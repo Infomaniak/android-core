@@ -22,13 +22,15 @@ import java.security.SecureRandom
  */
 class InfomaniakLogin(
     private val context: Context,
+    private var loginUrl: String = DEFAULT_LOGIN_URL,
     private val clientId: String,
-    private val redirectUri: String) {
+    private val redirectUri: String
+) {
 
     companion object {
         private const val CHROME_STABLE_PACKAGE = "com.android.chrome"
         private const val SERVICE_ACTION = "android.support.customtabs.action.CustomTabsService"
-        private const val LOGIN_URL = "https://login.infomaniak.com/authorize/"
+        private const val DEFAULT_LOGIN_URL = "https://login.infomaniak.com/"
         private const val DEFAULT_RESPONSE_TYPE = "code"
         private const val DEFAULT_ACCESS_TYPE = "offline"
         private const val DEFAULT_HASH_MODE = "SHA-256"
@@ -36,9 +38,9 @@ class InfomaniakLogin(
     }
 
     private lateinit var codeChallengeMethod: String
-    lateinit var codeChallenge: String
+    private lateinit var codeChallenge: String
+
     lateinit var codeVerifier: String
-    lateinit var loginUrl: String
 
     private var tabClient: CustomTabsClient? = null
     private var tabConnection: CustomTabsServiceConnection? = null
@@ -178,7 +180,7 @@ class InfomaniakLogin(
      * Generate the complete login URL based on parameters and base
      */
     private fun generateUrl() {
-        loginUrl = LOGIN_URL +
+        loginUrl = loginUrl + "authorize/" +
                 "?response_type=$DEFAULT_RESPONSE_TYPE" +
                 "&access_type=$DEFAULT_ACCESS_TYPE" +
                 "&client_id=$clientId" +
