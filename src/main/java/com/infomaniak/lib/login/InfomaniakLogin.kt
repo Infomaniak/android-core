@@ -24,6 +24,7 @@ class InfomaniakLogin(
     private val context: Context,
     private var loginUrl: String = DEFAULT_LOGIN_URL,
     private val clientId: String,
+    private val appUID: String,
     private val redirectUri: String
 ) {
 
@@ -208,5 +209,29 @@ class InfomaniakLogin(
         md.update(bytes, 0, bytes.size)
         val digest = md.digest()
         return Base64.encodeToString(digest, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
+    }
+
+    fun checkResponse(
+        intent: Intent,
+        onSuccess: (code: String) -> Unit,
+        onError: (error: String) -> Unit
+    ) {
+        val data = intent.data
+        if (data != null && appUID == data.scheme) {
+            intent.data = null
+            val code = data.getQueryParameter("code")
+            val error = data.getQueryParameter("error")
+            if (!code.isNullOrBlank()) {
+                onSuccess(code)
+            }
+            if (!error.isNullOrBlank()) {
+                val errorTitle = if (error == "access_denied") {
+                    context.getString(R.string.access_denied)
+                } else {
+                    context.getString(R.string.an_error_has_occurred)
+                }
+                onError(errorTitle)
+            }
+        }
     }
 }

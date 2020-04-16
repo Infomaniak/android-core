@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="access_denied">Accès refusé</string>
+
+    <string name="an_error_has_occurred">Une erreur est survenue</string>
+</resources>
