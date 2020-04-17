@@ -24,24 +24,21 @@ class InfomaniakLogin(
     private val context: Context,
     private var loginUrl: String = DEFAULT_LOGIN_URL,
     private val clientId: String,
-    private val appUID: String,
-    private val redirectUri: String
+    private val appUID: String
 ) {
 
     companion object {
         private const val CHROME_STABLE_PACKAGE = "com.android.chrome"
         private const val SERVICE_ACTION = "android.support.customtabs.action.CustomTabsService"
-        private const val DEFAULT_LOGIN_URL = "https://login.infomaniak.com/"
-        private const val DEFAULT_RESPONSE_TYPE = "code"
         private const val DEFAULT_ACCESS_TYPE = "offline"
         private const val DEFAULT_HASH_MODE = "SHA-256"
         private const val DEFAULT_HASH_MODE_SHORT = "S256"
+        private const val DEFAULT_LOGIN_URL = "https://login.infomaniak.com/"
+        private const val DEFAULT_REDIRECT_URI = "://oauth2redirect"
+        private const val DEFAULT_RESPONSE_TYPE = "code"
+        private const val preferenceName = "pkce_step_codes"
+        private const val verifierKey = "code_verifier"
     }
-
-    private lateinit var codeChallengeMethod: String
-    private lateinit var codeChallenge: String
-
-    lateinit var codeVerifier: String
 
     private var tabClient: CustomTabsClient? = null
     private var tabConnection: CustomTabsServiceConnection? = null
@@ -54,27 +51,27 @@ class InfomaniakLogin(
             }
     }
 
-    init {
-        // Generate the codes for PKCE Challenge
-        generatePkceCodes()
-        // Generate the complete login URL based on codes and arguments
-        generateUrl()
-    }
-
     /**
      * Officially start the Chrome Tab
      */
     fun start(): Boolean {
+        val codeChallenge = generatePkceCodes()
+        val url = generateUrl(codeChallenge)
         var success = false
-        if (URLUtil.isValidUrl(loginUrl)) {
+        if (URLUtil.isValidUrl(url)) {
             when {
-                isChromeCustomTabsSupported(context) -> bindCustomTabsService(loginUrl)
+                isChromeCustomTabsSupported(context) -> bindCustomTabsService(url)
                 else -> {
-                    success = showOnDefaultBrowser((loginUrl))
+                    success = showOnDefaultBrowser((url))
                 }
             }
         }
         return success
+    }
+
+    fun getCodeVerifier(): String {
+        val prefs: SharedPreferences = context.getSharedPreferences(preferenceName, MODE_PRIVATE)
+        return prefs.getString(verifierKey, "").toString()
     }
 
     /**
@@ -153,40 +150,26 @@ class InfomaniakLogin(
     /**
      * Will generate the PKCE challenge codes for this object
      */
-    private fun generatePkceCodes() {
-        codeChallengeMethod = DEFAULT_HASH_MODE_SHORT
+    private fun generatePkceCodes(): String {
+        val codeVerifier = generateCodeVerifier()
+        val codeChallenge = generateCodeChallenge(codeVerifier)
+        val editor = context.getSharedPreferences(preferenceName, MODE_PRIVATE).edit()
+        editor.putString(verifierKey, codeVerifier)
+        editor.apply()
 
-        val preferenceName = "pkce_step_codes"
-        val verifierTag = "code_verifier"
-        val challengeTag = "code_challenge"
-
-        val prefs: SharedPreferences = context.getSharedPreferences(preferenceName, MODE_PRIVATE)
-        val verifier = prefs.getString(verifierTag, null)
-        val challenge = prefs.getString(challengeTag, null)
-
-        if (challenge == null || verifier == null) {
-            codeVerifier = generateCodeVerifier()
-            codeChallenge = generateCodeChallenge(codeVerifier)
-            val editor = context.getSharedPreferences(preferenceName, MODE_PRIVATE).edit()
-            editor.putString(verifierTag, codeVerifier)
-            editor.putString(challengeTag, codeChallenge)
-            editor.apply()
-        } else {
-            codeVerifier = verifier
-            codeChallenge = challenge
-        }
+        return codeChallenge
     }
 
     /**
      * Generate the complete login URL based on parameters and base
      */
-    private fun generateUrl() {
-        loginUrl = loginUrl + "authorize/" +
+    private fun generateUrl(codeChallenge: String): String {
+        return loginUrl + "authorize/" +
                 "?response_type=$DEFAULT_RESPONSE_TYPE" +
                 "&access_type=$DEFAULT_ACCESS_TYPE" +
                 "&client_id=$clientId" +
-                "&redirect_uri=$redirectUri" +
-                "&code_challenge_method=$codeChallengeMethod" +
+                "&redirect_uri=$appUID$DEFAULT_REDIRECT_URI" +
+                "&code_challenge_method=$DEFAULT_HASH_MODE_SHORT" +
                 "&code_challenge=$codeChallenge"
     }
 
