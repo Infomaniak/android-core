@@ -13,6 +13,13 @@ import android.webkit.URLUtil
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsServiceConnection
+import com.google.gson.Gson
+import com.google.gson.JsonParser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.security.MessageDigest
 import java.security.SecureRandom
 
@@ -23,7 +30,7 @@ import java.security.SecureRandom
 class InfomaniakLogin(
     private val context: Context,
     private var loginUrl: String = DEFAULT_LOGIN_URL,
-    private val clientId: String,
+    private val clientID: String,
     private val appUID: String
 ) {
 
@@ -167,11 +174,13 @@ class InfomaniakLogin(
         return loginUrl + "authorize/" +
                 "?response_type=$DEFAULT_RESPONSE_TYPE" +
                 "&access_type=$DEFAULT_ACCESS_TYPE" +
-                "&client_id=$clientId" +
-                "&redirect_uri=$appUID$DEFAULT_REDIRECT_URI" +
+                "&client_id=$clientID" +
+                "&redirect_uri=${getRedirectURI()}" +
                 "&code_challenge_method=$DEFAULT_HASH_MODE_SHORT" +
                 "&code_challenge=$codeChallenge"
     }
+
+    private fun getRedirectURI() = "$appUID$DEFAULT_REDIRECT_URI"
 
     /**
      * Generate a verifier code for PKCE challenge (rfc7636 4.1.)
@@ -214,6 +223,81 @@ class InfomaniakLogin(
                     context.getString(R.string.an_error_has_occurred)
                 }
                 onError(errorTitle)
+            }
+        }
+    }
+
+    enum class ErrorStatus {
+        SERVER,
+        AUTH,
+        CONNECTION,
+        UNKNOWN;
+    }
+
+    suspend fun getToken(
+        okHttpClient: OkHttpClient,
+        code: String,
+        onSuccess: (apiToken: ApiToken) -> Unit,
+        onError: (error: ErrorStatus) -> Unit
+    ) {
+        withContext(Dispatchers.IO) {
+            try {
+                val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("grant_type", "authorization_code")
+                    .addFormDataPart("client_id", clientID)
+                    .addFormDataPart("code", code)
+                    .addFormDataPart("code_verifier", getCodeVerifier())
+                    .addFormDataPart("redirect_uri", getRedirectURI())
+
+                val request = Request.Builder()
+                    .url("$loginUrl/token")
+                    .post(formBuilder.build())
+                    .build()
+
+                val response = okHttpClient.newCall(request).execute()
+                val bodyResponse = response.body?.string()
+
+                when {
+                    response.code >= 500 -> {
+                        withContext(Dispatchers.Main) {
+                            onError(ErrorStatus.SERVER)
+                        }
+                    }
+                    response.code >= 400 -> {
+                        withContext(Dispatchers.Main) {
+                            onError(ErrorStatus.AUTH)
+                        }
+                    }
+                    bodyResponse.isNullOrBlank() -> {
+                        withContext(Dispatchers.Main) {
+                            onError(ErrorStatus.CONNECTION)
+                        }
+                    }
+                    else -> {
+                        withContext(Dispatchers.Default) {
+                            val gson = Gson()
+                            val jsonResult = JsonParser.parseString(bodyResponse)
+                            val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
+
+                            withContext(Dispatchers.Main) {
+                                onSuccess(apiToken)
+                            }
+                        }
+                    }
+                }
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+
+                val descriptionError =
+                    if (exception.javaClass.name.contains("java.net.", ignoreCase = true)) {
+                        ErrorStatus.CONNECTION
+                    } else {
+                        ErrorStatus.UNKNOWN
+                    }
+                withContext(Dispatchers.Main) {
+                    onError(descriptionError)
+                }
             }
         }
     }
