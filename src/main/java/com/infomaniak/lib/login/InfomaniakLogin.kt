@@ -280,6 +280,10 @@ class InfomaniakLogin(
                             val jsonResult = JsonParser.parseString(bodyResponse)
                             val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
 
+                            // Set the token expiration date (with margin-delay)
+                            apiToken.expiresAt =
+                                System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
+
                             withContext(Dispatchers.Main) {
                                 onSuccess(apiToken)
                             }
