@@ -251,7 +251,7 @@ class InfomaniakLogin(
                     .addFormDataPart("redirect_uri", getRedirectURI())
 
                 val request = Request.Builder()
-                    .url("$loginUrl/token")
+                    .url("${loginUrl}token")
                     .post(formBuilder.build())
                     .build()
 
