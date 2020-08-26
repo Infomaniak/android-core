@@ -76,6 +76,12 @@ class InfomaniakLogin(
         return success
     }
 
+    fun getUrl(): String{
+        val codeChallenge = generatePkceCodes()
+        val url = generateUrl(codeChallenge)
+        return  if (URLUtil.isValidUrl(url)) url else ""
+    }
+
     fun getCodeVerifier(): String {
         val prefs: SharedPreferences = context.getSharedPreferences(preferenceName, MODE_PRIVATE)
         return prefs.getString(verifierKey, "").toString()
