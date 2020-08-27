@@ -2,38 +2,48 @@ package com.infomaniak.lib.login
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
+import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.webkit.SslErrorHandler
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
+import kotlinx.android.synthetic.main.activity_web_view_login.progressBar
+import kotlinx.android.synthetic.main.activity_web_view_login.toolbar
 import kotlinx.android.synthetic.main.activity_web_view_login.webview
 import java.util.MissingFormatArgumentException
 
 class WebViewLoginActivity : AppCompatActivity() {
 
+	private lateinit var appUID: String
+
 	companion object {
 
-		const val CLIENT_ID_TAG = "clientID"
 		const val APPLICATION_ID_TAG = "appUID"
-		const val CODE_TAG = "code"
-		const val ERROR_TAG = "error"
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_web_view_login)
+		setSupportActionBar(toolbar)
 
-		val clientID = intent.extras?.getString(CLIENT_ID_TAG)
-			?: throw MissingFormatArgumentException(CLIENT_ID_TAG)
-		val appUID = intent.extras?.getString(APPLICATION_ID_TAG)
-			?: throw MissingFormatArgumentException(CLIENT_ID_TAG)
-
-		val infomaniakLogin = InfomaniakLogin(this, clientID = clientID, appUID = appUID)
+		val loginUrl = intent.extras?.getString(LOGIN_URL_TAG)
+			?: throw MissingFormatArgumentException(LOGIN_URL_TAG)
+		appUID = intent.extras?.getString(APPLICATION_ID_TAG)
+			?: throw MissingFormatArgumentException(APPLICATION_ID_TAG)
 
 		webview.apply {
 			settings.javaScriptEnabled = true
@@ -47,24 +57,97 @@ class WebViewLoginActivity : AppCompatActivity() {
 					return !isValidUrl(url)
 				}
 
-				override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-					handler?.proceed()
+				override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+					super.onPageStarted(view, url, favicon)
+					progressBar.visibility = View.VISIBLE
+					progressBar.progress = 0
 				}
 
 				override fun onPageFinished(view: WebView?, url: String?) {
-					val uri = Uri.parse(url)
-					val scheme = uri.scheme
-					if (scheme == appUID) {
+					super.onPageFinished(view, url)
+					progressBar.visibility = View.GONE
+					progressBar.progress = 100
+				}
+
+				override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+					val intent = Intent().apply {
+						putExtra(InfomaniakLogin.ERROR_CODE_TAG, InfomaniakLogin.SSL_ERROR_CODE)
+						putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translateError(InfomaniakLogin.SSL_ERROR_CODE))
+					}
+					setResult(RESULT_OK, intent)
+				}
+
+				@RequiresApi(Build.VERSION_CODES.M)
+				override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+					if (!onAuthResponse(request!!.url)) {
+						val errorCode = error?.description?.toString() ?: ""
+						val translatedError = translateError(errorCode)
 						val intent = Intent().apply {
-							putExtra("code", uri.getQueryParameter("code"))
-							putExtra("error", uri.getQueryParameter("error"))
+							putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCode)
+							putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
 						}
 						setResult(RESULT_OK, intent)
 						finish()
 					}
 				}
+
+				override fun onReceivedError(
+					view: WebView?,
+					errorCode: Int,
+					description: String?,
+					failingUrl: String?
+				) {
+					val uri = Uri.parse(url)
+					if (!onAuthResponse(uri)) {
+						val errorCode = description ?: ""
+						val translatedError = translateError(errorCode)
+						val intent = Intent().apply {
+							putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCode)
+							putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
+						}
+						setResult(RESULT_OK, intent)
+						finish()
+					}
+				}
+
+				override fun onReceivedHttpError(
+					view: WebView?,
+					request: WebResourceRequest?,
+					errorResponse: WebResourceResponse?
+				) {
+					val translatedError = translateError(InfomaniakLogin.HTTP_ERROR_CODE)
+					val intent = Intent().apply {
+						putExtra(InfomaniakLogin.ERROR_CODE_TAG, InfomaniakLogin.HTTP_ERROR_CODE)
+						putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
+					}
+					setResult(RESULT_OK, intent)
+				}
 			}
-			loadUrl(infomaniakLogin.getUrl())
+
+			webview.webChromeClient = object : WebChromeClient() {
+				override fun onProgressChanged(view: WebView, newProgress: Int) {
+					progressBar.progress = newProgress
+					if (newProgress == 100) {
+						progressBar.visibility = View.GONE
+					}
+				}
+			}
+			loadUrl(loginUrl)
+		}
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.webview_menu, menu)
+		return true
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		return when (item.itemId) {
+			R.id.doneItem -> {
+				onBackPressed()
+				true
+			}
+			else -> false
 		}
 	}
 
@@ -73,5 +156,28 @@ class WebViewLoginActivity : AppCompatActivity() {
 		return url.contains("login.infomaniak.com")
 				|| url.contains("oauth2redirect")
 				|| url.contains("www.google.com/recaptcha")
+	}
+
+	private fun onAuthResponse(uri: Uri): Boolean {
+		val scheme = uri.scheme
+		val error = uri.getQueryParameter("error")
+		val errorTranslated = if (error == "access_denied") getString(R.string.access_denied) else ""
+		return if (scheme == appUID) {
+			val intent = Intent().apply {
+				putExtra(InfomaniakLogin.CODE_TAG, uri.getQueryParameter("code"))
+				putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, errorTranslated)
+				putExtra(InfomaniakLogin.ERROR_CODE_TAG, InfomaniakLogin.CONNEXION_ERROR_CODE)
+			}
+			setResult(RESULT_OK, intent)
+			finish()
+			true
+		} else false
+	}
+
+	private fun translateError(errorCode: String): String {
+		return when (errorCode) {
+			InfomaniakLogin.CONNEXION_ERROR_CODE -> getString(R.string.connection_error)
+			else -> getString(R.string.an_error_has_occurred)
+		}
 	}
 }

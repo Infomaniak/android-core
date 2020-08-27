@@ -3,4 +3,5 @@
     <string name="access_denied">Zugang verweigert</string>
 
     <string name="an_error_has_occurred">Ein Fehler ist aufgetreten</string>
+	<string name="connection_error">Internet-Verbindungsproblem</string>
 </resources>

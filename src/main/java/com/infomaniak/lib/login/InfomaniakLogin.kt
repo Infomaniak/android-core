@@ -1,5 +1,6 @@
 package com.infomaniak.lib.login
 
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
@@ -10,6 +11,7 @@ import android.net.Uri
 import android.util.Base64
 import android.util.Log
 import android.webkit.URLUtil
+import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsServiceConnection
@@ -45,6 +47,14 @@ class InfomaniakLogin(
         private const val DEFAULT_RESPONSE_TYPE = "code"
         private const val preferenceName = "pkce_step_codes"
         private const val verifierKey = "code_verifier"
+
+        const val LOGIN_URL_TAG = "login_url"
+        const val CODE_TAG = "code"
+        const val ERROR_TRANSLATED_TAG = "translated_error"
+        const val ERROR_CODE_TAG = "error_code"
+        const val CONNEXION_ERROR_CODE = "net::ERR_INTERNET_DISCONNECTED"
+        const val SSL_ERROR_CODE = "ssl_error_code"
+        const val HTTP_ERROR_CODE = "http_error_code"
     }
 
     private var tabClient: CustomTabsClient? = null
@@ -76,10 +86,18 @@ class InfomaniakLogin(
         return success
     }
 
-    fun getUrl(): String{
+    /**
+     * Start WebView login
+     * @param requestCode : activity for result request code
+     */
+    fun startWebViewLogin(requestCode: Int){
         val codeChallenge = generatePkceCodes()
         val url = generateUrl(codeChallenge)
-        return  if (URLUtil.isValidUrl(url)) url else ""
+        val intent = Intent(context, WebViewLoginActivity::class.java).apply {
+            putExtra(LOGIN_URL_TAG, url)
+            putExtra(WebViewLoginActivity.APPLICATION_ID_TAG, appUID)
+        }
+        (context as AppCompatActivity).startActivityForResult(intent, requestCode)
     }
 
     fun getCodeVerifier(): String {
