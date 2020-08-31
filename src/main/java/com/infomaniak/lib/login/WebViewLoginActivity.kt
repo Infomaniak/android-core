@@ -65,6 +65,7 @@ class WebViewLoginActivity : AppCompatActivity() {
 
 				override fun onPageFinished(view: WebView?, url: String?) {
 					super.onPageFinished(view, url)
+					webview.visibility = if (isFinishing) View.GONE else View.VISIBLE
 					progressBar.visibility = View.GONE
 					progressBar.progress = 100
 				}
@@ -75,6 +76,7 @@ class WebViewLoginActivity : AppCompatActivity() {
 						putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translateError(InfomaniakLogin.SSL_ERROR_CODE))
 					}
 					setResult(RESULT_OK, intent)
+					finish()
 				}
 
 				@RequiresApi(Build.VERSION_CODES.M)
@@ -99,10 +101,10 @@ class WebViewLoginActivity : AppCompatActivity() {
 				) {
 					val uri = Uri.parse(url)
 					if (!onAuthResponse(uri)) {
-						val errorCode = description ?: ""
-						val translatedError = translateError(errorCode)
+						val errorCodeText = description ?: ""
+						val translatedError = translateError(errorCodeText)
 						val intent = Intent().apply {
-							putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCode)
+							putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCodeText)
 							putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
 						}
 						setResult(RESULT_OK, intent)
@@ -121,6 +123,7 @@ class WebViewLoginActivity : AppCompatActivity() {
 						putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
 					}
 					setResult(RESULT_OK, intent)
+					finish()
 				}
 			}
 
