@@ -4,6 +4,7 @@
 
     <item
         android:id="@+id/doneItem"
+        android:icon="@drawable/ic_baseline_close"
         android:title="ok"
         app:showAsAction="always" />
 </menu>
