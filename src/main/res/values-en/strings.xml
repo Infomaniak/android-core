@@ -3,5 +3,5 @@
     <string name="access_denied">Access denied</string>
 
     <string name="an_error_has_occurred">An error has occurred</string>
-	<string name="connection_error">Internet connection problem</string>
+    <string name="connection_error">Internet connection problem</string>
 </resources>

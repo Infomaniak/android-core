@@ -1,6 +1,5 @@
 package com.infomaniak.lib.login
 
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
@@ -90,7 +89,7 @@ class InfomaniakLogin(
      * Start WebView login
      * @param requestCode : activity for result request code
      */
-    fun startWebViewLogin(requestCode: Int){
+    fun startWebViewLogin(requestCode: Int) {
         val codeChallenge = generatePkceCodes()
         val url = generateUrl(codeChallenge)
         val intent = Intent(context, WebViewLoginActivity::class.java).apply {

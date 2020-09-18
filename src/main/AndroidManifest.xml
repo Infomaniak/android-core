@@ -1,3 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.infomaniak.lib.login">
-</manifest>
+<manifest package="com.infomaniak.lib.login"></manifest>

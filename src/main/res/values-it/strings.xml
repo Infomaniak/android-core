@@ -3,5 +3,5 @@
     <string name="access_denied">Accesso rifiutato</string>
 
     <string name="an_error_has_occurred">Si è verificato un errore</string>
-	<string name="connection_error">Problema di connessione a Internet</string>
+    <string name="connection_error">Problema di connessione a Internet</string>
 </resources>
