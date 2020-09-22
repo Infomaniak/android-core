@@ -1,5 +1,6 @@
 package com.infomaniak.lib.login
 
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
@@ -10,10 +11,10 @@ import android.net.Uri
 import android.util.Base64
 import android.util.Log
 import android.webkit.URLUtil
-import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsServiceConnection
+import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
@@ -89,14 +90,18 @@ class InfomaniakLogin(
      * Start WebView login
      * @param requestCode : activity for result request code
      */
-    fun startWebViewLogin(requestCode: Int) {
+    fun startWebViewLogin(requestCode: Int, fragment: Fragment? = null) {
         val codeChallenge = generatePkceCodes()
         val url = generateUrl(codeChallenge)
         val intent = Intent(context, WebViewLoginActivity::class.java).apply {
             putExtra(LOGIN_URL_TAG, url)
             putExtra(WebViewLoginActivity.APPLICATION_ID_TAG, appUID)
         }
-        (context as AppCompatActivity).startActivityForResult(intent, requestCode)
+        if (fragment == null) {
+            (context as Activity).startActivityForResult(intent, requestCode)
+        } else {
+            fragment.startActivityForResult(intent, requestCode)
+        }
     }
 
     fun getCodeVerifier(): String {
@@ -317,7 +322,9 @@ class InfomaniakLogin(
                 exception.printStackTrace()
 
                 val descriptionError =
-                    if (exception.javaClass.name.contains("java.net.", ignoreCase = true)) {
+                    if (exception.javaClass.name.contains("java.net.", ignoreCase = true) ||
+                        exception.javaClass.name.contains("javax.net.", ignoreCase = true)
+                    ) {
                         ErrorStatus.CONNECTION
                     } else {
                         ErrorStatus.UNKNOWN

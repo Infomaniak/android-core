@@ -44,9 +44,9 @@ class WebViewLoginActivity : AppCompatActivity() {
             settings.javaScriptEnabled = true
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(
-					view: WebView?,
-					request: WebResourceRequest?
-				): Boolean {
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): Boolean {
                     val url = request?.url.toString()
                     return !isValidUrl(url)
                 }
@@ -68,62 +68,57 @@ class WebViewLoginActivity : AppCompatActivity() {
                 }
 
                 override fun onReceivedSslError(
-					view: WebView?,
-					handler: SslErrorHandler?,
-					error: SslError?
-				) {
+                    view: WebView?,
+                    handler: SslErrorHandler?,
+                    error: SslError?
+                ) {
                     val intent = Intent().apply {
                         putExtra(InfomaniakLogin.ERROR_CODE_TAG, InfomaniakLogin.SSL_ERROR_CODE)
                         putExtra(
-							InfomaniakLogin.ERROR_TRANSLATED_TAG,
-							translateError(InfomaniakLogin.SSL_ERROR_CODE)
-						)
+                            InfomaniakLogin.ERROR_TRANSLATED_TAG,
+                            translateError(InfomaniakLogin.SSL_ERROR_CODE)
+                        )
                     }
                     setResult(RESULT_OK, intent)
                 }
 
                 @RequiresApi(Build.VERSION_CODES.M)
                 override fun onReceivedError(
-					view: WebView?,
-					request: WebResourceRequest?,
-					error: WebResourceError?
-				) {
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?
+                ) {
                     if (!onAuthResponse(request!!.url)) {
-                        val errorCode = error?.description?.toString() ?: ""
-                        val translatedError = translateError(errorCode)
-                        val intent = Intent().apply {
-                            putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCode)
-                            putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
-                        }
-                        setResult(RESULT_OK, intent)
-                        finish()
+                        catchError(error?.description?.toString() ?: "")
                     }
                 }
 
                 override fun onReceivedError(
-					view: WebView?,
-					errorCode: Int,
-					description: String?,
-					failingUrl: String?
-				) {
-                    val uri = Uri.parse(url)
-                    if (!onAuthResponse(uri)) {
-                        val errorCode = description ?: ""
-                        val translatedError = translateError(errorCode)
-                        val intent = Intent().apply {
-                            putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCode)
-                            putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
-                        }
-                        setResult(RESULT_OK, intent)
-                        finish()
+                    view: WebView?,
+                    errorCode: Int,
+                    description: String?,
+                    failingUrl: String?
+                ) {
+                    if (!onAuthResponse(Uri.parse(url))) {
+                        catchError(description ?: "")
                     }
                 }
 
+                private fun catchError(errorCode: String) {
+                    val translatedError = translateError(errorCode)
+                    val intent = Intent().apply {
+                        putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCode)
+                        putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
+                    }
+                    setResult(RESULT_OK, intent)
+                    finish()
+                }
+
                 override fun onReceivedHttpError(
-					view: WebView?,
-					request: WebResourceRequest?,
-					errorResponse: WebResourceResponse?
-				) {
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    errorResponse: WebResourceResponse?
+                ) {
                     val translatedError = translateError(InfomaniakLogin.HTTP_ERROR_CODE)
                     val intent = Intent().apply {
                         putExtra(InfomaniakLogin.ERROR_CODE_TAG, InfomaniakLogin.HTTP_ERROR_CODE)
@@ -152,16 +147,17 @@ class WebViewLoginActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-			R.id.doneItem -> {
-				onBackPressed()
-				true
-			}
+            R.id.doneItem -> {
+                onBackPressed()
+                true
+            }
             else -> false
         }
     }
 
     private fun isValidUrl(url: String?): Boolean {
         if (url == null) return false
+        if (onAuthResponse(Uri.parse(url))) return false
         return url.contains("login.infomaniak.com")
                 || url.contains("oauth2redirect")
                 || url.contains("www.google.com/recaptcha")
@@ -172,6 +168,7 @@ class WebViewLoginActivity : AppCompatActivity() {
         val error = uri.getQueryParameter("error")
         val errorTranslated =
             if (error == "access_denied") getString(R.string.access_denied) else ""
+
         return if (scheme == appUID) {
             val intent = Intent().apply {
                 putExtra(InfomaniakLogin.CODE_TAG, uri.getQueryParameter("code"))
@@ -186,7 +183,7 @@ class WebViewLoginActivity : AppCompatActivity() {
 
     private fun translateError(errorCode: String): String {
         return when (errorCode) {
-			InfomaniakLogin.CONNEXION_ERROR_CODE -> getString(R.string.connection_error)
+            InfomaniakLogin.CONNEXION_ERROR_CODE -> getString(R.string.connection_error)
             else -> getString(R.string.an_error_has_occurred)
         }
     }
