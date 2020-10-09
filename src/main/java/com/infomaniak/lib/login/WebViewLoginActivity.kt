@@ -88,7 +88,7 @@ class WebViewLoginActivity : AppCompatActivity() {
                     request: WebResourceRequest?,
                     error: WebResourceError?
                 ) {
-                    if (!onAuthResponse(request!!.url)) {
+                    if (!onAuthResponse(request?.url)) {
                         catchError(error?.description?.toString() ?: "")
                     }
                 }
@@ -163,9 +163,9 @@ class WebViewLoginActivity : AppCompatActivity() {
                 || url.contains("www.google.com/recaptcha")
     }
 
-    private fun onAuthResponse(uri: Uri): Boolean {
-        val scheme = uri.scheme
-        val error = uri.getQueryParameter("error")
+    private fun onAuthResponse(uri: Uri?): Boolean {
+        val scheme = uri?.scheme
+        val error = uri?.getQueryParameter("error")
         val errorTranslated =
             if (error == "access_denied") getString(R.string.access_denied) else ""
 

@@ -109,6 +109,8 @@ class InfomaniakLogin(
         return prefs.getString(verifierKey, "").toString()
     }
 
+    fun getRedirectURI() = "$appUID$DEFAULT_REDIRECT_URI"
+
     /**
      * Unbind the custom tab (close the connection)
      */
@@ -207,8 +209,6 @@ class InfomaniakLogin(
                 "&code_challenge_method=$DEFAULT_HASH_MODE_SHORT" +
                 "&code_challenge=$codeChallenge"
     }
-
-    private fun getRedirectURI() = "$appUID$DEFAULT_REDIRECT_URI"
 
     /**
      * Generate a verifier code for PKCE challenge (rfc7636 4.1.)
