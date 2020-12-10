@@ -164,6 +164,7 @@ class WebViewLoginActivity : AppCompatActivity() {
     }
 
     private fun onAuthResponse(uri: Uri?): Boolean {
+        if (uri?.isOpaque == true) return false
         val scheme = uri?.scheme
         val error = uri?.getQueryParameter("error")
         val errorTranslated =
