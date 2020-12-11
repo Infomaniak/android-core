@@ -52,7 +52,12 @@ class InfomaniakLogin(
         const val CODE_TAG = "code"
         const val ERROR_TRANSLATED_TAG = "translated_error"
         const val ERROR_CODE_TAG = "error_code"
-        const val CONNEXION_ERROR_CODE = "net::ERR_INTERNET_DISCONNECTED"
+
+        const val WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED = "net::ERR_INTERNET_DISCONNECTED"
+        const val WEBVIEW_ERROR_CODE_CONNECTION_REFUSED = "net::ERR_CONNECTION_REFUSED"
+
+        const val ERROR_ACCESS_DENIED = "access_denied"
+
         const val SSL_ERROR_CODE = "ssl_error_code"
         const val HTTP_ERROR_CODE = "http_error_code"
     }

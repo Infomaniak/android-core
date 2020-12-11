@@ -72,14 +72,7 @@ class WebViewLoginActivity : AppCompatActivity() {
                     handler: SslErrorHandler?,
                     error: SslError?
                 ) {
-                    val intent = Intent().apply {
-                        putExtra(InfomaniakLogin.ERROR_CODE_TAG, InfomaniakLogin.SSL_ERROR_CODE)
-                        putExtra(
-                            InfomaniakLogin.ERROR_TRANSLATED_TAG,
-                            translateError(InfomaniakLogin.SSL_ERROR_CODE)
-                        )
-                    }
-                    setResult(RESULT_OK, intent)
+                    errorResult(InfomaniakLogin.SSL_ERROR_CODE)
                 }
 
                 @RequiresApi(Build.VERSION_CODES.M)
@@ -88,8 +81,8 @@ class WebViewLoginActivity : AppCompatActivity() {
                     request: WebResourceRequest?,
                     error: WebResourceError?
                 ) {
-                    if (!onAuthResponse(request?.url)) {
-                        catchError(error?.description?.toString() ?: "")
+                    if (isValidUrl(request?.url.toString())) {
+                        errorResult(error?.description?.toString() ?: "")
                     }
                 }
 
@@ -99,19 +92,9 @@ class WebViewLoginActivity : AppCompatActivity() {
                     description: String?,
                     failingUrl: String?
                 ) {
-                    if (!onAuthResponse(Uri.parse(url))) {
-                        catchError(description ?: "")
+                    if (isValidUrl(failingUrl)) {
+                        errorResult(description ?: "")
                     }
-                }
-
-                private fun catchError(errorCode: String) {
-                    val translatedError = translateError(errorCode)
-                    val intent = Intent().apply {
-                        putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCode)
-                        putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
-                    }
-                    setResult(RESULT_OK, intent)
-                    finish()
                 }
 
                 override fun onReceivedHttpError(
@@ -119,12 +102,7 @@ class WebViewLoginActivity : AppCompatActivity() {
                     request: WebResourceRequest?,
                     errorResponse: WebResourceResponse?
                 ) {
-                    val translatedError = translateError(InfomaniakLogin.HTTP_ERROR_CODE)
-                    val intent = Intent().apply {
-                        putExtra(InfomaniakLogin.ERROR_CODE_TAG, InfomaniakLogin.HTTP_ERROR_CODE)
-                        putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translatedError)
-                    }
-                    setResult(RESULT_OK, intent)
+                    errorResult(InfomaniakLogin.HTTP_ERROR_CODE)
                 }
             }
 
@@ -164,27 +142,38 @@ class WebViewLoginActivity : AppCompatActivity() {
     }
 
     private fun onAuthResponse(uri: Uri?): Boolean {
-        if (uri?.isOpaque == true) return false
-        val scheme = uri?.scheme
-        val error = uri?.getQueryParameter("error")
-        val errorTranslated =
-            if (error == "access_denied") getString(R.string.access_denied) else ""
-
-        return if (scheme == appUID) {
-            val intent = Intent().apply {
-                putExtra(InfomaniakLogin.CODE_TAG, uri.getQueryParameter("code"))
-                putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, errorTranslated)
-                putExtra(InfomaniakLogin.ERROR_CODE_TAG, InfomaniakLogin.CONNEXION_ERROR_CODE)
+        return if (uri?.scheme == appUID) {
+            uri.getQueryParameter("code")?.let { code ->
+                successResult(code)
+            } ?: run {
+                errorResult(uri.getQueryParameter("error") ?: "")
             }
-            setResult(RESULT_OK, intent)
-            finish()
             true
         } else false
     }
 
+    private fun successResult(code: String) {
+        val intent = Intent().apply {
+            putExtra(InfomaniakLogin.CODE_TAG, code)
+        }
+        setResult(RESULT_OK, intent)
+        finish()
+    }
+
+    private fun errorResult(errorCode: String) {
+        val intent = Intent().apply {
+            putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCode)
+            putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translateError(errorCode))
+        }
+        setResult(RESULT_OK, intent)
+        finish()
+    }
+
     private fun translateError(errorCode: String): String {
         return when (errorCode) {
-            InfomaniakLogin.CONNEXION_ERROR_CODE -> getString(R.string.connection_error)
+            InfomaniakLogin.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED -> getString(R.string.connection_error)
+            InfomaniakLogin.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED -> getString(R.string.connection_error)
+            InfomaniakLogin.ERROR_ACCESS_DENIED -> getString(R.string.access_denied)
             else -> getString(R.string.an_error_has_occurred)
         }
     }
