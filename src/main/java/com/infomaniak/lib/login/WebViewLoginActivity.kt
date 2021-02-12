@@ -102,7 +102,7 @@ class WebViewLoginActivity : AppCompatActivity() {
                     request: WebResourceRequest?,
                     errorResponse: WebResourceResponse?
                 ) {
-                    errorResult(InfomaniakLogin.HTTP_ERROR_CODE)
+                    if (request?.method == "GET") errorResult(InfomaniakLogin.HTTP_ERROR_CODE)
                 }
             }
 
@@ -138,7 +138,8 @@ class WebViewLoginActivity : AppCompatActivity() {
         if (onAuthResponse(Uri.parse(url))) return false
         return url.contains("login.infomaniak.com")
                 || url.contains("oauth2redirect")
-                || url.contains("www.google.com/recaptcha")
+                || url.contains("gstatic.com")
+                || url.contains("google.com/recaptcha")
     }
 
     private fun onAuthResponse(uri: Uri?): Boolean {
