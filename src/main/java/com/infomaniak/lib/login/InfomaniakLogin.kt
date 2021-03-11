@@ -22,6 +22,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import java.security.MessageDigest
 import java.security.SecureRandom
 
@@ -273,70 +274,106 @@ class InfomaniakLogin(
         onSuccess: (apiToken: ApiToken) -> Unit,
         onError: (error: ErrorStatus) -> Unit
     ) {
-        withContext(Dispatchers.IO) {
-            try {
-                val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("grant_type", "authorization_code")
-                    .addFormDataPart("client_id", clientID)
-                    .addFormDataPart("code", code)
-                    .addFormDataPart("code_verifier", getCodeVerifier())
-                    .addFormDataPart("redirect_uri", getRedirectURI())
+        val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("grant_type", "authorization_code")
+            .addFormDataPart("client_id", clientID)
+            .addFormDataPart("code", code)
+            .addFormDataPart("code_verifier", getCodeVerifier())
+            .addFormDataPart("redirect_uri", getRedirectURI())
 
-                val request = Request.Builder()
-                    .url("${loginUrl}token")
-                    .post(formBuilder.build())
-                    .build()
+        getToken(
+            okHttpClient = okHttpClient,
+            body = formBuilder.build(),
+            onSuccess = onSuccess,
+            onError = onError
+        )
+    }
 
-                val response = okHttpClient.newCall(request).execute()
-                val bodyResponse = response.body?.string()
+    suspend fun getToken(
+        okHttpClient: OkHttpClient,
+        username: String,
+        password: String,
+        onSuccess: (apiToken: ApiToken) -> Unit,
+        onError: (error: ErrorStatus) -> Unit
+    ) {
+        val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("grant_type", "password")
+            .addFormDataPart("access_type", DEFAULT_ACCESS_TYPE)
+            .addFormDataPart("client_id", clientID)
+            .addFormDataPart("username", username)
+            .addFormDataPart("password", password)
 
-                when {
-                    response.code >= 500 -> {
-                        withContext(Dispatchers.Main) {
-                            onError(ErrorStatus.SERVER)
-                        }
+        getToken(
+            okHttpClient = okHttpClient,
+            body = formBuilder.build(),
+            onSuccess = onSuccess,
+            onError = onError
+        )
+    }
+
+    private suspend fun getToken(
+        okHttpClient: OkHttpClient,
+        body: RequestBody,
+        onSuccess: (apiToken: ApiToken) -> Unit,
+        onError: (error: ErrorStatus) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        try {
+
+            val request = Request.Builder()
+                .url("${loginUrl}token")
+                .post(body)
+                .build()
+
+            val response = okHttpClient.newCall(request).execute()
+            val bodyResponse = response.body?.string()
+
+            when {
+                response.code >= 500 -> {
+                    withContext(Dispatchers.Main) {
+                        onError(ErrorStatus.SERVER)
                     }
-                    response.code >= 400 -> {
-                        withContext(Dispatchers.Main) {
-                            onError(ErrorStatus.AUTH)
-                        }
+                }
+                response.code >= 400 -> {
+                    withContext(Dispatchers.Main) {
+                        onError(ErrorStatus.AUTH)
                     }
-                    bodyResponse.isNullOrBlank() -> {
-                        withContext(Dispatchers.Main) {
-                            onError(ErrorStatus.CONNECTION)
-                        }
+                }
+                bodyResponse.isNullOrBlank() -> {
+                    withContext(Dispatchers.Main) {
+                        onError(ErrorStatus.CONNECTION)
                     }
-                    else -> {
-                        withContext(Dispatchers.Default) {
-                            val gson = Gson()
-                            val jsonResult = JsonParser.parseString(bodyResponse)
-                            val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
+                }
+                else -> {
+                    withContext(Dispatchers.Default) {
+                        val gson = Gson()
+                        val jsonResult = JsonParser.parseString(bodyResponse)
+                        val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
 
-                            // Set the token expiration date (with margin-delay)
-                            apiToken.expiresAt =
-                                System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
+                        // Set the token expiration date (with margin-delay)
+                        apiToken.expiresAt =
+                            System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
 
-                            withContext(Dispatchers.Main) {
-                                onSuccess(apiToken)
-                            }
+                        withContext(Dispatchers.Main) {
+                            onSuccess(apiToken)
                         }
                     }
                 }
-            } catch (exception: Exception) {
-                exception.printStackTrace()
+            }
+        } catch (exception: Exception) {
+            exception.printStackTrace()
 
-                val descriptionError =
-                    if (exception.javaClass.name.contains("java.net.", ignoreCase = true) ||
-                        exception.javaClass.name.contains("javax.net.", ignoreCase = true)
-                    ) {
-                        ErrorStatus.CONNECTION
-                    } else {
-                        ErrorStatus.UNKNOWN
-                    }
-                withContext(Dispatchers.Main) {
-                    onError(descriptionError)
+            val descriptionError =
+                if (exception.javaClass.name.contains("java.net.", ignoreCase = true) ||
+                    exception.javaClass.name.contains("javax.net.", ignoreCase = true)
+                ) {
+                    ErrorStatus.CONNECTION
+                } else {
+                    ErrorStatus.UNKNOWN
                 }
+            withContext(Dispatchers.Main) {
+                onError(descriptionError)
             }
         }
     }
