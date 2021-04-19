@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2021 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- Main colors -->
+    <color name="accent">@color/infomaniak</color>
+    <color name="infomaniak">#0098FF</color>
+    <color name="infomaniakDark">#0079CC</color>
+    <color name="primary">@color/infomaniak</color>
+    <color name="primaryDark">@color/infomaniakDark</color>
+
+    <!-- Text -->
+    <color name="title">@color/grey_title</color>
+    <color name="primaryText">@color/grey_text</color>
+    <color name="secondaryText">#9F9F9F</color>
+
+    <!-- Containers -->
+    <color name="appBar">@android:color/white</color>
+    <color name="background">#F4F6FD</color>
+    <color name="backgroundCardview">@color/appBar</color>
+    <color name="backgroundSecondary">#EBEEFB</color>
+    <color name="border">@color/grey_border</color>
+    <color name="divider">#F7F7F7</color>
+    <color name="shadow">#80000000</color>
+    <color name="subLabel">#B0B0B0</color>
+
+    <!-- Context / errors -->
+    <color name="green_success_transparent">#E656BF62</color>
+    <color name="red_error_transparent">#E6FE644E</color>
+    <color name="orange_warning_transparent">#E6FFB700</color>
+    <color name="green_success">#56BF62</color>
+    <color name="red_error">#FB472E</color>
+    <color name="orange_warning">#FFB700</color>
+    <color name="staff_infomaniak">#8A2BE2</color>
+    <color name="blue_general">#0098FF</color>
+    <color name="devs">#FF00FF</color>
+
+    <!-- Dark tones -->
+    <color name="black">#000000</color>
+    <color name="grey_title">#333333</color>
+    <color name="grey_text">#666666</color>
+    <color name="grey_text_secondary">#9F9F9F</color>
+    <color name="grey_border">#E0E0E0</color>
+    <color name="grey_background">#EDECEC</color>
+    <color name="grey_background_transparent">#E6EDECEC</color>
+    <color name="grey_description">#F1F1F1</color>
+    <color name="hover">#F5F5F5</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Color tones -->
+    <color name="purple">#7974B4</color>
+    <color name="blue_dark_2">#3990BB</color>
+    <color name="blue_dark_1">#00A1B9</color>
+    <color name="blue_lighten_1">#05C2E7</color>
+    <color name="blue_lighten_2">#30ABFF</color>
+    <color name="blue_lighten_3">#7FD5FF</color>
+    <color name="green_darken_1">#029688</color>
+    <color name="green_darken_2">#3CB572</color>
+    <color name="green_lighten">#BEDA00</color>
+    <color name="green_enabled">#3EBF4D</color>
+    <color name="yellow">#FBE238</color>
+    <color name="orange">#FFB11B</color>
+    <color name="pink">#ED2C6E</color>
+    <color name="red">#D9283A</color>
+
+    <!-- Color loader -->
+    <color name="loaderDefault">#D7D7D7</color>
+    <color name="loaderDarkerDefault">#B4B4B4</color>
+</resources>

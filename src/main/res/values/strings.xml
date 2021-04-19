@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2021 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="androidActivateButton">Activer</string>
+    <string name="androidPermissionButton">Permission</string>
+    <string name="androidPermissionTitle">Permission requise</string>
+    <string name="anErrorHasOccurred">Une erreur est survenue</string>
+    <string name="connect">Se connecter</string>
+    <string name="connectionError">Problème de connexion internet</string>
+    <string name="errorTitle">Erreur</string>
+    <string name="errorTitleLabel">Une erreur s’est produite</string>
+    <string name="errorUserAlreadyPresent">Erreur utilisateur déjà présent</string>
+    <string name="infomaniak" translatable="false">Infomaniak</string>
+    <string name="serverError">Erreur serveur</string>
+    <string name="startButton">Démarrer</string>
+    <string name="typeAdmin">Administrateur</string>
+    <string name="typeClient">Client</string>
+    <string name="typeNormal">Collaborateur</string>
+    <string name="typeOwner">Responsable légal</string>
+    <string name="updateAppTitle">Mise à jour requise</string>
+    <string name="updateButton">Mettre à jour</string>
+</resources>
