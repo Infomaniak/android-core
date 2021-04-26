@@ -103,11 +103,16 @@ object ApiController {
                     return@withContext apiToken
                 }
                 else -> {
-                    if (JsonParser.parseString(bodyResponse)
+                    var invalidGrant = false
+                    try {
+                        invalidGrant = JsonParser.parseString(bodyResponse)
                             .asJsonObject
                             .getAsJsonPrimitive("error")
                             .asString == "invalid_grant"
-                    ) {
+                    } catch (_: Exception) {
+                    }
+
+                    if (invalidGrant) {
                         tokenInterceptorListener.onRefreshTokenError()
                         throw RefreshTokenException()
                     }

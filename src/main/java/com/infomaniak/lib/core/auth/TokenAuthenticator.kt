@@ -32,7 +32,7 @@ class TokenAuthenticator(
     private val tokenInterceptorListener: TokenInterceptorListener
 ) : Authenticator {
 
-    override fun authenticate(route: Route?, response: Response): Request? {
+    override fun authenticate(route: Route?, response: Response): Request {
         return runBlocking(Dispatchers.IO) {
             mutex.withLock {
                 val request = response.request
