@@ -19,6 +19,7 @@ package com.infomaniak.lib.core.utils
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
@@ -28,6 +29,7 @@ import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 
 import com.infomaniak.lib.core.R
+import java.util.*
 
 object UtilsUi {
 
@@ -58,4 +60,20 @@ object UtilsUi {
         fragment.sharedElementReturnTransition = returnContainerTransform
     }
 
+    fun String.getInitials(): String {
+        this.split(" ").let { initials ->
+            val initialFirst = initials.firstOrNull()?.firstOrNull()?.toUpperCase() ?: ""
+            val initialSecond = initials.getOrNull(1)?.firstOrNull()?.toUpperCase() ?: ""
+            return@getInitials "$initialFirst$initialSecond"
+        }
+    }
+
+    fun Context.getBackgroundColorBasedOnId(id: Int): GradientDrawable {
+        val colorIndex = id % 9
+        val organizationColor = this.resources.getIntArray(R.array.organizationColors)[colorIndex]
+        return GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(organizationColor)
+        }
+    }
 }
