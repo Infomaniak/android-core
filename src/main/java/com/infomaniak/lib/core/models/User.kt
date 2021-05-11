@@ -44,4 +44,7 @@ data class User(
     @SerializedName("phone_reminder_validate") val phoneReminderValidate: String?,
     val phones: ArrayList<Phone>?,
     var organizations: ArrayList<OrganizationAccount>
-) : Parcelable
+) : Parcelable {
+
+    fun getInitials() = "${firstname.first()}${lastname.first()}"
+}
