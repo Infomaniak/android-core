@@ -34,7 +34,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <dimen name="appBarHeight">120dp</dimen>
+    <dimen name="appBarHeight">110dp</dimen>
     <dimen name="buttonHeight">60dp</dimen>
     <dimen name="cardViewRadius">6dp</dimen>
     <dimen name="marginLarge">48dp</dimen>
