@@ -44,7 +44,7 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:4.10.0-RC1'
 
     // UI things
-    api 'com.google.android.material:material:1.4.0-alpha02'
+    api 'com.google.android.material:material:1.4.0-beta01'
 
     api "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     api "androidx.navigation:navigation-ui-ktx:$navigation_version"
