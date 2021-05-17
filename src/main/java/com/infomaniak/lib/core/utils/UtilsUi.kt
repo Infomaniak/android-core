@@ -19,6 +19,12 @@ package com.infomaniak.lib.core.utils
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import androidx.annotation.IdRes
@@ -75,5 +81,23 @@ object UtilsUi {
             shape = GradientDrawable.OVAL
             setColor(organizationColor)
         }
+    }
+
+    fun Context.generateInitialsAvatarDrawable(size: Int = 350, initials: String, background: Drawable): Drawable {
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        background.setBounds(canvas.clipBounds.left, canvas.clipBounds.top, canvas.clipBounds.right, canvas.clipBounds.bottom)
+        background.draw(canvas)
+        Paint().apply {
+            isAntiAlias = true
+            textAlign = Paint.Align.CENTER
+            color = Color.WHITE
+            textSize = (size / 2).toFloat()
+
+            val xPos = canvas.width / 2
+            val yPos = (canvas.height / 2 - (descent() + ascent()) / 2)
+            canvas.drawText(initials, xPos.toFloat(), yPos, this)
+        }
+        return BitmapDrawable(this.resources, bitmap)
     }
 }
