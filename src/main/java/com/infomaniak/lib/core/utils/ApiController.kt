@@ -67,11 +67,6 @@ object ApiController {
         return executeRequest(url, method, requestBody, okHttpClient)
     }
 
-    inline fun <reified T> callApiNoInterceptor(url: String, method: ApiMethod, body: Any? = null): T {
-        val requestBody: RequestBody = generateRequestBody(body)
-        return executeRequest(url, method, requestBody, HttpClient.okHttpClientNoInterceptor)
-    }
-
     fun generateRequestBody(body: Any?): RequestBody {
         val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val toJson = if (body is JsonElement) body.toString() else gson.toJson(body)
