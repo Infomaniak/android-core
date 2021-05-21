@@ -68,8 +68,8 @@ object UtilsUi {
 
     fun String.getInitials(): String {
         this.split(" ").let { initials ->
-            val initialFirst = initials.firstOrNull()?.firstOrNull()?.toUpperCase() ?: ""
-            val initialSecond = initials.getOrNull(1)?.firstOrNull()?.toUpperCase() ?: ""
+            val initialFirst = initials.firstOrNull()?.firstOrNull()?.uppercaseChar() ?: ""
+            val initialSecond = initials.getOrNull(1)?.firstOrNull()?.uppercaseChar() ?: ""
             return@getInitials "$initialFirst$initialSecond"
         }
     }
