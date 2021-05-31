@@ -38,9 +38,9 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:3.9.0'
 
     // Http things
-    api 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+    api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.github.Infomaniak:android-login:2.3.0'
-    api 'com.google.code.gson:gson:2.8.6'
+    api 'com.google.code.gson:gson:2.8.7'
     api 'com.squareup.okhttp3:okhttp:4.10.0-RC1'
 
     // UI things
