@@ -44,7 +44,7 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:4.10.0-RC1'
 
     // UI things
-    api 'com.google.android.material:material:1.4.0-beta01'
+    api 'com.google.android.material:material:1.4.0-rc01'
 
     api "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     api "androidx.navigation:navigation-ui-ktx:$navigation_version"
@@ -60,5 +60,5 @@ dependencies {
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
 }
