@@ -19,8 +19,8 @@ package com.infomaniak.lib.core.networking
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.infomaniak.lib.core.BuildConfig
-import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenAuthenticator
+import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit

@@ -21,7 +21,6 @@ import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.lib.core.BuildConfig.LOGIN_ENDPOINT_URL
 import com.infomaniak.lib.core.InfomaniakCore
-
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.models.ApiResponse
@@ -95,10 +94,12 @@ object ApiController {
                     val apiToken = gson.fromJson(bodyResponse, ApiToken::class.java)
                     apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1000)
                     tokenInterceptorListener.onRefreshTokenSuccess(apiToken)
+                    response.close()
                     return@withContext apiToken
                 }
                 else -> {
                     var invalidGrant = false
+                    response.close()
                     try {
                         invalidGrant = JsonParser.parseString(bodyResponse)
                             .asJsonObject
@@ -142,7 +143,7 @@ object ApiController {
             val response = okHttpClient.newCall(request).execute()
             val bodyResponse = response.body?.string()
 
-            return when {
+            val result = when {
                 response.code >= 500 -> {
                     ApiResponse<Any>(result = ERROR, translatedError = R.string.serverError) as T
                 }
@@ -160,6 +161,8 @@ object ApiController {
                     }
                 }
             }
+            response.close()
+            return result
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
             return ApiResponse<Any>(result = ERROR, translatedError = R.string.anErrorHasOccurred) as T
