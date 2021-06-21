@@ -35,7 +35,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    androidTestImplementation 'org.mockito:mockito-android:3.9.0'
+    androidTestImplementation 'org.mockito:mockito-android:3.11.0'
 
     // Http things
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
