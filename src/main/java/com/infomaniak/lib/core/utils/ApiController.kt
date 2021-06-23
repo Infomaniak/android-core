@@ -87,32 +87,32 @@ object ApiController {
                 .build()
 
             val response = HttpClient.okHttpClientNoInterceptor.newCall(request).execute()
-            val bodyResponse = response.body?.string()
+            response.use {
+                val bodyResponse = it.body?.string()
 
-            when {
-                response.isSuccessful -> {
-                    val apiToken = gson.fromJson(bodyResponse, ApiToken::class.java)
-                    apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1000)
-                    tokenInterceptorListener.onRefreshTokenSuccess(apiToken)
-                    response.close()
-                    return@withContext apiToken
-                }
-                else -> {
-                    var invalidGrant = false
-                    response.close()
-                    try {
-                        invalidGrant = JsonParser.parseString(bodyResponse)
-                            .asJsonObject
-                            .getAsJsonPrimitive("error")
-                            .asString == "invalid_grant"
-                    } catch (_: Exception) {
+                when {
+                    it.isSuccessful -> {
+                        val apiToken = gson.fromJson(bodyResponse, ApiToken::class.java)
+                        apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1000)
+                        tokenInterceptorListener.onRefreshTokenSuccess(apiToken)
+                        return@withContext apiToken
                     }
+                    else -> {
+                        var invalidGrant = false
+                        try {
+                            invalidGrant = JsonParser.parseString(bodyResponse)
+                                .asJsonObject
+                                .getAsJsonPrimitive("error")
+                                .asString == "invalid_grant"
+                        } catch (_: Exception) {
+                        }
 
-                    if (invalidGrant) {
-                        tokenInterceptorListener.onRefreshTokenError()
-                        throw RefreshTokenException()
+                        if (invalidGrant) {
+                            tokenInterceptorListener.onRefreshTokenError()
+                            throw RefreshTokenException()
+                        }
+                        throw Exception(bodyResponse)
                     }
-                    throw Exception(bodyResponse)
                 }
             }
         }
@@ -141,28 +141,27 @@ object ApiController {
                 .build()
 
             val response = okHttpClient.newCall(request).execute()
-            val bodyResponse = response.body?.string()
-
-            val result = when {
-                response.code >= 500 -> {
-                    ApiResponse<Any>(result = ERROR, translatedError = R.string.serverError) as T
-                }
-                bodyResponse.isNullOrBlank() -> {
-                    ApiResponse<Any>(result = ERROR, translatedError = R.string.connectionError) as T
-                }
-                else -> {
-                    return gson.fromJson<T>(bodyResponse, object : TypeToken<T>() {}.type).apply {
-                        if (this is ApiResponse<*>) {
-                            val apiResponse = this as ApiResponse<*>
-                            if (apiResponse.result == ERROR) {
-                                apiResponse.translatedError = R.string.anErrorHasOccurred
+            response.use {
+                val bodyResponse = it.body?.string()
+                return when {
+                    it.code >= 500 -> {
+                        ApiResponse<Any>(result = ERROR, translatedError = R.string.serverError) as T
+                    }
+                    bodyResponse.isNullOrBlank() -> {
+                        ApiResponse<Any>(result = ERROR, translatedError = R.string.connectionError) as T
+                    }
+                    else -> {
+                        return gson.fromJson<T>(bodyResponse, object : TypeToken<T>() {}.type).apply {
+                            if (this is ApiResponse<*>) {
+                                val apiResponse = this as ApiResponse<*>
+                                if (apiResponse.result == ERROR) {
+                                    apiResponse.translatedError = R.string.anErrorHasOccurred
+                                }
                             }
                         }
                     }
                 }
             }
-            response.close()
-            return result
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
             return ApiResponse<Any>(result = ERROR, translatedError = R.string.anErrorHasOccurred) as T
