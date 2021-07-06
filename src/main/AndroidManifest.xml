@@ -1,15 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.infomaniak.lib.core">
-
-    <permission
-        android:name="com.infomaniak.permission.ASK_CREDENTIAL"
-        android:protectionLevel="signature" />
-    <permission
-        android:name="com.infomaniak.permission.RECEIVE_CREDENTIAL"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="com.infomaniak.permission.ASK_CREDENTIAL" />
-    <uses-permission android:name="com.infomaniak.permission.RECEIVE_CREDENTIAL" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-</manifest>
+<manifest package="com.infomaniak.lib.core" />
