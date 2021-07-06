@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.utils
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -27,6 +28,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
+import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -40,10 +42,12 @@ import java.util.*
 object UtilsUi {
 
     fun Context.openUrl(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(url)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+        try {
+            startActivity(intent)
+        } catch (activityNotFoundException: ActivityNotFoundException) {
+            Toast.makeText(this, getString(R.string.browserNotFound), Toast.LENGTH_LONG).show()
+        }
     }
 
     fun setupSharedElementTransition(fragment: Fragment, @IdRes startViewId: Int, @IdRes endViewId: Int) {

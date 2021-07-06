@@ -34,4 +34,5 @@
     <string name="typeOwner">Responsabile giuridico</string>
     <string name="updateAppTitle">Aggiornamento necessario</string>
     <string name="updateButton">Aggiorna</string>
+    <string name="browserNotFound">Nessun browser trovato</string>
 </resources>
