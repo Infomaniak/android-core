@@ -44,8 +44,9 @@ abstract class LoaderAdapter<T> : RecyclerView.Adapter<ViewHolder>() {
     }
 
     fun clean() {
+        val itemListSize = itemList.size
         itemList.clear()
-        notifyDataSetChanged()
+        notifyItemRangeRemoved(0, itemListSize)
     }
 
     fun showLoading() {
