@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.infomaniak.com/v3/mobile_login"'
@@ -60,5 +58,5 @@ dependencies {
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1'
 }
