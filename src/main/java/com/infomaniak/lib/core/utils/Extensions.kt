@@ -142,3 +142,8 @@ fun Context.startAppSettingsConfig() {
     intent.data = Uri.parse("package:$packageName")
     startActivity(intent)
 }
+
+fun Exception.isNetworkException() = this.javaClass.name.contains("java.net.", ignoreCase = true) ||
+        this.javaClass.name.contains("javax.net.", ignoreCase = true) ||
+        this is java.io.InterruptedIOException ||
+        (this is java.io.IOException && this.message == "stream closed") // Okhttp3

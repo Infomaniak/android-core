@@ -168,10 +168,7 @@ object ApiController {
         } catch (exception: Exception) {
             exception.printStackTrace()
 
-            val descriptionError = if (exception.javaClass.name.contains("java.net.", ignoreCase = true) ||
-                exception.javaClass.name.contains("javax.net.", ignoreCase = true) ||
-                exception.javaClass.name.contains("java.io.", ignoreCase = true)
-            ) {
+            val descriptionError = if (exception.isNetworkException()) {
                 R.string.connectionError
             } else {
                 R.string.anErrorHasOccurred
