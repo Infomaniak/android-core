@@ -45,6 +45,7 @@ const val FORMAT_DATE_DEFAULT = "dd.MM.yy"
 const val FORMAT_DATE_CLEAR_MONTH = "dd MMM yyyy"
 const val FORMAT_EVENT_DATE = "dd/MM/yyyy HH:mm"
 const val FORMAT_FULL_DATE = "EEEE dd MMMM yyyy"
+const val FORMAT_DATE_HOUR_MINUTE = "HH:mm"
 
 fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
     val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
