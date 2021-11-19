@@ -136,6 +136,7 @@ object ApiController {
                         ApiMethod.POST -> post(requestBody)
                         ApiMethod.DELETE -> delete(requestBody)
                         ApiMethod.PUT -> put(requestBody)
+                        ApiMethod.PATCH -> patch(requestBody)
                     }
                 }
                 .build()
@@ -178,6 +179,6 @@ object ApiController {
     }
 
     enum class ApiMethod {
-        GET, PUT, POST, DELETE
+        GET, PUT, POST, DELETE, PATCH
     }
 }
