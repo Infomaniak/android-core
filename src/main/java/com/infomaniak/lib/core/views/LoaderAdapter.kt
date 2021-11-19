@@ -15,16 +15,22 @@
  */
 package com.infomaniak.lib.core.views
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.infomaniak.lib.core.R
 
 abstract class LoaderAdapter<T> : RecyclerView.Adapter<ViewHolder>() {
 
+    private var showLoading = false
     val itemList: ArrayList<T> = ArrayList()
-    var totalPossible = 0
+    var isComplete = false
     var numberItemLoader = 3
         get() = if (field > 10) 10 else field
-    private var showLoading = true
+
+    abstract override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
+
+    abstract override fun onBindViewHolder(holder: ViewHolder, position: Int)
 
     override fun getItemCount() = itemList.size + if (showLoading) numberItemLoader else 0
 
@@ -33,14 +39,11 @@ abstract class LoaderAdapter<T> : RecyclerView.Adapter<ViewHolder>() {
         else VIEW_TYPE_LOADING
     }
 
-    abstract override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-
-    abstract override fun onBindViewHolder(holder: ViewHolder, position: Int)
-
     fun addAll(newItemList: ArrayList<T>) {
+        hideLoading()
         val beforeItemCount = itemCount
         itemList.addAll(newItemList)
-        hideLoading(beforeItemCount)
+        notifyItemRangeInserted(beforeItemCount, newItemList.size)
     }
 
     fun clean() {
@@ -52,39 +55,26 @@ abstract class LoaderAdapter<T> : RecyclerView.Adapter<ViewHolder>() {
     fun showLoading() {
         if (!showLoading) {
             showLoading = true
-            notifyItemRangeInserted(itemCount - numberItemLoader, itemCount)
+            notifyItemRangeInserted(itemList.size, numberItemLoader)
         }
     }
 
-    private fun hideLoading(beforeItemCount: Int) {
+    private fun hideLoading() {
         if (showLoading) {
             showLoading = false
-            if (beforeItemCount > itemCount) {
-                notifyItemRangeRemoved(beforeItemCount - numberItemLoader, beforeItemCount)
-            } else notifyItemRangeChanged(beforeItemCount - numberItemLoader, beforeItemCount)
+            notifyItemRangeRemoved(itemList.size, numberItemLoader)
         }
-        if (beforeItemCount < itemCount) notifyItemRangeInserted(beforeItemCount, itemCount)
-    }
-
-    fun loadMorePossible(): Boolean {
-        return itemList.size < totalPossible && !showLoading
-    }
-
-    fun showSearchResults(newItemList: ArrayList<T>) {
-        itemList.clear()
-        itemList.addAll(newItemList)
-        showLoading = false
-        notifyDataSetChanged()
-    }
-
-    fun removeSearchResults(oldItemList: ArrayList<T>) {
-        itemList.clear()
-        itemList.addAll(oldItemList)
-        notifyDataSetChanged()
     }
 
     companion object {
+
         const val VIEW_TYPE_LOADING = 1
         const val VIEW_TYPE_NORMAL = 2
+
+        fun createLoadingViewHolder(parent: ViewGroup): ViewHolder {
+            return ViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false)
+            )
+        }
     }
 }
