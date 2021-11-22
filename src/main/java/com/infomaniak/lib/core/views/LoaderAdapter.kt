@@ -26,7 +26,6 @@ abstract class LoaderAdapter<T> : RecyclerView.Adapter<ViewHolder>() {
     val itemList: ArrayList<T> = ArrayList()
     var isComplete = false
     var numberItemLoader = 3
-        get() = if (field > 10) 10 else field
 
     abstract override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
 
@@ -34,10 +33,7 @@ abstract class LoaderAdapter<T> : RecyclerView.Adapter<ViewHolder>() {
 
     override fun getItemCount() = itemList.size + if (showLoading) numberItemLoader else 0
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position < itemList.size) VIEW_TYPE_NORMAL
-        else VIEW_TYPE_LOADING
-    }
+    override fun getItemViewType(position: Int): Int = if (position < itemList.size) VIEW_TYPE_NORMAL else VIEW_TYPE_LOADING
 
     fun addAll(newItemList: ArrayList<T>) {
         hideLoading()
