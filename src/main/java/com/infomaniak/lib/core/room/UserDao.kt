@@ -29,6 +29,9 @@ interface UserDao {
     @Query("SELECT * FROM user")
     fun getAllSync(): List<User>
 
+    @Query("SELECT COUNT(id) FROM user")
+    fun count(): Int
+
     @Query("SELECT * FROM user LIMIT 1")
     suspend fun getFirst(): User?
 
