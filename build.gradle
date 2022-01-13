@@ -46,17 +46,17 @@ dependencies {
 
     api "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     api "androidx.navigation:navigation-ui-ktx:$navigation_version"
-    api 'androidx.appcompat:appcompat:1.4.0'
+    api 'androidx.appcompat:appcompat:1.4.1'
     api 'androidx.core:core-ktx:1.7.0'
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
     //LifeCycle
     api "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
 
-    def room_version = '2.4.0'
+    def room_version = '2.4.1'
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
 }
