@@ -30,7 +30,7 @@ class LoaderTextView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : AppCompatTextView(context, attrs, defStyleAttr), LoaderView {
-    private var loaderController: LoaderController? = null
+    private var loaderController: LoaderController = LoaderController(this)
     private var defaultColorResource = ContextCompat.getColor(context, R.color.loaderDefault)
 
     init {
@@ -42,24 +42,23 @@ class LoaderTextView @JvmOverloads constructor(
             }
             typedArray.recycle()
         }
-        loaderController = LoaderController(this)
     }
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
-        loaderController?.onSizeChanged()
+        loaderController.onSizeChanged()
     }
 
     fun resetLoader() {
         if (!TextUtils.isEmpty(text)) {
             super.setText(null)
-            loaderController?.startLoading()
+            loaderController.startLoading()
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        loaderController?.onDraw(
+        loaderController.onDraw(
             canvas, compoundPaddingLeft.toFloat(),
             compoundPaddingTop.toFloat(),
             compoundPaddingRight.toFloat(),
@@ -69,7 +68,7 @@ class LoaderTextView @JvmOverloads constructor(
 
     override fun setText(text: CharSequence, type: BufferType) {
         super.setText(text, type)
-        if (text.isNotBlank()) loaderController?.stopLoading()
+        if (text.isNotBlank()) loaderController.stopLoading()
     }
 
     override fun setRectColor(rectPaint: Paint) {
@@ -82,6 +81,6 @@ class LoaderTextView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        loaderController?.removeAnimatorUpdateListener()
+        loaderController.removeAnimatorUpdateListener()
     }
 }
