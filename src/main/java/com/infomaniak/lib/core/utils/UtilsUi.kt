@@ -35,9 +35,7 @@ import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
-
 import com.infomaniak.lib.core.R
-import java.util.*
 
 object UtilsUi {
 
