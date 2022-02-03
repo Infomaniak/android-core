@@ -26,7 +26,7 @@ object InfomaniakCore {
     lateinit var appVersionName: String
     lateinit var bearerToken: String
     var appVersionCode: Int = -1
-    var clientID: String? = null
+    var clientId: String? = null
     var credentialManager: CredentialManager? = null
     var isDebug: Boolean = false
 
@@ -34,14 +34,14 @@ object InfomaniakCore {
         appVersionCode: Int = -1,
         appVersionName: String,
         bearerToken: String = "",
-        clientID: String? = null,
+        clientId: String? = null,
         credentialManager: CredentialManager? = null,
         isDebug: Boolean = false
     ) {
         this.appVersionCode = appVersionCode
         this.appVersionName = appVersionName
         this.bearerToken = bearerToken
-        this.clientID = clientID
+        this.clientId = clientId
         this.credentialManager = credentialManager
         this.isDebug = isDebug
     }

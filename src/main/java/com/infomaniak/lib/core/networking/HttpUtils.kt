@@ -37,7 +37,7 @@ object HttpUtils {
                 add("Content-type", it)
             }
             deviceIdentifier?.let {
-                add("Device-Identifier", loadUniqueID(deviceIdentifier))
+                add("Device-Identifier", loadUniqueId(deviceIdentifier))
             }
         }.run {
             build()
@@ -63,23 +63,23 @@ object HttpUtils {
         return preferredLocaleList
     }
 
-    private fun loadUniqueID(context: Context): String {
+    private fun loadUniqueId(context: Context): String {
         val sharedPreferences =
             context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
-        var uniqueID = sharedPreferences.getString(deviceIdentifier, "") ?: ""
-        if (uniqueID == "") {
-            uniqueID = generateUniqueID(context)
+        var uniqueId = sharedPreferences.getString(deviceIdentifier, "") ?: ""
+        if (uniqueId == "") {
+            uniqueId = generateUniqueId(context)
         }
-        return uniqueID
+        return uniqueId
     }
 
-    private fun generateUniqueID(context: Context): String {
+    private fun generateUniqueId(context: Context): String {
         val sharedPreferences =
             context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        val uniqueID = UUID.randomUUID().toString()
-        editor.putString(deviceIdentifier, uniqueID)
+        val uniqueId = UUID.randomUUID().toString()
+        editor.putString(deviceIdentifier, uniqueId)
         editor.apply()
-        return uniqueID
+        return uniqueId
     }
 }
