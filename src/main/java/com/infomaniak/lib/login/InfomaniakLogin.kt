@@ -1,6 +1,5 @@
 package com.infomaniak.lib.login
 
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
@@ -11,10 +10,10 @@ import android.net.Uri
 import android.util.Base64
 import android.util.Log
 import android.webkit.URLUtil
+import androidx.activity.result.ActivityResultLauncher
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsServiceConnection
-import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
@@ -94,20 +93,16 @@ class InfomaniakLogin(
 
     /**
      * Start WebView login
-     * @param requestCode : activity for result request code
+     * @param resultLauncher send back the result
      */
-    fun startWebViewLogin(requestCode: Int, fragment: Fragment? = null) {
+    fun startWebViewLogin(resultLauncher: ActivityResultLauncher<Intent>) {
         val codeChallenge = generatePkceCodes()
         val url = generateUrl(codeChallenge)
         val intent = Intent(context, WebViewLoginActivity::class.java).apply {
             putExtra(LOGIN_URL_TAG, url)
             putExtra(WebViewLoginActivity.APPLICATION_ID_TAG, appUID)
         }
-        if (fragment == null) {
-            (context as Activity).startActivityForResult(intent, requestCode)
-        } else {
-            fragment.startActivityForResult(intent, requestCode)
-        }
+        resultLauncher.launch(intent)
     }
 
     fun getCodeVerifier(): String {
