@@ -22,6 +22,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import com.infomaniak.lib.core.utils.firstOrEmpty
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.android.parcel.Parcelize
 
@@ -45,6 +46,5 @@ data class User(
     val phones: ArrayList<Phone>?,
     var organizations: ArrayList<OrganizationAccount>
 ) : Parcelable {
-
-    fun getInitials() = "${firstname.first()}${lastname.first()}"
+    fun getInitials() = "${firstname.firstOrEmpty()}${lastname.firstOrEmpty()}"
 }
