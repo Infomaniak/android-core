@@ -112,7 +112,7 @@ fun RecyclerView.setPagination(
     } ?: throw Exception("This RecyclerView doesn't contains a LinearLayoutManager")
 }
 
-fun Context.gotToPlaystore() {
+fun Context.goToPlaystore() {
     try {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
     } catch (anfe: ActivityNotFoundException) {
