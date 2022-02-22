@@ -57,12 +57,29 @@ object HttpClient {
             }
     }
 
+    val okHttpClientLongTimeoutNoInterceptor: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .apply {
+                if (BuildConfig.DEBUG) {
+                    addNetworkInterceptor(StethoInterceptor())
+                }
+                readTimeout(2, TimeUnit.MINUTES)
+                writeTimeout(2, TimeUnit.MINUTES)
+                connectTimeout(2, TimeUnit.MINUTES)
+                callTimeout(2, TimeUnit.MINUTES)
+            }.run {
+                build()
+            }
+    }
+
     val okHttpClientLongTimeout: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .apply {
                 if (BuildConfig.DEBUG) {
                     addNetworkInterceptor(StethoInterceptor())
                 }
+                addInterceptor(TokenInterceptor(tokenInterceptorListener))
+                authenticator(TokenAuthenticator(tokenInterceptorListener))
                 readTimeout(2, TimeUnit.MINUTES)
                 writeTimeout(2, TimeUnit.MINUTES)
                 connectTimeout(2, TimeUnit.MINUTES)
