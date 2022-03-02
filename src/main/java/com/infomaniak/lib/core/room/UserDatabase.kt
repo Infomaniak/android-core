@@ -26,7 +26,7 @@ import com.infomaniak.lib.core.models.OrganizationAccount
 import com.infomaniak.lib.core.models.Phone
 import com.infomaniak.lib.core.models.User
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class], version = 1, exportSchema = false)
 @TypeConverters(OrganizationAccountConverter::class)
 abstract class UserDatabase : RoomDatabase() {
 

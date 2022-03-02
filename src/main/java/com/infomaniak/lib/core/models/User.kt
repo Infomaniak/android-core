@@ -24,7 +24,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.infomaniak.lib.core.utils.firstOrEmpty
 import com.infomaniak.lib.login.ApiToken
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity

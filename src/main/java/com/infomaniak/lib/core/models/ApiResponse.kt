@@ -18,7 +18,7 @@
 package com.infomaniak.lib.core.models
 
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.RawValue
+import kotlinx.parcelize.RawValue
 
 data class ApiResponse<T>(
     val result: Status = Status.UNKNOWN,
