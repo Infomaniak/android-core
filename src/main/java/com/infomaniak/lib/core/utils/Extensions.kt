@@ -88,28 +88,28 @@ fun RecyclerView.setPagination(
     whenLoadMoreIsPossible: () -> Unit,
     findFirstVisibleItemPosition: (() -> Int)? = null
 ): RecyclerView.OnScrollListener {
-    layoutManager?.let {
-        val listener = object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) {
-                    val visibleItemCount = it.childCount
-                    val totalItemCount = it.itemCount
-                    val pastVisibleItems = findFirstVisibleItemPosition?.invoke()
-                        ?: (it as? LinearLayoutManager)?.findFirstVisibleItemPosition()?.plus(3)
-                        ?: throw MissingArgumentException("Missing findFirstVisibleItemPosition callback")
-                    val isLastElement = (visibleItemCount + pastVisibleItems) >= totalItemCount
+    if (layoutManager == null) throw Exception("This RecyclerView doesn't contains a LinearLayoutManager")
 
-                    if (isLastElement) {
-                        this@setPagination.post {
-                            whenLoadMoreIsPossible()
-                        }
+    val listener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) = with(recyclerView.layoutManager!!) {
+            if (dy > 0) {
+                val visibleItemCount = childCount
+                val totalItemCount = itemCount
+                val pastVisibleItems = findFirstVisibleItemPosition?.invoke()
+                    ?: (this as? LinearLayoutManager)?.findFirstVisibleItemPosition()?.plus(3)
+                    ?: throw MissingArgumentException("Missing findFirstVisibleItemPosition callback")
+                val isLastElement = (visibleItemCount + pastVisibleItems) >= totalItemCount
+
+                if (isLastElement) {
+                    this@setPagination.post {
+                        whenLoadMoreIsPossible()
                     }
                 }
             }
         }
-        addOnScrollListener(listener)
-        return listener
-    } ?: throw Exception("This RecyclerView doesn't contains a LinearLayoutManager")
+    }
+    addOnScrollListener(listener)
+    return listener
 }
 
 fun Context.goToPlaystore() {
