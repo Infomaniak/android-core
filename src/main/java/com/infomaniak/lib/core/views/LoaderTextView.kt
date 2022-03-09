@@ -19,7 +19,6 @@ package com.infomaniak.lib.core.views
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.text.TextUtils
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -35,12 +34,16 @@ class LoaderTextView @JvmOverloads constructor(
 
     init {
         attrs?.let {
-            val typedArray = context.obtainStyledAttributes(it, R.styleable.LoaderTextView)
-            if (typedArray.getBoolean(R.styleable.LoaderTextView_use_dark_color, false)) {
-                defaultColorResource =
-                    ContextCompat.getColor(context, R.color.loaderDarkerDefault)
+            with(context.obtainStyledAttributes(it, R.styleable.LoaderTextView)) {
+                if (getBoolean(R.styleable.LoaderTextView_loader_useDarkColor, false)) {
+                    defaultColorResource = ContextCompat.getColor(context, R.color.loaderDarkerDefault)
+                }
+                loaderController.corners = getDimensionPixelSize(
+                    R.styleable.LoaderTextView_loader_corner,
+                    LoaderConstant.CORNER_DEFAULT
+                )
+                recycle()
             }
-            typedArray.recycle()
         }
     }
 
@@ -50,10 +53,8 @@ class LoaderTextView @JvmOverloads constructor(
     }
 
     fun resetLoader() {
-        if (!TextUtils.isEmpty(text)) {
-            super.setText(null)
-            loaderController.startLoading()
-        }
+        text = ""
+        loaderController.startLoading()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -76,7 +77,7 @@ class LoaderTextView @JvmOverloads constructor(
     }
 
     override fun valueSet(): Boolean {
-        return !TextUtils.isEmpty(text)
+        return text.isNotEmpty()
     }
 
     override fun onDetachedFromWindow() {

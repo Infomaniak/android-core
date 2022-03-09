@@ -28,10 +28,10 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
     private var linearGradient: LinearGradient? = null
     private var progress = 0f
     private lateinit var valueAnimator: ValueAnimator
-    private var widthWeight = LoaderConstant.MAX_WEIGHT
-    private var heightWeight = LoaderConstant.MAX_WEIGHT
-    private var useGradient = LoaderConstant.USE_GRADIENT_DEFAULT
-    private var corners = LoaderConstant.CORNER_DEFAULT
+    var widthWeight = LoaderConstant.MAX_WEIGHT
+    var heightWeight = LoaderConstant.MAX_WEIGHT
+    var useGradient = LoaderConstant.USE_GRADIENT_DEFAULT
+    var corners = LoaderConstant.CORNER_DEFAULT
 
     companion object {
         private const val MAX_COLOR_CONSTANT_VALUE = 255
@@ -93,22 +93,6 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
             init()
             valueAnimator.start()
         }
-    }
-
-    fun setHeightWeight(heightWeight: Float) {
-        this.heightWeight = validateWeight(heightWeight)
-    }
-
-    fun setWidthWeight(widthWeight: Float) {
-        this.widthWeight = validateWeight(widthWeight)
-    }
-
-    fun setUseGradient(useGradient: Boolean) {
-        this.useGradient = useGradient
-    }
-
-    fun setCorners(corners: Int) {
-        this.corners = corners
     }
 
     private fun validateWeight(weight: Float): Float {

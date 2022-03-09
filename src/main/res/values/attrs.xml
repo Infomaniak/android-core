@@ -18,6 +18,7 @@
 -->
 <resources>
     <declare-styleable name="LoaderTextView">
-        <attr name="use_dark_color" format="boolean" />
+        <attr name="loader_corner" format="dimension" />
+        <attr name="loader_useDarkColor" format="boolean" />
     </declare-styleable>
 </resources>
