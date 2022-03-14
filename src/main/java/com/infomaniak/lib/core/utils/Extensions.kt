@@ -86,7 +86,8 @@ fun MaterialButton.hideProgress(@StringRes text: Int) {
  */
 fun RecyclerView.setPagination(
     whenLoadMoreIsPossible: () -> Unit,
-    findFirstVisibleItemPosition: (() -> Int)? = null
+    findFirstVisibleItemPosition: (() -> Int)? = null,
+    triggerOffset: Int = 3
 ): RecyclerView.OnScrollListener {
     if (layoutManager == null) throw Exception("This RecyclerView doesn't contains a LinearLayoutManager")
 
@@ -96,7 +97,7 @@ fun RecyclerView.setPagination(
                 val visibleItemCount = childCount
                 val totalItemCount = itemCount
                 val pastVisibleItems = findFirstVisibleItemPosition?.invoke()
-                    ?: (this as? LinearLayoutManager)?.findFirstVisibleItemPosition()?.plus(3)
+                    ?: (this as? LinearLayoutManager)?.findFirstVisibleItemPosition()?.plus(triggerOffset)
                     ?: throw MissingArgumentException("Missing findFirstVisibleItemPosition callback")
                 val isLastElement = (visibleItemCount + pastVisibleItems) >= totalItemCount
 
