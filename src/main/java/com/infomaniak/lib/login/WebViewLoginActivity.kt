@@ -72,6 +72,9 @@ class WebViewLoginActivity : AppCompatActivity() {
                     handler: SslErrorHandler?,
                     error: SslError?
                 ) {
+                    error?.certificate?.apply {
+                        if (issuedBy?.cName == "localhost" && issuedTo?.cName == "localhost") return
+                    }
                     errorResult(InfomaniakLogin.SSL_ERROR_CODE)
                 }
 
