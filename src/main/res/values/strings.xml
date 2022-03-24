@@ -16,23 +16,24 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="androidActivateButton">Activer</string>
-    <string name="androidPermissionButton">Permission</string>
-    <string name="androidPermissionTitle">Permission requise</string>
-    <string name="anErrorHasOccurred">Une erreur est survenue</string>
-    <string name="browserNotFound">Aucun navigateur trouvé</string>
-    <string name="connect">Se connecter</string>
-    <string name="connectionError">Problème de connexion internet</string>
-    <string name="errorTitle">Erreur</string>
-    <string name="errorTitleLabel">Une erreur s’est produite</string>
-    <string name="errorUserAlreadyPresent">Erreur utilisateur déjà présent</string>
     <string name="infomaniak" translatable="false">Infomaniak</string>
-    <string name="serverError">Erreur serveur</string>
-    <string name="startButton">Démarrer</string>
-    <string name="typeAdmin">Administrateur</string>
+
+    <string name="anErrorHasOccurred">An error has occurred</string>
+    <string name="androidActivateButton">Activate</string>
+    <string name="androidPermissionButton">Permission</string>
+    <string name="androidPermissionTitle">Permission required</string>
+    <string name="browserNotFound">No browser found</string>
+    <string name="connect">Login</string>
+    <string name="connectionError">Internet connection problem</string>
+    <string name="errorTitle">Error</string>
+    <string name="errorTitleLabel">An error occurred</string>
+    <string name="errorUserAlreadyPresent">Error, User already present</string>
+    <string name="serverError">Server Error</string>
+    <string name="startButton">Get started</string>
+    <string name="typeAdmin">Administrator</string>
     <string name="typeClient">Client</string>
-    <string name="typeNormal">Collaborateur</string>
-    <string name="typeOwner">Responsable légal</string>
-    <string name="updateAppTitle">Mise à jour requise</string>
-    <string name="updateButton">Mettre à jour</string>
+    <string name="typeNormal">Staff member</string>
+    <string name="typeOwner">Legally responsible</string>
+    <string name="updateAppTitle">Update required</string>
+    <string name="updateButton">Update</string>
 </resources>
