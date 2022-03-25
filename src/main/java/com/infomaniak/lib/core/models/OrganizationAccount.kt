@@ -30,10 +30,14 @@ data class OrganizationAccount(
     val type: Type,
     val billing: Boolean,
     val mailing: Boolean,
-    @SerializedName("no_access") val noAccess: Boolean,
-    @SerializedName("workspace_only") val workspaceOnly: Boolean,
-    @SerializedName("billing_mailing") val billingMailing: Boolean,
-    @SerializedName("legal_entity_type") val legalEntityType: String
+    @SerializedName("no_access")
+    val noAccess: Boolean,
+    @SerializedName("workspace_only")
+    val workspaceOnly: Boolean,
+    @SerializedName("billing_mailing")
+    val billingMailing: Boolean,
+    @SerializedName("legal_entity_type")
+    val legalEntityType: String
 ) : Parcelable {
 
     enum class Type {

@@ -19,7 +19,7 @@ package com.infomaniak.lib.core.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.infomaniak.lib.core.models.User
+import com.infomaniak.lib.core.models.user.User
 
 @Dao
 interface UserDao {

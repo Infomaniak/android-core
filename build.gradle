@@ -13,6 +13,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.infomaniak.com/v3/mobile_login"'
         buildConfigField 'String', 'LOGIN_ENDPOINT_URL', '"https://login.infomaniak.com/"'
+        buildConfigField 'String', 'INFOMANIAK_API', '"https://api.infomaniak.com/2/"'
+
+        kapt { arguments { arg("room.schemaLocation", "$projectDir/schemas") } }
     }
 
     compileOptions {
@@ -20,9 +23,7 @@ android {
         targetCompatibility rootProject.ext.java_version
     }
 
-    kotlinOptions {
-        jvmTarget = rootProject.ext.java_version
-    }
+    kotlinOptions { jvmTarget = rootProject.ext.java_version }
 }
 
 dependencies {

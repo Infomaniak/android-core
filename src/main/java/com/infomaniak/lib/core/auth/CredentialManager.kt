@@ -18,7 +18,7 @@
 package com.infomaniak.lib.core.auth
 
 import androidx.lifecycle.LiveData
-import com.infomaniak.lib.core.models.User
+import com.infomaniak.lib.core.models.user.User
 
 /**
  * CredentialManager interface : Implement the essential methods to get Users and their Credentials to pass

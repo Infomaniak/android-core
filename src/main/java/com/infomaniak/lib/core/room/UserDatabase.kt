@@ -19,18 +19,37 @@ package com.infomaniak.lib.core.room
 
 import android.content.Context
 import androidx.room.*
+import androidx.room.migration.AutoMigrationSpec
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.infomaniak.lib.core.models.Email
 import com.infomaniak.lib.core.models.OrganizationAccount
-import com.infomaniak.lib.core.models.Phone
-import com.infomaniak.lib.core.models.User
+import com.infomaniak.lib.core.models.user.Email
+import com.infomaniak.lib.core.models.user.Phone
+import com.infomaniak.lib.core.models.user.User
+import com.infomaniak.lib.core.models.user.preferences.security.AuthDevices
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
-@TypeConverters(OrganizationAccountConverter::class)
+@Database(
+    entities = [User::class],
+    autoMigrations = [
+        AutoMigration(
+            from = 1, to = 2,
+            spec = UserDatabase.UserV2Migration::class
+        )
+    ],
+    version = 2,
+    exportSchema = true
+)
+@TypeConverters(UserConverter::class)
 abstract class UserDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+
+    @DeleteColumn(tableName = "User", columnName = "doubleAuth")
+    @DeleteColumn(tableName = "User", columnName = "doubleAuthMethod")
+    @DeleteColumn(tableName = "User", columnName = "emailReminderValidate")
+    @DeleteColumn(tableName = "User", columnName = "emailValidate")
+    @DeleteColumn(tableName = "User", columnName = "phoneReminderValidate")
+    class UserV2Migration : AutoMigrationSpec
 
     companion object {
         @Volatile
@@ -53,24 +72,31 @@ abstract class UserDatabase : RoomDatabase() {
     }
 }
 
-class OrganizationAccountConverter {
-    private val organizationAccountsType = object : TypeToken<ArrayList<OrganizationAccount>>() {}.type
-    private val phonesType = object : TypeToken<ArrayList<Phone>>() {}.type
-    private val emailsType = object : TypeToken<ArrayList<Email>>() {}.type
+class UserConverter {
     private val gson: Gson by lazy { Gson() }
 
+    private val authDevicesType = object : TypeToken<ArrayList<AuthDevices>>() {}.type
+    private val emailsType = object : TypeToken<ArrayList<Email>>() {}.type
+    private val organizationAccountsType = object : TypeToken<ArrayList<OrganizationAccount>>() {}.type
+    private val phonesType = object : TypeToken<ArrayList<Phone>>() {}.type
+
     @TypeConverter
-    fun toOrganizationAccount(json: String): ArrayList<OrganizationAccount> {
-        return gson.fromJson(json, organizationAccountsType)
+    fun authDevicesToJson(authDevices: ArrayList<AuthDevices>?): String {
+        return gson.toJson(authDevices, authDevicesType)
     }
 
     @TypeConverter
-    fun toPhones(json: String): ArrayList<Phone>? {
-        return gson.fromJson(json, phonesType)
+    fun toauthDevices(json: String?): ArrayList<AuthDevices>? {
+        return gson.fromJson(json, authDevicesType)
     }
 
     @TypeConverter
-    fun toEmails(json: String): ArrayList<Email>? {
+    fun emailsToJson(emails: ArrayList<Email>?): String {
+        return gson.toJson(emails, emailsType)
+    }
+
+    @TypeConverter
+    fun toEmails(json: String?): ArrayList<Email>? {
         return gson.fromJson(json, emailsType)
     }
 
@@ -80,12 +106,17 @@ class OrganizationAccountConverter {
     }
 
     @TypeConverter
+    fun toOrganizationAccount(json: String?): ArrayList<OrganizationAccount> {
+        return gson.fromJson(json, organizationAccountsType)
+    }
+
+    @TypeConverter
     fun phonesToJson(phones: ArrayList<Phone>?): String {
         return gson.toJson(phones, phonesType)
     }
 
     @TypeConverter
-    fun emailsToJson(emails: ArrayList<Email>?): String {
-        return gson.toJson(emails, emailsType)
+    fun toPhones(json: String?): ArrayList<Phone>? {
+        return gson.fromJson(json, phonesType)
     }
 }
