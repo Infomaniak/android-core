@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "1dd645a9ba245b0757e280d59860231d",
+    "identityHash": "feccdd0e317c1733722985ce7cb7b973",
     "entities": [
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `displayName` TEXT, `firstname` TEXT NOT NULL, `lastname` TEXT NOT NULL, `email` TEXT NOT NULL, `avatar` TEXT, `login` TEXT NOT NULL, `phones` TEXT, `emails` TEXT, `organizations` TEXT NOT NULL, `preferences_security_score` INTEGER DEFAULT 0, `preferences_security_has_recovery_email` INTEGER DEFAULT false, `preferences_security_has_valid_phone` INTEGER DEFAULT false, `preferences_security_email_validated_at` INTEGER DEFAULT 0, `preferences_security_otp` INTEGER DEFAULT false, `preferences_security_sms` INTEGER DEFAULT false, `preferences_security_sms_phone` TEXT DEFAULT '', `preferences_security_yubikey` INTEGER DEFAULT false, `preferences_security_infomaniak_application` INTEGER DEFAULT false, `preferences_security_double_auth` INTEGER DEFAULT false, `preferences_security_remaining_rescue_code` INTEGER DEFAULT 0, `preferences_security_last_login_at` INTEGER DEFAULT 0, `preferences_security_date_last_changed_password` INTEGER DEFAULT 0, `preferences_security_double_auth_method` TEXT DEFAULT '', `preferences_security_authDevices` TEXT, `preferences_organizationPreference_currentOrganizationId` INTEGER NOT NULL DEFAULT 0, `preferences_organizationPreference_lastLoginAt` INTEGER NOT NULL DEFAULT 0, `preferences_language_shortName` TEXT NOT NULL DEFAULT '', `preferences_language_locale` TEXT NOT NULL DEFAULT '', `preferences_language_shortLocale` TEXT NOT NULL DEFAULT '', `preferences_language_id` INTEGER NOT NULL DEFAULT 0, `preferences_language_name` TEXT NOT NULL DEFAULT '', `preferences_country_shortName` TEXT NOT NULL DEFAULT '', `preferences_country_isEnabled` INTEGER NOT NULL DEFAULT false, `preferences_country_id` INTEGER NOT NULL DEFAULT 0, `preferences_country_name` TEXT NOT NULL DEFAULT '', `preferences_timezone_gmt` TEXT NOT NULL DEFAULT '', `preferences_timezone_id` INTEGER NOT NULL DEFAULT 0, `preferences_timezone_name` TEXT NOT NULL DEFAULT '', `accessToken` TEXT NOT NULL, `refreshToken` TEXT NOT NULL, `tokenType` TEXT NOT NULL, `expiresIn` INTEGER NOT NULL, `userId` INTEGER NOT NULL, `scope` TEXT, `expiresAt` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `displayName` TEXT, `firstname` TEXT NOT NULL, `lastname` TEXT NOT NULL, `email` TEXT NOT NULL, `avatar` TEXT, `login` TEXT NOT NULL, `phones` TEXT, `emails` TEXT, `organizations` TEXT NOT NULL, `preferences_security_score` INTEGER DEFAULT 0, `preferences_security_has_recovery_email` INTEGER DEFAULT false, `preferences_security_has_valid_phone` INTEGER DEFAULT false, `preferences_security_email_validated_at` INTEGER DEFAULT 0, `preferences_security_otp` INTEGER DEFAULT false, `preferences_security_sms` INTEGER DEFAULT false, `preferences_security_sms_phone` TEXT DEFAULT '', `preferences_security_yubikey` INTEGER DEFAULT false, `preferences_security_infomaniak_application` INTEGER DEFAULT false, `preferences_security_double_auth` INTEGER DEFAULT false, `preferences_security_remaining_rescue_code` INTEGER DEFAULT 0, `preferences_security_last_login_at` INTEGER DEFAULT 0, `preferences_security_date_last_changed_password` INTEGER DEFAULT 0, `preferences_security_double_auth_method` TEXT DEFAULT '', `preferences_security_authDevices` TEXT, `preferences_organizationPreference_currentOrganizationId` INTEGER NOT NULL DEFAULT 0, `preferences_organizationPreference_lastLoginAt` INTEGER NOT NULL DEFAULT 0, `preferences_language_shortName` TEXT NOT NULL DEFAULT '', `preferences_language_locale` TEXT NOT NULL DEFAULT '', `preferences_language_shortLocale` TEXT NOT NULL DEFAULT '', `preferences_language_id` INTEGER NOT NULL DEFAULT 0, `preferences_language_name` TEXT NOT NULL DEFAULT '', `preferences_country_shortName` TEXT NOT NULL DEFAULT '', `preferences_country_isEnabled` INTEGER NOT NULL DEFAULT false, `preferences_country_id` INTEGER NOT NULL DEFAULT 0, `preferences_country_name` TEXT NOT NULL DEFAULT '', `preferences_timezone_gmt` TEXT DEFAULT '', `preferences_timezone_id` INTEGER DEFAULT 0, `preferences_timezone_name` TEXT DEFAULT '', `accessToken` TEXT NOT NULL, `refreshToken` TEXT NOT NULL, `tokenType` TEXT NOT NULL, `expiresIn` INTEGER NOT NULL, `userId` INTEGER NOT NULL, `scope` TEXT, `expiresAt` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -253,21 +253,21 @@
             "fieldPath": "preferences.timezone.gmt",
             "columnName": "preferences_timezone_gmt",
             "affinity": "TEXT",
-            "notNull": true,
+            "notNull": false,
             "defaultValue": "''"
           },
           {
             "fieldPath": "preferences.timezone.id",
             "columnName": "preferences_timezone_id",
             "affinity": "INTEGER",
-            "notNull": true,
+            "notNull": false,
             "defaultValue": "0"
           },
           {
             "fieldPath": "preferences.timezone.name",
             "columnName": "preferences_timezone_name",
             "affinity": "TEXT",
-            "notNull": true,
+            "notNull": false,
             "defaultValue": "''"
           },
           {
@@ -326,7 +326,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1dd645a9ba245b0757e280d59860231d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'feccdd0e317c1733722985ce7cb7b973')"
     ]
   }
 }

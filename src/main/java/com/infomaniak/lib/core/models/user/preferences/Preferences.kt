@@ -35,5 +35,5 @@ data class Preferences(
     @Embedded(prefix = "country_")
     var country: Country,
     @Embedded(prefix = "timezone_")
-    var timezone: TimeZone,
+    var timezone: TimeZone?,
 ) : Parcelable
