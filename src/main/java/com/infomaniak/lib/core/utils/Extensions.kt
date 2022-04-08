@@ -93,7 +93,7 @@ fun RecyclerView.setPagination(
 
     val listener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) = with(recyclerView.layoutManager!!) {
-            if (dy > 0) {
+            if (dy >= 0) {
                 val visibleItemCount = childCount
                 val totalItemCount = itemCount
                 val pastVisibleItems = findFirstVisibleItemPosition?.invoke()
