@@ -48,6 +48,8 @@ const val FORMAT_EVENT_DATE = "dd/MM/yyyy HH:mm"
 const val FORMAT_FULL_DATE = "EEEE dd MMMM yyyy"
 const val FORMAT_NEW_FILE = "yyyyMMdd_HHmmss"
 
+fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
+
 fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
     val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
     return simpleDateFormat.format(this)
