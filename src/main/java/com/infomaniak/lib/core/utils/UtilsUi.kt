@@ -28,7 +28,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -44,7 +43,7 @@ object UtilsUi {
         try {
             startActivity(intent)
         } catch (activityNotFoundException: ActivityNotFoundException) {
-            Toast.makeText(this, getString(R.string.browserNotFound), Toast.LENGTH_LONG).show()
+            showToast(R.string.browserNotFound)
         }
     }
 

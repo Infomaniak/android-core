@@ -26,6 +26,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
 import android.provider.Settings
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -58,6 +59,14 @@ fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
 fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+fun Context.showToast(title: String, duration: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(this, title, duration).show()
+}
+
+fun Context.showToast(title: Int, duration: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(this, title, duration).show()
+}
 
 fun MaterialButton.initProgress(lifecycle: LifecycleOwner) {
     apply {
