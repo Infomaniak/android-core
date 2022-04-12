@@ -29,7 +29,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
 
     // Test things
     testImplementation 'junit:junit:4.13.2'
@@ -50,7 +50,7 @@ dependencies {
     api 'com.google.android.material:material:1.5.0'
     api 'com.google.code.gson:gson:2.9.0'
 
-    def coil_version = '2.0.0-rc02'
+    def coil_version = '2.0.0-rc03'
     api "io.coil-kt:coil-gif:$coil_version"
     api "io.coil-kt:coil:$coil_version"
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'

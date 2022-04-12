@@ -26,10 +26,12 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
 import android.provider.Settings
+import android.view.Window
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -164,3 +166,7 @@ fun Exception.isNetworkException() = this.javaClass.name.contains("java.net.", i
         (this is java.io.IOException && this.message == "stream closed") // Okhttp3
 
 fun String.firstOrEmpty(): Char = if (isNotEmpty()) first() else Char.MIN_VALUE
+
+fun Window.toggleEdgeToEdge(enabled: Boolean) {
+    WindowCompat.setDecorFitsSystemWindows(this, !enabled)
+}
