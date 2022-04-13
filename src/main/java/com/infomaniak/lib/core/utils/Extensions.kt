@@ -25,7 +25,9 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
+import android.view.View
 import android.view.Window
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -169,4 +171,33 @@ fun String.firstOrEmpty(): Char = if (isNotEmpty()) first() else Char.MIN_VALUE
 
 fun Window.toggleEdgeToEdge(enabled: Boolean) {
     WindowCompat.setDecorFitsSystemWindows(this, !enabled)
+}
+
+fun Window.lightStatusBar(enabled: Boolean) {
+    // TODO: DOESN'T WORK
+    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    //     if (enabled) {
+    //         insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
+    //     } else {
+    //         insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
+    //     }
+    // } else
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (enabled) {
+            decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+        }
+    }
+}
+
+fun Window.lightNavigationBar(enabled: Boolean) {
+    //TODO Android 11
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (enabled) {
+            decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        } else {
+            decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+        }
+    }
 }
