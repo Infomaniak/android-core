@@ -214,3 +214,5 @@ fun View.showKeyboard() {
         }
     }
 }
+
+fun String.capitalizeFirstChar(): String = replaceFirstChar { char -> char.titlecase() }
