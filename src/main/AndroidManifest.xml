@@ -1,1 +1,5 @@
-<manifest package="com.infomaniak.lib.core" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.infomaniak.lib.core">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+</manifest>
