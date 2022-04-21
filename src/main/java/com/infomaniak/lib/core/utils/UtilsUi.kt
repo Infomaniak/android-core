@@ -67,14 +67,6 @@ object UtilsUi {
         fragment.sharedElementReturnTransition = returnContainerTransform
     }
 
-    fun String.getInitials(): String {
-        this.split(" ").let { initials ->
-            val initialFirst = initials.firstOrNull()?.firstOrNull()?.uppercaseChar() ?: ""
-            val initialSecond = initials.getOrNull(1)?.firstOrNull()?.uppercaseChar() ?: ""
-            return@getInitials "$initialFirst$initialSecond"
-        }
-    }
-
     fun Context.getBackgroundColorBasedOnId(id: Int): GradientDrawable {
         val colorIndex = id % 9
         val organizationColor = this.resources.getIntArray(R.array.organizationColors)[colorIndex]
