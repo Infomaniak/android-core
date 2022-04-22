@@ -21,6 +21,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
@@ -216,3 +217,10 @@ fun View.showKeyboard() {
 }
 
 fun String.capitalizeFirstChar(): String = replaceFirstChar { char -> char.titlecase() }
+
+fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
+    with(edit()) {
+        block(this)
+        apply()
+    }
+}
