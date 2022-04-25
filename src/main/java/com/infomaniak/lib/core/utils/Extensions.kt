@@ -31,6 +31,7 @@ import android.provider.Settings
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
@@ -39,11 +40,18 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.ImageLoader
+import coil.load
+import coil.request.Disposable
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
+import com.infomaniak.lib.core.R
+import com.infomaniak.lib.core.models.user.User
+import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
+import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -222,5 +230,20 @@ fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
     with(edit()) {
         block(this)
         apply()
+    }
+}
+
+fun ImageView.loadAvatar(user: User): Disposable = loadAvatar(user.id, user.avatar, user.getInitials())
+
+fun ImageView.loadAvatar(id: Int, avatarUrl: String?, initials: String): Disposable {
+    val imageLoader = ImageLoader.Builder(context).build()
+    val fallback = context.generateInitialsAvatarDrawable(
+        initials = initials,
+        background = context.getBackgroundColorBasedOnId(id),
+    )
+    return load(avatarUrl, imageLoader) {
+        error(fallback)
+        fallback(fallback)
+        placeholder(R.drawable.placeholder)
     }
 }
