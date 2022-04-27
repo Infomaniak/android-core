@@ -28,6 +28,7 @@ object InfomaniakCore {
     var appVersionCode: Int = -1
     var clientId: String? = null
     var credentialManager: CredentialManager? = null
+    var deviceIdentifier: String? = null
     var isDebug: Boolean = false
 
     fun init(
@@ -36,6 +37,7 @@ object InfomaniakCore {
         bearerToken: String = "",
         clientId: String? = null,
         credentialManager: CredentialManager? = null,
+        deviceIdentifier: String? = null,
         isDebug: Boolean = false
     ) {
         this.appVersionCode = appVersionCode
@@ -43,6 +45,7 @@ object InfomaniakCore {
         this.bearerToken = bearerToken
         this.clientId = clientId
         this.credentialManager = credentialManager
+        this.deviceIdentifier = deviceIdentifier
         this.isDebug = isDebug
     }
 }

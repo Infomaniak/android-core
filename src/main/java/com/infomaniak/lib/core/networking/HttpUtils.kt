@@ -17,28 +17,22 @@
  */
 package com.infomaniak.lib.core.networking
 
-import android.content.Context
 import androidx.core.os.LocaleListCompat
 import com.infomaniak.lib.core.InfomaniakCore
 import okhttp3.Headers
+import java.net.URLEncoder
 import java.util.*
 
 object HttpUtils {
-    private const val SHARED_PREFS = "sharedPrefs"
-    private var deviceIdentifier = "Device-Identifier"
 
-    fun getHeaders(deviceIdentifier: Context? = null, contentType: String? = "application/json; charset=UTF-8"): Headers {
+    fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers {
         return Headers.Builder().apply {
             add("Accept-Language", getAcceptedLanguageHeaderValue())
             add("App-Version", "Android ${InfomaniakCore.appVersionName}")
             add("Authorization", "Bearer ${InfomaniakCore.bearerToken}")
             add("Cache-Control", "no-cache")
-            contentType?.let {
-                add("Content-type", it)
-            }
-            deviceIdentifier?.let {
-                add("Device-Identifier", loadUniqueId(deviceIdentifier))
-            }
+            contentType?.let { add("Content-type", it) }
+            InfomaniakCore.deviceIdentifier?.let { add("Device-Identifier", URLEncoder.encode(it, "UTF-8")) }
         }.run {
             build()
         }
@@ -61,25 +55,5 @@ object HttpUtils {
             preferredLocaleList.add(adjustedLocaleListCompat.get(index))
         }
         return preferredLocaleList
-    }
-
-    private fun loadUniqueId(context: Context): String {
-        val sharedPreferences =
-            context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
-        var uniqueId = sharedPreferences.getString(deviceIdentifier, "") ?: ""
-        if (uniqueId == "") {
-            uniqueId = generateUniqueId(context)
-        }
-        return uniqueId
-    }
-
-    private fun generateUniqueId(context: Context): String {
-        val sharedPreferences =
-            context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val uniqueId = UUID.randomUUID().toString()
-        editor.putString(deviceIdentifier, uniqueId)
-        editor.apply()
-        return uniqueId
     }
 }
