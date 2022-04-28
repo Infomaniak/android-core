@@ -7,6 +7,9 @@ import okhttp3.OkHttpClient
 
 abstract class ApiRepositoryCore {
 
+    @Suppress("PropertyName")
+    val PER_PAGE = 200
+
     fun getUserProfile(
         okHttpClient: OkHttpClient,
         withEmails: Boolean = false,
