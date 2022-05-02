@@ -17,10 +17,7 @@
  */
 package com.infomaniak.lib.core.utils
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
-import com.google.gson.JsonParser
+import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.lib.core.BuildConfig.LOGIN_ENDPOINT_URL
 import com.infomaniak.lib.core.InfomaniakCore
@@ -47,6 +44,11 @@ object ApiController {
 
     var gson: Gson = GsonBuilder()
         .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .setExclusionStrategies(object : ExclusionStrategy {
+            // Related to compatibility issue between GSON & Realm Kotlin: https://github.com/realm/realm-kotlin/issues/813
+            override fun shouldSkipField(f: FieldAttributes?): Boolean = f?.name?.startsWith("io_realm_kotlin_") ?: false
+            override fun shouldSkipClass(clazz: Class<*>?): Boolean = false
+        })
         .create()
 
     fun init(typeAdapterList: ArrayList<Pair<Type, Any>>) {
