@@ -71,11 +71,11 @@ object ApiController {
         url: String,
         method: ApiMethod,
         body: Any? = null,
-        okHttpClient: OkHttpClient = HttpClient.okHttpClient,
+        testsOnlyOkHttpClient: OkHttpClient? = null,
         useKotlinxSerialization: Boolean = false,
     ): T {
         val requestBody: RequestBody = generateRequestBody(body)
-        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization)
+        return executeRequest(url, method, requestBody, testsOnlyOkHttpClient ?: HttpClient.okHttpClient, useKotlinxSerialization)
     }
 
     fun generateRequestBody(body: Any?): RequestBody {

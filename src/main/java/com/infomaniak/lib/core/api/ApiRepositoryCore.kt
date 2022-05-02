@@ -37,6 +37,6 @@ abstract class ApiRepositoryCore {
         if (with.isNotEmpty()) with = "?with=$with"
 
         val url = "${ApiRoutesCore.getUserProfile()}$with"
-        return ApiController.callApi(url, ApiController.ApiMethod.GET, okHttpClient = okHttpClient)
+        return ApiController.callApi(url, ApiController.ApiMethod.GET, testsOnlyOkHttpClient = okHttpClient)
     }
 }
