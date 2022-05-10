@@ -24,30 +24,28 @@ import com.google.gson.stream.JsonWriter
 import java.util.*
 
 /**
- * Adapter for convert api timestamp to java [Date] when [com.google.gson.Gson] deserialize a model
- * And convert method [Date] to [Long] timestamp for the api when [com.google.gson.Gson] serialize a model
+ * Adapter to convert API [Long] timestamp to/from [Date] when [com.google.gson.Gson] deserializes/serializes a model.
  */
 class CustomDateTypeAdapter : TypeAdapter<Date>() {
     /**
-     * Write fields with type [Date] as a [Long] timestamp or null field
+     * Write [Date] field as a [Long] timestamp or null
      */
     override fun write(out: JsonWriter?, date: Date?) {
         date?.let {
-            out?.value(date.time / 1000)
+            out?.value(it.time / 1_000L)
         } ?: out?.nullValue()
     }
 
     /**
-     * Read fields timestamp [Long] as [Date]
-     * Read json fields [Long] timestamp as a [Date]
+     * Read [Long] timestamp field as a [Date] or null
      */
     override fun read(timestamp: JsonReader?): Date? {
         return timestamp?.let {
-            if (timestamp.peek() === JsonToken.NULL) {
-                timestamp.nextNull()
-                null
+            if (it.peek() === JsonToken.NUMBER) {
+                Date(it.nextLong() * 1_000L)
             } else {
-                Date(it.nextLong() * 1000)
+                it.nextNull()
+                null
             }
         }
     }
