@@ -88,11 +88,29 @@ fun Date.endOfTheDay(): Date =
         set(Calendar.SECOND, 59)
     }.time
 
+fun Date.startOfTomorow(): Date =
+    Calendar.getInstance().apply {
+        time = this@startOfTomorow
+        add(Calendar.DATE, 1)
+    }.time.startOfTheDay()
+
+fun Date.endOfTomorow(): Date =
+    Calendar.getInstance().apply {
+        time = this@endOfTomorow
+        add(Calendar.DATE, 1)
+    }.time.endOfTheDay()
+
 fun Date.startOfTheWeek(): Date =
     Calendar.getInstance().apply {
         time = this@startOfTheWeek
         set(Calendar.DAY_OF_WEEK, firstDayOfWeek)
     }.time.startOfTheDay()
+
+fun Date.endOfTheWeek(): Date =
+    Calendar.getInstance().apply {
+        time = this@endOfTheWeek
+        set(Calendar.DAY_OF_WEEK, (firstDayOfWeek - 1 + 6) % 7 + 1)
+    }.time.endOfTheDay()
 
 fun Date.year(): Int =
     Calendar.getInstance().apply {
