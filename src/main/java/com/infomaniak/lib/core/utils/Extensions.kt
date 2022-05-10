@@ -57,8 +57,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 const val FORMAT_DATE_CLEAR_MONTH = "dd MMM yyyy"
+const val FORMAT_DATE_CLEAR_MONTH_DAY_ONE_CHAR = "d MMM yyyy"
 const val FORMAT_DATE_DEFAULT = "dd.MM.yy"
 const val FORMAT_DATE_HOUR_MINUTE = "HH:mm"
+const val FORMAT_DATE_SHORT_DAY_ONE_CHAR = "d MMM"
 const val FORMAT_EVENT_DATE = "dd/MM/yyyy HH:mm"
 const val FORMAT_FULL_DATE = "EEEE dd MMMM yyyy"
 const val FORMAT_NEW_FILE = "yyyyMMdd_HHmmss"
@@ -69,6 +71,53 @@ fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
     val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
     return simpleDateFormat.format(this)
 }
+
+fun Date.startOfTheDay(): Date =
+    Calendar.getInstance().apply {
+        time = this@startOfTheDay
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+    }.time
+
+fun Date.endOfTheDay(): Date =
+    Calendar.getInstance().apply {
+        time = this@endOfTheDay
+        set(Calendar.HOUR_OF_DAY, 23)
+        set(Calendar.MINUTE, 59)
+        set(Calendar.SECOND, 59)
+    }.time
+
+fun Date.startOfTheWeek(): Date =
+    Calendar.getInstance().apply {
+        time = this@startOfTheWeek
+        set(Calendar.DAY_OF_WEEK, firstDayOfWeek)
+    }.time.startOfTheDay()
+
+fun Date.year(): Int =
+    Calendar.getInstance().apply {
+        time = this@year
+    }.get(Calendar.YEAR)
+
+fun Date.month(): Int =
+    Calendar.getInstance().apply {
+        time = this@month
+    }.get(Calendar.MONTH)
+
+fun Date.day(): Int =
+    Calendar.getInstance().apply {
+        time = this@day
+    }.get(Calendar.DAY_OF_MONTH)
+
+fun Date.hours(): Int =
+    Calendar.getInstance().apply {
+        time = this@hours
+    }.get(Calendar.HOUR_OF_DAY)
+
+fun Date.minutes(): Int =
+    Calendar.getInstance().apply {
+        time = this@minutes
+    }.get(Calendar.MINUTE)
 
 fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 

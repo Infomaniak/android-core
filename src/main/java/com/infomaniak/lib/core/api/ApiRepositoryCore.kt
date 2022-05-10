@@ -11,7 +11,7 @@ abstract class ApiRepositoryCore {
         okHttpClient: OkHttpClient,
         withEmails: Boolean = false,
         withPhones: Boolean = false,
-        withSecurity: Boolean = false
+        withSecurity: Boolean = false,
     ): ApiResponse<User> {
         var with = ""
         if (withEmails) with += "emails"
@@ -22,5 +22,4 @@ abstract class ApiRepositoryCore {
         val url = "${ApiRoutesCore.getUserProfile()}$with"
         return ApiController.callApi(url, ApiController.ApiMethod.GET, okHttpClient = okHttpClient)
     }
-
 }
