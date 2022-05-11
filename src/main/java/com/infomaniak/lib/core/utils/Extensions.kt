@@ -88,15 +88,15 @@ fun Date.endOfTheDay(): Date =
         set(Calendar.SECOND, 59)
     }.time
 
-fun Date.startOfTomorow(): Date =
+fun Date.startOfTomorrow(): Date =
     Calendar.getInstance().apply {
-        time = this@startOfTomorow
+        time = this@startOfTomorrow
         add(Calendar.DATE, 1)
     }.time.startOfTheDay()
 
-fun Date.endOfTomorow(): Date =
+fun Date.endOfTomorrow(): Date =
     Calendar.getInstance().apply {
-        time = this@endOfTomorow
+        time = this@endOfTomorrow
         add(Calendar.DATE, 1)
     }.time.endOfTheDay()
 
