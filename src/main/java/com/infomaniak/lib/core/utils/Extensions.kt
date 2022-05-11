@@ -27,17 +27,26 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavDirections
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
+import androidx.navigation.fragment.DialogFragmentNavigator
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.ImageLoader
@@ -313,4 +322,27 @@ fun ImageView.loadAvatar(id: Int, avatarUrl: String?, initials: String): Disposa
         fallback(fallback)
         placeholder(R.drawable.placeholder)
     }
+}
+
+private fun Fragment.canNavigate(currentClassName: String? = null): Boolean {
+    val className = currentClassName ?: when (val currentDestination = findNavController().currentDestination) {
+        is FragmentNavigator.Destination -> currentDestination.className
+        is DialogFragmentNavigator.Destination -> currentDestination.className
+        else -> null
+    }
+    return javaClass.name == className
+}
+
+fun Fragment.safeNavigate(directions: NavDirections) {
+    if (canNavigate()) findNavController().navigate(directions)
+}
+
+fun Fragment.safeNavigate(
+    @IdRes resId: Int,
+    args: Bundle? = null,
+    navOptions: NavOptions? = null,
+    navigatorExtras: Navigator.Extras? = null,
+    currentClassName: String? = null
+) {
+    if (canNavigate(currentClassName)) findNavController().navigate(resId, args, navOptions, navigatorExtras)
 }
