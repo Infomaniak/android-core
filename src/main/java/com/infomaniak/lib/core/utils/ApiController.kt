@@ -17,7 +17,10 @@
  */
 package com.infomaniak.lib.core.utils
 
-import com.google.gson.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.lib.core.BuildConfig.LOGIN_ENDPOINT_URL
 import com.infomaniak.lib.core.InfomaniakCore
@@ -30,6 +33,8 @@ import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -42,13 +47,19 @@ import java.util.*
 
 object ApiController {
 
+    val json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    }
+
     var gson: Gson = GsonBuilder()
         .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
-        .setExclusionStrategies(object : ExclusionStrategy {
-            // Related to compatibility issue between GSON & Realm Kotlin: https://github.com/realm/realm-kotlin/issues/813
-            override fun shouldSkipField(f: FieldAttributes?): Boolean = f?.name?.startsWith("io_realm_kotlin_") ?: false
-            override fun shouldSkipClass(clazz: Class<*>?): Boolean = false
-        })
+        // TODO: Use this only with Realm Kotlin. Now that we are using KotlinxSerialization instead of Gson, maybe remove it?
+        // .setExclusionStrategies(object : ExclusionStrategy {
+        //     // Related to compatibility issue between GSON & Realm Kotlin: https://github.com/realm/realm-kotlin/issues/813
+        //     override fun shouldSkipField(f: FieldAttributes?): Boolean = f?.name?.startsWith("io_realm_kotlin_") ?: false
+        //     override fun shouldSkipClass(clazz: Class<*>?): Boolean = false
+        // })
         .create()
 
     fun init(typeAdapterList: ArrayList<Pair<Type, Any>>) {
@@ -65,10 +76,11 @@ object ApiController {
         url: String,
         method: ApiMethod,
         body: Any? = null,
-        okHttpClient: OkHttpClient = HttpClient.okHttpClient
+        okHttpClient: OkHttpClient = HttpClient.okHttpClient,
+        useKotlinxSerialization: Boolean = false,
     ): T {
         val requestBody: RequestBody = generateRequestBody(body)
-        return executeRequest(url, method, requestBody, okHttpClient)
+        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization)
     }
 
     fun generateRequestBody(body: Any?): RequestBody {
@@ -129,7 +141,8 @@ object ApiController {
         url: String,
         method: ApiMethod,
         requestBody: RequestBody,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
+        useKotlinxSerialization: Boolean,
     ): T {
         try {
             val request = Request.Builder()
@@ -157,7 +170,12 @@ object ApiController {
                         ApiResponse<Any>(result = ERROR, translatedError = R.string.connectionError) as T
                     }
                     else -> {
-                        return gson.fromJson<T>(bodyResponse, object : TypeToken<T>() {}.type).apply {
+                        val decodedApiResponse = if (useKotlinxSerialization) {
+                            json.decodeFromString<T>(bodyResponse)
+                        } else {
+                            gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
+                        }
+                        decodedApiResponse.apply {
                             if (this is ApiResponse<*>) {
                                 val apiResponse = this as ApiResponse<*>
                                 if (apiResponse.result == ERROR) {

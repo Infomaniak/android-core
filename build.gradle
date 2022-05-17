@@ -1,7 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlinx-serialization'
 
 android {
     compileSdkVersion 31
@@ -30,6 +31,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:$rootProject.ext.kotlinx_serialization_version"
 
     // Test things
     testImplementation 'junit:junit:4.13.2'

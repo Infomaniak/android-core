@@ -18,15 +18,13 @@
 package com.infomaniak.lib.core.models
 
 import com.google.gson.JsonObject
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 
+@Serializable
 class ApiError(
-    @SerializedName("code")
     val code: String? = null,
-    @SerializedName("description")
     val description: String? = null,
-    @SerializedName("context")
-    val context: JsonObject? = null,
-    @SerializedName("errors")
+    @Contextual val context: JsonObject? = null,
     val errors: Array<ApiError>? = null
 )
