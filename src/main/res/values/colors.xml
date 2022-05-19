@@ -26,7 +26,7 @@
     <!-- Text -->
     <color name="title">@color/grey_title</color>
     <color name="primaryText">@color/grey_text</color>
-    <color name="secondaryText">#9F9F9F</color>
+    <color name="secondaryText">@color/grey_text_secondary</color>
 
     <!-- Containers -->
     <color name="appBar">@android:color/white</color>
@@ -53,6 +53,7 @@
     <color name="black">#000000</color>
     <color name="grey_title">#333333</color>
     <color name="grey_text">#666666</color>
+    <color name="grey_text_light">#888888</color>
     <color name="grey_text_secondary">#9F9F9F</color>
     <color name="grey_border">#E0E0E0</color>
     <color name="grey_background">#EDECEC</color>
