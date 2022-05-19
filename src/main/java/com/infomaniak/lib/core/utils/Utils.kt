@@ -30,4 +30,7 @@ object Utils {
         }
     }
 
+    inline fun <reified T : Enum<T>> enumValueOfOrNull(value: String?): T? {
+        return value?.let { runCatching { enumValueOf<T>(it) }.getOrNull() }
+    }
 }
