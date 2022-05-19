@@ -146,9 +146,7 @@ fun Date.minutes(): Int =
         time = this@minutes
     }.get(Calendar.MINUTE)
 
-fun Int.toDp(): Int = this.toFloat().toDp().toInt()
-
-fun Float.toDp(): Float = this / Resources.getSystem().displayMetrics.density
+fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
