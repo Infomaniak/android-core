@@ -23,6 +23,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
@@ -345,4 +346,8 @@ fun Fragment.safeNavigate(
     currentClassName: String? = null
 ) {
     if (canNavigate(currentClassName)) findNavController().navigate(resId, args, navOptions, navigatorExtras)
+}
+
+fun Resources.isNightModeEnabled(): Boolean {
+    return configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
