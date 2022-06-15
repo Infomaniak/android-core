@@ -52,7 +52,7 @@ object HttpUtils {
         val adjustedLocaleListCompat = LocaleListCompat.getAdjustedDefault()
         val preferredLocaleList = mutableListOf<Locale>()
         for (index in 0 until adjustedLocaleListCompat.size()) {
-            preferredLocaleList.add(adjustedLocaleListCompat.get(index))
+            preferredLocaleList.add(adjustedLocaleListCompat[index]!!)
         }
         return preferredLocaleList
     }
