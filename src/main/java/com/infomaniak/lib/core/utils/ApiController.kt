@@ -50,6 +50,7 @@ object ApiController {
     val json = Json {
         ignoreUnknownKeys = true
         coerceInputValues = true
+        isLenient = true
     }
 
     var gson: Gson = GsonBuilder()
