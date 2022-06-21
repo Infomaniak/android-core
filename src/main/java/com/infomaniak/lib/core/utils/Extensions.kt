@@ -330,11 +330,12 @@ private fun Fragment.canNavigate(currentClassName: String? = null): Boolean {
         is DialogFragmentNavigator.Destination -> currentDestination.className
         else -> null
     }
+
     return javaClass.name == className
 }
 
-fun Fragment.safeNavigate(directions: NavDirections) {
-    if (canNavigate()) findNavController().navigate(directions)
+fun Fragment.safeNavigate(directions: NavDirections, currentClassName: String? = null) {
+    if (canNavigate(currentClassName)) findNavController().navigate(directions)
 }
 
 fun Fragment.safeNavigate(
