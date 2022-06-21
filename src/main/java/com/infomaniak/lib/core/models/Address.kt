@@ -29,14 +29,22 @@ data class Address(
     val title: String?,
     val street: String?,
     val country: String?,
-    @SerializedName("country_id") val countryId: Int?,
-    @SerializedName("last_name") val lastName: String?,
-    @SerializedName("default") var isDefault: Boolean?,
-    @SerializedName("first_name") val firstName: String?,
-    @SerializedName("vat_number") val vatNumber: String?,
-    @SerializedName("organization_name") val organizationName: String?,
-    @SerializedName("street_complement") val streetComplement: String?,
-    @SerializedName("zip_code", alternate = ["zip"]) val zipCode: String?
+    @SerializedName("country_id")
+    val countryId: Int?,
+    @SerializedName("last_name")
+    val lastName: String?,
+    @SerializedName("default")
+    var isDefault: Boolean?,
+    @SerializedName("first_name")
+    val firstName: String?,
+    @SerializedName("vat_number")
+    val vatNumber: String?,
+    @SerializedName("organization_name")
+    val organizationName: String?,
+    @SerializedName("street_complement")
+    val streetComplement: String?,
+    @SerializedName("zip_code", alternate = ["zip"])
+    val zipCode: String?
 ) : Parcelable {
     enum class AddressType {
         @SerializedName("individual", alternate = ["personal", "professional"])

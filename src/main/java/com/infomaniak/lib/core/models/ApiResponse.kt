@@ -26,10 +26,12 @@ data class ApiResponse<T>(
     val error: ApiError? = null,
     val page: Int = 0,
     val pages: Int = 0,
-    @SerializedName("response_at") val responseAt: Long = 0,
+    @SerializedName("response_at")
+    val responseAt: Long = 0,
     val total: Int = 0,
     var translatedError: Int = 0,
-    @SerializedName("items_per_page") val itemsPerPage: Int = 0
+    @SerializedName("items_per_page")
+    val itemsPerPage: Int = 0
 ) {
 
     fun isSuccess() = result == Status.SUCCESS

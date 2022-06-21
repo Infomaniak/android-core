@@ -32,9 +32,12 @@ import kotlinx.parcelize.Parcelize
 @Entity
 data class User(
     @PrimaryKey val id: Int,
-    @SerializedName("display_name") val displayName: String?,
-    @SerializedName("first_name") val firstname: String,
-    @SerializedName("last_name") val lastname: String,
+    @SerializedName("display_name")
+    val displayName: String?,
+    @SerializedName("first_name")
+    val firstname: String,
+    @SerializedName("last_name")
+    val lastname: String,
     val email: String,
     val avatar: String?,
     val login: String,
