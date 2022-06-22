@@ -18,6 +18,8 @@
 package com.infomaniak.lib.core.utils
 
 import android.os.CountDownTimer
+import androidx.core.os.LocaleListCompat
+import java.util.*
 
 object Utils {
 
@@ -28,6 +30,20 @@ object Utils {
                 onTimerFinish()
             }
         }
+    }
+
+    fun getDefaultAcceptedLanguage(): String {
+        val acceptedApiLanguage = arrayOf("fr", "de", "it", "en", "es")
+        return getPreferredLocaleList().firstOrNull { it.language in acceptedApiLanguage }?.language ?: "en"
+    }
+
+    fun getPreferredLocaleList(): List<Locale> {
+        val adjustedLocaleListCompat = LocaleListCompat.getAdjustedDefault()
+        val preferredLocaleList = mutableListOf<Locale>()
+        for (index in 0 until adjustedLocaleListCompat.size()) {
+            preferredLocaleList.add(adjustedLocaleListCompat[index]!!)
+        }
+        return preferredLocaleList
     }
 
     inline fun <reified T : Enum<T>> enumValueOfOrNull(value: String?): T? {

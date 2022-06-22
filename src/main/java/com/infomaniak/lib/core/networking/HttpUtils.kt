@@ -17,11 +17,10 @@
  */
 package com.infomaniak.lib.core.networking
 
-import androidx.core.os.LocaleListCompat
 import com.infomaniak.lib.core.InfomaniakCore
+import com.infomaniak.lib.core.utils.Utils.getPreferredLocaleList
 import okhttp3.Headers
 import java.net.URLEncoder
-import java.util.*
 
 object HttpUtils {
 
@@ -46,14 +45,5 @@ object HttpUtils {
                 weight -= 0.1F
                 "$accumulator,$languageTag;q=$weight"
             }
-    }
-
-    private fun getPreferredLocaleList(): List<Locale> {
-        val adjustedLocaleListCompat = LocaleListCompat.getAdjustedDefault()
-        val preferredLocaleList = mutableListOf<Locale>()
-        for (index in 0 until adjustedLocaleListCompat.size()) {
-            preferredLocaleList.add(adjustedLocaleListCompat[index]!!)
-        }
-        return preferredLocaleList
     }
 }
