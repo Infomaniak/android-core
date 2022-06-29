@@ -80,7 +80,11 @@ object ApiController {
 
     fun generateRequestBody(body: Any?): RequestBody {
         val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
-        val toJson = if (body is JsonElement) body.toString() else gson.toJson(body)
+        val toJson = when (body) {
+            is JsonElement -> body.toString()
+            is String -> body
+            else -> gson.toJson(body)
+        }
         return toJson.toRequestBody(jsonMediaType)
     }
 
