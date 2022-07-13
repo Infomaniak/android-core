@@ -28,40 +28,40 @@ data class Security(
     var score: Int,
     @SerializedName("has_recovery_email")
     @ColumnInfo(defaultValue = "false")
-    var has_recovery_email: Boolean,
+    var hasRecoveryEmail: Boolean,
     @SerializedName("has_valid_phone")
     @ColumnInfo(defaultValue = "false")
-    var has_valid_phone: Boolean,
+    var hasValidPhone: Boolean,
     @SerializedName("email_validated_at")
     @ColumnInfo(defaultValue = "0")
-    var email_validated_at: Long,
+    var emailValidatedAt: Long,
     @ColumnInfo(defaultValue = "false")
     var otp: Boolean,
     @ColumnInfo(defaultValue = "false")
     var sms: Boolean,
     @SerializedName("sms_phone")
     @ColumnInfo(defaultValue = "")
-    var sms_phone: String,
+    var smsPhone: String,
     @ColumnInfo(defaultValue = "false")
     var yubikey: Boolean,
     @SerializedName("infomaniak_application")
     @ColumnInfo(defaultValue = "false")
-    var infomaniak_application: Boolean,
+    var infomaniakApplication: Boolean,
     @SerializedName("double_auth")
     @ColumnInfo(defaultValue = "false")
-    var double_auth: Boolean,
+    var doubleAuth: Boolean,
     @SerializedName("remaining_rescue_code")
     @ColumnInfo(defaultValue = "0")
-    var remaining_rescue_code: Int,
+    var remainingRescueCode: Int,
     @SerializedName("last_login_at")
     @ColumnInfo(defaultValue = "0")
-    var last_login_at: Long,
+    var lastLoginAt: Long,
     @SerializedName("date_last_changed_password")
     @ColumnInfo(defaultValue = "0")
-    var date_last_changed_password: Long,
+    var dateLastChangedPassword: Long,
     @SerializedName("double_auth_method")
     @ColumnInfo(defaultValue = "")
-    var double_auth_method: String,
+    var doubleAuthMethod: String,
     @SerializedName("auth_devices")
     var authDevices: ArrayList<AuthDevices>?,
 ) : Parcelable

@@ -26,16 +26,16 @@ data class AuthDevices(
     var id: Int,
     var name: String,
     @SerializedName("last_connexion")
-    var last_connexion: Long,
+    var lastConnexion: Long,
     @SerializedName("user_agent")
-    var user_agent: String,
+    var userAgent: String,
     @SerializedName("user_ip")
-    var user_ip: String,
+    var userIp: String,
     var device: String,
     @SerializedName("created_at")
-    var created_at: Long,
+    var createdAt: Long,
     @SerializedName("updated_at")
-    var updated_at: Long,
+    var updatedAt: Long,
     @SerializedName("deleted_at")
-    var deleted_at: Long?,
+    var deletedAt: Long?,
 ) : Parcelable

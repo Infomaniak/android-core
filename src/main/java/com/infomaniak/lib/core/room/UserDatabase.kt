@@ -33,23 +33,20 @@ import com.infomaniak.lib.core.models.user.preferences.security.AuthDevices
     autoMigrations = [
         AutoMigration(
             from = 1, to = 2,
-            spec = UserDatabase.UserV2Migration::class
+            spec = UserV2Migration::class
+        ),
+        AutoMigration(
+            from = 2, to = 3,
+            spec = UserV3Migration::class
         )
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(UserConverter::class)
 abstract class UserDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
-
-    @DeleteColumn(tableName = "User", columnName = "doubleAuth")
-    @DeleteColumn(tableName = "User", columnName = "doubleAuthMethod")
-    @DeleteColumn(tableName = "User", columnName = "emailReminderValidate")
-    @DeleteColumn(tableName = "User", columnName = "emailValidate")
-    @DeleteColumn(tableName = "User", columnName = "phoneReminderValidate")
-    class UserV2Migration : AutoMigrationSpec
 
     companion object {
         @Volatile
