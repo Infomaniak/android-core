@@ -18,11 +18,7 @@
 package com.infomaniak.lib.core.utils
 
 import android.os.CountDownTimer
-import android.view.View
-import androidx.annotation.StringRes
 import androidx.core.os.LocaleListCompat
-import com.google.android.material.snackbar.Snackbar
-import com.infomaniak.lib.core.R
 import java.util.*
 
 object Utils {
@@ -52,29 +48,5 @@ object Utils {
 
     inline fun <reified T : Enum<T>> enumValueOfOrNull(value: String?): T? {
         return value?.let { runCatching { enumValueOf<T>(it.uppercase()) }.getOrNull() }
-    }
-
-    fun showSnackbar(
-        view: View,
-        @StringRes title: Int,
-        anchorView: View? = null,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
-        onActionClicked: (() -> Unit)? = null,
-    ) {
-        showSnackbar(view, view.context.getString(title), anchorView, actionButtonTitle, onActionClicked)
-    }
-
-    fun showSnackbar(
-        view: View,
-        title: String,
-        anchorView: View? = null,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
-        onActionClicked: (() -> Unit)? = null,
-    ) {
-        Snackbar.make(view, title, Snackbar.LENGTH_LONG).apply {
-            anchorView?.let { this.anchorView = it }
-            onActionClicked?.let { action -> setAction(actionButtonTitle) { action() } }
-            show()
-        }
     }
 }
