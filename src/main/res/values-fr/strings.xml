@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
   ~ Copyright (C) 2022 Infomaniak Network SA
   ~
@@ -22,6 +21,7 @@
     <string name="androidPermissionButton">Permission</string>
     <string name="androidPermissionTitle">Permission requise</string>
     <string name="browserNotFound">Aucun navigateur trouvé</string>
+    <string name="buttonCancel">Annuler</string>
     <string name="connect">Se connecter</string>
     <string name="connectionError">Problème de connexion internet</string>
     <string name="errorTitle">Erreur</string>

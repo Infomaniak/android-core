@@ -16,10 +16,12 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <string name="anErrorHasOccurred">Ein Fehler ist aufgetreten</string>
     <string name="androidActivateButton">Aktivieren</string>
     <string name="androidPermissionButton">Autorizzazione</string>
     <string name="androidPermissionTitle">Erlaubnis erforderlich</string>
-    <string name="anErrorHasOccurred">Ein Fehler ist aufgetreten</string>
+    <string name="browserNotFound">Kein Browser gefunden</string>
+    <string name="buttonCancel">Abbrechen</string>
     <string name="connect">Anmeldung</string>
     <string name="connectionError">Problem mit der Internetverbindung</string>
     <string name="errorTitle">Fehler</string>
@@ -33,5 +35,4 @@
     <string name="typeOwner">Gesetzlich Verantwortlicher</string>
     <string name="updateAppTitle">Aktualisierung erforderlich</string>
     <string name="updateButton">Aktualisieren</string>
-    <string name="browserNotFound">Kein Browser gefunden</string>
 </resources>
