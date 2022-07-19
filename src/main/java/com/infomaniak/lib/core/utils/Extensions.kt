@@ -57,6 +57,7 @@ import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
@@ -346,4 +347,52 @@ fun Fragment.safeNavigate(
     currentClassName: String? = null
 ) {
     if (canNavigate(currentClassName)) findNavController().navigate(resId, args, navOptions, navigatorExtras)
+}
+
+fun Activity.showSnackbar(
+    @StringRes title: Int,
+    anchorView: View? = null,
+    @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+    onActionClicked: (() -> Unit)? = null,
+) {
+    Utils.showSnackbar(
+        view = window.decorView.findViewById(android.R.id.content),
+        title = title,
+        anchorView = anchorView,
+        actionButtonTitle = actionButtonTitle,
+        onActionClicked = onActionClicked,
+    )
+}
+
+fun Activity.showSnackbar(
+    title: String,
+    anchorView: View? = null,
+    @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+    onActionClicked: (() -> Unit)? = null,
+) {
+    Utils.showSnackbar(
+        view = window.decorView.findViewById(android.R.id.content),
+        title = title,
+        anchorView = anchorView,
+        actionButtonTitle = actionButtonTitle,
+        onActionClicked = onActionClicked,
+    )
+}
+
+fun Fragment.showSnackbar(
+    @StringRes titleId: Int,
+    mainFab: FloatingActionButton? = null,
+    @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+    onActionClicked: (() -> Unit)? = null,
+) {
+    showSnackbar(getString(titleId), mainFab, actionButtonTitle, onActionClicked)
+}
+
+fun Fragment.showSnackbar(
+    title: String,
+    mainFab: FloatingActionButton? = null,
+    @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+    onActionClicked: (() -> Unit)? = null,
+) {
+    activity?.showSnackbar(title, mainFab, actionButtonTitle, onActionClicked)
 }

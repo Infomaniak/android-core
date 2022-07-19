@@ -23,6 +23,7 @@
     <string name="androidPermissionButton">Permission</string>
     <string name="androidPermissionTitle">Permission required</string>
     <string name="browserNotFound">No browser found</string>
+    <string name="buttonCancel">Cancel</string>
     <string name="connect">Login</string>
     <string name="connectionError">Internet connection problem</string>
     <string name="errorTitle">Error</string>
