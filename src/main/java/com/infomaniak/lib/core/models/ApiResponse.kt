@@ -29,11 +29,13 @@ data class ApiResponse<T>(
     val error: ApiError? = null,
     val page: Int = 0,
     val pages: Int = 0,
-    @SerialName("response_at") @SerializedName("response_at")
+    @SerialName("response_at")
+    @SerializedName("response_at")
     val responseAt: Long = 0,
     val total: Int = 0,
     var translatedError: Int = 0,
-    @SerialName("items_per_page") @SerializedName("items_per_page")
+    @SerialName("items_per_page")
+    @SerializedName("items_per_page")
     val itemsPerPage: Int = 0
 ) {
 
