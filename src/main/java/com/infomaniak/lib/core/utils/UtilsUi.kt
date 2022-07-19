@@ -68,7 +68,7 @@ object UtilsUi {
     }
 
     fun Context.getBackgroundColorBasedOnId(id: Int): GradientDrawable {
-        val colorIndex = id % 9
+        val colorIndex = Math.floorMod(id, 9)
         val organizationColor = this.resources.getIntArray(R.array.organizationColors)[colorIndex]
         return GradientDrawable().apply {
             shape = GradientDrawable.OVAL
