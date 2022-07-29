@@ -309,10 +309,17 @@ fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
     }
 }
 
-fun ImageView.loadAvatar(user: User): Disposable = loadAvatar(user.id, user.avatar, user.getInitials())
+fun ImageView.loadAvatar(
+    user: User,
+    imageLoader: ImageLoader = ImageLoader.Builder(context).build()
+): Disposable = loadAvatar(user.id, user.avatar, user.getInitials(), imageLoader)
 
-fun ImageView.loadAvatar(id: Int, avatarUrl: String?, initials: String): Disposable {
-    val imageLoader = ImageLoader.Builder(context).build()
+fun ImageView.loadAvatar(
+    id: Int,
+    avatarUrl: String?,
+    initials: String,
+    imageLoader: ImageLoader = ImageLoader.Builder(context).build()
+): Disposable {
     val fallback = context.generateInitialsAvatarDrawable(
         initials = initials,
         background = context.getBackgroundColorBasedOnId(id),
