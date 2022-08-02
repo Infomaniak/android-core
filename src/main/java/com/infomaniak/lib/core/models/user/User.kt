@@ -18,6 +18,7 @@
 package com.infomaniak.lib.core.models.user
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -41,6 +42,9 @@ data class User(
     val email: String,
     val avatar: String?,
     val login: String,
+    @ColumnInfo(defaultValue = "false")
+    @SerializedName("is_staff")
+    val isStaff: Boolean,
     @Embedded(prefix = "preferences_")
     val preferences: Preferences,
     val phones: ArrayList<Phone>?,

@@ -19,7 +19,6 @@ package com.infomaniak.lib.core.room
 
 import android.content.Context
 import androidx.room.*
-import androidx.room.migration.AutoMigrationSpec
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.lib.core.models.OrganizationAccount
@@ -38,9 +37,10 @@ import com.infomaniak.lib.core.models.user.preferences.security.AuthDevices
         AutoMigration(
             from = 2, to = 3,
             spec = UserV3Migration::class
-        )
+        ),
+        AutoMigration(from = 3, to = 4)
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 @TypeConverters(UserConverter::class)
