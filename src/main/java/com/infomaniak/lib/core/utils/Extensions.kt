@@ -355,4 +355,12 @@ fun Fragment.safeNavigate(
     if (canNavigate(currentClassName)) findNavController().navigate(resId, args, navOptions, navigatorExtras)
 }
 
+fun <T> List<T>.isContentEqual(other: List<T>, predicate: (T, T) -> Boolean): Boolean {
+    if (size != other.size) return false
+
+    forEachIndexed { index, item -> if (!predicate(item, other[index])) return false }
+
+    return true
+}
+
 operator fun Regex.contains(input: String) = containsMatchIn(input)
