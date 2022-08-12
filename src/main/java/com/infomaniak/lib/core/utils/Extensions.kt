@@ -354,3 +354,5 @@ fun Fragment.safeNavigate(
 ) {
     if (canNavigate(currentClassName)) findNavController().navigate(resId, args, navOptions, navigatorExtras)
 }
+
+operator fun Regex.contains(input: String) = containsMatchIn(input)
