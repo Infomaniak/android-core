@@ -202,7 +202,7 @@ class InfomaniakLogin(
      * Generate the complete login URL based on parameters and base
      */
     private fun generateUrl(codeChallenge: String): String {
-        return loginUrl + "authorize/" +
+        return loginUrl + "authorize" +
                 "?response_type=$DEFAULT_RESPONSE_TYPE" +
                 "&access_type=$DEFAULT_ACCESS_TYPE" +
                 "&client_id=$clientID" +
