@@ -158,11 +158,10 @@ object ApiController {
                 }
                 .build()
 
-            val response = okHttpClient.newCall(request).execute()
-            response.use {
-                val bodyResponse = it.body?.string()
+            okHttpClient.newCall(request).execute().use { response ->
+                val bodyResponse = response.body?.string()
                 return when {
-                    it.code >= 500 -> {
+                    response.code >= 500 -> {
                         ApiResponse<Any>(result = ERROR, translatedError = R.string.serverError) as T
                     }
                     bodyResponse.isNullOrBlank() -> {
@@ -175,12 +174,8 @@ object ApiController {
                             gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
                         }
                         decodedApiResponse.apply {
-                            if (this is ApiResponse<*>) {
-                                val apiResponse = this as ApiResponse<*>
-                                if (apiResponse.result == ERROR) {
-                                    apiResponse.translatedError = R.string.anErrorHasOccurred
-                                }
-                            }
+                            val apiResponse = this as? ApiResponse<*>
+                            if (apiResponse?.result == ERROR) apiResponse.translatedError = R.string.anErrorHasOccurred
                         }
                     }
                 }
@@ -191,11 +186,7 @@ object ApiController {
         } catch (exception: Exception) {
             exception.printStackTrace()
 
-            val descriptionError = if (exception.isNetworkException()) {
-                R.string.connectionError
-            } else {
-                R.string.anErrorHasOccurred
-            }
+            val descriptionError = if (exception.isNetworkException()) R.string.connectionError else R.string.anErrorHasOccurred
             return ApiResponse<Any>(result = ERROR, translatedError = descriptionError) as T
         }
     }
