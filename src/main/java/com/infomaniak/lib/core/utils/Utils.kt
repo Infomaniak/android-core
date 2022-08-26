@@ -17,11 +17,17 @@
  */
 package com.infomaniak.lib.core.utils
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.CountDownTimer
 import androidx.core.os.LocaleListCompat
 import java.util.*
+import kotlin.math.min
 
 object Utils {
+    private const val MIN_HEIGHT_FOR_LANDSCAPE = 4
 
     fun createRefreshTimer(milliseconds: Long = 600, onTimerFinish: () -> Unit): CountDownTimer {
         return object : CountDownTimer(milliseconds, milliseconds) {
@@ -48,5 +54,17 @@ object Utils {
 
     inline fun <reified T : Enum<T>> enumValueOfOrNull(value: String?): T? {
         return value?.let { runCatching { enumValueOf<T>(it.uppercase()) }.getOrNull() }
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    fun Activity.lockLandscapeForSmallScreens() {
+        val (screenHeightInches, screenWidthInches) = with(resources.displayMetrics) { (heightPixels / ydpi) to (widthPixels / xdpi) }
+
+        val aspectRatio = resources.configuration.screenLayout and Configuration.SCREENLAYOUT_LONG_MASK
+        val isLongScreen = aspectRatio != Configuration.SCREENLAYOUT_LONG_NO
+
+        val isScreenTooSmall = isLongScreen && min(screenHeightInches, screenWidthInches) < MIN_HEIGHT_FOR_LANDSCAPE
+
+        if (isScreenTooSmall) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 }
