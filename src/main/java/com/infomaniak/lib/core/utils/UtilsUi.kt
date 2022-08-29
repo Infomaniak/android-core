@@ -39,9 +39,11 @@ import com.infomaniak.lib.core.R
 object UtilsUi {
 
     fun Context.openUrl(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
         try {
-            startActivity(intent)
+            Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(this)
+            }
         } catch (activityNotFoundException: ActivityNotFoundException) {
             showToast(R.string.browserNotFound)
         }

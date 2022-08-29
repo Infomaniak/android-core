@@ -240,11 +240,12 @@ fun Activity.requestPermissionsIsPossible(permissions: Array<String>): Boolean {
 }
 
 fun Context.startAppSettingsConfig() {
-    val intent = Intent()
-    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-    intent.addCategory(Intent.CATEGORY_DEFAULT)
-    intent.data = Uri.parse("package:$packageName")
-    startActivity(intent)
+    Intent().apply {
+        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        addCategory(Intent.CATEGORY_DEFAULT)
+        data = Uri.parse("package:$packageName")
+        startActivity(this)
+    }
 }
 
 fun Exception.isNetworkException() = this.javaClass.name.contains("java.net.", ignoreCase = true) ||
