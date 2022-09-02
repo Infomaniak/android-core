@@ -5,11 +5,13 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlinx-serialization'
 
 android {
-    compileSdkVersion 32
+    namespace 'com.infomaniak.lib.core'
+
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.infomaniak.com/v3/mobile_login"'
@@ -46,7 +48,7 @@ dependencies {
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "androidx.appcompat:appcompat-resources:$appcompat_version"
 
-    def room_version = '2.5.0-alpha02'
+    def room_version = '2.5.0-alpha03'
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -60,6 +62,6 @@ dependencies {
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.github.Infomaniak:android-login:2.5.1'
     api 'com.squareup.okhttp3:okhttp:4.10.0'
-    api 'io.sentry:sentry-android:6.4.0'
+    api 'io.sentry:sentry-android:6.4.1'
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 }
