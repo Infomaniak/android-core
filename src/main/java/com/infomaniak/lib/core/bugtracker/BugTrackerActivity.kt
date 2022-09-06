@@ -17,12 +17,21 @@
  */
 package com.infomaniak.lib.core.bugtracker
 
+import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.database.getStringOrNull
 import androidx.navigation.navArgs
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.databinding.ActivityBugTrackerBinding
+import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
+import com.infomaniak.lib.core.utils.whenResultIsOk
+
 
 class BugTrackerActivity : AppCompatActivity() {
 
@@ -32,6 +41,69 @@ class BugTrackerActivity : AppCompatActivity() {
     val types = listOf("bugs", "features") // TODO : What values should be sent ?
     var type = ""
 
+    // private val importedImages = mutableListOf<Image>()
+    private val imageAdapter = BugTrackerImageAdapter()
+
+    private val selectImagesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        it.whenResultIsOk { data -> onImagesImported(data) }
+    }
+
+    private fun onImagesImported(importIntent: Intent?) {
+        val clipData = importIntent?.clipData
+        val uri = importIntent?.data
+        var errorCount = 0
+
+        val newImages = mutableListOf<Image>()
+
+        try {
+            if (clipData != null) {
+                for (i in 0 until clipData.itemCount) {
+                    runCatching {
+                        newImages.add(getImageFromUri(clipData.getItemAt(i).uri))
+                    }.onFailure {
+                        it.printStackTrace()
+                        errorCount++
+                    }
+                }
+            } else if (uri != null) {
+                newImages.add(getImageFromUri(uri))
+            }
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            errorCount++
+        } finally {
+            if (errorCount > 0) {
+                showSnackbar("Some files failed to be imported: ($errorCount)")
+            }
+        }
+
+        imageAdapter.addImages(newImages)
+    }
+
+    private fun getImageFromUri(uri: Uri): Image {
+        val cursor: Cursor = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null) ?: throw Exception("Cursor is null")
+        cursor.moveToFirst()
+
+        val fileName = getFileName(cursor) ?: uri.lastPathSegment ?: throw Exception("Could not find filename of the file")
+        val fileSize = getFileSize(cursor)
+
+        val image = Image(fileName, fileSize, uri)
+
+        cursor.close()
+
+        return image
+    }
+
+    private fun getFileName(cursor: Cursor): String? {
+        val columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        return when {
+            columnIndex != -1 -> cursor.getStringOrNull(columnIndex)
+            else -> null
+        }
+    }
+
+    private fun getFileSize(cursor: Cursor) = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE))
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,6 +111,16 @@ class BugTrackerActivity : AppCompatActivity() {
             setContentView(root)
 
             toolbar.setNavigationOnClickListener { finish() }
+
+            addFilesButton.setOnClickListener {
+                val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                    type = "image/*"
+                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                }
+                val chooserIntent = Intent.createChooser(intent, "Sélectionner des images TODO")
+                selectImagesResultLauncher.launch(chooserIntent)
+            }
 
             typeField.setOnItemClickListener { _, _, position, _ ->
                 // val bugValue = resources.getStringArray(R.array.bugTrakerType)
@@ -51,7 +133,8 @@ class BugTrackerActivity : AppCompatActivity() {
                 val subject = subjectField.prefixText.toString() + subjectTextInput.text.toString() // subject
                 val description = descriptionTextInput.text.toString() // description
                 val priorityString = priorityField.text.toString() // priority[label]
-                val priorityValue = resources.getStringArray(R.array.bugTrakerPriority).indexOf(priorityString) + 1 // priority[value]
+                val priorityValue =
+                    resources.getStringArray(R.array.bugTrakerPriority).indexOf(priorityString) + 1 // priority[value]
                 val extraProject = navigationArgs.projectName // extra[project]
                 // val extraRoute = "undefined" // extra[route] // PAS DE SENS
                 val userAgent = "InfomaniakBugTracker/1" // extra[userAgent]
@@ -123,4 +206,10 @@ class BugTrackerActivity : AppCompatActivity() {
             }
         }
     }
+
+    data class Image(
+        val name: String,
+        val size: Long,
+        val uri: Uri
+    )
 }
