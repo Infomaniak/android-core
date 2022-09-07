@@ -18,6 +18,7 @@
 package com.infomaniak.lib.core.bugtracker
 
 import android.text.format.Formatter.formatShortFileSize
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -34,20 +35,28 @@ class BugTrackerImageAdapter : RecyclerView.Adapter<BugTrackerImageAdapter.BugTr
     override fun onBindViewHolder(holder: BugTrackerImageViewHolder, position: Int): Unit = with(holder.binding) {
         val image = images[position]
 
+        Log.e("gibran", "onBindViewHolder - binding position: ${position}")
+
         fileName.text = image.name
         fileSize.text = formatShortFileSize(root.context, image.size)
-        closeButton.setOnClickListener { removeImage(position) }
+        closeButton.setOnClickListener { removeImage(image) }
     }
 
     override fun getItemCount(): Int = images.count()
 
     fun addImages(newImages: MutableList<BugTrackerActivity.Image>) {
         val startingPosition = images.count()
+        Log.e("gibran", "addImages - newImages: ${newImages}")
+        Log.e("gibran", "addImages - newImages.count(): ${newImages.count()}")
         images.addAll(newImages)
         notifyItemRangeInserted(startingPosition, newImages.count())
     }
 
-    private fun removeImage(position: Int) {
+    fun getImages() = images
+
+    private fun removeImage(image: BugTrackerActivity.Image) {
+        val position = images.indexOf(image)
+        Log.e("gibran", "removeImage - removing at position: ${position}")
         images.removeAt(position)
         notifyItemRemoved(position)
     }

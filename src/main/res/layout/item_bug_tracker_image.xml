@@ -50,6 +50,7 @@
         android:id="@+id/closeButton"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:background="?selectableItemBackground"
         android:backgroundTint="?attr/colorPrimaryContainer"
         android:minWidth="0dp"
         android:minHeight="0dp"

@@ -26,11 +26,22 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.infomaniak.lib.core.BuildConfig
+import com.infomaniak.lib.core.InfomaniakCore
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.databinding.ActivityBugTrackerBinding
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.lib.core.utils.whenResultIsOk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.Headers
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.net.URLEncoder
 
 
 class BugTrackerActivity : AppCompatActivity() {
@@ -38,11 +49,9 @@ class BugTrackerActivity : AppCompatActivity() {
     private val binding: ActivityBugTrackerBinding by lazy { ActivityBugTrackerBinding.inflate(layoutInflater) }
     private val navigationArgs: BugTrackerActivityArgs by navArgs()
 
+    private val imageAdapter = BugTrackerImageAdapter()
     val types = listOf("bugs", "features") // TODO : What values should be sent ?
     var type = ""
-
-    // private val importedImages = mutableListOf<Image>()
-    private val imageAdapter = BugTrackerImageAdapter()
 
     private val selectImagesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         it.whenResultIsOk { data -> onImagesImported(data) }
@@ -81,7 +90,9 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private fun getImageFromUri(uri: Uri): Image {
-        val cursor: Cursor = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null) ?: throw Exception("Cursor is null")
+        val cursor: Cursor =
+            contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
+                ?: throw Exception("Cursor is null")
         cursor.moveToFirst()
 
         val fileName = getFileName(cursor) ?: uri.lastPathSegment ?: throw Exception("Could not find filename of the file")
@@ -103,7 +114,7 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private fun getFileSize(cursor: Cursor) = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE))
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -128,24 +139,27 @@ class BugTrackerActivity : AppCompatActivity() {
                 type = types[position]
             }
 
+            fileRecyclerView.adapter = imageAdapter
+
             submitButton.setOnClickListener {
-                val bucketIdentifier = "TODO" // bucket_identifier // TODO : understand iOS code how it works ?
+                val bucketIdentifier = "app_mail" // bucket_identifier // TODO : understand iOS code how it works ?
                 val subject = subjectField.prefixText.toString() + subjectTextInput.text.toString() // subject
                 val description = descriptionTextInput.text.toString() // description
                 val priorityString = priorityField.text.toString() // priority[label]
                 val priorityValue =
-                    resources.getStringArray(R.array.bugTrakerPriority).indexOf(priorityString) + 1 // priority[value]
+                    (resources.getStringArray(R.array.bugTrakerPriority)
+                        .indexOf(priorityString) + 1).toString() // priority[value]
                 val extraProject = navigationArgs.projectName // extra[project]
                 // val extraRoute = "undefined" // extra[route] // PAS DE SENS
                 val userAgent = "InfomaniakBugTracker/1" // extra[userAgent]
-                val extraUserId = navigationArgs.user.id // extra[userId]
-                // val extraGroupId = // extra[groupId]
+                val extraUserId = navigationArgs.user.id.toString() // extra[userId]
+                val extraOrganizationId =
+                    navigationArgs.user.preferences.organizationPreference.currentOrganizationId.toString() // extra[groupId]
                 val extraUserMail = navigationArgs.user.email // extra[userMail]
-                val extraUserDisplayName = navigationArgs.user.displayName // extra[userDisplayName]
+                val extraUserDisplayName = navigationArgs.user.displayName ?: "undefined" // extra[userDisplayName]
                 // val extraPageLink = // extra[pageLink] // PAS DE SENS
                 // val extraConsole = // extra[console] // PAS DE SENS
                 // val typeIndex = resources.getStringArray(R.array.bugTrakerType).toList().indexOf(typeField.text.toString())
-                // val type = types[typeIndex] // type
                 // val file0 = // file_0
 
                 // From iOS code:
@@ -153,19 +167,13 @@ class BugTrackerActivity : AppCompatActivity() {
                 val os_version = android.os.Build.VERSION.SDK_INT
                 val device = android.os.Build.DEVICE
                 val app_version = navigationArgs.appBuildNumber
-                // val app_build_number = Bundle.main.buildVersionNumber
 
-                // val manufacturer = android.os.Build.MANUFACTURER
-                // val hardware = android.os.Build.HARDWARE
-                // val model = android.os.Build.MODEL
-                // val product = android.os.Build.PRODUCT
-                // val osCodeName = android.os.Build.VERSION.CODENAME
-                // val baseOs = android.os.Build.VERSION.BASE_OS
-                // val osRelease = android.os.Build.VERSION.RELEASE
 
-                // val appVersion = navigationArgs.appVersion
-                // val appBuildNumber = navigationArgs.appBuildNumber
-                // val appId = navigationArgs.projectName
+                val imagesToSend = mutableListOf<ByteArray>()
+                imageAdapter.getImages().forEach { image ->
+                    val inputStream = contentResolver.openInputStream(image.uri)
+                    inputStream?.readBytes()?.let { imagesToSend.add(it) }
+                }
 
 
                 Log.e("gibran", "onCreate - bucket_identifier: ${bucketIdentifier}")
@@ -177,7 +185,7 @@ class BugTrackerActivity : AppCompatActivity() {
                 // Log.e("gibran", "onCreate - extraRoute: ${extraRoute}")
                 Log.e("gibran", "onCreate - userAgent: ${userAgent}")
                 Log.e("gibran", "onCreate - extraUserId: ${extraUserId}")
-                // Log.e("gibran", "onCreate - extraGroupId: ${extraGroupId}")
+                Log.e("gibran", "onCreate - extraGroupId: ${extraOrganizationId}")
                 Log.e("gibran", "onCreate - extraUserMail: ${extraUserMail}")
                 Log.e("gibran", "onCreate - extraUserDisplayName: ${extraUserDisplayName}")
                 // Log.e("gibran", "onCreate - extraPageLink: ${extraPageLink}")
@@ -191,19 +199,64 @@ class BugTrackerActivity : AppCompatActivity() {
                 Log.e("gibran", "onCreate - app_version: ${app_version}")
                 Log.e("gibran", "onCreate: ===");
 
-                // Log.e("gibran", "onCreate - manufacturer: ${manufacturer}")
-                // Log.e("gibran", "onCreate - hardware: ${hardware}")
-                // Log.e("gibran", "onCreate - model: ${model}")
-                // Log.e("gibran", "onCreate - product: ${product}")
-                // Log.e("gibran", "onCreate - osCodeName: ${osCodeName}")
-                // Log.e("gibran", "onCreate - baseOs: ${baseOs}")
-                // Log.e("gibran", "onCreate - osRelease: ${osRelease}")
-                // Log.e("gibran", "onCreate: ===", );
+                imagesToSend.forEachIndexed { index, bytes ->
+                    Log.e("gibran", "onCreate - file_${index} -> bytes.size : ${bytes.size}")
+                }
 
-                // Log.e("gibran", "onCreate - appVersion: ${appVersion}")
-                // Log.e("gibran", "onCreate - appBuildNumber: ${appBuildNumber}")
-                // Log.e("gibran", "onCreate - appId: ${appId}")
+
+                val httpClient = OkHttpClient.Builder().apply {
+                    if (BuildConfig.DEBUG) {
+                        addNetworkInterceptor(StethoInterceptor())
+                    }
+                }.run {
+                    build()
+                }
+
+                val url = "https://welcome.infomaniak.com/api/components/report"
+                val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("bucket_identifier", bucketIdentifier)
+                    .addFormDataPart("subject", subject)
+                    .addFormDataPart("description", description)
+                    .addFormDataPart("priority[label]", priorityString)
+                    .addFormDataPart("priority[value]", priorityValue)
+                    .addFormDataPart("extra[project]", extraProject)
+                    .addFormDataPart("extra[userAgent]", userAgent)
+                    .addFormDataPart("extra[userId]", extraUserId)
+                    .addFormDataPart("extra[groupId]", extraOrganizationId)
+                    .addFormDataPart("extra[userMail]", extraUserMail)
+                    .addFormDataPart("extra[userDisplayName]", extraUserDisplayName)
+                    .addFormDataPart("type", type)
+
+                imagesToSend.forEachIndexed { index, bytes ->
+                    formBuilder.addFormDataPart("file_$index", bytes.toString())
+                }
+
+                val request = Request.Builder()
+                    .url(url)
+                    .headers(getReportHeader())
+                    .post(formBuilder.build())
+                    .build()
+
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val response = httpClient.newBuilder().build().newCall(request).execute()
+                    Log.e("gibran", "onCreate - response: ${response}")
+                }
             }
+        }
+    }
+
+    private fun getReportHeader(): Headers {
+        return Headers.Builder().apply {
+            add("accept", "*/*")
+            add("accept-encoding", "gzip, deflate, br")
+            add("accept-language", "fr-FR,fr;q=0.9")
+            add("App-Version", "Android ${InfomaniakCore.appVersionName}")
+            add("Authorization", "Bearer ${InfomaniakCore.bearerToken}")
+            add("Cache-Control", "no-cache")
+            InfomaniakCore.deviceIdentifier?.let { add("Device-Identifier", URLEncoder.encode(it, "UTF-8")) }
+        }.run {
+            build()
         }
     }
 

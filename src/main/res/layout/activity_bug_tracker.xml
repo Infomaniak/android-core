@@ -64,6 +64,7 @@
                     android:id="@+id/typeField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorPrimaryContainer"
                     android:inputType="none"
                     app:simpleItems="@array/bugTrakerType" />
 
@@ -81,6 +82,7 @@
                     android:id="@+id/priorityField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorPrimaryContainer"
                     android:inputType="none"
                     app:simpleItems="@array/bugTrakerPriority" />
 
@@ -99,7 +101,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/subjectTextInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorPrimaryContainer" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -119,6 +122,7 @@
                     android:id="@+id/descriptionTextInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorPrimaryContainer"
                     android:inputType="textMultiLine" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -130,13 +134,31 @@
                 android:layout_marginTop="@dimen/marginStandard"
                 android:text="FICHIERS" />
 
-            <Button
-                android:id="@+id/addFilesButton"
-                style="@style/Widget.Material3.Button.TonalButton.Icon"
-                android:layout_width="wrap_content"
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fileRecyclerView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginStandard"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="1"
+                tools:listitem="@layout/item_bug_tracker_image" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addFilesButton"
+                style="@style/Widget.Material3.Button.TonalButton.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/colorPrimaryContainer"
+                android:gravity="center_vertical"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minHeight="40dp"
                 android:text="Ajouter un fichier"
+                app:cornerRadius="0dp"
                 app:icon="@android:drawable/stat_sys_upload_done" />
 
             <TextView
