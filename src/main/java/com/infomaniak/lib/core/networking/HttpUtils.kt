@@ -30,7 +30,10 @@ object HttpUtils {
             add("App-Version", "Android ${InfomaniakCore.appVersionName}")
             add("Authorization", "Bearer ${InfomaniakCore.bearerToken}")
             add("Cache-Control", "no-cache")
-            contentType?.let { add("Content-type", it) }
+            contentType?.let {
+                add("Accept-type", it)
+                add("Content-type", it)
+            }
             InfomaniakCore.deviceIdentifier?.let { add("Device-Identifier", URLEncoder.encode(it, "UTF-8")) }
         }.run {
             build()
