@@ -23,6 +23,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.infomaniak.lib.core.R
+import com.infomaniak.lib.core.utils.getAttributes
 
 class LoaderTextView @JvmOverloads constructor(
     context: Context,
@@ -33,17 +34,14 @@ class LoaderTextView @JvmOverloads constructor(
     private var defaultColorResource = ContextCompat.getColor(context, R.color.loaderDefault)
 
     init {
-        attrs?.let {
-            with(context.obtainStyledAttributes(it, R.styleable.LoaderTextView)) {
-                if (getBoolean(R.styleable.LoaderTextView_loader_useDarkColor, false)) {
-                    defaultColorResource = ContextCompat.getColor(context, R.color.loaderDarkerDefault)
-                }
-                loaderController.corners = getDimensionPixelSize(
-                    R.styleable.LoaderTextView_loader_corner,
-                    LoaderConstant.CORNER_DEFAULT
-                )
-                recycle()
+        attrs?.getAttributes(context, R.styleable.LoaderTextView) {
+            if (getBoolean(R.styleable.LoaderTextView_loader_useDarkColor, false)) {
+                defaultColorResource = ContextCompat.getColor(context, R.color.loaderDarkerDefault)
             }
+            loaderController.corners = getDimensionPixelSize(
+                R.styleable.LoaderTextView_loader_corner,
+                LoaderConstant.CORNER_DEFAULT
+            )
         }
     }
 
