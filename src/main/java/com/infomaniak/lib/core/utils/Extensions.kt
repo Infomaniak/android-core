@@ -24,18 +24,19 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.content.res.TypedArray
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.AttributeSet
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.annotation.IdRes
-import androidx.annotation.StringRes
+import androidx.annotation.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -365,3 +366,16 @@ fun <T> List<T>.isContentEqual(other: List<T>, predicate: (T, T) -> Boolean): Bo
 }
 
 operator fun Regex.contains(input: String) = containsMatchIn(input)
+
+fun AttributeSet.getAttributes(
+    context: Context,
+    @StyleableRes styleableResource: IntArray,
+    @AttrRes defStyleAttr: Int = 0,
+    @StyleRes defStyleRes: Int = 0,
+    block: TypedArray.() -> Unit
+) {
+    context.obtainStyledAttributes(this, styleableResource, defStyleAttr, defStyleRes).apply {
+        block()
+        recycle()
+    }
+}
