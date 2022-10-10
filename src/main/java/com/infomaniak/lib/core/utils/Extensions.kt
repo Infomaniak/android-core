@@ -147,6 +147,22 @@ fun Date.minutes(): Int =
         time = this@minutes
     }.get(Calendar.MINUTE)
 
+fun Date.isToday(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() && day() == now.day() }
+
+fun Date.isYesterday(): Boolean {
+    val yesterday = Calendar.getInstance().apply { add(Calendar.DATE, -1) }.time
+    return year() == yesterday.year() && month() == yesterday.month() && day() == yesterday.day()
+}
+
+fun Date.isThisWeek(): Boolean {
+    val now = Date()
+    return this in now.startOfTheWeek()..now.endOfTheWeek()
+}
+
+fun Date.isThisMonth(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() }
+
+fun Date.isThisYear(): Boolean = Date().let { now -> year() == now.year() }
+
 fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
