@@ -35,4 +35,14 @@
     <string name="typeOwner">Gesetzlich Verantwortlicher</string>
     <string name="updateAppTitle">Aktualisierung erforderlich</string>
     <string name="updateButton">Aktualisieren</string>
+
+    <string name="bugTrackerAddFiles">Dateien hinzufügen</string>
+    <string name="bugTrackerHint">Sie können Dateien (maximal 32 MB) hinzufügen, die helfen, Ihren Bug besser zu verstehen.</string>
+    <string name="bugTrackerSubmit">Einreichen</string>
+    <string name="bugTrackerFilesTitle">DATEIEN</string>
+    <string name="bugTrackerDescription">Beschreibung</string>
+    <string name="bugTrackerSubject">Betreff</string>
+    <string name="bugTrackerPriority">Priorität</string>
+    <string name="bugTrackerType">Typ</string>
+
 </resources>

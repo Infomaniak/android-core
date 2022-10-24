@@ -25,12 +25,15 @@
         android:id="@+id/bugTrackerActivity"
         android:name="com.infomaniak.lib.core.bugtracker.BugTrackerActivity"
         android:label="activity_bug_tracker"
-        tools:layout="@layout/activity_bug_tracker" >
+        tools:layout="@layout/activity_bug_tracker">
         <argument
             android:name="user"
             app:argType="com.infomaniak.lib.core.models.user.User" />
         <argument
             android:name="appBuildNumber"
+            app:argType="string" />
+        <argument
+            android:name="bucketIdentifier"
             app:argType="string" />
         <argument
             android:name="projectName"

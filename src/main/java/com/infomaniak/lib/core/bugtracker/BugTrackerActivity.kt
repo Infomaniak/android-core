@@ -20,29 +20,30 @@ package com.infomaniak.lib.core.bugtracker
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
-import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.infomaniak.lib.core.BuildConfig
 import com.infomaniak.lib.core.InfomaniakCore
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.databinding.ActivityBugTrackerBinding
+import com.infomaniak.lib.core.networking.HttpClient.okHttpClient
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.lib.core.utils.whenResultIsOk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.Headers
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.net.URLEncoder
-
 
 class BugTrackerActivity : AppCompatActivity() {
 
@@ -50,7 +51,7 @@ class BugTrackerActivity : AppCompatActivity() {
     private val navigationArgs: BugTrackerActivityArgs by navArgs()
 
     private val imageAdapter = BugTrackerImageAdapter()
-    val types = listOf("bugs", "features") // TODO : What values should be sent ?
+    val types = listOf("bugs", "features")
     var type = ""
 
     private val selectImagesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -68,41 +69,42 @@ class BugTrackerActivity : AppCompatActivity() {
             if (clipData != null) {
                 for (i in 0 until clipData.itemCount) {
                     runCatching {
-                        newImages.add(getImageFromUri(clipData.getItemAt(i).uri))
+                        getImageFromUri(clipData.getItemAt(i).uri)?.let(newImages::add)
                     }.onFailure {
                         it.printStackTrace()
                         errorCount++
                     }
                 }
             } else if (uri != null) {
-                newImages.add(getImageFromUri(uri))
+                getImageFromUri(uri)?.let(newImages::add)
             }
         } catch (exception: Exception) {
             exception.printStackTrace()
             errorCount++
         } finally {
             if (errorCount > 0) {
-                showSnackbar("Some files failed to be imported: ($errorCount)")
+                showSnackbar("Some images failed to be imported: ($errorCount)")
             }
         }
 
         imageAdapter.addImages(newImages)
     }
 
-    private fun getImageFromUri(uri: Uri): Image {
-        val cursor: Cursor =
-            contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
-                ?: throw Exception("Cursor is null")
-        cursor.moveToFirst()
+    private fun getImageFromUri(uri: Uri): Image? {
+        val cursor = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
+        return cursor?.use { cursor ->
+            cursor.moveToFirst()
 
-        val fileName = getFileName(cursor) ?: uri.lastPathSegment ?: throw Exception("Could not find filename of the file")
-        val fileSize = getFileSize(cursor)
+            val fileName = getFileName(cursor) ?: uri.lastPathSegment ?: throw Exception("Could not find filename of the file")
+            val fileSize = getFileSize(cursor)
+            val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
+            val mimeType = contentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val bytes = contentResolver.openInputStream(uri).use { it?.readBytes() }
 
-        val image = Image(fileName, fileSize, uri)
+            Log.e("gibran", "getImageFromUri - type1: ${mimeType}")
 
-        cursor.close()
-
-        return image
+            bytes?.let { Image(fileName, fileSize, uri, mimeType, bytes) }
+        }
     }
 
     private fun getFileName(cursor: Cursor): String? {
@@ -115,134 +117,88 @@ class BugTrackerActivity : AppCompatActivity() {
 
     private fun getFileSize(cursor: Cursor) = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE))
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         super.onCreate(savedInstanceState)
+        setContentView(root)
 
-        with(binding) {
-            setContentView(root)
+        toolbar.setNavigationOnClickListener { finish() }
 
-            toolbar.setNavigationOnClickListener { finish() }
-
-            addFilesButton.setOnClickListener {
-                val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                    type = "image/*"
-                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                }
-                val chooserIntent = Intent.createChooser(intent, "Sélectionner des images TODO")
-                selectImagesResultLauncher.launch(chooserIntent)
+        addFilesButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                addCategory(Intent.CATEGORY_OPENABLE)
             }
+            val chooserIntent = Intent.createChooser(intent, getString(R.string.bugTrackerAddFiles)) // TODO
+            selectImagesResultLauncher.launch(chooserIntent)
+        }
 
-            typeField.setOnItemClickListener { _, _, position, _ ->
-                // val bugValue = resources.getStringArray(R.array.bugTrakerType)
-                // Log.e("bugValue", bugValue[position])
-                type = types[position]
-            }
+        typeField.setOnItemClickListener { _, _, position, _ ->
+            type = types[position]
+        }
 
-            fileRecyclerView.adapter = imageAdapter
+        fileRecyclerView.adapter = imageAdapter
 
-            submitButton.setOnClickListener {
-                val bucketIdentifier = "app_mail" // bucket_identifier // TODO : understand iOS code how it works ?
-                val subject = subjectField.prefixText.toString() + subjectTextInput.text.toString() // subject
-                val description = descriptionTextInput.text.toString() // description
-                val priorityString = priorityField.text.toString() // priority[label]
-                val priorityValue =
-                    (resources.getStringArray(R.array.bugTrakerPriority)
-                        .indexOf(priorityString) + 1).toString() // priority[value]
-                val extraProject = navigationArgs.projectName // extra[project]
-                // val extraRoute = "undefined" // extra[route] // PAS DE SENS
-                val userAgent = "InfomaniakBugTracker/1" // extra[userAgent]
-                val extraUserId = navigationArgs.user.id.toString() // extra[userId]
-                val extraOrganizationId =
-                    navigationArgs.user.preferences.organizationPreference.currentOrganizationId.toString() // extra[groupId]
-                val extraUserMail = navigationArgs.user.email // extra[userMail]
-                val extraUserDisplayName = navigationArgs.user.displayName ?: "undefined" // extra[userDisplayName]
-                // val extraPageLink = // extra[pageLink] // PAS DE SENS
-                // val extraConsole = // extra[console] // PAS DE SENS
-                // val typeIndex = resources.getStringArray(R.array.bugTrakerType).toList().indexOf(typeField.text.toString())
-                // val file0 = // file_0
+        submitButton.setOnClickListener { sendBugReport() }
+    }
 
-                // From iOS code:
-                val platform = android.os.Build.BRAND
-                val os_version = android.os.Build.VERSION.SDK_INT
-                val device = android.os.Build.DEVICE
-                val app_version = navigationArgs.appBuildNumber
+    private fun sendBugReport() = with(binding) {
+        val bucketIdentifier = navigationArgs.bucketIdentifier
+        val subject = subjectField.prefixText.toString() + subjectTextInput.text.toString()
+        val description = descriptionTextInput.text.toString()
+        val priorityLabel = "Priorité: " + priorityField.text.toString()
+        val priorityValue = (resources.getStringArray(R.array.bugTrackerPriority).indexOf(priorityLabel) + 1).toString()
+        val extraProject = navigationArgs.projectName
+        val extraRoute = "undefined"
+        val userAgent = "InfomaniakBugTracker/1"
+        val extraUserId = navigationArgs.user.id.toString()
+        val extraOrganizationId = navigationArgs.user.preferences.organizationPreference.currentOrganizationId.toString()
+        val extraUserMail = navigationArgs.user.email
+        val extraUserDisplayName = navigationArgs.user.displayName ?: "undefined"
 
+        val brand = Build.BRAND
+        val osVersion = Build.VERSION.SDK_INT.toString()
+        val device = Build.DEVICE
+        val appVersion = navigationArgs.appBuildNumber
 
-                val imagesToSend = mutableListOf<ByteArray>()
-                imageAdapter.getImages().forEach { image ->
-                    val inputStream = contentResolver.openInputStream(image.uri)
-                    inputStream?.readBytes()?.let { imagesToSend.add(it) }
-                }
+        val url = REPORT_URL
+        val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("bucket_identifier", bucketIdentifier)
+            .addFormDataPart("subject", subject)
+            .addFormDataPart("description", description)
+            .addFormDataPart("priority[label]", priorityLabel)
+            .addFormDataPart("priority[value]", priorityValue)
+            .addFormDataPart("extra[project]", extraProject)
+            .addFormDataPart("extra[route]", extraRoute)
+            .addFormDataPart("extra[userAgent]", userAgent)
+            .addFormDataPart("extra[userId]", extraUserId)
+            .addFormDataPart("extra[groupId]", extraOrganizationId)
+            .addFormDataPart("extra[userMail]", extraUserMail)
+            .addFormDataPart("extra[userDisplayName]", extraUserDisplayName)
+            .addFormDataPart("extra[brand]", brand)
+            .addFormDataPart("extra[osVersion]", osVersion)
+            .addFormDataPart("extra[device]", device)
+            .addFormDataPart("extra[appVersion]", appVersion)
+            .addFormDataPart("type", type)
 
+        imageAdapter.getImages().forEachIndexed { index, image ->
+            formBuilder.addFormDataPart(
+                "file_$index",
+                image.name,
+                image.bytes.toRequestBody(image.mimeType?.toMediaTypeOrNull())
+            )
+        }
 
-                Log.e("gibran", "onCreate - bucket_identifier: ${bucketIdentifier}")
-                Log.e("gibran", "onCreate - subject: ${subject}")
-                Log.e("gibran", "onCreate - description: ${description}")
-                Log.e("gibran", "onCreate - priorityString: ${priorityString}")
-                Log.e("gibran", "onCreate - priorityValue: ${priorityValue}")
-                Log.e("gibran", "onCreate - extraProject: ${extraProject}")
-                // Log.e("gibran", "onCreate - extraRoute: ${extraRoute}")
-                Log.e("gibran", "onCreate - userAgent: ${userAgent}")
-                Log.e("gibran", "onCreate - extraUserId: ${extraUserId}")
-                Log.e("gibran", "onCreate - extraGroupId: ${extraOrganizationId}")
-                Log.e("gibran", "onCreate - extraUserMail: ${extraUserMail}")
-                Log.e("gibran", "onCreate - extraUserDisplayName: ${extraUserDisplayName}")
-                // Log.e("gibran", "onCreate - extraPageLink: ${extraPageLink}")
-                // Log.e("gibran", "onCreate - extraConsole: ${extraConsole}")
-                Log.e("gibran", "onCreate - type: ${type}")
-                Log.e("gibran", "onCreate: ===");
+        val request = Request.Builder()
+            .url(url)
+            .headers(getReportHeader())
+            .post(formBuilder.build())
+            .build()
 
-                Log.e("gibran", "onCreate - platform: ${platform}")
-                Log.e("gibran", "onCreate - os_version: ${os_version}")
-                Log.e("gibran", "onCreate - device: ${device}")
-                Log.e("gibran", "onCreate - app_version: ${app_version}")
-                Log.e("gibran", "onCreate: ===");
-
-                imagesToSend.forEachIndexed { index, bytes ->
-                    Log.e("gibran", "onCreate - file_${index} -> bytes.size : ${bytes.size}")
-                }
-
-
-                val httpClient = OkHttpClient.Builder().apply {
-                    if (BuildConfig.DEBUG) {
-                        addNetworkInterceptor(StethoInterceptor())
-                    }
-                }.run {
-                    build()
-                }
-
-                val url = "https://welcome.infomaniak.com/api/components/report"
-                val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("bucket_identifier", bucketIdentifier)
-                    .addFormDataPart("subject", subject)
-                    .addFormDataPart("description", description)
-                    .addFormDataPart("priority[label]", priorityString)
-                    .addFormDataPart("priority[value]", priorityValue)
-                    .addFormDataPart("extra[project]", extraProject)
-                    .addFormDataPart("extra[userAgent]", userAgent)
-                    .addFormDataPart("extra[userId]", extraUserId)
-                    .addFormDataPart("extra[groupId]", extraOrganizationId)
-                    .addFormDataPart("extra[userMail]", extraUserMail)
-                    .addFormDataPart("extra[userDisplayName]", extraUserDisplayName)
-                    .addFormDataPart("type", type)
-
-                imagesToSend.forEachIndexed { index, bytes ->
-                    formBuilder.addFormDataPart("file_$index", bytes.toString())
-                }
-
-                val request = Request.Builder()
-                    .url(url)
-                    .headers(getReportHeader())
-                    .post(formBuilder.build())
-                    .build()
-
-                lifecycleScope.launch(Dispatchers.IO) {
-                    val response = httpClient.newBuilder().build().newCall(request).execute()
-                    Log.e("gibran", "onCreate - response: ${response}")
-                }
-            }
+        lifecycleScope.launch(Dispatchers.IO) {
+            val response = okHttpClient.newBuilder().build().newCall(request).execute()
+            Log.e("gibran", "onCreate - response: ${response}")
         }
     }
 
@@ -263,6 +219,13 @@ class BugTrackerActivity : AppCompatActivity() {
     data class Image(
         val name: String,
         val size: Long,
-        val uri: Uri
+        val uri: Uri,
+        val mimeType: String?,
+        val bytes: ByteArray
     )
+
+    companion object {
+        const val REPORT_URL = "https://welcome.infomaniak.com/api/components/report"
+        const val MAIL_BUCKET_ID = "app_mail"
+    }
 }

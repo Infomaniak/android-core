@@ -31,6 +31,7 @@
             android:id="@+id/collapsingToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="?android:windowBackground"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:title="Bug tracker">
 
@@ -58,7 +59,7 @@
                 style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Type">
+                android:hint="@string/bugTrackerType">
 
                 <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:id="@+id/typeField"
@@ -66,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorPrimaryContainer"
                     android:inputType="none"
-                    app:simpleItems="@array/bugTrakerType" />
+                    app:simpleItems="@array/bugTrackerType" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,7 +75,7 @@
                 style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Priorité"
+                android:hint="@string/bugTrackerPriority"
                 app:boxCornerRadiusTopEnd="0dp"
                 app:boxCornerRadiusTopStart="0dp">
 
@@ -84,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorPrimaryContainer"
                     android:inputType="none"
-                    app:simpleItems="@array/bugTrakerPriority" />
+                    app:simpleItems="@array/bugTrackerPriority" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,10 +94,10 @@
                 style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Sujet"
+                android:hint="@string/bugTrackerSubject"
                 app:boxCornerRadiusTopEnd="0dp"
                 app:boxCornerRadiusTopStart="0dp"
-                app:prefixText="[Mobile] : ">
+                app:prefixText="[Android] : ">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/subjectTextInput"
@@ -111,7 +112,7 @@
                 style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Description"
+                android:hint="@string/bugTrackerDescription"
                 app:boxCornerRadiusBottomEnd="4dp"
                 app:boxCornerRadiusBottomStart="4dp"
                 app:boxCornerRadiusTopEnd="0dp"
@@ -132,8 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginStandard"
-                android:text="FICHIERS" />
-
+                android:text="@string/bugTrackerFilesTitle" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fileRecyclerView"
@@ -157,14 +157,14 @@
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:minHeight="40dp"
-                android:text="Ajouter un fichier"
+                android:text="@string/bugTrackerAddFiles"
                 app:cornerRadius="0dp"
                 app:icon="@android:drawable/stat_sys_upload_done" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vous pouvez ajouter des fichiers (32 Mo maximum) pour aider à mieux comprendre votre bug."
+                android:text="@string/bugTrackerHint"
                 android:textSize="12sp" />
 
             <Button
