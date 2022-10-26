@@ -25,8 +25,10 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.infomaniak.lib.core.InfomaniakCore
@@ -47,6 +49,7 @@ import java.net.URLEncoder
 class BugTrackerActivity : AppCompatActivity() {
 
     private val binding: ActivityBugTrackerBinding by lazy { ActivityBugTrackerBinding.inflate(layoutInflater) }
+    private val bugTrackerViewModel: BugTrackerViewModel by viewModels()
     private val navigationArgs: BugTrackerActivityArgs by navArgs()
 
     private val imageAdapter = BugTrackerImageAdapter()
@@ -143,6 +146,7 @@ class BugTrackerActivity : AppCompatActivity() {
         }
 
         fileRecyclerView.adapter = imageAdapter
+        imageAdapter.bindToViewModel(bugTrackerViewModel.images)
 
         submitButton.setOnClickListener { sendBugReport() }
     }
@@ -218,6 +222,10 @@ class BugTrackerActivity : AppCompatActivity() {
         }.run {
             build()
         }
+    }
+
+    class BugTrackerViewModel : ViewModel() {
+        val images = mutableListOf<Image>()
     }
 
     data class Image(
