@@ -37,12 +37,13 @@
     <string name="updateButton">Mettre à jour</string>
 
     <string name="bugTrackerAddFiles">Ajouter des fichiers</string>
-    <string name="bugTrackerHint">Vous pouvez ajouter des fichiers (32 Mo maximum) pour aider à mieux comprendre votre bug.</string>
-    <string name="bugTrackerSubmit">Envoyer</string>
-    <string name="bugTrackerFilesTitle">FICHIERS</string>
     <string name="bugTrackerDescription">Description</string>
-    <string name="bugTrackerSubject">Sujet</string>
+    <string name="bugTrackerFileTooBig">Images trop lourdes (max 32 Mo)</string>
+    <string name="bugTrackerFilesTitle">FICHIERS</string>
+    <string name="bugTrackerHint">Vous pouvez ajouter des fichiers (32 Mo maximum) pour aider à mieux comprendre votre bug.</string>
     <string name="bugTrackerPriority">Priorité</string>
+    <string name="bugTrackerSubject">Sujet</string>
+    <string name="bugTrackerSubmit">Envoyer</string>
     <string name="bugTrackerType">Type</string>
 
 </resources>

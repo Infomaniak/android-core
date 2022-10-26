@@ -163,7 +163,13 @@ class BugTrackerActivity : AppCompatActivity() {
         imageAdapter.bindToViewModel(bugTrackerViewModel.images)
         updateImageTotalSize()
 
-        submitButton.setOnClickListener { sendBugReport() }
+        submitButton.setOnClickListener {
+            if (bugTrackerViewModel.images.sumOf { it.size } < MB_32) {
+                sendBugReport()
+            } else {
+                showSnackbar(R.string.bugTrackerFileTooBig)
+            }
+        }
     }
 
     private fun sendBugReport() = with(binding) {
