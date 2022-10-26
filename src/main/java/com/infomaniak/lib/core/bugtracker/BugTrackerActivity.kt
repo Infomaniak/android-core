@@ -23,11 +23,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.text.format.Formatter
 import android.webkit.MimeTypeMap
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
@@ -52,7 +55,7 @@ class BugTrackerActivity : AppCompatActivity() {
     private val bugTrackerViewModel: BugTrackerViewModel by viewModels()
     private val navigationArgs: BugTrackerActivityArgs by navArgs()
 
-    private val imageAdapter = BugTrackerImageAdapter()
+    private val imageAdapter = BugTrackerImageAdapter() { updateImageTotalSize() }
     val types = listOf("bugs", "features")
     var type = types[DEFAULT_REPORT_TYPE]
 
@@ -90,6 +93,17 @@ class BugTrackerActivity : AppCompatActivity() {
         }
 
         imageAdapter.addImages(newImages)
+        updateImageTotalSize()
+    }
+
+    private fun updateImageTotalSize() {
+        if (bugTrackerViewModel.images.count() <= 1) {
+            binding.totalSize.isGone = true
+        } else {
+            val imagesSize = bugTrackerViewModel.images.sumOf { it.size }
+            binding.totalSize.text = Formatter.formatShortFileSize(this, imagesSize)
+            binding.totalSize.isVisible = true
+        }
     }
 
     private fun getImageFromUri(uri: Uri): Image? {
@@ -147,6 +161,7 @@ class BugTrackerActivity : AppCompatActivity() {
 
         fileRecyclerView.adapter = imageAdapter
         imageAdapter.bindToViewModel(bugTrackerViewModel.images)
+        updateImageTotalSize()
 
         submitButton.setOnClickListener { sendBugReport() }
     }
@@ -242,5 +257,7 @@ class BugTrackerActivity : AppCompatActivity() {
 
         const val DEFAULT_REPORT_TYPE = 0
         const val DEFAULT_PRIORITY_TYPE = 1
+
+        const val MB_32 = 32 * 1024 * 1024
     }
 }

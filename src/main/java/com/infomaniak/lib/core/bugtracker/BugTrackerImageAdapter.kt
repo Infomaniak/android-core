@@ -23,7 +23,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.infomaniak.lib.core.databinding.ItemBugTrackerImageBinding
 
-class BugTrackerImageAdapter : RecyclerView.Adapter<BugTrackerImageAdapter.BugTrackerImageViewHolder>() {
+class BugTrackerImageAdapter(
+    private val onImageDeleted: () -> Unit
+) : RecyclerView.Adapter<BugTrackerImageAdapter.BugTrackerImageViewHolder>() {
 
     private var images: MutableList<BugTrackerActivity.Image> = mutableListOf()
 
@@ -53,6 +55,7 @@ class BugTrackerImageAdapter : RecyclerView.Adapter<BugTrackerImageAdapter.BugTr
         val position = images.indexOf(image)
         images.removeAt(position)
         notifyItemRemoved(position)
+        onImageDeleted()
     }
 
     fun bindToViewModel(newImages: MutableList<BugTrackerActivity.Image>) {
