@@ -23,7 +23,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -52,7 +51,7 @@ class BugTrackerActivity : AppCompatActivity() {
 
     private val imageAdapter = BugTrackerImageAdapter()
     val types = listOf("bugs", "features")
-    var type = ""
+    var type = types[DEFAULT_REPORT_TYPE]
 
     private val selectImagesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         it.whenResultIsOk { data -> onImagesImported(data) }
@@ -101,9 +100,7 @@ class BugTrackerActivity : AppCompatActivity() {
             val mimeType = contentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             val bytes = contentResolver.openInputStream(uri).use { it?.readBytes() }
 
-            Log.e("gibran", "getImageFromUri - type1: ${mimeType}")
-
-            bytes?.let { Image(fileName, fileSize, uri, mimeType, bytes) }
+            bytes?.let { Image(fileName, fileSize, uri, mimeType, it) }
         }
     }
 
@@ -129,12 +126,20 @@ class BugTrackerActivity : AppCompatActivity() {
                 putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
                 addCategory(Intent.CATEGORY_OPENABLE)
             }
-            val chooserIntent = Intent.createChooser(intent, getString(R.string.bugTrackerAddFiles)) // TODO
+            val chooserIntent = Intent.createChooser(intent, getString(R.string.bugTrackerAddFiles))
             selectImagesResultLauncher.launch(chooserIntent)
         }
 
-        typeField.setOnItemClickListener { _, _, position, _ ->
-            type = types[position]
+        typeField.apply {
+            setOnItemClickListener { _, _, position, _ ->
+                type = types[position]
+            }
+
+            setText(adapter.getItem(DEFAULT_REPORT_TYPE) as String, false)
+        }
+
+        priorityField.apply {
+            setText(adapter.getItem(DEFAULT_PRIORITY_TYPE) as String, false)
         }
 
         fileRecyclerView.adapter = imageAdapter
@@ -198,7 +203,6 @@ class BugTrackerActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             val response = okHttpClient.newBuilder().build().newCall(request).execute()
-            Log.e("gibran", "onCreate - response: ${response}")
         }
     }
 
@@ -221,11 +225,14 @@ class BugTrackerActivity : AppCompatActivity() {
         val size: Long,
         val uri: Uri,
         val mimeType: String?,
-        val bytes: ByteArray
+        val bytes: ByteArray,
     )
 
     companion object {
         const val REPORT_URL = "https://welcome.infomaniak.com/api/components/report"
         const val MAIL_BUCKET_ID = "app_mail"
+
+        const val DEFAULT_REPORT_TYPE = 0
+        const val DEFAULT_PRIORITY_TYPE = 1
     }
 }
