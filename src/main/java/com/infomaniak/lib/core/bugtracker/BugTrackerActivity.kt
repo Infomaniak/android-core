@@ -259,7 +259,12 @@ class BugTrackerActivity : AppCompatActivity() {
 
     companion object {
         const val REPORT_URL = "https://welcome.infomaniak.com/api/components/report"
+
         const val MAIL_BUCKET_ID = "app_mail"
+        const val MAIL_PROJECT_NAME = "mail"
+
+        // const val DRIVE_BUCKET_ID = "???"
+        const val DRIVE_PROJECT_NAME = "drive"
 
         const val DEFAULT_REPORT_TYPE = 0
         const val DEFAULT_PRIORITY_TYPE = 1
