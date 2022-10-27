@@ -34,20 +34,18 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
-import com.infomaniak.lib.core.InfomaniakCore
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.databinding.ActivityBugTrackerBinding
 import com.infomaniak.lib.core.networking.HttpClient.okHttpClient
+import com.infomaniak.lib.core.networking.HttpUtils.getHeaders
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.lib.core.utils.whenResultIsOk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.net.URLEncoder
 
 class BugTrackerActivity : AppCompatActivity() {
 
@@ -68,7 +66,7 @@ class BugTrackerActivity : AppCompatActivity() {
         val uri = importIntent?.data
         var errorCount = 0
 
-        val newImages = mutableListOf<Image>()
+        val newImages = mutableListOf<BugTrackerImage>()
 
         try {
             if (clipData != null) {
@@ -96,17 +94,7 @@ class BugTrackerActivity : AppCompatActivity() {
         updateImageTotalSize()
     }
 
-    private fun updateImageTotalSize() {
-        if (bugTrackerViewModel.images.count() <= 1) {
-            binding.totalSize.isGone = true
-        } else {
-            val imagesSize = bugTrackerViewModel.images.sumOf { it.size }
-            binding.totalSize.text = Formatter.formatShortFileSize(this, imagesSize)
-            binding.totalSize.isVisible = true
-        }
-    }
-
-    private fun getImageFromUri(uri: Uri): Image? {
+    private fun getImageFromUri(uri: Uri): BugTrackerImage? {
         val cursor = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
         return cursor?.use { cursor ->
             cursor.moveToFirst()
@@ -117,7 +105,7 @@ class BugTrackerActivity : AppCompatActivity() {
             val mimeType = contentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             val bytes = contentResolver.openInputStream(uri).use { it?.readBytes() }
 
-            bytes?.let { Image(fileName, fileSize, uri, mimeType, it) }
+            bytes?.let { BugTrackerImage(fileName, fileSize, uri, mimeType, it) }
         }
     }
 
@@ -130,6 +118,18 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private fun getFileSize(cursor: Cursor) = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE))
+
+    private fun updateImageTotalSize() = with(binding) {
+        if (bugTrackerViewModel.images.count() <= 1) {
+            totalSize.isGone = true
+        } else {
+            val imagesSize = bugTrackerViewModel.images.sumOf { it.size }
+            totalSize.apply {
+                text = Formatter.formatShortFileSize(this@BugTrackerActivity, imagesSize)
+                isVisible = true
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         super.onCreate(savedInstanceState)
@@ -164,7 +164,7 @@ class BugTrackerActivity : AppCompatActivity() {
         updateImageTotalSize()
 
         submitButton.setOnClickListener {
-            if (bugTrackerViewModel.images.sumOf { it.size } < MB_32) {
+            if (bugTrackerViewModel.images.sumOf { it.size } < FILE_SIZE_32_MB) {
                 sendBugReport()
             } else {
                 showSnackbar(R.string.bugTrackerFileTooBig)
@@ -215,14 +215,14 @@ class BugTrackerActivity : AppCompatActivity() {
         imageAdapter.getImages().forEachIndexed { index, image ->
             formBuilder.addFormDataPart(
                 "file_$index",
-                image.name,
+                image.fileName,
                 image.bytes.toRequestBody(image.mimeType?.toMediaTypeOrNull())
             )
         }
 
         val request = Request.Builder()
             .url(url)
-            .headers(getReportHeader())
+            .headers(getHeaders())
             .post(formBuilder.build())
             .build()
 
@@ -231,26 +231,12 @@ class BugTrackerActivity : AppCompatActivity() {
         }
     }
 
-    private fun getReportHeader(): Headers {
-        return Headers.Builder().apply {
-            add("accept", "*/*")
-            add("accept-encoding", "gzip, deflate, br")
-            add("accept-language", "fr-FR,fr;q=0.9")
-            add("App-Version", "Android ${InfomaniakCore.appVersionName}")
-            add("Authorization", "Bearer ${InfomaniakCore.bearerToken}")
-            add("Cache-Control", "no-cache")
-            InfomaniakCore.deviceIdentifier?.let { add("Device-Identifier", URLEncoder.encode(it, "UTF-8")) }
-        }.run {
-            build()
-        }
-    }
-
     class BugTrackerViewModel : ViewModel() {
-        val images = mutableListOf<Image>()
+        val images = mutableListOf<BugTrackerImage>()
     }
 
-    data class Image(
-        val name: String,
+    data class BugTrackerImage(
+        val fileName: String,
         val size: Long,
         val uri: Uri,
         val mimeType: String?,
@@ -269,6 +255,6 @@ class BugTrackerActivity : AppCompatActivity() {
         const val DEFAULT_REPORT_TYPE = 0
         const val DEFAULT_PRIORITY_TYPE = 1
 
-        const val MB_32 = 32 * 1024 * 1024
+        const val FILE_SIZE_32_MB = 32 * 1024 * 1024
     }
 }

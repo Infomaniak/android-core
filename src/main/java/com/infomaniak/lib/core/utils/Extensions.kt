@@ -397,6 +397,6 @@ fun AttributeSet.getAttributes(
     }
 }
 
-fun ActivityResult.whenResultIsOk(completion: (Intent?) -> Unit) { // TODO : Remove from kDrive extensions
+fun ActivityResult.whenResultIsOk(completion: (Intent?) -> Unit) {
     if (resultCode == Activity.RESULT_OK) data.let(completion::invoke)
 }
