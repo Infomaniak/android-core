@@ -33,7 +33,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
+    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
 
     api "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     api "androidx.navigation:navigation-ui-ktx:$navigation_version"
@@ -54,7 +54,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     api 'com.google.android.material:material:1.7.0'
-    api 'com.google.code.gson:gson:2.9.1'
+    api 'com.google.code.gson:gson:2.10'
 
     def coil_version = '2.2.2'
     api "io.coil-kt:coil-gif:$coil_version"
@@ -62,6 +62,6 @@ dependencies {
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.github.Infomaniak:android-login:2.5.1'
     api 'com.squareup.okhttp3:okhttp:4.10.0'
-    api 'io.sentry:sentry-android:6.4.3'
+    api 'io.sentry:sentry-android:6.6.0'
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 }
