@@ -36,7 +36,6 @@ import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.annotation.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -395,8 +394,4 @@ fun AttributeSet.getAttributes(
         block()
         recycle()
     }
-}
-
-fun ActivityResult.whenResultIsOk(completion: (Intent?) -> Unit) {
-    if (resultCode == Activity.RESULT_OK) data.let(completion::invoke)
 }

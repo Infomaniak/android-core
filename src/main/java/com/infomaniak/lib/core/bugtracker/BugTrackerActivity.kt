@@ -17,7 +17,6 @@
  */
 package com.infomaniak.lib.core.bugtracker
 
-import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
@@ -25,7 +24,6 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.text.format.Formatter
 import android.webkit.MimeTypeMap
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
@@ -39,7 +37,7 @@ import com.infomaniak.lib.core.databinding.ActivityBugTrackerBinding
 import com.infomaniak.lib.core.networking.HttpClient.okHttpClient
 import com.infomaniak.lib.core.networking.HttpUtils.getHeaders
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
-import com.infomaniak.lib.core.utils.whenResultIsOk
+import com.infomaniak.lib.core.utils.Utils.FilePicker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -53,79 +51,17 @@ class BugTrackerActivity : AppCompatActivity() {
     private val bugTrackerViewModel: BugTrackerViewModel by viewModels()
     private val navigationArgs: BugTrackerActivityArgs by navArgs()
 
-    private val imageAdapter = BugTrackerImageAdapter() { updateImageTotalSize() }
+    private val fileAdapter = BugTrackerFileAdapter() { updateFileTotalSize() }
     val types = listOf("bugs", "features")
     var type = types[DEFAULT_REPORT_TYPE]
 
-    private val selectImagesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        it.whenResultIsOk { data -> onImagesImported(data) }
-    }
-
-    private fun onImagesImported(importIntent: Intent?) {
-        val clipData = importIntent?.clipData
-        val uri = importIntent?.data
-        var errorCount = 0
-
-        val newImages = mutableListOf<BugTrackerImage>()
-
-        try {
-            if (clipData != null) {
-                for (i in 0 until clipData.itemCount) {
-                    runCatching {
-                        getImageFromUri(clipData.getItemAt(i).uri)?.let(newImages::add)
-                    }.onFailure {
-                        it.printStackTrace()
-                        errorCount++
-                    }
-                }
-            } else if (uri != null) {
-                getImageFromUri(uri)?.let(newImages::add)
-            }
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-            errorCount++
-        } finally {
-            if (errorCount > 0) {
-                showSnackbar("Some images failed to be imported: ($errorCount)")
-            }
-        }
-
-        imageAdapter.addImages(newImages)
-        updateImageTotalSize()
-    }
-
-    private fun getImageFromUri(uri: Uri): BugTrackerImage? {
-        val cursor = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
-        return cursor?.use { cursor ->
-            cursor.moveToFirst()
-
-            val fileName = getFileName(cursor) ?: uri.lastPathSegment ?: throw Exception("Could not find filename of the file")
-            val fileSize = getFileSize(cursor)
-            val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
-            val mimeType = contentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            val bytes = contentResolver.openInputStream(uri).use { it?.readBytes() }
-
-            bytes?.let { BugTrackerImage(fileName, fileSize, uri, mimeType, it) }
-        }
-    }
-
-    private fun getFileName(cursor: Cursor): String? {
-        val columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        return when {
-            columnIndex != -1 -> cursor.getStringOrNull(columnIndex)
-            else -> null
-        }
-    }
-
-    private fun getFileSize(cursor: Cursor) = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE))
-
-    private fun updateImageTotalSize() = with(binding) {
-        if (bugTrackerViewModel.images.count() <= 1) {
+    private fun updateFileTotalSize() = with(binding) {
+        if (bugTrackerViewModel.files.count() <= 1) {
             totalSize.isGone = true
         } else {
-            val imagesSize = bugTrackerViewModel.images.sumOf { it.size }
+            val filesSize = bugTrackerViewModel.files.sumOf { it.size }
             totalSize.apply {
-                text = Formatter.formatShortFileSize(this@BugTrackerActivity, imagesSize)
+                text = Formatter.formatShortFileSize(this@BugTrackerActivity, filesSize)
                 isVisible = true
             }
         }
@@ -137,15 +73,8 @@ class BugTrackerActivity : AppCompatActivity() {
 
         toolbar.setNavigationOnClickListener { finish() }
 
-        addFilesButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "image/*"
-                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                addCategory(Intent.CATEGORY_OPENABLE)
-            }
-            val chooserIntent = Intent.createChooser(intent, getString(R.string.bugTrackerAddFiles))
-            selectImagesResultLauncher.launch(chooserIntent)
-        }
+        val filePicker = FilePicker(this@BugTrackerActivity)
+        addFilesButton.setOnClickListener { filePicker.open(callback = ::addFiles) }
 
         typeField.apply {
             setOnItemClickListener { _, _, position, _ ->
@@ -159,18 +88,64 @@ class BugTrackerActivity : AppCompatActivity() {
             setText(adapter.getItem(DEFAULT_PRIORITY_TYPE) as String, false)
         }
 
-        fileRecyclerView.adapter = imageAdapter
-        imageAdapter.bindToViewModel(bugTrackerViewModel.images)
-        updateImageTotalSize()
+        fileRecyclerView.adapter = fileAdapter
+        fileAdapter.bindToViewModel(bugTrackerViewModel.files)
+        updateFileTotalSize()
 
         submitButton.setOnClickListener {
-            if (bugTrackerViewModel.images.sumOf { it.size } < FILE_SIZE_32_MB) {
+            if (bugTrackerViewModel.files.sumOf { it.size } < FILE_SIZE_32_MB) {
                 sendBugReport()
             } else {
                 showSnackbar(R.string.bugTrackerFileTooBig)
             }
         }
     }
+
+    private fun addFiles(uris: List<Uri>) {
+        val newFiles = mutableListOf<BugTrackerFile>()
+        var errorCount = 0
+
+        uris.forEach { uri ->
+            runCatching {
+                getFileFromUri(uri)?.let(newFiles::add)
+            }.onFailure {
+                it.printStackTrace()
+                errorCount++
+            }
+        }
+
+        if (errorCount > 0) {
+            showSnackbar(resources.getQuantityString(R.plurals.bugTrackerUploadError, errorCount, errorCount))
+        }
+
+        fileAdapter.addFiles(newFiles)
+        updateFileTotalSize()
+    }
+
+    private fun getFileFromUri(uri: Uri): BugTrackerFile? {
+        val cursor = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
+        return cursor?.use { cursor ->
+            cursor.moveToFirst()
+
+            val fileName = getFileName(cursor) ?: uri.lastPathSegment ?: throw Exception("Could not find filename of the file")
+            val fileSize = getFileSize(cursor)
+            val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
+            val mimeType = contentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val bytes = contentResolver.openInputStream(uri).use { it?.readBytes() }
+
+            bytes?.let { BugTrackerFile(fileName, fileSize, uri, mimeType, it) }
+        }
+    }
+
+    private fun getFileName(cursor: Cursor): String? {
+        val columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        return when {
+            columnIndex != -1 -> cursor.getStringOrNull(columnIndex)
+            else -> null
+        }
+    }
+
+    private fun getFileSize(cursor: Cursor) = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE))
 
     private fun sendBugReport() = with(binding) {
         val bucketIdentifier = navigationArgs.bucketIdentifier
@@ -212,11 +187,11 @@ class BugTrackerActivity : AppCompatActivity() {
             .addFormDataPart("extra[appVersion]", appVersion)
             .addFormDataPart("type", type)
 
-        imageAdapter.getImages().forEachIndexed { index, image ->
+        fileAdapter.getFiles().forEachIndexed { index, file ->
             formBuilder.addFormDataPart(
                 "file_$index",
-                image.fileName,
-                image.bytes.toRequestBody(image.mimeType?.toMediaTypeOrNull())
+                file.fileName,
+                file.bytes.toRequestBody(file.mimeType?.toMediaTypeOrNull())
             )
         }
 
@@ -232,10 +207,10 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     class BugTrackerViewModel : ViewModel() {
-        val images = mutableListOf<BugTrackerImage>()
+        val files = mutableListOf<BugTrackerFile>()
     }
 
-    data class BugTrackerImage(
+    data class BugTrackerFile(
         val fileName: String,
         val size: Long,
         val uri: Uri,

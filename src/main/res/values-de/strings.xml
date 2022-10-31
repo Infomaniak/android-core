@@ -45,6 +45,10 @@
     <string name="bugTrackerSubject">Betreff</string>
     <string name="bugTrackerSubmit">Einreichen</string>
     <string name="bugTrackerType">Typ</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Eine Datei konnte nicht importiert werden</item>
+        <item quantity="other">%d Dateien konnten nicht importiert werden</item>
+    </plurals>
 
     <string-array name="bugTrackerType">
         <item name="item1">Fehler</item>

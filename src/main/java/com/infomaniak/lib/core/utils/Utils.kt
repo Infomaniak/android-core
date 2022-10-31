@@ -21,8 +21,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.CountDownTimer
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.LocaleListCompat
+import androidx.fragment.app.Fragment
 import java.util.*
 import kotlin.math.min
 
@@ -66,5 +71,28 @@ object Utils {
         val isScreenTooSmall = isLongScreen && min(screenHeightInches, screenWidthInches) < MIN_HEIGHT_FOR_LANDSCAPE
 
         if (isScreenTooSmall) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    class FilePicker {
+        constructor(fragment: Fragment) {
+            this.activityResult = fragment.registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+                _callback(uris)
+            }
+        }
+
+        constructor(activity: ComponentActivity) {
+            this.activityResult = activity.registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+                _callback(uris)
+            }
+        }
+
+        private var _callback: (uris: List<Uri>) -> Unit = {}
+
+        private val activityResult: ActivityResultLauncher<String>
+
+        fun open(mimeType: String = "*/*", callback: (List<Uri>) -> Unit) {
+            _callback = callback
+            activityResult.launch(mimeType)
+        }
     }
 }
