@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.core.bugtracker
+package com.infomaniak.lib.bugtracker
 
 import android.database.Cursor
 import android.net.Uri
@@ -32,8 +32,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import com.infomaniak.lib.bugtracker.databinding.ActivityBugTrackerBinding
 import com.infomaniak.lib.core.R
-import com.infomaniak.lib.core.databinding.ActivityBugTrackerBinding
 import com.infomaniak.lib.core.networking.HttpClient.okHttpClient
 import com.infomaniak.lib.core.networking.HttpUtils.getHeaders
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
