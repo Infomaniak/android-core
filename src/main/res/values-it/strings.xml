@@ -46,4 +46,17 @@
     <string name="bugTrackerSubmit">Inviare</string>
     <string name="bugTrackerType">Tipo</string>
 
+    <string-array name="bugTrackerType">
+        <item name="item1">Bug</item>
+        <item name="item2">Miglioramento</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriority">
+        <item name="item1">Basso</item>
+        <item name="item2">Normale</item>
+        <item name="item3">Alto</item>
+        <item name="item4">Urgente</item>
+        <item name="item5">Immediato</item>
+    </string-array>
+
 </resources>
