@@ -187,7 +187,7 @@ class BugTrackerActivity : AppCompatActivity() {
             .addFormDataPart("extra[appVersion]", appVersion)
             .addFormDataPart("type", type)
 
-        fileAdapter.getFiles().forEachIndexed { index, file ->
+        fileAdapter.files.forEachIndexed { index, file ->
             formBuilder.addFormDataPart(
                 "file_$index",
                 file.fileName,

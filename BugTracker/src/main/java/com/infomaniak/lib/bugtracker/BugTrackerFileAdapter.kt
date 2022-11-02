@@ -27,7 +27,8 @@ class BugTrackerFileAdapter(
     private val onFileDeleted: () -> Unit
 ) : RecyclerView.Adapter<BugTrackerFileAdapter.BugTrackerFileViewHolder>() {
 
-    private var files: MutableList<BugTrackerActivity.BugTrackerFile> = mutableListOf()
+    var files: MutableList<BugTrackerActivity.BugTrackerFile> = mutableListOf()
+        private set
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BugTrackerFileViewHolder {
         return BugTrackerFileViewHolder(ItemBugTrackerFileBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -56,8 +57,6 @@ class BugTrackerFileAdapter(
         files.addAll(newFiles)
         notifyItemRangeInserted(startingPosition, newFiles.count())
     }
-
-    fun getFiles() = files
 
     private fun removeFileAt(position: Int) {
         files.removeAt(position)
