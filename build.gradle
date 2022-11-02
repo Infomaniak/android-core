@@ -17,6 +17,7 @@ android {
         buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.infomaniak.com/v3/mobile_login"'
         buildConfigField 'String', 'LOGIN_ENDPOINT_URL', '"https://login.infomaniak.com/"'
         buildConfigField 'String', 'INFOMANIAK_API', '"https://api.infomaniak.com/2/"'
+        buildConfigField 'String', 'MATOMO_URL', '"https://analytics.infomaniak.com/matomo.php"'
 
         kapt { arguments { arg("room.schemaLocation", "$projectDir/schemas") } }
     }
@@ -64,4 +65,6 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:4.10.0'
     api 'io.sentry:sentry-android:6.6.0'
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
+
+    api 'com.github.matomo-org:matomo-sdk-android:4.1.4'
 }
