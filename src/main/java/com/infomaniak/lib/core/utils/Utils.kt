@@ -21,13 +21,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.CountDownTimer
-import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.LocaleListCompat
-import androidx.fragment.app.Fragment
 import java.util.*
 import kotlin.math.min
 
