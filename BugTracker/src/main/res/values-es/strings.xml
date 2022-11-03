@@ -23,6 +23,7 @@
     <string name="bugTrackerFormSubmitSuccess">Informe de error enviado</string>
     <string name="bugTrackerFilesTitle">ARCHIVOS</string>
     <string name="bugTrackerHint">Puede añadir archivos (32 MB como máximo) para ayudar a entender mejor su fallo.</string>
+    <string name="bugTrackerMissingFields">El asunto y la descripción deben ser rellenados</string>
     <string name="bugTrackerPriority">Prioridad</string>
     <string name="bugTrackerSubject">Asunto</string>
     <string name="bugTrackerSubmit">Enviar</string>

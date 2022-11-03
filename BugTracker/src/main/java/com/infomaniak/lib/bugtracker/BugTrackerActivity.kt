@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
@@ -93,11 +94,15 @@ class BugTrackerActivity : AppCompatActivity() {
         fileAdapter.bindToViewModel(bugTrackerViewModel.files)
         updateFileTotalSize()
 
+        hideErrorWhenNeeded()
+
         submitButton.setOnClickListener {
-            if (bugTrackerViewModel.files.sumOf { it.size } < FILE_SIZE_32_MB) {
-                sendBugReport()
-            } else {
+            if (bugTrackerViewModel.files.sumOf { it.size } >= FILE_SIZE_32_MB) {
                 showSnackbar(R.string.bugTrackerFileTooBig)
+            } else if (descriptionTextInput.text.isNullOrBlank() || subjectTextInput.text.isNullOrBlank()) {
+                missingFieldsError.isVisible = true
+            } else {
+                sendBugReport()
             }
         }
     }
@@ -147,6 +152,11 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private fun getFileSize(cursor: Cursor) = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE))
+
+    private fun ActivityBugTrackerBinding.hideErrorWhenNeeded() {
+        descriptionTextInput.doOnTextChanged { text, _, _, _ -> if ((text?.count() ?: 0) > 0) missingFieldsError.isGone = true }
+        subjectTextInput.doOnTextChanged { text, _, _, _ -> if ((text?.count() ?: 0) > 0) missingFieldsError.isGone = true }
+    }
 
     private fun sendBugReport() = with(binding) {
         val bucketIdentifier = navigationArgs.bucketIdentifier

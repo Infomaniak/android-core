@@ -23,6 +23,7 @@
     <string name="bugTrackerFormSubmitError">Le rapport de bug n’a pas pu être envoyé</string>
     <string name="bugTrackerFormSubmitSuccess">Rapport de bug envoyé</string>
     <string name="bugTrackerHint">Vous pouvez ajouter des fichiers (32 Mo maximum) pour aider à mieux comprendre votre bug.</string>
+    <string name="bugTrackerMissingFields">Le sujet et la description doivent être remplis</string>
     <string name="bugTrackerPriority">Priorité</string>
     <string name="bugTrackerSubject">Sujet</string>
     <string name="bugTrackerSubmit">Envoyer</string>
