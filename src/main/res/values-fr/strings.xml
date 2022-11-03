@@ -35,32 +35,4 @@
     <string name="typeOwner">Responsable légal</string>
     <string name="updateAppTitle">Mise à jour requise</string>
     <string name="updateButton">Mettre à jour</string>
-
-    <string name="bugTrackerAddFiles">Ajouter des fichiers</string>
-    <string name="bugTrackerDescription">Description</string>
-    <string name="bugTrackerFileTooBig">Images trop lourdes (max 32 Mo)</string>
-    <string name="bugTrackerFilesTitle">FICHIERS</string>
-    <string name="bugTrackerHint">Vous pouvez ajouter des fichiers (32 Mo maximum) pour aider à mieux comprendre votre bug.</string>
-    <string name="bugTrackerPriority">Priorité</string>
-    <string name="bugTrackerSubject">Sujet</string>
-    <string name="bugTrackerSubmit">Envoyer</string>
-    <string name="bugTrackerType">Type</string>
-    <plurals name="bugTrackerUploadError">
-        <item quantity="one">Un fichier n’a pas pu être importé</item>
-        <item quantity="other">%d fichiers n’ont pas pu être importés</item>
-    </plurals>
-
-    <string-array name="bugTrackerType">
-        <item name="item1">Bug</item>
-        <item name="item2">Amélioration</item>
-    </string-array>
-
-    <string-array name="bugTrackerPriority">
-        <item name="item1">Bas</item>
-        <item name="item2">Normal</item>
-        <item name="item3">Elevé</item>
-        <item name="item4">Urgent</item>
-        <item name="item5">Immédiat</item>
-    </string-array>
-
 </resources>

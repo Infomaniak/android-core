@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2022 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="bugTrackerAddFiles">Añadir archivos</string>
+    <string name="bugTrackerDescription">Descripción</string>
+    <string name="bugTrackerFileTooBig">Imágenes demasiado grandes (máx. 32 MB)</string>
+    <string name="bugTrackerFilesTitle">ARCHIVOS</string>
+    <string name="bugTrackerHint">Puede añadir archivos (32 MB como máximo) para ayudar a entender mejor su fallo.</string>
+    <string name="bugTrackerPriority">Prioridad</string>
+    <string name="bugTrackerSubject">Asunto</string>
+    <string name="bugTrackerSubmit">Enviar</string>
+    <string name="bugTrackerType">Tipo</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">No se ha podido importar un archivo</item>
+        <item quantity="other">No se han podido importar %d archivos</item>
+    </plurals>
+
+    <string-array name="bugTrackerType">
+        <item name="item1">Bug</item>
+        <item name="item2">Mejora</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriority">
+        <item name="item1">Bajo</item>
+        <item name="item2">Normal</item>
+        <item name="item3">Alto</item>
+        <item name="item4">Urgente</item>
+        <item name="item5">Inmediato</item>
+    </string-array>
+
+</resources>

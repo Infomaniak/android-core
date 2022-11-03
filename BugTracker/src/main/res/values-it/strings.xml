@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2022 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="bugTrackerAddFiles">Aggiungere file</string>
+    <string name="bugTrackerDescription">Descrizione</string>
+    <string name="bugTrackerFileTooBig">Immagini troppo grandi (max 32 MB)</string>
+    <string name="bugTrackerFilesTitle">FILES</string>
+    <string name="bugTrackerHint">È possibile aggiungere file (32 MB al massimo) per aiutare a comprendere meglio il bug.</string>
+    <string name="bugTrackerPriority">Priorità</string>
+    <string name="bugTrackerSubject">Oggetto</string>
+    <string name="bugTrackerSubmit">Inviare</string>
+    <string name="bugTrackerType">Tipo</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Non è stato possibile importare un file</item>
+        <item quantity="other">%d file non possono essere importati</item>
+    </plurals>
+
+    <string-array name="bugTrackerType">
+        <item name="item1">Bug</item>
+        <item name="item2">Miglioramento</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriority">
+        <item name="item1">Basso</item>
+        <item name="item2">Normale</item>
+        <item name="item3">Alto</item>
+        <item name="item4">Urgente</item>
+        <item name="item5">Immediato</item>
+    </string-array>
+
+</resources>

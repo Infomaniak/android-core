@@ -33,11 +33,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.infomaniak.lib.bugtracker.databinding.ActivityBugTrackerBinding
-import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.networking.HttpClient.okHttpClient
 import com.infomaniak.lib.core.networking.HttpUtils.getHeaders
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
-import com.infomaniak.lib.core.utils.Utils.FilePicker
+import com.infomaniak.lib.core.utils.FilePicker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

@@ -72,27 +72,4 @@ object Utils {
 
         if (isScreenTooSmall) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
-
-    class FilePicker {
-        constructor(fragment: Fragment) {
-            this.activityResult = fragment.registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
-                _callback(uris)
-            }
-        }
-
-        constructor(activity: ComponentActivity) {
-            this.activityResult = activity.registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
-                _callback(uris)
-            }
-        }
-
-        private var _callback: (uris: List<Uri>) -> Unit = {}
-
-        private val activityResult: ActivityResultLauncher<String>
-
-        fun open(mimeType: String = "*/*", callback: (List<Uri>) -> Unit) {
-            _callback = callback
-            activityResult.launch(mimeType)
-        }
-    }
 }

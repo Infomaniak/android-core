@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2022 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="bugTrackerAddFiles">Dateien hinzufügen</string>
+    <string name="bugTrackerDescription">Beschreibung</string>
+    <string name="bugTrackerFileTooBig">Bilder zu groß (max. 32 MB)</string>
+    <string name="bugTrackerFilesTitle">DATEIEN</string>
+    <string name="bugTrackerHint">Sie können Dateien (maximal 32 MB) hinzufügen, die helfen, Ihren Bug besser zu verstehen.</string>
+    <string name="bugTrackerPriority">Priorität</string>
+    <string name="bugTrackerSubject">Betreff</string>
+    <string name="bugTrackerSubmit">Einreichen</string>
+    <string name="bugTrackerType">Typ</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Eine Datei konnte nicht importiert werden</item>
+        <item quantity="other">%d Dateien konnten nicht importiert werden</item>
+    </plurals>
+
+    <string-array name="bugTrackerType">
+        <item name="item1">Fehler</item>
+        <item name="item2">Verbesserungsvorschläge</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriority">
+        <item name="item1">Niedrig</item>
+        <item name="item2">Normal</item>
+        <item name="item3">Hoch</item>
+        <item name="item4">Dringend</item>
+        <item name="item5">Unmittelbar</item>
+    </string-array>
+
+</resources>
