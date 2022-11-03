@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.text.format.Formatter
 import android.webkit.MimeTypeMap
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
@@ -35,10 +36,11 @@ import androidx.navigation.navArgs
 import com.infomaniak.lib.bugtracker.databinding.ActivityBugTrackerBinding
 import com.infomaniak.lib.core.networking.HttpClient.okHttpClient
 import com.infomaniak.lib.core.networking.HttpUtils.getHeaders
-import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.lib.core.utils.FilePicker
+import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.Request
@@ -202,6 +204,14 @@ class BugTrackerActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             val response = okHttpClient.newBuilder().build().newCall(request).execute()
+            if (response.isSuccessful) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@BugTrackerActivity, R.string.bugTrackerFormSubmitSuccess, Toast.LENGTH_LONG).show()
+                }
+                finish()
+            } else {
+                showSnackbar(R.string.bugTrackerFormSubmitError)
+            }
         }
     }
 

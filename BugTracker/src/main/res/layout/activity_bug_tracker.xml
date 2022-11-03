@@ -20,7 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".bugtracker.BugTrackerActivity">
+    tools:context=".BugTrackerActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:background="?android:windowBackground"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:title="Bug tracker">
+            app:title="@string/bugTrackerTitle">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
