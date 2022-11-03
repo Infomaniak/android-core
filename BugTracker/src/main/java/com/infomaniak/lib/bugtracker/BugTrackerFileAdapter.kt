@@ -34,20 +34,12 @@ class BugTrackerFileAdapter(
         return BugTrackerFileViewHolder(ItemBugTrackerFileBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: BugTrackerFileViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (payloads.firstOrNull() == Unit) {
-            holder.binding.closeButton.setOnClickListener { removeFileAt(position) }
-        } else {
-            super.onBindViewHolder(holder, position, payloads)
-        }
-    }
-
     override fun onBindViewHolder(holder: BugTrackerFileViewHolder, position: Int): Unit = with(holder.binding) {
         val file = files[position]
 
         fileName.text = file.fileName
         fileSize.text = formatShortFileSize(root.context, file.size)
-        closeButton.setOnClickListener { removeFileAt(position) }
+        closeButton.setOnClickListener { removeFile(file) }
     }
 
     override fun getItemCount(): Int = files.count()
@@ -58,10 +50,10 @@ class BugTrackerFileAdapter(
         notifyItemRangeInserted(startingPosition, newFiles.count())
     }
 
-    private fun removeFileAt(position: Int) {
+    private fun removeFile(file: BugTrackerActivity.BugTrackerFile) {
+        val position = files.indexOf(file)
         files.removeAt(position)
         notifyItemRemoved(position)
-        notifyItemRangeChanged(position, itemCount - position, Unit)
         onFileDeleted()
     }
 
