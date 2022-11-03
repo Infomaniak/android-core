@@ -16,6 +16,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsServiceConnection
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import kotlinx.android.parcel.RawValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
@@ -35,6 +36,12 @@ class InfomaniakLogin(
     private val clientID: String,
     private val appUID: String
 ) {
+
+    private data class ApiResponse(
+        val result: String,
+        val error: String? = null,
+        val data: @RawValue Any? = null
+    )
 
     companion object {
         private const val CHROME_STABLE_PACKAGE = "com.android.chrome"
@@ -315,7 +322,6 @@ class InfomaniakLogin(
         onError: (error: ErrorStatus) -> Unit
     ) = withContext(Dispatchers.IO) {
         try {
-
             val request = Request.Builder()
                 .url("${loginUrl}token")
                 .post(body)
@@ -324,52 +330,86 @@ class InfomaniakLogin(
             val response = okHttpClient.newCall(request).execute()
             val bodyResponse = response.body?.string()
 
-            when {
-                response.code >= 500 -> {
-                    withContext(Dispatchers.Main) {
-                        onError(ErrorStatus.SERVER)
-                    }
-                }
-                response.code >= 400 -> {
-                    withContext(Dispatchers.Main) {
-                        onError(ErrorStatus.AUTH)
-                    }
-                }
-                bodyResponse.isNullOrBlank() -> {
-                    withContext(Dispatchers.Main) {
-                        onError(ErrorStatus.CONNECTION)
-                    }
-                }
-                else -> {
-                    withContext(Dispatchers.Default) {
-                        val gson = Gson()
-                        val jsonResult = JsonParser.parseString(bodyResponse)
-                        val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
+            if (verifyHttpResponseSuccess(response.code, bodyResponse, onError)) {
+                withContext(Dispatchers.Default) {
+                    val gson = Gson()
+                    val jsonResult = JsonParser.parseString(bodyResponse)
+                    val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
 
-                        // Set the token expiration date (with margin-delay)
-                        apiToken.expiresAt =
-                            System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
+                    // Set the token expiration date (with margin-delay)
+                    apiToken.expiresAt =
+                        System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
 
-                        withContext(Dispatchers.Main) {
-                            onSuccess(apiToken)
-                        }
+                    withContext(Dispatchers.Main) { onSuccess(apiToken) }
+                }
+            }
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            withContext(Dispatchers.Main) { onError(getErrorStatusFromException(exception)) }
+        }
+    }
+
+    suspend fun deleteToken(
+        okHttpClient: OkHttpClient,
+        token: ApiToken,
+        onError: (error: ErrorStatus) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        try {
+            val request = Request.Builder()
+                .url("${loginUrl}token")
+                .addHeader("Authorization", "Bearer ${token.accessToken}")
+                .delete()
+                .build()
+
+            val response = okHttpClient.newCall(request).execute()
+            val bodyResponse = response.body?.string()
+
+            if (verifyHttpResponseSuccess(response.code, bodyResponse, onError)) {
+                withContext(Dispatchers.Default) {
+                    val gson = Gson()
+                    val jsonResult = JsonParser.parseString(bodyResponse)
+
+                    val apiResponse = gson.fromJson(jsonResult, ApiResponse::class.java)
+                    if (apiResponse.result == "error") {
+                        withContext(Dispatchers.Main) { onError(ErrorStatus.UNKNOWN) }
                     }
                 }
             }
         } catch (exception: Exception) {
             exception.printStackTrace()
 
-            val descriptionError =
-                if (exception.javaClass.name.contains("java.net.", ignoreCase = true) ||
-                    exception.javaClass.name.contains("javax.net.", ignoreCase = true)
-                ) {
-                    ErrorStatus.CONNECTION
-                } else {
-                    ErrorStatus.UNKNOWN
-                }
-            withContext(Dispatchers.Main) {
-                onError(descriptionError)
-            }
+            withContext(Dispatchers.Main) { onError(getErrorStatusFromException(exception)) }
+        }
+    }
+
+    private suspend fun verifyHttpResponseSuccess(
+        statusCode: Int,
+        bodyResponse: String?,
+        onError: (error: ErrorStatus) -> Unit
+    ): Boolean = when {
+        statusCode >= 500 -> {
+            withContext(Dispatchers.Main) { onError(ErrorStatus.SERVER) }
+            false
+        }
+        statusCode >= 400 -> {
+            withContext(Dispatchers.Main) { onError(ErrorStatus.AUTH) }
+            false
+        }
+        bodyResponse.isNullOrBlank() -> {
+            withContext(Dispatchers.Main) { onError(ErrorStatus.CONNECTION) }
+            false
+        }
+        else -> true
+    }
+
+    private fun getErrorStatusFromException(exception: Exception): ErrorStatus {
+        return if (
+            exception.javaClass.name.contains("java.net.", ignoreCase = true) ||
+            exception.javaClass.name.contains("javax.net.", ignoreCase = true)
+        ) {
+            ErrorStatus.CONNECTION
+        } else {
+            ErrorStatus.UNKNOWN
         }
     }
 }
