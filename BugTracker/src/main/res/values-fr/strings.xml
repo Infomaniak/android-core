@@ -34,12 +34,12 @@
         <item quantity="other">%d fichiers n’ont pas pu être importés</item>
     </plurals>
 
-    <string-array name="bugTrackerType">
+    <string-array name="bugTrackerTypeArray">
         <item name="item1">Bug</item>
         <item name="item2">Amélioration</item>
     </string-array>
 
-    <string-array name="bugTrackerPriority">
+    <string-array name="bugTrackerPriorityArray">
         <item name="item1">Bas</item>
         <item name="item2">Normal</item>
         <item name="item3">Elevé</item>

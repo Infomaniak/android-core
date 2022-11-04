@@ -53,9 +53,8 @@ class BugTrackerActivity : AppCompatActivity() {
     private val bugTrackerViewModel: BugTrackerViewModel by viewModels()
     private val navigationArgs: BugTrackerActivityArgs by navArgs()
 
-    private val fileAdapter = BugTrackerFileAdapter() { updateFileTotalSize() }
-    val types = listOf("bugs", "features")
-    var type = types[DEFAULT_REPORT_TYPE]
+    private val fileAdapter = BugTrackerFileAdapter { updateFileTotalSize() }
+    var type = DEFAULT_REPORT_TYPE
 
     private fun updateFileTotalSize() = with(binding) {
         if (bugTrackerViewModel.files.count() <= 1) {
@@ -80,10 +79,10 @@ class BugTrackerActivity : AppCompatActivity() {
 
         typeField.apply {
             setOnItemClickListener { _, _, position, _ ->
-                type = types[position]
+                type = ReportType.values()[position]
             }
 
-            setText(adapter.getItem(DEFAULT_REPORT_TYPE) as String, false)
+            setText(adapter.getItem(ReportType.values().indexOf(DEFAULT_REPORT_TYPE)) as String, false)
         }
 
         priorityField.apply {
@@ -163,7 +162,7 @@ class BugTrackerActivity : AppCompatActivity() {
         val subject = subjectField.prefixText.toString() + subjectTextInput.text.toString()
         val description = descriptionTextInput.text.toString()
         val priorityLabel = "Priorité: " + priorityField.text.toString()
-        val priorityValue = (resources.getStringArray(R.array.bugTrackerPriority).indexOf(priorityLabel) + 1).toString()
+        val priorityValue = (resources.getStringArray(R.array.bugTrackerPriorityArray).indexOf(priorityLabel) + 1).toString()
         val extraProject = navigationArgs.projectName
         val extraRoute = "undefined"
         val userAgent = "InfomaniakBugTracker/1"
@@ -177,7 +176,6 @@ class BugTrackerActivity : AppCompatActivity() {
         val device = Build.DEVICE
         val appVersion = navigationArgs.appBuildNumber
 
-        val url = REPORT_URL
         val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("bucket_identifier", bucketIdentifier)
@@ -196,7 +194,7 @@ class BugTrackerActivity : AppCompatActivity() {
             .addFormDataPart("extra[osVersion]", osVersion)
             .addFormDataPart("extra[device]", device)
             .addFormDataPart("extra[appVersion]", appVersion)
-            .addFormDataPart("type", type)
+            .addFormDataPart("type", type.apiValue)
 
         fileAdapter.files.forEachIndexed { index, file ->
             formBuilder.addFormDataPart(
@@ -207,7 +205,7 @@ class BugTrackerActivity : AppCompatActivity() {
         }
 
         val request = Request.Builder()
-            .url(url)
+            .url(REPORT_URL)
             .headers(getHeaders())
             .post(formBuilder.build())
             .build()
@@ -237,10 +235,15 @@ class BugTrackerActivity : AppCompatActivity() {
         val bytes: ByteArray,
     )
 
-    companion object {
+    enum class ReportType(val apiValue: String) {
+        BUGS("bugs"),
+        FEATURES("features")
+    }
+
+    private companion object {
         const val REPORT_URL = "https://welcome.infomaniak.com/api/components/report"
 
-        const val DEFAULT_REPORT_TYPE = 0
+        val DEFAULT_REPORT_TYPE = ReportType.BUGS
         const val DEFAULT_PRIORITY_TYPE = 1
 
         const val FILE_SIZE_32_MB = 32 * 1024 * 1024

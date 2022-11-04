@@ -29,13 +29,13 @@ class FilePicker {
     private val activityResult: ActivityResultLauncher<String>
 
     constructor(fragment: Fragment) {
-        this.activityResult = fragment.registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+        activityResult = fragment.registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
             _callback(uris)
         }
     }
 
     constructor(activity: ComponentActivity) {
-        this.activityResult = activity.registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+        activityResult = activity.registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
             _callback(uris)
         }
     }

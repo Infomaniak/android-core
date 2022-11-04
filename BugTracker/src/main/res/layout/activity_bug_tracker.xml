@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorPrimaryContainer"
                     android:inputType="none"
-                    app:simpleItems="@array/bugTrackerType" />
+                    app:simpleItems="@array/bugTrackerTypeArray" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorPrimaryContainer"
                     android:inputType="none"
-                    app:simpleItems="@array/bugTrackerPriority" />
+                    app:simpleItems="@array/bugTrackerPriorityArray" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
