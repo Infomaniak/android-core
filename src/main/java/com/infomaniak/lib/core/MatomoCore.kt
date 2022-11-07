@@ -59,21 +59,21 @@ interface MatomoCore {
         applicationContext.tracker.userId = userId.toString()
     }
 
-    // Navigate to another Activity
+    //region Track screens
     fun Activity.trackScreen() {
         TrackHelper.track().screen(this).title(this::class.java.simpleName).with(applicationContext.tracker)
     }
 
-    // Navigate to another Fragment
     fun Context.trackScreen(path: String, title: String) {
         TrackHelper.track().screen(path).title(title).with(applicationContext.tracker)
     }
 
-    // Navigate to another Slide, Tab, etc...
     fun Fragment.trackScreen() {
         context?.trackScreen(this::class.java.name, this::class.java.simpleName)
     }
+    //endregion
 
+    //region Track events
     fun Fragment.trackEvent(category: String, name: String, action: TrackerAction = TrackerAction.CLICK, value: Float? = null) {
         context?.trackEvent(category, name, action, value)
     }
@@ -85,6 +85,7 @@ interface MatomoCore {
             .let { if (value != null) it.value(value) else it }
             .with(applicationContext.tracker)
     }
+    //endregion
 
     fun Boolean.toFloat() = if (this) 1.0f else 0.0f
 
