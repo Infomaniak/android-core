@@ -23,6 +23,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import android.os.Build
 import androidx.lifecycle.LiveData
 import java.net.UnknownHostException
 
@@ -69,9 +70,15 @@ class LiveDataNetworkStatus(context: Context) : LiveData<Boolean>() {
     }
 
     private fun networkRequestBuilder(): NetworkRequest {
-        return NetworkRequest.Builder()
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
+        return NetworkRequest.Builder().apply {
+            addTransportType(NetworkCapabilities.TRANSPORT_BLUETOOTH)
+            addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) addTransportType(NetworkCapabilities.TRANSPORT_LOWPAN)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) addTransportType(NetworkCapabilities.TRANSPORT_USB)
+            addTransportType(NetworkCapabilities.TRANSPORT_VPN)
+            addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) addTransportType(NetworkCapabilities.TRANSPORT_WIFI_AWARE)
+        }.build()
     }
 }
