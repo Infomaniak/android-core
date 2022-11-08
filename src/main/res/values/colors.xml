@@ -33,7 +33,7 @@
     <color name="background">#F4F6FD</color>
     <color name="backgroundCardview">@color/appBar</color>
     <color name="backgroundSecondary">#EBEEFB</color>
-    <color name="border">@color/grey_border</color>
+    <color name="border">@color/mouse</color>
     <color name="divider">#F7F7F7</color>
     <color name="shadow">#80000000</color>
     <color name="subLabel">#B0B0B0</color>
@@ -55,7 +55,7 @@
     <color name="orca">#333333</color>
     <color name="elephant">#666666</color>
     <color name="shark">#9F9F9F</color>
-    <color name="grey_border">#E0E0E0</color>
+    <color name="mouse">#E0E0E0</color>
     <color name="grey_description">#F1F1F1</color>
     <color name="hover">#F5F5F5</color>
     <color name="swan">#FAFAFA</color>
