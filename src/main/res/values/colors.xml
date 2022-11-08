@@ -49,7 +49,7 @@
     <color name="blue_general">#0098FF</color>
     <color name="devs">#FF00FF</color>
 
-    <!-- Dark tones -->
+    <!-- Grey tones from UI/UX -->
     <color name="black">#000000</color>
     <color name="bat">#1A1A1A</color>
     <color name="orca">#333333</color>
@@ -61,18 +61,7 @@
     <color name="swan">#FAFAFA</color>
     <color name="white">#FFFFFF</color>
 
-
-    <!--<color name="black">#000000</color>-->
-    <!--<color name="bat">#1A1A1A</color>-->
-    <!--<color name="orca">#333333</color>-->
-    <!--<color name="elephant">#666666</color>-->
-    <!--<color name="shark">#9F9F9F</color>-->
-    <!--<color name="mouse">#E0E0E0</color>-->
-    <!--<color name="rabbit">#F1F1F1</color>-->
-    <!--<color name="polar_bear">#F5F5F5</color>-->
-    <!--<color name="swan">#FAFAFA</color>-->
-    <!--<color name="white">#FFFFFF</color>-->
-
+    <!-- Custom grey tones -->
     <color name="grey_background">#EDECEC</color>
     <color name="grey_background_transparent">#E6EDECEC</color>
 
