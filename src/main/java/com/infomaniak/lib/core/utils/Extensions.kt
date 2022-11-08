@@ -124,6 +124,12 @@ fun Date.endOfTheWeek(): Date =
         set(Calendar.DAY_OF_WEEK, (firstDayOfWeek - 1 + 6) % 7 + 1)
     }.time.endOfTheDay()
 
+fun Date.monthsAgo(value: Int): Date =
+    Calendar.getInstance().apply {
+        time = this@monthsAgo
+        roll(Calendar.MONTH, -value)
+    }.time
+
 fun Date.year(): Int =
     Calendar.getInstance().apply {
         time = this@year
