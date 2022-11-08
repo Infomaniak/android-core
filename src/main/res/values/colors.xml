@@ -26,7 +26,7 @@
     <!-- Text -->
     <color name="title">@color/orca</color>
     <color name="primaryText">@color/elephant</color>
-    <color name="secondaryText">#9F9F9F</color>
+    <color name="secondaryText">@color/shark</color>
 
     <!-- Containers -->
     <color name="appBar">@android:color/white</color>
@@ -54,7 +54,7 @@
     <color name="bat">#1A1A1A</color>
     <color name="orca">#333333</color>
     <color name="elephant">#666666</color>
-    <color name="grey_text_secondary">#9F9F9F</color>
+    <color name="shark">#9F9F9F</color>
     <color name="grey_border">#E0E0E0</color>
     <color name="grey_description">#F1F1F1</color>
     <color name="hover">#F5F5F5</color>
