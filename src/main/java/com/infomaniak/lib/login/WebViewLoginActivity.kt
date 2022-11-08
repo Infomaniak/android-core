@@ -51,6 +51,7 @@ class WebViewLoginActivity : AppCompatActivity() {
                     return !isValidUrl(url)
                 }
 
+                @Deprecated("Only for API below 23")
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                     return !isValidUrl(url)
                 }
@@ -89,6 +90,7 @@ class WebViewLoginActivity : AppCompatActivity() {
                     }
                 }
 
+                @Deprecated("Only for API below 23")
                 override fun onReceivedError(
                     view: WebView?,
                     errorCode: Int,
