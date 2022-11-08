@@ -352,7 +352,8 @@ class InfomaniakLogin(
     suspend fun deleteToken(
         okHttpClient: OkHttpClient,
         token: ApiToken,
-        onError: (error: ErrorStatus) -> Unit
+        onError: (error: ErrorStatus) -> Unit,
+        onSuccess: () -> Unit = {}
     ) = withContext(Dispatchers.IO) {
         try {
             val request = Request.Builder()
@@ -374,6 +375,8 @@ class InfomaniakLogin(
                         withContext(Dispatchers.Main) { onError(ErrorStatus.UNKNOWN) }
                     }
                 }
+
+                onSuccess()
             }
         } catch (exception: Exception) {
             exception.printStackTrace()
