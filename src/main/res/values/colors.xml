@@ -24,16 +24,16 @@
     <color name="primaryDark">@color/infomaniakDark</color>
 
     <!-- Text -->
-    <color name="title">@color/grey_title</color>
-    <color name="primaryText">@color/grey_text</color>
-    <color name="secondaryText">#9F9F9F</color>
+    <color name="title">@color/orca</color>
+    <color name="primaryText">@color/elephant</color>
+    <color name="secondaryText">@color/shark</color>
 
     <!-- Containers -->
     <color name="appBar">@android:color/white</color>
     <color name="background">#F4F6FD</color>
     <color name="backgroundCardview">@color/appBar</color>
     <color name="backgroundSecondary">#EBEEFB</color>
-    <color name="border">@color/grey_border</color>
+    <color name="border">@color/mouse</color>
     <color name="divider">#F7F7F7</color>
     <color name="shadow">#80000000</color>
     <color name="subLabel">#B0B0B0</color>
@@ -49,17 +49,21 @@
     <color name="blue_general">#0098FF</color>
     <color name="devs">#FF00FF</color>
 
-    <!-- Dark tones -->
+    <!-- Grey tones from UI/UX -->
     <color name="black">#000000</color>
-    <color name="grey_title">#333333</color>
-    <color name="grey_text">#666666</color>
-    <color name="grey_text_secondary">#9F9F9F</color>
-    <color name="grey_border">#E0E0E0</color>
+    <color name="bat">#1A1A1A</color>
+    <color name="orca">#333333</color>
+    <color name="elephant">#666666</color>
+    <color name="shark">#9F9F9F</color>
+    <color name="mouse">#E0E0E0</color>
+    <color name="rabbit">#F1F1F1</color>
+    <color name="polar_bear">#F5F5F5</color>
+    <color name="swan">#FAFAFA</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Custom grey tones -->
     <color name="grey_background">#EDECEC</color>
     <color name="grey_background_transparent">#E6EDECEC</color>
-    <color name="grey_description">#F1F1F1</color>
-    <color name="hover">#F5F5F5</color>
-    <color name="white">#FFFFFF</color>
 
     <!-- Color tones -->
     <color name="purple">#7974B4</color>
