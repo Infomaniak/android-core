@@ -37,38 +37,6 @@ class InfomaniakLogin(
     private val appUID: String
 ) {
 
-    private data class ApiResponse(
-        val result: String,
-        val error: String? = null,
-        val data: @RawValue Any? = null
-    )
-
-    companion object {
-        private const val CHROME_STABLE_PACKAGE = "com.android.chrome"
-        private const val SERVICE_ACTION = "android.support.customtabs.action.CustomTabsService"
-        private const val DEFAULT_ACCESS_TYPE = "offline"
-        private const val DEFAULT_HASH_MODE = "SHA-256"
-        private const val DEFAULT_HASH_MODE_SHORT = "S256"
-        private const val DEFAULT_LOGIN_URL = "https://login.infomaniak.com/"
-        private const val DEFAULT_REDIRECT_URI = "://oauth2redirect"
-        private const val DEFAULT_RESPONSE_TYPE = "code"
-        private const val preferenceName = "pkce_step_codes"
-        private const val verifierKey = "code_verifier"
-
-        const val LOGIN_URL_TAG = "login_url"
-        const val CODE_TAG = "code"
-        const val ERROR_TRANSLATED_TAG = "translated_error"
-        const val ERROR_CODE_TAG = "error_code"
-
-        const val WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED = "net::ERR_INTERNET_DISCONNECTED"
-        const val WEBVIEW_ERROR_CODE_CONNECTION_REFUSED = "net::ERR_CONNECTION_REFUSED"
-
-        const val ERROR_ACCESS_DENIED = "access_denied"
-
-        const val SSL_ERROR_CODE = "ssl_error_code"
-        const val HTTP_ERROR_CODE = "http_error_code"
-    }
-
     private var tabClient: CustomTabsClient? = null
     private var tabConnection: CustomTabsServiceConnection? = null
     private val tabIntent: CustomTabsIntent by lazy {
@@ -79,6 +47,8 @@ class InfomaniakLogin(
                 customTabIntent.intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             }
     }
+
+    private val gson: Gson by lazy { Gson() }
 
     /**
      * Officially start the Chrome Tab
@@ -222,9 +192,9 @@ class InfomaniakLogin(
      * Generate a verifier code for PKCE challenge (rfc7636 4.1.)
      */
     private fun generateCodeVerifier(): String {
-        val sr = SecureRandom()
+        val secureRandom = SecureRandom()
         val code = ByteArray(33)
-        sr.nextBytes(code)
+        secureRandom.nextBytes(code)
         return Base64.encodeToString(code, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
     }
 
@@ -233,9 +203,9 @@ class InfomaniakLogin(
      */
     private fun generateCodeChallenge(codeVerifier: String): String {
         val bytes = codeVerifier.toByteArray(Charsets.US_ASCII)
-        val md = MessageDigest.getInstance(DEFAULT_HASH_MODE)
-        md.update(bytes, 0, bytes.size)
-        val digest = md.digest()
+        val messageDigest = MessageDigest.getInstance(DEFAULT_HASH_MODE)
+        messageDigest.update(bytes, 0, bytes.size)
+        val digest = messageDigest.digest()
         return Base64.encodeToString(digest, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
     }
 
@@ -332,13 +302,11 @@ class InfomaniakLogin(
 
             if (verifyHttpResponseSuccess(response.code, bodyResponse, onError)) {
                 withContext(Dispatchers.Default) {
-                    val gson = Gson()
                     val jsonResult = JsonParser.parseString(bodyResponse)
                     val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
 
                     // Set the token expiration date (with margin-delay)
-                    apiToken.expiresAt =
-                        System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
+                    apiToken.expiresAt = System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
 
                     withContext(Dispatchers.Main) { onSuccess(apiToken) }
                 }
@@ -352,8 +320,8 @@ class InfomaniakLogin(
     suspend fun deleteToken(
         okHttpClient: OkHttpClient,
         token: ApiToken,
-        onError: (error: ErrorStatus) -> Unit,
-        onSuccess: () -> Unit = {}
+        onSuccess: () -> Unit = {},
+        onError: (error: ErrorStatus) -> Unit
     ) = withContext(Dispatchers.IO) {
         try {
             val request = Request.Builder()
@@ -367,20 +335,18 @@ class InfomaniakLogin(
 
             if (verifyHttpResponseSuccess(response.code, bodyResponse, onError)) {
                 withContext(Dispatchers.Default) {
-                    val gson = Gson()
                     val jsonResult = JsonParser.parseString(bodyResponse)
 
                     val apiResponse = gson.fromJson(jsonResult, ApiResponse::class.java)
                     if (apiResponse.result == "error") {
                         withContext(Dispatchers.Main) { onError(ErrorStatus.UNKNOWN) }
                     }
-                }
 
-                onSuccess()
+                    withContext(Dispatchers.Main) { onSuccess() }
+                }
             }
         } catch (exception: Exception) {
             exception.printStackTrace()
-
             withContext(Dispatchers.Main) { onError(getErrorStatusFromException(exception)) }
         }
     }
@@ -414,5 +380,37 @@ class InfomaniakLogin(
         } else {
             ErrorStatus.UNKNOWN
         }
+    }
+
+    private data class ApiResponse(
+        val result: String,
+        val error: String? = null,
+        val data: @RawValue Any? = null
+    )
+
+    companion object {
+        private const val CHROME_STABLE_PACKAGE = "com.android.chrome"
+        private const val SERVICE_ACTION = "android.support.customtabs.action.CustomTabsService"
+        private const val DEFAULT_ACCESS_TYPE = "offline"
+        private const val DEFAULT_HASH_MODE = "SHA-256"
+        private const val DEFAULT_HASH_MODE_SHORT = "S256"
+        private const val DEFAULT_LOGIN_URL = "https://login.infomaniak.com/"
+        private const val DEFAULT_REDIRECT_URI = "://oauth2redirect"
+        private const val DEFAULT_RESPONSE_TYPE = "code"
+        private const val preferenceName = "pkce_step_codes"
+        private const val verifierKey = "code_verifier"
+
+        const val LOGIN_URL_TAG = "login_url"
+        const val CODE_TAG = "code"
+        const val ERROR_TRANSLATED_TAG = "translated_error"
+        const val ERROR_CODE_TAG = "error_code"
+
+        const val WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED = "net::ERR_INTERNET_DISCONNECTED"
+        const val WEBVIEW_ERROR_CODE_CONNECTION_REFUSED = "net::ERR_CONNECTION_REFUSED"
+
+        const val ERROR_ACCESS_DENIED = "access_denied"
+
+        const val SSL_ERROR_CODE = "ssl_error_code"
+        const val HTTP_ERROR_CODE = "http_error_code"
     }
 }
