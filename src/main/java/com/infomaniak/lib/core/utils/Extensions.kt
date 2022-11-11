@@ -266,6 +266,8 @@ fun Context.startAppSettingsConfig() {
     }
 }
 
+fun Context.getAppName() = packageManager.getApplicationLabel(applicationInfo).toString()
+
 fun Exception.isNetworkException() = this.javaClass.name.contains("java.net.", ignoreCase = true) ||
         this.javaClass.name.contains("javax.net.", ignoreCase = true) ||
         this is java.io.InterruptedIOException ||

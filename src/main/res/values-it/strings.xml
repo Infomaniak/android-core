@@ -24,6 +24,8 @@
     <string name="buttonCancel">Annulla</string>
     <string name="connect">Accesso</string>
     <string name="connectionError">Problema di connessione a Internet</string>
+    <string name="errorDownload">Errore durante il download</string>
+    <string name="errorDownloadInsufficientSpace">Impossibile scaricare: spazio insufficiente</string>
     <string name="errorTitle">Errore</string>
     <string name="errorTitleLabel">Si è verificato un errore</string>
     <string name="errorUserAlreadyPresent">Errore utente già esistente</string>

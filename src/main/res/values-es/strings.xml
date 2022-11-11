@@ -24,6 +24,8 @@
     <string name="buttonCancel">Anular</string>
     <string name="connect">Ingresa en</string>
     <string name="connectionError">Problema de conexión a Internet</string>
+    <string name="errorDownload">Error al descargar</string>
+    <string name="errorDownloadInsufficientSpace">No se puede descargar: espacio insuficiente</string>
     <string name="errorTitle">Error</string>
     <string name="errorTitleLabel">Se ha producido un error</string>
     <string name="errorUserAlreadyPresent">Error, usuario ya registrado</string>
