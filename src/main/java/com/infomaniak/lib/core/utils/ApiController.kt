@@ -73,9 +73,10 @@ object ApiController {
         body: Any? = null,
         okHttpClient: OkHttpClient = HttpClient.okHttpClient,
         useKotlinxSerialization: Boolean = false,
+        throwExceptions: Boolean = false,
     ): T {
         val requestBody: RequestBody = generateRequestBody(body)
-        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization)
+        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization, throwExceptions)
     }
 
     fun generateRequestBody(body: Any?): RequestBody {
@@ -142,6 +143,7 @@ object ApiController {
         requestBody: RequestBody,
         okHttpClient: OkHttpClient,
         useKotlinxSerialization: Boolean,
+        throwExceptions: Boolean,
     ): T {
         try {
             val request = Request.Builder()
@@ -182,9 +184,11 @@ object ApiController {
             }
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
+            if (throwExceptions) throw refreshTokenException
             return ApiResponse<Any>(result = ERROR, translatedError = R.string.anErrorHasOccurred) as T
         } catch (exception: Exception) {
             exception.printStackTrace()
+            if (throwExceptions) throw exception
 
             val descriptionError = if (exception.isNetworkException()) R.string.connectionError else R.string.anErrorHasOccurred
             return ApiResponse<Any>(result = ERROR, translatedError = descriptionError) as T
