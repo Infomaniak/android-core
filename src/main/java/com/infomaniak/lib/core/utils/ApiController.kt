@@ -17,15 +17,13 @@
  */
 package com.infomaniak.lib.core.utils
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
-import com.google.gson.JsonParser
+import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.lib.core.BuildConfig.LOGIN_ENDPOINT_URL
 import com.infomaniak.lib.core.InfomaniakCore
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
+import com.infomaniak.lib.core.models.ApiError
 import com.infomaniak.lib.core.models.ApiResponse
 import com.infomaniak.lib.core.models.ApiResponse.Status.ERROR
 import com.infomaniak.lib.core.networking.HttpClient
@@ -73,10 +71,9 @@ object ApiController {
         body: Any? = null,
         okHttpClient: OkHttpClient = HttpClient.okHttpClient,
         useKotlinxSerialization: Boolean = false,
-        throwExceptions: Boolean = false,
     ): T {
         val requestBody: RequestBody = generateRequestBody(body)
-        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization, throwExceptions)
+        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization)
     }
 
     fun generateRequestBody(body: Any?): RequestBody {
@@ -143,8 +140,8 @@ object ApiController {
         requestBody: RequestBody,
         okHttpClient: OkHttpClient,
         useKotlinxSerialization: Boolean,
-        throwExceptions: Boolean,
     ): T {
+        var bodyResponse = ""
         try {
             val request = Request.Builder()
                 .url(url)
@@ -161,14 +158,16 @@ object ApiController {
                 .build()
 
             okHttpClient.newCall(request).execute().use { response ->
-                val bodyResponse = response.body?.string()
+                bodyResponse = response.body?.string() ?: ""
                 return when {
                     response.code >= 500 -> {
-                        ApiResponse<Any>(result = ERROR, translatedError = R.string.serverError) as T
+                        ApiResponse<Any>(
+                            result = ERROR,
+                            error = ApiError(context = bodyResponse.bodyResponseToJson(), exception = ServerErrorException()),
+                            translatedError = R.string.serverError
+                        ) as T
                     }
-                    bodyResponse.isNullOrBlank() -> {
-                        ApiResponse<Any>(result = ERROR, translatedError = R.string.connectionError) as T
-                    }
+                    bodyResponse.isBlank() -> getApiResponseInternetError()
                     else -> {
                         val decodedApiResponse = if (useKotlinxSerialization) {
                             json.decodeFromString<T>(bodyResponse)
@@ -184,16 +183,36 @@ object ApiController {
             }
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
-            if (throwExceptions) throw refreshTokenException
             return ApiResponse<Any>(result = ERROR, translatedError = R.string.anErrorHasOccurred) as T
         } catch (exception: Exception) {
             exception.printStackTrace()
-            if (throwExceptions) throw exception
 
-            val descriptionError = if (exception.isNetworkException()) R.string.connectionError else R.string.anErrorHasOccurred
-            return ApiResponse<Any>(result = ERROR, translatedError = descriptionError) as T
+            return if (exception.isNetworkException()) {
+                getApiResponseInternetError()
+            } else {
+                ApiResponse<Any>(
+                    result = ERROR,
+                    error = ApiError(context = bodyResponse.bodyResponseToJson(), exception = exception),
+                    translatedError = R.string.anErrorHasOccurred
+                ) as T
+            }
+
         }
     }
+
+    fun String.bodyResponseToJson(): JsonObject {
+        val bodyJsonElement = gson.toJsonTree(this, String::class.java)
+        return JsonObject().apply { add("bodyResponse", bodyJsonElement) }
+    }
+
+    inline fun <reified T> getApiResponseInternetError() = ApiResponse<Any>(
+        result = ERROR,
+        error = ApiError(exception = NetworkException()),
+        translatedError = R.string.connectionError
+    ) as T
+
+    class NetworkException : Exception()
+    class ServerErrorException : Exception()
 
     enum class ApiMethod {
         GET, PUT, POST, DELETE, PATCH
