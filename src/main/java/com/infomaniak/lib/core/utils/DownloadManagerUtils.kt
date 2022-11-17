@@ -25,11 +25,10 @@ import android.os.Build
 import android.os.Environment
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.networking.HttpUtils
+import com.infomaniak.lib.core.utils.Utils.regexInvalidSystemChar
 import kotlinx.coroutines.*
 
 object DownloadManagerUtils {
-
-    val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]")
 
     fun scheduleDownload(context: Context, url: String, name: String) {
         val formattedName = name.replace(regexInvalidSystemChar, "_").replace("%", "_").let {

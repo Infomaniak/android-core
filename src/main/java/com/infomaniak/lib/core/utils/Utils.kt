@@ -29,6 +29,8 @@ import kotlin.math.min
 object Utils {
     private const val MIN_HEIGHT_FOR_LANDSCAPE = 4
 
+    val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]")
+
     fun createRefreshTimer(milliseconds: Long = 600, onTimerFinish: () -> Unit): CountDownTimer {
         return object : CountDownTimer(milliseconds, milliseconds) {
             override fun onTick(millisUntilFinished: Long) = Unit
@@ -67,4 +69,6 @@ object Utils {
 
         if (isScreenTooSmall) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
+
+    fun getInvalidFileNameCharacter(fileName: String): String? = regexInvalidSystemChar.find(fileName)?.value
 }
