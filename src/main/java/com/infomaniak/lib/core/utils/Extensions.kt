@@ -32,6 +32,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -318,6 +319,28 @@ fun View.showKeyboard() {
         (context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
             showSoftInput(this@showKeyboard, InputMethodManager.SHOW_IMPLICIT)
         }
+    }
+}
+
+fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
+    (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        setMargins(
+            left ?: leftMargin,
+            top ?: topMargin,
+            right ?: rightMargin,
+            bottom ?: bottomMargin,
+        )
+        requestLayout()
+    }
+}
+
+fun View.setMarginsRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
+    (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        start?.let { marginStart = it }
+        top?.let { topMargin = it }
+        end?.let { marginEnd = it }
+        bottom?.let { bottomMargin = it }
+        requestLayout()
     }
 }
 
