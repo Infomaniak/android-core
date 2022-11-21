@@ -35,6 +35,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -248,6 +249,10 @@ fun View.setMarginsRelative(start: Int? = null, top: Int? = null, end: Int? = nu
 }
 
 fun String.capitalizeFirstChar(): String = replaceFirstChar { char -> char.titlecase() }
+
+fun String.guessMimeType(): String {
+    return MimeTypeMap.getSingleton().getMimeTypeFromExtension(substringAfterLast(".")) ?: "*/*"
+}
 
 fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
     with(edit()) {
