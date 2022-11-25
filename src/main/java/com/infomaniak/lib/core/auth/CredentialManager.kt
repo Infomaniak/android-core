@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit
  */
 abstract class CredentialManager {
 
+    //region User
     abstract var userDatabase: UserDatabase
     abstract var currentUserId: Int
     abstract var currentUser: User?
@@ -41,7 +42,9 @@ abstract class CredentialManager {
     /**
      * Get users, and their informations / tokens in a JSON format
      */
-    abstract fun getAllUsers(): LiveData<List<User>>
+    fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().getAll()
+
+    protected fun getAllUserCount(): Int = userDatabase.userDao().count()
 
     suspend fun setUserToken(user: User?, apiToken: ApiToken) {
         user?.let {
@@ -51,8 +54,9 @@ abstract class CredentialManager {
     }
 
     suspend fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
+    //endregion
 
-
+    //region HttpClient
     var onRefreshTokenError: ((user: User) -> Unit)? = null
 
     private val mutex = Mutex()
@@ -62,16 +66,14 @@ abstract class CredentialManager {
         mutex.withLock {
             var httpClient = httpClientMap[Pair(userId, timeout)]
             if (httpClient == null) {
-                httpClient = getHttpClientUser(userId, timeout) {
-                    onRefreshTokenError?.invoke(it)
-                }
+                httpClient = getHttpClientUser(userId, timeout)
                 httpClientMap[Pair(userId, timeout)] = httpClient
             }
             return httpClient
         }
     }
 
-    private suspend fun getHttpClientUser(userId: Int, timeout: Long?, onRefreshTokenError: (user: User) -> Unit): OkHttpClient {
+    private suspend fun getHttpClientUser(userId: Int, timeout: Long?): OkHttpClient {
         var user = getUserById(userId)
         return OkHttpClient.Builder().apply {
             if (BuildConfig.DEBUG) {
@@ -92,9 +94,7 @@ abstract class CredentialManager {
                 }
 
                 override suspend fun onRefreshTokenError() {
-                    user?.let {
-                        onRefreshTokenError(it)
-                    }
+                    user?.let { onRefreshTokenError?.invoke(it) }
                 }
 
                 override suspend fun getApiToken(): ApiToken {
@@ -108,4 +108,5 @@ abstract class CredentialManager {
             build()
         }
     }
+    //endregion
 }
