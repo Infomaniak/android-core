@@ -1,5 +1,5 @@
 /*
- * Infomaniak Core - Android
+ * Infomaniak kDrive - Android
  * Copyright (C) 2022 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.core.utils
+package com.infomaniak.lib.core.networking
 
 import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE

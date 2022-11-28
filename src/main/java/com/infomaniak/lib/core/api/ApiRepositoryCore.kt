@@ -19,7 +19,6 @@ package com.infomaniak.lib.core.api
 
 import com.infomaniak.lib.core.models.ApiResponse
 import com.infomaniak.lib.core.models.user.User
-import com.infomaniak.lib.core.utils.ApiController
 import okhttp3.OkHttpClient
 
 abstract class ApiRepositoryCore {

@@ -17,7 +17,7 @@
  */
 package com.infomaniak.lib.core.auth
 
-import com.infomaniak.lib.core.utils.ApiController
+import com.infomaniak.lib.core.api.ApiController
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
