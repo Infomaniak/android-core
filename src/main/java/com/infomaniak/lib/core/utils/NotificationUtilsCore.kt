@@ -19,6 +19,7 @@ package com.infomaniak.lib.core.utils
 
 import android.app.Application
 import android.app.NotificationChannel
+import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
@@ -49,9 +50,20 @@ abstract class NotificationUtilsCore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun Context.createNotificationChannels(channelList: List<NotificationChannel>) {
+    fun Context.createNotificationChannels(
+        channelList: List<NotificationChannel>,
+        groupList: List<NotificationChannelGroup>? = null
+    ) {
         (getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager).apply {
+            groupList?.let { createNotificationChannelGroups(it) }
             createNotificationChannels(channelList)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun Context.deleteNotificationChannels(channelList: List<String>) {
+        (getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager).apply {
+            channelList.forEach { deleteNotificationChannel(it) }
         }
     }
 
@@ -59,9 +71,13 @@ abstract class NotificationUtilsCore {
     protected fun Context.buildNotificationChannel(
         channelId: String,
         name: String,
-        importance: Int
+        importance: Int,
+        description: String? = null,
+        groupId: String? = null
     ): NotificationChannel {
         return NotificationChannel(channelId, name, importance).apply {
+            description?.let { this.description = it }
+            groupId?.let { group = it }
             when (importance) {
                 NotificationManager.IMPORTANCE_HIGH -> {
                     enableLights(true)
