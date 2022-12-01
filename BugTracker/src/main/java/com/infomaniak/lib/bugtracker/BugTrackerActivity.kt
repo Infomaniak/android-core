@@ -39,6 +39,9 @@ import com.infomaniak.lib.core.networking.HttpClient.okHttpClient
 import com.infomaniak.lib.core.networking.HttpUtils.getHeaders
 import com.infomaniak.lib.core.utils.FilePicker
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
+import com.infomaniak.lib.core.utils.hideProgress
+import com.infomaniak.lib.core.utils.initProgress
+import com.infomaniak.lib.core.utils.showProgress
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -93,17 +96,21 @@ class BugTrackerActivity : AppCompatActivity() {
         fileAdapter.bindToViewModel(bugTrackerViewModel.files)
         updateFileTotalSize()
 
-        hideErrorWhenNeeded()
-
-        submitButton.setOnClickListener {
-            if (bugTrackerViewModel.files.sumOf { it.size } >= FILE_SIZE_32_MB) {
-                showSnackbar(R.string.bugTrackerFileTooBig)
-            } else if (descriptionTextInput.text.isNullOrBlank() || subjectTextInput.text.isNullOrBlank()) {
-                missingFieldsError.isVisible = true
-            } else {
-                sendBugReport()
+        submitButton.apply {
+            initProgress(this@BugTrackerActivity)
+            setOnClickListener {
+                if (bugTrackerViewModel.files.sumOf { it.size } >= FILE_SIZE_32_MB) {
+                    showSnackbar(R.string.bugTrackerFileTooBig)
+                } else if (descriptionTextInput.text.isNullOrBlank() || subjectTextInput.text.isNullOrBlank()) {
+                    missingFieldsError.isVisible = true
+                } else {
+                    showProgress()
+                    sendBugReport()
+                }
             }
         }
+
+        hideErrorWhenNeeded()
     }
 
     private fun addFiles(uris: List<Uri>) {
@@ -218,6 +225,7 @@ class BugTrackerActivity : AppCompatActivity() {
                 }
                 finish()
             } else {
+                submitButton.hideProgress(R.string.bugTrackerSubmit)
                 showSnackbar(R.string.bugTrackerFormSubmitError)
             }
         }
