@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="bugTrackerAddFiles">Ajouter des fichiers</string>
     <string name="bugTrackerDescription">Description</string>
     <string name="bugTrackerFileTooBig">Images trop lourdes (max 32 Mo)</string>
@@ -30,8 +30,9 @@
     <string name="bugTrackerTitle">Traqueur de bugs</string>
     <string name="bugTrackerType">Type</string>
     <plurals name="bugTrackerUploadError">
-        <item quantity="one">Un fichier n’a pas pu être importé</item>
+        <item quantity="one" tools:ignore="ImpliedQuantity">Un fichier n’a pas pu être importé</item>
         <item quantity="other">%d fichiers n’ont pas pu être importés</item>
+        <item quantity="many">%d de fichiers n’ont pas pu être importés</item>
     </plurals>
 
     <string-array name="bugTrackerTypeArray">
