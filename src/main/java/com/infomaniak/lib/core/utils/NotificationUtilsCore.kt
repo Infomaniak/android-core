@@ -17,10 +17,7 @@
  */
 package com.infomaniak.lib.core.utils
 
-import android.app.Application
-import android.app.NotificationChannel
-import android.app.NotificationChannelGroup
-import android.app.NotificationManager
+import android.app.*
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -90,6 +87,14 @@ abstract class NotificationUtilsCore {
                     enableVibration(false)
                 }
             }
+        }
+    }
+
+    companion object {
+        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
         }
     }
 }
