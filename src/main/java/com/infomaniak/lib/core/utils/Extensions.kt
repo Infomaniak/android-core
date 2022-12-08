@@ -23,6 +23,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.content.res.TypedArray
 import android.graphics.Color
@@ -183,6 +184,10 @@ fun String.firstOrEmpty(): Char = if (isNotEmpty()) first() else Char.MIN_VALUE
 
 fun Window.toggleEdgeToEdge(enabled: Boolean) {
     WindowCompat.setDecorFitsSystemWindows(this, !enabled)
+}
+
+fun Context.isNightModeEnabled(): Boolean {
+    return resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
 
 fun Window.lightStatusBar(enabled: Boolean) {
