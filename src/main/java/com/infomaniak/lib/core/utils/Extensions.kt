@@ -30,6 +30,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.Settings
 import android.util.AttributeSet
 import android.view.View
@@ -333,6 +334,16 @@ fun AttributeSet.getAttributes(
         block()
         recycle()
     }
+}
+
+inline fun <reified T : Parcelable> Intent.parcelableExtra(key: String): T? = when {
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
+}
+
+inline fun <reified T : Parcelable> Intent.parcelableArrayListExtra(key: String): List<T>? = when {
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArrayListExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
 }
 
 fun ActivityResult.whenResultIsOk(completion: (Intent?) -> Unit) {
