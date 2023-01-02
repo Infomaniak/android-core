@@ -77,7 +77,7 @@ fun Date.endOfTheWeek(): Date =
 fun Date.monthsAgo(value: Int): Date =
     Calendar.getInstance().apply {
         time = this@monthsAgo
-        roll(Calendar.MONTH, -value)
+        add(Calendar.MONTH, -value)
     }.time
 
 fun Date.year(): Int =
