@@ -20,7 +20,7 @@ Init the `InfomaniakCore` object in `ApplicationMain` and configure it like this
         )
 ```
 
-You'll be able to call the method `getHeaders()` everywhere in your app, as long as you've initiated the InfomaniakCore library in App main.
+You'll be able to call the method `getHeaders()` everywhere in your app, as long as you've initiated the InfomaniakCore library in  App main.
 Like this example :
 
 ``` 
@@ -40,7 +40,7 @@ val request = Request.Builder()
 
 ## License
 
-    Copyright 2022 Infomaniak Network SA
+    Copyright 2023 Infomaniak Network SA
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
