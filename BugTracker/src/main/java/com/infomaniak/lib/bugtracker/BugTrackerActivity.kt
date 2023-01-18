@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.infomaniak.lib.bugtracker.databinding.ActivityBugTrackerBinding
-import com.infomaniak.lib.core.networking.HttpClient.okHttpClient
+import com.infomaniak.lib.core.networking.HttpClient.okHttpClientLongTimeout
 import com.infomaniak.lib.core.networking.HttpUtils.getHeaders
 import com.infomaniak.lib.core.utils.FilePicker
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
@@ -218,7 +218,7 @@ class BugTrackerActivity : AppCompatActivity() {
             .build()
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val response = okHttpClient.newBuilder().build().newCall(request).execute()
+            val response = okHttpClientLongTimeout.newBuilder().build().newCall(request).execute()
             if (response.isSuccessful) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@BugTrackerActivity, R.string.bugTrackerFormSubmitSuccess, Toast.LENGTH_LONG).show()
