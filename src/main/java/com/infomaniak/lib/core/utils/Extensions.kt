@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +46,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
@@ -348,4 +350,32 @@ inline fun <reified T : Parcelable> Intent.parcelableArrayListExtra(key: String)
 
 fun ActivityResult.whenResultIsOk(completion: (Intent?) -> Unit) {
     if (resultCode == Activity.RESULT_OK) data.let(completion::invoke)
+}
+
+/**
+ * Send a value to the previous navigation
+ */
+fun <T> Fragment.setBackNavigationResult(key: String, value: T) {
+    findNavController().apply {
+        previousBackStackEntry?.savedStateHandle?.set(key, value)
+        popBackStack()
+    }
+}
+
+/**
+ * Get the value sent by navigation popbackStack in the current navigation
+ */
+fun <T> Fragment.getBackNavigationResult(key: String, onResult: (result: T) -> Unit) {
+    val backStackEntry = findNavController().currentBackStackEntry
+    val observer = LifecycleEventObserver { _, event ->
+        if (event == Lifecycle.Event.ON_RESUME && backStackEntry?.savedStateHandle?.contains(key) == true) {
+            backStackEntry.savedStateHandle.get<T>(key)?.let(onResult)
+            backStackEntry.savedStateHandle.remove<T>(key)
+        }
+    }
+
+    backStackEntry?.lifecycle?.addObserver(observer)
+    viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+        if (event == Lifecycle.Event.ON_DESTROY) backStackEntry?.lifecycle?.removeObserver(observer)
+    })
 }
