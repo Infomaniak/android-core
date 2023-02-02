@@ -31,24 +31,14 @@ import androidx.core.database.getStringOrNull
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.infomaniak.lib.bugtracker.databinding.ActivityBugTrackerBinding
-import com.infomaniak.lib.core.networking.HttpClient.okHttpClientLongTimeout
-import com.infomaniak.lib.core.networking.HttpUtils.getHeaders
 import com.infomaniak.lib.core.utils.FilePicker
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.lib.core.utils.hideProgress
 import com.infomaniak.lib.core.utils.initProgress
 import com.infomaniak.lib.core.utils.showProgress
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 
 class BugTrackerActivity : AppCompatActivity() {
 
@@ -111,6 +101,20 @@ class BugTrackerActivity : AppCompatActivity() {
         }
 
         hideErrorWhenNeeded()
+
+        observeBugReportResult()
+    }
+
+    private fun ActivityBugTrackerBinding.observeBugReportResult() {
+        bugTrackerViewModel.bugReportResult.observe(this@BugTrackerActivity) { isSuccessful ->
+            if (isSuccessful) {
+                Toast.makeText(this@BugTrackerActivity, R.string.bugTrackerFormSubmitSuccess, Toast.LENGTH_LONG).show()
+                finish()
+            } else {
+                submitButton.hideProgress(R.string.bugTrackerSubmit)
+                showSnackbar(R.string.bugTrackerFormSubmitError)
+            }
+        }
     }
 
     private fun addFiles(uris: List<Uri>) {
@@ -203,36 +207,7 @@ class BugTrackerActivity : AppCompatActivity() {
             .addFormDataPart("extra[appVersion]", appVersion)
             .addFormDataPart("type", type.apiValue)
 
-        fileAdapter.files.forEachIndexed { index, file ->
-            formBuilder.addFormDataPart(
-                "file_$index",
-                file.fileName,
-                file.bytes.toRequestBody(file.mimeType?.toMediaTypeOrNull())
-            )
-        }
-
-        val request = Request.Builder()
-            .url(REPORT_URL)
-            .headers(getHeaders())
-            .post(formBuilder.build())
-            .build()
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            val response = okHttpClientLongTimeout.newBuilder().build().newCall(request).execute()
-            if (response.isSuccessful) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@BugTrackerActivity, R.string.bugTrackerFormSubmitSuccess, Toast.LENGTH_LONG).show()
-                }
-                finish()
-            } else {
-                submitButton.hideProgress(R.string.bugTrackerSubmit)
-                showSnackbar(R.string.bugTrackerFormSubmitError)
-            }
-        }
-    }
-
-    class BugTrackerViewModel : ViewModel() {
-        val files = mutableListOf<BugTrackerFile>()
+        bugTrackerViewModel.sendBugReport(formBuilder)
     }
 
     data class BugTrackerFile(
@@ -249,7 +224,6 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private companion object {
-        const val REPORT_URL = "https://welcome.infomaniak.com/api/components/report"
 
         val DEFAULT_REPORT_TYPE = ReportType.BUGS
         const val DEFAULT_PRIORITY_TYPE = 1
