@@ -256,6 +256,18 @@ fun View.setMarginsRelative(start: Int? = null, top: Int? = null, end: Int? = nu
     }
 }
 
+fun View.setPaddingRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
+    (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        setPaddingRelative(
+            start ?: paddingStart,
+            top ?: paddingTop,
+            end ?: paddingEnd,
+            bottom ?: paddingBottom,
+        )
+        requestLayout()
+    }
+}
+
 fun String.capitalizeFirstChar(): String = replaceFirstChar { char -> char.titlecase() }
 
 fun String.guessMimeType(): String {
