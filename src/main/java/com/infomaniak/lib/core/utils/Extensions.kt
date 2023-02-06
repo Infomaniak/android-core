@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -171,6 +172,21 @@ fun Context.startAppSettingsConfig() {
         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         addCategory(Intent.CATEGORY_DEFAULT)
         data = Uri.parse("package:$packageName")
+        startActivity(this)
+    }
+}
+
+@SuppressLint("InlinedApi")
+fun Context.openAppNotificationSettings() {
+    Intent().apply {
+        action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+            else -> {
+                putExtra("app_package", packageName)
+                putExtra("app_uid", applicationInfo.uid)
+            }
+        }
         startActivity(this)
     }
 }
