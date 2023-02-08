@@ -33,6 +33,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.navArgs
 import com.infomaniak.lib.bugtracker.databinding.ActivityBugTrackerBinding
+import com.infomaniak.lib.core.githubTools.GitHubViewModel
 import com.infomaniak.lib.core.utils.FilePicker
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.lib.core.utils.hideProgress
@@ -44,6 +45,7 @@ class BugTrackerActivity : AppCompatActivity() {
 
     private val binding: ActivityBugTrackerBinding by lazy { ActivityBugTrackerBinding.inflate(layoutInflater) }
     private val bugTrackerViewModel: BugTrackerViewModel by viewModels()
+    private val gitHubViewModel: GitHubViewModel by viewModels()
     private val navigationArgs: BugTrackerActivityArgs by navArgs()
 
     private val fileAdapter = BugTrackerFileAdapter { updateFileTotalSize() }
@@ -103,6 +105,14 @@ class BugTrackerActivity : AppCompatActivity() {
         hideErrorWhenNeeded()
 
         observeBugReportResult()
+
+        checkLastAppVersion()
+    }
+
+    private fun ActivityBugTrackerBinding.checkLastAppVersion() {
+        gitHubViewModel.getLastRelease(navigationArgs.repoGitHub).observe(this@BugTrackerActivity) { lastRelease ->
+            appNotUpToDate.isGone = lastRelease?.name == navigationArgs.appBuildNumber
+        }
     }
 
     private fun ActivityBugTrackerBinding.observeBugReportResult() {

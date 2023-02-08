@@ -17,9 +17,10 @@
 -->
 <resources>
     <string name="bugTrackerAddFiles">Dateien hinzufügen</string>
+    <string name="bugTrackerAppNotUpToDate">ACHTUNG: IHRE ANWENDUNG IST NICHT AUF DEM NEUESTEN STAND.</string>
     <string name="bugTrackerDescription">Beschreibung</string>
-    <string name="bugTrackerFileTooBig">Bilder zu groß (max. 32 MB)</string>
     <string name="bugTrackerFilesTitle">DATEIEN</string>
+    <string name="bugTrackerFileTooBig">Bilder zu groß (max. 32 MB)</string>
     <string name="bugTrackerFormSubmitError">Der Fehlerbericht konnte nicht gesendet werden</string>
     <string name="bugTrackerFormSubmitSuccess">Fehlerbericht gesendet</string>
     <string name="bugTrackerHint">Sie können Dateien (maximal 32 MB) hinzufügen, die helfen, Ihren Bug besser zu verstehen.</string>

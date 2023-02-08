@@ -185,6 +185,18 @@
                 android:text="@string/bugTrackerHint"
                 android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/appNotUpToDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginStandard"
+                android:gravity="center"
+                android:text="@string/bugTrackerAppNotUpToDate"
+                android:textColor="@color/red_error"
+                android:textSize="20sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/submitButton"
                 style="@style/Widget.Material3.Button"

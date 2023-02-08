@@ -17,9 +17,10 @@
 -->
 <resources>
     <string name="bugTrackerAddFiles">Add files</string>
+    <string name="bugTrackerAppNotUpToDate">WARNING: YOUR APPLICATION IS NOT UP TO DATE.</string>
     <string name="bugTrackerDescription">Description</string>
-    <string name="bugTrackerFileTooBig">Images are too heavy (max 32 MB)</string>
     <string name="bugTrackerFilesTitle">FILES</string>
+    <string name="bugTrackerFileTooBig">Images are too heavy (max 32 MB)</string>
     <string name="bugTrackerFormSubmitError">The bug report could not be sent</string>
     <string name="bugTrackerFormSubmitSuccess">Bug report sent</string>
     <string name="bugTrackerHint">You can add files (32 MB maximum) to help understand your bug better.</string>

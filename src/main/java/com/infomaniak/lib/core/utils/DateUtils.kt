@@ -18,7 +18,9 @@
 package com.infomaniak.lib.core.utils
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 const val FORMAT_DATE_CLEAR_MONTH = "dd MMM yyyy"
 const val FORMAT_DATE_CLEAR_MONTH_DAY_ONE_CHAR = "d MMM yyyy"

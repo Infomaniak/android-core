@@ -21,7 +21,7 @@ import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
-import java.util.*
+import java.util.Date
 
 /**
  * Adapter to convert API [Long] timestamp to/from [Date] when [com.google.gson.Gson] deserializes/serializes a model.
