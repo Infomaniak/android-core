@@ -19,14 +19,14 @@ package com.infomaniak.lib.bugtracker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.lib.core.api.ApiController
+import com.infomaniak.lib.core.models.ApiResponse
 import com.infomaniak.lib.core.networking.HttpClient
-import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class BugTrackerViewModel : ViewModel() {
@@ -41,15 +41,17 @@ class BugTrackerViewModel : ViewModel() {
                 file.bytes.toRequestBody(file.mimeType?.toMediaTypeOrNull())
             )
         }
-        val request = Request.Builder()
-            .url(REPORT_URL)
-            .headers(HttpUtils.getHeaders())
-            .post(formBuilder.build())
-            .build()
 
-        val response = HttpClient.okHttpClientLongTimeout.newBuilder().build().newCall(request).execute()
+        bugReportResult.postValue(apiSendBugReport(formBuilder.build()).isSuccess())
+    }
 
-        bugReportResult.postValue(response.isSuccessful)
+    private fun apiSendBugReport(multipartBody: MultipartBody): ApiResponse<Any> {
+        return ApiController.callApi(
+            url = REPORT_URL,
+            method = ApiController.ApiMethod.POST,
+            body = multipartBody,
+            okHttpClient = HttpClient.okHttpClientLongTimeout
+        )
     }
 
     private companion object {

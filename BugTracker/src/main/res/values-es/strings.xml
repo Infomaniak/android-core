@@ -17,11 +17,12 @@
 -->
 <resources>
     <string name="bugTrackerAddFiles">Añadir archivos</string>
+    <string name="bugTrackerappNotUpToDate">ADVERTENCIA: SU SOLICITUD NO ESTÁ ACTUALIZADA.</string>
     <string name="bugTrackerDescription">Descripción</string>
+    <string name="bugTrackerFilesTitle">ARCHIVOS</string>
     <string name="bugTrackerFileTooBig">Imágenes demasiado grandes (máx. 32 MB)</string>
     <string name="bugTrackerFormSubmitError">No se ha podido enviar el informe de error</string>
     <string name="bugTrackerFormSubmitSuccess">Informe de error enviado</string>
-    <string name="bugTrackerFilesTitle">ARCHIVOS</string>
     <string name="bugTrackerHint">Puede añadir archivos (32 MB como máximo) para ayudar a entender mejor su fallo.</string>
     <string name="bugTrackerMissingFields">El asunto y la descripción deben ser rellenados</string>
     <string name="bugTrackerPriority">Prioridad</string>

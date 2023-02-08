@@ -17,9 +17,10 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="bugTrackerAddFiles">Ajouter des fichiers</string>
+    <string name="bugTrackerappNotUpToDate">ATTENTION : VOTRE APPLICATION N’EST PAS À JOUR.</string>
     <string name="bugTrackerDescription">Description</string>
-    <string name="bugTrackerFileTooBig">Images trop lourdes (max 32 Mo)</string>
     <string name="bugTrackerFilesTitle">FICHIERS</string>
+    <string name="bugTrackerFileTooBig">Images trop lourdes (max 32 Mo)</string>
     <string name="bugTrackerFormSubmitError">Le rapport de bug n’a pas pu être envoyé</string>
     <string name="bugTrackerFormSubmitSuccess">Rapport de bug envoyé</string>
     <string name="bugTrackerHint">Vous pouvez ajouter des fichiers (32 Mo maximum) pour aider à mieux comprendre votre bug.</string>
