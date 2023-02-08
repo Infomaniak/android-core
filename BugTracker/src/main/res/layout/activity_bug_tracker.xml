@@ -191,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginStandard"
                 android:gravity="center"
-                android:text="@string/bugTrackerappNotUpToDate"
+                android:text="@string/bugTrackerAppNotUpToDate"
                 android:textColor="@color/red_error"
                 android:textSize="20sp"
                 android:visibility="gone"

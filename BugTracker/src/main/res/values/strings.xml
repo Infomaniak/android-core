@@ -17,7 +17,7 @@
 -->
 <resources>
     <string name="bugTrackerAddFiles">Add files</string>
-    <string name="bugTrackerappNotUpToDate">WARNING: YOUR APPLICATION IS NOT UP TO DATE.</string>
+    <string name="bugTrackerAppNotUpToDate">WARNING: YOUR APPLICATION IS NOT UP TO DATE.</string>
     <string name="bugTrackerDescription">Description</string>
     <string name="bugTrackerFilesTitle">FILES</string>
     <string name="bugTrackerFileTooBig">Images are too heavy (max 32 MB)</string>

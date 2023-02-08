@@ -17,7 +17,7 @@
 -->
 <resources>
     <string name="bugTrackerAddFiles">Añadir archivos</string>
-    <string name="bugTrackerappNotUpToDate">ADVERTENCIA: SU SOLICITUD NO ESTÁ ACTUALIZADA.</string>
+    <string name="bugTrackerAppNotUpToDate">ADVERTENCIA: SU SOLICITUD NO ESTÁ ACTUALIZADA.</string>
     <string name="bugTrackerDescription">Descripción</string>
     <string name="bugTrackerFilesTitle">ARCHIVOS</string>
     <string name="bugTrackerFileTooBig">Imágenes demasiado grandes (máx. 32 MB)</string>
