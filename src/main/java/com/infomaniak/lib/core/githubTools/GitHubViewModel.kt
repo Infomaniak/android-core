@@ -32,7 +32,7 @@ class GitHubViewModel : ViewModel() {
         val response = HttpClient.okHttpClientNoInterceptor.newBuilder().build().newCall(request).execute()
         val bodyResponse = response.body?.string() ?: ""
         val lastRelease = if (response.isSuccessful && bodyResponse.isNotBlank()) {
-            val releases = ApiController.json.decodeFromString<List<GithubRelease>>(bodyResponse)
+            val releases = ApiController.json.decodeFromString<List<GitHubRelease>>(bodyResponse)
             releases.find { !it.draft && !it.prerelease }
         } else {
             null

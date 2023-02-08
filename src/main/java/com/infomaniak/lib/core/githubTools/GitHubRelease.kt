@@ -21,7 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GithubRelease(
+data class GitHubRelease(
     @SerialName("tag_name")
     val tagName: String,
     val name: String,

@@ -39,7 +39,7 @@
             android:name="projectName"
             app:argType="string" />
         <argument
-            android:name="repoGithub"
+            android:name="repoGitHub"
             app:argType="string" />
     </activity>
 </navigation>

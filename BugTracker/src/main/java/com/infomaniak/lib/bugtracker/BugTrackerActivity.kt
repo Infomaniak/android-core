@@ -110,7 +110,7 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private fun ActivityBugTrackerBinding.checkLastAppVersion() {
-        gitHubViewModel.getLastRelease(navigationArgs.repoGithub).observe(this@BugTrackerActivity) { lastRelease ->
+        gitHubViewModel.getLastRelease(navigationArgs.repoGitHub).observe(this@BugTrackerActivity) { lastRelease ->
             appNotUpToDate.isGone = lastRelease?.name == navigationArgs.appBuildNumber
         }
     }
