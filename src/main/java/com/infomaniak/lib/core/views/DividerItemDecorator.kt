@@ -20,6 +20,7 @@ package com.infomaniak.lib.core.views
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.roundToInt
 
 class DividerItemDecorator(private val divider: Drawable) : RecyclerView.ItemDecoration() {
 
@@ -27,15 +28,14 @@ class DividerItemDecorator(private val divider: Drawable) : RecyclerView.ItemDec
         val dividerLeft = parent.paddingLeft
         val dividerRight = parent.width - parent.paddingRight
 
-        for (i in 0..parent.childCount - 2) {
+        for (i in 1 until parent.childCount) {
             parent.getChildAt(i).let { child ->
-                val dividerTop = child.bottom + (child.layoutParams as RecyclerView.LayoutParams).bottomMargin
+                val yTranslation = child.translationY.roundToInt()
+                val dividerTop = child.top - (child.layoutParams as RecyclerView.LayoutParams).topMargin + yTranslation
                 val dividerBottom = dividerTop + divider.intrinsicHeight
                 divider.setBounds(dividerLeft, dividerTop, dividerRight, dividerBottom)
                 divider.draw(canvas)
             }
         }
-
-        super.onDrawOver(canvas, parent, state)
     }
 }
