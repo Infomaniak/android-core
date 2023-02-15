@@ -74,6 +74,9 @@ import org.apache.commons.cli.MissingArgumentException
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
 
+@SuppressLint("QueryPermissionsNeeded")
+fun Intent.hasSupportedApplications(context: Context) = resolveActivity(context.packageManager) != null
+
 fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
