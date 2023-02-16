@@ -45,7 +45,7 @@ dependencies {
     api 'androidx.recyclerview:recyclerview:1.2.1'
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    def appcompat_version = "1.6.0"
+    def appcompat_version = "1.6.1"
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "androidx.appcompat:appcompat-resources:$appcompat_version"
 
@@ -63,7 +63,7 @@ dependencies {
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.github.Infomaniak:android-login:2.6.0'
     api 'com.squareup.okhttp3:okhttp:4.10.0'
-    api 'io.sentry:sentry-android:6.13.1'
+    api 'io.sentry:sentry-android:6.14.0'
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
     api 'com.github.matomo-org:matomo-sdk-android:4.1.4'
