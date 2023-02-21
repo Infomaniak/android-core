@@ -68,6 +68,7 @@ import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.models.user.User
+import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
 import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
@@ -302,14 +303,14 @@ fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
 
 fun ImageView.loadAvatar(
     user: User,
-    imageLoader: ImageLoader = ImageLoader.Builder(context).build()
+    imageLoader: ImageLoader = context.simpleImageLoader
 ): Disposable = loadAvatar(user.id, user.avatar, user.getInitials(), imageLoader)
 
 fun ImageView.loadAvatar(
     id: Int,
     avatarUrl: String?,
     initials: String,
-    imageLoader: ImageLoader = ImageLoader.Builder(context).build()
+    imageLoader: ImageLoader = context.simpleImageLoader
 ): Disposable {
     val fallback = context.generateInitialsAvatarDrawable(
         initials = initials,
