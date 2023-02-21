@@ -1,5 +1,5 @@
 /*
- * Infomaniak kDrive - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2023 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,11 +35,10 @@ import okhttp3.OkHttpClient
 
 object CoilUtils {
 
-    private val COIL_CACHE_DIR = "coil_cache"
+    private const val COIL_CACHE_DIR = "coil_cache"
 
     private var simpleImageLoader: ImageLoader? = null
 
-    @JvmStatic
     fun simpleImageLoader(context: Context): ImageLoader {
         return simpleImageLoader ?: synchronized(this) {
             simpleImageLoader?.let { return it }
@@ -47,19 +46,23 @@ object CoilUtils {
         }
     }
 
-    inline val Context.simpleImageLoader: ImageLoader
-        get() = simpleImageLoader(this)
+    inline val Context.simpleImageLoader: ImageLoader get() = simpleImageLoader(this)
 
     fun newImageLoader(
         context: Context,
         tokenInterceptorListener: TokenInterceptorListener? = null,
-        gifPreview: Boolean = false
+        gifPreview: Boolean = false,
     ): ImageLoader {
         return ImageLoader.Builder(context)
             .crossfade(true)
             .components {
                 if (gifPreview) {
-                    add(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) ImageDecoderDecoder.Factory() else GifDecoder.Factory())
+                    val factory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        ImageDecoderDecoder.Factory()
+                    } else {
+                        GifDecoder.Factory()
+                    }
+                    add(factory)
                 }
             }
             .okHttpClient {
