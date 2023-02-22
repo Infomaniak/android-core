@@ -19,6 +19,7 @@ package com.infomaniak.lib.core.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -37,6 +38,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowManager.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
@@ -248,9 +250,16 @@ fun View.hideKeyboard() {
 
 fun View.showKeyboard() {
     if (requestFocus()) {
-        (context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
-            showSoftInput(this@showKeyboard, InputMethodManager.SHOW_IMPLICIT)
-        }
+        (context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(
+            this@showKeyboard,
+            InputMethodManager.SHOW_IMPLICIT,
+        )
+    }
+}
+
+fun Dialog.showKeyboard() {
+    window?.apply {
+        if (decorView.requestFocus()) setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
 }
 
