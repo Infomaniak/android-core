@@ -1,5 +1,5 @@
 /*
- * Infomaniak kMail - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2023 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,6 @@ data class FdroidRelease(
     @Serializable
     data class FdroidPackages(
         val versionName: String,
-        val versionCode: Int
+        val versionCode: Int,
     )
 }
