@@ -85,6 +85,10 @@ interface MatomoCore {
             .let { if (value != null) it.value(value) else it }
             .with(applicationContext.tracker)
     }
+
+    fun Context.trackAccountEvent(name: String, action: TrackerAction = TrackerAction.CLICK, value: Float? = null) {
+        trackEvent("account", name, action, value)
+    }
     //endregion
 
     fun Boolean.toFloat() = if (this) 1.0f else 0.0f
