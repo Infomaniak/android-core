@@ -55,7 +55,7 @@ object DownloadManagerUtils {
             delay(1000)
             DownloadManager.Query().apply {
                 setFilterById(downloadReference)
-                downloadManager.query(this).also {
+                downloadManager.query(this).use {
                     if (it.moveToFirst()) withContext(Dispatchers.Main) { checkStatus(it) }
                 }
             }
