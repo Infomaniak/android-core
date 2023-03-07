@@ -185,7 +185,8 @@ class InfomaniakLogin(
                 "&client_id=$clientID" +
                 "&redirect_uri=${getRedirectURI()}" +
                 "&code_challenge_method=$DEFAULT_HASH_MODE_SHORT" +
-                "&code_challenge=$codeChallenge"
+                "&code_challenge=$codeChallenge"+
+                "&hide_create_account=true"
     }
 
     /**
