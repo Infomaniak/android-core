@@ -70,7 +70,8 @@ class InfomaniakLogin(
 
     /**
      * Start WebView login
-     * @param resultLauncher send back the result
+     * @param resultLauncher Send back the result
+     * @param removeCookies Remove all cookies if needed, by default is true
      */
     fun startWebViewLogin(resultLauncher: ActivityResultLauncher<Intent>, removeCookies: Boolean = true) {
         val codeChallenge = generatePkceCodes()
