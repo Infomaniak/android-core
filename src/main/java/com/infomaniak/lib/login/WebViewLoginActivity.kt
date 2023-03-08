@@ -16,7 +16,6 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
-import kotlinx.android.synthetic.main.activity_web_view_login.*
 import java.util.*
 
 class WebViewLoginActivity : AppCompatActivity() {
