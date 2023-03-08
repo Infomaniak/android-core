@@ -19,7 +19,7 @@
             android:theme="?attr/themeLoginToolbar"
             android:visibility="visible"
             app:menu="@menu/webview_menu"
-            app:title="login.infomaniak.com" />
+            app:title="@string/login" />
 
         <ProgressBar
             android:id="@+id/progressBar"

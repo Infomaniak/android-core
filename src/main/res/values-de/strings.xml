@@ -4,4 +4,6 @@
 
     <string name="an_error_has_occurred">Ein Fehler ist aufgetreten</string>
     <string name="connection_error">Internet-Verbindungsproblem</string>
+    <string name="create_account">Ein Konto erstellen</string>
+    <string name="login">Anmeldung</string>
 </resources>
