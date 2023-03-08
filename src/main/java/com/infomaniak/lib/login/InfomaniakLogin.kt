@@ -72,11 +72,12 @@ class InfomaniakLogin(
      * Start WebView login
      * @param resultLauncher send back the result
      */
-    fun startWebViewLogin(resultLauncher: ActivityResultLauncher<Intent>) {
+    fun startWebViewLogin(resultLauncher: ActivityResultLauncher<Intent>, removeCookies: Boolean = true) {
         val codeChallenge = generatePkceCodes()
         val url = generateUrl(codeChallenge)
         val intent = Intent(context, WebViewLoginActivity::class.java).apply {
             putExtra(LOGIN_URL_TAG, url)
+            putExtra(REMOVE_COOKIES_TAG, removeCookies)
             putExtra(WebViewLoginActivity.APPLICATION_ID_TAG, appUID)
         }
         resultLauncher.launch(intent)
@@ -185,7 +186,7 @@ class InfomaniakLogin(
                 "&client_id=$clientID" +
                 "&redirect_uri=${getRedirectURI()}" +
                 "&code_challenge_method=$DEFAULT_HASH_MODE_SHORT" +
-                "&code_challenge=$codeChallenge"+
+                "&code_challenge=$codeChallenge" +
                 "&hide_create_account=true"
     }
 
@@ -361,14 +362,17 @@ class InfomaniakLogin(
             withContext(Dispatchers.Main) { onError(ErrorStatus.SERVER) }
             false
         }
+
         statusCode >= 400 -> {
             withContext(Dispatchers.Main) { onError(ErrorStatus.AUTH) }
             false
         }
+
         bodyResponse.isNullOrBlank() -> {
             withContext(Dispatchers.Main) { onError(ErrorStatus.CONNECTION) }
             false
         }
+
         else -> true
     }
 
@@ -402,6 +406,7 @@ class InfomaniakLogin(
         private const val verifierKey = "code_verifier"
 
         const val LOGIN_URL_TAG = "login_url"
+        const val REMOVE_COOKIES_TAG = "remove_cookies_tag"
         const val CODE_TAG = "code"
         const val ERROR_TRANSLATED_TAG = "translated_error"
         const val ERROR_CODE_TAG = "error_code"

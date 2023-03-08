@@ -14,16 +14,20 @@ import android.webkit.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
 import kotlinx.android.synthetic.main.activity_web_view_login.*
 import java.util.*
 
 class WebViewLoginActivity : AppCompatActivity() {
 
-    private lateinit var appUID: String
-
-    companion object {
-
-        const val APPLICATION_ID_TAG = "appUID"
+    private val appUID: String by lazy {
+        intent.getStringExtra(APPLICATION_ID_TAG) ?: throw MissingFormatArgumentException(APPLICATION_ID_TAG)
+    }
+    private val loginUrl: String by lazy {
+        intent.getStringExtra(LOGIN_URL_TAG) ?: throw MissingFormatArgumentException(LOGIN_URL_TAG)
+    }
+    private val removeCookies: Boolean by lazy {
+        intent.getBooleanExtra(REMOVE_COOKIES_TAG, true)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -32,13 +36,10 @@ class WebViewLoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_web_view_login)
         setSupportActionBar(toolbar)
 
-        CookieManager.getInstance().removeAllCookies(null)
-        CookieManager.getInstance().flush()
-
-        val loginUrl = intent.extras?.getString(LOGIN_URL_TAG)
-            ?: throw MissingFormatArgumentException(LOGIN_URL_TAG)
-        appUID = intent.extras?.getString(APPLICATION_ID_TAG)
-            ?: throw MissingFormatArgumentException(APPLICATION_ID_TAG)
+        if (removeCookies) {
+            CookieManager.getInstance().removeAllCookies(null)
+            CookieManager.getInstance().flush()
+        }
 
         webview.apply {
             settings.javaScriptEnabled = true
@@ -131,9 +132,10 @@ class WebViewLoginActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.doneItem -> {
-                onBackPressed()
+                finish()
                 true
             }
+
             else -> false
         }
     }
@@ -182,5 +184,10 @@ class WebViewLoginActivity : AppCompatActivity() {
             InfomaniakLogin.ERROR_ACCESS_DENIED -> getString(R.string.access_denied)
             else -> getString(R.string.an_error_has_occurred)
         }
+    }
+
+    companion object {
+
+        const val APPLICATION_ID_TAG = "appUID"
     }
 }
