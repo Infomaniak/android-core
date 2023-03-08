@@ -9,10 +9,11 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.webkit.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
 import kotlinx.android.synthetic.main.activity_web_view_login.*
@@ -43,83 +44,8 @@ class WebViewLoginActivity : AppCompatActivity() {
 
         webview.apply {
             settings.javaScriptEnabled = true
-            webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(
-                    view: WebView?,
-                    request: WebResourceRequest?
-                ): Boolean {
-                    val url = request?.url.toString()
-                    return !isValidUrl(url)
-                }
-
-                @Deprecated("Only for API below 23")
-                override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                    return !isValidUrl(url)
-                }
-
-                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    super.onPageStarted(view, url, favicon)
-                    progressBar.visibility = View.VISIBLE
-                    progressBar.progress = 0
-                }
-
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-                    progressBar.visibility = View.GONE
-                    progressBar.progress = 100
-                }
-
-                override fun onReceivedSslError(
-                    view: WebView?,
-                    handler: SslErrorHandler?,
-                    error: SslError?
-                ) {
-                    error?.certificate?.apply {
-                        if (issuedBy?.cName == "localhost" && issuedTo?.cName == "localhost") return
-                    }
-                    errorResult(InfomaniakLogin.SSL_ERROR_CODE)
-                }
-
-                @RequiresApi(Build.VERSION_CODES.M)
-                override fun onReceivedError(
-                    view: WebView?,
-                    request: WebResourceRequest?,
-                    error: WebResourceError?
-                ) {
-                    if (isValidUrl(request?.url.toString())) {
-                        errorResult(error?.description?.toString() ?: "")
-                    }
-                }
-
-                @Deprecated("Only for API below 23")
-                override fun onReceivedError(
-                    view: WebView?,
-                    errorCode: Int,
-                    description: String?,
-                    failingUrl: String?
-                ) {
-                    if (isValidUrl(failingUrl)) {
-                        errorResult(description ?: "")
-                    }
-                }
-
-                override fun onReceivedHttpError(
-                    view: WebView?,
-                    request: WebResourceRequest?,
-                    errorResponse: WebResourceResponse?
-                ) {
-                    if (request?.method == "GET") errorResult(InfomaniakLogin.HTTP_ERROR_CODE)
-                }
-            }
-
-            webview.webChromeClient = object : WebChromeClient() {
-                override fun onProgressChanged(view: WebView, newProgress: Int) {
-                    progressBar.progress = newProgress
-                    if (newProgress == 100) {
-                        progressBar.visibility = View.GONE
-                    }
-                }
-            }
+            webViewClient = LoginWebViewClient()
+            webChromeClient = ProgressWebChromeClient()
             loadUrl(loginUrl)
         }
     }
@@ -183,6 +109,64 @@ class WebViewLoginActivity : AppCompatActivity() {
             InfomaniakLogin.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED -> getString(R.string.connection_error)
             InfomaniakLogin.ERROR_ACCESS_DENIED -> getString(R.string.access_denied)
             else -> getString(R.string.an_error_has_occurred)
+        }
+    }
+
+    private inner class LoginWebViewClient : WebViewClient() {
+
+        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+            val url = request?.url.toString()
+            return !isValidUrl(url)
+        }
+
+        @Deprecated("Only for API below 23")
+        override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+            return !isValidUrl(url)
+        }
+
+        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+            progressBar.progress = 0
+            progressBar.isVisible = true
+        }
+
+        override fun onPageFinished(view: WebView?, url: String?) {
+            progressBar.progress = 100
+            progressBar.isGone = true
+        }
+
+        override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+            error?.certificate?.apply {
+                if (issuedBy?.cName == "localhost" && issuedTo?.cName == "localhost") return
+            }
+            errorResult(InfomaniakLogin.SSL_ERROR_CODE)
+        }
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+            if (isValidUrl(request?.url.toString())) {
+                errorResult(error?.description?.toString() ?: "")
+            }
+        }
+
+        @Deprecated("Only for API below 23")
+        override fun onReceivedError(view: WebView?, errorCode: Int, description: String?, failingUrl: String?) {
+            if (isValidUrl(failingUrl)) {
+                errorResult(description ?: "")
+            }
+        }
+
+        override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
+            if (request?.method == "GET") errorResult(InfomaniakLogin.HTTP_ERROR_CODE)
+        }
+    }
+
+    private inner class ProgressWebChromeClient : WebChromeClient() {
+
+        override fun onProgressChanged(view: WebView, newProgress: Int) {
+            progressBar.progress = newProgress
+            if (newProgress == 100) {
+                progressBar.isGone = true
+            }
         }
     }
 
