@@ -16,9 +16,12 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
+import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
 import java.util.*
 
 class WebViewLoginActivity : AppCompatActivity() {
+
+    private val binding by lazy { ActivityWebViewLoginBinding.inflate(layoutInflater) }
 
     private val appUID: String by lazy {
         intent.getStringExtra(APPLICATION_ID_TAG) ?: throw MissingFormatArgumentException(APPLICATION_ID_TAG)
@@ -34,14 +37,14 @@ class WebViewLoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view_login)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         if (removeCookies) {
             CookieManager.getInstance().removeAllCookies(null)
             CookieManager.getInstance().flush()
         }
 
-        webview.apply {
+        binding.webview.apply {
             settings.javaScriptEnabled = true
             webViewClient = LoginWebViewClient()
             webChromeClient = ProgressWebChromeClient()
@@ -123,12 +126,12 @@ class WebViewLoginActivity : AppCompatActivity() {
             return !isValidUrl(url)
         }
 
-        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) = with(binding) {
             progressBar.progress = 0
             progressBar.isVisible = true
         }
 
-        override fun onPageFinished(view: WebView?, url: String?) {
+        override fun onPageFinished(view: WebView?, url: String?) = with(binding) {
             progressBar.progress = 100
             progressBar.isGone = true
         }
@@ -161,11 +164,9 @@ class WebViewLoginActivity : AppCompatActivity() {
 
     private inner class ProgressWebChromeClient : WebChromeClient() {
 
-        override fun onProgressChanged(view: WebView, newProgress: Int) {
-            progressBar.progress = newProgress
-            if (newProgress == 100) {
-                progressBar.isGone = true
-            }
+        override fun onProgressChanged(view: WebView, newProgress: Int) = with(binding.progressBar) {
+            progress = newProgress
+            if (newProgress == 100) isGone = true
         }
     }
 
