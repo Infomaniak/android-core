@@ -85,7 +85,7 @@ class InfomaniakLogin(
     }
 
     /**
-     * Start a webview for the creation of a new account
+     * Start a WebView for the creation of a new account
      * @param resultLauncher Send back the result
      * @param createAccountUrl The url of the account creation page
      * @param successHost The host name when the account creation was successful
@@ -180,8 +180,7 @@ class InfomaniakLogin(
         val serviceIntent = Intent(SERVICE_ACTION).apply {
             setPackage(CHROME_STABLE_PACKAGE)
         }
-        val resolveInfos: MutableList<ResolveInfo> =
-            context.packageManager.queryIntentServices(serviceIntent, 0)
+        val resolveInfos: MutableList<ResolveInfo> = context.packageManager.queryIntentServices(serviceIntent, 0)
         return !resolveInfos.isNullOrEmpty()
     }
 
