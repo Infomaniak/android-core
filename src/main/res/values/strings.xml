@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="access_denied">Accès refusé</string>
+    <string name="access_denied">Access denied</string>
 
-    <string name="an_error_has_occurred">Une erreur est survenue</string>
-    <string name="connection_error">Problème de connexion internet</string>
-    <string name="create_account">Créer un compte</string>
-    <string name="login">Se connecter</string>
+    <string name="an_error_has_occurred">An error has occurred</string>
+    <string name="connection_error">Internet connection problem</string>
+    <string name="create_account">Create an account</string>
+    <string name="login">Login</string>
 </resources>
