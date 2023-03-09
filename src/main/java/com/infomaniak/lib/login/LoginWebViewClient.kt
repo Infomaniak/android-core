@@ -34,6 +34,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.CODE_TAG
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.ERROR_ACCESS_DENIED
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.ERROR_CODE_TAG
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.ERROR_TRANSLATED_TAG
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.HTTP_ERROR_CODE
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.SSL_ERROR_CODE
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
 
 open class LoginWebViewClient(
     private val activity: Activity,
@@ -60,7 +68,7 @@ open class LoginWebViewClient(
         error?.certificate?.apply {
             if (issuedBy?.cName == "localhost" && issuedTo?.cName == "localhost") return
         }
-        errorResult(InfomaniakLogin.SSL_ERROR_CODE)
+        errorResult(SSL_ERROR_CODE)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -71,12 +79,12 @@ open class LoginWebViewClient(
     @Deprecated("Support API below 23")
     override fun onReceivedError(view: WebView?, errorCode: Int, description: String, failingUrl: String) {
         if (isValidUrl(failingUrl)) {
-            errorResult(description ?: "")
+            errorResult(description)
         }
     }
 
     override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
-        if (request?.method == "GET") errorResult(InfomaniakLogin.HTTP_ERROR_CODE)
+        if (request?.method == "GET") errorResult(HTTP_ERROR_CODE)
     }
 
     private fun isValidUrl(url: String?): Boolean {
@@ -101,7 +109,7 @@ open class LoginWebViewClient(
 
     private fun successResult(code: String) = with(activity) {
         val intent = Intent().apply {
-            putExtra(InfomaniakLogin.CODE_TAG, code)
+            putExtra(CODE_TAG, code)
         }
         setResult(AppCompatActivity.RESULT_OK, intent)
         finish()
@@ -109,8 +117,8 @@ open class LoginWebViewClient(
 
     protected fun errorResult(errorCode: String) = with(activity) {
         val intent = Intent().apply {
-            putExtra(InfomaniakLogin.ERROR_CODE_TAG, errorCode)
-            putExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG, translateError(errorCode))
+            putExtra(ERROR_CODE_TAG, errorCode)
+            putExtra(ERROR_TRANSLATED_TAG, translateError(errorCode))
         }
         setResult(AppCompatActivity.RESULT_OK, intent)
         finish()
@@ -118,9 +126,9 @@ open class LoginWebViewClient(
 
     private fun translateError(errorCode: String): String = with(activity) {
         return when (errorCode) {
-            InfomaniakLogin.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED -> getString(R.string.connection_error)
-            InfomaniakLogin.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED -> getString(R.string.connection_error)
-            InfomaniakLogin.ERROR_ACCESS_DENIED -> getString(R.string.access_denied)
+            WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED -> getString(R.string.connection_error)
+            WEBVIEW_ERROR_CODE_CONNECTION_REFUSED -> getString(R.string.connection_error)
+            ERROR_ACCESS_DENIED -> getString(R.string.access_denied)
             else -> getString(R.string.an_error_has_occurred)
         }
     }
