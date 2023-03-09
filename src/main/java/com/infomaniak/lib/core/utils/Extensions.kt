@@ -71,6 +71,8 @@ import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
+import com.infomaniak.lib.core.utils.Utils.CAMEL_CASE_REGEX
+import com.infomaniak.lib.core.utils.Utils.SNAKE_CASE_REGEX
 import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
@@ -420,3 +422,7 @@ fun <T> Fragment.getBackNavigationResult(key: String, onResult: (result: T) -> U
         if (event == Lifecycle.Event.ON_DESTROY) backStackEntry?.lifecycle?.removeObserver(observer)
     })
 }
+
+fun String.camelToSnakeCase() = replace(CAMEL_CASE_REGEX) { "_${it.value}" }.lowercase()
+
+fun String.snakeToCamelCase() = replace(SNAKE_CASE_REGEX) { it.value.replace("_", "").uppercase() }
