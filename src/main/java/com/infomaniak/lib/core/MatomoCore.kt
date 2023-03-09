@@ -95,8 +95,11 @@ interface MatomoCore {
 
     enum class TrackerAction {
         CLICK,
-        INPUT;
+        DATA,
+        DRAG,
+        INPUT,
+        LONG_PRESS;
 
-        override fun toString() = name.lowercase()
+        override fun toString() = if (this == LONG_PRESS) "longPress" else name.lowercase()
     }
 }
