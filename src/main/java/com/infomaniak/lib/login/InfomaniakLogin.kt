@@ -180,7 +180,7 @@ class InfomaniakLogin(
         val serviceIntent = Intent(SERVICE_ACTION).apply {
             setPackage(CHROME_STABLE_PACKAGE)
         }
-        val resolveInfos: MutableList<ResolveInfo>? =
+        val resolveInfos: MutableList<ResolveInfo> =
             context.packageManager.queryIntentServices(serviceIntent, 0)
         return !resolveInfos.isNullOrEmpty()
     }
