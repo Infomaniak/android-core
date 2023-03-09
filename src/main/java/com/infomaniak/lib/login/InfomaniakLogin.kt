@@ -84,6 +84,27 @@ class InfomaniakLogin(
         resultLauncher.launch(intent)
     }
 
+    /**
+     * Start a webview for the creation of a new account
+     * @param resultLauncher Send back the result
+     * @param createAccountUrl The url of the account creation page
+     * @param successHost The host name when the account creation was successful
+     * @param cancelHost The host name to connect, cancel will be invoke
+     */
+    fun startCreateAccountWebView(
+        resultLauncher: ActivityResultLauncher<Intent>,
+        createAccountUrl: String,
+        successHost: String,
+        cancelHost: String,
+    ) {
+        val intent = Intent(context, WebViewCreateAccountActivity::class.java).apply {
+            putExtra(CREATE_ACCOUNT_URL_TAG, createAccountUrl)
+            putExtra(SUCCESS_HOST_TAG, successHost)
+            putExtra(CANCEL_HOST_TAG, cancelHost)
+        }
+        resultLauncher.launch(intent)
+    }
+
     fun getCodeVerifier(): String {
         val prefs: SharedPreferences = context.getSharedPreferences(preferenceName, MODE_PRIVATE)
         return prefs.getString(verifierKey, "").toString()
@@ -411,6 +432,10 @@ class InfomaniakLogin(
         const val CODE_TAG = "code"
         const val ERROR_TRANSLATED_TAG = "translated_error"
         const val ERROR_CODE_TAG = "error_code"
+
+        const val CANCEL_HOST_TAG = "cancel_url"
+        const val CREATE_ACCOUNT_URL_TAG = "create_account_url"
+        const val SUCCESS_HOST_TAG = "success_url"
 
         const val WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED = "net::ERR_INTERNET_DISCONNECTED"
         const val WEBVIEW_ERROR_CODE_CONNECTION_REFUSED = "net::ERR_CONNECTION_REFUSED"
