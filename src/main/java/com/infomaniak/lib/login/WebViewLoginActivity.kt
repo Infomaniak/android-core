@@ -31,10 +31,7 @@ class WebViewLoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        if (removeCookies) {
-            CookieManager.getInstance().removeAllCookies(null)
-            CookieManager.getInstance().flush()
-        }
+        if (removeCookies) WebViewUtils.flushAllCookies()
 
         binding.webview.apply {
             settings.javaScriptEnabled = true
