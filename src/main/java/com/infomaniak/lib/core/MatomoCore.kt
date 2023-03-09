@@ -21,6 +21,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.fragment.app.Fragment
+import com.infomaniak.lib.core.utils.snakeToCamelCase
 import org.matomo.sdk.Matomo
 import org.matomo.sdk.Tracker
 import org.matomo.sdk.TrackerBuilder
@@ -100,6 +101,6 @@ interface MatomoCore {
         INPUT,
         LONG_PRESS;
 
-        override fun toString() = if (this == LONG_PRESS) "longPress" else name.lowercase()
+        override fun toString() = name.lowercase().snakeToCamelCase()
     }
 }

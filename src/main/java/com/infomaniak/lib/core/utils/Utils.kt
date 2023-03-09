@@ -29,7 +29,10 @@ import kotlin.math.min
 object Utils {
     private const val MIN_HEIGHT_FOR_LANDSCAPE = 4
 
-    fun createRefreshTimer(milliseconds: Long = 600, onTimerFinish: () -> Unit): CountDownTimer {
+    val CAMEL_CASE_REGEX = "(?<=[a-z])[A-Z]".toRegex()
+    val SNAKE_CASE_REGEX = "_[a-zA-Z]".toRegex()
+
+    fun createRefreshTimer(milliseconds: Long = 600L, onTimerFinish: () -> Unit): CountDownTimer {
         return object : CountDownTimer(milliseconds, milliseconds) {
             override fun onTick(millisUntilFinished: Long) = Unit
             override fun onFinish() {
