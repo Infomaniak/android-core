@@ -34,7 +34,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0'
+    // TODO: Temporary, remove serialization_json_version when kDrive migrated to ViewBinding
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_json_version"
 
     api "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     api "androidx.navigation:navigation-ui-ktx:$navigation_version"
