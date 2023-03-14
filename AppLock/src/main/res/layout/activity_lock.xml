@@ -27,11 +27,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:contentDescription="@string/app_name"
+        android:contentDescription="?attr/appName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.5"
+        app:srcCompat="?attr/appIcon"
         tools:srcCompat="@drawable/ic_logo" />
 
     <ImageView
@@ -44,12 +45,13 @@
         app:layout_constraintTop_toBottomOf="@id/imageViewTitle"
         app:layout_constraintVertical_bias="0.3"
         app:layout_constraintWidth_percent="0.7"
-        app:srcCompat="@drawable/ic_lock_screen"
-        tools:ignore="ContentDescription" />
+        app:srcCompat="?attr/lockIcon"
+        tools:ignore="ContentDescription"
+        tools:srcCompat="@drawable/ic_lock_screen" />
 
     <TextView
         android:id="@+id/textView"
-        style="@style/H2"
+        style="?attr/titleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginStandard"
@@ -60,8 +62,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/unLock"
-        android:layout_height="wrap_content"
+        style="?attr/primaryButtonStyle"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/marginStandard"
         android:text="@string/buttonUnlock"
         app:layout_constraintBottom_toBottomOf="parent"
