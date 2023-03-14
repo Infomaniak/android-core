@@ -67,6 +67,8 @@ dependencies {
     api 'com.github.Infomaniak:android-login:2.7.0'
     api 'com.squareup.okhttp3:okhttp:4.10.0'
     api 'io.sentry:sentry-android:6.16.0'
+
+    implementation 'androidx.biometric:biometric:1.1.0'
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
     api 'com.github.matomo-org:matomo-sdk-android:4.1.4'
