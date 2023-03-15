@@ -19,6 +19,7 @@ package com.infomaniak.lib.applock
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.lib.applock.databinding.ActivityLockBinding
 import com.infomaniak.lib.core.utils.getAppName
@@ -34,8 +35,12 @@ class LockActivity : AppCompatActivity() {
         if (savedInstanceState?.getBoolean("firstLaunch") != false) {
             requestCredentials { onCredentialsSuccessful() }
         }
+
+        onBackPressedDispatcher.addCallback(this@LockActivity) { finishAffinity() }
+
         imageViewTitle.contentDescription = getAppName()
         unLock.setOnClickListener { requestCredentials { onCredentialsSuccessful() } }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
