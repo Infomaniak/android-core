@@ -20,6 +20,7 @@ package com.infomaniak.lib.core.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.app.KeyguardManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -434,6 +435,10 @@ fun String.camelToSnakeCase() = replace(CAMEL_CASE_REGEX) { "_${it.value}" }.low
 fun String.snakeToCamelCase() = replace(SNAKE_CASE_REGEX) { it.value.replace("_", "").uppercase() }
 
 inline val ViewBinding.context: Context get() = root.context
+
+fun Context.isKeyguardSecure(): Boolean {
+    return (getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardSecure ?: false
+}
 
 @SuppressLint("NewApi")
 fun FragmentActivity.requestCredentials(onSuccess: () -> Unit) {
