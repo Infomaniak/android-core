@@ -21,24 +21,31 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.lib.applock.databinding.ActivityLockBinding
+import com.infomaniak.lib.core.utils.getAppName
 import com.infomaniak.lib.core.utils.requestCredentials
 
 class LockActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityLockBinding.inflate(layoutInflater) }
-    override fun onCreate(savedInstanceState: Bundle?) = with (binding) {
+
+    override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         super.onCreate(savedInstanceState)
         setContentView(root)
-        val appName = intent.extras?.getString(APP_NAME_TAG) ?: ""
         if (savedInstanceState?.getBoolean("firstLaunch") != false) {
-            requestCredentials(appName) { onCredentialsSuccessful() }
+            requestCredentials { onCredentialsSuccessful() }
         }
-        unLock.setOnClickListener { requestCredentials(appName) { onCredentialsSuccessful() } }
+        imageViewTitle.contentDescription = getAppName()
+        unLock.setOnClickListener { requestCredentials { onCredentialsSuccessful() } }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean("firstLaunch", false)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
     private fun onCredentialsSuccessful() {
@@ -47,13 +54,7 @@ class LockActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun onPause() {
-        super.onPause()
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-    }
-
     companion object {
         const val FACE_ID_LOG_TAG = "Face ID"
-        const val APP_NAME_TAG = "app name"
     }
 }

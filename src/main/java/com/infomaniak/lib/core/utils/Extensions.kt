@@ -436,7 +436,7 @@ fun String.snakeToCamelCase() = replace(SNAKE_CASE_REGEX) { it.value.replace("_"
 inline val ViewBinding.context: Context get() = root.context
 
 @SuppressLint("NewApi")
-fun FragmentActivity.requestCredentials(appName: String, onSuccess: () -> Unit) {
+fun FragmentActivity.requestCredentials(onSuccess: () -> Unit) {
     val biometricPrompt = BiometricPrompt(this,
         ContextCompat.getMainExecutor(this),
         object : BiometricPrompt.AuthenticationCallback() {
@@ -447,7 +447,7 @@ fun FragmentActivity.requestCredentials(appName: String, onSuccess: () -> Unit) 
         })
 
     val promptInfo = BiometricPrompt.PromptInfo.Builder()
-        .setTitle(appName)
+        .setTitle(getAppName())
         .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL or BiometricManager.Authenticators.BIOMETRIC_WEAK)
         .build()
 
