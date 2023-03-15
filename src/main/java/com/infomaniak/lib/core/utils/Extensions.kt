@@ -417,9 +417,9 @@ fun <T> Fragment.getBackNavigationResult(key: String, onResult: (result: T) -> U
         }
     }
 
-    backStackEntry?.lifecycle?.addObserver(observer)
+    backStackEntry?.getLifecycle()?.addObserver(observer)
     viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-        if (event == Lifecycle.Event.ON_DESTROY) backStackEntry?.lifecycle?.removeObserver(observer)
+        if (event == Lifecycle.Event.ON_DESTROY) backStackEntry?.getLifecycle()?.removeObserver(observer)
     })
 }
 
