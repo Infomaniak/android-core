@@ -39,15 +39,14 @@
         android:id="@+id/imageViewLogo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="?attr/lockIcon"
+        android:src="@drawable/ic_lock_screen"
         app:layout_constraintBottom_toTopOf="@id/unLock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageViewTitle"
         app:layout_constraintVertical_bias="0.3"
         app:layout_constraintWidth_percent="0.7"
-        tools:ignore="ContentDescription"
-        tools:src="@drawable/ic_lock_screen" />
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/textView"

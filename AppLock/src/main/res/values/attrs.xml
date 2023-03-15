@@ -17,7 +17,6 @@
   -->
 <resources>
     <attr name="appIcon" format="reference" />
-    <attr name="lockIcon" format="reference" />
     <attr name="primaryButtonStyle" format="reference" />
     <attr name="titleStyle" format="reference" />
 </resources>

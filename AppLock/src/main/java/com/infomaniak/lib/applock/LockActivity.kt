@@ -38,9 +38,11 @@ class LockActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this@LockActivity) { finishAffinity() }
 
+        unLock.apply {
+            intent.extras?.getInt(PRIMARY_COLOR_DATA)?.let(::setBackgroundColor)
+            setOnClickListener { requestCredentials { onCredentialsSuccessful() } }
+        }
         imageViewTitle.contentDescription = getAppName()
-        unLock.setOnClickListener { requestCredentials { onCredentialsSuccessful() } }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -61,5 +63,6 @@ class LockActivity : AppCompatActivity() {
 
     companion object {
         const val FACE_ID_LOG_TAG = "Face ID"
+        const val PRIMARY_COLOR_DATA = "Primary color"
     }
 }
