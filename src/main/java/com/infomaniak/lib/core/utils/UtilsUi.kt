@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
+import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -78,7 +79,12 @@ object UtilsUi {
         }
     }
 
-    fun Context.generateInitialsAvatarDrawable(size: Int = 350, initials: String, background: Drawable): Drawable {
+    fun Context.generateInitialsAvatarDrawable(
+        size: Int = 350,
+        initials: String,
+        background: Drawable,
+        @ColorInt initialsColor: Int = Color.WHITE,
+    ): Drawable {
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         background.setBounds(canvas.clipBounds.left, canvas.clipBounds.top, canvas.clipBounds.right, canvas.clipBounds.bottom)
@@ -86,7 +92,7 @@ object UtilsUi {
         Paint().apply {
             isAntiAlias = true
             textAlign = Paint.Align.CENTER
-            color = Color.WHITE
+            color = initialsColor
             textSize = (size / 2).toFloat()
 
             val xPos = canvas.width / 2

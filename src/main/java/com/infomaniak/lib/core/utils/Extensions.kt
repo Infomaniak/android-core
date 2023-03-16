@@ -322,11 +322,13 @@ fun ImageView.loadAvatar(
     id: Int,
     avatarUrl: String?,
     initials: String,
-    imageLoader: ImageLoader = context.simpleImageLoader
+    imageLoader: ImageLoader = context.simpleImageLoader,
+    @ColorInt initialsColor: Int = Color.WHITE,
 ): Disposable {
     val fallback = context.generateInitialsAvatarDrawable(
         initials = initials,
         background = context.getBackgroundColorBasedOnId(id),
+        initialsColor = initialsColor,
     )
     return load(avatarUrl, imageLoader) {
         error(fallback)
