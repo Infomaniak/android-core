@@ -427,4 +427,5 @@ fun <T> Fragment.getBackNavigationResult(key: String, onResult: (result: T) -> U
 fun String.camelToSnakeCase() = replace(CAMEL_CASE_REGEX) { "_${it.value}" }.lowercase()
 
 fun String.snakeToCamelCase() = replace(SNAKE_CASE_REGEX) { it.value.replace("_", "").uppercase() }
+
 inline val ViewBinding.context: Context get() = root.context
