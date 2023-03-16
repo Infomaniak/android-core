@@ -60,6 +60,7 @@ import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.load
 import coil.request.Disposable
@@ -426,3 +427,5 @@ fun <T> Fragment.getBackNavigationResult(key: String, onResult: (result: T) -> U
 fun String.camelToSnakeCase() = replace(CAMEL_CASE_REGEX) { "_${it.value}" }.lowercase()
 
 fun String.snakeToCamelCase() = replace(SNAKE_CASE_REGEX) { it.value.replace("_", "").uppercase() }
+
+inline val ViewBinding.context: Context get() = root.context
