@@ -36,12 +36,14 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
+import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -436,6 +438,7 @@ fun String.snakeToCamelCase() = replace(SNAKE_CASE_REGEX) { it.value.replace("_"
 
 inline val ViewBinding.context: Context get() = root.context
 
+//region App lock
 fun Context.isKeyguardSecure(): Boolean {
     return (getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardSecure ?: false
 }
@@ -458,3 +461,21 @@ fun FragmentActivity.requestCredentials(onSuccess: () -> Unit) {
 
     biometricPrompt.authenticate(promptInfo)
 }
+
+fun FragmentActivity.silentlyReverseSwitch(switch: CompoundButton, onCredentialSuccessful: (Boolean) -> Unit) = with(switch) {
+    if (tag == null) {
+        silentClick()
+        requestCredentials {
+            Log.i(Utils.FACE_ID_LOG_TAG, "success")
+            silentClick() // Click that doesn't pass in listener
+            onCredentialSuccessful(isChecked)
+        }
+    }
+}
+
+private fun CompoundButton.silentClick() {
+    tag = true
+    performClick()
+    tag = null
+}
+//endregion

@@ -22,6 +22,7 @@ import android.util.Log
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.lib.applock.databinding.ActivityLockBinding
+import com.infomaniak.lib.core.utils.Utils.FACE_ID_LOG_TAG
 import com.infomaniak.lib.core.utils.getAppName
 import com.infomaniak.lib.core.utils.requestCredentials
 
@@ -62,7 +63,6 @@ class LockActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val FACE_ID_LOG_TAG = "Face ID"
         const val PRIMARY_COLOR_DATA = "Primary color"
     }
 }
