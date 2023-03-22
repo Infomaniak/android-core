@@ -17,9 +17,9 @@
  */
 package com.infomaniak.lib.core.models
 
-import com.google.gson.JsonObject
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 
 @Serializable
 class ApiError(
