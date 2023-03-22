@@ -120,12 +120,11 @@ object ApiController {
                     }
                     else -> {
                         var invalidGrant = false
-                        try {
+                        runCatching {
                             invalidGrant = JsonParser.parseString(bodyResponse)
                                 .asJsonObject
                                 .getAsJsonPrimitive("error")
                                 .asString == "invalid_grant"
-                        } catch (_: Exception) {
                         }
 
                         if (invalidGrant) {
