@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.applock
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +25,7 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
+import androidx.navigation.navArgs
 import com.infomaniak.lib.applock.Utils.requestCredentials
 import com.infomaniak.lib.applock.databinding.ActivityLockBinding
 import com.infomaniak.lib.core.utils.getAppName
@@ -31,6 +33,7 @@ import com.infomaniak.lib.core.utils.getAppName
 class LockActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLockBinding.inflate(layoutInflater) }
     private val lockViewModel: LockViewModel by viewModels()
+    private val navigationArgs: LockActivityArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         super.onCreate(savedInstanceState)
@@ -42,7 +45,7 @@ class LockActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this@LockActivity) { finishAffinity() }
 
         unLock.apply {
-            intent.extras?.getInt(PRIMARY_COLOR_KEY)?.let(::setBackgroundColor)
+            if (navigationArgs.primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(navigationArgs.primaryColor)
             setOnClickListener { requestCredentials { onCredentialsSuccessful() } }
         }
         imageViewTitle.contentDescription = getAppName()
@@ -60,7 +63,10 @@ class LockActivity : AppCompatActivity() {
 
     private fun onCredentialsSuccessful() {
         Log.i(Utils.APP_LOCK_TAG, "success")
-        startActivity(Intent(this, mainActivityClass))
+        Intent(this, Class.forName(navigationArgs.destinationClassName)).apply {
+            navigationArgs.destinationClassArgs?.let(::putExtras)
+            startActivity(this)
+        }
         finish()
     }
 
@@ -69,6 +75,16 @@ class LockActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val PRIMARY_COLOR_KEY = "Primary color"
+        private const val UNDEFINED_PRIMARY_COLOR = 0
+
+        fun startAppLockActivity(
+            context: Context,
+            destinationClass: Class<*>,
+            primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
+            destinationClassArgs: Bundle? = null,
+        ) {
+            val args = LockActivityArgs(destinationClass.name, primaryColor, destinationClassArgs).toBundle()
+            context.startActivity(Intent(context, LockActivity::class.java).putExtras(args))
+        }
     }
 }
