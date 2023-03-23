@@ -20,7 +20,6 @@ package com.infomaniak.lib.core.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.app.KeyguardManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -36,25 +35,20 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
-import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.annotation.*
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -437,45 +431,3 @@ fun String.camelToSnakeCase() = replace(CAMEL_CASE_REGEX) { "_${it.value}" }.low
 fun String.snakeToCamelCase() = replace(SNAKE_CASE_REGEX) { it.value.replace("_", "").uppercase() }
 
 inline val ViewBinding.context: Context get() = root.context
-
-//region App lock
-fun Context.isKeyguardSecure(): Boolean {
-    return (getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardSecure ?: false
-}
-
-@SuppressLint("NewApi")
-fun FragmentActivity.requestCredentials(onSuccess: () -> Unit) {
-    val biometricPrompt = BiometricPrompt(this,
-        ContextCompat.getMainExecutor(this),
-        object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                onSuccess()
-            }
-        })
-
-    val promptInfo = BiometricPrompt.PromptInfo.Builder()
-        .setTitle(getAppName())
-        .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL or BiometricManager.Authenticators.BIOMETRIC_WEAK)
-        .build()
-
-    biometricPrompt.authenticate(promptInfo)
-}
-
-fun FragmentActivity.silentlyReverseSwitch(switch: CompoundButton, onCredentialSuccessful: (Boolean) -> Unit) = with(switch) {
-    if (tag == null) {
-        silentClick()
-        requestCredentials {
-            Log.i(Utils.FACE_ID_LOG_TAG, "success")
-            silentClick() // Click that doesn't pass in listener
-            onCredentialSuccessful(isChecked)
-        }
-    }
-}
-
-private fun CompoundButton.silentClick() {
-    tag = true
-    performClick()
-    tag = null
-}
-//endregion

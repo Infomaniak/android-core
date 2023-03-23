@@ -32,8 +32,6 @@ object Utils {
     val CAMEL_CASE_REGEX = "(?<=[a-z])[A-Z]".toRegex()
     val SNAKE_CASE_REGEX = "_[a-zA-Z]".toRegex()
 
-    const val FACE_ID_LOG_TAG = "Face ID"
-
     fun createRefreshTimer(milliseconds: Long = 600L, onTimerFinish: () -> Unit): CountDownTimer {
         return object : CountDownTimer(milliseconds, milliseconds) {
             override fun onTick(millisUntilFinished: Long) = Unit

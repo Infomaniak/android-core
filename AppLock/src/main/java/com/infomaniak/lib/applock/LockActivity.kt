@@ -17,30 +17,32 @@
  */
 package com.infomaniak.lib.applock
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.addCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import com.infomaniak.lib.applock.Utils.requestCredentials
 import com.infomaniak.lib.applock.databinding.ActivityLockBinding
-import com.infomaniak.lib.core.utils.Utils.FACE_ID_LOG_TAG
 import com.infomaniak.lib.core.utils.getAppName
-import com.infomaniak.lib.core.utils.requestCredentials
 
 class LockActivity : AppCompatActivity() {
-
     private val binding by lazy { ActivityLockBinding.inflate(layoutInflater) }
+    private val lockViewModel: LockViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         super.onCreate(savedInstanceState)
         setContentView(root)
-        if (savedInstanceState?.getBoolean("firstLaunch") != false) {
+        if (lockViewModel.firstLaunch) {
             requestCredentials { onCredentialsSuccessful() }
         }
 
         onBackPressedDispatcher.addCallback(this@LockActivity) { finishAffinity() }
 
         unLock.apply {
-            intent.extras?.getInt(PRIMARY_COLOR_DATA)?.let(::setBackgroundColor)
+            intent.extras?.getInt(PRIMARY_COLOR_KEY)?.let(::setBackgroundColor)
             setOnClickListener { requestCredentials { onCredentialsSuccessful() } }
         }
         imageViewTitle.contentDescription = getAppName()
@@ -48,7 +50,7 @@ class LockActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean("firstLaunch", false)
+        lockViewModel.firstLaunch = false
     }
 
     override fun onPause() {
@@ -57,12 +59,16 @@ class LockActivity : AppCompatActivity() {
     }
 
     private fun onCredentialsSuccessful() {
-        Log.i(FACE_ID_LOG_TAG, "success")
-        setResult(RESULT_OK)
+        Log.i(Utils.APP_LOCK_TAG, "success")
+        startActivity(Intent(this, mainActivityClass))
         finish()
     }
 
+    class LockViewModel : ViewModel() {
+        var firstLaunch = true
+    }
+
     companion object {
-        const val PRIMARY_COLOR_DATA = "Primary color"
+        const val PRIMARY_COLOR_KEY = "Primary color"
     }
 }
