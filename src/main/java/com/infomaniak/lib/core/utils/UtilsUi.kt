@@ -28,6 +28,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
+import androidx.annotation.ArrayRes
 import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
@@ -70,9 +71,11 @@ object UtilsUi {
         fragment.sharedElementReturnTransition = returnContainerTransform
     }
 
-    fun Context.getBackgroundColorBasedOnId(id: Int): GradientDrawable {
-        val colorIndex = Math.floorMod(id, 9)
-        val organizationColor = this.resources.getIntArray(R.array.organizationColors)[colorIndex]
+    fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
+        val arrayResource = array ?: R.array.organizationColors
+        val colors = resources.getIntArray(arrayResource)
+        val colorIndex = Math.floorMod(id, colors.count())
+        val organizationColor = colors[colorIndex]
         return GradientDrawable().apply {
             shape = GradientDrawable.OVAL
             setColor(organizationColor)
