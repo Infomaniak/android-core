@@ -60,7 +60,7 @@ dependencies {
     api 'com.google.android.material:material:1.8.0'
     api 'com.google.code.gson:gson:2.10.1'
 
-    def coil_version = '2.2.2'
+    def coil_version = '2.3.0'
     api "io.coil-kt:coil-gif:$coil_version"
     api "io.coil-kt:coil:$coil_version"
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
