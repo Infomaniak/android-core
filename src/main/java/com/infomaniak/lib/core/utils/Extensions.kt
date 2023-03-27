@@ -29,6 +29,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.content.res.TypedArray
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -325,9 +326,20 @@ fun ImageView.loadAvatar(
     imageLoader: ImageLoader = context.simpleImageLoader,
     @ColorInt initialsColor: Int = Color.WHITE,
 ): Disposable {
+    val backgroundColor = context.getBackgroundColorBasedOnId(id)
+    return loadAvatar(backgroundColor, avatarUrl, initials, imageLoader, initialsColor)
+}
+
+fun ImageView.loadAvatar(
+    backgroundColor: GradientDrawable,
+    avatarUrl: String?,
+    initials: String,
+    imageLoader: ImageLoader = context.simpleImageLoader,
+    @ColorInt initialsColor: Int = Color.WHITE,
+): Disposable {
     val fallback = context.generateInitialsAvatarDrawable(
         initials = initials,
-        background = context.getBackgroundColorBasedOnId(id),
+        background = backgroundColor,
         initialsColor = initialsColor,
     )
     return load(avatarUrl, imageLoader) {
