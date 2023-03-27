@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
-  ~ Copyright (C) 2022 Infomaniak Network SA
+  ~ Copyright (C) 2022-2023 Infomaniak Network SA
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
     <string name="androidPermissionTitle">Permission required</string>
     <string name="browserNotFound">No browser found</string>
     <string name="buttonCancel">Cancel</string>
+    <string name="buttonLater">Later</string>
     <string name="connect">Login</string>
     <string name="connectionError">Internet connection problem</string>
     <string name="errorDownload">Download error</string>
@@ -38,5 +39,7 @@
     <string name="typeNormal">Staff member</string>
     <string name="typeOwner">Legally responsible</string>
     <string name="updateAppTitle">Update required</string>
+    <string name="updateAvailableDescription">To get the best out of %s, we recommend you update your application.</string>
+    <string name="updateAvailableTitle">Update available!</string>
     <string name="updateButton">Update</string>
 </resources>
