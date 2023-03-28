@@ -23,6 +23,7 @@
     <string name="browserNotFound">Nessun browser trovato</string>
     <string name="buttonCancel">Annulla</string>
     <string name="buttonLater">Più tardi</string>
+    <string name="buttonUpdate">Aggiorna</string>
     <string name="connect">Accesso</string>
     <string name="connectionError">Problema di connessione a Internet</string>
     <string name="errorDownload">Errore durante il download</string>
@@ -39,5 +40,4 @@
     <string name="updateAppTitle">Aggiornamento necessario</string>
     <string name="updateAvailableDescription">Per vivere la migliore esperienza con %s, ti consigliamo di aggiornare la tua applicazione.</string>
     <string name="updateAvailableTitle">Aggiornamento disponibile!</string>
-    <string name="updateButton">Aggiorna</string>
 </resources>

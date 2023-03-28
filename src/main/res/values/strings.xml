@@ -25,6 +25,7 @@
     <string name="browserNotFound">No browser found</string>
     <string name="buttonCancel">Cancel</string>
     <string name="buttonLater">Later</string>
+    <string name="buttonUpdate">Update</string>
     <string name="connect">Login</string>
     <string name="connectionError">Internet connection problem</string>
     <string name="errorDownload">Download error</string>
@@ -41,5 +42,4 @@
     <string name="updateAppTitle">Update required</string>
     <string name="updateAvailableDescription">To get the best out of %s, we recommend you update your application.</string>
     <string name="updateAvailableTitle">Update available!</string>
-    <string name="updateButton">Update</string>
 </resources>

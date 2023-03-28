@@ -23,6 +23,7 @@
     <string name="browserNotFound">No se ha encontrado ningún navegador</string>
     <string name="buttonCancel">Anular</string>
     <string name="buttonLater">Más tarde</string>
+    <string name="buttonUpdate">Actualizar</string>
     <string name="connect">Ingresa en</string>
     <string name="connectionError">Problema de conexión a Internet</string>
     <string name="errorDownload">Error al descargar</string>
@@ -39,5 +40,4 @@
     <string name="updateAppTitle">Es necesario actualizar</string>
     <string name="updateAvailableDescription">Para disfrutar de una experiencia óptima de %s, te aconsejamos que actualices tu aplicación.</string>
     <string name="updateAvailableTitle">¡Actualización disponible!</string>
-    <string name="updateButton">Actualizar</string>
 </resources>
