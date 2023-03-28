@@ -18,16 +18,13 @@
 package com.infomaniak.lib.core.utils
 
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.liveData
 import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
-import kotlinx.coroutines.launch
 
-fun FragmentActivity.checkUpdateIsAvailable(appId: String, versionCode: Int, onResult: (updateIsAvailable: Boolean) -> Unit) {
-    lifecycleScope.launch {
-        val lastVersionCode = FdroidApiTools().getLastRelease(appId)
+fun checkUpdateIsAvailable(appId: String, versionCode: Int) = liveData {
+    val lastVersionCode = FdroidApiTools().getLastRelease(appId)
 
-        onResult(versionCode < lastVersionCode)
-    }
+    emit(versionCode < lastVersionCode)
 }
 
 fun FragmentActivity.launchInAppReview() = Unit
