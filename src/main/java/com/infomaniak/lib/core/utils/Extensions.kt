@@ -353,6 +353,7 @@ fun Fragment.canNavigate(currentClassName: String? = null): Boolean {
     val className = currentClassName ?: when (val currentDestination = findNavController().currentDestination) {
         is FragmentNavigator.Destination -> currentDestination.className
         is DialogFragmentNavigator.Destination -> currentDestination.className
+        null -> javaClass.name
         else -> null
     }
 
