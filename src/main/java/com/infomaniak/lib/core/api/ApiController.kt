@@ -94,11 +94,10 @@ object ApiController {
     }
 
     suspend fun refreshToken(refreshToken: String, tokenInterceptorListener: TokenInterceptorListener): ApiToken {
-        val clientId = InfomaniakCore.clientId ?: throw MissingArgumentException("clientId core not initialized")
         val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("grant_type", "refresh_token")
-            .addFormDataPart("client_id", clientId)
+            .addFormDataPart("client_id", InfomaniakCore.clientId)
             .addFormDataPart("refresh_token", refreshToken)
 
         return withContext(Dispatchers.IO) {

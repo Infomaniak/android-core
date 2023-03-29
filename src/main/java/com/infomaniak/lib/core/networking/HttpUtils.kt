@@ -24,17 +24,18 @@ import java.net.URLEncoder
 
 object HttpUtils {
 
-    fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers {
+    fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers = with(InfomaniakCore) {
         return Headers.Builder().apply {
             add("Accept-Language", getAcceptedLanguageHeaderValue())
-            add("App-Version", "Android ${InfomaniakCore.appVersionName}")
-            add("Authorization", "Bearer ${InfomaniakCore.bearerToken}")
+            add("App-Version", "Android $appVersionName")
+            add("Authorization", "Bearer $bearerToken")
             add("Cache-Control", "no-cache")
             contentType?.let {
                 add("Accept-type", it)
                 add("Content-type", it)
             }
-            InfomaniakCore.deviceIdentifier?.let { add("Device-Identifier", URLEncoder.encode(it, "UTF-8")) }
+            deviceIdentifier?.let { add("Device-Identifier", URLEncoder.encode(it, "UTF-8")) }
+            customHeaders?.forEach { customHeader -> add(customHeader.key, customHeader.value) }
         }.run {
             build()
         }
