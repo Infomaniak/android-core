@@ -35,7 +35,7 @@ object HttpUtils {
                 add("Content-type", it)
             }
             deviceIdentifier?.let { add("Device-Identifier", URLEncoder.encode(it, "UTF-8")) }
-            customHeaders?.let { it.forEach { customHeader -> add(customHeader.key, customHeader.value) } }
+            customHeaders?.forEach { customHeader -> add(customHeader.key, customHeader.value) }
         }.run {
             build()
         }
