@@ -23,29 +23,21 @@ import com.infomaniak.lib.core.auth.CredentialManager
  * InfomaniakCore : Allow to instantiate the library with some parameters
  */
 object InfomaniakCore {
+    var appVersionCode: Int = -1
     lateinit var appVersionName: String
     lateinit var bearerToken: String
-    var appVersionCode: Int = -1
-    var clientId: String? = null
+    lateinit var clientId: String
     var credentialManager: CredentialManager? = null
     var deviceIdentifier: String? = null
-    var isDebug: Boolean = false
+    var customHeaders: MutableMap<String, String>? = null
 
     fun init(
-        appVersionCode: Int = -1,
+        appVersionCode: Int,
         appVersionName: String,
-        bearerToken: String = "",
-        clientId: String? = null,
-        credentialManager: CredentialManager? = null,
-        deviceIdentifier: String? = null,
-        isDebug: Boolean = false
+        clientId: String,
     ) {
         this.appVersionCode = appVersionCode
         this.appVersionName = appVersionName
-        this.bearerToken = bearerToken
         this.clientId = clientId
-        this.credentialManager = credentialManager
-        this.deviceIdentifier = deviceIdentifier
-        this.isDebug = isDebug
     }
 }
