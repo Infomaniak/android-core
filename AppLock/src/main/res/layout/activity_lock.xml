@@ -27,26 +27,26 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:importantForAccessibility="no"
         android:src="?attr/appIcon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.5"
-        tools:src="@drawable/ic_logo"
-        tools:ignore="ContentDescription" />
+        tools:src="@drawable/ic_logo" />
 
     <ImageView
         android:id="@+id/imageViewLogo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
         android:src="@drawable/ic_lock_screen"
         app:layout_constraintBottom_toTopOf="@id/unLock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageViewTitle"
         app:layout_constraintVertical_bias="0.3"
-        app:layout_constraintWidth_percent="0.7"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintWidth_percent="0.7" />
 
     <TextView
         android:id="@+id/textView"
