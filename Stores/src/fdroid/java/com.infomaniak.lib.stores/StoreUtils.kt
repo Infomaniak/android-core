@@ -15,16 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.core.utils
+package com.infomaniak.lib.stores
 
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.liveData
+import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-fun checkUpdateIsAvailable(appId: String, versionCode: Int) = liveData {
-    val lastVersionCode = FdroidApiTools().getLastRelease(appId)
+fun FragmentActivity.checkUpdateIsAvailable(appId: String, versionCode: Int, onResult: (updateIsAvailable: Boolean) -> Unit) {
+    lifecycleScope.launch {
+        val lastVersionCode = FdroidApiTools().getLastRelease(appId)
 
-    emit(versionCode < lastVersionCode)
+        withContext(Dispatchers.Main) { onResult(versionCode < lastVersionCode) }
+    }
 }
 
 fun FragmentActivity.launchInAppReview() = Unit
