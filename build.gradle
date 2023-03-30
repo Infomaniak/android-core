@@ -7,11 +7,16 @@ apply plugin: 'kotlinx-serialization'
 android {
     namespace 'com.infomaniak.lib.core'
 
-    compileSdkVersion 33
+    rootProject.ext {
+        coreMinSdk = 21
+        coreTargetSdk = 33
+    }
+
+    compileSdkVersion rootProject.ext.coreTargetSdk
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdkVersion rootProject.ext.coreMinSdk
+        targetSdkVersion rootProject.ext.coreTargetSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.infomaniak.com/v3/mobile_login"'
@@ -52,7 +57,7 @@ dependencies {
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "androidx.appcompat:appcompat-resources:$appcompat_version"
 
-    def room_version = '2.5.0'
+    def room_version = '2.5.1'
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"

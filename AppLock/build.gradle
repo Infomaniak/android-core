@@ -4,11 +4,11 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     namespace 'com.infomaniak.lib.applock'
-    compileSdk 33
+    compileSdk rootProject.ext.coreTargetSdk
 
     defaultConfig {
-        minSdk 21
-        targetSdk 33
+        minSdk rootProject.ext.coreMinSdk
+        targetSdk rootProject.ext.coreTargetSdk
     }
 
     compileOptions {
