@@ -209,7 +209,7 @@ fun Exception.isNetworkException() = this.javaClass.name.contains("java.net.", i
         this is okhttp3.internal.http2.StreamResetException ||
         (this is java.io.IOException && this.message == "stream closed") // Okhttp3
 
-fun String.firstOrEmpty(): Char = if (isNotEmpty()) first() else Char.MIN_VALUE
+fun String.firstOrEmpty(): String = if (isNotEmpty()) first().toString() else ""
 
 fun Window.toggleEdgeToEdge(enabled: Boolean) {
     WindowCompat.setDecorFitsSystemWindows(this, !enabled)

@@ -58,5 +58,5 @@ data class User(
     var organizations: ArrayList<OrganizationAccount>
 
 ) : Parcelable {
-    fun getInitials() = "${firstname.firstOrEmpty().uppercaseChar()}${lastname.firstOrEmpty().uppercaseChar()}"
+    fun getInitials() = "${firstname.firstOrEmpty().uppercase()}${lastname.firstOrEmpty().uppercase()}"
 }
