@@ -28,8 +28,8 @@ object HttpUtils {
         return Headers.Builder().apply {
             add("Accept-Language", getAcceptedLanguageHeaderValue())
             add("App-Version", "Android $appVersionName")
-            add("Authorization", "Bearer $bearerToken")
             add("Cache-Control", "no-cache")
+            bearerToken?.let { add("Authorization", "Bearer $it") }
             contentType?.let {
                 add("Accept-type", it)
                 add("Content-type", it)
