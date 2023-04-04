@@ -25,8 +25,8 @@ import com.infomaniak.lib.core.auth.CredentialManager
 object InfomaniakCore {
     var appVersionCode: Int = -1
     lateinit var appVersionName: String
-    lateinit var bearerToken: String
     lateinit var clientId: String
+    var bearerToken: String? = null
     var credentialManager: CredentialManager? = null
     var deviceIdentifier: String? = null
     var customHeaders: MutableMap<String, String>? = null
