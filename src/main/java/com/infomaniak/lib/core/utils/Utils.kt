@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,13 @@ import android.content.res.Configuration
 import android.os.CountDownTimer
 import androidx.core.os.LocaleListCompat
 import java.util.*
+import java.util.regex.Pattern
 import kotlin.math.min
 
 object Utils {
     private const val MIN_HEIGHT_FOR_LANDSCAPE = 4
 
+    val ACCENTS_PATTERN: Pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
     val CAMEL_CASE_REGEX = "(?<=[a-z])[A-Z]".toRegex()
     val SNAKE_CASE_REGEX = "_[a-zA-Z]".toRegex()
 

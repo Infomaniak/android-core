@@ -30,6 +30,7 @@ import android.content.res.Resources
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.icu.text.Normalizer2
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -73,6 +74,7 @@ import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
+import com.infomaniak.lib.core.utils.Utils.ACCENTS_PATTERN
 import com.infomaniak.lib.core.utils.Utils.CAMEL_CASE_REGEX
 import com.infomaniak.lib.core.utils.Utils.SNAKE_CASE_REGEX
 import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
@@ -442,5 +444,10 @@ fun <T> Fragment.getBackNavigationResult(key: String, onResult: (result: T) -> U
 fun String.camelToSnakeCase() = replace(CAMEL_CASE_REGEX) { "_${it.value}" }.lowercase()
 
 fun String.snakeToCamelCase() = replace(SNAKE_CASE_REGEX) { it.value.replace("_", "").uppercase() }
+
+@RequiresApi(Build.VERSION_CODES.N)
+fun String.removeAccents(): String {
+    return ACCENTS_PATTERN.matcher(Normalizer2.getNFDInstance().normalize(this)).replaceAll("")
+}
 
 inline val ViewBinding.context: Context get() = root.context
