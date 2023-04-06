@@ -362,8 +362,10 @@ fun Fragment.canNavigate(currentClassName: String? = null): Boolean {
     return javaClass.name == className
 }
 
-fun Fragment.safeNavigate(directions: NavDirections, currentClassName: String? = null) {
-    if (canNavigate(currentClassName)) findNavController().navigate(directions)
+fun Fragment.safeNavigate(directions: NavDirections, currentClassName: String? = null) = with(findNavController()) {
+    if (canNavigate(currentClassName) && currentDestination?.getAction(directions.actionId) != null) {
+        navigate(directions)
+    }
 }
 
 fun Fragment.safeNavigate(
