@@ -26,15 +26,18 @@ import okhttp3.Request
 
 class FdroidApiTools {
 
-    suspend fun getLastRelease(packages: String) = withContext(Dispatchers.IO) {
+    suspend fun getLastRelease(packages: String): Int = withContext(Dispatchers.IO) {
         val request = Request.Builder().url("${API_FROID_URL}${packages}").get().build()
-        val response = HttpClient.okHttpClientNoInterceptor.newBuilder().build().newCall(request).execute()
-        val bodyResponse = response.body?.string() ?: ""
-        if (response.isSuccessful && bodyResponse.isNotBlank()) {
-            ApiController.json.decodeFromString<FdroidRelease>(bodyResponse).suggestedVersionCode
-        } else {
-            0
+        var versionCode = 0
+        runCatching {
+            val response = HttpClient.okHttpClientNoInterceptor.newBuilder().build().newCall(request).execute()
+            val bodyResponse = response.body?.string() ?: ""
+            if (response.isSuccessful && bodyResponse.isNotBlank()) {
+                versionCode = ApiController.json.decodeFromString<FdroidRelease>(bodyResponse).suggestedVersionCode
+            }
         }
+
+        versionCode
     }
 
     private companion object {
