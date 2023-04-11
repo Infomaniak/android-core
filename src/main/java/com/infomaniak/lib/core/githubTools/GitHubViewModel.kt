@@ -38,7 +38,10 @@ class GitHubViewModel : ViewModel() {
                 val releases = ApiController.json.decodeFromString<List<GitHubRelease>>(bodyResponse)
                 lastRelease = releases.find { !it.draft && !it.prerelease }
             }
+        }.onFailure { exception ->
+            exception.printStackTrace()
         }
+
         emit(lastRelease)
     }
 

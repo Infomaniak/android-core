@@ -55,7 +55,10 @@ class BugTrackerViewModel : ViewModel() {
                 .build()
 
             isSuccessful = HttpClient.okHttpClientLongTimeout.newBuilder().build().newCall(request).execute().isSuccessful
+        }.onFailure { exception ->
+            exception.printStackTrace()
         }
+
         return isSuccessful
     }
 

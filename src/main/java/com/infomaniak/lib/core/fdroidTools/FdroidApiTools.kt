@@ -35,6 +35,8 @@ class FdroidApiTools {
             if (response.isSuccessful && bodyResponse.isNotBlank()) {
                 versionCode = ApiController.json.decodeFromString<FdroidRelease>(bodyResponse).suggestedVersionCode
             }
+        }.onFailure { exception ->
+            exception.printStackTrace()
         }
 
         versionCode
