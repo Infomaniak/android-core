@@ -19,8 +19,6 @@ package com.infomaniak.lib.bugtracker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infomaniak.lib.core.api.ApiController
-import com.infomaniak.lib.core.models.ApiResponse
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.SingleLiveEvent
@@ -30,7 +28,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
 
 class BugTrackerViewModel : ViewModel() {
     val files = mutableListOf<BugTrackerActivity.BugTrackerFile>()
@@ -45,17 +42,24 @@ class BugTrackerViewModel : ViewModel() {
             )
         }
 
-        bugReportResult.postValue(apiSendBugReport(formBuilder.build()).isSuccessful)
+        bugReportResult.postValue(apiSendBugReport(formBuilder.build()))
     }
 
-    private fun apiSendBugReport(multipartBody: MultipartBody): Response {
-        val request = Request.Builder()
-            .url(REPORT_URL)
-            .headers(HttpUtils.getHeaders())
-            .post(multipartBody)
-            .build()
+    private fun apiSendBugReport(multipartBody: MultipartBody): Boolean {
+        var isSuccessful = false
+        runCatching {
+            val request = Request.Builder()
+                .url(REPORT_URL)
+                .headers(HttpUtils.getHeaders())
+                .post(multipartBody)
+                .build()
 
-        return HttpClient.okHttpClientLongTimeout.newBuilder().build().newCall(request).execute()
+            isSuccessful = HttpClient.okHttpClientLongTimeout.newBuilder().build().newCall(request).execute().isSuccessful
+        }.onFailure { exception ->
+            exception.printStackTrace()
+        }
+
+        return isSuccessful
     }
 
     private companion object {

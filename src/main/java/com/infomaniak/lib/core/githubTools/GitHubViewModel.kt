@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.githubTools
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.infomaniak.lib.core.api.ApiController
@@ -27,16 +28,20 @@ import okhttp3.Request
 
 class GitHubViewModel : ViewModel() {
 
-    fun getLastRelease(repo: String) = liveData(Dispatchers.IO) {
+    fun getLastRelease(repo: String): LiveData<GitHubRelease?> = liveData(Dispatchers.IO) {
         val request = Request.Builder().url("${API_GITHUB_URL}${repo}/releases").get().build()
-        val response = HttpClient.okHttpClientNoInterceptor.newBuilder().build().newCall(request).execute()
-        val bodyResponse = response.body?.string() ?: ""
-        val lastRelease = if (response.isSuccessful && bodyResponse.isNotBlank()) {
-            val releases = ApiController.json.decodeFromString<List<GitHubRelease>>(bodyResponse)
-            releases.find { !it.draft && !it.prerelease }
-        } else {
-            null
+        var lastRelease: GitHubRelease? = null
+        runCatching {
+            val response = HttpClient.okHttpClientNoInterceptor.newBuilder().build().newCall(request).execute()
+            val bodyResponse = response.body?.string() ?: ""
+            if (response.isSuccessful && bodyResponse.isNotBlank()) {
+                val releases = ApiController.json.decodeFromString<List<GitHubRelease>>(bodyResponse)
+                lastRelease = releases.find { !it.draft && !it.prerelease }
+            }
+        }.onFailure { exception ->
+            exception.printStackTrace()
         }
+
         emit(lastRelease)
     }
 
