@@ -1,6 +1,6 @@
 /*
  * Copyright 2016 Elye Project
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,12 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.View.MeasureSpec.*
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.utils.getAttributes
+import kotlin.math.min
 
 class LoaderTextView @JvmOverloads constructor(
     context: Context,
@@ -54,6 +56,13 @@ class LoaderTextView @JvmOverloads constructor(
     fun resetLoader() {
         text = ""
         loaderController.startLoading()
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val widthSize = getSize(widthMeasureSpec)
+        val widthMeasureMode = getMode(widthMeasureSpec)
+        val maxWidthMeasureSpec = makeMeasureSpec(min(maxWidth, widthSize), widthMeasureMode)
+        super.onMeasure(maxWidthMeasureSpec, heightMeasureSpec)
     }
 
     override fun onDraw(canvas: Canvas) {
