@@ -28,8 +28,9 @@ import com.infomaniak.lib.core.utils.getAttributes
 class LoaderTextView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : AppCompatTextView(context, attrs, defStyleAttr), LoaderView {
+
     private var loaderController: LoaderController = LoaderController(this)
     private var defaultColorResource = ContextCompat.getColor(context, R.color.loaderDefault)
 
@@ -40,7 +41,7 @@ class LoaderTextView @JvmOverloads constructor(
             }
             loaderController.corners = getDimensionPixelSize(
                 R.styleable.LoaderTextView_loader_corner,
-                LoaderConstant.CORNER_DEFAULT
+                LoaderConstant.CORNER_DEFAULT,
             )
         }
     }
@@ -58,10 +59,11 @@ class LoaderTextView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         loaderController.onDraw(
-            canvas, compoundPaddingLeft.toFloat(),
+            canvas,
+            compoundPaddingLeft.toFloat(),
             compoundPaddingTop.toFloat(),
             compoundPaddingRight.toFloat(),
-            compoundPaddingBottom.toFloat()
+            compoundPaddingBottom.toFloat(),
         )
     }
 
@@ -74,9 +76,7 @@ class LoaderTextView @JvmOverloads constructor(
         rectPaint.color = defaultColorResource
     }
 
-    override fun valueSet(): Boolean {
-        return text.isNotEmpty()
-    }
+    override fun valueSet(): Boolean = text.isNotEmpty()
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
