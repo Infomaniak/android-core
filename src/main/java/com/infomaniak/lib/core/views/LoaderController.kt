@@ -1,6 +1,6 @@
 /*
  * Copyright 2016 Elye Project
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,19 +24,16 @@ import android.view.animation.LinearInterpolator
 import kotlin.math.max
 
 internal class LoaderController(private val loaderView: LoaderView) : AnimatorUpdateListener {
+
     private lateinit var rectPaint: Paint
     private var linearGradient: LinearGradient? = null
-    private var progress = 0f
+    private var progress = 0.0f
     private lateinit var valueAnimator: ValueAnimator
+
     var widthWeight = LoaderConstant.MAX_WEIGHT
     var heightWeight = LoaderConstant.MAX_WEIGHT
     var useGradient = LoaderConstant.USE_GRADIENT_DEFAULT
     var corners = LoaderConstant.CORNER_DEFAULT
-
-    companion object {
-        private const val MAX_COLOR_CONSTANT_VALUE = 255
-        private const val ANIMATION_CYCLE_DURATION = 750 //milis
-    }
 
     init {
         init()
@@ -45,38 +42,42 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
     private fun init() {
         rectPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
         loaderView.setRectColor(rectPaint)
-        setValueAnimator(0.5f, 1f, ObjectAnimator.INFINITE)
+        setValueAnimator(0.5f, 1.0f, ObjectAnimator.INFINITE)
     }
 
     fun onDraw(
         canvas: Canvas,
-        left_pad: Float = 0f,
-        top_pad: Float = 0f,
-        right_pad: Float = 0f,
-        bottom_pad: Float = 0f
+        leftPad: Float = 0.0f,
+        topPad: Float = 0.0f,
+        rightPad: Float = 0.0f,
+        bottomPad: Float = 0.0f,
     ) {
-        val marginHeight = canvas.height * (1 - heightWeight) / 2
+        val marginHeight = canvas.height * (1.0f - heightWeight) / 2.0f
         rectPaint.alpha = (progress * MAX_COLOR_CONSTANT_VALUE).toInt()
-        if (useGradient) {
-            prepareGradient(canvas.width * widthWeight)
-        }
+        if (useGradient) prepareGradient(canvas.width * widthWeight)
+
         canvas.drawRoundRect(
             RectF(
-                0 + left_pad,
-                marginHeight + top_pad,
-                canvas.width * widthWeight - right_pad,
-                canvas.height - marginHeight - bottom_pad
+                0.0f + leftPad,
+                marginHeight + topPad,
+                canvas.width * widthWeight - rightPad,
+                canvas.height - marginHeight - bottomPad,
             ),
             corners.toFloat(), corners.toFloat(),
-            rectPaint
+            rectPaint,
         )
     }
 
     private fun prepareGradient(width: Float) {
         if (linearGradient == null) {
             linearGradient = LinearGradient(
-                0f, 0f, width, 0f, rectPaint.color,
-                LoaderConstant.COLOR_DEFAULT_GRADIENT, Shader.TileMode.MIRROR
+                0.0f,
+                0.0f,
+                width,
+                0.0f,
+                rectPaint.color,
+                LoaderConstant.COLOR_DEFAULT_GRADIENT,
+                Shader.TileMode.MIRROR,
             )
         }
         rectPaint.shader = linearGradient
@@ -101,17 +102,18 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
 
     fun stopLoading() {
         valueAnimator.cancel()
-        setValueAnimator(progress, 0f, 0)
+        setValueAnimator(progress, 0.0f, 0)
         valueAnimator.start()
     }
 
-    private fun setValueAnimator(begin: Float, end: Float, repeatCount: Int) {
-        valueAnimator = ValueAnimator.ofFloat(begin, end)
-        valueAnimator.repeatCount = repeatCount
-        valueAnimator.duration = ANIMATION_CYCLE_DURATION.toLong()
-        valueAnimator.repeatMode = ValueAnimator.REVERSE
-        valueAnimator.interpolator = LinearInterpolator()
-        valueAnimator.addUpdateListener(this)
+    private fun setValueAnimator(begin: Float, end: Float, newRepeatCount: Int) {
+        valueAnimator = ValueAnimator.ofFloat(begin, end).apply {
+            repeatCount = newRepeatCount
+            duration = ANIMATION_CYCLE_DURATION.toLong()
+            repeatMode = ValueAnimator.REVERSE
+            interpolator = LinearInterpolator()
+            addUpdateListener(this@LoaderController)
+        }
     }
 
     override fun onAnimationUpdate(valueAnimator: ValueAnimator) {
@@ -122,6 +124,11 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
     fun removeAnimatorUpdateListener() {
         valueAnimator.removeUpdateListener(this)
         valueAnimator.cancel()
-        progress = 0f
+        progress = 0.0f
+    }
+
+    private companion object {
+        const val MAX_COLOR_CONSTANT_VALUE = 255
+        const val ANIMATION_CYCLE_DURATION = 750 // In milliseconds
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,9 +68,7 @@ abstract class LoaderAdapter<T> : RecyclerView.Adapter<ViewHolder>() {
         const val VIEW_TYPE_NORMAL = 2
 
         fun createLoadingViewHolder(parent: ViewGroup): ViewHolder {
-            return ViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false)
-            )
+            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false))
         }
     }
 }

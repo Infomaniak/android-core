@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,9 @@ import com.infomaniak.lib.core.R
 class LoaderCardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : MaterialCardView(context, attrs, defStyleAttr), LoaderView {
+
     private var loaderController: LoaderController = LoaderController(this)
     private var defaultColorResource = ContextCompat.getColor(context, R.color.loaderDefault)
 
@@ -66,9 +67,7 @@ class LoaderCardView @JvmOverloads constructor(
         rectPaint.color = defaultColorResource
     }
 
-    override fun valueSet(): Boolean {
-        return false
-    }
+    override fun valueSet(): Boolean = false
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
