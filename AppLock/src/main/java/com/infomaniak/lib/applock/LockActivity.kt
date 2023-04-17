@@ -29,6 +29,7 @@ import androidx.navigation.navArgs
 import com.infomaniak.lib.applock.Utils.requestCredentials
 import com.infomaniak.lib.applock.databinding.ActivityLockBinding
 import com.infomaniak.lib.core.utils.getAppName
+import java.util.Date
 
 class LockActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLockBinding.inflate(layoutInflater) }
@@ -76,6 +77,7 @@ class LockActivity : AppCompatActivity() {
 
     companion object {
         private const val UNDEFINED_PRIMARY_COLOR = 0
+        private const val SECURITY_APP_TOLERANCE = 1 * 60 * 1000 // 1min (ms)
 
         fun startAppLockActivity(
             context: Context,
@@ -85,6 +87,18 @@ class LockActivity : AppCompatActivity() {
         ) {
             val args = LockActivityArgs(destinationClass.name, primaryColor, destinationClassArgs).toBundle()
             context.startActivity(Intent(context, LockActivity::class.java).putExtras(args))
+        }
+
+        fun lockAfterTimeout(
+            lastAppClosing: Date,
+            context: Context,
+            destinationClass: Class<*>,
+            primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
+            securityTolerance: Int = SECURITY_APP_TOLERANCE,
+        ) {
+            val lastCloseAppWithTolerance = Date(lastAppClosing.time + securityTolerance)
+            val now = Date()
+            if (now.after(lastCloseAppWithTolerance)) startAppLockActivity(context, destinationClass, primaryColor)
         }
     }
 }
