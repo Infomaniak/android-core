@@ -74,6 +74,7 @@ dependencies {
     def sentry_version = '6.17.0'
     api "io.sentry:sentry-android:$sentry_version"
     api "io.sentry:sentry-android-navigation:$sentry_version"
+    api "io.sentry:sentry-android-fragment:$sentry_version"
 
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
