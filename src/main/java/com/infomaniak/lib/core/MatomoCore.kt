@@ -41,15 +41,17 @@ interface MatomoCore {
     }
 
     fun Context.addTrackingCallbackForDebugLog() {
-        tracker.addTrackingCallback { trackMe ->
-            trackMe.also {
-                it.toMap().forEach { entry ->
-                    when (entry.key) {
-                        "action_name" -> Log.d("TrackerScreen", entry.value)
-                        "e_c" -> Log.d("TrackerEvent", "Category : ${entry.value}")
-                        "e_n" -> Log.d("TrackerEvent", "Name     : ${entry.value}")
-                        "e_a" -> Log.d("TrackerEvent", "Action   : ${entry.value}")
-                        "e_v" -> Log.d("TrackerEvent", "Value    : ${entry.value}")
+        if (BuildConfig.DEBUG) {
+            tracker.addTrackingCallback { trackMe ->
+                trackMe.also {
+                    it.toMap().forEach { entry ->
+                        when (entry.key) {
+                            "action_name" -> Log.d("TrackerScreen", entry.value)
+                            "e_c" -> Log.d("TrackerEvent", "Category : ${entry.value}")
+                            "e_n" -> Log.d("TrackerEvent", "Name     : ${entry.value}")
+                            "e_a" -> Log.d("TrackerEvent", "Action   : ${entry.value}")
+                            "e_v" -> Log.d("TrackerEvent", "Value    : ${entry.value}")
+                        }
                     }
                 }
             }
