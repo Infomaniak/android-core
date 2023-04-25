@@ -108,6 +108,8 @@ fun Date.minutes(): Int =
         time = this@minutes
     }.get(Calendar.MINUTE)
 
+fun Date.isInTheFuture(): Boolean = after(Date())
+
 fun Date.isToday(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() && day() == now.day() }
 
 fun Date.isYesterday(): Boolean {
