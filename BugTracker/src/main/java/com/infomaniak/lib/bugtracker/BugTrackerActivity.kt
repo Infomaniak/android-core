@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.text.format.Formatter
 import android.webkit.MimeTypeMap
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.database.getStringOrNull
@@ -34,11 +33,8 @@ import androidx.core.widget.doOnTextChanged
 import androidx.navigation.navArgs
 import com.infomaniak.lib.bugtracker.databinding.ActivityBugTrackerBinding
 import com.infomaniak.lib.core.githubTools.GitHubViewModel
-import com.infomaniak.lib.core.utils.FilePicker
+import com.infomaniak.lib.core.utils.*
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
-import com.infomaniak.lib.core.utils.hideProgress
-import com.infomaniak.lib.core.utils.initProgress
-import com.infomaniak.lib.core.utils.showProgress
 import okhttp3.MultipartBody
 
 class BugTrackerActivity : AppCompatActivity() {
@@ -118,7 +114,7 @@ class BugTrackerActivity : AppCompatActivity() {
     private fun ActivityBugTrackerBinding.observeBugReportResult() {
         bugTrackerViewModel.bugReportResult.observe(this@BugTrackerActivity) { isSuccessful ->
             if (isSuccessful) {
-                Toast.makeText(this@BugTrackerActivity, R.string.bugTrackerFormSubmitSuccess, Toast.LENGTH_LONG).show()
+                showToast(R.string.bugTrackerFormSubmitSuccess)
                 finish()
             } else {
                 submitButton.hideProgress(R.string.bugTrackerSubmit)
