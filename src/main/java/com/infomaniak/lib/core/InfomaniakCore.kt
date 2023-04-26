@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,13 @@
 package com.infomaniak.lib.core
 
 import com.infomaniak.lib.core.auth.CredentialManager
+import com.infomaniak.lib.core.utils.ApiErrorCode
 
 /**
  * InfomaniakCore : Allow to instantiate the library with some parameters
  */
 object InfomaniakCore {
+
     var appVersionCode: Int = -1
     lateinit var appVersionName: String
     lateinit var clientId: String
@@ -30,6 +32,7 @@ object InfomaniakCore {
     var credentialManager: CredentialManager? = null
     var deviceIdentifier: String? = null
     var customHeaders: MutableMap<String, String>? = null
+    var apiErrorCodes: List<ApiErrorCode>? = null
 
     fun init(
         appVersionCode: Int,
