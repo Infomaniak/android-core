@@ -24,6 +24,9 @@ import kotlin.math.roundToLong
 
 object FormatterFileSize {
 
+    const val KIBI_BYTE = 1024
+    const val KILO_BYTE = 1000
+
     private const val FLAG_SHORTER = 1 shl 0
     private const val FLAG_CALCULATE_ROUNDED = 1 shl 1
     private const val FLAG_SI_UNITS = 1 shl 2
@@ -49,7 +52,7 @@ object FormatterFileSize {
     }
 
     fun formatBytes(res: Resources, sizeBytes: Long, flags: Int): BytesResult {
-        val unit = if (flags and FLAG_IEC_UNITS != 0) 1024 else 1000
+        val unit = if (flags and FLAG_IEC_UNITS != 0) KIBI_BYTE else KILO_BYTE
         val isNegative = sizeBytes < 0
         var result = if (isNegative) (-sizeBytes).toFloat() else sizeBytes.toFloat()
         var suffix: Int = Resources.getSystem().getIdentifier("byteShort", "string", "android")
