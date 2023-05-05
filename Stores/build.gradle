@@ -11,11 +11,11 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility rootProject.ext.java_version
-        targetCompatibility rootProject.ext.java_version
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
     }
 
-    kotlinOptions { jvmTarget = rootProject.ext.java_version }
+    kotlinOptions { jvmTarget = rootProject.ext.javaVersion }
 
     flavorDimensions 'distribution'
     productFlavors {
