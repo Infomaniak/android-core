@@ -30,7 +30,6 @@ object InfomaniakCore {
     lateinit var clientId: String
     var bearerToken: String? = null
     var credentialManager: CredentialManager? = null
-    var deviceIdentifier: String? = null
     var customHeaders: MutableMap<String, String>? = null
     var apiErrorCodes: List<ApiErrorCode>? = null
 
