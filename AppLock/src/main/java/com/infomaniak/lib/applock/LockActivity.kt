@@ -62,11 +62,13 @@ class LockActivity : AppCompatActivity() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
-    private fun onCredentialsSuccessful() {
+    private fun onCredentialsSuccessful() = with(navigationArgs) {
         Log.i(Utils.APP_LOCK_TAG, "success")
-        Intent(this, Class.forName(navigationArgs.destinationClassName)).apply {
-            navigationArgs.destinationClassArgs?.let(::putExtras)
-            startActivity(this)
+        if (shouldStartActivity) {
+            Intent(this@LockActivity, Class.forName(destinationClassName)).apply {
+                destinationClassArgs?.let(::putExtras)
+                startActivity(this)
+            }
         }
         finish()
     }
@@ -83,9 +85,10 @@ class LockActivity : AppCompatActivity() {
             context: Context,
             destinationClass: Class<*>,
             primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
+            shouldStartActivity: Boolean = true,
             destinationClassArgs: Bundle? = null,
         ) {
-            val args = LockActivityArgs(destinationClass.name, primaryColor, destinationClassArgs).toBundle()
+            val args = LockActivityArgs(destinationClass.name, primaryColor, shouldStartActivity, destinationClassArgs).toBundle()
             context.startActivity(Intent(context, LockActivity::class.java).putExtras(args))
         }
 
@@ -98,7 +101,9 @@ class LockActivity : AppCompatActivity() {
         ) {
             val lastCloseAppWithTolerance = Date(lastAppClosing.time + securityTolerance)
             val now = Date()
-            if (now.after(lastCloseAppWithTolerance)) startAppLockActivity(context, destinationClass, primaryColor)
+            if (now.after(lastCloseAppWithTolerance)) {
+                startAppLockActivity(context, destinationClass, primaryColor, shouldStartActivity = false)
+            }
         }
     }
 }
