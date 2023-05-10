@@ -17,16 +17,13 @@
  */
 package com.infomaniak.lib.bugtracker
 
-import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.text.format.Formatter
 import android.webkit.MimeTypeMap
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.database.getStringOrNull
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -145,29 +142,13 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private fun getFileFromUri(uri: Uri): BugTrackerFile? {
-        val cursor = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
-        return cursor?.use { cursor ->
-            cursor.moveToFirst()
+        val (fileName, fileSize) = getFileNameAndSize(uri) ?: return null
+        val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
+        val mimeType = contentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val bytes = contentResolver.openInputStream(uri).use { it?.readBytes() }
 
-            val fileName = getFileName(cursor) ?: uri.lastPathSegment ?: throw Exception("Could not find filename of the file")
-            val fileSize = getFileSize(cursor)
-            val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
-            val mimeType = contentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            val bytes = contentResolver.openInputStream(uri).use { it?.readBytes() }
-
-            bytes?.let { BugTrackerFile(fileName, fileSize, uri, mimeType, it) }
-        }
+        return bytes?.let { BugTrackerFile(fileName, fileSize, uri, mimeType, it) }
     }
-
-    private fun getFileName(cursor: Cursor): String? {
-        val columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        return when {
-            columnIndex != -1 -> cursor.getStringOrNull(columnIndex)
-            else -> null
-        }
-    }
-
-    private fun getFileSize(cursor: Cursor) = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE))
 
     private fun ActivityBugTrackerBinding.hideErrorWhenNeeded() {
         descriptionTextInput.doOnTextChanged { text, _, _, _ -> if ((text?.count() ?: 0) > 0) missingFieldsError.isGone = true }
