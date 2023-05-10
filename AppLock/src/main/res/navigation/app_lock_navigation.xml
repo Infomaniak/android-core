@@ -24,7 +24,7 @@
     <activity
         android:id="@+id/lockActivity"
         android:name="com.infomaniak.lib.applock.LockActivity"
-        android:label="activity_bug_tracker"
+        android:label="activity_lock"
         tools:layout="@layout/activity_lock">
         <argument
             android:name="destinationClassName"
@@ -37,5 +37,8 @@
         <argument
             android:name="primaryColor"
             app:argType="integer" />
+        <argument
+            android:name="shouldStartActivity"
+            app:argType="boolean" />
     </activity>
 </navigation>
