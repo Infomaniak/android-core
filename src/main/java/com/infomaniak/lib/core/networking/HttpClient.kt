@@ -65,7 +65,7 @@ object HttpClient {
 
     private fun OkHttpClient.Builder.addInterceptors() {
         if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
-        customInterceptor?.let { for (interceptor in it) addInterceptor(interceptor) }
+        customInterceptor?.forEach { addInterceptor(it) }
     }
 
     private fun OkHttpClient.Builder.addTokenInterceptor() {
