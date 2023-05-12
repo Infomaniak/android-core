@@ -105,7 +105,7 @@ object ApiController {
                 .post(formBuilder.build())
                 .build()
 
-            val response = HttpClient.okHttpClientNoInterceptor.newCall(request).execute()
+            val response = HttpClient.okHttpClientNoTokenInterceptor.newCall(request).execute()
             response.use {
                 val bodyResponse = it.body?.string()
 

@@ -30,7 +30,7 @@ class FdroidApiTools {
         val request = Request.Builder().url("${API_FROID_URL}${packages}").get().build()
         var versionCode = 0
         runCatching {
-            val response = HttpClient.okHttpClientNoInterceptor.newBuilder().build().newCall(request).execute()
+            val response = HttpClient.okHttpClientNoTokenInterceptor.newBuilder().build().newCall(request).execute()
             val bodyResponse = response.body?.string() ?: ""
             if (response.isSuccessful && bodyResponse.isNotBlank()) {
                 versionCode = ApiController.json.decodeFromString<FdroidRelease>(bodyResponse).suggestedVersionCode
