@@ -22,6 +22,7 @@ import com.infomaniak.lib.core.BuildConfig
 import com.infomaniak.lib.core.auth.TokenAuthenticator
 import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -29,47 +30,53 @@ object HttpClient {
 
     private lateinit var tokenInterceptorListener: TokenInterceptorListener
 
+    var customInterceptor: List<Interceptor>? = null
+    var customTimeout: Long = 2
+
     fun init(tokenInterceptorListener: TokenInterceptorListener) {
         this.tokenInterceptorListener = tokenInterceptorListener
     }
 
-    val okHttpClientNoInterceptor: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .apply {
-                if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
-            }.build()
-    }
+    val okHttpClientNoTokenInterceptor: OkHttpClient by lazy { OkHttpClient.Builder().apply { addInterceptors() }.build() }
 
     val okHttpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .apply {
-                if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
-                addInterceptor(TokenInterceptor(tokenInterceptorListener))
-                authenticator(TokenAuthenticator(tokenInterceptorListener))
-            }.build()
+        OkHttpClient.Builder().apply {
+            addInterceptors()
+            addTokenInterceptor()
+        }.build()
     }
 
-    val okHttpClientLongTimeoutNoInterceptor: OkHttpClient by lazy {
+    val okHttpClientLongTimeoutNoTokenInterceptor: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .apply {
-                if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
-                readTimeout(2, TimeUnit.MINUTES)
-                writeTimeout(2, TimeUnit.MINUTES)
-                connectTimeout(2, TimeUnit.MINUTES)
-                callTimeout(2, TimeUnit.MINUTES)
+                addInterceptors()
+                addCustomTimeout()
             }.build()
     }
 
     val okHttpClientLongTimeout: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .apply {
-                if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
-                addInterceptor(TokenInterceptor(tokenInterceptorListener))
-                authenticator(TokenAuthenticator(tokenInterceptorListener))
-                readTimeout(2, TimeUnit.MINUTES)
-                writeTimeout(2, TimeUnit.MINUTES)
-                connectTimeout(2, TimeUnit.MINUTES)
-                callTimeout(2, TimeUnit.MINUTES)
+                addInterceptors()
+                addTokenInterceptor()
+                addCustomTimeout()
             }.build()
+    }
+
+    private fun OkHttpClient.Builder.addInterceptors() {
+        if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
+        customInterceptor?.let { for (interceptor in it) addInterceptor(interceptor) }
+    }
+
+    private fun OkHttpClient.Builder.addTokenInterceptor() {
+        addInterceptor(TokenInterceptor(tokenInterceptorListener))
+        authenticator(TokenAuthenticator(tokenInterceptorListener))
+    }
+
+    private fun OkHttpClient.Builder.addCustomTimeout() {
+        readTimeout(customTimeout, TimeUnit.MINUTES)
+        writeTimeout(customTimeout, TimeUnit.MINUTES)
+        connectTimeout(customTimeout, TimeUnit.MINUTES)
+        callTimeout(customTimeout, TimeUnit.MINUTES)
     }
 }
