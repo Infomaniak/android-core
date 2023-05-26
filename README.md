@@ -8,7 +8,7 @@ Import the project as a git modsub-module in the root folder of your project
 
 ## Use
 
-Init the `InfomaniakCore` object in `ApplicationMain` and configure it like this :
+Init the `InfomaniakCore` object in `MainApplication` and configure it like this :
 
 ``` 
         InfomaniakCore.init(
@@ -20,8 +20,8 @@ Init the `InfomaniakCore` object in `ApplicationMain` and configure it like this
         )
 ```
 
-You'll be able to call the method `getHeaders()` everywhere in your app, as long as you've initiated the InfomaniakCore library in App main.
-Like this example :
+You'll be able to call the method `getHeaders()` everywhere in your app, as long as you've initiated the InfomaniakCore library in
+`MainApplication`. Like this example :
 
 ``` 
 val request = Request.Builder()
@@ -40,7 +40,7 @@ val request = Request.Builder()
 
 ## License
 
-    Copyright 2022 Infomaniak Network SA
+    Copyright 2021-2023 Infomaniak Network SA
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
