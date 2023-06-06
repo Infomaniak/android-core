@@ -61,6 +61,10 @@ object Utils {
         return value?.let { runCatching { enumValueOf<T>(it.uppercase()) }.getOrNull() }
     }
 
+    inline fun <reified T : Enum<T>> String.toEnumOrThrow(): T {
+        return enumValueOf(uppercase())
+    }
+
     @SuppressLint("SourceLockedOrientationActivity")
     fun Activity.lockOrientationForSmallScreens() {
         val (screenHeightInches, screenWidthInches) = with(resources.displayMetrics) { (heightPixels / ydpi) to (widthPixels / xdpi) }
