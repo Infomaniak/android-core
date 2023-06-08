@@ -84,25 +84,24 @@ class LockActivity : AppCompatActivity() {
         fun startAppLockActivity(
             context: Context,
             destinationClass: Class<*>,
+            destinationClassArgs: Bundle? = null,
             primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
             shouldStartActivity: Boolean = true,
-            destinationClassArgs: Bundle? = null,
         ) {
             val args = LockActivityArgs(destinationClass.name, primaryColor, shouldStartActivity, destinationClassArgs).toBundle()
             context.startActivity(Intent(context, LockActivity::class.java).putExtras(args))
         }
 
         fun lockAfterTimeout(
-            lastAppClosing: Date,
             context: Context,
             destinationClass: Class<*>,
+            lastAppClosingTime: Long,
             primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
             securityTolerance: Int = SECURITY_APP_TOLERANCE,
         ) {
-            val lastCloseAppWithTolerance = Date(lastAppClosing.time + securityTolerance)
-            val now = Date()
-            if (now.after(lastCloseAppWithTolerance)) {
-                startAppLockActivity(context, destinationClass, primaryColor, shouldStartActivity = false)
+            val lastCloseAppWithTolerance = Date(lastAppClosingTime + securityTolerance)
+            if (Date().after(lastCloseAppWithTolerance)) {
+                startAppLockActivity(context, destinationClass, primaryColor = primaryColor, shouldStartActivity = false)
             }
         }
     }
