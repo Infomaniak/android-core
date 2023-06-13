@@ -25,7 +25,6 @@ import androidx.core.database.getStringOrNull
 import io.sentry.Sentry
 import java.net.URLDecoder
 
-
 fun Cursor.getFileName(uri: Uri): String {
     val filename = runCatching {
         getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME).let(this::getStringOrNull)
