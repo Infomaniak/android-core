@@ -13,7 +13,7 @@ android {
         javaVersion = JavaVersion.VERSION_17
     }
 
-    compileSdkVersion rootProject.ext.coreTargetSdk
+    compileSdk rootProject.ext.coreTargetSdk
 
     defaultConfig {
         minSdkVersion rootProject.ext.coreMinSdk
