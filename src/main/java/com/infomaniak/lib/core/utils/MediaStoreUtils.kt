@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.utils
 
+import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
@@ -46,11 +47,17 @@ fun Context.getFileNameAndSize(uri: Uri): Pair<String, Long>? {
         contentResolver.query(uri, null, null, null, null)?.use { cursor ->
             if (cursor.moveToFirst()) {
                 val fileName = cursor.getFileName(uri)
-                val fileSize = cursor.getFileSize()
+                val fileSize = runCatching {
+                    cursor.getFileSize()
+                }.getOrElse {
+                    uri.calculateFileSize(contentResolver)
+                } ?: throw Exception("Cannot calculate size")
+
                 fileName to fileSize
             } else {
                 Sentry.withScope { scope ->
                     scope.setExtra("uri", uri.toString())
+                    scope.setExtra("available columns", cursor.columnNames.joinToString { it })
                     Sentry.captureException(Exception("$this has empty cursor"))
                 }
                 null
@@ -63,4 +70,22 @@ fun Context.getFileNameAndSize(uri: Uri): Pair<String, Long>? {
         }
         null
     }
+}
+
+/**
+ * Calculates the size of a file from a Uri.
+ * @return The file size in bytes, or null if there is an error during the calculation.
+ */
+fun Uri.calculateFileSize(contentResolver: ContentResolver): Long? {
+    return runCatching {
+        contentResolver.openInputStream(this)?.use { inputStream ->
+            var currentSize: Int
+            val byteArray = ByteArray(8192) // 8 Ko
+            var fileSize = 0L
+            while (inputStream.read(byteArray).also { currentSize = it } != -1) {
+                fileSize += currentSize
+            }
+            fileSize
+        }
+    }.getOrNull()
 }
