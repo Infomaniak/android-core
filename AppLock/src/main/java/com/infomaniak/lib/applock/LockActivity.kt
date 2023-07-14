@@ -30,6 +30,7 @@ import com.infomaniak.lib.applock.Utils.requestCredentials
 import com.infomaniak.lib.applock.databinding.ActivityLockBinding
 import com.infomaniak.lib.core.utils.getAppName
 import java.util.Date
+import kotlin.system.exitProcess
 
 class LockActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLockBinding.inflate(layoutInflater) }
@@ -43,7 +44,10 @@ class LockActivity : AppCompatActivity() {
             requestCredentials { onCredentialsSuccessful() }
         }
 
-        onBackPressedDispatcher.addCallback(this@LockActivity) { finishAffinity() }
+        onBackPressedDispatcher.addCallback(this@LockActivity) {
+            finishAffinity()
+            exitProcess(0)
+        }
 
         unLock.apply {
             if (navigationArgs.primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(navigationArgs.primaryColor)
