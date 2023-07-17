@@ -50,6 +50,7 @@ import androidx.annotation.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -71,6 +72,8 @@ import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.internal.CheckableImageButton
+import com.google.android.material.textfield.TextInputLayout
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
@@ -80,6 +83,7 @@ import com.infomaniak.lib.core.utils.Utils.SNAKE_CASE_REGEX
 import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
+import com.google.android.material.R as RMaterial
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
 
@@ -453,3 +457,10 @@ fun String.removeAccents(): String {
 }
 
 inline val ViewBinding.context: Context get() = root.context
+
+// TODO : Waiting https://github.com/material-components/material-components-android/issues/366 (icon padding issue)
+fun TextInputLayout.fixIconPaddingIssue() {
+    findViewById<CheckableImageButton>(RMaterial.id.text_input_end_icon)?.apply {
+        setPadding(resources.getDimensionPixelSize(R.dimen.marginStandardMedium))
+    }
+}
