@@ -24,7 +24,9 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.LiveData
+import io.sentry.Sentry
 import java.net.UnknownHostException
 
 class LiveDataNetworkStatus(context: Context) : LiveData<Boolean>() {
@@ -34,17 +36,15 @@ class LiveDataNetworkStatus(context: Context) : LiveData<Boolean>() {
     }
 
     private val connectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-    private val networks: ArrayList<Network> = ArrayList()
+    private val networks = mutableListOf<Network>()
 
     private val networkStateObject = object : ConnectivityManager.NetworkCallback() {
         override fun onLost(network: Network) {
-            super.onLost(network)
             networks.remove(network)
             postValue(!networks.all { !checkInternetConnectivity(it) })
         }
 
         override fun onAvailable(network: Network) {
-            super.onAvailable(network)
             networks.add(network)
             postValue(checkInternetConnectivity(network))
         }
@@ -59,14 +59,25 @@ class LiveDataNetworkStatus(context: Context) : LiveData<Boolean>() {
     }
 
     override fun onActive() {
-        super.onActive()
-        connectivityManager.registerNetworkCallback(networkRequestBuilder(), networkStateObject)
+        runCatching {
+            connectivityManager.registerNetworkCallback(networkRequestBuilder(), networkStateObject)
+        }.onFailure { exception ->
+            // Fix potential Exception thrown by ConnectivityManager on Android 11
+            // Already fixed in Android S and above
+            // https://issuetracker.google.com/issues/175055271
+            Log.e("LiveDataNetworkStatus", "onActive: registerNetworkCallback failed", exception)
+            Sentry.captureException(exception)
+        }
         postValue(false) // Consider all networks "unavailable" on start of listening
     }
 
     override fun onInactive() {
-        super.onInactive()
-        connectivityManager.unregisterNetworkCallback(networkStateObject)
+        runCatching {
+            connectivityManager.unregisterNetworkCallback(networkStateObject)
+        }.onFailure { exception ->
+            Log.e("LiveDataNetworkStatus", "onInactive: unregisterNetworkCallback failed", exception)
+            Sentry.captureException(exception)
+        }
     }
 
     private fun networkRequestBuilder(): NetworkRequest {
