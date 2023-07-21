@@ -18,11 +18,11 @@
 package com.infomaniak.lib.applock
 
 import android.annotation.SuppressLint
-import android.app.KeyguardManager
 import android.content.Context
 import android.util.Log
 import android.widget.CompoundButton
 import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -31,10 +31,10 @@ import com.infomaniak.lib.core.utils.getAppName
 object Utils {
 
     const val APP_LOCK_TAG = "App lock"
+    private const val authenticators = BIOMETRIC_WEAK or DEVICE_CREDENTIAL
 
-    fun Context.isKeyguardSecure(): Boolean {
-        return (getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardSecure ?: false
-    }
+    fun Context.isKeyguardSecure() =
+        BiometricManager.from(this).canAuthenticate(authenticators) == BiometricManager.BIOMETRIC_SUCCESS
 
     @SuppressLint("NewApi")
     fun FragmentActivity.requestCredentials(onSuccess: () -> Unit) {
@@ -43,13 +43,24 @@ object Utils {
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
+                    Log.i(APP_LOCK_TAG, "onAuthenticationSucceeded")
                     onSuccess()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Log.i(APP_LOCK_TAG, "onAuthenticationFailed")
+                }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Log.i(APP_LOCK_TAG, "onAuthenticationError errorCode: $errorCode errString: $errString")
                 }
             })
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(getAppName())
-            .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL or BiometricManager.Authenticators.BIOMETRIC_WEAK)
+            .setAllowedAuthenticators(authenticators)
             .build()
 
         biometricPrompt.authenticate(promptInfo)
@@ -59,7 +70,6 @@ object Utils {
         if (tag == null) {
             silentClick()
             requestCredentials {
-                Log.i(APP_LOCK_TAG, "success")
                 silentClick() // Click that doesn't pass in listener
                 onCredentialSuccessful(isChecked)
             }
