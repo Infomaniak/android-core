@@ -50,6 +50,7 @@ abstract class CredentialManager {
         user?.let {
             it.apiToken = apiToken
             userDatabase.userDao().update(it)
+            if (currentUserId == it.id) currentUser = it
         }
     }
 
@@ -88,9 +89,6 @@ abstract class CredentialManager {
             val tokenInterceptorListener = object : TokenInterceptorListener {
                 override suspend fun onRefreshTokenSuccess(apiToken: ApiToken) {
                     setUserToken(user, apiToken)
-                    if (currentUserId == userId) {
-                        currentUser = user
-                    }
                 }
 
                 override suspend fun onRefreshTokenError() {
