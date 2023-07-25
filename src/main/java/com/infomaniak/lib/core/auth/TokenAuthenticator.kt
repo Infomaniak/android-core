@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.auth
 
+import com.infomaniak.lib.core.InfomaniakCore
 import com.infomaniak.lib.core.api.ApiController
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +44,7 @@ class TokenAuthenticator(
                     return@runBlocking changeAccessToken(request, apiToken)
                 } else {
                     apiToken = ApiController.refreshToken(apiToken.refreshToken, tokenInterceptorListener)
+                    InfomaniakCore.bearerToken = apiToken.accessToken
                     return@runBlocking changeAccessToken(request, apiToken)
                 }
             }
