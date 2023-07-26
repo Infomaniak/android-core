@@ -42,7 +42,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
 
     def navigationVersion = '2.6.0'
@@ -75,7 +75,7 @@ dependencies {
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.github.Infomaniak:android-login:2.7.0'
     api 'com.squareup.okhttp3:okhttp:4.11.0'
-    api 'io.sentry:sentry-android:6.26.0'
+    api 'io.sentry:sentry-android:6.27.0'
 
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
