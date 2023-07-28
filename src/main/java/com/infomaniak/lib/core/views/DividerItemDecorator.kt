@@ -26,6 +26,8 @@ import kotlin.math.roundToInt
 class DividerItemDecorator(private val divider: Drawable) : RecyclerView.ItemDecoration() {
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        if (parent.childCount == 0) return
+
         val firstChildY = parent.children.minOf { it.y }
         val dividerLeft = parent.paddingLeft
         val dividerRight = parent.width - parent.paddingRight
