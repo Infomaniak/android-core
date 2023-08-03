@@ -431,7 +431,7 @@ fun <T> Fragment.setBackNavigationResult(key: String, value: T) {
 fun <T> Fragment.getBackNavigationResult(key: String, onResult: (result: T) -> Unit) {
     val backStackEntry = findNavController().currentBackStackEntry
     val observer = LifecycleEventObserver { _, event ->
-        if (event == Lifecycle.Event.ON_RESUME && backStackEntry?.savedStateHandle?.contains(key) == true) {
+        if (event == Lifecycle.Event.ON_START && backStackEntry?.savedStateHandle?.contains(key) == true) {
             backStackEntry.savedStateHandle.get<T>(key)?.let(onResult)
             backStackEntry.savedStateHandle.remove<T>(key)
         }
@@ -439,7 +439,7 @@ fun <T> Fragment.getBackNavigationResult(key: String, onResult: (result: T) -> U
 
     backStackEntry?.lifecycle?.addObserver(observer)
     viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-        if (event == Lifecycle.Event.ON_DESTROY) backStackEntry?.lifecycle?.removeObserver(observer)
+        if (event == Lifecycle.Event.ON_STOP) backStackEntry?.lifecycle?.removeObserver(observer)
     })
 }
 
