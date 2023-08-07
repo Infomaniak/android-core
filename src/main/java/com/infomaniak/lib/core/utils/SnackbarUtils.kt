@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2023 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,11 +106,9 @@ object SnackbarUtils {
         anchor: View? = null,
         @StringRes actionButtonTitle: Int = R.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
-    ) {
-        Snackbar.make(view, title, Snackbar.LENGTH_LONG).apply {
-            anchor?.let { anchorView = it }
-            onActionClicked?.let { action -> setAction(actionButtonTitle) { action() } }
-            show()
-        }
+    ) = Snackbar.make(view, title, Snackbar.LENGTH_LONG).apply {
+        anchor?.let { anchorView = it }
+        onActionClicked?.let { action -> setAction(actionButtonTitle) { action() } }
+        show()
     }
 }
