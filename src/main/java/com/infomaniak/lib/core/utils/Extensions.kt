@@ -426,20 +426,33 @@ fun <T> Fragment.setBackNavigationResult(key: String, value: T) {
 }
 
 /**
- * Get the value sent by navigation popbackStack in the current navigation
+ * Observes and handles back navigation results using the given [key].
+ *
+ * This function adds an observer to the lifecycle events of the current back stack entry
+ * and handles the specified [key] in the saved state handle when appropriate lifecycle
+ * events occur. The [onResult] lambda is called with the result value associated with the key.
+ *
+ * @param key The key used to identify the result value in the saved state handle.
+ * @param onResult Lambda function to be executed with the result value when available.
+ *
+ * @param T The type of the result value associated with the key.
  */
 fun <T> Fragment.getBackNavigationResult(key: String, onResult: (result: T) -> Unit) {
     val backStackEntry = findNavController().currentBackStackEntry
     val observer = LifecycleEventObserver { _, event ->
-        if (event == Lifecycle.Event.ON_START && backStackEntry?.savedStateHandle?.contains(key) == true) {
+        val lifecycleEventsToHandle = arrayOf(Lifecycle.Event.ON_START, Lifecycle.Event.ON_RESUME)
+        if (event in lifecycleEventsToHandle && backStackEntry?.savedStateHandle?.contains(key) == true) {
             backStackEntry.savedStateHandle.get<T>(key)?.let(onResult)
             backStackEntry.savedStateHandle.remove<T>(key)
         }
     }
 
+    // Add observer to the back stack entry's lifecycle
     backStackEntry?.lifecycle?.addObserver(observer)
+
+    // Remove observer when the view's lifecycle is being destroyed
     viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-        if (event == Lifecycle.Event.ON_STOP) backStackEntry?.lifecycle?.removeObserver(observer)
+        if (event == Lifecycle.Event.ON_DESTROY) backStackEntry?.lifecycle?.removeObserver(observer)
     })
 }
 
