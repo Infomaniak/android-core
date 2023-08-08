@@ -21,7 +21,7 @@
     <string name="androidPermissionButton">Permiso</string>
     <string name="androidPermissionTitle">Permiso necesario</string>
     <string name="browserNotFound">No se ha encontrado ningún navegador</string>
-    <string name="buttonCancel">Anular</string>
+    <string name="buttonCancel">Cancelar</string>
     <string name="buttonLater">Más tarde</string>
     <string name="buttonUpdate">Actualizar</string>
     <string name="connect">Ingresa en</string>
