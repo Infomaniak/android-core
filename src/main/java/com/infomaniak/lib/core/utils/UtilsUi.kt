@@ -44,8 +44,7 @@ object UtilsUi {
         try {
             Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(this)
-            }
+            }.also(::startActivity)
         } catch (activityNotFoundException: ActivityNotFoundException) {
             showToast(R.string.browserNotFound)
         }

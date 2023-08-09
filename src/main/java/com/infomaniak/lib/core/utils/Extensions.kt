@@ -157,11 +157,11 @@ fun RecyclerView.setPagination(
 fun Context.goToPlaystore() {
     try {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
-    } catch (anfe: ActivityNotFoundException) {
+    } catch (_: ActivityNotFoundException) {
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                Uri.parse("https://play.google.com/store/apps/details?id=$packageName"),
             )
         )
     }
@@ -184,8 +184,7 @@ fun Context.startAppSettingsConfig() {
         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         addCategory(Intent.CATEGORY_DEFAULT)
         data = Uri.parse("package:$packageName")
-        startActivity(this)
-    }
+    }.also(::startActivity)
 }
 
 @SuppressLint("InlinedApi")
@@ -199,8 +198,7 @@ fun Context.openAppNotificationSettings() {
                 putExtra("app_uid", applicationInfo.uid)
             }
         }
-        startActivity(this)
-    }
+    }.also(::startActivity)
 }
 
 fun Context.getAppName() = packageManager.getApplicationLabel(applicationInfo).toString()
