@@ -71,8 +71,7 @@ class LockActivity : AppCompatActivity() {
         if (shouldStartActivity) {
             Intent(this@LockActivity, Class.forName(destinationClassName)).apply {
                 destinationClassArgs?.let(::putExtras)
-                startActivity(this)
-            }
+            }.also(::startActivity)
         }
         finish()
     }
@@ -92,8 +91,10 @@ class LockActivity : AppCompatActivity() {
             primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
             shouldStartActivity: Boolean = true,
         ) {
-            val args = LockActivityArgs(destinationClass.name, primaryColor, shouldStartActivity, destinationClassArgs).toBundle()
-            context.startActivity(Intent(context, LockActivity::class.java).putExtras(args))
+            Intent(context, LockActivity::class.java).apply {
+                val args = LockActivityArgs(destinationClass.name, primaryColor, shouldStartActivity, destinationClassArgs)
+                putExtras(args.toBundle())
+            }.also(context::startActivity)
         }
 
         fun lockAfterTimeout(
