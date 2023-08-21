@@ -9,7 +9,7 @@ android {
 
     rootProject.ext {
         coreMinSdk = 21
-        coreTargetSdk = 33
+        coreTargetSdk = 34
         javaVersion = JavaVersion.VERSION_17
     }
 
