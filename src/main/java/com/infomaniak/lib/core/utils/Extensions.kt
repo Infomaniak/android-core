@@ -203,11 +203,14 @@ fun Context.openAppNotificationSettings() {
 
 fun Context.getAppName() = packageManager.getApplicationLabel(applicationInfo).toString()
 
-fun Exception.isNetworkException() = this.javaClass.name.contains("java.net.", ignoreCase = true) ||
-        this.javaClass.name.contains("javax.net.", ignoreCase = true) ||
-        this is java.io.InterruptedIOException ||
-        this is okhttp3.internal.http2.StreamResetException ||
-        (this is java.io.IOException && this.message == "stream closed") // Okhttp3
+fun Exception.isNetworkException(): Boolean {
+    val okHttpException = arrayOf("stream closed", "required settings preface not received")
+    return this.javaClass.name.contains("java.net.", ignoreCase = true) ||
+            this.javaClass.name.contains("javax.net.", ignoreCase = true) ||
+            this is java.io.InterruptedIOException ||
+            this is okhttp3.internal.http2.StreamResetException ||
+            (this is java.io.IOException && this.message?.lowercase() in okHttpException)
+}
 
 fun String.firstOrEmpty(): String = if (isNotEmpty()) first().toString() else ""
 
