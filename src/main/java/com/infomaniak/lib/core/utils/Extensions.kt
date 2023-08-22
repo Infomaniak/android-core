@@ -80,6 +80,7 @@ import com.infomaniak.lib.core.utils.Utils.SNAKE_CASE_REGEX
 import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
+import java.io.Serializable
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
 
@@ -410,6 +411,11 @@ inline fun <reified T : Parcelable> Intent.parcelableExtra(key: String): T? = wh
 inline fun <reified T : Parcelable> Intent.parcelableArrayListExtra(key: String): List<T>? = when {
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArrayListExtra(key, T::class.java)
     else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
+}
+
+inline fun <reified T : Serializable> Intent.serializableExtra(key: String): T? = when {
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
 }
 
 fun ActivityResult.whenResultIsOk(completion: (Intent?) -> Unit) {
