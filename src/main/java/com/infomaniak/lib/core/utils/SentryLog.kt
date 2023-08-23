@@ -1,5 +1,5 @@
 /*
- * Infomaniak ikMail - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2023 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,8 +69,8 @@ object SentryLog {
             setTag("SentryLogTag", tag)
             level = this@captureEvent
             logger = TAG
-            message = Message().apply { message = msg }
-            throwable?.let { setThrowable(it) }
+            message = Message().apply { this.message = msg }
+            throwable?.let(::setThrowable)
         }
 
         Sentry.captureEvent(sentryEvent)
