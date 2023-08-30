@@ -54,11 +54,10 @@ class HttpUtilsTest {
 
         // Initializing globally Infomaniak core lib
         InfomaniakCore.init(
+            appId = "com.infomaniak.core",
             appVersionName = "0.0.5",
-            bearerToken = "testToken",
             appVersionCode = 5,
-            isDebug = true,
-            credentialManager = null
+            clientId = ""
         )
     }
 

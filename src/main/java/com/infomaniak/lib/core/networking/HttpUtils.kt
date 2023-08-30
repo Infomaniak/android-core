@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.networking
 
+import android.os.Build
 import com.infomaniak.lib.core.InfomaniakCore
 import com.infomaniak.lib.core.utils.Utils.getPreferredLocaleList
 import okhttp3.Headers
@@ -29,6 +30,7 @@ object HttpUtils {
             add("Accept-Language", getAcceptedLanguageHeaderValue())
             add("App-Version", "Android $appVersionName")
             add("Cache-Control", "no-cache")
+            add("User-Agent", getUserAgent)
             bearerToken?.let { add("Authorization", "Bearer $it") }
             contentType?.let {
                 add("Accept-type", it)
@@ -37,6 +39,14 @@ object HttpUtils {
             customHeaders?.forEach { customHeader -> add(customHeader.key, URLEncoder.encode(customHeader.value, "UTF-8")) }
         }.run {
             build()
+        }
+    }
+
+    val getUserAgent: String by lazy {
+        with(InfomaniakCore) {
+            val androidVersion = "Android ${Build.VERSION.RELEASE}"
+            val arch = System.getProperty("os.arch")
+            "$appId/$appVersionName-$appVersionCode (${Build.MODEL}; $androidVersion; $arch)"
         }
     }
 

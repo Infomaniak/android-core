@@ -25,6 +25,7 @@ import com.infomaniak.lib.core.utils.ApiErrorCode
  */
 object InfomaniakCore {
 
+    lateinit var appId: String
     var appVersionCode: Int = -1
     lateinit var appVersionName: String
     lateinit var clientId: String
@@ -34,10 +35,12 @@ object InfomaniakCore {
     var apiErrorCodes: List<ApiErrorCode>? = null
 
     fun init(
+        appId: String,
         appVersionCode: Int,
         appVersionName: String,
         clientId: String,
     ) {
+        this.appId = appId
         this.appVersionCode = appVersionCode
         this.appVersionName = appVersionName
         this.clientId = clientId
