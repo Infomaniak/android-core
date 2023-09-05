@@ -36,7 +36,6 @@ import com.infomaniak.lib.core.utils.isNetworkException
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -47,6 +46,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.reflect.Type
+import java.net.UnknownHostException
 import java.util.Date
 
 object ApiController {
@@ -192,12 +192,12 @@ object ApiController {
             exception.printStackTrace()
 
             return if (exception.isNetworkException()) {
-                getApiResponseInternetError()
+                getApiResponseInternetError(noNetwork = exception is UnknownHostException)
             } else {
                 ApiResponse<Any>(
                     result = ERROR,
                     error = ApiError(context = bodyResponse.bodyResponseToJson(), exception = exception),
-                    translatedError = R.string.anErrorHasOccurred
+                    translatedError = R.string.anErrorHasOccurred,
                 ) as T
             }
 
@@ -208,10 +208,10 @@ object ApiController {
         return JsonObject(mapOf("bodyResponse" to JsonPrimitive(this)))
     }
 
-    inline fun <reified T> getApiResponseInternetError() = ApiResponse<Any>(
+    inline fun <reified T> getApiResponseInternetError(noNetwork: Boolean = false) = ApiResponse<Any>(
         result = ERROR,
         error = ApiError(exception = NetworkException()),
-        translatedError = R.string.connectionError
+        translatedError = if (noNetwork) R.string.connectionError else R.string.connectionError
     ) as T
 
     class NetworkException : Exception()
