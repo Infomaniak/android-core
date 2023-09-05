@@ -31,6 +31,7 @@
     <string name="errorTitle">Errore</string>
     <string name="errorTitleLabel">Si è verificato un errore</string>
     <string name="errorUserAlreadyPresent">Errore utente già esistente</string>
+    <string name="noConnection">Nessuna connessione</string>
     <string name="serverError">Errore del server</string>
     <string name="startButton">Avvia</string>
     <string name="typeAdmin">Amministratore</string>

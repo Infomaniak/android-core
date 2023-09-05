@@ -36,6 +36,7 @@ import com.infomaniak.lib.core.utils.isNetworkException
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -211,7 +212,7 @@ object ApiController {
     inline fun <reified T> getApiResponseInternetError(noNetwork: Boolean = false) = ApiResponse<Any>(
         result = ERROR,
         error = ApiError(exception = NetworkException()),
-        translatedError = if (noNetwork) R.string.connectionError else R.string.connectionError
+        translatedError = if (noNetwork) R.string.noConnection else R.string.connectionError,
     ) as T
 
     class NetworkException : Exception()
