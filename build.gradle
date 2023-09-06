@@ -75,7 +75,7 @@ dependencies {
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.github.Infomaniak:android-login:2.7.0'
     api 'com.squareup.okhttp3:okhttp:4.11.0'
-    api 'io.sentry:sentry-android:6.28.0'
+    api 'io.sentry:sentry-android:6.29.0'
 
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
