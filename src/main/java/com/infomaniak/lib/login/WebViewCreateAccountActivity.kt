@@ -91,7 +91,11 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             when (url.toUri().host) {
                 successUrl -> successResult()
-                cancelUrl -> cancelResult()
+                cancelUrl -> {
+                    openUrl(url)
+                    cancelResult()
+                }
+
                 else -> openUrl(url)
             }
             return true

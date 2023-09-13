@@ -207,8 +207,7 @@ class InfomaniakLogin(
                 "&client_id=$clientID" +
                 "&redirect_uri=${getRedirectURI()}" +
                 "&code_challenge_method=$DEFAULT_HASH_MODE_SHORT" +
-                "&code_challenge=$codeChallenge" +
-                "&hide_create_account=true"
+                "&code_challenge=$codeChallenge"
     }
 
     /**
@@ -438,6 +437,7 @@ class InfomaniakLogin(
 
         const val WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED = "net::ERR_INTERNET_DISCONNECTED"
         const val WEBVIEW_ERROR_CODE_CONNECTION_REFUSED = "net::ERR_CONNECTION_REFUSED"
+        const val WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED = "net::ERR_NAME_NOT_RESOLVED"
 
         const val ERROR_ACCESS_DENIED = "access_denied"
 

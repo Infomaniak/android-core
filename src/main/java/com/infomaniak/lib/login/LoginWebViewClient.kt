@@ -42,6 +42,7 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.HTTP_ERROR_CODE
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.SSL_ERROR_CODE
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED
 
 open class LoginWebViewClient(
     private val activity: Activity,
@@ -126,8 +127,10 @@ open class LoginWebViewClient(
 
     private fun translateError(errorCode: String): String = with(activity) {
         return when (errorCode) {
-            WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED -> getString(R.string.connection_error)
-            WEBVIEW_ERROR_CODE_CONNECTION_REFUSED -> getString(R.string.connection_error)
+            WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED,
+            WEBVIEW_ERROR_CODE_CONNECTION_REFUSED,
+            WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED -> getString(R.string.connection_error)
+
             ERROR_ACCESS_DENIED -> getString(R.string.access_denied)
             else -> getString(R.string.an_error_has_occurred)
         }
