@@ -66,10 +66,9 @@ import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.load
 import coil.request.Disposable
-import com.github.razir.progressbutton.attachTextChangeAnimator
-import com.github.razir.progressbutton.bindProgressButton
+import com.github.razir.progressbutton.*
+import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
 import com.github.razir.progressbutton.hideProgress
-import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.models.user.User
@@ -111,6 +110,7 @@ fun MaterialButton.showProgress(color: Int = Color.WHITE) {
         isClickable = false
         showProgress {
             progressColor = color
+            gravity = GRAVITY_CENTER
         }
     }
 }
