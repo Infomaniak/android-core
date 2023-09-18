@@ -76,6 +76,7 @@ dependencies {
     api 'com.github.Infomaniak:android-login:2.7.2'
     api 'com.squareup.okhttp3:okhttp:4.11.0'
     api 'io.sentry:sentry-android:6.29.0'
+    implementation 'io.sentry:sentry-android-okhttp:6.29.0'
 
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
