@@ -17,11 +17,14 @@
  */
 package com.infomaniak.lib.core.utils
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.infomaniak.lib.core.R
 
 abstract class NotificationUtilsCore {
@@ -89,6 +92,18 @@ abstract class NotificationUtilsCore {
             }
         }
     }
+
+    @SuppressLint("MissingPermission")
+    fun NotificationManagerCompat.notifyCompat(context: Context, notificationId: Int, build: Notification) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (context.hasPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))) {
+                notify(notificationId, build)
+            }
+        } else {
+            notify(notificationId, build)
+        }
+    }
+
 
     companion object {
         val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
