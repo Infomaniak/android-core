@@ -29,37 +29,43 @@ object SentryLog {
     private val TAG = SentryLog::class.java.simpleName
 
     fun v(tag: String, msg: String, throwable: Throwable? = null) {
-        Log.v(TAG, formatLogMessage(tag, msg), throwable)
-        SentryLevel.DEBUG.addBreadcrumb(msg, throwable)
+        val formattedMessage = formatLogMessage(tag, msg)
+        Log.v(TAG, formattedMessage, throwable)
+        SentryLevel.DEBUG.addBreadcrumb(formattedMessage, throwable)
     }
 
     fun d(tag: String, msg: String, throwable: Throwable? = null) {
-        Log.d(TAG, formatLogMessage(tag, msg), throwable)
-        SentryLevel.DEBUG.addBreadcrumb(msg, throwable)
+        val formattedMessage = formatLogMessage(tag, msg)
+        Log.d(TAG, formattedMessage, throwable)
+        SentryLevel.DEBUG.addBreadcrumb(formattedMessage, throwable)
     }
 
     fun i(tag: String, msg: String, throwable: Throwable? = null) {
-        Log.i(TAG, formatLogMessage(tag, msg), throwable)
-        SentryLevel.INFO.addBreadcrumb(msg, throwable)
+        val formattedMessage = formatLogMessage(tag, msg)
+        Log.i(TAG, formattedMessage, throwable)
+        SentryLevel.INFO.addBreadcrumb(formattedMessage, throwable)
     }
 
     fun w(tag: String, msg: String, throwable: Throwable? = null) {
-        Log.w(TAG, formatLogMessage(tag, msg), throwable)
-        SentryLevel.WARNING.addBreadcrumb(msg, throwable)
+        val formattedMessage = formatLogMessage(tag, msg)
+        Log.w(TAG, formattedMessage, throwable)
+        SentryLevel.WARNING.addBreadcrumb(formattedMessage, throwable)
     }
 
     fun e(tag: String, msg: String, throwable: Throwable? = null) {
-        Log.e(TAG, formatLogMessage(tag, msg), throwable)
+        val formattedMessage = formatLogMessage(tag, msg)
+        Log.e(TAG, formattedMessage, throwable)
         SentryLevel.ERROR.apply {
-            addBreadcrumb(msg, throwable)
+            addBreadcrumb(formattedMessage, throwable)
             captureEvent(tag, msg, throwable)
         }
     }
 
     fun wtf(tag: String, msg: String, throwable: Throwable? = null) {
-        Log.wtf(TAG, formatLogMessage(tag, msg), throwable)
+        val formattedMessage = formatLogMessage(tag, msg)
+        Log.wtf(TAG, formattedMessage, throwable)
         SentryLevel.FATAL.apply {
-            addBreadcrumb(msg, throwable)
+            addBreadcrumb(formattedMessage, throwable)
             captureEvent(tag, msg, throwable)
         }
     }
