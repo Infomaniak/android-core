@@ -51,6 +51,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -80,6 +81,8 @@ import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
 import java.io.Serializable
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
 
@@ -473,3 +476,30 @@ fun String.removeAccents(): String {
 }
 
 inline val ViewBinding.context: Context get() = root.context
+
+fun <T> Fragment.safeBinding(): ReadWriteProperty<Fragment, T> {
+    return object : ReadWriteProperty<Fragment, T>, DefaultLifecycleObserver {
+
+        private var binding: T? = null
+        private var viewLifecycleOwner: LifecycleOwner? = null
+
+        init {
+            viewLifecycleOwnerLiveData.observe(this@safeBinding) { lifecycleOwner ->
+                viewLifecycleOwner?.lifecycle?.removeObserver(this)
+                viewLifecycleOwner = lifecycleOwner
+                lifecycleOwner.lifecycle.addObserver(this)
+            }
+        }
+
+        override fun onDestroy(owner: LifecycleOwner) {
+            super.onDestroy(owner)
+            binding = null
+        }
+
+        override fun getValue(thisRef: Fragment, property: KProperty<*>): T = binding!!
+
+        override fun setValue(thisRef: Fragment, property: KProperty<*>, value: T) {
+            binding = value
+        }
+    }
+}
