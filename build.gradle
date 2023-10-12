@@ -45,7 +45,7 @@ dependencies {
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
 
-    def navigationVersion = '2.7.3'
+    def navigationVersion = '2.7.4'
     api "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     api "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
@@ -65,7 +65,7 @@ dependencies {
     api "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
-    api 'com.google.android.material:material:1.9.0'
+    api 'com.google.android.material:material:1.10.0'
     api 'com.google.code.gson:gson:2.10.1'
 
     def coilVersion = '2.4.0'
