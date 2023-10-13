@@ -30,6 +30,7 @@ const val FORMAT_DATE_SHORT_DAY_ONE_CHAR = "d MMM"
 const val FORMAT_DATE_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZ"
 const val FORMAT_EVENT_DATE = "dd/MM/yyyy HH:mm"
 const val FORMAT_FULL_DATE = "EEEE dd MMMM yyyy"
+const val FORMAT_FULL_DATE_WITH_HOUR = "EEEE MMM d yyyy HH:mm:ss"
 const val FORMAT_NEW_FILE = "yyyyMMdd_HHmmss"
 
 fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
