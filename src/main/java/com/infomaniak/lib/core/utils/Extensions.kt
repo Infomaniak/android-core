@@ -498,3 +498,16 @@ fun <T> Fragment.safeBinding(): ReadWriteProperty<Fragment, T> {
         }
     }
 }
+
+/**
+ * Catch exceptions launched by the [android.view.View.post] function
+ *
+ * Use this if you use [safeBinding] and your [action] contains reference
+ * to this binding, as it could result in an [NullPointerException].
+ */
+fun View.safePost(action: () -> Unit, onFailure: ((exception: Throwable) -> Unit)? = null) = post {
+    runCatching { action() }.onFailure {
+        onFailure?.invoke(it)
+        it.printStackTrace()
+    }
+}
