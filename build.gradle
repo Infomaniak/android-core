@@ -72,7 +72,6 @@ dependencies {
     api "io.coil-kt:coil-gif:$coilVersion"
     api "io.coil-kt:coil:$coilVersion"
 
-
     def loginVersion = rootProject.findProperty("loginVersion") ?: "2.7.2" // TODO: Update when kDrive migrated to ViewBinding
     api "com.github.Infomaniak:android-login:$loginVersion"
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
