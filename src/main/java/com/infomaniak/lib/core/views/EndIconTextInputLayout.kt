@@ -23,6 +23,7 @@ import androidx.core.view.setPadding
 import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.textfield.TextInputLayout
 import com.infomaniak.lib.core.R
+import com.infomaniak.lib.core.utils.getAttributes
 import com.google.android.material.R as RMaterial
 
 // TODO: Waiting https://github.com/material-components/material-components-android/issues/366 (icon padding issue)
@@ -33,8 +34,12 @@ class EndIconTextInputLayout @JvmOverloads constructor(
 ) : TextInputLayout(context, attrs, defStyleAttr) {
 
     init {
-        findViewById<CheckableImageButton>(RMaterial.id.text_input_end_icon)?.apply {
-            setPadding(resources.getDimensionPixelSize(R.dimen.marginStandardMedium))
+        attrs?.getAttributes(context, R.styleable.EndIconTextInputLayout) {
+            val padding = getDimensionPixelSize(
+                R.styleable.EndIconTextInputLayout_endIconPadding,
+                resources.getDimensionPixelSize(R.dimen.marginStandardMedium),
+            )
+            findViewById<CheckableImageButton>(RMaterial.id.text_input_end_icon)?.setPadding(padding)
         }
     }
 }
