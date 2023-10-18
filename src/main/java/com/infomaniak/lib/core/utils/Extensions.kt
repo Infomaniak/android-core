@@ -102,27 +102,21 @@ fun Context.showToast(title: Int, duration: Int = Toast.LENGTH_LONG) {
 }
 
 fun MaterialButton.initProgress(lifecycle: LifecycleOwner) {
-    apply {
-        lifecycle.bindProgressButton(this)
-        attachTextChangeAnimator()
-    }
+    lifecycle.bindProgressButton(button = this)
+    attachTextChangeAnimator()
 }
 
 fun MaterialButton.showProgress(color: Int = Color.WHITE) {
-    apply {
-        isClickable = false
-        showProgress {
-            progressColor = color
-            gravity = GRAVITY_CENTER
-        }
+    isClickable = false
+    showProgress {
+        progressColor = color
+        gravity = GRAVITY_CENTER
     }
 }
 
 fun MaterialButton.hideProgress(@StringRes text: Int) {
-    apply {
-        isClickable = true
-        hideProgress(text)
-    }
+    isClickable = true
+    hideProgress(text)
 }
 
 /**
