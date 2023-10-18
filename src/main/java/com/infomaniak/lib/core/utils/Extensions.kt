@@ -132,7 +132,7 @@ fun MaterialButton.hideProgress(@StringRes text: Int) {
 fun RecyclerView.setPagination(
     whenLoadMoreIsPossible: () -> Unit,
     findFirstVisibleItemPosition: (() -> Int)? = null,
-    triggerOffset: Int = 3
+    triggerOffset: Int = 3,
 ): RecyclerView.OnScrollListener {
     if (layoutManager == null) throw Exception("This RecyclerView doesn't contains a LinearLayoutManager")
 
@@ -318,7 +318,7 @@ fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
 
 fun ImageView.loadAvatar(
     user: User,
-    imageLoader: ImageLoader = context.simpleImageLoader
+    imageLoader: ImageLoader = context.simpleImageLoader,
 ): Disposable = loadAvatar(user.id, user.avatar, user.getInitials(), imageLoader)
 
 fun ImageView.loadAvatar(
@@ -373,7 +373,7 @@ fun Fragment.safeNavigate(
     args: Bundle? = null,
     navOptions: NavOptions? = null,
     navigatorExtras: Navigator.Extras? = null,
-    currentClassName: String? = null
+    currentClassName: String? = null,
 ) {
     if (canNavigate(currentClassName)) findNavController().navigate(resId, args, navOptions, navigatorExtras)
 }
@@ -393,7 +393,7 @@ fun AttributeSet.getAttributes(
     @StyleableRes styleableResource: IntArray,
     @AttrRes defStyleAttr: Int = 0,
     @StyleRes defStyleRes: Int = 0,
-    block: TypedArray.() -> Unit
+    block: TypedArray.() -> Unit,
 ) {
     context.obtainStyledAttributes(this, styleableResource, defStyleAttr, defStyleRes).apply {
         block()
