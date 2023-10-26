@@ -28,7 +28,7 @@ import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.models.ApiError
 import com.infomaniak.lib.core.models.ApiResponse
-import com.infomaniak.lib.core.models.ApiResponse.Status.ERROR
+import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
@@ -36,7 +36,6 @@ import com.infomaniak.lib.core.utils.isNetworkException
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive

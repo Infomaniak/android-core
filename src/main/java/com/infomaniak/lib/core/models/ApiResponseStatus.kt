@@ -18,23 +18,25 @@
 package com.infomaniak.lib.core.models
 
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.RawValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiResponse<T>(
-    override val result: ApiResponseStatus = ApiResponseStatus.UNKNOWN,
-    override val data: @RawValue T? = null,
-    override val error: ApiError? = null,
-    val page: Int = 0,
-    val pages: Int = 0,
-    @SerialName("response_at")
-    @SerializedName("response_at")
-    override val responseAt: Long = 0,
-    val total: Int = 0,
-    override var translatedError: Int = 0,
-    @SerialName("items_per_page")
-    @SerializedName("items_per_page")
-    val itemsPerPage: Int = 0
-) : IApiResponse<T>
+enum class ApiResponseStatus {
+
+    @SerialName("error")
+    @SerializedName("error")
+    ERROR,
+
+    @SerialName("success")
+    @SerializedName("success")
+    SUCCESS,
+
+    @SerialName("asynchronous")
+    @SerializedName("asynchronous")
+    ASYNCHRONOUS,
+
+    @SerialName("unknown")
+    @SerializedName("unknown")
+    UNKNOWN;
+}
