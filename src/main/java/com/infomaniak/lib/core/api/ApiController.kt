@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.api
 
+import androidx.annotation.StringRes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
@@ -165,13 +166,12 @@ object ApiController {
                 bodyResponse = response.body?.string() ?: ""
                 return when {
                     response.code >= 500 -> {
-                        ApiResponse<Any>(
-                            result = ERROR,
-                            error = ApiError(context = bodyResponse.bodyResponseToJson(), exception = ServerErrorException()),
-                            translatedError = R.string.serverError
-                        ) as T
+                        createErrorResponse(
+                            apiError = ApiError(context = bodyResponse.bodyResponseToJson(), exception = ServerErrorException()),
+                            translatedError = R.string.serverError,
+                        )
                     }
-                    bodyResponse.isBlank() -> getApiResponseInternetError()
+                    bodyResponse.isBlank() -> createInternetErrorResponse()
                     else -> {
                         val decodedApiResponse = if (useKotlinxSerialization) {
                             json.decodeFromString<T>(bodyResponse)
@@ -187,18 +187,17 @@ object ApiController {
             }
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
-            return ApiResponse<Any>(result = ERROR, translatedError = R.string.anErrorHasOccurred) as T
+            return createErrorResponse(translatedError = R.string.anErrorHasOccurred)
         } catch (exception: Exception) {
             exception.printStackTrace()
 
             return if (exception.isNetworkException()) {
-                getApiResponseInternetError(noNetwork = exception is UnknownHostException)
+                createInternetErrorResponse(noNetwork = exception is UnknownHostException)
             } else {
-                ApiResponse<Any>(
-                    result = ERROR,
-                    error = ApiError(context = bodyResponse.bodyResponseToJson(), exception = exception),
+                createErrorResponse(
+                    apiError = ApiError(context = bodyResponse.bodyResponseToJson(), exception = exception),
                     translatedError = R.string.anErrorHasOccurred,
-                ) as T
+                )
             }
 
         }
@@ -208,11 +207,15 @@ object ApiController {
         return JsonObject(mapOf("bodyResponse" to JsonPrimitive(this)))
     }
 
-    inline fun <reified T> getApiResponseInternetError(noNetwork: Boolean = false) = ApiResponse<Any>(
-        result = ERROR,
-        error = ApiError(exception = NetworkException()),
+    inline fun <reified T> createInternetErrorResponse(noNetwork: Boolean = false) = createErrorResponse<Any>(
+        apiError = ApiError(exception = NetworkException()),
         translatedError = if (noNetwork) R.string.noConnection else R.string.connectionError,
     ) as T
+
+    inline fun <reified T> createErrorResponse(
+        @StringRes translatedError: Int,
+        apiError: ApiError? = null,
+    ) = ApiResponse<Any>(result = ERROR, error = apiError, translatedError = translatedError) as T
 
     class NetworkException : Exception()
     class ServerErrorException : Exception()
