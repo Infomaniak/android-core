@@ -34,10 +34,11 @@ data class ApiErrorCode(val code: String, @StringRes val translateRes: Int) {
         fun <T> ApiResponse<T>.translateError(): Int = formatError().translateRes
 
         fun <T> ApiResponse<T>.formatError(): ApiErrorCode {
-            return if (error?.code == null) {
+            val errorCode = error?.code
+            return if (errorCode == null) {
                 defaultApiErrorCode
             } else {
-                InfomaniakCore.apiErrorCodes?.firstOrNull { it.code.equals(error.code, ignoreCase = true) } ?: defaultApiErrorCode
+                InfomaniakCore.apiErrorCodes?.firstOrNull { it.code.equals(errorCode, ignoreCase = true) } ?: defaultApiErrorCode
             }
         }
     }
