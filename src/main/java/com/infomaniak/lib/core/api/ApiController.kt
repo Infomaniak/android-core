@@ -78,9 +78,10 @@ object ApiController {
         body: Any? = null,
         okHttpClient: OkHttpClient = HttpClient.okHttpClient,
         useKotlinxSerialization: Boolean = false,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
     ): T {
         val requestBody: RequestBody = generateRequestBody(body)
-        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization)
+        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization, buildErrorResult)
     }
 
     fun generateRequestBody(body: Any?): RequestBody {
@@ -145,6 +146,7 @@ object ApiController {
         requestBody: RequestBody,
         okHttpClient: OkHttpClient,
         useKotlinxSerialization: Boolean,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
     ): T {
         var bodyResponse = ""
         try {
@@ -169,9 +171,10 @@ object ApiController {
                         createErrorResponse(
                             apiError = ApiError(context = bodyResponse.bodyResponseToJson(), exception = ServerErrorException()),
                             translatedError = R.string.serverError,
+                            buildErrorResult = buildErrorResult,
                         )
                     }
-                    bodyResponse.isBlank() -> createInternetErrorResponse()
+                    bodyResponse.isBlank() -> createInternetErrorResponse(buildErrorResult = buildErrorResult)
                     else -> {
                         val decodedApiResponse = if (useKotlinxSerialization) {
                             json.decodeFromString<T>(bodyResponse)
@@ -187,16 +190,17 @@ object ApiController {
             }
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
-            return createErrorResponse(translatedError = R.string.anErrorHasOccurred)
+            return createErrorResponse(translatedError = R.string.anErrorHasOccurred, buildErrorResult = buildErrorResult)
         } catch (exception: Exception) {
             exception.printStackTrace()
 
             return if (exception.isNetworkException()) {
-                createInternetErrorResponse(noNetwork = exception is UnknownHostException)
+                createInternetErrorResponse(noNetwork = exception is UnknownHostException, buildErrorResult = buildErrorResult)
             } else {
                 createErrorResponse(
-                    apiError = ApiError(context = bodyResponse.bodyResponseToJson(), exception = exception),
                     translatedError = R.string.anErrorHasOccurred,
+                    apiError = ApiError(context = bodyResponse.bodyResponseToJson(), exception = exception),
+                    buildErrorResult = buildErrorResult,
                 )
             }
 
@@ -207,15 +211,23 @@ object ApiController {
         return JsonObject(mapOf("bodyResponse" to JsonPrimitive(this)))
     }
 
-    inline fun <reified T> createInternetErrorResponse(noNetwork: Boolean = false) = createErrorResponse<Any>(
-        apiError = ApiError(exception = NetworkException()),
+    inline fun <reified T> createInternetErrorResponse(
+        noNetwork: Boolean = false,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
+    ) = createErrorResponse<T>(
         translatedError = if (noNetwork) R.string.noConnection else R.string.connectionError,
-    ) as T
+        apiError = ApiError(exception = NetworkException()),
+        buildErrorResult = buildErrorResult,
+    )
 
     inline fun <reified T> createErrorResponse(
         @StringRes translatedError: Int,
         apiError: ApiError? = null,
-    ) = ApiResponse<Any>(result = ERROR, error = apiError, translatedError = translatedError) as T
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
+    ): T {
+        return buildErrorResult?.invoke(apiError, translatedError)
+            ?: ApiResponse<Any>(result = ERROR, error = apiError, translatedError = translatedError) as T
+    }
 
     class NetworkException : Exception()
     class ServerErrorException : Exception()
