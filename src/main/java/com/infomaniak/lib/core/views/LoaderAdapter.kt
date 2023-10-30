@@ -15,12 +15,11 @@
  */
 package com.infomaniak.lib.core.views
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.infomaniak.lib.core.R
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
-abstract class LoaderAdapter<T> : RecyclerView.Adapter<ViewHolder>() {
+abstract class LoaderAdapter<T> : Adapter<ViewHolder>() {
 
     private var showLoading = false
     val itemList: ArrayList<T> = ArrayList()
@@ -66,9 +65,5 @@ abstract class LoaderAdapter<T> : RecyclerView.Adapter<ViewHolder>() {
 
         const val VIEW_TYPE_LOADING = 1
         const val VIEW_TYPE_NORMAL = 2
-
-        fun createLoadingViewHolder(parent: ViewGroup): ViewHolder {
-            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false))
-        }
     }
 }
