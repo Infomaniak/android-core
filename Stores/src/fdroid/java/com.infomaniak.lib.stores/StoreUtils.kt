@@ -29,6 +29,10 @@ import kotlinx.coroutines.withContext
 
 object StoreUtils {
 
+    //region In-App Update
+
+    fun initAppUpdateManager(context: Context, onInstall: () -> Unit) = Unit
+
     fun FragmentActivity.checkUpdateIsAvailable(
         appId: String,
         versionCode: Int,
@@ -42,13 +46,15 @@ object StoreUtils {
         }
     }
 
-    fun initAppUpdateManager(context: Context, onInstall: () -> Unit) = Unit
-
     fun checkStalledUpdate(resultLauncher: ActivityResultLauncher<IntentSenderRequest>) = Unit
 
     fun installDownloadedUpdate() = Unit
 
     fun cancelUpdate() = Unit
+    //endregion
+
+    //region In-App Review
 
     fun FragmentActivity.launchInAppReview() = Unit
+    //endRegion
 }

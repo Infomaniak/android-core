@@ -57,6 +57,8 @@ object StoreUtils {
         }
     }
 
+    //region In-App Update
+
     fun initAppUpdateManager(context: Context, onInstall: () -> Unit) {
         appUpdateManager = AppUpdateManagerFactory.create(context)
         onInstallDownloaded = onInstall
@@ -91,6 +93,15 @@ object StoreUtils {
         }
     }
 
+    fun installDownloadedUpdate() = with(appUpdateManager) {
+        registerListener(installStateUpdatedListener)
+        completeUpdate()
+    }
+
+    fun cancelUpdate() {
+        appUpdateManager.unregisterListener(installStateUpdatedListener)
+    }
+
     private fun startUpdateFlow(
         appUpdateInfo: AppUpdateInfo,
         downloadUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
@@ -101,15 +112,9 @@ object StoreUtils {
             AppUpdateOptions.newBuilder(UPDATE_TYPE).build(),
         )
     }
+    //endregion
 
-    fun installDownloadedUpdate() = with(appUpdateManager) {
-        registerListener(installStateUpdatedListener)
-        completeUpdate()
-    }
-
-    fun cancelUpdate() {
-        appUpdateManager.unregisterListener(installStateUpdatedListener)
-    }
+    //region In-App Review
 
     fun FragmentActivity.launchInAppReview() {
         ReviewManagerFactory.create(this).apply {
@@ -119,4 +124,5 @@ object StoreUtils {
             }
         }
     }
+    //endregion
 }
