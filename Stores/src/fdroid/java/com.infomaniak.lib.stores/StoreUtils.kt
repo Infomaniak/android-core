@@ -17,6 +17,9 @@
  */
 package com.infomaniak.lib.stores
 
+import android.content.Context
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
@@ -24,12 +27,28 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-fun FragmentActivity.checkUpdateIsAvailable(appId: String, versionCode: Int, onResult: (updateIsAvailable: Boolean) -> Unit) {
-    lifecycleScope.launch {
-        val lastVersionCode = FdroidApiTools().getLastRelease(appId)
+object StoreUtils {
 
-        withContext(Dispatchers.Main) { onResult(versionCode < lastVersionCode) }
+    fun FragmentActivity.checkUpdateIsAvailable(
+        appId: String,
+        versionCode: Int,
+        resultLauncher: ActivityResultLauncher<IntentSenderRequest>,
+        onResult: (updateIsAvailable: Boolean) -> Unit,
+    ) {
+        lifecycleScope.launch {
+            val lastVersionCode = FdroidApiTools().getLastRelease(appId)
+
+            withContext(Dispatchers.Main) { onResult(versionCode < lastVersionCode) }
+        }
     }
-}
 
-fun FragmentActivity.launchInAppReview() = Unit
+    fun initAppUpdateManager(context: Context, onInstall: () -> Unit) = Unit
+
+    fun checkStalledUpdate(resultLauncher: ActivityResultLauncher<IntentSenderRequest>) = Unit
+
+    fun installDownloadedUpdate() = Unit
+
+    fun cancelUpdate() = Unit
+
+    fun FragmentActivity.launchInAppReview() = Unit
+}

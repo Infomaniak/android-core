@@ -66,7 +66,7 @@ object StoreUtils {
         appId: String,
         versionCode: Int,
         resultLauncher: ActivityResultLauncher<IntentSenderRequest>,
-        onResult: ((updateIsAvailable: Boolean) -> Unit)? = null,
+        onResult: (updateIsAvailable: Boolean) -> Unit,
     ) {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
