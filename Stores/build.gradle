@@ -27,5 +27,11 @@ android {
 dependencies {
     implementation project(path: ':Core')
 
-    standardImplementation 'com.google.android.play:core:1.10.3'
+    def appReviewVersion = "2.0.1"
+    standardImplementation "com.google.android.play:review:$appReviewVersion"
+    standardImplementation "com.google.android.play:review-ktx:$appReviewVersion"
+
+    def appUpdateVersion = "2.1.0"
+    standardImplementation "com.google.android.play:app-update:$appUpdateVersion"
+    standardImplementation "com.google.android.play:app-update-ktx:$appUpdateVersion"
 }
