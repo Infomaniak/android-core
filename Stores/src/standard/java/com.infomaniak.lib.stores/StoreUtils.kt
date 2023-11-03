@@ -82,31 +82,36 @@ object StoreUtils {
 
     fun checkStalledUpdate(resultLauncher: ActivityResultLauncher<IntentSenderRequest>) {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-                // If an in-app update is already running, resume the update.
-                startUpdateFlow(appUpdateInfo, resultLauncher)
-            }
 
-            // If the update is downloaded but not installed,
-            // notify the user to complete the update.
-            if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) onInstallDownloaded.invoke()
+            // This check is intended for IMMEDIATE updates, it is not needed for FLEXIBLE updates
+            // if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+            //     Log.e("TOTO", "DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS")
+            //     // If an in-app update is already running, resume the update.
+            //     startUpdateFlow(appUpdateInfo, resultLauncher)
+            // }
+
+            // This check is intended for FLEXIBLE updates, it is not needed for IMMEDIATE updates
+            // If the update is downloaded but not installed, notify the user to complete the update.
+            if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                onInstallDownloaded.invoke()
+            }
         }
     }
 
-    fun installDownloadedUpdate() = with(appUpdateManager) {
-        registerListener(installStateUpdatedListener)
-        completeUpdate()
+    fun installDownloadedUpdate() {
+        appUpdateManager.completeUpdate()
     }
 
-    fun cancelUpdate() {
+    fun unregisterAppUpdateListener() {
         appUpdateManager.unregisterListener(installStateUpdatedListener)
     }
 
     private fun startUpdateFlow(
         appUpdateInfo: AppUpdateInfo,
         downloadUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
-    ) {
-        appUpdateManager.startUpdateFlowForResult(
+    ) = with(appUpdateManager) {
+        registerListener(installStateUpdatedListener)
+        startUpdateFlowForResult(
             appUpdateInfo,
             downloadUpdateResultLauncher,
             AppUpdateOptions.newBuilder(UPDATE_TYPE).build(),
