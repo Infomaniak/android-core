@@ -98,8 +98,8 @@ object StoreUtils {
         }
     }
 
-    fun installDownloadedUpdate() {
-        appUpdateManager.completeUpdate()
+    fun installDownloadedUpdate(onFailure: (Exception) -> Unit) {
+        appUpdateManager.completeUpdate().addOnFailureListener(onFailure)
     }
 
     fun unregisterAppUpdateListener() {
