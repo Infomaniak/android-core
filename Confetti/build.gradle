@@ -1,0 +1,22 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
+}
+
+android {
+
+    namespace 'com.infomaniak.lib.confetti'
+    compileSdk rootProject.ext.coreTargetSdk
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.coreMinSdk
+        targetSdkVersion rootProject.ext.coreTargetSdk
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
+    }
+
+    kotlinOptions { jvmTarget = rootProject.ext.javaVersion }
+}
