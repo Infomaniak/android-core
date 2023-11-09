@@ -20,12 +20,13 @@ package com.infomaniak.lib.bugtracker
 import android.text.format.Formatter.formatShortFileSize
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.infomaniak.lib.bugtracker.databinding.ItemBugTrackerFileBinding
 
 class BugTrackerFileAdapter(
     private val onFileDeleted: () -> Unit
-) : RecyclerView.Adapter<BugTrackerFileAdapter.BugTrackerFileViewHolder>() {
+) : Adapter<BugTrackerFileAdapter.BugTrackerFileViewHolder>() {
 
     var files: MutableList<BugTrackerActivity.BugTrackerFile> = mutableListOf()
         private set
@@ -62,5 +63,5 @@ class BugTrackerFileAdapter(
         notifyItemRangeInserted(0, newFiles.count())
     }
 
-    class BugTrackerFileViewHolder(val binding: ItemBugTrackerFileBinding) : RecyclerView.ViewHolder(binding.root)
+    class BugTrackerFileViewHolder(val binding: ItemBugTrackerFileBinding) : ViewHolder(binding.root)
 }
