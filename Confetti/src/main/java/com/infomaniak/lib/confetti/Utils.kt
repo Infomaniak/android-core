@@ -49,8 +49,10 @@ object Utils {
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         val radius = size / 2.0f
+
         paint.color = color
         canvas.drawCircle(radius, radius, radius, paint)
+
         return bitmap
     }
 
@@ -64,8 +66,10 @@ object Utils {
             lineTo(0.0f, size.toFloat())
             close()
         }
+
         paint.color = color
         canvas.drawPath(path, paint)
+
         return bitmap
     }
 
@@ -80,8 +84,10 @@ object Utils {
             lineTo(point, size.toFloat())
             close()
         }
+
         paint.color = color
         canvas.drawPath(path, paint)
+
         return bitmap
     }
 }

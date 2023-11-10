@@ -28,11 +28,9 @@ class CircleConfetto(private val color: Int, private val radius: Float) : Confet
 
     private val diameter: Int = (radius * 2.0f).toInt()
 
-    override val width: Int
-        get() = diameter
+    override val width: Int get() = diameter
 
-    override val height: Int
-        get() = diameter
+    override val height: Int get() = diameter
 
     override fun configurePaint(paint: Paint) {
         super.configurePaint(paint)

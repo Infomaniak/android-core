@@ -51,13 +51,16 @@ class ShimmeringConfetto(
     ) {
         val currentTime = SystemClock.elapsedRealtime()
         val fraction = (currentTime - randomStart) % waveLength
+
         val animated = if (fraction < halfWaveLength) {
             fraction.toFloat() / halfWaveLength
         } else {
             (waveLength.toFloat() - fraction) / halfWaveLength
         }
+
         val color = evaluator.evaluate(animated, fromColor, toColor) as Int
         paint.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+
         super.drawInternal(canvas, matrix, paint, x, y, rotation, percentAnimated)
     }
 }

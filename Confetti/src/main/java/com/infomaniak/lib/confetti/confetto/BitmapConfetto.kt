@@ -27,11 +27,9 @@ open class BitmapConfetto(private val bitmap: Bitmap) : Confetto() {
     private val bitmapCenterX: Float = bitmap.width / 2.0f
     private val bitmapCenterY: Float = bitmap.height / 2.0f
 
-    override val width: Int
-        get() = bitmap.width
+    override val width: Int get() = bitmap.width
 
-    override val height: Int
-        get() = bitmap.height
+    override val height: Int get() = bitmap.height
 
     override fun drawInternal(
         canvas: Canvas,
