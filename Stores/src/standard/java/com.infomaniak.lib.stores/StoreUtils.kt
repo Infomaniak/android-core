@@ -33,8 +33,6 @@ import com.google.android.play.core.review.ReviewManagerFactory
 
 object StoreUtils {
 
-    const val DAYS_FOR_FLEXIBLE_UPDATE = 3
-
     private const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
 
     private lateinit var appUpdateManager: AppUpdateManager
@@ -43,17 +41,11 @@ object StoreUtils {
     // Create a listener to track request state updates.
     private val installStateUpdatedListener by lazy {
         InstallStateUpdatedListener { state ->
-            // (Optional) Provide a download progress bar.
-            if (state.installStatus() == InstallStatus.DOWNLOADING) {
-                val bytesDownloaded = state.bytesDownloaded()
-                val totalBytesToDownload = state.totalBytesToDownload()
-                // Show update progress bar.
+            when (state.installStatus()) {
+                InstallStatus.DOWNLOADED -> onInstallDownloaded()
+                InstallStatus.INSTALLED -> unregisterAppUpdateListener()
+                else -> Unit
             }
-
-            // After the update is downloaded, show a notification
-            // and request user confirmation to restart the app.
-            if (state.installStatus() == InstallStatus.DOWNLOADED) onInstallDownloaded()
-
         }
     }
 
@@ -72,7 +64,6 @@ object StoreUtils {
     ) {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                // && (appUpdateInfo.clientVersionStalenessDays() ?: -1) >= DAYS_FOR_FLEXIBLE_UPDATE
                 && appUpdateInfo.isUpdateTypeAllowed(UPDATE_TYPE)
             ) {
                 startUpdateFlow(appUpdateInfo, resultLauncher)
@@ -80,19 +71,11 @@ object StoreUtils {
         }
     }
 
-    fun checkStalledUpdate(resultLauncher: ActivityResultLauncher<IntentSenderRequest>) {
-        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
-
-            // This check is intended for IMMEDIATE updates, it is not needed for FLEXIBLE updates
-            // if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-            //     Log.e("TOTO", "DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS")
-            //     // If an in-app update is already running, resume the update.
-            //     startUpdateFlow(appUpdateInfo, resultLauncher)
-            // }
-
-            // This check is intended for FLEXIBLE updates, it is not needed for IMMEDIATE updates
-            // If the update is downloaded but not installed, notify the user to complete the update.
+    fun checkStalledUpdate() = with(appUpdateManager) {
+        registerListener(installStateUpdatedListener)
+        appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                // If the update is downloaded but not installed, notify the user to complete the update.
                 onInstallDownloaded.invoke()
             }
         }

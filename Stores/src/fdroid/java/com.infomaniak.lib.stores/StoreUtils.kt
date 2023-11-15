@@ -46,9 +46,11 @@ object StoreUtils {
         }
     }
 
-    fun checkStalledUpdate(resultLauncher: ActivityResultLauncher<IntentSenderRequest>) = Unit
+    fun checkStalledUpdate() = Unit
 
-    fun installDownloadedUpdate() = Unit
+    fun installDownloadedUpdate(onFailure: (Exception) -> Unit) = Unit
+
+    fun unregisterAppUpdateListener() = Unit
 
     fun cancelUpdate() = Unit
     //endregion
