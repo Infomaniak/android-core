@@ -23,7 +23,6 @@ import androidx.lifecycle.liveData
 import com.infomaniak.lib.core.api.ApiController
 import com.infomaniak.lib.core.networking.HttpClient
 import kotlinx.coroutines.Dispatchers
-import kotlinx.serialization.decodeFromString
 import okhttp3.Request
 
 class GitHubViewModel : ViewModel() {
