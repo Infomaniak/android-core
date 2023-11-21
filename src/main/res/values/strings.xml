@@ -33,6 +33,7 @@
     <string name="errorNoSupportingAppFound">This file is not supported by any installed application</string>
     <string name="errorTitle">Error</string>
     <string name="errorTitleLabel">An error occurred</string>
+    <string name="errorUpdateInstall">Error during update install</string>
     <string name="errorUserAlreadyPresent">Error, User already present</string>
     <string name="noConnection">No connection</string>
     <string name="openWith">Open with</string>
@@ -45,4 +46,5 @@
     <string name="updateAppTitle">Update required</string>
     <string name="updateAvailableDescription">To get the best out of %s, we recommend you update your application.</string>
     <string name="updateAvailableTitle">Update available!</string>
+    <string name="updateReadyTitle">Update ready</string>
 </resources>
