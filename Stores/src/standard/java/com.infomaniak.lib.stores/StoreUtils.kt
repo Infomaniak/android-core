@@ -50,7 +50,6 @@ object StoreUtils {
     }
 
     //region In-App Update
-
     fun initAppUpdateManager(context: Context, onInstall: () -> Unit) {
         appUpdateManager = AppUpdateManagerFactory.create(context)
         onInstallDownloaded = onInstall
@@ -59,14 +58,14 @@ object StoreUtils {
     fun checkUpdateIsAvailable(
         appId: String,
         versionCode: Int,
-        resultLauncher: ActivityResultLauncher<IntentSenderRequest>,
-        onResult: (updateIsAvailable: Boolean) -> Unit,
+        inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
+        onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
     ) {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                 && appUpdateInfo.isUpdateTypeAllowed(UPDATE_TYPE)
             ) {
-                startUpdateFlow(appUpdateInfo, resultLauncher)
+                startUpdateFlow(appUpdateInfo, inAppResultLauncher)
             }
         }
     }
@@ -103,7 +102,6 @@ object StoreUtils {
     //endregion
 
     //region In-App Review
-
     fun FragmentActivity.launchInAppReview() {
         ReviewManagerFactory.create(this).apply {
             val requestReviewFlow = requestReviewFlow()

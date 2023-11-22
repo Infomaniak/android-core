@@ -30,19 +30,18 @@ import kotlinx.coroutines.withContext
 object StoreUtils {
 
     //region In-App Update
-
     fun initAppUpdateManager(context: Context, onInstall: () -> Unit) = Unit
 
     fun FragmentActivity.checkUpdateIsAvailable(
         appId: String,
         versionCode: Int,
-        resultLauncher: ActivityResultLauncher<IntentSenderRequest>,
-        onResult: (updateIsAvailable: Boolean) -> Unit,
+        inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
+        onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
     ) {
         lifecycleScope.launch {
             val lastVersionCode = FdroidApiTools().getLastRelease(appId)
 
-            withContext(Dispatchers.Main) { onResult(versionCode < lastVersionCode) }
+            withContext(Dispatchers.Main) { onFDroidResult(versionCode < lastVersionCode) }
         }
     }
 
@@ -56,7 +55,6 @@ object StoreUtils {
     //endregion
 
     //region In-App Review
-
     fun FragmentActivity.launchInAppReview() = Unit
     //endRegion
 }
