@@ -49,13 +49,25 @@ object StoreUtils {
         }
     }
 
+    //region legacy App update
+    // TODO: Remove this when Ui for kDrive in app update will be made
+    fun FragmentActivity.checkUpdateIsAvailable(appId: String, versionCode: Int, onResult: (updateIsAvailable: Boolean) -> Unit) {
+        AppUpdateManagerFactory.create(this).appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            val updateIsAvailable = appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
+                    appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+
+            onResult(updateIsAvailable)
+        }
+    }
+    //endRegion
+
     //region In-App Update
     fun initAppUpdateManager(context: Context, onInstall: () -> Unit) {
         appUpdateManager = AppUpdateManagerFactory.create(context)
         onInstallDownloaded = onInstall
     }
 
-    fun checkUpdateIsAvailable(
+    fun FragmentActivity.checkUpdateIsAvailable(
         appId: String,
         versionCode: Int,
         inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
@@ -65,7 +77,7 @@ object StoreUtils {
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                 && appUpdateInfo.isUpdateTypeAllowed(UPDATE_TYPE)
             ) {
-                startUpdateFlow(appUpdateInfo, inAppResultLauncher)
+                inAppResultLauncher?.let { startUpdateFlow(appUpdateInfo, it) }
             }
         }
     }
