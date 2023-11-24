@@ -21,7 +21,6 @@ import com.infomaniak.lib.core.api.ApiController
 import com.infomaniak.lib.core.networking.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.decodeFromString
 import okhttp3.Request
 
 class FdroidApiTools {
