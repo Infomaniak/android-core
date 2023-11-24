@@ -32,6 +32,7 @@
     <string name="errorTitleLabel">Ein Fehler ist aufgetreten</string>
     <string name="errorUserAlreadyPresent">Fehler Benutzer bereits vorhanden</string>
     <string name="noConnection">Keine Verbindung</string>
+    <string name="openWith">Öffnen mit</string>
     <string name="serverError">Server-Fehler</string>
     <string name="startButton">Start</string>
     <string name="typeAdmin">Administrator</string>

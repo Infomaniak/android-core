@@ -34,6 +34,7 @@
     <string name="errorTitleLabel">An error occurred</string>
     <string name="errorUserAlreadyPresent">Error, User already present</string>
     <string name="noConnection">No connection</string>
+    <string name="openWith">Open with</string>
     <string name="serverError">Server Error</string>
     <string name="startButton">Get started</string>
     <string name="typeAdmin">Administrator</string>
