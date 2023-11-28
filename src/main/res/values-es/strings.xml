@@ -29,6 +29,7 @@
     <string name="connectionError">Problema de conexión a Internet</string>
     <string name="errorDownload">Error al descargar</string>
     <string name="errorDownloadInsufficientSpace">No se puede descargar: espacio insuficiente</string>
+    <string name="errorNoSupportingAppFound">No hay ninguna aplicación instalada compatible con este archivo</string>
     <string name="errorTitle">Error</string>
     <string name="errorTitleLabel">Se ha producido un error</string>
     <string name="errorUserAlreadyPresent">Error, usuario ya registrado</string>

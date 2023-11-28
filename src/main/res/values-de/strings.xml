@@ -28,6 +28,7 @@
     <string name="connectionError">Problem mit der Internetverbindung</string>
     <string name="errorDownload">Fehler beim Download</string>
     <string name="errorDownloadInsufficientSpace">Download nicht möglich: Unzureichender Speicherplatz</string>
+    <string name="errorNoSupportingAppFound">Diese Datei wird von keiner installierten Anwendung unterstützt</string>
     <string name="errorTitle">Fehler</string>
     <string name="errorTitleLabel">Ein Fehler ist aufgetreten</string>
     <string name="errorUserAlreadyPresent">Fehler Benutzer bereits vorhanden</string>
