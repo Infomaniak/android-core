@@ -17,7 +17,7 @@
  */
 package com.infomaniak.lib.bugtracker
 
-import android.text.format.Formatter.formatShortFileSize
+import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -39,7 +39,7 @@ class BugTrackerFileAdapter(
         val file = files[position]
 
         fileName.text = file.fileName
-        fileSize.text = formatShortFileSize(root.context, file.size)
+        fileSize.text = Formatter.formatShortFileSize(root.context, file.size)
         closeButton.setOnClickListener { removeFile(file) }
     }
 
