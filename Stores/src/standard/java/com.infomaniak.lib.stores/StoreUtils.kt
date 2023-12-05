@@ -36,14 +36,18 @@ object StoreUtils {
     private const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
 
     private lateinit var appUpdateManager: AppUpdateManager
-    private lateinit var onInstallDownloaded: () -> Unit
+    private lateinit var onUpdateDownloaded: () -> Unit
+    private lateinit var onUpdateInstalled: () -> Unit
 
     // Create a listener to track request state updates.
     private val installStateUpdatedListener by lazy {
         InstallStateUpdatedListener { state ->
             when (state.installStatus()) {
-                InstallStatus.DOWNLOADED -> onInstallDownloaded()
-                InstallStatus.INSTALLED -> unregisterAppUpdateListener()
+                InstallStatus.DOWNLOADED -> onUpdateDownloaded()
+                InstallStatus.INSTALLED -> {
+                    onUpdateInstalled()
+                    unregisterAppUpdateListener()
+                }
                 else -> Unit
             }
         }
@@ -62,9 +66,10 @@ object StoreUtils {
     //endRegion
 
     //region In-App Update
-    fun initAppUpdateManager(context: Context, onInstall: () -> Unit) {
+    fun initAppUpdateManager(context: Context, onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) {
         appUpdateManager = AppUpdateManagerFactory.create(context)
-        onInstallDownloaded = onInstall
+        this.onUpdateDownloaded = onUpdateDownloaded
+        this.onUpdateInstalled = onUpdateInstalled
     }
 
     fun FragmentActivity.checkUpdateIsAvailable(
@@ -87,7 +92,7 @@ object StoreUtils {
         appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 // If the update is downloaded but not installed, notify the user to complete the update.
-                onInstallDownloaded.invoke()
+                onUpdateDownloaded.invoke()
             }
         }
     }

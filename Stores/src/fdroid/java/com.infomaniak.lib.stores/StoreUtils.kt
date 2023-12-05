@@ -37,7 +37,7 @@ object StoreUtils {
     //endRegion
 
     //region In-App Update
-    fun initAppUpdateManager(context: Context, onInstall: () -> Unit) = Unit
+    fun initAppUpdateManager(context: Context, onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) = Unit
 
     fun FragmentActivity.checkUpdateIsAvailable(
         appId: String,
