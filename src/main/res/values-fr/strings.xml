@@ -31,6 +31,7 @@
     <string name="errorNoSupportingAppFound">Aucune application installée ne prend en charge ce fichier</string>
     <string name="errorTitle">Erreur</string>
     <string name="errorTitleLabel">Une erreur s’est produite</string>
+    <string name="errorUpdateInstall">Erreur lors de l’installation de la mise à jour</string>
     <string name="errorUserAlreadyPresent">Erreur utilisateur déjà présent</string>
     <string name="noConnection">Pas de connexion</string>
     <string name="openWith">Ouvrir avec</string>
@@ -43,4 +44,5 @@
     <string name="updateAppTitle">Mise à jour requise</string>
     <string name="updateAvailableDescription">Afin de profiter d’une expérience optimale de %s, nous vous conseillons de mettre à jour votre application.</string>
     <string name="updateAvailableTitle">Mise à jour disponible !</string>
+    <string name="updateReadyTitle">Mise à jour prête</string>
 </resources>

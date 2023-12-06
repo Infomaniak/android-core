@@ -17,26 +17,110 @@
  */
 package com.infomaniak.lib.stores
 
+import android.content.Context
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.fragment.app.FragmentActivity
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.review.ReviewManagerFactory
 
-fun FragmentActivity.checkUpdateIsAvailable(appId: String, versionCode: Int, onResult: (updateIsAvailable: Boolean) -> Unit) {
-    AppUpdateManagerFactory.create(this).appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
-        val updateIsAvailable = appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
-                appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+object StoreUtils {
 
-        onResult(updateIsAvailable)
-    }
-}
+    private const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
 
-fun FragmentActivity.launchInAppReview() {
-    ReviewManagerFactory.create(this).apply {
-        val requestReviewFlow = requestReviewFlow()
-        requestReviewFlow.addOnCompleteListener { request ->
-            if (request.isSuccessful) launchReviewFlow(this@launchInAppReview, request.result)
+    private lateinit var appUpdateManager: AppUpdateManager
+    private lateinit var onInstallDownloaded: () -> Unit
+
+    // Create a listener to track request state updates.
+    private val installStateUpdatedListener by lazy {
+        InstallStateUpdatedListener { state ->
+            when (state.installStatus()) {
+                InstallStatus.DOWNLOADED -> onInstallDownloaded()
+                InstallStatus.INSTALLED -> unregisterAppUpdateListener()
+                else -> Unit
+            }
         }
     }
+
+    //region legacy App update
+    // TODO: Remove this when Ui for kDrive in app update will be made
+    fun FragmentActivity.checkUpdateIsAvailable(appId: String, versionCode: Int, onResult: (updateIsAvailable: Boolean) -> Unit) {
+        AppUpdateManagerFactory.create(this).appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            val updateIsAvailable = appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
+                    appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+
+            onResult(updateIsAvailable)
+        }
+    }
+    //endRegion
+
+    //region In-App Update
+    fun initAppUpdateManager(context: Context, onInstall: () -> Unit) {
+        appUpdateManager = AppUpdateManagerFactory.create(context)
+        onInstallDownloaded = onInstall
+    }
+
+    fun FragmentActivity.checkUpdateIsAvailable(
+        appId: String,
+        versionCode: Int,
+        inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
+        onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
+    ) {
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(UPDATE_TYPE)
+            ) {
+                inAppResultLauncher?.let { startUpdateFlow(appUpdateInfo, it) }
+            }
+        }
+    }
+
+    fun checkStalledUpdate() = with(appUpdateManager) {
+        registerListener(installStateUpdatedListener)
+        appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                // If the update is downloaded but not installed, notify the user to complete the update.
+                onInstallDownloaded.invoke()
+            }
+        }
+    }
+
+    fun installDownloadedUpdate(onFailure: (Exception) -> Unit) {
+        appUpdateManager.completeUpdate().addOnFailureListener(onFailure)
+    }
+
+    fun unregisterAppUpdateListener() {
+        appUpdateManager.unregisterListener(installStateUpdatedListener)
+    }
+
+    private fun startUpdateFlow(
+        appUpdateInfo: AppUpdateInfo,
+        downloadUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
+    ) = with(appUpdateManager) {
+        registerListener(installStateUpdatedListener)
+        startUpdateFlowForResult(
+            appUpdateInfo,
+            downloadUpdateResultLauncher,
+            AppUpdateOptions.newBuilder(UPDATE_TYPE).build(),
+        )
+    }
+    //endregion
+
+    //region In-App Review
+    fun FragmentActivity.launchInAppReview() {
+        ReviewManagerFactory.create(this).apply {
+            val requestReviewFlow = requestReviewFlow()
+            requestReviewFlow.addOnCompleteListener { request ->
+                if (request.isSuccessful) launchReviewFlow(this@launchInAppReview, request.result)
+            }
+        }
+    }
+    //endregion
 }

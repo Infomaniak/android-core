@@ -17,6 +17,9 @@
  */
 package com.infomaniak.lib.stores
 
+import android.content.Context
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
@@ -24,12 +27,41 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-fun FragmentActivity.checkUpdateIsAvailable(appId: String, versionCode: Int, onResult: (updateIsAvailable: Boolean) -> Unit) {
-    lifecycleScope.launch {
-        val lastVersionCode = FdroidApiTools().getLastRelease(appId)
+object StoreUtils {
 
-        withContext(Dispatchers.Main) { onResult(versionCode < lastVersionCode) }
+    //region legacy App update
+    // TODO: Remove this when Ui for kDrive in app update will be made
+    fun FragmentActivity.checkUpdateIsAvailable(appId: String, versionCode: Int, onResult: (updateIsAvailable: Boolean) -> Unit) {
+        checkUpdateIsAvailable(appId = appId, versionCode = versionCode, inAppResultLauncher = null, onFDroidResult = onResult)
     }
-}
+    //endRegion
 
-fun FragmentActivity.launchInAppReview() = Unit
+    //region In-App Update
+    fun initAppUpdateManager(context: Context, onInstall: () -> Unit) = Unit
+
+    fun FragmentActivity.checkUpdateIsAvailable(
+        appId: String,
+        versionCode: Int,
+        inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>?,
+        onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
+    ) {
+        lifecycleScope.launch {
+            val lastVersionCode = FdroidApiTools().getLastRelease(appId)
+
+            withContext(Dispatchers.Main) { onFDroidResult(versionCode < lastVersionCode) }
+        }
+    }
+
+    fun checkStalledUpdate() = Unit
+
+    fun installDownloadedUpdate(onFailure: (Exception) -> Unit) = Unit
+
+    fun unregisterAppUpdateListener() = Unit
+
+    fun cancelUpdate() = Unit
+    //endregion
+
+    //region In-App Review
+    fun FragmentActivity.launchInAppReview() = Unit
+    //endRegion
+}

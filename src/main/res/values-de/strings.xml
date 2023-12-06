@@ -31,6 +31,7 @@
     <string name="errorNoSupportingAppFound">Diese Datei wird von keiner installierten Anwendung unterstützt</string>
     <string name="errorTitle">Fehler</string>
     <string name="errorTitleLabel">Ein Fehler ist aufgetreten</string>
+    <string name="errorUpdateInstall">Fehler bei der Update-Installation</string>
     <string name="errorUserAlreadyPresent">Fehler Benutzer bereits vorhanden</string>
     <string name="noConnection">Keine Verbindung</string>
     <string name="openWith">Öffnen mit</string>
@@ -43,4 +44,5 @@
     <string name="updateAppTitle">Aktualisierung erforderlich</string>
     <string name="updateAvailableDescription">Mit Blick auf ein optimales %s-Benutzererlebnis empfehlen wir Ihnen, Ihre Anwendung zu aktualisieren.</string>
     <string name="updateAvailableTitle">Aktualisierung verfügbar!</string>
+    <string name="updateReadyTitle">Update bereit</string>
 </resources>
