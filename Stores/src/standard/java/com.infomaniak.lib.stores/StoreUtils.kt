@@ -82,7 +82,7 @@ object StoreUtils {
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                 && appUpdateInfo.isUpdateTypeAllowed(UPDATE_TYPE)
             ) {
-                inAppResultLauncher?.let { startUpdateFlow(appUpdateInfo, it) }
+                startUpdateFlow(appUpdateInfo, inAppResultLauncher)
             }
         }
     }
@@ -97,8 +97,10 @@ object StoreUtils {
         }
     }
 
-    fun installDownloadedUpdate(onFailure: (Exception) -> Unit) {
-        appUpdateManager.completeUpdate().addOnFailureListener(onFailure)
+    fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)? = null) {
+        appUpdateManager.completeUpdate()
+            .addOnSuccessListener { onSuccess?.invoke() }
+            .addOnFailureListener(onFailure)
     }
 
     fun unregisterAppUpdateListener() {

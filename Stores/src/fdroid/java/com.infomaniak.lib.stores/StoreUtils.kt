@@ -54,7 +54,7 @@ object StoreUtils {
 
     fun checkStalledUpdate() = Unit
 
-    fun installDownloadedUpdate(onFailure: (Exception) -> Unit) = Unit
+    fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)? = null) = Unit
 
     fun unregisterAppUpdateListener() = Unit
 
