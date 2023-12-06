@@ -98,7 +98,9 @@ object StoreUtils {
     }
 
     fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)? = null) {
-        appUpdateManager.completeUpdate().addOnSuccessListener { onSuccess?.invoke() }.addOnFailureListener(onFailure)
+        appUpdateManager.completeUpdate()
+            .addOnSuccessListener { onSuccess?.invoke() }
+            .addOnFailureListener(onFailure)
     }
 
     fun unregisterAppUpdateListener() {
