@@ -43,7 +43,7 @@ dependencies {
 
     api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.21'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1'
+    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2'
 
     def navigationVersion = '2.7.5'
     api "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
@@ -75,8 +75,8 @@ dependencies {
     api "com.github.Infomaniak:android-login:2.7.2"
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.squareup.okhttp3:okhttp:4.12.0'
-    api 'io.sentry:sentry-android:6.34.0'
-    implementation 'io.sentry:sentry-android-okhttp:6.34.0'
+    api 'io.sentry:sentry-android:7.0.0'
+    implementation 'io.sentry:sentry-okhttp:7.0.0'
 
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
