@@ -46,7 +46,7 @@ abstract class CredentialManager {
 
     fun getAllUsersCount(): Int = userDatabase.userDao().count()
 
-    suspend fun setUserToken(user: User?, apiToken: ApiToken) {
+    fun setUserToken(user: User?, apiToken: ApiToken) {
         user?.let {
             it.apiToken = apiToken
             userDatabase.userDao().update(it)
@@ -54,7 +54,7 @@ abstract class CredentialManager {
         }
     }
 
-    suspend fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
+    fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
     //endregion
 
     //region HttpClient
