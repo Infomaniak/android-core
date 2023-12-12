@@ -60,7 +60,7 @@ dependencies {
     api "androidx.appcompat:appcompat:$appcompatVersion"
     api "androidx.appcompat:appcompat-resources:$appcompatVersion"
 
-    def roomVersion = '2.5.2'
+    def roomVersion = '2.6.1'
     api "androidx.room:room-ktx:$roomVersion"
     api "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
