@@ -69,22 +69,6 @@ object SnackbarUtils {
         )
     }
 
-    fun Activity.showIndefiniteSnackbar(
-        @StringRes title: Int,
-        anchor: View? = null,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
-        onActionClicked: (() -> Unit)? = null,
-    ) {
-        showSnackbar(
-            view = window.decorView.findViewById(android.R.id.content),
-            anchor = anchor,
-            title = title,
-            length = Snackbar.LENGTH_INDEFINITE,
-            actionButtonTitle = actionButtonTitle,
-            onActionClicked = onActionClicked,
-        )
-    }
-
     fun Activity.showSnackbar(
         title: String,
         anchor: View? = null,
@@ -100,6 +84,20 @@ object SnackbarUtils {
         )
     }
 
+    fun Activity.showIndefiniteSnackbar(
+        @StringRes title: Int,
+        anchor: View? = null,
+        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        onActionClicked: (() -> Unit)? = null,
+    ) = showSnackbar(
+        view = window.decorView.findViewById(android.R.id.content),
+        anchor = anchor,
+        title = title,
+        length = Snackbar.LENGTH_INDEFINITE,
+        actionButtonTitle = actionButtonTitle,
+        onActionClicked = onActionClicked,
+    )
+
     fun showSnackbar(
         view: View,
         @StringRes title: Int,
@@ -107,16 +105,14 @@ object SnackbarUtils {
         length: Int = Snackbar.LENGTH_LONG,
         @StringRes actionButtonTitle: Int = R.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
-    ) {
-        showSnackbar(
-            view = view,
-            title = view.context.getString(title),
-            anchor = anchor,
-            length = length,
-            actionButtonTitle = actionButtonTitle,
-            onActionClicked = onActionClicked,
-        )
-    }
+    ) = showSnackbar(
+        view = view,
+        title = view.context.getString(title),
+        anchor = anchor,
+        length = length,
+        actionButtonTitle = actionButtonTitle,
+        onActionClicked = onActionClicked,
+    )
 
     fun showSnackbar(
         view: View,
