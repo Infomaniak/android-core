@@ -33,23 +33,23 @@ interface UserDao {
     fun count(): Int
 
     @Query("SELECT * FROM user LIMIT 1")
-    fun getFirst(): User?
+    suspend fun getFirst(): User?
 
     @Query("SELECT * FROM user WHERE id IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<User>
+    suspend fun loadAllByIds(userIds: IntArray): List<User>
 
     @Query("SELECT * FROM user WHERE id LIKE (:id) LIMIT 1")
-    fun findById(id: Int): User?
+    suspend fun findById(id: Int): User?
 
     @Query("SELECT * FROM user WHERE firstname LIKE (:firstName) AND lastname LIKE (:lastName) LIMIT 1")
-    fun findByName(firstName: String, lastName: String): User?
+    suspend fun findByName(firstName: String, lastName: String): User?
 
     @Insert
-    fun insert(user: User)
+    suspend fun insert(user: User)
 
     @Update
-    fun update(user: User)
+    suspend fun update(user: User)
 
     @Delete
-    fun delete(user: User)
+    suspend fun delete(user: User)
 }
