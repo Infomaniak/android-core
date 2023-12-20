@@ -17,9 +17,6 @@
  */
 package com.infomaniak.lib.stores
 
-import android.content.Context
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.IntentSenderRequest
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
@@ -33,12 +30,11 @@ interface StoresUtils {
     val APP_UPDATE_TAG: String
 
     //region In-App Updates
-    fun initAppUpdateManager(context: Context, onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) = Unit
+    fun FragmentActivity.initAppUpdateManager(onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) = Unit
 
     fun FragmentActivity.checkUpdateIsAvailable(
         appId: String,
         versionCode: Int,
-        inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
         onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
     ) {
         lifecycleScope.launch {

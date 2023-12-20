@@ -17,9 +17,10 @@
  */
 package com.infomaniak.lib.stores
 
-import android.content.Context
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -39,6 +40,8 @@ object StoreUtils : StoresUtils {
     private const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
 
     private lateinit var appUpdateManager: AppUpdateManager
+    private lateinit var inAppUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest>
+    private lateinit var localSettings: StoresLocalSettings
     private lateinit var onUpdateDownloaded: () -> Unit
     private lateinit var onUpdateInstalled: () -> Unit
 
@@ -61,16 +64,20 @@ object StoreUtils : StoresUtils {
     }
 
     //region In-App Update
-    override fun initAppUpdateManager(context: Context, onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) {
-        appUpdateManager = AppUpdateManagerFactory.create(context)
-        this.onUpdateDownloaded = onUpdateDownloaded
-        this.onUpdateInstalled = onUpdateInstalled
+    override fun FragmentActivity.initAppUpdateManager(onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) {
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        localSettings = StoresLocalSettings.getInstance(context = this)
+        this@StoreUtils.onUpdateDownloaded = onUpdateDownloaded
+        this@StoreUtils.onUpdateInstalled = onUpdateInstalled
+
+        inAppUpdateResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            localSettings.isUserWantingUpdates = result.resultCode == AppCompatActivity.RESULT_OK
+        }
     }
 
     override fun FragmentActivity.checkUpdateIsAvailable(
         appId: String,
         versionCode: Int,
-        inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
         onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
     ) {
         SentryLog.d(APP_UPDATE_TAG, "Checking for update on GPlay")
@@ -79,7 +86,7 @@ object StoreUtils : StoresUtils {
                 && appUpdateInfo.isUpdateTypeAllowed(UPDATE_TYPE)
             ) {
                 SentryLog.d(APP_UPDATE_TAG, "Update available on GPlay")
-                startUpdateFlow(appUpdateInfo, inAppResultLauncher)
+                startUpdateFlow(appUpdateInfo, inAppUpdateResultLauncher)
             }
         }
     }
@@ -96,12 +103,13 @@ object StoreUtils : StoresUtils {
     }
 
     override fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)?) {
+        localSettings.hasAppUpdateDownloaded = false
         appUpdateManager.completeUpdate()
-            .addOnSuccessListener {
-                onSuccess?.invoke()
-                SentryLog.d(APP_UPDATE_TAG, "Update Install 'OnSuccess' has triggered")
+            .addOnSuccessListener { onSuccess?.invoke() }
+            .addOnFailureListener {
+                localSettings.resetUpdateSettings()
+                onFailure(it)
             }
-            .addOnFailureListener(onFailure)
     }
 
     override fun unregisterAppUpdateListener() {
