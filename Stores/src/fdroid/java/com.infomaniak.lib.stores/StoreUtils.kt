@@ -29,13 +29,6 @@ import kotlinx.coroutines.withContext
 
 object StoreUtils {
 
-    //region legacy App update
-    // TODO: Remove this when Ui for kDrive in app update will be made
-    fun FragmentActivity.checkUpdateIsAvailable(appId: String, versionCode: Int, onResult: (updateIsAvailable: Boolean) -> Unit) {
-        checkUpdateIsAvailable(appId = appId, versionCode = versionCode, inAppResultLauncher = null, onFDroidResult = onResult)
-    }
-    //endRegion
-
     //region In-App Update
     fun initAppUpdateManager(context: Context, onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) = Unit
 
