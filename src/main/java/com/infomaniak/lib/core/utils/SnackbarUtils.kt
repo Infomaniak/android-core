@@ -84,29 +84,44 @@ object SnackbarUtils {
         )
     }
 
-    fun showSnackbar(
-        view: View,
+    fun Activity.showIndefiniteSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
         @StringRes actionButtonTitle: Int = R.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
-    ) {
-        showSnackbar(
-            view = view,
-            title = view.context.getString(title),
-            anchor = anchor,
-            actionButtonTitle = actionButtonTitle,
-            onActionClicked = onActionClicked,
-        )
-    }
+    ) = showSnackbar(
+        view = window.decorView.findViewById(android.R.id.content),
+        anchor = anchor,
+        title = title,
+        length = Snackbar.LENGTH_INDEFINITE,
+        actionButtonTitle = actionButtonTitle,
+        onActionClicked = onActionClicked,
+    )
+
+    fun showSnackbar(
+        view: View,
+        @StringRes title: Int,
+        anchor: View? = null,
+        length: Int = Snackbar.LENGTH_LONG,
+        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        onActionClicked: (() -> Unit)? = null,
+    ) = showSnackbar(
+        view = view,
+        title = view.context.getString(title),
+        anchor = anchor,
+        length = length,
+        actionButtonTitle = actionButtonTitle,
+        onActionClicked = onActionClicked,
+    )
 
     fun showSnackbar(
         view: View,
         title: String,
         anchor: View? = null,
+        length: Int = Snackbar.LENGTH_LONG,
         @StringRes actionButtonTitle: Int = R.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
-    ) = Snackbar.make(view, title, Snackbar.LENGTH_LONG).apply {
+    ) = Snackbar.make(view, title, length).apply {
         anchor?.let { anchorView = it }
         onActionClicked?.let { action -> setAction(actionButtonTitle) { action() } }
         show()
