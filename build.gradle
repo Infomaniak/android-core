@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlinx-serialization'
+apply plugin: 'com.google.devtools.ksp'
 
 android {
     namespace 'com.infomaniak.lib.core'
@@ -25,7 +25,7 @@ android {
         buildConfigField 'String', 'INFOMANIAK_API', '"https://api.infomaniak.com/2/"'
         buildConfigField 'String', 'MATOMO_URL', '"https://analytics.infomaniak.com/matomo.php"'
 
-        kapt { arguments { arg("room.schemaLocation", "$projectDir/schemas") } }
+        ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }
 
     compileOptions {
@@ -63,7 +63,7 @@ dependencies {
     def roomVersion = '2.6.1'
     api "androidx.room:room-ktx:$roomVersion"
     api "androidx.room:room-runtime:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
+    ksp "androidx.room:room-compiler:$roomVersion"
 
     api 'com.google.android.material:material:1.11.0'
     api 'com.google.code.gson:gson:2.10.1'
