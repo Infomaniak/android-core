@@ -93,8 +93,8 @@ object SnackbarUtils {
         view = window.decorView.findViewById(android.R.id.content),
         anchor = anchor,
         title = title,
-        length = Snackbar.LENGTH_INDEFINITE,
         actionButtonTitle = actionButtonTitle,
+        length = Snackbar.LENGTH_INDEFINITE,
         onActionClicked = onActionClicked,
     )
 
@@ -109,8 +109,8 @@ object SnackbarUtils {
         view = view,
         title = view.context.getString(title),
         anchor = anchor,
-        length = length,
         actionButtonTitle = actionButtonTitle,
+        length = length,
         onActionClicked = onActionClicked,
     )
 
@@ -118,8 +118,8 @@ object SnackbarUtils {
         view: View,
         title: String,
         anchor: View? = null,
-        length: Int = Snackbar.LENGTH_LONG,
         @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        length: Int = Snackbar.LENGTH_LONG,
         onActionClicked: (() -> Unit)? = null,
     ) = Snackbar.make(view, title, length).apply {
         anchor?.let { anchorView = it }
