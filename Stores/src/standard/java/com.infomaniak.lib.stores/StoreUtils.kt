@@ -34,7 +34,7 @@ import com.infomaniak.lib.core.utils.SentryLog
 
 object StoreUtils {
 
-    const val IN_APP_UPDATE_TAG = "inAppUpdate"
+    const val APP_UPDATE_TAG = "inAppUpdate"
 
     private const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
 
