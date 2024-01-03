@@ -30,8 +30,11 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.infomaniak.lib.core.utils.SentryLog
 
 object StoreUtils {
+
+    const val IN_APP_UPDATE_TAG = "inAppUpdate"
 
     private const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
 
@@ -43,8 +46,12 @@ object StoreUtils {
     private val installStateUpdatedListener by lazy {
         InstallStateUpdatedListener { state ->
             when (state.installStatus()) {
-                InstallStatus.DOWNLOADED -> onUpdateDownloaded()
+                InstallStatus.DOWNLOADED -> {
+                    SentryLog.d(IN_APP_UPDATE_TAG, "OnUpdateDownloaded triggered by InstallStateUpdated listener")
+                    onUpdateDownloaded()
+                }
                 InstallStatus.INSTALLED -> {
+                    SentryLog.d(IN_APP_UPDATE_TAG, "OnUpdateInstalled triggered by InstallStateUpdated listener")
                     onUpdateInstalled()
                     unregisterAppUpdateListener()
                 }
@@ -66,10 +73,12 @@ object StoreUtils {
         inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
         onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
     ) {
+        SentryLog.d(IN_APP_UPDATE_TAG, "Checking for update on GPlay")
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                 && appUpdateInfo.isUpdateTypeAllowed(UPDATE_TYPE)
             ) {
+                SentryLog.d(IN_APP_UPDATE_TAG, "Update available on GPlay")
                 startUpdateFlow(appUpdateInfo, inAppResultLauncher)
             }
         }
@@ -79,6 +88,7 @@ object StoreUtils {
         registerListener(installStateUpdatedListener)
         appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                SentryLog.d(IN_APP_UPDATE_TAG, "CheckStalledUpdate downloaded")
                 // If the update is downloaded but not installed, notify the user to complete the update.
                 onUpdateDownloaded.invoke()
             }
@@ -87,7 +97,10 @@ object StoreUtils {
 
     fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)? = null) {
         appUpdateManager.completeUpdate()
-            .addOnSuccessListener { onSuccess?.invoke() }
+            .addOnSuccessListener {
+                onSuccess?.invoke()
+                SentryLog.d(IN_APP_UPDATE_TAG, "Update Install 'OnSuccess' has triggered")
+            }
             .addOnFailureListener(onFailure)
     }
 
