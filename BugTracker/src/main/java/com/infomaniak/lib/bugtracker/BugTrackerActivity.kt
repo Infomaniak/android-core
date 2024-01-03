@@ -67,10 +67,10 @@ class BugTrackerActivity : AppCompatActivity() {
 
         typeField.apply {
             setOnItemClickListener { _, _, position, _ ->
-                type = ReportType.values()[position]
+                type = ReportType.entries[position]
             }
 
-            setText(adapter.getItem(ReportType.values().indexOf(DEFAULT_REPORT_TYPE)) as String, false)
+            setText(adapter.getItem(ReportType.entries.indexOf(DEFAULT_REPORT_TYPE)) as String, false)
         }
 
         priorityField.apply {
