@@ -29,6 +29,8 @@ import kotlinx.coroutines.withContext
 
 object StoreUtils {
 
+    const val APP_UPDATE_TAG = "appUpdateFDroid"
+
     //region In-App Update
     fun initAppUpdateManager(context: Context, onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) = Unit
 
