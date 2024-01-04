@@ -84,7 +84,7 @@ object StoreUtils {
         }
     }
 
-    fun checkStalledUpdate() = with(appUpdateManager) {
+    fun checkStalledUpdate(): Unit = with(appUpdateManager) {
         registerListener(installStateUpdatedListener)
         appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
