@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023 Infomaniak Network SA
+ * Copyright (C) 2023-2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,53 +23,53 @@ import kotlinx.serialization.json.Json
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-object SharedValue {
+interface SharedValues {
 
-    private val json = Json
+    val sharedPreferences: SharedPreferences
 
-    fun SharedPreferences.sharedValue(key: String, defaultValue: Boolean): ReadWriteProperty<Any, Boolean> {
+    fun sharedValue(key: String, defaultValue: Boolean): ReadWriteProperty<Any, Boolean> = with(sharedPreferences) {
         return object : ReadWriteProperty<Any, Boolean> {
             override fun getValue(thisRef: Any, property: KProperty<*>): Boolean = getBoolean(key, defaultValue)
             override fun setValue(thisRef: Any, property: KProperty<*>, value: Boolean) = transaction { putBoolean(key, value) }
         }
     }
 
-    fun SharedPreferences.sharedValue(key: String, defaultValue: Int): ReadWriteProperty<Any, Int> {
+    fun sharedValue(key: String, defaultValue: Int): ReadWriteProperty<Any, Int> = with(sharedPreferences) {
         return object : ReadWriteProperty<Any, Int> {
             override fun getValue(thisRef: Any, property: KProperty<*>): Int = getInt(key, defaultValue)
             override fun setValue(thisRef: Any, property: KProperty<*>, value: Int) = transaction { putInt(key, value) }
         }
     }
 
-    fun SharedPreferences.sharedValue(key: String, defaultValue: Float): ReadWriteProperty<Any, Float> {
+    fun sharedValue(key: String, defaultValue: Float): ReadWriteProperty<Any, Float> = with(sharedPreferences) {
         return object : ReadWriteProperty<Any, Float> {
             override fun getValue(thisRef: Any, property: KProperty<*>): Float = getFloat(key, defaultValue)
             override fun setValue(thisRef: Any, property: KProperty<*>, value: Float) = transaction { putFloat(key, value) }
         }
     }
 
-    fun SharedPreferences.sharedValue(key: String, defaultValue: Long): ReadWriteProperty<Any, Long> {
+    fun sharedValue(key: String, defaultValue: Long): ReadWriteProperty<Any, Long> = with(sharedPreferences) {
         return object : ReadWriteProperty<Any, Long> {
             override fun getValue(thisRef: Any, property: KProperty<*>): Long = getLong(key, defaultValue)
             override fun setValue(thisRef: Any, property: KProperty<*>, value: Long) = transaction { putLong(key, value) }
         }
     }
 
-    fun SharedPreferences.sharedValue(key: String, defaultValue: String): ReadWriteProperty<Any, String> {
+    fun sharedValue(key: String, defaultValue: String): ReadWriteProperty<Any, String> = with(sharedPreferences) {
         return object : ReadWriteProperty<Any, String> {
             override fun getValue(thisRef: Any, property: KProperty<*>): String = getString(key, defaultValue) ?: defaultValue
             override fun setValue(thisRef: Any, property: KProperty<*>, value: String) = transaction { putString(key, value) }
         }
     }
 
-    fun SharedPreferences.sharedValueNullable(key: String, defaultValue: String?): ReadWriteProperty<Any, String?> {
+    fun sharedValueNullable(key: String, defaultValue: String?): ReadWriteProperty<Any, String?> = with(sharedPreferences) {
         return object : ReadWriteProperty<Any, String?> {
             override fun getValue(thisRef: Any, property: KProperty<*>): String? = getString(key, defaultValue)
             override fun setValue(thisRef: Any, property: KProperty<*>, value: String?) = transaction { putString(key, value) }
         }
     }
 
-    fun SharedPreferences.sharedValue(key: String, defaultValue: Set<String>): ReadWriteProperty<Any, Set<String>> {
+    fun sharedValue(key: String, defaultValue: Set<String>): ReadWriteProperty<Any, Set<String>> = with(sharedPreferences) {
         return object : ReadWriteProperty<Any, Set<String>> {
             override fun getValue(thisRef: Any, property: KProperty<*>) = getStringSet(key, defaultValue) ?: defaultValue
             override fun setValue(thisRef: Any, property: KProperty<*>, value: Set<String>) {
@@ -78,7 +78,7 @@ object SharedValue {
         }
     }
 
-    fun SharedPreferences.sharedValue(key: String, defaultValue: List<String>): ReadWriteProperty<Any, List<String>> {
+    fun sharedValue(key: String, defaultValue: List<String>): ReadWriteProperty<Any, List<String>> = with(sharedPreferences) {
         return object : ReadWriteProperty<Any, List<String>> {
             override fun getValue(thisRef: Any, property: KProperty<*>): List<String> {
                 return getString(key, null)?.let(json::decodeFromString) ?: defaultValue
@@ -90,15 +90,19 @@ object SharedValue {
         }
     }
 
-    inline fun <reified E : Enum<E>> SharedPreferences.sharedValue(key: String, defaultValue: E): ReadWriteProperty<Any, E> {
-        return object : ReadWriteProperty<Any, E> {
-            override fun getValue(thisRef: Any, property: KProperty<*>): E {
-                return Utils.enumValueOfOrNull<E>(getString(key, defaultValue.name)) ?: defaultValue
-            }
+    companion object {
+        private val json = Json
+    }
+}
 
-            override fun setValue(thisRef: Any, property: KProperty<*>, value: E) {
-                transaction { putString(key, value.name) }
-            }
+inline fun <reified E : Enum<E>> SharedValues.sharedValue(key: String, defaultValue: E): ReadWriteProperty<Any, E> {
+    return object : ReadWriteProperty<Any, E> {
+        override fun getValue(thisRef: Any, property: KProperty<*>): E {
+            return Utils.enumValueOfOrNull<E>(sharedPreferences.getString(key, defaultValue.name)) ?: defaultValue
+        }
+
+        override fun setValue(thisRef: Any, property: KProperty<*>, value: E) {
+            sharedPreferences.transaction { putString(key, value.name) }
         }
     }
 }
