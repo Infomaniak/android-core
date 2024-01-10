@@ -72,7 +72,7 @@ dependencies {
     api "io.coil-kt:coil-gif:$coilVersion"
     api "io.coil-kt:coil:$coilVersion"
 
-    api "com.github.Infomaniak:android-login:2.7.2"
+    api "com.github.Infomaniak:android-login:2.8.0"
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.squareup.okhttp3:okhttp:4.12.0'
     api 'io.sentry:sentry-android:7.1.0'
