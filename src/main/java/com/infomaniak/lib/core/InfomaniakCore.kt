@@ -19,6 +19,7 @@ package com.infomaniak.lib.core
 
 import com.infomaniak.lib.core.auth.CredentialManager
 import com.infomaniak.lib.core.utils.ApiErrorCode
+import com.infomaniak.lib.login.InfomaniakLogin.AccessType
 
 /**
  * InfomaniakCore : Allow to instantiate the library with some parameters
@@ -33,6 +34,7 @@ object InfomaniakCore {
     var credentialManager: CredentialManager? = null
     var customHeaders: MutableMap<String, String>? = null
     var apiErrorCodes: List<ApiErrorCode>? = null
+    var accessType: AccessType? = AccessType.OFFLINE
 
     fun init(
         appId: String,

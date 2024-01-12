@@ -94,12 +94,20 @@ object ApiController {
         return toJson.toRequestBody(jsonMediaType)
     }
 
-    suspend fun refreshToken(refreshToken: String, tokenInterceptorListener: TokenInterceptorListener): ApiToken {
+    suspend fun refreshToken(refreshToken: String?, tokenInterceptorListener: TokenInterceptorListener): ApiToken {
+
+        if (refreshToken.isNullOrBlank()) {
+            tokenInterceptorListener.onRefreshTokenError()
+            throw RefreshTokenException()
+        }
+
         val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("grant_type", "refresh_token")
             .addFormDataPart("client_id", InfomaniakCore.clientId)
             .addFormDataPart("refresh_token", refreshToken)
+
+        if (InfomaniakCore.accessType == null) formBuilder.addFormDataPart("duration", "infinite")
 
         return withContext(Dispatchers.IO) {
             val request = Request.Builder()

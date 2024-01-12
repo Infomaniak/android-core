@@ -38,9 +38,10 @@ import com.infomaniak.lib.core.models.user.preferences.security.AuthDevices
             from = 2, to = 3,
             spec = UserV3Migration::class
         ),
-        AutoMigration(from = 3, to = 4)
+        AutoMigration(from = 3, to = 4),
+        AutoMigration(from = 4, to = 5),
     ],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(UserConverter::class)
