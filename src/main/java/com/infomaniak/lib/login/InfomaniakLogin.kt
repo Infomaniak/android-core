@@ -202,11 +202,9 @@ class InfomaniakLogin(
      * Generate the complete login URL based on parameters and base
      */
     private fun generateUrl(codeChallenge: String): String {
-
-        val accessType = if (accessType == null) "" else "&access_type=${accessType.apiValue}"
         return loginUrl + "authorize" +
                 "?response_type=$DEFAULT_RESPONSE_TYPE" +
-                accessType +
+                (if (accessType == null) "" else "&access_type=${accessType.apiValue}") +
                 "&client_id=$clientID" +
                 "&redirect_uri=${getRedirectURI()}" +
                 "&code_challenge_method=$DEFAULT_HASH_MODE_SHORT" +
