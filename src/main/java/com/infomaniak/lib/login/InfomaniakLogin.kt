@@ -412,7 +412,7 @@ class InfomaniakLogin(
         SERVER,
         AUTH,
         CONNECTION,
-        UNKNOWN;
+        UNKNOWN,
     }
 
     enum class AccessType(val apiValue: String) {
