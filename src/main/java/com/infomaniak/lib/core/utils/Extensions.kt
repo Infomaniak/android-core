@@ -71,7 +71,6 @@ import com.github.razir.progressbutton.*
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
 import com.github.razir.progressbutton.hideProgress
 import com.google.android.material.button.MaterialButton
-import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
 import com.infomaniak.lib.core.utils.Utils.ACCENTS_PATTERN
@@ -341,7 +340,7 @@ fun ImageView.loadAvatar(
     return load(avatarUrl, imageLoader) {
         error(fallback)
         fallback(fallback)
-        placeholder(R.drawable.placeholder)
+        placeholder(fallback)
     }
 }
 
