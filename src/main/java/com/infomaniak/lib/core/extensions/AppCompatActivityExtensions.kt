@@ -1,5 +1,5 @@
 /*
- * Infomaniak kDrive - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,18 +24,18 @@ import androidx.core.app.LocaleManagerCompat
 import androidx.core.os.LocaleListCompat
 import java.util.Locale
 
-val acceptedLocale = arrayOf("fr", "de", "it", "en", "es")
-val defaultLocale: Locale = Locale.ENGLISH
+private val acceptedLocale = arrayOf("en", "de", "es", "fr", "it")
+private val defaultLocale = Locale.ENGLISH
 
-fun AppCompatActivity.setDefaultLocalIfNeeded() {
-    if (nothingLocaleAccepted()) {
+fun AppCompatActivity.setDefaultLocaleIfNeeded() {
+    if (noLocalesAreAccepted()) {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(defaultLocale))
     } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && !AppCompatDelegate.getApplicationLocales().isEmpty) {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
     }
 }
 
-private fun AppCompatActivity.nothingLocaleAccepted(): Boolean {
+private fun AppCompatActivity.noLocalesAreAccepted(): Boolean {
     val systemLocales = LocaleManagerCompat.getSystemLocales(this)
 
     for (i in 0..systemLocales.size()) {
