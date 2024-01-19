@@ -46,7 +46,7 @@ fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
 @RequiresApi(Build.VERSION_CODES.O)
 fun Date.formatWithLocal(
     formatStyle: FormatStyle,
-    formatData: FormatData
+    formatData: FormatData,
 ): String {
     val formatter = when (formatData) {
         FormatData.DATE -> DateTimeFormatter.ofLocalizedDate(formatStyle)
@@ -143,19 +143,24 @@ fun Date.minutes(): Int =
         time = this@minutes
     }.get(Calendar.MINUTE)
 
-fun Date.isInTheFuture(): Boolean = after(Date())
-
-fun Date.isToday(): Boolean = isSameDayAs(Date())
-
 fun Date.isSameDayAs(targetDate: Date): Boolean {
     return year() == targetDate.year() &&
             month() == targetDate.month() &&
             day() == targetDate.day()
 }
 
+fun Date.addDays(amount: Int): Date = Calendar.getInstance().apply {
+    time = this@addDays
+    add(Calendar.DATE, amount)
+}.time
+
+fun Date.isInTheFuture(): Boolean = after(Date())
+
+fun Date.isToday(): Boolean = isSameDayAs(Date())
+
 fun Date.isYesterday(): Boolean {
-    val yesterday = Calendar.getInstance().apply { add(Calendar.DATE, -1) }.time
-    return year() == yesterday.year() && month() == yesterday.month() && day() == yesterday.day()
+    val yesterday = Date().addDays(-1)
+    return isSameDayAs(yesterday)
 }
 
 fun Date.isThisWeek(): Boolean {
