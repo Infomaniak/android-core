@@ -61,6 +61,7 @@ class LockActivity : AppCompatActivity() {
         lockViewModel.firstLaunch = false
     }
 
+    // TODO: Fix deprecated
     override fun onPause() {
         super.onPause()
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

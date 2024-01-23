@@ -40,7 +40,7 @@ class CommonConfetti private constructor(container: ViewGroup) {
      *
      * @return the resulting [ConfettiManager] that's performing the animation.
      */
-    fun oneShot(): ConfettiManager = confettiManager!!
+    fun oneShot(): ConfettiManager = confettiManager
         .setNumInitialCount(100)
         .setEmissionDuration(0L)
         .animate(false)
@@ -51,7 +51,7 @@ class CommonConfetti private constructor(container: ViewGroup) {
      * @param durationInMillis how long to animate the confetti for.
      * @return the resulting [ConfettiManager] that's performing the animation.
      */
-    fun stream(durationInMillis: Long): ConfettiManager = confettiManager!!
+    fun stream(durationInMillis: Long): ConfettiManager = confettiManager
         .setNumInitialCount(0)
         .setEmissionDuration(durationInMillis)
         .setEmissionRate(50.0f)
@@ -62,7 +62,7 @@ class CommonConfetti private constructor(container: ViewGroup) {
      *
      * @return the resulting [ConfettiManager] that's performing the animation.
      */
-    fun infinite(): ConfettiManager = confettiManager!!
+    fun infinite(): ConfettiManager = confettiManager
         .setNumInitialCount(0)
         .setEmissionDuration(ConfettiManager.INFINITE_DURATION)
         .setEmissionRate(50.0f)

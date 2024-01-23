@@ -214,6 +214,7 @@ fun Context.isNightModeEnabled(): Boolean {
     return resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
 
+// TODO: Fix deprecated
 fun Window.lightStatusBar(enabled: Boolean) {
     // TODO: DOESN'T WORK
     // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -232,6 +233,7 @@ fun Window.lightStatusBar(enabled: Boolean) {
     }
 }
 
+// TODO: Fix deprecated
 fun Window.lightNavigationBar(enabled: Boolean) {
     // TODO Android 11
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
