@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022 Infomaniak Network SA
+ * Copyright (C) 2022-2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,12 @@
  */
 package com.infomaniak.lib.core.utils
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -36,6 +41,35 @@ const val FORMAT_NEW_FILE = "yyyyMMdd_HHmmss"
 fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
     val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
     return simpleDateFormat.format(this)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun Date.formatWithLocal(
+    formatStyle: FormatStyle,
+    formatData: FormatData,
+): String {
+    val formatter = when (formatData) {
+        FormatData.DATE -> DateTimeFormatter.ofLocalizedDate(formatStyle)
+        FormatData.HOUR -> DateTimeFormatter.ofLocalizedTime(formatStyle)
+        FormatData.BOTH -> DateTimeFormatter.ofLocalizedDateTime(formatStyle)
+    }
+
+    return toInstant()
+        .atZone(ZoneId.systemDefault())
+        .also {
+            when (formatData) {
+                FormatData.DATE -> it.toLocalDate()
+                FormatData.HOUR -> it.toLocalTime()
+                FormatData.BOTH -> it.toLocalDateTime()
+            }
+        }
+        .format(formatter)
+}
+
+enum class FormatData {
+    DATE,
+    HOUR,
+    BOTH,
 }
 
 fun Date.startOfTheDay(): Date =
@@ -109,13 +143,24 @@ fun Date.minutes(): Int =
         time = this@minutes
     }.get(Calendar.MINUTE)
 
+fun Date.isSameDayAs(targetDate: Date): Boolean {
+    return year() == targetDate.year() &&
+            month() == targetDate.month() &&
+            day() == targetDate.day()
+}
+
+fun Date.addDays(amount: Int): Date = Calendar.getInstance().apply {
+    time = this@addDays
+    add(Calendar.DATE, amount)
+}.time
+
 fun Date.isInTheFuture(): Boolean = after(Date())
 
-fun Date.isToday(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() && day() == now.day() }
+fun Date.isToday(): Boolean = isSameDayAs(Date())
 
 fun Date.isYesterday(): Boolean {
-    val yesterday = Calendar.getInstance().apply { add(Calendar.DATE, -1) }.time
-    return year() == yesterday.year() && month() == yesterday.month() && day() == yesterday.day()
+    val yesterday = Date().addDays(-1)
+    return isSameDayAs(yesterday)
 }
 
 fun Date.isThisWeek(): Boolean {
