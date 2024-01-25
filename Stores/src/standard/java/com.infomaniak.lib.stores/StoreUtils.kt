@@ -32,9 +32,9 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.infomaniak.lib.core.utils.SentryLog
 
-object StoreUtils {
+object StoreUtils : StoresUtils {
 
-    const val APP_UPDATE_TAG = "inAppUpdate"
+    override val APP_UPDATE_TAG = "inAppUpdate"
 
     private const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
 
@@ -61,13 +61,13 @@ object StoreUtils {
     }
 
     //region In-App Update
-    fun initAppUpdateManager(context: Context, onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) {
+    override fun initAppUpdateManager(context: Context, onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) {
         appUpdateManager = AppUpdateManagerFactory.create(context)
         this.onUpdateDownloaded = onUpdateDownloaded
         this.onUpdateInstalled = onUpdateInstalled
     }
 
-    fun FragmentActivity.checkUpdateIsAvailable(
+    override fun FragmentActivity.checkUpdateIsAvailable(
         appId: String,
         versionCode: Int,
         inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
@@ -84,7 +84,7 @@ object StoreUtils {
         }
     }
 
-    fun checkStalledUpdate(): Unit = with(appUpdateManager) {
+    override fun checkStalledUpdate(): Unit = with(appUpdateManager) {
         registerListener(installStateUpdatedListener)
         appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
@@ -95,7 +95,7 @@ object StoreUtils {
         }
     }
 
-    fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)? = null) {
+    override fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)?) {
         appUpdateManager.completeUpdate()
             .addOnSuccessListener {
                 onSuccess?.invoke()
@@ -104,7 +104,7 @@ object StoreUtils {
             .addOnFailureListener(onFailure)
     }
 
-    fun unregisterAppUpdateListener() {
+    override fun unregisterAppUpdateListener() {
         appUpdateManager.unregisterListener(installStateUpdatedListener)
     }
 
@@ -122,10 +122,9 @@ object StoreUtils {
     //endregion
 
     //region In-App Review
-    fun FragmentActivity.launchInAppReview() {
+    override fun FragmentActivity.launchInAppReview() {
         ReviewManagerFactory.create(this).apply {
-            val requestReviewFlow = requestReviewFlow()
-            requestReviewFlow.addOnCompleteListener { request ->
+            requestReviewFlow().addOnCompleteListener { request ->
                 if (request.isSuccessful) launchReviewFlow(this@launchInAppReview, request.result)
             }
         }

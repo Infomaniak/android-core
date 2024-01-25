@@ -17,46 +17,7 @@
  */
 package com.infomaniak.lib.stores
 
-import android.content.Context
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.IntentSenderRequest
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
-import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+object StoreUtils : StoresUtils {
 
-object StoreUtils {
-
-    const val APP_UPDATE_TAG = "appUpdateFDroid"
-
-    //region In-App Update
-    fun initAppUpdateManager(context: Context, onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) = Unit
-
-    fun FragmentActivity.checkUpdateIsAvailable(
-        appId: String,
-        versionCode: Int,
-        inAppResultLauncher: ActivityResultLauncher<IntentSenderRequest>?,
-        onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
-    ) {
-        lifecycleScope.launch {
-            val lastVersionCode = FdroidApiTools().getLastRelease(appId)
-
-            withContext(Dispatchers.Main) { onFDroidResult(versionCode < lastVersionCode) }
-        }
-    }
-
-    fun checkStalledUpdate() = Unit
-
-    fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)? = null) = Unit
-
-    fun unregisterAppUpdateListener() = Unit
-
-    fun cancelUpdate() = Unit
-    //endregion
-
-    //region In-App Review
-    fun FragmentActivity.launchInAppReview() = Unit
-    //endRegion
+    override val APP_UPDATE_TAG = "appUpdateFDroid"
 }
