@@ -44,10 +44,7 @@ fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun Date.formatWithLocal(
-    formatStyle: FormatStyle,
-    formatData: FormatData,
-): String {
+fun Date.formatWithLocal(formatStyle: FormatStyle, formatData: FormatData): String {
     val formatter = when (formatData) {
         FormatData.DATE -> DateTimeFormatter.ofLocalizedDate(formatStyle)
         FormatData.HOUR -> DateTimeFormatter.ofLocalizedTime(formatStyle)
