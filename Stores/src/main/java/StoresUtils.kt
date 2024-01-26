@@ -26,9 +26,6 @@ import kotlinx.coroutines.withContext
 
 interface StoresUtils {
 
-    @Suppress("PropertyName")
-    val APP_UPDATE_TAG: String
-
     //region In-App Updates
     fun FragmentActivity.initAppUpdateManager(
         onUserChoice: (Boolean) -> Unit,

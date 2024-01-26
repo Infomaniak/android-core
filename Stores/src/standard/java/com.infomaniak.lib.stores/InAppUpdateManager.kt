@@ -1,6 +1,6 @@
 /*
- * Infomaniak Core - Android
- * Copyright (C) 2023 Infomaniak Network SA
+ * Infomaniak kDrive - Android
+ * Copyright (C) 2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,40 +22,52 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.play.core.appupdate.AppUpdateInfo
-import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.InstallStateUpdatedListener
-import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.review.ReviewManagerFactory
 import com.infomaniak.lib.core.utils.SentryLog
 
-object StoreUtils : StoresUtils {
+class InAppUpdateManager(
+    private val activity: FragmentActivity,
+    private val appId: String,
+    private val versionCode: Int,
+    private val onUserChoice: (Boolean) -> Unit,
+    private val onFDroidResult: (Boolean) -> Unit,
+    private val onInAppUpdateUiChange: (Boolean) -> Unit,
+) : DefaultLifecycleObserver, StoresUtils {
 
-    const val APP_UPDATE_TAG = "inAppUpdate"
-
-    const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
-
-    private lateinit var appUpdateManager: AppUpdateManager
+    private val appUpdateManager = AppUpdateManagerFactory.create(activity)
+    private val localSettings = StoresLocalSettings.getInstance(activity)
     // Result of in app update's bottomSheet user choice
-    private lateinit var inAppUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest>
-    private lateinit var localSettings: StoresLocalSettings
-    private lateinit var onUpdateDownloaded: () -> Unit
-    private lateinit var onUpdateInstalled: () -> Unit
+    private var inAppUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest> = activity.registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
+        localSettings.isUserWantingUpdates = isUserWantingUpdate
+        onUserChoice(isUserWantingUpdate)
+    }
+
+    private val viewModel: StoresViewModel by lazy { ViewModelProvider(activity)[StoresViewModel::class.java] }
+
+    private val onUpdateDownloaded = { viewModel.canInstallUpdate.value = true }
+    private val onUpdateInstalled = { viewModel.canInstallUpdate.value = false }
 
     // Create a listener to track request state updates.
     private val installStateUpdatedListener by lazy {
         InstallStateUpdatedListener { state ->
             when (state.installStatus()) {
                 InstallStatus.DOWNLOADED -> {
-                    SentryLog.d(APP_UPDATE_TAG, "OnUpdateDownloaded triggered by InstallStateUpdated listener")
+                    SentryLog.d(StoreUtils.APP_UPDATE_TAG, "OnUpdateDownloaded triggered by InstallStateUpdated listener")
                     onUpdateDownloaded()
                 }
                 InstallStatus.INSTALLED -> {
-                    SentryLog.d(APP_UPDATE_TAG, "OnUpdateInstalled triggered by InstallStateUpdated listener")
+                    SentryLog.d(StoreUtils.APP_UPDATE_TAG, "OnUpdateInstalled triggered by InstallStateUpdated listener")
                     onUpdateInstalled()
                     unregisterAppUpdateListener()
                 }
@@ -64,22 +76,35 @@ object StoreUtils : StoresUtils {
         }
     }
 
-    //region In-App Update
-    override fun FragmentActivity.initAppUpdateManager(
-        onUserChoice: (Boolean) -> Unit,
-        onUpdateDownloaded: () -> Unit,
-        onUpdateInstalled: () -> Unit,
-    ) {
-        appUpdateManager = AppUpdateManagerFactory.create(this)
-        localSettings = StoresLocalSettings.getInstance(context = this)
-        this@StoreUtils.onUpdateDownloaded = onUpdateDownloaded
-        this@StoreUtils.onUpdateInstalled = onUpdateInstalled
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+        observeAppUpdateDownload()
+    }
 
-        inAppUpdateResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
-            localSettings.isUserWantingUpdates = isUserWantingUpdate
-            onUserChoice(isUserWantingUpdate)
-        }
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+
+        handleUpdates()
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+
+        viewModel.canInstallUpdate.value = localSettings.hasAppUpdateDownloaded
+        checkStalledUpdate()
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        unregisterAppUpdateListener()
+        super.onStop(owner)
+    }
+
+    private fun handleUpdates() {
+        if (localSettings.isUserWantingUpdates) activity.checkUpdateIsAvailable(appId, versionCode, onFDroidResult)
+    }
+
+    private fun observeAppUpdateDownload() {
+        viewModel.canInstallUpdate.observe(activity) { isUploadDownloaded -> onInAppUpdateUiChange(isUploadDownloaded) }
     }
 
     override fun FragmentActivity.checkUpdateIsAvailable(
@@ -87,12 +112,12 @@ object StoreUtils : StoresUtils {
         versionCode: Int,
         onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
     ) {
-        SentryLog.d(APP_UPDATE_TAG, "Checking for update on GPlay")
+        SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on GPlay")
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && appUpdateInfo.isUpdateTypeAllowed(UPDATE_TYPE)
+                && appUpdateInfo.isUpdateTypeAllowed(StoreUtils.UPDATE_TYPE)
             ) {
-                SentryLog.d(APP_UPDATE_TAG, "Update available on GPlay")
+                SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Update available on GPlay")
                 startUpdateFlow(appUpdateInfo, inAppUpdateResultLauncher)
             }
         }
@@ -102,7 +127,7 @@ object StoreUtils : StoresUtils {
         registerListener(installStateUpdatedListener)
         appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
-                SentryLog.d(APP_UPDATE_TAG, "CheckStalledUpdate downloaded")
+                SentryLog.d(StoreUtils.APP_UPDATE_TAG, "CheckStalledUpdate downloaded")
                 // If the update is downloaded but not installed, notify the user to complete the update.
                 onUpdateDownloaded.invoke()
             }
@@ -135,18 +160,7 @@ object StoreUtils : StoresUtils {
         startUpdateFlowForResult(
             appUpdateInfo,
             downloadUpdateResultLauncher,
-            AppUpdateOptions.newBuilder(UPDATE_TYPE).build(),
+            AppUpdateOptions.newBuilder(StoreUtils.UPDATE_TYPE).build(),
         )
     }
-    //endregion
-
-    //region In-App Review
-    override fun FragmentActivity.launchInAppReview() {
-        ReviewManagerFactory.create(this).apply {
-            requestReviewFlow().addOnCompleteListener { request ->
-                if (request.isSuccessful) launchReviewFlow(this@launchInAppReview, request.result)
-            }
-        }
-    }
-    //endregion
 }
