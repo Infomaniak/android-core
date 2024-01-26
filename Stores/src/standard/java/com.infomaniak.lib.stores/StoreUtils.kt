@@ -40,6 +40,7 @@ object StoreUtils : StoresUtils {
     private const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
 
     private lateinit var appUpdateManager: AppUpdateManager
+    // Result of in app update's bottomSheet user choice
     private lateinit var inAppUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var localSettings: StoresLocalSettings
     private lateinit var onUpdateDownloaded: () -> Unit
@@ -64,14 +65,20 @@ object StoreUtils : StoresUtils {
     }
 
     //region In-App Update
-    override fun FragmentActivity.initAppUpdateManager(onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) {
+    override fun FragmentActivity.initAppUpdateManager(
+        onUserChoice: (Boolean) -> Unit,
+        onUpdateDownloaded: () -> Unit,
+        onUpdateInstalled: () -> Unit,
+    ) {
         appUpdateManager = AppUpdateManagerFactory.create(this)
         localSettings = StoresLocalSettings.getInstance(context = this)
         this@StoreUtils.onUpdateDownloaded = onUpdateDownloaded
         this@StoreUtils.onUpdateInstalled = onUpdateInstalled
 
         inAppUpdateResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            localSettings.isUserWantingUpdates = result.resultCode == AppCompatActivity.RESULT_OK
+            val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
+            localSettings.isUserWantingUpdates = isUserWantingUpdate
+            onUserChoice(isUserWantingUpdate)
         }
     }
 
@@ -102,13 +109,17 @@ object StoreUtils : StoresUtils {
         }
     }
 
-    override fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)?) {
+    override fun installDownloadedUpdate(
+        onInstallStart: (() -> Unit)?,
+        onSuccess: (() -> Unit)?,
+        onFailure: ((Exception) -> Unit)?,
+    ) {
         localSettings.hasAppUpdateDownloaded = false
         appUpdateManager.completeUpdate()
             .addOnSuccessListener { onSuccess?.invoke() }
             .addOnFailureListener {
                 localSettings.resetUpdateSettings()
-                onFailure(it)
+                onFailure?.invoke(it)
             }
     }
 

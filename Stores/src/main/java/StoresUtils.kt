@@ -30,7 +30,11 @@ interface StoresUtils {
     val APP_UPDATE_TAG: String
 
     //region In-App Updates
-    fun FragmentActivity.initAppUpdateManager(onUpdateDownloaded: () -> Unit, onUpdateInstalled: () -> Unit) = Unit
+    fun FragmentActivity.initAppUpdateManager(
+        onUserChoice: (Boolean) -> Unit,
+        onUpdateDownloaded: () -> Unit,
+        onUpdateInstalled: () -> Unit,
+    ) = Unit
 
     fun FragmentActivity.checkUpdateIsAvailable(
         appId: String,
@@ -46,7 +50,11 @@ interface StoresUtils {
 
     fun checkStalledUpdate() = Unit
 
-    fun installDownloadedUpdate(onFailure: (Exception) -> Unit, onSuccess: (() -> Unit)? = null) = Unit
+    fun installDownloadedUpdate(
+        onInstallStart: (() -> Unit)? = null,
+        onSuccess: (() -> Unit)? = null,
+        onFailure: ((Exception) -> Unit)? = null,
+    ) = Unit
 
     fun unregisterAppUpdateListener() = Unit
     //endregion
