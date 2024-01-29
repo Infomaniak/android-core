@@ -39,8 +39,12 @@ class InAppUpdateManager(
     private val versionCode: Int,
     private val onUserChoice: (Boolean) -> Unit,
     private val onFDroidResult: (Boolean) -> Unit,
-    private val onInAppUpdateUiChange: (Boolean) -> Unit,
+    private val onInstallStart: (() -> Unit)? = null,
+    private val onInstallFailure: ((Exception) -> Unit)? = null,
+    private val onInstallSuccess: (() -> Unit)? = null,
 ) : DefaultLifecycleObserver, StoresUtils {
+
+    var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
 
     private val appUpdateManager = AppUpdateManagerFactory.create(activity)
     private val localSettings = StoresLocalSettings.getInstance(activity)
@@ -105,7 +109,20 @@ class InAppUpdateManager(
     }
 
     private fun observeAppUpdateDownload() {
-        viewModel.canInstallUpdate.observe(activity) { isUploadDownloaded -> onInAppUpdateUiChange(isUploadDownloaded) }
+        viewModel.canInstallUpdate.observe(activity) { isUploadDownloaded -> onInAppUpdateUiChange?.invoke(isUploadDownloaded) }
+    }
+
+    private fun checkUpdateIsAvailable() {
+        SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on GPlay")
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            SentryLog.d(StoreUtils.APP_UPDATE_TAG, "checking success")
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(StoreUtils.UPDATE_TYPE)
+            ) {
+                SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Update available on GPlay")
+                startUpdateFlow(appUpdateInfo, inAppUpdateResultLauncher)
+            }
+        }
     }
 
     override fun FragmentActivity.checkUpdateIsAvailable(
@@ -135,17 +152,15 @@ class InAppUpdateManager(
         }
     }
 
-    override fun installDownloadedUpdate(
-        onInstallStart: (() -> Unit)?,
-        onSuccess: (() -> Unit)?,
-        onFailure: ((Exception) -> Unit)?,
-    ) {
+    fun installDownloadedUpdate() {
         localSettings.hasAppUpdateDownloaded = false
+        viewModel.canInstallUpdate.value = false
+        onInstallStart?.invoke()
         appUpdateManager.completeUpdate()
-            .addOnSuccessListener { onSuccess?.invoke() }
+            .addOnSuccessListener { onInstallSuccess?.invoke() }
             .addOnFailureListener {
                 localSettings.resetUpdateSettings()
-                onFailure?.invoke(it)
+                onInstallFailure?.invoke(it)
             }
     }
 
