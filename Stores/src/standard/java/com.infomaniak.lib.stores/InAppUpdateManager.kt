@@ -55,8 +55,8 @@ class InAppUpdateManager(
 
     private val viewModel: StoresViewModel by lazy { ViewModelProvider(activity)[StoresViewModel::class.java] }
 
-    private val onUpdateDownloaded = { viewModel.canInstallUpdate.value = true }
-    private val onUpdateInstalled = { viewModel.canInstallUpdate.value = false }
+    private val onUpdateDownloaded = { viewModel.toggleAppUpdateStatus(localSettings, isUpdateDownloaded = true) }
+    private val onUpdateInstalled = { viewModel.toggleAppUpdateStatus(localSettings, isUpdateDownloaded = false) }
 
     // Create a listener to track request state updates.
     private val installStateUpdatedListener by lazy {
