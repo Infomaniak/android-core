@@ -84,6 +84,7 @@ class InAppUpdateManager(
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
+        localSettings.appUpdateLaunches++
         handleUpdates()
     }
 
@@ -99,8 +100,8 @@ class InAppUpdateManager(
         super.onStop(owner)
     }
 
-    private fun handleUpdates() {
-        if (localSettings.isUserWantingUpdates) activity.checkUpdateIsAvailable(appId, versionCode, onFDroidResult)
+    private fun handleUpdates() = with(localSettings) {
+        if (isUserWantingUpdates || (appUpdateLaunches != 0 && appUpdateLaunches % 10 == 0)) checkUpdateIsAvailable()
     }
 
     private fun observeAppUpdateDownload() {

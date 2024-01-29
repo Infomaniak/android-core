@@ -27,6 +27,7 @@ class StoresLocalSettings private constructor(context: Context) : SharedValues {
 
     var isUserWantingUpdates by sharedValue("isUserWantingUpdatesKey", true)
     var hasAppUpdateDownloaded by sharedValue("hasAppUpdateDownloaded", false)
+    var appUpdateLaunches by sharedValue("appUpdateLaunchesKey", 0)
     var appReviewLaunches by sharedValue("appReviewLaunchesKey", DEFAULT_APP_REVIEW_LAUNCHES)
     var showAppReviewDialog by sharedValue("showAppReviewDialogKey", true)
 
