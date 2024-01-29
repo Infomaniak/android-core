@@ -22,7 +22,6 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.play.core.appupdate.AppUpdateInfo
@@ -35,19 +34,25 @@ import com.infomaniak.lib.core.utils.SentryLog
 
 class InAppUpdateManager(
     private val activity: FragmentActivity,
-    private val appId: String,
-    private val versionCode: Int,
+    appId: String,
+    versionCode: Int,
+    onFDroidResult: (Boolean) -> Unit,
     private val onUserChoice: (Boolean) -> Unit,
-    private val onFDroidResult: (Boolean) -> Unit,
-    private val onInstallStart: (() -> Unit)? = null,
-    private val onInstallFailure: ((Exception) -> Unit)? = null,
+    private val onInstallStart: () -> Unit,
+    private val onInstallFailure: (Exception) -> Unit,
     private val onInstallSuccess: (() -> Unit)? = null,
-) : DefaultLifecycleObserver, StoresUtils {
-
-    var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
+) : BaseInAppUpdateManager(
+    activity,
+    appId,
+    versionCode,
+    onUserChoice,
+    onFDroidResult,
+    onInstallStart,
+    onInstallFailure,
+    onInstallSuccess,
+) {
 
     private val appUpdateManager = AppUpdateManagerFactory.create(activity)
-    private val localSettings = StoresLocalSettings.getInstance(activity)
     // Result of in app update's bottomSheet user choice
     private var inAppUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest> = activity.registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
@@ -85,13 +90,6 @@ class InAppUpdateManager(
         observeAppUpdateDownload()
     }
 
-    override fun onStart(owner: LifecycleOwner) {
-        super.onStart(owner)
-
-        localSettings.appUpdateLaunches++
-        handleUpdates()
-    }
-
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
 
@@ -104,15 +102,7 @@ class InAppUpdateManager(
         super.onStop(owner)
     }
 
-    private fun handleUpdates() = with(localSettings) {
-        if (isUserWantingUpdates || (appUpdateLaunches != 0 && appUpdateLaunches % 10 == 0)) checkUpdateIsAvailable()
-    }
-
-    private fun observeAppUpdateDownload() {
-        viewModel.canInstallUpdate.observe(activity) { isUploadDownloaded -> onInAppUpdateUiChange?.invoke(isUploadDownloaded) }
-    }
-
-    private fun checkUpdateIsAvailable() {
+    override fun checkUpdateIsAvailable() {
         SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on GPlay")
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             SentryLog.d(StoreUtils.APP_UPDATE_TAG, "checking success")
@@ -125,23 +115,23 @@ class InAppUpdateManager(
         }
     }
 
-    override fun FragmentActivity.checkUpdateIsAvailable(
-        appId: String,
-        versionCode: Int,
-        onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
-    ) {
-        SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on GPlay")
-        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && appUpdateInfo.isUpdateTypeAllowed(StoreUtils.UPDATE_TYPE)
-            ) {
-                SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Update available on GPlay")
-                startUpdateFlow(appUpdateInfo, inAppUpdateResultLauncher)
+    override fun installDownloadedUpdate() {
+        localSettings.hasAppUpdateDownloaded = false
+        viewModel.canInstallUpdate.value = false
+        onInstallStart()
+        appUpdateManager.completeUpdate()
+            .addOnSuccessListener { onInstallSuccess?.invoke() }
+            .addOnFailureListener {
+                localSettings.resetUpdateSettings()
+                onInstallFailure(it)
             }
-        }
     }
 
-    override fun checkStalledUpdate(): Unit = with(appUpdateManager) {
+    private fun observeAppUpdateDownload() {
+        viewModel.canInstallUpdate.observe(activity) { isUploadDownloaded -> onInAppUpdateUiChange?.invoke(isUploadDownloaded) }
+    }
+
+    private fun checkStalledUpdate(): Unit = with(appUpdateManager) {
         registerListener(installStateUpdatedListener)
         appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
@@ -152,19 +142,7 @@ class InAppUpdateManager(
         }
     }
 
-    fun installDownloadedUpdate() {
-        localSettings.hasAppUpdateDownloaded = false
-        viewModel.canInstallUpdate.value = false
-        onInstallStart?.invoke()
-        appUpdateManager.completeUpdate()
-            .addOnSuccessListener { onInstallSuccess?.invoke() }
-            .addOnFailureListener {
-                localSettings.resetUpdateSettings()
-                onInstallFailure?.invoke(it)
-            }
-    }
-
-    override fun unregisterAppUpdateListener() {
+    private fun unregisterAppUpdateListener() {
         appUpdateManager.unregisterListener(installStateUpdatedListener)
     }
 
