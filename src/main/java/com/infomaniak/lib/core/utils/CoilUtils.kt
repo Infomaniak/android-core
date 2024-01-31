@@ -42,7 +42,9 @@ object CoilUtils {
     fun simpleImageLoader(context: Context): ImageLoader {
         return simpleImageLoader ?: synchronized(this) {
             simpleImageLoader?.let { return it }
-            newImageLoader(context)
+            newImageLoader(context).also {
+                simpleImageLoader = it
+            }
         }
     }
 
