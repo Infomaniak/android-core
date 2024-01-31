@@ -18,19 +18,32 @@
 package com.infomaniak.lib.stores
 
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
+import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
+import com.infomaniak.lib.core.utils.SentryLog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class InAppUpdateManager(
-    activity: FragmentActivity,
-    appId: String,
-    versionCode: Int,
-    onFDroidResult: (Boolean) -> Unit,
+    private val activity: FragmentActivity,
+    private val appId: String,
+    private val versionCode: Int,
+    private val onFDroidResult: (Boolean) -> Unit,
     onUserChoice: (Boolean) -> Unit,
     onInstallStart: () -> Unit,
     onInstallFailure: (Exception) -> Unit,
     onInstallSuccess: (() -> Unit)? = null,
-) : BaseInAppUpdateManager(
-    activity,
-    appId,
-    versionCode,
-    onFDroidResult,
-)
+) : BaseInAppUpdateManager(activity) {
+
+    override fun installDownloadedUpdate() = Unit
+
+    override fun checkUpdateIsAvailable() {
+        SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on FDroid")
+        activity.lifecycleScope.launch(Dispatchers.IO) {
+            val lastVersionCode = FdroidApiTools().getLastRelease(appId)
+
+            withContext(Dispatchers.Main) { onFDroidResult(versionCode < lastVersionCode) }
+        }
+    }
+}

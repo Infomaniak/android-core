@@ -20,23 +20,8 @@ package com.infomaniak.lib.stores
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
-import com.infomaniak.lib.core.utils.SentryLog
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-abstract class BaseInAppUpdateManager(
-    private val activity: FragmentActivity,
-    private val appId: String,
-    private val versionCode: Int,
-    private val onFDroidResult: (Boolean) -> Unit,
-    private val onUserChoice: ((Boolean) -> Unit)? = null,
-    private val onInstallStart: (() -> Unit)? = null,
-    private val onInstallFailure: ((Exception) -> Unit)? = null,
-    private val onInstallSuccess: (() -> Unit)? = null,
-) : DefaultLifecycleObserver {
+abstract class BaseInAppUpdateManager(activity: FragmentActivity) : DefaultLifecycleObserver {
 
     var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
 
@@ -49,16 +34,9 @@ abstract class BaseInAppUpdateManager(
         handleUpdates()
     }
 
-    open fun installDownloadedUpdate() = Unit
+    abstract fun installDownloadedUpdate()
 
-    protected open fun checkUpdateIsAvailable() {
-        SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on FDroid")
-        activity.lifecycleScope.launch(Dispatchers.IO) {
-            val lastVersionCode = FdroidApiTools().getLastRelease(appId)
-
-            withContext(Dispatchers.Main) { onFDroidResult(versionCode < lastVersionCode) }
-        }
-    }
+    protected abstract fun checkUpdateIsAvailable()
 
     private fun handleUpdates() = with(localSettings) {
         if (isUserWantingUpdates || (appUpdateLaunches != 0 && appUpdateLaunches % 10 == 0)) checkUpdateIsAvailable()

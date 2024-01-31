@@ -41,16 +41,7 @@ class InAppUpdateManager(
     private val onInstallStart: () -> Unit,
     private val onInstallFailure: (Exception) -> Unit,
     private val onInstallSuccess: (() -> Unit)? = null,
-) : BaseInAppUpdateManager(
-    activity,
-    appId,
-    versionCode,
-    onUserChoice,
-    onFDroidResult,
-    onInstallStart,
-    onInstallFailure,
-    onInstallSuccess,
-) {
+) : BaseInAppUpdateManager(activity) {
 
     private val appUpdateManager = AppUpdateManagerFactory.create(activity)
     // Result of in app update's bottomSheet user choice
