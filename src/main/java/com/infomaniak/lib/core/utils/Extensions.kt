@@ -66,7 +66,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.load
-import coil.request.Disposable
 import com.github.razir.progressbutton.*
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
 import com.github.razir.progressbutton.hideProgress
@@ -314,7 +313,7 @@ fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
 fun ImageView.loadAvatar(
     user: User,
     imageLoader: ImageLoader = context.simpleImageLoader,
-): Disposable = loadAvatar(user.id, user.avatar, user.getInitials(), imageLoader)
+) = loadAvatar(user.id, user.avatar, user.getInitials(), imageLoader)
 
 fun ImageView.loadAvatar(
     id: Int,
@@ -322,9 +321,9 @@ fun ImageView.loadAvatar(
     initials: String,
     imageLoader: ImageLoader = context.simpleImageLoader,
     @ColorInt initialsColor: Int = Color.WHITE,
-): Disposable {
+) {
     val backgroundColor = context.getBackgroundColorBasedOnId(id)
-    return loadAvatar(backgroundColor, avatarUrl, initials, imageLoader, initialsColor)
+    loadAvatar(backgroundColor, avatarUrl, initials, imageLoader, initialsColor)
 }
 
 fun ImageView.loadAvatar(
@@ -333,13 +332,13 @@ fun ImageView.loadAvatar(
     initials: String,
     imageLoader: ImageLoader = context.simpleImageLoader,
     @ColorInt initialsColor: Int = Color.WHITE,
-): Disposable {
+) {
     val fallback = context.generateInitialsAvatarDrawable(
         initials = initials,
         background = backgroundColor,
         initialsColor = initialsColor,
     )
-    return load(avatarUrl, imageLoader) {
+    load(avatarUrl, imageLoader) {
         error(fallback)
         fallback(fallback)
         placeholder(fallback)
