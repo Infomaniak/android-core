@@ -39,6 +39,6 @@ abstract class BaseInAppUpdateManager(activity: FragmentActivity) : DefaultLifec
     protected abstract fun checkUpdateIsAvailable()
 
     private fun handleUpdates() = with(localSettings) {
-        if (isUserWantingUpdates || (appUpdateLaunches != 0 && appUpdateLaunches % 10 == 0)) checkUpdateIsAvailable()
+        if (appUpdateLaunches != 0 && (isUserWantingUpdates || appUpdateLaunches % 10 == 0)) checkUpdateIsAvailable()
     }
 }
