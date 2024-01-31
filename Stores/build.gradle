@@ -19,13 +19,20 @@ android {
 
     flavorDimensions 'distribution'
     productFlavors {
-        standard
-        fdroid
+        standard {
+            buildConfigField "boolean", "HAS_GPLAY_SERVICES", "true"
+        }
+        fdroid {
+            buildConfigField "boolean", "HAS_GPLAY_SERVICES", "false"
+        }
     }
 }
 
 dependencies {
     implementation project(path: ':Core')
+
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    implementation 'androidx.concurrent:concurrent-futures-ktx:1.1.0'
 
     def appReviewVersion = "2.0.1"
     standardImplementation "com.google.android.play:review:$appReviewVersion"
