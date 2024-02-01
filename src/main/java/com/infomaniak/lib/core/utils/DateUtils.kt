@@ -28,7 +28,7 @@ import java.util.Date
 import java.util.Locale
 
 const val FORMAT_DATE_CLEAR_MONTH = "dd MMM yyyy"
-const val FORMAT_DATE_DAY_FULL_MONTH_YEAR_WITH_TIME= "dd MMMM yyyy HH:mmZ"
+const val FORMAT_DATE_DAY_FULL_MONTH_YEAR_WITH_TIME= "dd MMMM yyyy HH:mm"
 const val FORMAT_DATE_CLEAR_MONTH_DAY_ONE_CHAR = "d MMM yyyy"
 const val FORMAT_DATE_DEFAULT = "dd.MM.yy"
 const val FORMAT_DATE_HOUR_MINUTE = "HH:mm"
