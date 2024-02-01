@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2023 Infomaniak Network SA
+ * Copyright (C) 2022-2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.models.ApiError
 import com.infomaniak.lib.core.models.ApiResponse
 import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
+import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
@@ -60,6 +61,7 @@ object ApiController {
 
     var gson: Gson = GsonBuilder()
         .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .registerTypeAdapter(User::class.java, CustomDateTypeAdapter())
         .create()
 
     fun init(typeAdapterList: ArrayList<Pair<Type, Any>>) {
