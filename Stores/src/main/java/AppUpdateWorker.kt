@@ -22,6 +22,7 @@ import androidx.concurrent.futures.CallbackToFutureAdapter
 import androidx.work.*
 import com.google.common.util.concurrent.ListenableFuture
 import com.infomaniak.lib.core.utils.SentryLog
+import com.infomaniak.lib.stores.updateManagers.WorkerUpdateManager
 import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
