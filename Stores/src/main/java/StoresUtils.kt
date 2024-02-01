@@ -18,43 +18,8 @@
 package com.infomaniak.lib.stores
 
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
-import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 interface StoresUtils {
-
-    //region In-App Updates
-    fun FragmentActivity.initAppUpdateManager(
-        onUserChoice: (Boolean) -> Unit,
-        onUpdateDownloaded: () -> Unit,
-        onUpdateInstalled: () -> Unit,
-    ) = Unit
-
-    fun FragmentActivity.checkUpdateIsAvailable(
-        appId: String,
-        versionCode: Int,
-        onFDroidResult: (updateIsAvailable: Boolean) -> Unit,
-    ) {
-        lifecycleScope.launch {
-            val lastVersionCode = FdroidApiTools().getLastRelease(appId)
-
-            withContext(Dispatchers.Main) { onFDroidResult(versionCode < lastVersionCode) }
-        }
-    }
-
-    fun checkStalledUpdate() = Unit
-
-    fun installDownloadedUpdate(
-        onInstallStart: (() -> Unit)? = null,
-        onSuccess: (() -> Unit)? = null,
-        onFailure: ((Exception) -> Unit)? = null,
-    ) = Unit
-
-    fun unregisterAppUpdateListener() = Unit
-    //endregion
 
     //region In-App Review
     fun FragmentActivity.launchInAppReview() = Unit
