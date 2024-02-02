@@ -20,8 +20,8 @@ package com.infomaniak.lib.core.views
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import androidx.core.view.children
-import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
+import com.infomaniak.lib.core.R
 import kotlin.math.roundToInt
 
 class DividerItemDecorator(private val divider: Drawable) : RecyclerView.ItemDecoration() {
@@ -30,17 +30,12 @@ class DividerItemDecorator(private val divider: Drawable) : RecyclerView.ItemDec
         if (parent.childCount == 0) return
 
         val firstChildY = parent.children.minOf { it.y }
+        val ignoreDivider = parent.context.getString(R.string.ignoreDivider)
         val dividerLeft = parent.paddingLeft
         val dividerRight = parent.width - parent.paddingRight
 
-        parent.children.forEachIndexed { index, child ->
-
-            if (child.y == firstChildY ||
-                child.tag == SUPER_COLLAPSED_BLOCK_TAG ||
-                parent[index - 1].tag == SUPER_COLLAPSED_BLOCK_TAG
-            ) {
-                return@forEachIndexed
-            }
+        parent.children.forEach { child ->
+            if (child.y == firstChildY || child.tag == ignoreDivider) return@forEach
 
             val yTranslation = child.translationY.roundToInt()
             val dividerTop = child.top - (child.layoutParams as RecyclerView.LayoutParams).topMargin + yTranslation
@@ -48,9 +43,5 @@ class DividerItemDecorator(private val divider: Drawable) : RecyclerView.ItemDec
             divider.setBounds(dividerLeft, dividerTop, dividerRight, dividerBottom)
             divider.draw(canvas)
         }
-    }
-
-    companion object {
-        private const val SUPER_COLLAPSED_BLOCK_TAG = "SuperCollapsedBlock"
     }
 }
