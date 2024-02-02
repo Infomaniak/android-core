@@ -24,14 +24,15 @@ import androidx.lifecycle.LifecycleOwner
 abstract class BaseInAppUpdateManager(activity: FragmentActivity) : DefaultLifecycleObserver {
 
     var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
+    var onFDroidResult: ((Boolean) -> Unit)? = null
 
     protected val localSettings = StoresLocalSettings.getInstance(activity)
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
-        localSettings.appUpdateLaunches++
         handleUpdates()
+        localSettings.appUpdateLaunches++
     }
 
     abstract fun installDownloadedUpdate()

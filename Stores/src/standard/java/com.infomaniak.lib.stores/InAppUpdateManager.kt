@@ -36,7 +36,6 @@ class InAppUpdateManager(
     private val activity: FragmentActivity,
     appId: String,
     versionCode: Int,
-    onFDroidResult: (Boolean) -> Unit,
     private val onUserChoice: (Boolean) -> Unit,
     private val onInstallStart: () -> Unit,
     private val onInstallFailure: (Exception) -> Unit,

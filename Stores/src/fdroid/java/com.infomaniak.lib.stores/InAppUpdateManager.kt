@@ -29,7 +29,6 @@ class InAppUpdateManager(
     private val activity: FragmentActivity,
     private val appId: String,
     private val versionCode: Int,
-    private val onFDroidResult: (Boolean) -> Unit,
     onUserChoice: (Boolean) -> Unit,
     onInstallStart: () -> Unit,
     onInstallFailure: (Exception) -> Unit,
@@ -43,7 +42,7 @@ class InAppUpdateManager(
         activity.lifecycleScope.launch(Dispatchers.IO) {
             val lastVersionCode = FdroidApiTools().getLastRelease(appId)
 
-            withContext(Dispatchers.Main) { onFDroidResult(versionCode < lastVersionCode) }
+            withContext(Dispatchers.Main) { onFDroidResult?.invoke(versionCode < lastVersionCode) }
         }
     }
 }
