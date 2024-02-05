@@ -1,5 +1,5 @@
 /*
- * Infomaniak kDrive - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.infomaniak.lib.core.utils.SentryLog
 
-class StoresViewModel: ViewModel() {
+class StoresViewModel : ViewModel() {
 
     val canInstallUpdate = MutableLiveData(false)
 
