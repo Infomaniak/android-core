@@ -19,7 +19,7 @@ package com.infomaniak.lib.stores.updatemanagers
 
 import android.content.Context
 
-class WorkerUpdateManager(appContext: Context) {
+internal class WorkerUpdateManager(appContext: Context) {
 
     fun installDownloadedUpdate(onInstallFailure: (Exception) -> Unit, onInstallSuccess: () -> Unit) = Unit
 }

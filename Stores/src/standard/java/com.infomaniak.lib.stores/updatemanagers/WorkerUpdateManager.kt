@@ -21,7 +21,7 @@ import android.content.Context
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.infomaniak.lib.stores.StoresLocalSettings
 
-class WorkerUpdateManager(appContext: Context) {
+internal class WorkerUpdateManager(appContext: Context) {
 
     private val appUpdateManager = AppUpdateManagerFactory.create(appContext)
     private val localSettings = StoresLocalSettings.getInstance(appContext)
