@@ -44,7 +44,7 @@ class InAppUpdateManager(
 
     private val appUpdateManager = AppUpdateManagerFactory.create(activity)
     // Result of in app update's bottomSheet user choice
-    private var inAppUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest> = activity.registerForActivityResult(
+    private val inAppUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest> = activity.registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
         val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
@@ -118,7 +118,7 @@ class InAppUpdateManager(
     }
 
     private fun observeAppUpdateDownload() {
-        viewModel.canInstallUpdate.observe(activity) { isUploadDownloaded -> onInAppUpdateUiChange?.invoke(isUploadDownloaded) }
+        viewModel.canInstallUpdate.observe(activity) { isUpdateDownloaded -> onInAppUpdateUiChange?.invoke(isUpdateDownloaded) }
     }
 
     private fun checkStalledUpdate(): Unit = with(appUpdateManager) {

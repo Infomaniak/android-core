@@ -26,7 +26,7 @@ class StoresLocalSettings private constructor(context: Context) : SharedValues {
     override val sharedPreferences = context.applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)!!
 
     var isUserWantingUpdates by sharedValue("isUserWantingUpdatesKey", true)
-    var hasAppUpdateDownloaded by sharedValue("hasAppUpdateDownloaded", false)
+    var hasAppUpdateDownloaded by sharedValue("hasAppUpdateDownloadedKey", false)
     var appUpdateLaunches by sharedValue("appUpdateLaunchesKey", 0)
     var appReviewLaunches by sharedValue("appReviewLaunchesKey", DEFAULT_APP_REVIEW_LAUNCHES)
     var showAppReviewDialog by sharedValue("showAppReviewDialogKey", true)
@@ -40,9 +40,9 @@ class StoresLocalSettings private constructor(context: Context) : SharedValues {
 
     companion object {
 
-        private const val SHARED_PREFS_NAME = "StoresLocalSettingsSharedPref"
-
         const val DEFAULT_APP_REVIEW_LAUNCHES = 50
+
+        private const val SHARED_PREFS_NAME = "StoresLocalSettingsSharedPref"
 
         @Volatile
         private var INSTANCE: StoresLocalSettings? = null
