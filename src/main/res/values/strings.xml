@@ -17,7 +17,6 @@
 -->
 <resources>
     <string name="infomaniak" translatable="false">Infomaniak</string>
-    <string name="ignoreDivider" translatable="false">IGNORE_DIVIDER</string>
 
     <string name="anErrorHasOccurred">An error has occurred</string>
     <string name="androidActivateButton">Activate</string>
