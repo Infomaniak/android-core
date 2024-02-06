@@ -19,10 +19,15 @@ package com.infomaniak.lib.stores.updaterequired
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
+import com.google.android.material.R
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.color.MaterialColors
 import com.infomaniak.lib.stores.databinding.ActivityUpdateRequiredBinding
 import kotlin.system.exitProcess
 
@@ -33,6 +38,7 @@ class UpdateRequiredActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?): Unit = with(binding) {
         super.onCreate(savedInstanceState)
+        setTheme(navigationArgs.appTheme)
         setContentView(root)
 
         onBackPressedDispatcher.addCallback(this@UpdateRequiredActivity) {
@@ -41,19 +47,26 @@ class UpdateRequiredActivity : AppCompatActivity() {
         }
 
         updateAppButton.apply {
-            if (navigationArgs.primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(navigationArgs.primaryColor)
+            val primaryColor = getPrimaryColor()
+            if (primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(primaryColor)
             setOnClickListener {
                 // TODO
             }
         }
     }
 
+    private fun MaterialButton.getPrimaryColor() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        MaterialColors.getColor(ContextThemeWrapper(context, theme), R.attr.colorPrimary, UNDEFINED_PRIMARY_COLOR)
+    } else {
+        UNDEFINED_PRIMARY_COLOR
+    }
+
     companion object {
         private const val UNDEFINED_PRIMARY_COLOR = 0
 
-        fun startUpdateRequiredActivity(context: Context, primaryColor: Int = UNDEFINED_PRIMARY_COLOR) {
+        fun startUpdateRequiredActivity(context: Context, appTheme: Int) {
             Intent(context, UpdateRequiredActivity::class.java).apply {
-                val args = UpdateRequiredActivityArgs(primaryColor)
+                val args = UpdateRequiredActivityArgs(appTheme)
                 putExtras(args.toBundle())
             }.also(context::startActivity)
         }
