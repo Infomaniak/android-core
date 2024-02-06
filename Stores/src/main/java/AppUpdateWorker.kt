@@ -24,13 +24,14 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.stores.updatemanagers.WorkerUpdateManager
 import io.sentry.Sentry
+import io.sentry.SentryLevel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
 class AppUpdateWorker(appContext: Context, params: WorkerParameters) : ListenableWorker(appContext, params) {
 
-    private val updateManager by lazy { WorkerUpdateManager(appContext) }
+    private val updateManager = WorkerUpdateManager(appContext)
 
     override fun startWork(): ListenableFuture<Result> {
         SentryLog.i(TAG, "Work started")
@@ -52,9 +53,8 @@ class AppUpdateWorker(appContext: Context, params: WorkerParameters) : Listenabl
         SentryLog.d(TAG, "Work finished")
     }
 
-    class Scheduler(appContext: Context) {
+    class Scheduler(appContext: Context, private val workManager: WorkManager = WorkManager.getInstance(appContext)) {
 
-        private val workManager = WorkManager.getInstance(appContext)
         private val storesLocalSettings = StoresLocalSettings.getInstance(appContext)
 
         fun scheduleWorkIfNeeded() {
@@ -65,7 +65,7 @@ class AppUpdateWorker(appContext: Context, params: WorkerParameters) : Listenabl
                     .setConstraints(Constraints.Builder().setRequiresBatteryNotLow(true).build())
                     // We start with a delayed duration, so that when the app quickly come back to foreground because the user
                     // was just switching apps, the service is not launched
-                    .setInitialDelay(INITIAL_DELAY, TimeUnit.SECONDS)
+                    .setInitialDelay(INITIAL_DELAY_SECONDS, TimeUnit.SECONDS)
                     .build()
 
                 workManager.enqueueUniqueWork(TAG, ExistingWorkPolicy.KEEP, workRequest)
@@ -74,21 +74,28 @@ class AppUpdateWorker(appContext: Context, params: WorkerParameters) : Listenabl
 
         suspend fun cancelWorkIfNeeded() = withContext(Dispatchers.IO) {
 
-            val workInfo = workManager.getWorkInfos(
+            val workInfos = workManager.getWorkInfos(
                 WorkQuery.Builder.fromUniqueWorkNames(listOf(TAG))
                     .addStates(listOf(WorkInfo.State.BLOCKED, WorkInfo.State.ENQUEUED))
                     .build(),
             ).get()
 
-            workInfo.forEach {
-                workManager.cancelWorkById(it.id)
+            workInfos.forEachIndexed { index, workInfo ->
+                workManager.cancelWorkById(workInfo.id)
                 SentryLog.d(TAG, "Work cancelled")
+                // TODO: Check this Sentry in approximately 1 month (end of March 2024) to know if the `forEach` is useful or not.
+                if (index > 0) {
+                    Sentry.withScope { scope ->
+                        scope.level = SentryLevel.WARNING
+                        Sentry.captureMessage("There is more than one work infos, we must keep forEach")
+                    }
+                }
             }
         }
     }
 
     companion object {
         private const val TAG = "AppUpdateWorker"
-        private const val INITIAL_DELAY = 10L // 10s
+        private const val INITIAL_DELAY_SECONDS = 10L
     }
 }
