@@ -49,6 +49,7 @@ class InAppUpdateManager(
     private val inAppUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest> = activity.registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
+        viewModel.isUpdateBottomSheetShown = false
         val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
         viewModel.set(StoresSettingsRepository.IS_USER_WANTING_UPDATES_KEY, isUserWantingUpdate)
         onUserChoice(isUserWantingUpdate)
@@ -145,6 +146,7 @@ class InAppUpdateManager(
         downloadUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
     ) = with(appUpdateManager) {
         registerListener(installStateUpdatedListener)
+        viewModel.isUpdateBottomSheetShown = true
         startUpdateFlowForResult(
             appUpdateInfo,
             downloadUpdateResultLauncher,
