@@ -20,13 +20,14 @@ package com.infomaniak.lib.stores
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
 
 abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : DefaultLifecycleObserver {
 
     var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
     var onFDroidResult: ((Boolean) -> Unit)? = null
 
-    protected val localSettings = StoresLocalSettings.getInstance(activity)
+    protected val viewModel: StoresViewModel by lazy { ViewModelProvider(activity)[StoresViewModel::class.java] }
 
     open fun installDownloadedUpdate() = Unit
 
@@ -35,15 +36,13 @@ abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
-        handleUpdates()
-        localSettings.appUpdateLaunches++
+        with(viewModel) {
+            shouldCheckUpdate(::checkUpdateIsAvailable)
+            incrementAppUpdateLaunches()
+        }
     }
 
     protected fun BaseInAppUpdateManager.observeLifecycle() {
         activity.lifecycle.addObserver(observer = this)
-    }
-
-    private fun handleUpdates() = with(localSettings) {
-        if (appUpdateLaunches != 0 && (isUserWantingUpdates || appUpdateLaunches % 10 == 0)) checkUpdateIsAvailable()
     }
 }

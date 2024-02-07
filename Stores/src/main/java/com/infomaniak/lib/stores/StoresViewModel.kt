@@ -17,17 +17,41 @@
  */
 package com.infomaniak.lib.stores
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.infomaniak.lib.core.utils.SentryLog
+import android.app.Application
+import android.content.Context
+import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-internal class StoresViewModel : ViewModel() {
+class StoresViewModel(application: Application) : AndroidViewModel(application) {
 
-    val canInstallUpdate = MutableLiveData(false)
+    private inline val context: Context get() = getApplication()
+    private val ioCoroutineContext = viewModelScope.coroutineContext + Dispatchers.IO
+    private val storesSettingsRepository = StoresSettingsRepository(context)
 
-    fun toggleAppUpdateStatus(localSettings: StoresLocalSettings, isUpdateDownloaded: Boolean) {
-        SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Setting canInstallUpdate value to $isUpdateDownloaded in toggleAppUpdateStatus")
-        canInstallUpdate.value = isUpdateDownloaded
-        localSettings.hasAppUpdateDownloaded = isUpdateDownloaded
+    val storesSettingsLiveData = storesSettingsRepository.flow.asLiveData(ioCoroutineContext)
+
+    fun <T> liveDataOf(key: Preferences.Key<T>): LiveData<T> {
+        return storesSettingsRepository.flowOf(key).asLiveData(ioCoroutineContext).distinctUntilChanged()
     }
+
+    fun <T> set(key: Preferences.Key<T>, value: T) = viewModelScope.launch(ioCoroutineContext) {
+        storesSettingsRepository.setValue(key, value)
+    }
+
+    fun resetUpdateSettings() = viewModelScope.launch(ioCoroutineContext) { storesSettingsRepository.resetUpdateSettings() }
+
+    //region BaseInAppUpdateManager
+    fun incrementAppUpdateLaunches() = viewModelScope.launch(ioCoroutineContext) {
+        val appUpdateLaunches = storesSettingsRepository.getValue(StoresSettingsRepository.APP_UPDATE_LAUNCHES)
+        set(StoresSettingsRepository.APP_UPDATE_LAUNCHES, appUpdateLaunches + 1)
+    }
+
+    fun shouldCheckUpdate(checkUpdateCallback: () -> Unit) = viewModelScope.launch(ioCoroutineContext) {
+        with(storesSettingsRepository.getAll()) {
+            if (appUpdateLaunches != 0 && (isUserWantingUpdates || appUpdateLaunches % 10 == 0)) checkUpdateCallback()
+        }
+    }
+    //endregion
 }

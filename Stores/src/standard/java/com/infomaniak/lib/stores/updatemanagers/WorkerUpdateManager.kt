@@ -19,19 +19,24 @@ package com.infomaniak.lib.stores.updatemanagers
 
 import android.content.Context
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.infomaniak.lib.stores.StoresLocalSettings
+import com.infomaniak.lib.stores.StoresSettingsRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 internal class WorkerUpdateManager(appContext: Context) {
 
     private val appUpdateManager = AppUpdateManagerFactory.create(appContext)
-    private val localSettings = StoresLocalSettings.getInstance(appContext)
+    private val storesSettingsRepository = StoresSettingsRepository(appContext)
 
     fun installDownloadedUpdate(onInstallFailure: (Exception) -> Unit, onInstallSuccess: () -> Unit) {
-        localSettings.hasAppUpdateDownloaded = false
+        CoroutineScope(Dispatchers.IO).launch {
+            storesSettingsRepository.setValue(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED, false)
+        }
         appUpdateManager.completeUpdate()
             .addOnSuccessListener { onInstallSuccess() }
             .addOnFailureListener {
-                localSettings.resetUpdateSettings()
+                CoroutineScope(Dispatchers.IO).launch { storesSettingsRepository.resetUpdateSettings() }
                 onInstallFailure(it)
             }
     }
