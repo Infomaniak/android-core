@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
+//TODO: Inject this when kDrive will have hilt
 private val Context.dataStore by preferencesDataStore(name = StoresSettingsRepository.DATA_STORE_NAME)
 
 class StoresSettingsRepository(private val context: Context) {
@@ -84,6 +85,6 @@ class StoresSettingsRepository(private val context: Context) {
 
         private const val DEFAULT_IS_USER_WANTING_UPDATES = true
         private const val DEFAULT_HAS_APP_UPDATE_DOWNLOADED = false
-        private const val DEFAULT_APP_UPDATE_LAUNCHES = 0
+        const val DEFAULT_APP_UPDATE_LAUNCHES = 20
     }
 }

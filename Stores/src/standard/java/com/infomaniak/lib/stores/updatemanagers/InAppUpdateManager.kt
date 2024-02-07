@@ -108,7 +108,10 @@ class InAppUpdateManager(
     }
 
     override fun installDownloadedUpdate() {
-        viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED, false)
+        with(viewModel) {
+            set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED, false)
+            set(StoresSettingsRepository.APP_UPDATE_LAUNCHES, StoresSettingsRepository.DEFAULT_APP_UPDATE_LAUNCHES)
+        }
         onInstallStart()
         appUpdateManager.completeUpdate()
             .addOnSuccessListener { onInstallSuccess?.invoke() }

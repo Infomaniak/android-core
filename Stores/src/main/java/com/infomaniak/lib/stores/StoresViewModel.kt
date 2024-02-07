@@ -21,6 +21,8 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.*
+import com.infomaniak.lib.stores.StoresSettingsRepository.Companion.APP_UPDATE_LAUNCHES
+import com.infomaniak.lib.stores.StoresSettingsRepository.Companion.DEFAULT_APP_UPDATE_LAUNCHES
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -43,14 +45,17 @@ class StoresViewModel(application: Application) : AndroidViewModel(application) 
     fun resetUpdateSettings() = viewModelScope.launch(ioCoroutineContext) { storesSettingsRepository.resetUpdateSettings() }
 
     //region BaseInAppUpdateManager
-    fun incrementAppUpdateLaunches() = viewModelScope.launch(ioCoroutineContext) {
-        val appUpdateLaunches = storesSettingsRepository.getValue(StoresSettingsRepository.APP_UPDATE_LAUNCHES)
-        set(StoresSettingsRepository.APP_UPDATE_LAUNCHES, appUpdateLaunches + 1)
+    fun decrementAppUpdateLaunches() = viewModelScope.launch(ioCoroutineContext) {
+        val appUpdateLaunches = storesSettingsRepository.getValue(APP_UPDATE_LAUNCHES)
+        set(APP_UPDATE_LAUNCHES, appUpdateLaunches - 1)
     }
 
     fun shouldCheckUpdate(checkUpdateCallback: () -> Unit) = viewModelScope.launch(ioCoroutineContext) {
         with(storesSettingsRepository.getAll()) {
-            if (appUpdateLaunches != 0 && (isUserWantingUpdates || appUpdateLaunches % 10 == 0)) checkUpdateCallback()
+            if (isUserWantingUpdates || appUpdateLaunches <= 0) {
+                checkUpdateCallback()
+                storesSettingsRepository.setValue(APP_UPDATE_LAUNCHES, DEFAULT_APP_UPDATE_LAUNCHES)
+            }
         }
     }
     //endregion

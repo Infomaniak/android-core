@@ -38,7 +38,7 @@ abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : 
 
         with(viewModel) {
             shouldCheckUpdate(::checkUpdateIsAvailable)
-            incrementAppUpdateLaunches()
+            decrementAppUpdateLaunches()
         }
     }
 
