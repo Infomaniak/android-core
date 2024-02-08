@@ -19,11 +19,15 @@ package com.infomaniak.lib.core.views
 
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.view.View
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
-class DividerItemDecorator(private val divider: Drawable) : RecyclerView.ItemDecoration() {
+class DividerItemDecorator(
+    private val divider: Drawable,
+    private val shouldIgnoreView: ((View) -> Boolean)? = null,
+) : RecyclerView.ItemDecoration() {
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         if (parent.childCount == 0) return
@@ -32,8 +36,9 @@ class DividerItemDecorator(private val divider: Drawable) : RecyclerView.ItemDec
         val dividerLeft = parent.paddingLeft
         val dividerRight = parent.width - parent.paddingRight
 
+        // Don't ever try to use index of children again… They are not in order :(
         parent.children.forEach { child ->
-            if (child.y == firstChildY) return@forEach
+            if (child.y == firstChildY || shouldIgnoreView?.invoke(child) == true) return@forEach
 
             val yTranslation = child.translationY.roundToInt()
             val dividerTop = child.top - (child.layoutParams as RecyclerView.LayoutParams).topMargin + yTranslation
