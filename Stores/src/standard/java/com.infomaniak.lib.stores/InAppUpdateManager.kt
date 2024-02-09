@@ -75,6 +75,10 @@ class InAppUpdateManager(
         }
     }
 
+    init {
+        observeLifecycle()
+    }
+
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         observeAppUpdateDownload()

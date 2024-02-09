@@ -35,7 +35,9 @@ class InAppUpdateManager(
     onInstallSuccess: (() -> Unit)? = null,
 ) : BaseInAppUpdateManager(activity) {
 
-    override fun installDownloadedUpdate() = Unit
+    init {
+        observeLifecycle()
+    }
 
     override fun checkUpdateIsAvailable() {
         SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on FDroid")

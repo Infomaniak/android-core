@@ -21,12 +21,16 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
-abstract class BaseInAppUpdateManager(activity: FragmentActivity) : DefaultLifecycleObserver {
+abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : DefaultLifecycleObserver {
 
     var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
     var onFDroidResult: ((Boolean) -> Unit)? = null
 
     protected val localSettings = StoresLocalSettings.getInstance(activity)
+
+    open fun installDownloadedUpdate() = Unit
+
+    protected abstract fun checkUpdateIsAvailable()
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
@@ -35,9 +39,9 @@ abstract class BaseInAppUpdateManager(activity: FragmentActivity) : DefaultLifec
         localSettings.appUpdateLaunches++
     }
 
-    abstract fun installDownloadedUpdate()
-
-    protected abstract fun checkUpdateIsAvailable()
+    protected fun BaseInAppUpdateManager.observeLifecycle() {
+        activity.lifecycle.addObserver(observer = this)
+    }
 
     private fun handleUpdates() = with(localSettings) {
         if (appUpdateLaunches != 0 && (isUserWantingUpdates || appUpdateLaunches % 10 == 0)) checkUpdateIsAvailable()
