@@ -15,27 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores.updaterequired.data.models
+package com.infomaniak.lib.stores.updaterequired.data.api
 
-import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.Serializable
-import java.util.Date
+import com.infomaniak.lib.core.api.ApiController
+import com.infomaniak.lib.core.api.ApiController.ApiMethod
+import com.infomaniak.lib.core.models.ApiResponse
+import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion
+import okhttp3.OkHttpClient
 
-@Serializable
-data class AppPublishedVersion(
-    var tag: String,
-    @SerializedName("tag_updated_at")
-    var tagUpdatedAt: Date,
-    @SerializedName("version_changelog")
-    var versionChangelog: String,
-    var type: VersionType,
-    @SerializedName("build_version")
-    var buildVersion: String,
-    @SerializedName("build_min_os_version")
-    var buildMinOsVersion: String,
-) {
-    enum class VersionType(val apiValue: String) {
-        PRODUCTION("production"),
-        BETA("beta"),
+object ApiRepositoryStores {
+
+    fun getAppVersion(appName: String, okHttpClient: OkHttpClient): ApiResponse<AppVersion> {
+        return ApiController.callApi(ApiRoutesStores.appVersion(appName), ApiMethod.GET, okHttpClient = okHttpClient)
     }
 }

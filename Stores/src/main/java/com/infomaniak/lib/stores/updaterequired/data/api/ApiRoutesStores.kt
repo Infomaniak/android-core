@@ -15,27 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores.updaterequired.data.models
+package com.infomaniak.lib.stores.updaterequired.data.api
 
-import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.Serializable
-import java.util.Date
+import com.infomaniak.lib.core.BuildConfig
+import com.infomaniak.lib.stores.BuildConfig.IS_GPLAY_BUILD
+import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion.Platform
+import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion.Store
 
-@Serializable
-data class AppPublishedVersion(
-    var tag: String,
-    @SerializedName("tag_updated_at")
-    var tagUpdatedAt: Date,
-    @SerializedName("version_changelog")
-    var versionChangelog: String,
-    var type: VersionType,
-    @SerializedName("build_version")
-    var buildVersion: String,
-    @SerializedName("build_min_os_version")
-    var buildMinOsVersion: String,
-) {
-    enum class VersionType(val apiValue: String) {
-        PRODUCTION("production"),
-        BETA("beta"),
+object ApiRoutesStores {
+
+    fun appVersion(appName: String): String {
+        val store = if (IS_GPLAY_BUILD) Store.PLAY_STORE else Store.FDROID
+        return "${BuildConfig.INFOMANIAK_API_V1}/app-information/versions/${store.apiValue}/${Platform.ANDROID.apiValue}/$appName"
     }
 }

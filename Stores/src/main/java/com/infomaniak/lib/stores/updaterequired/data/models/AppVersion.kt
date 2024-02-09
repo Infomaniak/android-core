@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.stores.updaterequired.data.models
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,7 +26,9 @@ data class AppVersion(
     var name: String,
     var platform: Platform,
     var store: Store,
+    @SerializedName("api_id")
     var apiId: String,
+    @SerializedName("min_version")
     var minVersion: String,
     var publishedVersions: AppPublishedVersion,
 ) {
