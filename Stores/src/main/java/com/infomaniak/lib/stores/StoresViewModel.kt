@@ -18,44 +18,45 @@
 package com.infomaniak.lib.stores
 
 import android.app.Application
-import android.content.Context
 import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.*
-import com.infomaniak.lib.stores.StoresSettingsRepository.Companion.APP_UPDATE_LAUNCHES
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
+import com.infomaniak.lib.stores.StoresSettingsRepository.Companion.APP_UPDATE_LAUNCHES_KEY
 import com.infomaniak.lib.stores.StoresSettingsRepository.Companion.DEFAULT_APP_UPDATE_LAUNCHES
+import com.infomaniak.lib.stores.StoresSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY
+import com.infomaniak.lib.stores.StoresSettingsRepository.Companion.IS_USER_WANTING_UPDATES_KEY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class StoresViewModel(application: Application) : AndroidViewModel(application) {
 
-    private inline val context: Context get() = getApplication()
-    private val ioCoroutineContext = viewModelScope.coroutineContext + Dispatchers.IO
-    private val storesSettingsRepository = StoresSettingsRepository(context)
+    private val storesSettingsRepository = StoresSettingsRepository(getApplication())
 
-    val storesSettingsLiveData = storesSettingsRepository.flow.asLiveData(ioCoroutineContext)
+    val canInstallUpdate = storesSettingsRepository
+        .flowOf(HAS_APP_UPDATE_DOWNLOADED_KEY)
+        .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
+        .distinctUntilChanged()
 
-    fun <T> liveDataOf(key: Preferences.Key<T>): LiveData<T> {
-        return storesSettingsRepository.flowOf(key).asLiveData(ioCoroutineContext).distinctUntilChanged()
-    }
-
-    fun <T> set(key: Preferences.Key<T>, value: T) = viewModelScope.launch(ioCoroutineContext) {
+    fun <T> set(key: Preferences.Key<T>, value: T) = viewModelScope.launch(Dispatchers.IO) {
         storesSettingsRepository.setValue(key, value)
     }
 
-    fun resetUpdateSettings() = viewModelScope.launch(ioCoroutineContext) { storesSettingsRepository.resetUpdateSettings() }
+    fun resetUpdateSettings() = viewModelScope.launch(Dispatchers.IO) { storesSettingsRepository.resetUpdateSettings() }
 
     //region BaseInAppUpdateManager
-    fun decrementAppUpdateLaunches() = viewModelScope.launch(ioCoroutineContext) {
-        val appUpdateLaunches = storesSettingsRepository.getValue(APP_UPDATE_LAUNCHES)
-        set(APP_UPDATE_LAUNCHES, appUpdateLaunches - 1)
+    fun decrementAppUpdateLaunches() = viewModelScope.launch(Dispatchers.IO) {
+        val appUpdateLaunches = storesSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY)
+        set(APP_UPDATE_LAUNCHES_KEY, appUpdateLaunches - 1)
     }
 
-    fun shouldCheckUpdate(checkUpdateCallback: () -> Unit) = viewModelScope.launch(ioCoroutineContext) {
-        with(storesSettingsRepository.getAll()) {
-            if (isUserWantingUpdates || appUpdateLaunches <= 0) {
-                checkUpdateCallback()
-                storesSettingsRepository.setValue(APP_UPDATE_LAUNCHES, DEFAULT_APP_UPDATE_LAUNCHES)
-            }
+    fun shouldCheckUpdate(checkUpdateCallback: () -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        if (storesSettingsRepository.getValue(IS_USER_WANTING_UPDATES_KEY) ||
+            storesSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY) <= 0
+        ) {
+            checkUpdateCallback()
+            storesSettingsRepository.setValue(APP_UPDATE_LAUNCHES_KEY, DEFAULT_APP_UPDATE_LAUNCHES)
         }
     }
     //endregion

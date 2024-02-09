@@ -50,12 +50,12 @@ class InAppUpdateManager(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
         val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
-        viewModel.set(StoresSettingsRepository.IS_USER_WANTING_UPDATES, isUserWantingUpdate)
+        viewModel.set(StoresSettingsRepository.IS_USER_WANTING_UPDATES_KEY, isUserWantingUpdate)
         onUserChoice(isUserWantingUpdate)
     }
 
-    private val onUpdateDownloaded = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED, true) }
-    private val onUpdateInstalled = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED, false) }
+    private val onUpdateDownloaded = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, true) }
+    private val onUpdateInstalled = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false) }
 
     // Create a listener to track request state updates.
     private val installStateUpdatedListener by lazy {
@@ -109,8 +109,8 @@ class InAppUpdateManager(
 
     override fun installDownloadedUpdate() {
         with(viewModel) {
-            set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED, false)
-            set(StoresSettingsRepository.APP_UPDATE_LAUNCHES, StoresSettingsRepository.DEFAULT_APP_UPDATE_LAUNCHES)
+            set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false)
+            set(StoresSettingsRepository.APP_UPDATE_LAUNCHES_KEY, StoresSettingsRepository.DEFAULT_APP_UPDATE_LAUNCHES)
         }
         onInstallStart()
         appUpdateManager.completeUpdate()
@@ -122,9 +122,7 @@ class InAppUpdateManager(
     }
 
     private fun observeAppUpdateDownload() {
-        viewModel.liveDataOf(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED).observe(activity) {
-            onInAppUpdateUiChange?.invoke(it)
-        }
+        viewModel.canInstallUpdate.observe(activity) { onInAppUpdateUiChange?.invoke(it) }
     }
 
     private fun checkStalledUpdate(): Unit = with(appUpdateManager) {

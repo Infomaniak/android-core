@@ -28,15 +28,16 @@ internal class WorkerUpdateManager(appContext: Context) {
 
     private val appUpdateManager = AppUpdateManagerFactory.create(appContext)
     private val storesSettingsRepository = StoresSettingsRepository(appContext)
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     fun installDownloadedUpdate(onInstallFailure: (Exception) -> Unit, onInstallSuccess: () -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            storesSettingsRepository.setValue(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED, false)
+        coroutineScope.launch {
+            storesSettingsRepository.setValue(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false)
         }
         appUpdateManager.completeUpdate()
             .addOnSuccessListener { onInstallSuccess() }
             .addOnFailureListener {
-                CoroutineScope(Dispatchers.IO).launch { storesSettingsRepository.resetUpdateSettings() }
+                coroutineScope.launch { storesSettingsRepository.resetUpdateSettings() }
                 onInstallFailure(it)
             }
     }

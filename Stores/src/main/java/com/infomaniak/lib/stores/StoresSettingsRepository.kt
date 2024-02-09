@@ -21,33 +21,25 @@ import android.content.Context
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import java.io.IOException
 
 //TODO: Inject this when kDrive will have hilt
 private val Context.dataStore by preferencesDataStore(name = StoresSettingsRepository.DATA_STORE_NAME)
 
 class StoresSettingsRepository(private val context: Context) {
 
-    val flow: Flow<StoresSettings> = context.dataStore.data
-        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
-        .map { it.toStoresSettings() }
-
     @Suppress("UNCHECKED_CAST")
     fun <T> flowOf(key: Preferences.Key<T>): Flow<T> {
         val defaultValue = when (key) {
-            IS_USER_WANTING_UPDATES -> DEFAULT_IS_USER_WANTING_UPDATES
-            HAS_APP_UPDATE_DOWNLOADED -> DEFAULT_HAS_APP_UPDATE_DOWNLOADED
-            APP_UPDATE_LAUNCHES -> DEFAULT_APP_UPDATE_LAUNCHES
+            IS_USER_WANTING_UPDATES_KEY -> DEFAULT_IS_USER_WANTING_UPDATES
+            HAS_APP_UPDATE_DOWNLOADED_KEY -> DEFAULT_HAS_APP_UPDATE_DOWNLOADED
+            APP_UPDATE_LAUNCHES_KEY -> DEFAULT_APP_UPDATE_LAUNCHES
             else -> throw IllegalArgumentException("Unknown Preferences.Key")
         }
 
         return context.dataStore.data.map { it[key] ?: (defaultValue as T) }
     }
-
-    suspend fun getAll() = context.dataStore.data.first().toStoresSettings()
 
     suspend fun <T> getValue(key: Preferences.Key<T>): T = flowOf(key).first()
 
@@ -59,31 +51,19 @@ class StoresSettingsRepository(private val context: Context) {
 
     suspend fun resetUpdateSettings() {
         // This avoid the user being instantly reprompted to download update
-        setValue(IS_USER_WANTING_UPDATES, false)
-        setValue(HAS_APP_UPDATE_DOWNLOADED, false)
+        setValue(IS_USER_WANTING_UPDATES_KEY, DEFAULT_IS_USER_WANTING_UPDATES)
+        setValue(HAS_APP_UPDATE_DOWNLOADED_KEY, DEFAULT_HAS_APP_UPDATE_DOWNLOADED)
     }
-
-    private fun Preferences.toStoresSettings() = StoresSettings(
-        isUserWantingUpdates = this[IS_USER_WANTING_UPDATES] ?: DEFAULT_IS_USER_WANTING_UPDATES,
-        hasAppUpdateDownloaded = this[HAS_APP_UPDATE_DOWNLOADED] ?: DEFAULT_HAS_APP_UPDATE_DOWNLOADED,
-        appUpdateLaunches = this[APP_UPDATE_LAUNCHES] ?: DEFAULT_APP_UPDATE_LAUNCHES,
-    )
-
-    data class StoresSettings(
-        val isUserWantingUpdates: Boolean,
-        val hasAppUpdateDownloaded: Boolean,
-        val appUpdateLaunches: Int,
-    )
 
     companion object {
 
-        val IS_USER_WANTING_UPDATES = booleanPreferencesKey("isUserWantingUpdatesKey")
-        val HAS_APP_UPDATE_DOWNLOADED = booleanPreferencesKey("hasAppUpdateDownloadedKey")
-        val APP_UPDATE_LAUNCHES = intPreferencesKey("appUpdateLaunchesKey")
+        val IS_USER_WANTING_UPDATES_KEY = booleanPreferencesKey("isUserWantingUpdatesKey")
+        val HAS_APP_UPDATE_DOWNLOADED_KEY = booleanPreferencesKey("hasAppUpdateDownloadedKey")
+        val APP_UPDATE_LAUNCHES_KEY = intPreferencesKey("appUpdateLaunchesKey")
 
-        const val DATA_STORE_NAME = "StoresSettingsDataStore"
+        internal const val DATA_STORE_NAME = "StoresSettingsDataStore"
 
-        private const val DEFAULT_IS_USER_WANTING_UPDATES = true
+        private const val DEFAULT_IS_USER_WANTING_UPDATES = false
         private const val DEFAULT_HAS_APP_UPDATE_DOWNLOADED = false
         const val DEFAULT_APP_UPDATE_LAUNCHES = 20
     }
