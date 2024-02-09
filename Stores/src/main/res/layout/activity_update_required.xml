@@ -15,55 +15,59 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".updaterequired.UpdateRequiredActivity">
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/updateRequiredIllu"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:importantForAccessibility="no"
-        android:src="?attr/illustration"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.5"
-        tools:src="@drawable/illu_update_required" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/marginStandard"
+        android:layout_marginBottom="@dimen/marginStandardMedium"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".updaterequired.UpdateRequiredActivity">
 
-    <TextView
-        android:id="@+id/updateRequiredTitle"
-        style="?attr/titleStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/marginStandard"
-        android:text="@string/updateAppTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/updateRequiredIllu" />
+        <ImageView
+            android:id="@+id/updateRequiredIllu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/marginStandardMedium"
+            android:importantForAccessibility="no"
+            android:src="?attr/illustration"
+            tools:src="@drawable/illu_update_required" />
 
-    <TextView
-        android:id="@+id/updateRequiredDescription"
-        style="?attr/descriptionStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/marginStandard"
-        android:text="@string/updateRequiredDescription"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/updateRequiredTitle" />
+        <TextView
+            android:id="@+id/updateRequiredTitle"
+            style="?attr/titleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/marginStandardMedium"
+            android:text="@string/updateAppTitle"
+            app:layout_constraintEnd_toEndOf="@id/end"
+            app:layout_constraintStart_toStartOf="@id/start"
+            app:layout_constraintTop_toBottomOf="@id/updateRequiredIllu" />
+
+        <TextView
+            android:id="@+id/updateRequiredDescription"
+            style="?attr/descriptionStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginStandardMedium"
+            android:gravity="center"
+            android:text="@string/updateRequiredDescription" />
+    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/updateAppButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:layout_margin="@dimen/marginStandard"
-        android:text="@string/buttonUpdate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginHorizontal="@dimen/marginStandard"
+        android:layout_marginTop="@dimen/marginStandardMedium"
+        android:layout_marginBottom="40dp"
+        android:text="@string/buttonUpdate" />
+</LinearLayout>
