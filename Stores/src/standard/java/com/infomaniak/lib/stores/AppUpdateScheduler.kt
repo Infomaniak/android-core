@@ -25,7 +25,9 @@ import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.stores.updatemanagers.WorkerUpdateManager
 import io.sentry.Sentry
 import io.sentry.SentryLevel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
@@ -34,20 +36,22 @@ class AppUpdateScheduler(
     private val workManager: WorkManager = WorkManager.getInstance(appContext),
 ) : UpdateScheduler(appContext, workManager) {
 
-    private val storesLocalSettings = StoresLocalSettings.getInstance(appContext)
+    private val storesSettingsRepository = StoresSettingsRepository(appContext)
 
     override fun scheduleWorkIfNeeded() {
-        if (storesLocalSettings.hasAppUpdateDownloaded) {
-            SentryLog.d(TAG, "Work scheduled")
+        CoroutineScope(Dispatchers.IO).launch {
+            if (storesSettingsRepository.getValue(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY)) {
+                SentryLog.d(TAG, "Work scheduled")
 
-            val workRequest = OneTimeWorkRequestBuilder<AppUpdateWorker>()
-                .setConstraints(Constraints.Builder().setRequiresBatteryNotLow(true).build())
-                // We start with a delayed duration, so that when the app quickly come back to foreground because the user
-                // was just switching apps, the service is not launched
-                .setInitialDelay(INITIAL_DELAY_SECONDS, TimeUnit.SECONDS)
-                .build()
+                val workRequest = OneTimeWorkRequestBuilder<AppUpdateWorker>()
+                    .setConstraints(Constraints.Builder().setRequiresBatteryNotLow(true).build())
+                    // We start with a delayed duration, so that when the app quickly come back to foreground because the user
+                    // was just switching apps, the service is not launched
+                    .setInitialDelay(INITIAL_DELAY_SECONDS, TimeUnit.SECONDS)
+                    .build()
 
-            workManager.enqueueUniqueWork(TAG, ExistingWorkPolicy.KEEP, workRequest)
+                workManager.enqueueUniqueWork(TAG, ExistingWorkPolicy.KEEP, workRequest)
+            }
         }
     }
 
@@ -83,7 +87,6 @@ class AppUpdateScheduler(
                 updateManager.installDownloadedUpdate(
                     onInstallSuccess = { completer.setResult(Result.success()) },
                     onInstallFailure = { exception ->
-                        // This avoid the user being instantly reprompted to download update
                         Sentry.captureException(exception)
                         completer.setResult(Result.failure())
                     },

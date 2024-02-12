@@ -23,7 +23,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
@@ -33,7 +32,7 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.stores.BaseInAppUpdateManager
 import com.infomaniak.lib.stores.StoreUtils
-import com.infomaniak.lib.stores.StoresViewModel
+import com.infomaniak.lib.stores.StoresSettingsRepository
 
 class InAppUpdateManager(
     private val activity: FragmentActivity,
@@ -51,14 +50,12 @@ class InAppUpdateManager(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
         val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
-        localSettings.isUserWantingUpdates = isUserWantingUpdate
+        viewModel.set(StoresSettingsRepository.IS_USER_WANTING_UPDATES_KEY, isUserWantingUpdate)
         onUserChoice(isUserWantingUpdate)
     }
 
-    private val viewModel: StoresViewModel by lazy { ViewModelProvider(activity)[StoresViewModel::class.java] }
-
-    private val onUpdateDownloaded = { viewModel.toggleAppUpdateStatus(localSettings, isUpdateDownloaded = true) }
-    private val onUpdateInstalled = { viewModel.toggleAppUpdateStatus(localSettings, isUpdateDownloaded = false) }
+    private val onUpdateDownloaded = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, true) }
+    private val onUpdateInstalled = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false) }
 
     // Create a listener to track request state updates.
     private val installStateUpdatedListener by lazy {
@@ -89,8 +86,6 @@ class InAppUpdateManager(
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-
-        viewModel.canInstallUpdate.value = localSettings.hasAppUpdateDownloaded
         checkStalledUpdate()
     }
 
@@ -113,19 +108,21 @@ class InAppUpdateManager(
     }
 
     override fun installDownloadedUpdate() {
-        localSettings.hasAppUpdateDownloaded = false
-        viewModel.canInstallUpdate.value = false
+        with(viewModel) {
+            set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false)
+            set(StoresSettingsRepository.APP_UPDATE_LAUNCHES_KEY, StoresSettingsRepository.DEFAULT_APP_UPDATE_LAUNCHES)
+        }
         onInstallStart()
         appUpdateManager.completeUpdate()
             .addOnSuccessListener { onInstallSuccess?.invoke() }
             .addOnFailureListener {
-                localSettings.resetUpdateSettings()
+                viewModel.resetUpdateSettings()
                 onInstallFailure(it)
             }
     }
 
     private fun observeAppUpdateDownload() {
-        viewModel.canInstallUpdate.observe(activity) { isUpdateDownloaded -> onInAppUpdateUiChange?.invoke(isUpdateDownloaded) }
+        viewModel.canInstallUpdate.observe(activity) { onInAppUpdateUiChange?.invoke(it) }
     }
 
     private fun checkStalledUpdate(): Unit = with(appUpdateManager) {
