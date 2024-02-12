@@ -32,6 +32,8 @@ import kotlinx.coroutines.launch
 
 class StoresViewModel(application: Application) : AndroidViewModel(application) {
 
+    var isUpdateBottomSheetShown = false
+
     private val storesSettingsRepository = StoresSettingsRepository(getApplication())
 
     val canInstallUpdate = storesSettingsRepository

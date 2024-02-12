@@ -37,7 +37,7 @@ abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : 
         super.onStart(owner)
 
         with(viewModel) {
-            shouldCheckUpdate(::checkUpdateIsAvailable)
+            if (!viewModel.isUpdateBottomSheetShown) shouldCheckUpdate(::checkUpdateIsAvailable)
             decrementAppUpdateLaunches()
         }
     }
