@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores
+package com.infomaniak.lib.stores.updatemanagers
 
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -31,6 +31,9 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.infomaniak.lib.core.utils.SentryLog
+import com.infomaniak.lib.stores.BaseInAppUpdateManager
+import com.infomaniak.lib.stores.StoreUtils
+import com.infomaniak.lib.stores.StoresViewModel
 
 class InAppUpdateManager(
     private val activity: FragmentActivity,

@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2024 Infomaniak Network SA
+ * Copyright (C) 2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,10 @@
  */
 package com.infomaniak.lib.stores
 
-import androidx.fragment.app.FragmentActivity
-import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.review.ReviewManagerFactory
+import android.content.Context
+import androidx.work.WorkManager
 
-object StoreUtils : StoresUtils {
-
-    const val APP_UPDATE_TAG = "inAppUpdate"
-    const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
-
-    //region In-App Review
-    override fun FragmentActivity.launchInAppReview() {
-        ReviewManagerFactory.create(this).apply {
-            requestReviewFlow().addOnCompleteListener { request ->
-                if (request.isSuccessful) launchReviewFlow(this@launchInAppReview, request.result)
-            }
-        }
-    }
-    //endregion
-}
+class AppUpdateScheduler(
+    appContext: Context,
+    workManager: WorkManager = WorkManager.getInstance(appContext),
+) : UpdateScheduler(appContext, workManager)

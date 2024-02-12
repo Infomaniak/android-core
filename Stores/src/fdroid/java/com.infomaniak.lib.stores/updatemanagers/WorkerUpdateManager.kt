@@ -15,13 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores
+package com.infomaniak.lib.stores.updatemanagers
 
-import androidx.fragment.app.FragmentActivity
+import android.content.Context
 
-interface StoresUtils {
+class WorkerUpdateManager(appContext: Context) {
 
-    //region In-App Review
-    fun FragmentActivity.launchInAppReview() = Unit
-    //endRegion
+    fun installDownloadedUpdate(onInstallFailure: (Exception) -> Unit, onInstallSuccess: () -> Unit) = Unit
 }

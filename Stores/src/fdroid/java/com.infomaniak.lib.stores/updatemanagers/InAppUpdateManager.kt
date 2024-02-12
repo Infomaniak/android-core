@@ -15,12 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores
+package com.infomaniak.lib.stores.updatemanagers
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
 import com.infomaniak.lib.core.utils.SentryLog
+import com.infomaniak.lib.stores.BaseInAppUpdateManager
+import com.infomaniak.lib.stores.StoreUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
