@@ -18,8 +18,21 @@
 package com.infomaniak.lib.stores.updatemanagers
 
 import android.content.Context
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.infomaniak.lib.stores.StoresLocalSettings
 
-class WorkerUpdateManager(appContext: Context) {
+internal class WorkerUpdateManager(appContext: Context) {
 
-    fun installDownloadedUpdate(onInstallFailure: (Exception) -> Unit, onInstallSuccess: () -> Unit) = Unit
+    private val appUpdateManager = AppUpdateManagerFactory.create(appContext)
+    private val localSettings = StoresLocalSettings.getInstance(appContext)
+
+    fun installDownloadedUpdate(onInstallFailure: (Exception) -> Unit, onInstallSuccess: () -> Unit) {
+        localSettings.hasAppUpdateDownloaded = false
+        appUpdateManager.completeUpdate()
+            .addOnSuccessListener { onInstallSuccess() }
+            .addOnFailureListener {
+                localSettings.resetUpdateSettings()
+                onInstallFailure(it)
+            }
+    }
 }

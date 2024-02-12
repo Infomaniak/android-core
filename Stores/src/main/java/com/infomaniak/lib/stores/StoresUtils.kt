@@ -19,7 +19,7 @@ package com.infomaniak.lib.stores
 
 import androidx.fragment.app.FragmentActivity
 
-interface StoresUtils {
+internal interface StoresUtils {
 
     //region In-App Review
     fun FragmentActivity.launchInAppReview() = Unit

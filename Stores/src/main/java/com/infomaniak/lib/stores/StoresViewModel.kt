@@ -21,7 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.infomaniak.lib.core.utils.SentryLog
 
-class StoresViewModel : ViewModel() {
+internal class StoresViewModel : ViewModel() {
 
     val canInstallUpdate = MutableLiveData(false)
 
