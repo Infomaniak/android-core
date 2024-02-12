@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2024 Infomaniak Network SA
+ * Copyright (C) 2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,17 @@
  */
 package com.infomaniak.lib.stores
 
-object StoreUtils : StoresUtils {
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.infomaniak.lib.core.utils.SentryLog
 
-    const val APP_UPDATE_TAG = "appUpdateFDroid"
+class StoresViewModel : ViewModel() {
+
+    val canInstallUpdate = MutableLiveData(false)
+
+    fun toggleAppUpdateStatus(localSettings: StoresLocalSettings, isUpdateDownloaded: Boolean) {
+        SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Setting canInstallUpdate value to $isUpdateDownloaded in toggleAppUpdateStatus")
+        canInstallUpdate.value = isUpdateDownloaded
+        localSettings.hasAppUpdateDownloaded = isUpdateDownloaded
+    }
 }
