@@ -28,6 +28,7 @@ abstract class ApiRepositoryCore {
         withEmails: Boolean = false,
         withPhones: Boolean = false,
         withSecurity: Boolean = false,
+        ignoreDefaultAvatar: Boolean = false,
     ): ApiResponse<User> {
         var with = ""
         if (withEmails) with += "emails"
@@ -35,7 +36,7 @@ abstract class ApiRepositoryCore {
         if (withSecurity) with += "security"
         if (with.isNotEmpty()) with = "?with=$with"
 
-        val url = "${ApiRoutesCore.getUserProfile()}$with"
+        val url = "${ApiRoutesCore.getUserProfile(ignoreDefaultAvatar)}$with"
         return ApiController.callApi(url, ApiController.ApiMethod.GET, okHttpClient = okHttpClient)
     }
 }
