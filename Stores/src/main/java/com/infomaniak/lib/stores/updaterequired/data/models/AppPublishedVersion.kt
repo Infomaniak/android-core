@@ -18,22 +18,24 @@
 package com.infomaniak.lib.stores.updaterequired.data.models
 
 import com.google.gson.annotations.SerializedName
+import com.infomaniak.lib.core.utils.Utils.enumValueOfOrNull
 import kotlinx.serialization.Serializable
-import java.util.Date
 
 @Serializable
 data class AppPublishedVersion(
     var tag: String,
-    @SerializedName("tag_updated_at")
-    var tagUpdatedAt: Date,
     @SerializedName("version_changelog")
     var versionChangelog: String,
-    var type: VersionType,
+    @SerializedName("type")
+    private var _type: String,
     @SerializedName("build_version")
     var buildVersion: String,
     @SerializedName("build_min_os_version")
     var buildMinOsVersion: String,
 ) {
+
+    val type get() = enumValueOfOrNull<VersionType>(_type)
+
     enum class VersionType(val apiValue: String) {
         PRODUCTION("production"),
         BETA("beta"),

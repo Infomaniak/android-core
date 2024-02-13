@@ -30,7 +30,8 @@ data class AppVersion(
     var apiId: String,
     @SerializedName("min_version")
     var minVersion: String,
-    var publishedVersions: AppPublishedVersion,
+    @Suppress("ArrayInDataClass")
+    var publishedVersions: Array<AppPublishedVersion>,
 ) {
 
     enum class Store(val apiValue: String) {
@@ -43,4 +44,20 @@ data class AppVersion(
         ANDROID("android")
     }
 
+    fun mustRequireUpdate(currentAppVersion: String): Boolean {
+
+        fun String.toVersionNumbers() = split(".").map(String::toInt)
+
+        val currentVersionNumbers = currentAppVersion.toVersionNumbers()
+        val minVersionNumbers = minVersion.toVersionNumbers()
+
+        currentVersionNumbers.forEachIndexed { index, versionNumber ->
+            val minVersionNumber = minVersionNumbers[index]
+            if (versionNumber == minVersionNumber) return@forEachIndexed
+
+            return versionNumber < minVersionNumber
+        }
+
+        return false
+    }
 }
