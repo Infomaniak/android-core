@@ -141,7 +141,7 @@ class InAppUpdateManager(
     }
 
     override fun requireUpdate() {
-        checkStalledUpdate(forceUpdate = true)
+        if (!viewModel.isUpdateBottomSheetShown) checkStalledUpdate(forceUpdate = true)
     }
 
     private fun observeAppUpdateDownload() {

@@ -21,7 +21,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import com.infomaniak.lib.core.utils.goToPlayStore
 
 abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : DefaultLifecycleObserver {
 
@@ -32,7 +31,7 @@ abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : 
 
     open fun installDownloadedUpdate() = Unit
 
-    open fun requireUpdate() = activity.goToPlayStore()
+    open fun requireUpdate() = Unit
 
     open fun init(
         mustRequireImmediateUpdate: Boolean = false,

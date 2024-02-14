@@ -28,6 +28,7 @@ import androidx.navigation.navArgs
 import com.google.android.material.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
+import com.infomaniak.lib.core.utils.goToPlayStore
 import com.infomaniak.lib.stores.databinding.ActivityUpdateRequiredBinding
 import com.infomaniak.lib.stores.updatemanagers.InAppUpdateManager
 import kotlin.system.exitProcess
@@ -54,8 +55,13 @@ class UpdateRequiredActivity : AppCompatActivity() {
         updateAppButton.apply {
             val primaryColor = getPrimaryColor()
             if (primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(primaryColor)
-            setOnClickListener { inAppUpdateManager.requireUpdate() }
+            setOnClickListener { goToPlayStore() }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        inAppUpdateManager.requireUpdate()
     }
 
     private fun MaterialButton.getPrimaryColor() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
