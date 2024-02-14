@@ -17,11 +17,37 @@
  */
 package com.infomaniak.lib.stores
 
+import androidx.annotation.StyleRes
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
+import com.infomaniak.lib.core.networking.HttpClient
+import com.infomaniak.lib.stores.updaterequired.UpdateRequiredActivity
+import com.infomaniak.lib.stores.updaterequired.data.api.ApiRepositoryStores
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 internal interface StoresUtils {
 
+    //region In-App Update
+    fun FragmentActivity.checkUpdateIsRequired(
+        appId: String,
+        appVersion: String,
+        versionCode: Int,
+        @StyleRes themeRes: Int,
+    ) = lifecycleScope.launch(Dispatchers.IO) {
+        val appVersionResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClientNoTokenInterceptor)
+
+        if (appVersionResponse.data?.mustRequireUpdate(appVersion) == true) {
+            withContext(Dispatchers.Main) {
+                UpdateRequiredActivity.startUpdateRequiredActivity(this@checkUpdateIsRequired, appId, versionCode, themeRes)
+                finish()
+            }
+        }
+    }
+    //endregion
+
     //region In-App Review
     fun FragmentActivity.launchInAppReview() = Unit
-    //endRegion
+    //endregion
 }

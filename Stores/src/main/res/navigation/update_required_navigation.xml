@@ -27,6 +27,12 @@
         android:label="UpdateRequiredActivity"
         tools:layout="@layout/activity_update_required">
         <argument
+            android:name="appId"
+            app:argType="string" />
+        <argument
+            android:name="versionCode"
+            app:argType="integer" />
+        <argument
             android:name="appTheme"
             app:argType="integer" />
     </activity>

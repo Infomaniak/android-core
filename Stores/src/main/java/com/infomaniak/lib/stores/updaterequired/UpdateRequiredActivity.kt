@@ -28,8 +28,8 @@ import androidx.navigation.navArgs
 import com.google.android.material.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
-import com.infomaniak.lib.core.utils.goToPlayStore
 import com.infomaniak.lib.stores.databinding.ActivityUpdateRequiredBinding
+import com.infomaniak.lib.stores.updatemanagers.InAppUpdateManager
 import kotlin.system.exitProcess
 
 class UpdateRequiredActivity : AppCompatActivity() {
@@ -37,10 +37,14 @@ class UpdateRequiredActivity : AppCompatActivity() {
     private val binding by lazy { ActivityUpdateRequiredBinding.inflate(layoutInflater) }
     private val navigationArgs: UpdateRequiredActivityArgs by navArgs()
 
+    private val inAppUpdateManager by lazy { InAppUpdateManager(this, navigationArgs.appId, navigationArgs.versionCode) }
+
     override fun onCreate(savedInstanceState: Bundle?): Unit = with(binding) {
         super.onCreate(savedInstanceState)
         setTheme(navigationArgs.appTheme)
         setContentView(root)
+
+        inAppUpdateManager.init(mustRequireImmediateUpdate = true)
 
         onBackPressedDispatcher.addCallback(this@UpdateRequiredActivity) {
             finishAffinity()
@@ -50,7 +54,7 @@ class UpdateRequiredActivity : AppCompatActivity() {
         updateAppButton.apply {
             val primaryColor = getPrimaryColor()
             if (primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(primaryColor)
-            setOnClickListener { goToPlayStore() }
+            setOnClickListener { inAppUpdateManager.requireUpdate() }
         }
     }
 
@@ -63,9 +67,9 @@ class UpdateRequiredActivity : AppCompatActivity() {
     companion object {
         private const val UNDEFINED_PRIMARY_COLOR = 0
 
-        fun startUpdateRequiredActivity(context: Context, appTheme: Int) {
+        fun startUpdateRequiredActivity(context: Context, appId: String, versionCode: Int, appTheme: Int) {
             Intent(context, UpdateRequiredActivity::class.java).apply {
-                val args = UpdateRequiredActivityArgs(appTheme)
+                val args = UpdateRequiredActivityArgs(appId, versionCode, appTheme)
                 putExtras(args.toBundle())
             }.also(context::startActivity)
         }
