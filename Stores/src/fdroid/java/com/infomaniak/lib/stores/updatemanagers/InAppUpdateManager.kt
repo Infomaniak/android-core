@@ -31,15 +31,7 @@ class InAppUpdateManager(
     private val activity: FragmentActivity,
     private val appId: String,
     private val versionCode: Int,
-    onUserChoice: (Boolean) -> Unit,
-    onInstallStart: () -> Unit,
-    onInstallFailure: (Exception) -> Unit,
-    onInstallSuccess: (() -> Unit)? = null,
 ) : BaseInAppUpdateManager(activity) {
-
-    init {
-        observeLifecycle()
-    }
 
     override fun checkUpdateIsAvailable() {
         SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on FDroid")

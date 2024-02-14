@@ -27,6 +27,7 @@ import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.infomaniak.lib.core.utils.SentryLog
@@ -38,10 +39,6 @@ class InAppUpdateManager(
     private val activity: FragmentActivity,
     appId: String,
     versionCode: Int,
-    private val onUserChoice: (Boolean) -> Unit,
-    private val onInstallStart: () -> Unit,
-    private val onInstallFailure: (Exception) -> Unit,
-    private val onInstallSuccess: (() -> Unit)? = null,
 ) : BaseInAppUpdateManager(activity) {
 
     private val appUpdateManager = AppUpdateManagerFactory.create(activity)
@@ -52,11 +49,18 @@ class InAppUpdateManager(
         viewModel.isUpdateBottomSheetShown = false
         val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
         viewModel.set(StoresSettingsRepository.IS_USER_WANTING_UPDATES_KEY, isUserWantingUpdate)
-        onUserChoice(isUserWantingUpdate)
+        onUserChoice?.invoke(isUserWantingUpdate)
     }
 
     private val onUpdateDownloaded = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, true) }
     private val onUpdateInstalled = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false) }
+
+    private var onUserChoice: ((Boolean) -> Unit)? = null
+    private var onInstallStart: (() -> Unit)? = null
+    private var onInstallFailure: ((Exception) -> Unit)? = null
+    private var onInstallSuccess: (() -> Unit)? = null
+
+    private var updateType: Int = StoreUtils.DEFAULT_UPDATE_TYPE
 
     // Create a listener to track request state updates.
     private val installStateUpdatedListener by lazy {
@@ -76,8 +80,22 @@ class InAppUpdateManager(
         }
     }
 
-    init {
-        observeLifecycle()
+    override fun init(
+        mustRequireImmediateUpdate: Boolean,
+        onUserChoice: ((Boolean) -> Unit)?,
+        onInstallStart: (() -> Unit)?,
+        onInstallFailure: ((Exception) -> Unit)?,
+        onInstallSuccess: (() -> Unit)?,
+        onInAppUpdateUiChange: ((Boolean) -> Unit)?,
+        onFDroidResult: ((Boolean) -> Unit)?,
+    ) {
+        this.updateType = if (mustRequireImmediateUpdate) AppUpdateType.IMMEDIATE else AppUpdateType.FLEXIBLE
+        this.onUserChoice = onUserChoice
+        this.onInstallStart = onInstallStart
+        this.onInstallFailure = onInstallFailure
+        this.onInstallSuccess = onInstallSuccess
+
+        super.init(onInAppUpdateUiChange, onFDroidResult)
     }
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -100,10 +118,10 @@ class InAppUpdateManager(
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             SentryLog.d(StoreUtils.APP_UPDATE_TAG, "checking success")
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && appUpdateInfo.isUpdateTypeAllowed(StoreUtils.UPDATE_TYPE)
+                && appUpdateInfo.isUpdateTypeAllowed(updateType)
             ) {
                 SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Update available on GPlay")
-                startUpdateFlow(appUpdateInfo, inAppUpdateResultLauncher)
+                startUpdateFlow(appUpdateInfo)
             }
         }
     }
@@ -113,26 +131,37 @@ class InAppUpdateManager(
             set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false)
             set(StoresSettingsRepository.APP_UPDATE_LAUNCHES_KEY, StoresSettingsRepository.DEFAULT_APP_UPDATE_LAUNCHES)
         }
-        onInstallStart()
+        onInstallStart?.invoke()
         appUpdateManager.completeUpdate()
             .addOnSuccessListener { onInstallSuccess?.invoke() }
             .addOnFailureListener {
                 viewModel.resetUpdateSettings()
-                onInstallFailure(it)
+                onInstallFailure?.invoke(it)
             }
     }
 
-    private fun observeAppUpdateDownload() {
-        viewModel.canInstallUpdate.observe(activity) { onInAppUpdateUiChange?.invoke(it) }
+    override fun requireUpdate() {
+        checkStalledUpdate(forceUpdate = true)
     }
 
-    private fun checkStalledUpdate(): Unit = with(appUpdateManager) {
+    private fun observeAppUpdateDownload() {
+        onInAppUpdateUiChange?.let { updateUiCallback ->
+            viewModel.canInstallUpdate.observe(activity, updateUiCallback)
+        }
+    }
+
+    private fun checkStalledUpdate(forceUpdate: Boolean = false): Unit = with(appUpdateManager) {
         registerListener(installStateUpdatedListener)
         appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 SentryLog.d(StoreUtils.APP_UPDATE_TAG, "CheckStalledUpdate downloaded")
                 // If the update is downloaded but not installed, notify the user to complete the update.
                 onUpdateDownloaded.invoke()
+            }
+
+            val isUpdateStalled = appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+            if (updateType == AppUpdateType.IMMEDIATE && (forceUpdate || isUpdateStalled)) {
+                startUpdateFlow(appUpdateInfo)
             }
         }
     }
@@ -141,16 +170,13 @@ class InAppUpdateManager(
         appUpdateManager.unregisterListener(installStateUpdatedListener)
     }
 
-    private fun startUpdateFlow(
-        appUpdateInfo: AppUpdateInfo,
-        downloadUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
-    ) = with(appUpdateManager) {
+    private fun startUpdateFlow(appUpdateInfo: AppUpdateInfo) = with(appUpdateManager) {
         registerListener(installStateUpdatedListener)
         viewModel.isUpdateBottomSheetShown = true
         startUpdateFlowForResult(
             appUpdateInfo,
-            downloadUpdateResultLauncher,
-            AppUpdateOptions.newBuilder(StoreUtils.UPDATE_TYPE).build(),
+            inAppUpdateResultLauncher,
+            AppUpdateOptions.newBuilder(updateType).build(),
         )
     }
 }
