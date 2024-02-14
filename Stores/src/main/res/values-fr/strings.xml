@@ -16,5 +16,5 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
-    <string name="updateRequiredDescription">Votre application n’est plus supportée.\nInstallez la dernière version et profitez des dernières améliorations et nouveautés.</string>
+    <string name="updateRequiredDescription">Votre version de l’application n’est plus supportée.\nInstallez la dernière version et profitez des dernières améliorations et nouveautés.</string>
 </resources>
