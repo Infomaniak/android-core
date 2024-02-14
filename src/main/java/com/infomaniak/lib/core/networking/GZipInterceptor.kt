@@ -26,29 +26,24 @@ import okio.buffer
 
 class GZipInterceptor : Interceptor {
 
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val response: Response = chain.proceed(chain.request())
-        return unzip(response)
-    }
+    override fun intercept(chain: Interceptor.Chain) = unzip(chain.proceed(chain.request()))
 
-    private fun unzip(response: Response): Response {
-        if (response.body == null) {
-            return response
-        }
+    private fun unzip(response: Response) : Response = with(response) {
+        if (body == null) return response
 
-        return response.headers["content-encoding"]?.let { contentEncoding ->
+        return headers["content-encoding"]?.let { contentEncoding ->
             if (contentEncoding == "gzip") {
-                response.body?.let { body ->
-                    val contentLength: Long = body.contentLength()
-                    val responseBody = GzipSource(body.source())
-                    val strippedHeaders: Headers = response.headers.newBuilder().build()
-                    response.newBuilder().headers(strippedHeaders)
-                        .body(RealResponseBody(body.contentType().toString(), contentLength, responseBody.buffer()))
+                body?.let { body ->
+                    val contentLength = body.contentLength()
+                    val unzippedBody = GzipSource(body.source())
+                    val strippedHeaders = headers.newBuilder().build()
+                    newBuilder().headers(strippedHeaders)
+                        .body(RealResponseBody(body.contentType().toString(), contentLength, unzippedBody.buffer()))
                         .build()
                 }
             } else {
-                response
+                this
             }
-        } ?: response
+        } ?: this
     }
 }
