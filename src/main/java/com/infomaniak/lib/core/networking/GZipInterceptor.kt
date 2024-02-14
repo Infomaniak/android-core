@@ -17,7 +17,6 @@
  */
 package com.infomaniak.lib.core.networking
 
-import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.internal.http.RealResponseBody
@@ -28,7 +27,7 @@ class GZipInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain) = unzip(chain.proceed(chain.request()))
 
-    private fun unzip(response: Response) : Response = with(response) {
+    private fun unzip(response: Response): Response = with(response) {
         if (body == null) return response
 
         return headers["content-encoding"]?.let { contentEncoding ->
