@@ -39,7 +39,7 @@
             android:layout_marginBottom="@dimen/marginStandardMedium"
             android:importantForAccessibility="no"
             android:src="?attr/illustration"
-            tools:src="@drawable/illu_update_required" />
+            tools:src="@drawable/illu_update_required_example" />
 
         <TextView
             android:id="@+id/updateRequiredTitle"
