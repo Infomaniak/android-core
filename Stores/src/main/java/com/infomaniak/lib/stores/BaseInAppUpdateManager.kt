@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import com.infomaniak.lib.core.utils.goToPlayStore
 
 abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : DefaultLifecycleObserver {
 
@@ -31,7 +32,7 @@ abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : 
 
     open fun installDownloadedUpdate() = Unit
 
-    open fun requireUpdate() = Unit
+    open fun requireUpdate() = activity.goToPlayStore()
 
     open fun init(
         mustRequireImmediateUpdate: Boolean = false,
@@ -41,16 +42,17 @@ abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : 
         onInstallSuccess: (() -> Unit)? = null,
         onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
         onFDroidResult: ((Boolean) -> Unit)? = null,
-    ) = init(onInAppUpdateUiChange, onFDroidResult)
+    ) = init(mustRequireImmediateUpdate, onInAppUpdateUiChange, onFDroidResult)
 
     protected fun init(
+        mustRequireImmediateUpdate: Boolean = false,
         onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
         onFDroidResult: ((Boolean) -> Unit)? = null,
     ) {
         this.onInAppUpdateUiChange = onInAppUpdateUiChange
         this.onFDroidResult = onFDroidResult
 
-        activity.lifecycle.addObserver(observer = this)
+        if (!mustRequireImmediateUpdate) activity.lifecycle.addObserver(observer = this)
     }
 
     protected abstract fun checkUpdateIsAvailable()

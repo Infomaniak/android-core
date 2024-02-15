@@ -30,9 +30,12 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
 import com.infomaniak.lib.core.utils.clearStack
 import com.infomaniak.lib.core.utils.goToPlayStore
+import com.infomaniak.lib.core.utils.showToast
 import com.infomaniak.lib.stores.databinding.ActivityUpdateRequiredBinding
 import com.infomaniak.lib.stores.updatemanagers.InAppUpdateManager
+import io.sentry.Sentry
 import kotlin.system.exitProcess
+import com.infomaniak.lib.core.R as RCore
 
 class UpdateRequiredActivity : AppCompatActivity() {
 
@@ -46,7 +49,14 @@ class UpdateRequiredActivity : AppCompatActivity() {
         setTheme(navigationArgs.appTheme)
         setContentView(root)
 
-        inAppUpdateManager.init(mustRequireImmediateUpdate = true)
+        inAppUpdateManager.init(
+            mustRequireImmediateUpdate = true,
+            onInstallFailure = {
+                Sentry.captureException(it)
+                showToast(RCore.string.errorUpdateInstall)
+                goToPlayStore()
+            },
+        )
 
         onBackPressedDispatcher.addCallback(this@UpdateRequiredActivity) {
             finishAffinity()
@@ -56,13 +66,8 @@ class UpdateRequiredActivity : AppCompatActivity() {
         updateAppButton.apply {
             val primaryColor = getPrimaryColor()
             if (primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(primaryColor)
-            setOnClickListener { goToPlayStore() }
+            setOnClickListener { inAppUpdateManager.requireUpdate() }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        inAppUpdateManager.requireUpdate()
     }
 
     private fun MaterialButton.getPrimaryColor() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
