@@ -18,6 +18,8 @@
 package com.infomaniak.lib.stores.updaterequired.data.models
 
 import com.google.gson.annotations.SerializedName
+import io.sentry.Sentry
+import io.sentry.SentryLevel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -51,11 +53,20 @@ data class AppVersion(
         val currentVersionNumbers = currentAppVersion.toVersionNumbers()
         val minVersionNumbers = minVersion.toVersionNumbers()
 
-        currentVersionNumbers.forEachIndexed { index, versionNumber ->
-            val minVersionNumber = minVersionNumbers[index]
-            if (versionNumber == minVersionNumber) return@forEachIndexed
+        runCatching {
+            currentVersionNumbers.forEachIndexed { index, versionNumber ->
+                val minVersionNumber = minVersionNumbers[index]
+                if (versionNumber == minVersionNumber) return@forEachIndexed
 
-            return versionNumber < minVersionNumber
+                return versionNumber < minVersionNumber
+            }
+        }.onFailure { exception ->
+            Sentry.withScope { scope ->
+                scope.level = SentryLevel.ERROR
+                scope.setExtra("Version from API", minVersion)
+                scope.setExtra("Current Version", currentAppVersion)
+                Sentry.captureException(exception)
+            }
         }
 
         return false
