@@ -30,7 +30,6 @@ class GZipInterceptor : Interceptor {
     private fun unzip(response: Response): Response = with(response) {
         return if (body != null && headers["content-encoding"] != null && headers["content-encoding"] == "gzip") {
             with(body!!) {
-                val contentLength = contentLength()
                 val unzippedBody = GzipSource(source())
                 val strippedHeaders = headers.newBuilder().build()
                 newBuilder().headers(strippedHeaders)
