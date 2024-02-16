@@ -152,11 +152,9 @@ class InAppUpdateManager(
     override fun requireUpdate() {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (updateType == AppUpdateType.IMMEDIATE) {
-                if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-                    startUpdateFlow(appUpdateInfo)
-                } else {
-                    if (!viewModel.isUpdateBottomSheetShown) startUpdateFlow(appUpdateInfo)
-                }
+                val isUpdateStalled =
+                    appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                if (isUpdateStalled || !viewModel.isUpdateBottomSheetShown) startUpdateFlow(appUpdateInfo)
             }
         }
     }
