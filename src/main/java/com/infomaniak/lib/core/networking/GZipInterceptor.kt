@@ -33,7 +33,7 @@ class GZipInterceptor : Interceptor {
                 val unzippedBody = GzipSource(source())
                 val strippedHeaders = headers.newBuilder().build()
                 newBuilder().headers(strippedHeaders)
-                    .body(RealResponseBody(contentType().toString(), contentLength, unzippedBody.buffer()))
+                    .body(RealResponseBody(contentType().toString(), contentLength(), unzippedBody.buffer()))
                     .build()
             }
         } else {
