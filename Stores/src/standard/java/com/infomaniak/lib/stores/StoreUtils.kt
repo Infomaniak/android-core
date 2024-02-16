@@ -24,7 +24,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 object StoreUtils : StoresUtils {
 
     const val APP_UPDATE_TAG = "inAppUpdate"
-    const val UPDATE_TYPE = AppUpdateType.FLEXIBLE
+    const val DEFAULT_UPDATE_TYPE = AppUpdateType.FLEXIBLE
 
     //region In-App Review
     override fun FragmentActivity.launchInAppReview() {

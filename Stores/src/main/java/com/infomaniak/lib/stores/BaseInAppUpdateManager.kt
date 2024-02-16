@@ -21,15 +21,38 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import com.infomaniak.lib.core.utils.goToPlayStore
 
 abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : DefaultLifecycleObserver {
 
-    var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
-    var onFDroidResult: ((Boolean) -> Unit)? = null
+    protected var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
+    protected var onFDroidResult: ((Boolean) -> Unit)? = null
 
     protected val viewModel: StoresViewModel by lazy { ViewModelProvider(activity)[StoresViewModel::class.java] }
 
     open fun installDownloadedUpdate() = Unit
+
+    open fun requireUpdate() = activity.goToPlayStore()
+
+    open fun init(
+        mustRequireImmediateUpdate: Boolean = false,
+        onUserChoice: ((Boolean) -> Unit)? = null,
+        onInstallStart: (() -> Unit)? = null,
+        onInstallFailure: ((Exception) -> Unit)? = null,
+        onInstallSuccess: (() -> Unit)? = null,
+        onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
+        onFDroidResult: ((Boolean) -> Unit)? = null,
+    ) = init(onInAppUpdateUiChange, onFDroidResult)
+
+    protected fun init(
+        onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
+        onFDroidResult: ((Boolean) -> Unit)? = null,
+    ) {
+        this.onInAppUpdateUiChange = onInAppUpdateUiChange
+        this.onFDroidResult = onFDroidResult
+
+        activity.lifecycle.addObserver(observer = this)
+    }
 
     protected abstract fun checkUpdateIsAvailable()
 
@@ -40,9 +63,5 @@ abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : 
             if (!viewModel.isUpdateBottomSheetShown) shouldCheckUpdate(::checkUpdateIsAvailable)
             decrementAppUpdateLaunches()
         }
-    }
-
-    protected fun BaseInAppUpdateManager.observeLifecycle() {
-        activity.lifecycle.addObserver(observer = this)
     }
 }
