@@ -20,11 +20,14 @@ package com.infomaniak.lib.stores
 import androidx.fragment.app.FragmentActivity
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion
+import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion.Store
 
 object StoreUtils : StoresUtils {
 
     const val APP_UPDATE_TAG = "inAppUpdate"
     const val DEFAULT_UPDATE_TYPE = AppUpdateType.FLEXIBLE
+    override val REQUIRED_UPDATE_STORE = Store.PLAY_STORE
 
     //region In-App Review
     override fun FragmentActivity.launchInAppReview() {

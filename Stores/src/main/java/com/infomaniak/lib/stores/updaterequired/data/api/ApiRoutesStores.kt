@@ -18,14 +18,15 @@
 package com.infomaniak.lib.stores.updaterequired.data.api
 
 import com.infomaniak.lib.core.BuildConfig
-import com.infomaniak.lib.stores.BuildConfig.IS_GPLAY_BUILD
+import com.infomaniak.lib.stores.StoreUtils
 import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion.Platform
-import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion.Store
 
 object ApiRoutesStores {
 
     fun appVersion(appName: String): String {
-        val store = if (IS_GPLAY_BUILD) Store.PLAY_STORE else Store.FDROID
-        return "${BuildConfig.INFOMANIAK_API_V1}/app-information/versions/${store.apiValue}/${Platform.ANDROID.apiValue}/$appName"
+        val store = StoreUtils.REQUIRED_UPDATE_STORE.apiValue
+        val platform = Platform.ANDROID.apiValue
+
+        return "${BuildConfig.INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName"
     }
 }

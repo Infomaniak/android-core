@@ -22,12 +22,8 @@ android {
 
     flavorDimensions 'distribution'
     productFlavors {
-        standard {
-            buildConfigField "boolean", "IS_GPLAY_BUILD", "true"
-        }
-        fdroid {
-            buildConfigField "boolean", "IS_GPLAY_BUILD", "false"
-        }
+        standard
+        fdroid
     }
 }
 

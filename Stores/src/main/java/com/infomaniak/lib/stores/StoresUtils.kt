@@ -23,11 +23,15 @@ import androidx.lifecycle.lifecycleScope
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.stores.updaterequired.UpdateRequiredActivity
 import com.infomaniak.lib.stores.updaterequired.data.api.ApiRepositoryStores
+import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal interface StoresUtils {
+
+    @Suppress("PropertyName")
+    val REQUIRED_UPDATE_STORE: AppVersion.Store
 
     //region In-App Update
     fun FragmentActivity.checkUpdateIsRequired(
