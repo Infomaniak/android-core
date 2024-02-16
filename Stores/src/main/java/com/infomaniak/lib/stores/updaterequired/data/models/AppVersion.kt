@@ -24,16 +24,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppVersion(
-    var id: Int,
-    var name: String,
-    var platform: Platform,
-    var store: Store,
-    @SerializedName("api_id")
-    var apiId: String,
     @SerializedName("min_version")
-    var minVersion: String,
-    @Suppress("ArrayInDataClass")
-    var publishedVersions: Array<AppPublishedVersion>,
+    var minimalAcceptedVersion: String,
 ) {
 
     enum class Store(val apiValue: String) {
@@ -41,30 +33,30 @@ data class AppVersion(
         FDROID("f-droid")
     }
 
-
     enum class Platform(val apiValue: String) {
         ANDROID("android")
     }
 
-    fun mustRequireUpdate(currentAppVersion: String): Boolean {
+    fun mustRequireUpdate(currentVersion: String): Boolean {
 
         fun String.toVersionNumbers() = split(".").map(String::toInt)
 
-        val currentVersionNumbers = currentAppVersion.toVersionNumbers()
-        val minVersionNumbers = minVersion.toVersionNumbers()
-
         runCatching {
-            currentVersionNumbers.forEachIndexed { index, versionNumber ->
-                val minVersionNumber = minVersionNumbers[index]
-                if (versionNumber == minVersionNumber) return@forEachIndexed
 
-                return versionNumber < minVersionNumber
+            val currentVersionNumbers = currentVersion.toVersionNumbers()
+            val minimalAcceptedVersionNumbers = minimalAcceptedVersion.toVersionNumbers()
+
+            currentVersionNumbers.forEachIndexed { index, currentNumber ->
+                val minimalAcceptedNumber = minimalAcceptedVersionNumbers[index]
+                if (currentNumber == minimalAcceptedNumber) return@forEachIndexed
+
+                return currentNumber < minimalAcceptedNumber
             }
         }.onFailure { exception ->
             Sentry.withScope { scope ->
                 scope.level = SentryLevel.ERROR
-                scope.setExtra("Version from API", minVersion)
-                scope.setExtra("Current Version", currentAppVersion)
+                scope.setExtra("Version from API", minimalAcceptedVersion)
+                scope.setExtra("Current Version", currentVersion)
                 Sentry.captureException(exception)
             }
         }

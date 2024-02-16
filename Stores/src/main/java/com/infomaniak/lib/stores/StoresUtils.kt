@@ -40,9 +40,9 @@ internal interface StoresUtils {
         versionCode: Int,
         @StyleRes themeRes: Int,
     ) = lifecycleScope.launch(Dispatchers.IO) {
-        val appVersionResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClientNoTokenInterceptor)
+        val apiResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClientNoTokenInterceptor)
 
-        if (appVersionResponse.data?.mustRequireUpdate(appVersion) == true) {
+        if (apiResponse.data?.mustRequireUpdate(appVersion) == true) {
             withContext(Dispatchers.Main) {
                 UpdateRequiredActivity.startUpdateRequiredActivity(this@checkUpdateIsRequired, appId, versionCode, themeRes)
                 finish()
