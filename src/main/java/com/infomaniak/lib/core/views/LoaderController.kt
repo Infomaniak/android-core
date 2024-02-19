@@ -21,7 +21,6 @@ import android.animation.ValueAnimator
 import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.graphics.*
 import android.view.animation.LinearInterpolator
-import kotlin.math.max
 
 internal class LoaderController(private val loaderView: LoaderView) : AnimatorUpdateListener {
 
@@ -94,10 +93,6 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
             init()
             valueAnimator.start()
         }
-    }
-
-    private fun validateWeight(weight: Float): Float {
-        return if (weight > LoaderConstant.MAX_WEIGHT) LoaderConstant.MAX_WEIGHT else max(weight, LoaderConstant.MIN_WEIGHT)
     }
 
     fun stopLoading() {
