@@ -19,7 +19,11 @@ package com.infomaniak.lib.core.views
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.animation.ValueAnimator.AnimatorUpdateListener
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.Shader.TileMode
 import android.view.animation.LinearInterpolator
 
 internal class LoaderController(private val loaderView: LoaderView) : AnimatorUpdateListener {
@@ -76,7 +80,7 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
                 0.0f,
                 rectPaint.color,
                 LoaderConstant.COLOR_DEFAULT_GRADIENT,
-                Shader.TileMode.MIRROR,
+                TileMode.MIRROR,
             )
         }
         rectPaint.shader = linearGradient
