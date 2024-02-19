@@ -66,6 +66,7 @@ object HttpClient {
 
     private fun OkHttpClient.Builder.addInterceptors() {
         if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
+        addInterceptor(GZipInterceptor())
         addInterceptor(SentryOkHttpInterceptor(captureFailedRequests = true))
         customInterceptor?.forEach { addInterceptor(it) }
     }

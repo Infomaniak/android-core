@@ -28,6 +28,7 @@ object HttpUtils {
     fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers = with(InfomaniakCore) {
         return Headers.Builder().apply {
             add("Accept-Language", getAcceptedLanguageHeaderValue())
+            add("Accept-Encoding", "gzip")
             add("App-Version", "Android $appVersionName")
             add("Cache-Control", "no-cache")
             add("User-Agent", getUserAgent)
