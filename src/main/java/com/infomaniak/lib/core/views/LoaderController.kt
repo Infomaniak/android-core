@@ -33,9 +33,9 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
     private var progress = 0.0f
     private lateinit var valueAnimator: ValueAnimator
 
-    private var widthWeight = LoaderConstant.MAX_WEIGHT
-    private var heightWeight = LoaderConstant.MAX_WEIGHT
-    private var useGradient = LoaderConstant.USE_GRADIENT_DEFAULT
+    private val widthWeight = LoaderConstant.MAX_WEIGHT
+    private val heightWeight = LoaderConstant.MAX_WEIGHT
+    private val useGradient = LoaderConstant.USE_GRADIENT_DEFAULT
     var corners = LoaderConstant.CORNER_DEFAULT
 
     init {
