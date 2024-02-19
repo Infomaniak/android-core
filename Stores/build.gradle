@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     namespace 'com.infomaniak.lib.stores'
@@ -16,6 +17,8 @@ android {
     }
 
     kotlinOptions { jvmTarget = rootProject.ext.javaVersion }
+
+    buildFeatures { viewBinding true }
 
     flavorDimensions 'distribution'
     productFlavors {

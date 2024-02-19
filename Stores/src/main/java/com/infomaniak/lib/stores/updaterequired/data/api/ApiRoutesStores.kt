@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2024 Infomaniak Network SA
+ * Copyright (C) 2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores
+package com.infomaniak.lib.stores.updaterequired.data.api
 
-import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion.Store
+import com.infomaniak.lib.core.BuildConfig
+import com.infomaniak.lib.stores.StoreUtils
+import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion.Platform
 
-object StoreUtils : StoresUtils {
+object ApiRoutesStores {
 
-    const val APP_UPDATE_TAG = "appUpdateFDroid"
-    override val REQUIRED_UPDATE_STORE = Store.FDROID
+    fun appVersion(appName: String): String {
+        val store = StoreUtils.REQUIRED_UPDATE_STORE.apiValue
+        val platform = Platform.ANDROID.apiValue
+
+        return "${BuildConfig.INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName"
+    }
 }

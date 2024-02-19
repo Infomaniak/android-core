@@ -26,10 +26,12 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.InstallException
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.ktx.installErrorCode
 import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.stores.BaseInAppUpdateManager
 import com.infomaniak.lib.stores.StoreUtils
@@ -68,11 +70,18 @@ class InAppUpdateManager(
             when (state.installStatus()) {
                 InstallStatus.DOWNLOADED -> {
                     SentryLog.d(StoreUtils.APP_UPDATE_TAG, "OnUpdateDownloaded triggered by InstallStateUpdated listener")
-                    onUpdateDownloaded()
+                    if (updateType == AppUpdateType.FLEXIBLE) onUpdateDownloaded()
+                }
+                InstallStatus.FAILED -> {
+                    SentryLog.d(StoreUtils.APP_UPDATE_TAG, "onInstallFailure triggered by InstallStateUpdated listener")
+                    if (updateType == AppUpdateType.IMMEDIATE) {
+                        viewModel.resetUpdateSettings()
+                        onInstallFailure?.invoke(InstallException(state.installErrorCode))
+                    }
                 }
                 InstallStatus.INSTALLED -> {
                     SentryLog.d(StoreUtils.APP_UPDATE_TAG, "OnUpdateInstalled triggered by InstallStateUpdated listener")
-                    onUpdateInstalled()
+                    if (updateType == AppUpdateType.FLEXIBLE) onUpdateInstalled()
                     unregisterAppUpdateListener()
                 }
                 else -> Unit
@@ -95,7 +104,7 @@ class InAppUpdateManager(
         this.onInstallFailure = onInstallFailure
         this.onInstallSuccess = onInstallSuccess
 
-        super.init(onInAppUpdateUiChange, onFDroidResult)
+        super.init(mustRequireImmediateUpdate, onInAppUpdateUiChange, onFDroidResult)
     }
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -141,7 +150,13 @@ class InAppUpdateManager(
     }
 
     override fun requireUpdate() {
-        checkStalledUpdate(forceUpdate = true)
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            if (updateType == AppUpdateType.IMMEDIATE) {
+                val isUpdateStalled =
+                    appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                if (isUpdateStalled || !viewModel.isUpdateBottomSheetShown) startUpdateFlow(appUpdateInfo)
+            }
+        }
     }
 
     private fun observeAppUpdateDownload() {
@@ -150,18 +165,13 @@ class InAppUpdateManager(
         }
     }
 
-    private fun checkStalledUpdate(forceUpdate: Boolean = false): Unit = with(appUpdateManager) {
+    private fun checkStalledUpdate(): Unit = with(appUpdateManager) {
         registerListener(installStateUpdatedListener)
         appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 SentryLog.d(StoreUtils.APP_UPDATE_TAG, "CheckStalledUpdate downloaded")
                 // If the update is downloaded but not installed, notify the user to complete the update.
                 onUpdateDownloaded.invoke()
-            }
-
-            val isUpdateStalled = appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-            if (updateType == AppUpdateType.IMMEDIATE && (forceUpdate || isUpdateStalled)) {
-                startUpdateFlow(appUpdateInfo)
             }
         }
     }
