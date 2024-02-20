@@ -18,6 +18,7 @@
 package com.infomaniak.lib.stores.updaterequired.data.models
 
 import com.google.gson.annotations.SerializedName
+import com.infomaniak.lib.stores.updaterequired.data.models.AppPublishedVersion.VersionType
 import io.sentry.Sentry
 import io.sentry.SentryLevel
 import kotlinx.serialization.Serializable
@@ -26,6 +27,8 @@ import kotlinx.serialization.Serializable
 data class AppVersion(
     @SerializedName("min_version")
     var minimalAcceptedVersion: String,
+    @Suppress("ArrayInDataClass")
+    var publishedVersions: Array<AppPublishedVersion>,
 ) {
 
     enum class Store(val apiValue: String) {
@@ -37,30 +40,47 @@ data class AppVersion(
         ANDROID("android")
     }
 
-    fun mustRequireUpdate(currentVersion: String): Boolean {
+    fun mustRequireUpdate(currentVersion: String): Boolean = runCatching {
 
-        fun String.toVersionNumbers() = split(".").map(String::toInt)
+        val currentVersionNumbers = currentVersion.toVersionNumbers()
+        val minimalAcceptedVersionNumbers = minimalAcceptedVersion.toVersionNumbers()
 
-        runCatching {
-
-            val currentVersionNumbers = currentVersion.toVersionNumbers()
-            val minimalAcceptedVersionNumbers = minimalAcceptedVersion.toVersionNumbers()
-
-            currentVersionNumbers.forEachIndexed { index, currentNumber ->
-                val minimalAcceptedNumber = minimalAcceptedVersionNumbers[index]
-                if (currentNumber == minimalAcceptedNumber) return@forEachIndexed
-
-                return currentNumber < minimalAcceptedNumber
-            }
-        }.onFailure { exception ->
-            Sentry.withScope { scope ->
-                scope.level = SentryLevel.ERROR
-                scope.setExtra("Version from API", minimalAcceptedVersion)
-                scope.setExtra("Current Version", currentVersion)
-                Sentry.captureException(exception)
-            }
+        return isMinimalVersionValid(minimalAcceptedVersionNumbers) &&
+                minimalAcceptedVersionNumbers.compareVersionTo(currentVersionNumbers) > 0
+    }.getOrElse { exception ->
+        Sentry.withScope { scope ->
+            scope.level = SentryLevel.ERROR
+            scope.setExtra("Version from API", minimalAcceptedVersion)
+            scope.setExtra("Current Version", currentVersion)
+            Sentry.captureException(exception)
         }
 
         return false
+    }
+
+    private fun isMinimalVersionValid(minimalVersionNumbers: List<Int>): Boolean {
+        val productionVersion = publishedVersions.find { it.type == VersionType.PRODUCTION }?.tag ?: return false
+        val productionVersionNumbers = productionVersion.toVersionNumbers()
+
+        return minimalVersionNumbers.compareVersionTo(productionVersionNumbers) <= 0
+    }
+
+    private fun String.toVersionNumbers() = split(".").map(String::toInt)
+
+    /**
+     * Compare Two version in the form of two [List] of [Int].
+     * These lists must corresponds to the major, minor and patch version values
+     *
+     * @return -1 if caller version is older than [other] version, 0 if they are equal, 1 if caller is newer
+     */
+    private fun List<Int>.compareVersionTo(other: List<Int>): Int {
+        forEachIndexed { index, currentNumber ->
+            val otherNumber = other[index]
+            if (currentNumber == otherNumber) return@forEachIndexed
+
+            return if (currentNumber < otherNumber) -1 else 1
+        }
+
+        return 0
     }
 }
