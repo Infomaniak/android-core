@@ -43,8 +43,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22'
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0'
+    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3'
 
     def navigationVersion = '2.7.7'
     api "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
