@@ -22,6 +22,7 @@ import androidx.lifecycle.LiveData
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.infomaniak.lib.core.BuildConfig
 import com.infomaniak.lib.core.models.user.User
+import com.infomaniak.lib.core.networking.GZipInterceptor
 import com.infomaniak.lib.core.room.UserDatabase
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.sync.Mutex
@@ -100,6 +101,7 @@ abstract class CredentialManager {
                     return user?.apiToken!!
                 }
             }
+            addInterceptor(GZipInterceptor())
             addInterceptor(TokenInterceptor(tokenInterceptorListener))
             authenticator(TokenAuthenticator(tokenInterceptorListener))
         }.run {
