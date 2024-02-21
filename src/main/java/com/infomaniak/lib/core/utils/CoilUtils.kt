@@ -29,6 +29,7 @@ import com.infomaniak.lib.core.BuildConfig
 import com.infomaniak.lib.core.auth.TokenAuthenticator
 import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
+import com.infomaniak.lib.core.networking.GZipInterceptor
 import com.infomaniak.lib.core.networking.HttpUtils
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -76,6 +77,7 @@ object CoilUtils {
                                 .build()
                                 .let(chain::proceed)
                         })
+                        addInterceptor(GZipInterceptor())
                         addInterceptor(TokenInterceptor(it))
                         authenticator(TokenAuthenticator(it))
                     }
