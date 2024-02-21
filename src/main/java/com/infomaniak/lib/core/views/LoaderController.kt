@@ -19,9 +19,12 @@ package com.infomaniak.lib.core.views
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.animation.ValueAnimator.AnimatorUpdateListener
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.Shader.TileMode
 import android.view.animation.LinearInterpolator
-import kotlin.math.max
 
 internal class LoaderController(private val loaderView: LoaderView) : AnimatorUpdateListener {
 
@@ -30,9 +33,9 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
     private var progress = 0.0f
     private lateinit var valueAnimator: ValueAnimator
 
-    var widthWeight = LoaderConstant.MAX_WEIGHT
-    var heightWeight = LoaderConstant.MAX_WEIGHT
-    var useGradient = LoaderConstant.USE_GRADIENT_DEFAULT
+    private val widthWeight = LoaderConstant.MAX_WEIGHT
+    private val heightWeight = LoaderConstant.MAX_WEIGHT
+    private val useGradient = LoaderConstant.USE_GRADIENT_DEFAULT
     var corners = LoaderConstant.CORNER_DEFAULT
 
     init {
@@ -77,7 +80,7 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
                 0.0f,
                 rectPaint.color,
                 LoaderConstant.COLOR_DEFAULT_GRADIENT,
-                Shader.TileMode.MIRROR,
+                TileMode.MIRROR,
             )
         }
         rectPaint.shader = linearGradient
@@ -94,10 +97,6 @@ internal class LoaderController(private val loaderView: LoaderView) : AnimatorUp
             init()
             valueAnimator.start()
         }
-    }
-
-    private fun validateWeight(weight: Float): Float {
-        return if (weight > LoaderConstant.MAX_WEIGHT) LoaderConstant.MAX_WEIGHT else max(weight, LoaderConstant.MIN_WEIGHT)
     }
 
     fun stopLoading() {

@@ -62,7 +62,7 @@ abstract class CredentialManager {
     var onRefreshTokenError: ((user: User) -> Unit)? = null
 
     private val mutex = Mutex()
-    private var httpClientMap: ArrayMap<Pair<Int, Long?>, OkHttpClient> = ArrayMap()
+    private val httpClientMap: ArrayMap<Pair<Int, Long?>, OkHttpClient> = ArrayMap()
 
     suspend fun getHttpClient(userId: Int, timeout: Long? = null): OkHttpClient {
         mutex.withLock {
