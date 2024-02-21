@@ -22,6 +22,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.database.getStringOrNull
 import io.sentry.Sentry
 import java.net.URLDecoder
@@ -41,6 +42,16 @@ fun Cursor.getFileName(uri: Uri): String {
 }
 
 fun Cursor.getFileSize() = getLong(getColumnIndexOrThrow(OpenableColumns.SIZE))
+
+fun Context.getFileName(uri: Uri): String? {
+    return runCatching {
+        contentResolver.query(uri, null, null, null, null)
+            ?.use { cursor ->
+                cursor.moveToFirst()
+                cursor.getFileName(uri)
+            }
+    }.getOrNull()
+}
 
 fun Context.getFileNameAndSize(uri: Uri): Pair<String, Long>? {
     return runCatching {
