@@ -27,6 +27,7 @@ import kotlinx.serialization.Serializable
 data class AppVersion(
     @SerializedName("min_version")
     var minimalAcceptedVersion: String,
+    @SerializedName("published_versions")
     @Suppress("ArrayInDataClass")
     var publishedVersions: Array<AppPublishedVersion>,
 ) {
@@ -46,7 +47,7 @@ data class AppVersion(
         val minimalAcceptedVersionNumbers = minimalAcceptedVersion.toVersionNumbers()
 
         return isMinimalVersionValid(minimalAcceptedVersionNumbers) &&
-                minimalAcceptedVersionNumbers.compareVersionTo(currentVersionNumbers) > 0
+                currentVersionNumbers.compareVersionTo(minimalAcceptedVersionNumbers) < 0
     }.getOrElse { exception ->
         Sentry.withScope { scope ->
             scope.level = SentryLevel.ERROR
@@ -58,29 +59,39 @@ data class AppVersion(
         return false
     }
 
-    private fun isMinimalVersionValid(minimalVersionNumbers: List<Int>): Boolean {
+    fun isMinimalVersionValid(minimalVersionNumbers: List<Int>): Boolean {
         val productionVersion = publishedVersions.find { it.type == VersionType.PRODUCTION }?.tag ?: return false
         val productionVersionNumbers = productionVersion.toVersionNumbers()
 
         return minimalVersionNumbers.compareVersionTo(productionVersionNumbers) <= 0
     }
 
-    private fun String.toVersionNumbers() = split(".").map(String::toInt)
+    companion object {
+        fun String.toVersionNumbers() = split(".").map(String::toInt)
 
-    /**
-     * Compare Two version in the form of two [List] of [Int].
-     * These lists must corresponds to the major, minor and patch version values
-     *
-     * @return -1 if caller version is older than [other] version, 0 if they are equal, 1 if caller is newer
-     */
-    private fun List<Int>.compareVersionTo(other: List<Int>): Int {
-        forEachIndexed { index, currentNumber ->
-            val otherNumber = other[index]
-            if (currentNumber == otherNumber) return@forEachIndexed
+        /**
+         * Compare Two version in the form of two [List] of [Int].
+         * These lists must corresponds to the major, minor and patch version values
+         *
+         * @return -1 if caller version is older than [other] version, 0 if they are equal, 1 if caller is newer
+         */
+        fun List<Int>.compareVersionTo(other: List<Int>): Int {
 
-            return if (currentNumber < otherNumber) -1 else 1
+            val selfNormalizedList = normalizeVersionNumbers(other)
+            val otherNormalizedList = other.normalizeVersionNumbers(this)
+
+            selfNormalizedList.forEachIndexed { index, currentNumber ->
+                val otherNumber = otherNormalizedList[index]
+                if (currentNumber == otherNumber) return@forEachIndexed
+
+                return if (currentNumber < otherNumber) -1 else 1
+            }
+
+            return 0
         }
 
-        return 0
+        private fun List<Int>.normalizeVersionNumbers(other: List<Int>) = toMutableList().apply {
+            while (count() < other.count()) add(0)
+        }
     }
 }
