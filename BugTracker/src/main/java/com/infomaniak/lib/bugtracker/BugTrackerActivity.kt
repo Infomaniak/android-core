@@ -62,8 +62,8 @@ class BugTrackerActivity : AppCompatActivity() {
 
         toolbar.setNavigationOnClickListener { finish() }
 
-        val filePicker = FilePicker(this@BugTrackerActivity)
-        addFilesButton.setOnClickListener { filePicker.open(callback = ::addFiles) }
+        val filePicker = FilePicker(activity = this@BugTrackerActivity).apply { initCallback(::addFiles) }
+        addFilesButton.setOnClickListener { filePicker.open() }
 
         typeField.apply {
             setOnItemClickListener { _, _, position, _ ->
