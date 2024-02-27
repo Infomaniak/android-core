@@ -24,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 
 class FilePicker {
+
     private var _callback: (uris: List<Uri>) -> Unit = {}
 
     private val activityResult: ActivityResultLauncher<String>
@@ -40,8 +41,11 @@ class FilePicker {
         }
     }
 
-    fun open(mimeType: String = "*/*", callback: (List<Uri>) -> Unit) {
+    fun initCallback(callback: (List<Uri>) -> Unit) {
         _callback = callback
+    }
+
+    fun open(mimeType: String = "*/*") {
         activityResult.launch(mimeType)
     }
 }
