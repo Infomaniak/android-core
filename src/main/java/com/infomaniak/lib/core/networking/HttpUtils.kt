@@ -30,7 +30,6 @@ object HttpUtils {
             add("Accept-Language", getAcceptedLanguageHeaderValue())
             add("Accept-Encoding", "gzip")
             add("App-Version", "Android $appVersionName")
-            add("Cache-Control", "no-cache")
             add("User-Agent", getUserAgent)
             bearerToken?.let { add("Authorization", "Bearer $it") }
             contentType?.let {
