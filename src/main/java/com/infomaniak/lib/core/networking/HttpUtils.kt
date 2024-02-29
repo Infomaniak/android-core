@@ -31,6 +31,7 @@ object HttpUtils {
             add("Accept-Encoding", "gzip")
             add("App-Version", "Android $appVersionName")
             add("User-Agent", getUserAgent)
+            if (HttpClientConfig.cacheDir == null) add("Cache-Control", "no-cache")
             bearerToken?.let { add("Authorization", "Bearer $it") }
             contentType?.let {
                 add("Accept-type", it)
