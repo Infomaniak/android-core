@@ -30,7 +30,9 @@ import com.infomaniak.lib.core.auth.TokenAuthenticator
 import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.networking.GZipInterceptor
+import com.infomaniak.lib.core.networking.HttpClientConfig
 import com.infomaniak.lib.core.networking.HttpUtils
+import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 
@@ -70,6 +72,9 @@ object CoilUtils {
             }
             .okHttpClient {
                 OkHttpClient.Builder().apply {
+
+                    HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
+
                     tokenInterceptorListener?.let {
                         addInterceptor(Interceptor { chain ->
                             chain.request().newBuilder()

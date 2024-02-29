@@ -23,10 +23,12 @@ import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.infomaniak.lib.core.BuildConfig
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.networking.GZipInterceptor
+import com.infomaniak.lib.core.networking.HttpClientConfig
 import com.infomaniak.lib.core.room.UserDatabase
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -76,7 +78,6 @@ abstract class CredentialManager {
     }
 
     private suspend fun getHttpClientUser(userId: Int, timeout: Long?): OkHttpClient {
-        var user = getUserById(userId)
         return OkHttpClient.Builder().apply {
             if (BuildConfig.DEBUG) {
                 addNetworkInterceptor(StethoInterceptor())
@@ -87,6 +88,8 @@ abstract class CredentialManager {
                 writeTimeout(timeout, TimeUnit.SECONDS)
                 connectTimeout(timeout, TimeUnit.SECONDS)
             }
+
+            var user = getUserById(userId)
             val tokenInterceptorListener = object : TokenInterceptorListener {
                 override suspend fun onRefreshTokenSuccess(apiToken: ApiToken) {
                     setUserToken(user, apiToken)
@@ -101,6 +104,9 @@ abstract class CredentialManager {
                     return user?.apiToken!!
                 }
             }
+
+            HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
+
             addInterceptor(GZipInterceptor())
             addInterceptor(TokenInterceptor(tokenInterceptorListener))
             authenticator(TokenAuthenticator(tokenInterceptorListener))

@@ -23,7 +23,7 @@ import com.infomaniak.lib.core.auth.TokenAuthenticator
 import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import io.sentry.okhttp.SentryOkHttpInterceptor
-import okhttp3.Interceptor
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -31,17 +31,18 @@ object HttpClient {
 
     private lateinit var tokenInterceptorListener: TokenInterceptorListener
 
-    var customInterceptor: List<Interceptor>? = null
-    var customTimeout: Long = 2
-
     fun init(tokenInterceptorListener: TokenInterceptorListener) {
         this.tokenInterceptorListener = tokenInterceptorListener
     }
 
-    val okHttpClientNoTokenInterceptor: OkHttpClient by lazy { OkHttpClient.Builder().apply { addInterceptors() }.build() }
+    val okHttpClientNoTokenInterceptor: OkHttpClient by lazy { OkHttpClient.Builder().apply {
+        addCache()
+        addInterceptors()
+    }.build() }
 
     val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder().apply {
+            addCache()
             addInterceptors()
             addTokenInterceptor()
         }.build()
@@ -50,6 +51,7 @@ object HttpClient {
     val okHttpClientLongTimeoutNoTokenInterceptor: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .apply {
+                addCache()
                 addInterceptors()
                 addCustomTimeout()
             }.build()
@@ -58,17 +60,22 @@ object HttpClient {
     val okHttpClientLongTimeout: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .apply {
+                addCache()
                 addInterceptors()
                 addTokenInterceptor()
                 addCustomTimeout()
             }.build()
     }
 
+    private fun OkHttpClient.Builder.addCache() {
+        HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
+    }
+
     private fun OkHttpClient.Builder.addInterceptors() {
         if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
         addInterceptor(GZipInterceptor())
         addInterceptor(SentryOkHttpInterceptor(captureFailedRequests = true))
-        customInterceptor?.forEach { addInterceptor(it) }
+        HttpClientConfig.customInterceptors?.forEach(::addInterceptor)
     }
 
     private fun OkHttpClient.Builder.addTokenInterceptor() {
@@ -77,9 +84,11 @@ object HttpClient {
     }
 
     private fun OkHttpClient.Builder.addCustomTimeout() {
-        readTimeout(customTimeout, TimeUnit.MINUTES)
-        writeTimeout(customTimeout, TimeUnit.MINUTES)
-        connectTimeout(customTimeout, TimeUnit.MINUTES)
-        callTimeout(customTimeout, TimeUnit.MINUTES)
+        HttpClientConfig.apply {
+            readTimeout(customTimeoutMinutes, TimeUnit.MINUTES)
+            writeTimeout(customTimeoutMinutes, TimeUnit.MINUTES)
+            connectTimeout(customTimeoutMinutes, TimeUnit.MINUTES)
+            callTimeout(customTimeoutMinutes, TimeUnit.MINUTES)
+        }
     }
 }
