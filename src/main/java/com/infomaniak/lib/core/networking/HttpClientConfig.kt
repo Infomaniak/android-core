@@ -22,9 +22,9 @@ import java.io.File
 
 object HttpClientConfig {
 
-    const val CACHE_SIZE_BYTES: Long = 10 * 1024 * 1024 // 10 MB
+    const val CACHE_SIZE_BYTES: Long = 10 * 1_024 * 1_024 // 10 MB
 
     var cacheDir: File? = null
     var customInterceptors: List<Interceptor>? = null
-    var customTimeoutMinutes: Long = 2
+    var customTimeoutMinutes = 2L
 }
