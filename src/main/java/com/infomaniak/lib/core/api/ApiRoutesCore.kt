@@ -21,9 +21,8 @@ import com.infomaniak.lib.core.BuildConfig.INFOMANIAK_API
 
 object ApiRoutesCore {
 
-    fun getUserProfile(ignoreDefaultAvatar: Boolean): String {
-        val args = if (ignoreDefaultAvatar) "?no_avatar_default=1" else ""
-        return "${INFOMANIAK_API}profile$args"
+    fun getUserProfile(): String {
+        return "${INFOMANIAK_API}profile?no_avatar_default=1"
     }
 
 }
