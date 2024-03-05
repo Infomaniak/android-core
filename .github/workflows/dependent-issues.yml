@@ -25,4 +25,5 @@ jobs:
       - uses: z0al/dependent-issues@v1.5.2
         env:
           # (Required) The token to use to make API calls to GitHub.
-          GITHUB_TOKEN: ${{ github.token }}
+          # GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
