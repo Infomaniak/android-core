@@ -18,8 +18,10 @@
 package com.infomaniak.lib.stores.ui.dialogs
 
 import android.content.Context
+import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.infomaniak.lib.stores.databinding.AlertDialogReviewBinding
 
 class ReviewAlertDialog(
     private val activityContext: Context,
@@ -27,6 +29,7 @@ class ReviewAlertDialog(
     reviewAlertDialogData: ReviewAlertDialogData,
 ) {
 
+    private val viewBinding = AlertDialogReviewBinding.inflate(LayoutInflater.from(activityContext))
     private val alertDialog: AlertDialog
 
     init {
@@ -35,9 +38,10 @@ class ReviewAlertDialog(
         } ?: MaterialAlertDialogBuilder(activityContext)
 
         with(reviewAlertDialogData) {
+            viewBinding.dialogTitle.text = title
 
             alertDialog = builder
-                .setTitle(reviewAlertDialogData.title)
+                .setView(viewBinding.root)
                 .setPositiveButton(positiveText) { _, _ -> onPositiveButtonClicked() }
                 .setNegativeButton(negativeText) { _, _ -> onNegativeButtonClicked() }
                 .setCancelable(false)
