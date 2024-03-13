@@ -35,6 +35,8 @@ class StoresSettingsRepository(private val context: Context) {
             IS_USER_WANTING_UPDATES_KEY -> DEFAULT_IS_USER_WANTING_UPDATES
             HAS_APP_UPDATE_DOWNLOADED_KEY -> DEFAULT_HAS_APP_UPDATE_DOWNLOADED
             APP_UPDATE_LAUNCHES_KEY -> DEFAULT_APP_UPDATE_LAUNCHES
+            APP_REVIEW_LAUNCHES_KEY -> DEFAULT_APP_REVIEW_LAUNCHES
+            ALREADY_GAVE_REVIEW_KEY -> DEFAULT_ALREADY_GAVE_REVIEW
             else -> throw IllegalArgumentException("Unknown Preferences.Key")
         }
 
@@ -53,18 +55,30 @@ class StoresSettingsRepository(private val context: Context) {
         // This avoid the user being instantly reprompted to download update
         setValue(IS_USER_WANTING_UPDATES_KEY, DEFAULT_IS_USER_WANTING_UPDATES)
         setValue(HAS_APP_UPDATE_DOWNLOADED_KEY, DEFAULT_HAS_APP_UPDATE_DOWNLOADED)
+        setValue(APP_UPDATE_LAUNCHES_KEY, DEFAULT_APP_UPDATE_LAUNCHES)
+    }
+
+    suspend fun resetReviewSettings() {
+        setValue(APP_REVIEW_LAUNCHES_KEY, MAX_APP_REVIEW_LAUNCHES)
     }
 
     companion object {
 
+        const val DEFAULT_APP_UPDATE_LAUNCHES = 20
+
         val IS_USER_WANTING_UPDATES_KEY = booleanPreferencesKey("isUserWantingUpdatesKey")
         val HAS_APP_UPDATE_DOWNLOADED_KEY = booleanPreferencesKey("hasAppUpdateDownloadedKey")
         val APP_UPDATE_LAUNCHES_KEY = intPreferencesKey("appUpdateLaunchesKey")
+        val APP_REVIEW_LAUNCHES_KEY = intPreferencesKey("appReviewLaunchesKey")
+        val ALREADY_GAVE_REVIEW_KEY = booleanPreferencesKey("alreadyGaveReview")
 
         internal const val DATA_STORE_NAME = "StoresSettingsDataStore"
 
         private const val DEFAULT_IS_USER_WANTING_UPDATES = false
         private const val DEFAULT_HAS_APP_UPDATE_DOWNLOADED = false
-        const val DEFAULT_APP_UPDATE_LAUNCHES = 20
+        private const val DEFAULT_ALREADY_GAVE_REVIEW = false
+
+        private const val DEFAULT_APP_REVIEW_LAUNCHES = 50
+        private const val MAX_APP_REVIEW_LAUNCHES = 500
     }
 }
