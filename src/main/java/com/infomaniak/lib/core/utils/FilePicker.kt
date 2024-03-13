@@ -36,12 +36,15 @@ class FilePicker {
 
     constructor(activity: ComponentActivity) {
         activityResult = activity.registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+
             _callback(uris)
         }
     }
-
-    fun open(mimeType: String = "*/*", callback: (List<Uri>) -> Unit) {
+    fun initCallback(callback: (List<Uri>) -> Unit) {
         _callback = callback
+    }
+
+    fun open(mimeType: String = "*/*") {
         activityResult.launch(mimeType)
     }
 }
