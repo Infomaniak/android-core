@@ -23,6 +23,8 @@
     <string name="androidPermissionButton">Permission</string>
     <string name="androidPermissionTitle">Permission required</string>
     <string name="browserNotFound">No browser found</string>
+    <string name="buttonYes">Yes</string>
+    <string name="buttonNo">No</string>
     <string name="buttonCancel">Cancel</string>
     <string name="buttonLater">Later</string>
     <string name="buttonUpdate">Update</string>
