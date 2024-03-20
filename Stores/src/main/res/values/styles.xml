@@ -21,7 +21,7 @@
 
     <style name="TitleReviewDialog">
         <item name="android:fontFamily">@font/suisseintl_medium</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/title</item>
         <item name="android:textSize">16sp</item>
     </style>
 
