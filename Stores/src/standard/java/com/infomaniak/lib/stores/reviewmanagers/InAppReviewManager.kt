@@ -56,7 +56,7 @@ class InAppReviewManager(
         observeInAppReview()
     }
 
-     private fun onUserWantToReview() {
+    private fun onUserWantToReview() {
         onUserWantsToReview?.invoke()
         viewModel.changeReviewStatus(true)
         activity.launchInAppReview()
