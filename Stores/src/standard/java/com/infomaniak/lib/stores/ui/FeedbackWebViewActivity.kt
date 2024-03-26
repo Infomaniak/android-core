@@ -23,12 +23,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
-import com.infomaniak.lib.stores.databinding.ActivityWebviewBinding
+import com.infomaniak.lib.stores.databinding.ActivityFeedbackWebviewBinding
 
-class WebViewActivity : AppCompatActivity() {
+class FeedbackWebViewActivity : AppCompatActivity() {
 
-    private val binding by lazy { ActivityWebviewBinding.inflate(layoutInflater) }
-    private val navArgs: WebViewActivityArgs by navArgs()
+    private val binding by lazy { ActivityFeedbackWebviewBinding.inflate(layoutInflater) }
+    private val navArgs: FeedbackWebViewActivityArgs by navArgs()
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +44,8 @@ class WebViewActivity : AppCompatActivity() {
     companion object {
 
         fun startActivity(context: Context, url: String) {
-            Intent(context, WebViewActivity::class.java).apply {
-                putExtras(WebViewActivityArgs(url).toBundle())
+            Intent(context, FeedbackWebViewActivity::class.java).apply {
+                putExtras(FeedbackWebViewActivityArgs(url).toBundle())
             }.also(context::startActivity)
         }
     }

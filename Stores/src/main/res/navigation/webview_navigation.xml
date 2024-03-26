@@ -18,14 +18,14 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/webview_navigation"
-    app:startDestination="@id/webViewActivity">
+    android:id="@+id/feedback_webview_navigation"
+    app:startDestination="@id/feedbackWebViewActivity">
 
     <activity
-        android:id="@+id/webViewActivity"
-        android:name="com.infomaniak.lib.stores.ui.WebViewActivity"
-        android:label="WebViewActivity"
-        tools:layout="@layout/activity_webview">
+        android:id="@+id/feedbackWebViewActivity"
+        android:name="com.infomaniak.lib.stores.ui.FeedbackWebViewActivity"
+        android:label="FeedbackWebViewActivity"
+        tools:layout="@layout/activity_feedback_webview">
 
         <argument
             android:name="url"

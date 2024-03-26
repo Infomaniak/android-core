@@ -21,7 +21,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.infomaniak.lib.stores.BaseInAppReviewManager
 import com.infomaniak.lib.stores.StoreUtils.launchInAppReview
-import com.infomaniak.lib.stores.ui.WebViewActivity
+import com.infomaniak.lib.stores.ui.FeedbackWebViewActivity
 import com.infomaniak.lib.stores.ui.dialogs.ReviewAlertDialog
 import com.infomaniak.lib.stores.ui.dialogs.ReviewAlertDialogData
 import com.infomaniak.lib.core.R as RCore
@@ -83,7 +83,7 @@ class InAppReviewManager(
                 onPositiveButtonClicked = ::onUserWantToReview,
                 onNegativeButtonClicked = {
                     onUserWantsToGiveFeedback?.invoke()
-                    WebViewActivity.startActivity(this, getString(feedbackUrlResId))
+                    FeedbackWebViewActivity.startActivity(this, getString(feedbackUrlResId))
                 },
             ),
         ).show()
