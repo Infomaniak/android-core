@@ -28,7 +28,7 @@ import com.infomaniak.lib.stores.databinding.ActivityWebviewBinding
 class WebViewActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityWebviewBinding.inflate(layoutInflater) }
-    private val navArgs by navArgs<WebViewActivityArgs>()
+    private val navArgs: WebViewActivityArgs by navArgs()
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
