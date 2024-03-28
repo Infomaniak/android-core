@@ -44,7 +44,6 @@ class ReviewAlertDialog(
                 .setView(viewBinding.root)
                 .setPositiveButton(positiveText) { _, _ -> onPositiveButtonClicked() }
                 .setNegativeButton(negativeText) { _, _ -> onNegativeButtonClicked() }
-                .setCancelable(false)
                 .create()
         }
     }
