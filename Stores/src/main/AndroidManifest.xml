@@ -21,7 +21,6 @@
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
-        android:usesCleartextTraffic="true"
         tools:targetApi="UPSIDE_DOWN_CAKE">
 
         <activity
