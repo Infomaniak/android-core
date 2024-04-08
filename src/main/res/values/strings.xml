@@ -32,7 +32,7 @@
     <string name="connectionError">Internet connection problem</string>
     <string name="errorDownload">Download error</string>
     <string name="errorDownloadInsufficientSpace">Cannot download : Insufficient space</string>
-    <string name="errorFileNotFound">An error occurred when opening this file</string>
+    <string name="errorFileNotFound">An error has occurred while opening the file</string>
     <string name="errorNoSupportingAppFound">This file is not supported by any installed application</string>
     <string name="errorTitle">Error</string>
     <string name="errorTitleLabel">An error occurred</string>
