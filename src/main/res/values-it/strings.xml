@@ -30,6 +30,7 @@
     <string name="connectionError">Problema di connessione a Internet</string>
     <string name="errorDownload">Errore durante il download</string>
     <string name="errorDownloadInsufficientSpace">Impossibile scaricare: spazio insufficiente</string>
+    <string name="errorFileNotFound">Si è verificato un errore durante l’apertura di questo file</string>
     <string name="errorNoSupportingAppFound">Il file non è supportato da nessuna delle applicazioni installate</string>
     <string name="errorTitle">Errore</string>
     <string name="errorTitleLabel">Si è verificato un errore</string>
