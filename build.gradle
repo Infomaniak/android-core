@@ -34,7 +34,10 @@ android {
         targetCompatibility rootProject.ext.javaVersion
     }
 
-    buildFeatures { viewBinding true }
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
 
     kotlinOptions { jvmTarget = rootProject.ext.javaVersion }
 }
