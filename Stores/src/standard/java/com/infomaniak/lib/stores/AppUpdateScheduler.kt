@@ -67,12 +67,7 @@ class AppUpdateScheduler(
             workManager.cancelWorkById(workInfo.id)
             SentryLog.d(TAG, "Work cancelled")
             // TODO: Check this Sentry in approximately 1 month (end of March 2024) to know if the `forEach` is useful or not.
-            if (index > 0) {
-                Sentry.withScope { scope ->
-                    scope.level = SentryLevel.WARNING
-                    Sentry.captureMessage("There is more than one work infos, we must keep forEach")
-                }
-            }
+            if (index > 0) Sentry.captureMessage("There is more than one work infos, we must keep forEach", SentryLevel.WARNING)
         }
     }
 
