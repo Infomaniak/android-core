@@ -24,7 +24,6 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.stores.updatemanagers.WorkerUpdateManager
 import io.sentry.Sentry
-import io.sentry.SentryLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,19 +54,16 @@ class AppUpdateScheduler(
         }
     }
 
-    override suspend fun cancelWorkIfNeeded() = withContext(Dispatchers.IO) {
-
-        val workInfos = workManager.getWorkInfos(
+    override suspend fun cancelWorkIfNeeded(): Unit = withContext(Dispatchers.IO) {
+        val worksInfo = workManager.getWorkInfos(
             WorkQuery.Builder.fromUniqueWorkNames(listOf(TAG))
                 .addStates(listOf(WorkInfo.State.BLOCKED, WorkInfo.State.ENQUEUED))
                 .build(),
         ).get()
 
-        workInfos.forEachIndexed { index, workInfo ->
-            workManager.cancelWorkById(workInfo.id)
+        worksInfo.firstOrNull()?.let {
+            workManager.cancelWorkById(it.id)
             SentryLog.d(TAG, "Work cancelled")
-            // TODO: Check this Sentry in approximately 1 month (end of March 2024) to know if the `forEach` is useful or not.
-            if (index > 0) Sentry.captureMessage("There is more than one work infos, we must keep forEach", SentryLevel.WARNING)
         }
     }
 
