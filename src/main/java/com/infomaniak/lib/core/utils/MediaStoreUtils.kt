@@ -30,10 +30,7 @@ fun Cursor.getFileName(uri: Uri): String {
     val filename = runCatching {
         getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME).let(this::getStringOrNull)
     }.getOrElse { exception ->
-        Sentry.withScope { scope ->
-            scope.setExtra("uri", uri.toString())
-            Sentry.captureException(exception)
-        }
+        Sentry.captureException(exception)
         null
     }
 
@@ -56,7 +53,6 @@ fun Context.getFileNameAndSize(uri: Uri): Pair<String, Long>? {
                 fileName to fileSize
             } else {
                 Sentry.withScope { scope ->
-                    scope.setExtra("uri", uri.toString())
                     scope.setExtra("available columns", cursor.columnNames.joinToString { it })
                     Sentry.captureException(Exception("$this has empty cursor"))
                 }
@@ -64,10 +60,7 @@ fun Context.getFileNameAndSize(uri: Uri): Pair<String, Long>? {
             }
         }
     }.getOrElse { exception ->
-        Sentry.withScope { scope ->
-            scope.setExtra("uri", uri.toString())
-            Sentry.captureException(exception)
-        }
+        Sentry.captureException(exception)
         null
     }
 }
