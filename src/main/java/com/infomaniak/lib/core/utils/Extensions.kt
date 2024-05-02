@@ -37,10 +37,11 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
 import android.util.AttributeSet
+import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.view.WindowManager.*
+import android.view.WindowManager.LayoutParams
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
@@ -49,10 +50,12 @@ import androidx.activity.result.ActivityResult
 import androidx.annotation.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle.*
+import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDirections
@@ -66,9 +69,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.load
-import com.github.razir.progressbutton.*
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
+import com.github.razir.progressbutton.attachTextChangeAnimator
+import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
@@ -79,8 +85,10 @@ import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
 import java.io.Serializable
+import kotlin.math.max
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
+
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
 
@@ -273,6 +281,57 @@ fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bot
         )
         requestLayout()
     }
+}
+
+fun Activity.getRotation(): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        display?.rotation ?: Surface.ROTATION_0
+    } else {
+        windowManager.defaultDisplay.rotation
+    }
+}
+
+fun View.setupWindowInsetsListener(
+    bottomSheetView: View? = null,
+    bottomSheetStyleResId: Int? = null,
+    peekHeightAttrId: Int? = null,
+) {
+    ViewCompat.setOnApplyWindowInsetsListener(rootView) { _, windowInsets ->
+        with(windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())) {
+            setMargins(left = left, top = top, right = right)
+
+            bottomSheetView?.let {
+                val topOffset = getTopOffsetFor(bottomSheetView)
+                BottomSheetBehavior.from(bottomSheetView).apply {
+                    peekHeight = getDefaultPeekHeight(bottomSheetStyleResId!!, peekHeightAttrId!!) + bottom
+
+                    if (topOffset > 0) {
+                        expandedOffset = topOffset
+                        maxHeight = rootView.height - topOffset
+                    }
+                }
+                // Add padding to the bottom to allow the last element of the
+                // list to be displayed right over the android navigation bar
+                bottomSheetView.setPadding(0, 0, 0, bottom)
+            }
+        }
+
+        windowInsets
+    }
+}
+
+private fun View.getTopOffsetFor(bottomSheetView: View): Int {
+    return if (rootView.height < bottomSheetView.height) max(top, rootView.height - bottomSheetView.height) else 0
+}
+
+private fun View.getDefaultPeekHeight(bottomSheetStyleResId: Int, peekHeightAttrId: Int): Int {
+    val typedArray = context.theme.obtainStyledAttributes(
+        bottomSheetStyleResId,
+        intArrayOf(peekHeightAttrId)
+    )
+    val peekHeight = typedArray.getDimensionPixelSize(0, 0)
+    typedArray.recycle()
+    return peekHeight
 }
 
 fun View.setMarginsRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
