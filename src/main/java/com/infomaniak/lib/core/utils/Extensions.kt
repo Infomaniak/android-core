@@ -40,7 +40,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.view.WindowManager.*
+import android.view.WindowManager.LayoutParams
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
@@ -52,7 +52,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle.*
+import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDirections
@@ -66,9 +66,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.load
-import com.github.razir.progressbutton.*
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
+import com.github.razir.progressbutton.attachTextChangeAnimator
+import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
@@ -79,6 +81,9 @@ import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
 import java.io.Serializable
+import java.text.StringCharacterIterator
+import kotlin.math.abs
+import kotlin.math.sign
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -301,6 +306,28 @@ fun String.capitalizeFirstChar(): String = replaceFirstChar { char -> char.title
 
 fun String.guessMimeType(): String {
     return MimeTypeMap.getSingleton().getMimeTypeFromExtension(substringAfterLast(".")) ?: "*/*"
+}
+
+fun Context.humanReadableBinaryBytesCount(bytes: Long): String {
+    val byteChar = "B"
+
+    val absBytes = if (bytes == Long.MIN_VALUE) Long.MAX_VALUE else abs(bytes)
+    if (absBytes < 1_024L) return "$bytes $byteChar"
+
+    var value = absBytes
+    val characters = StringCharacterIterator("KMGTPE")
+
+    var i = 40
+    while (i >= 0 && absBytes > 0xfffccccccccccccL shr i) {
+        value = value shr 10
+        characters.next()
+        i -= 10
+    }
+
+    value *= bytes.sign.toLong()
+
+    val locale = resources.configuration.getLocales().get(0)
+    return String.format(locale, "%.1f %c$byteChar", value / 1_024.0f, characters.current())
 }
 
 fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
