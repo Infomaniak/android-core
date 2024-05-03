@@ -50,6 +50,7 @@ import androidx.activity.result.ActivityResult
 import androidx.annotation.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -178,6 +179,10 @@ fun Activity.requestPermissionsIsPossible(permissions: Array<String>): Boolean {
     }
 }
 
+fun Activity.getInsets(): Insets? {
+    return ViewCompat.getRootWindowInsets(window.decorView)?.getInsets(WindowInsetsCompat.Type.navigationBars())
+}
+
 fun Context.startAppSettingsConfig() {
     Intent().apply {
         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -295,10 +300,11 @@ fun View.setupWindowInsetsListener(
     bottomSheetView: View? = null,
     bottomSheetStyleResId: Int? = null,
     peekHeightAttrId: Int? = null,
+    callback: ((insets: Insets) -> Unit)? = null,
 ) {
     ViewCompat.setOnApplyWindowInsetsListener(rootView) { _, windowInsets ->
-        with(windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())) {
-            setMargins(left = left, top = top, right = right)
+        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).apply {
+            setMargins(left = right, top = top, right = right)
 
             bottomSheetView?.let {
                 val topOffset = getTopOffsetFor(bottomSheetView)
@@ -316,6 +322,7 @@ fun View.setupWindowInsetsListener(
             }
         }
 
+        callback?.invoke(insets)
         windowInsets
     }
 }
