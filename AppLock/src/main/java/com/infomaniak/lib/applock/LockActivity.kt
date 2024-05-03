@@ -82,8 +82,9 @@ class LockActivity : AppCompatActivity() {
     }
 
     companion object {
+
         private const val UNDEFINED_PRIMARY_COLOR = 0
-        private const val SECURITY_APP_TOLERANCE = 1 * 60 * 1000 // 1min (ms)
+        private const val SECURITY_APP_TOLERANCE = 1 * 60 * 1_000 // 1 min (ms)
 
         fun startAppLockActivity(
             context: Context,

@@ -215,6 +215,6 @@ class BugTrackerActivity : AppCompatActivity() {
         val DEFAULT_REPORT_TYPE = ReportType.BUGS
         const val DEFAULT_PRIORITY_TYPE = 1
 
-        const val FILE_SIZE_32_MB = 32 * 1024 * 1024
+        const val FILE_SIZE_32_MB = 32 * 1_024 * 1_024 // 32 MB
     }
 }
