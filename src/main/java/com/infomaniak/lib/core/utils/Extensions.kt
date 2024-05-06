@@ -81,9 +81,6 @@ import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
 import java.io.Serializable
-import java.text.StringCharacterIterator
-import kotlin.math.abs
-import kotlin.math.sign
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -306,28 +303,6 @@ fun String.capitalizeFirstChar(): String = replaceFirstChar { char -> char.title
 
 fun String.guessMimeType(): String {
     return MimeTypeMap.getSingleton().getMimeTypeFromExtension(substringAfterLast(".")) ?: "*/*"
-}
-
-fun Context.humanReadableBinaryBytesCount(bytes: Long): String {
-    val byteChar = "B"
-
-    val absBytes = if (bytes == Long.MIN_VALUE) Long.MAX_VALUE else abs(bytes)
-    if (absBytes < 1_024L) return "$bytes $byteChar"
-
-    var value = absBytes
-    val characters = StringCharacterIterator("KMGTPE")
-
-    var i = 40
-    while (i >= 0 && absBytes > 0xfffccccccccccccL shr i) {
-        value = value shr 10
-        characters.next()
-        i -= 10
-    }
-
-    value *= bytes.sign.toLong()
-
-    val locale = resources.configuration.getLocales().get(0)
-    return String.format(locale, "%.1f %c$byteChar", value / 1_024.0f, characters.current())
 }
 
 fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
