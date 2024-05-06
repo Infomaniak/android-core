@@ -50,35 +50,27 @@ object FormatterFileSize {
 
     private fun formatFileSize(resources: Resources, sizeBytes: Long, flags: Int): Pair<String, String> {
 
+        val suffixes = mutableListOf(
+            "byteShort",
+            "kilobyteShort",
+            "megabyteShort",
+            "gigabyteShort",
+            "terabyteShort",
+            "petabyteShort",
+        )
         val unit = if (flags and FLAG_IEC_UNITS != 0) KIBI_BYTE else KILO_BYTE
         var result = abs(sizeBytes).toFloat()
-        var suffix = resources.getIdentifier("byteShort", "string", "android")
         var multiplier = 1L
 
-        if (result > 900) {
-            suffix = resources.getIdentifier("kilobyteShort", "string", "android")
-            multiplier = unit
-            result /= unit
-        }
-        if (result > 900) {
-            suffix = resources.getIdentifier("megabyteShort", "string", "android")
-            multiplier *= unit
-            result /= unit
-        }
-        if (result > 900) {
-            suffix = resources.getIdentifier("gigabyteShort", "string", "android")
-            multiplier *= unit
-            result /= unit
-        }
-        if (result > 900) {
-            suffix = resources.getIdentifier("terabyteShort", "string", "android")
-            multiplier *= unit
-            result /= unit
-        }
-        if (result > 900) {
-            suffix = resources.getIdentifier("petabyteShort", "string", "android")
-            multiplier *= unit
-            result /= unit
+        var suffix = resources.getIdentifier(suffixes.removeFirstOrNull(), "string", "android")
+        val suffixesCount = suffixes.count()
+
+        repeat(suffixesCount) {
+            if (result > 900) {
+                suffix = resources.getIdentifier(suffixes.removeFirstOrNull(), "string", "android")
+                multiplier *= unit
+                result /= unit
+            }
         }
 
         val roundFormat = when {
