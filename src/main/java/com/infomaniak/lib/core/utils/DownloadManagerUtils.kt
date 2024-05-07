@@ -52,7 +52,7 @@ object DownloadManagerUtils {
 
     private fun Context.handleDownloadManagerErrors(downloadReference: Long, downloadManager: DownloadManager) {
         CoroutineScope(Dispatchers.Default).launch {
-            delay(1000)
+            delay(1_000L)
             DownloadManager.Query().apply {
                 setFilterById(downloadReference)
                 downloadManager.query(this).use {

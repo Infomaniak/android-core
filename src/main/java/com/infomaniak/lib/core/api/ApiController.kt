@@ -122,7 +122,7 @@ object ApiController {
                 when {
                     it.isSuccessful -> {
                         val apiToken = gson.fromJson(bodyResponse, ApiToken::class.java)
-                        apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1000)
+                        apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1_000)
                         tokenInterceptorListener.onRefreshTokenSuccess(apiToken)
                         return@withContext apiToken
                     }
