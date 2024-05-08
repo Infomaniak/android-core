@@ -56,9 +56,9 @@ object FormatterFileSize {
             "petabyteShort",
         )
         val unit = if (flags and FLAG_IEC_UNITS != 0) KIBI_BYTE else KILO_BYTE
-        var result = abs(bytes).toFloat()
         var multiplier = 1L
 
+        var result = abs(bytes).toFloat()
         var suffix = getSuffix(suffixes)
         val suffixesCount = suffixes.count()
 
