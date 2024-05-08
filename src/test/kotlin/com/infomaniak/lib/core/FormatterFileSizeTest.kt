@@ -19,11 +19,13 @@
 package com.infomaniak.lib.core
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.infomaniak.lib.core.utils.FormatterFileSize.formatShortFileSize
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
 class FormatterFileSizeTest {
@@ -31,30 +33,63 @@ class FormatterFileSizeTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
     @Test
-    fun `1_890 short IEC`() {
-        val result = context.formatShortFileSize(bytes = 1_890L, valueOnly = true, shortValue = true, iecUnits = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.8")
+    fun testAllFormatterFileSizePossibilities() {
+
+        val bytesList = listOf(1_892L)
+        val iecUnitsLists = listOf(true, false)
+        val shortValueList = listOf(true, false)
+        val valueOnlyList = listOf(true, false)
+        val localeList = listOf(Locale.ENGLISH, Locale.FRENCH)
+        val expectedList = mutableListOf(
+            "1.8",
+            "1.8",
+            "1.8 kB",
+            "1.8 Ko",
+            "1.85",
+            "1.85",
+            "1.85 kB",
+            "1.85 Ko",
+            "1.9",
+            "1.9",
+            "1.9 kB",
+            "1.9 Ko",
+            "1.89",
+            "1.89",
+            "1.89 kB",
+            "1.89 Ko",
+        )
+
+        bytesList.forEach { bytes ->
+            iecUnitsLists.forEach { iecUnits ->
+                shortValueList.forEach { shortValue ->
+                    valueOnlyList.forEach { valueOnly ->
+                        localeList.forEach { locale ->
+
+                            val localizedContext = createLocalizedContext(context, locale)
+                            val result = localizedContext.formatShortFileSize(bytes, valueOnly, shortValue, iecUnits)
+
+                            println(
+                                "===> Result is ${"[$result]".padStart(length = 9)}. " +
+                                        "Parameters were [bytes: $bytes], " +
+                                        "[iecUnits: ${"$iecUnits".padStart(length = 5)}], " +
+                                        "[shortValue: ${"$shortValue".padStart(length = 5)}], " +
+                                        "[valueOnly: ${"$valueOnly".padStart(length = 5)}], " +
+                                        "[locale: $locale].",
+                            )
+
+                            val expected = expectedList.removeFirstOrNull()
+                            assert(result == expected)
+                        }
+                    }
+                }
+            }
+        }
+
+        assert(expectedList.isEmpty())
     }
 
-    @Test
-    fun `1_890 long IEC`() {
-        val result = context.formatShortFileSize(bytes = 1_890L, valueOnly = true, shortValue = false, iecUnits = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.85")
-    }
-
-    @Test
-    fun `1_890 short SI`() {
-        val result = context.formatShortFileSize(bytes = 1_890L, valueOnly = true, shortValue = true, iecUnits = false)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.9")
-    }
-
-    @Test
-    fun `1_890 long SI`() {
-        val result = context.formatShortFileSize(bytes = 1_890L, valueOnly = true, shortValue = false, iecUnits = false)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.89")
+    private fun createLocalizedContext(context: Context, locale: Locale): Context {
+        val localizedConfiguration = Configuration(context.resources.configuration).apply { setLocale(locale) }
+        return context.createConfigurationContext(localizedConfiguration)
     }
 }
