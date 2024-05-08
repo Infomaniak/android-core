@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.infomaniak.lib.core.utils.FormatterFileSize.formatShortFileSize
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -31,71 +32,52 @@ class FormatterFileSizeTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
     @Test
-    fun `900`() {
-        val result = context.formatShortFileSize(bytes = 900L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "900")
+    fun `900 is not rounded`() {
+        Assert.assertEquals("900", context.formatShortFileSize(bytes = 900L, valueOnly = true))
     }
 
     @Test
-    fun `901`() {
-        val result = context.formatShortFileSize(bytes = 901L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "0.88")
+    fun `901 is rounded to 0,XX`() {
+        Assert.assertEquals("0.88", context.formatShortFileSize(bytes = 901L, valueOnly = true))
     }
+
     @Test
     fun `921_600`() {
-        val result = context.formatShortFileSize(bytes = 921_600L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "900")
+        Assert.assertEquals("900", context.formatShortFileSize(bytes = 921_600L, valueOnly = true))
     }
 
     @Test
     fun `921_601`() {
-        val result = context.formatShortFileSize(bytes = 921_601L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "0.88")
+        Assert.assertEquals("0.88", context.formatShortFileSize(bytes = 921_601L, valueOnly = true))
     }
 
     @Test
     fun `1_890`() {
-        val result = context.formatShortFileSize(bytes = 1_890L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.8")
+        Assert.assertEquals("1.8", context.formatShortFileSize(bytes = 1_890L, valueOnly = true))
     }
 
     @Test
     fun `1_890_000`() {
-        val result = context.formatShortFileSize(bytes = 1_890_000L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.8")
+        Assert.assertEquals("1.8", context.formatShortFileSize(bytes = 1_890_000L, valueOnly = true))
     }
 
     @Test
     fun `1_890_000_000`() {
-        val result = context.formatShortFileSize(bytes = 1_890_000_000L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.8")
+        Assert.assertEquals("1.8", context.formatShortFileSize(bytes = 1_890_000_000L, valueOnly = true))
     }
 
     @Test
     fun `1_890_000_000_000`() {
-        val result = context.formatShortFileSize(bytes = 1_890_000_000_000L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.7")
+        Assert.assertEquals("1.7", context.formatShortFileSize(bytes = 1_890_000_000_000L, valueOnly = true))
     }
 
     @Test
     fun `1_890_000_000_000_000`() {
-        val result = context.formatShortFileSize(bytes = 1_890_000_000_000_000L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.7")
+        Assert.assertEquals("1.7", context.formatShortFileSize(bytes = 1_890_000_000_000_000L, valueOnly = true))
     }
 
     @Test
     fun `1_890_000_000_000_000_000`() {
-        val result = context.formatShortFileSize(bytes = 1_890_000_000_000_000_000L, valueOnly = true)
-        println("=== Result is : [$result] ===")
-        assert(result == "1.6")
+        Assert.assertEquals("1.6", context.formatShortFileSize(bytes = 1_890_000_000_000_000_000L, valueOnly = true))
     }
 }
