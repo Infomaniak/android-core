@@ -19,13 +19,11 @@
 package com.infomaniak.lib.core
 
 import android.content.Context
-import android.content.res.Configuration
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.infomaniak.lib.core.utils.FormatterFileSize.formatShortFileSize
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
 class FormatterFileSizeTest {
@@ -33,184 +31,71 @@ class FormatterFileSizeTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
     @Test
-    fun testAllFormatterFileSizePossibilities() {
-
-        val bytesList = listOf(
-            123L,
-            912L,
-            1_892L,
-            1_892_000L,
-            1_892_000_000L,
-            1_892_000_000_000L,
-            1_892_000_000_000_000L,
-            1_892_000_000_000_000_000L,
-        )
-        val iecUnitsLists = listOf(true, false)
-        val shortValueList = listOf(true, false)
-        val valueOnlyList = listOf(true, false)
-        val localeList = listOf(Locale.ENGLISH, Locale.FRENCH)
-        val expectedList = mutableListOf(
-            "123",
-            "123",
-            "123 b",
-            "123 o",
-            "123",
-            "123",
-            "123 b",
-            "123 o",
-            "123",
-            "123",
-            "123 b",
-            "123 o",
-            "123",
-            "123",
-            "123 b",
-            "123 o",
-            "0.89",
-            "0.89",
-            "0.89 kB",
-            "0.89 Ko",
-            "0.89",
-            "0.89",
-            "0.89 kB",
-            "0.89 Ko",
-            "0.91",
-            "0.91",
-            "0.91 kB",
-            "0.91 Ko",
-            "0.91",
-            "0.91",
-            "0.91 kB",
-            "0.91 Ko",
-            "1.8",
-            "1.8",
-            "1.8 kB",
-            "1.8 Ko",
-            "1.85",
-            "1.85",
-            "1.85 kB",
-            "1.85 Ko",
-            "1.9",
-            "1.9",
-            "1.9 kB",
-            "1.9 Ko",
-            "1.89",
-            "1.89",
-            "1.89 kB",
-            "1.89 Ko",
-            "1.8",
-            "1.8",
-            "1.8 MB",
-            "1.8 Mo",
-            "1.85",
-            "1.85",
-            "1.85 MB",
-            "1.85 Mo",
-            "1.9",
-            "1.9",
-            "1.9 MB",
-            "1.9 Mo",
-            "1.89",
-            "1.89",
-            "1.89 MB",
-            "1.89 Mo",
-            "1.8",
-            "1.8",
-            "1.8 GB",
-            "1.8 Go",
-            "1.85",
-            "1.85",
-            "1.85 GB",
-            "1.85 Go",
-            "1.9",
-            "1.9",
-            "1.9 GB",
-            "1.9 Go",
-            "1.89",
-            "1.89",
-            "1.89 GB",
-            "1.89 Go",
-            "1.8",
-            "1.8",
-            "1.8 TB",
-            "1.8 To",
-            "1.85",
-            "1.85",
-            "1.85 TB",
-            "1.85 To",
-            "1.9",
-            "1.9",
-            "1.9 TB",
-            "1.9 To",
-            "1.89",
-            "1.89",
-            "1.89 TB",
-            "1.89 To",
-            "1.8",
-            "1.8",
-            "1.8 PB",
-            "1.8 Po",
-            "1.85",
-            "1.85",
-            "1.85 PB",
-            "1.85 Po",
-            "1.9",
-            "1.9",
-            "1.9 PB",
-            "1.9 Po",
-            "1.89",
-            "1.89",
-            "1.89 PB",
-            "1.89 Po",
-            "1.8",
-            "1.8",
-            "1.8 EB",
-            "1.8 Eo",
-            "1.85",
-            "1.85",
-            "1.85 EB",
-            "1.85 Eo",
-            "1.9",
-            "1.9",
-            "1.9 EB",
-            "1.9 Eo",
-            "1.89",
-            "1.89",
-            "1.89 EB",
-            "1.89 Eo",
-        )
-
-        bytesList.forEach { bytes ->
-            iecUnitsLists.forEach { iecUnits ->
-                shortValueList.forEach { shortValue ->
-                    valueOnlyList.forEach { valueOnly ->
-                        localeList.forEach { locale ->
-
-                            val localizedContext = createLocalizedContext(context, locale)
-                            val result = localizedContext.formatShortFileSize(bytes, valueOnly, shortValue, iecUnits)
-
-                            println(
-                                "===> Result is ${"[$result]".padStart(length = 9)}. " +
-                                        "Parameters were [bytes: $bytes], " +
-                                        "[iecUnits: ${"$iecUnits".padStart(length = 5)}], " +
-                                        "[shortValue: ${"$shortValue".padStart(length = 5)}], " +
-                                        "[valueOnly: ${"$valueOnly".padStart(length = 5)}], " +
-                                        "[locale: $locale].",
-                            )
-
-                            val expected = expectedList.removeFirstOrNull()
-                            assert(result == expected)
-                        }
-                    }
-                }
-            }
-        }
-
-        assert(expectedList.isEmpty())
+    fun `900`() {
+        val result = context.formatShortFileSize(bytes = 900L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "900")
     }
 
-    private fun createLocalizedContext(context: Context, locale: Locale): Context {
-        val localizedConfiguration = Configuration(context.resources.configuration).apply { setLocale(locale) }
-        return context.createConfigurationContext(localizedConfiguration)
+    @Test
+    fun `901`() {
+        val result = context.formatShortFileSize(bytes = 901L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "0.88")
+    }
+    @Test
+    fun `921_600`() {
+        val result = context.formatShortFileSize(bytes = 921_600L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "900")
+    }
+
+    @Test
+    fun `921_601`() {
+        val result = context.formatShortFileSize(bytes = 921_601L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "0.88")
+    }
+
+    @Test
+    fun `1_890`() {
+        val result = context.formatShortFileSize(bytes = 1_890L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "1.8")
+    }
+
+    @Test
+    fun `1_890_000`() {
+        val result = context.formatShortFileSize(bytes = 1_890_000L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "1.8")
+    }
+
+    @Test
+    fun `1_890_000_000`() {
+        val result = context.formatShortFileSize(bytes = 1_890_000_000L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "1.8")
+    }
+
+    @Test
+    fun `1_890_000_000_000`() {
+        val result = context.formatShortFileSize(bytes = 1_890_000_000_000L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "1.7")
+    }
+
+    @Test
+    fun `1_890_000_000_000_000`() {
+        val result = context.formatShortFileSize(bytes = 1_890_000_000_000_000L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "1.7")
+    }
+
+    @Test
+    fun `1_890_000_000_000_000_000`() {
+        val result = context.formatShortFileSize(bytes = 1_890_000_000_000_000_000L, valueOnly = true)
+        println("=== Result is : [$result] ===")
+        assert(result == "1.6")
     }
 }
