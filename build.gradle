@@ -19,7 +19,9 @@ android {
         minSdkVersion rootProject.ext.coreMinSdk
         targetSdkVersion rootProject.ext.coreTargetSdk
 
+        testOptions.unitTests.includeAndroidResources = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.infomaniak.com/v3/mobile_login"'
         buildConfigField 'String', 'LOGIN_ENDPOINT_URL', '"https://login.infomaniak.com/"'
         buildConfigField 'String', 'INFOMANIAK_API_V1', '"https://api.infomaniak.com/1"'
@@ -87,4 +89,10 @@ dependencies {
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
     api 'com.github.matomo-org:matomo-sdk-android:4.1.4'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.test.ext:junit:1.1.0'
+    testImplementation 'androidx.test:core-ktx:1.5.0'
+    testImplementation 'androidx.test:core:1.5.0'
+    testImplementation 'org.robolectric:robolectric:4.12'
 }
