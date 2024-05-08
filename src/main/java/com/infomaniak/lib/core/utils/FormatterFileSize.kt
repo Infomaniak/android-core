@@ -32,13 +32,13 @@ object FormatterFileSize {
 
     fun Context.formatShortFileSize(bytes: Long, valueOnly: Boolean = false): String = runCatching {
         val (value, unit) = formatFileSize(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly)
-        return@runCatching if (unit == null) {
+        if (unit == null) {
             value
         } else {
             getString(resources.getIdentifier("fileSizeSuffix", "string", "android"), value, unit)
         }
     }.getOrElse {
-        return@getOrElse Formatter.formatShortFileSize(this, bytes)
+        Formatter.formatShortFileSize(this, bytes)
     }
 
     private fun Context.formatFileSize(bytes: Long, flags: Int, valueOnly: Boolean): Pair<String, String?> {
