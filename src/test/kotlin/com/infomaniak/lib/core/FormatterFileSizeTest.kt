@@ -35,12 +35,44 @@ class FormatterFileSizeTest {
     @Test
     fun testAllFormatterFileSizePossibilities() {
 
-        val bytesList = listOf(1_892L)
+        val bytesList = listOf(123L, 912L, 1_892L)
         val iecUnitsLists = listOf(true, false)
         val shortValueList = listOf(true, false)
         val valueOnlyList = listOf(true, false)
         val localeList = listOf(Locale.ENGLISH, Locale.FRENCH)
         val expectedList = mutableListOf(
+            "123",
+            "123",
+            "123 b",
+            "123 o",
+            "123",
+            "123",
+            "123 b",
+            "123 o",
+            "123",
+            "123",
+            "123 b",
+            "123 o",
+            "123",
+            "123",
+            "123 b",
+            "123 o",
+            "0.89",
+            "0.89",
+            "0.89 kB",
+            "0.89 Ko",
+            "0.89",
+            "0.89",
+            "0.89 kB",
+            "0.89 Ko",
+            "0.91",
+            "0.91",
+            "0.91 kB",
+            "0.91 Ko",
+            "0.91",
+            "0.91",
+            "0.91 kB",
+            "0.91 Ko",
             "1.8",
             "1.8",
             "1.8 kB",
