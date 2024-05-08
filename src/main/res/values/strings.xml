@@ -50,11 +50,4 @@
     <string name="updateAvailableDescription">To get the best out of %s, we recommend you update your application.</string>
     <string name="updateAvailableTitle">Update available!</string>
     <string name="updateReadyTitle">Update ready</string>
-    <string name="sizeByteShort">b</string>
-    <string name="sizeKiloByteShort">kB</string>
-    <string name="sizeMegaByteShort">MB</string>
-    <string name="sizeGigaByteShort">GB</string>
-    <string name="sizeTeraByteShort">TB</string>
-    <string name="sizePetaByteShort">PB</string>
-    <string name="sizeExaByteShort">EB</string>
 </resources>

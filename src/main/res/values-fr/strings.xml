@@ -48,11 +48,4 @@
     <string name="updateAvailableDescription">Afin de profiter d’une expérience optimale de %s, nous vous conseillons de mettre à jour votre application.</string>
     <string name="updateAvailableTitle">Mise à jour disponible !</string>
     <string name="updateReadyTitle">Mise à jour prête</string>
-    <string name="sizeByteShort">o</string>
-    <string name="sizeKiloByteShort">Ko</string>
-    <string name="sizeMegaByteShort">Mo</string>
-    <string name="sizeGigaByteShort">Go</string>
-    <string name="sizeTeraByteShort">To</string>
-    <string name="sizePetaByteShort">Po</string>
-    <string name="sizeExaByteShort">Eo</string>
 </resources>
