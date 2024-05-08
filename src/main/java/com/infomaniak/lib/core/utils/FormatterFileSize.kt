@@ -18,7 +18,6 @@
 package com.infomaniak.lib.core.utils
 
 import android.content.Context
-import android.content.res.Resources
 import android.text.format.Formatter
 import kotlin.math.abs
 
@@ -36,26 +35,20 @@ object FormatterFileSize {
         valueOnly: Boolean = false,
         shortValue: Boolean = true,
         iecUnits: Boolean = true,
-    ): String {
-        return runCatching {
-            val unitsFlag = if (iecUnits) FLAG_IEC_UNITS else FLAG_SI_UNITS
-            val flags = if (shortValue) (unitsFlag or FLAG_SHORTER) else unitsFlag
-            val (value, unit) = formatFileSize(resources, bytes, valueOnly, flags)
-            if (unit == null) {
-                value
-            } else {
-                getString(
-                    resources.getIdentifier("fileSizeSuffix", "string", "android"),
-                    value,
-                    unit,
-                )
-            }
-        }.getOrElse {
-            Formatter.formatShortFileSize(this, bytes)
+    ): String = runCatching {
+        val unitsFlag = if (iecUnits) FLAG_IEC_UNITS else FLAG_SI_UNITS
+        val flags = if (shortValue) (unitsFlag or FLAG_SHORTER) else unitsFlag
+        val (value, unit) = formatFileSize(bytes, valueOnly, flags)
+        if (unit == null) {
+            value
+        } else {
+            getString(resources.getIdentifier("fileSizeSuffix", "string", "android"), value, unit)
         }
+    }.getOrElse {
+        Formatter.formatShortFileSize(this, bytes)
     }
 
-    private fun formatFileSize(resources: Resources, bytes: Long, valueOnly: Boolean, flags: Int): Pair<String, String?> {
+    private fun Context.formatFileSize(bytes: Long, valueOnly: Boolean, flags: Int): Pair<String, String?> {
 
         fun getSuffix(suffixes: MutableList<String>): Int? {
             return if (valueOnly) null else resources.getIdentifier(suffixes.removeFirstOrNull(), "string", "android")
