@@ -31,10 +31,17 @@ object FormatterFileSize {
     private const val FLAG_SI_UNITS = 1 shl 2
     private const val FLAG_SHORTER = 1 shl 0
 
-    fun Context.formatShortFileSize(bytes: Long, valueOnly: Boolean = false): String {
+    fun Context.formatShortFileSize(
+        bytes: Long,
+        valueOnly: Boolean = false,
+        shortValue: Boolean = true,
+        iecUnits: Boolean = true,
+    ): String {
         return runCatching {
-            val (value, unit) = formatFileSize(resources, bytes, FLAG_IEC_UNITS or FLAG_SHORTER)
-            if (valueOnly) {
+            val unitsFlag = if (iecUnits) FLAG_IEC_UNITS else FLAG_SI_UNITS
+            val flags = if (shortValue) (unitsFlag or FLAG_SHORTER) else unitsFlag
+            val (value, unit) = formatFileSize(resources, bytes, valueOnly, flags)
+            if (unit == null) {
                 value
             } else {
                 getString(
@@ -48,7 +55,11 @@ object FormatterFileSize {
         }
     }
 
-    private fun formatFileSize(resources: Resources, sizeBytes: Long, flags: Int): Pair<String, String> {
+    private fun formatFileSize(resources: Resources, bytes: Long, valueOnly: Boolean, flags: Int): Pair<String, String?> {
+
+        fun getSuffix(suffixes: MutableList<String>): Int? {
+            return if (valueOnly) null else resources.getIdentifier(suffixes.removeFirstOrNull(), "string", "android")
+        }
 
         val suffixes = mutableListOf(
             "byteShort",
@@ -59,15 +70,15 @@ object FormatterFileSize {
             "petabyteShort",
         )
         val unit = if (flags and FLAG_IEC_UNITS != 0) KIBI_BYTE else KILO_BYTE
-        var result = abs(sizeBytes).toFloat()
+        var result = abs(bytes).toFloat()
         var multiplier = 1L
 
-        var suffix = resources.getIdentifier(suffixes.removeFirstOrNull(), "string", "android")
+        var suffix = getSuffix(suffixes)
         val suffixesCount = suffixes.count()
 
         repeat(suffixesCount) {
             if (result > 900) {
-                suffix = resources.getIdentifier(suffixes.removeFirstOrNull(), "string", "android")
+                suffix = getSuffix(suffixes)
                 multiplier *= unit
                 result /= unit
             }
@@ -82,7 +93,7 @@ object FormatterFileSize {
 
         result = abs(result)
         val resultValue = String.format(roundFormat, result)
-        val resultUnit = resources.getString(suffix)
+        val resultUnit = suffix?.let(resources::getString)
 
         return resultValue to resultUnit
     }
