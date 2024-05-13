@@ -37,47 +37,47 @@ class FormatterFileSizeTest {
     }
 
     @Test
-    fun `901 is rounded to 0,XX`() {
+    fun `901 is rounded to 0,88 KB`() {
         Assert.assertEquals("0.88", context.formatShortFileSize(bytes = 901L, valueOnly = true))
     }
 
     @Test
-    fun `921_600`() {
+    fun `921_600 is rounded to 900 KB`() {
         Assert.assertEquals("900", context.formatShortFileSize(bytes = 921_600L, valueOnly = true))
     }
 
     @Test
-    fun `921_601`() {
+    fun `921_601 is rounded to 0,88 MB`() {
         Assert.assertEquals("0.88", context.formatShortFileSize(bytes = 921_601L, valueOnly = true))
     }
 
     @Test
-    fun `1_890`() {
+    fun `1_890 is rounded to 1,8 KB`() {
         Assert.assertEquals("1.8", context.formatShortFileSize(bytes = 1_890L, valueOnly = true))
     }
 
     @Test
-    fun `1_890_000`() {
+    fun `1_890_000 is rounded to 1,8 MB`() {
         Assert.assertEquals("1.8", context.formatShortFileSize(bytes = 1_890_000L, valueOnly = true))
     }
 
     @Test
-    fun `1_890_000_000`() {
+    fun `1_890_000_000 is rounded to 1,8 GB`() {
         Assert.assertEquals("1.8", context.formatShortFileSize(bytes = 1_890_000_000L, valueOnly = true))
     }
 
     @Test
-    fun `1_890_000_000_000`() {
+    fun `1_890_000_000_000 is rounded to 1,7 TB`() {
         Assert.assertEquals("1.7", context.formatShortFileSize(bytes = 1_890_000_000_000L, valueOnly = true))
     }
 
     @Test
-    fun `1_890_000_000_000_000`() {
+    fun `1_890_000_000_000_000 is rounded to 1,7 PB`() {
         Assert.assertEquals("1.7", context.formatShortFileSize(bytes = 1_890_000_000_000_000L, valueOnly = true))
     }
 
     @Test
-    fun `1_890_000_000_000_000_000`() {
+    fun `1_890_000_000_000_000_000 is rounded to 1,6 EB`() {
         Assert.assertEquals("1.6", context.formatShortFileSize(bytes = 1_890_000_000_000_000_000L, valueOnly = true))
     }
 }
