@@ -59,8 +59,8 @@ object FormatterFileSize {
         var multiplier = 1L
 
         var result = abs(bytes).toFloat()
+        val suffixesCount = suffixes.count() - 1
         var suffix = getSuffix(suffixes)
-        val suffixesCount = suffixes.count()
 
         repeat(suffixesCount) {
             if (result > 900) {
