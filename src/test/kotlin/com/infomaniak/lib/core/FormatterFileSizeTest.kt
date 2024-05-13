@@ -77,7 +77,7 @@ class FormatterFileSizeTest {
     }
 
     @Test
-    fun `1_890_000_000_000_000_000 is rounded to 1,6 EB`() {
-        Assert.assertEquals("1.6", context.formatShortFileSize(bytes = 1_890_000_000_000_000_000L, valueOnly = true))
+    fun `1_890_000_000_000_000_000 is rounded to 1679 PB`() {
+        Assert.assertEquals("1679", context.formatShortFileSize(bytes = 1_890_000_000_000_000_000L, valueOnly = true))
     }
 }
