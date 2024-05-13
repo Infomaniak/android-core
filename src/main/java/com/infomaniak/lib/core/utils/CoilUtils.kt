@@ -22,6 +22,7 @@ import android.os.Build
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import coil.decode.SvgDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import com.infomaniak.lib.core.auth.TokenAuthenticator
@@ -54,6 +55,7 @@ object CoilUtils {
         context: Context,
         tokenInterceptorListener: TokenInterceptorListener? = null,
         gifPreview: Boolean = false,
+        isSvg: Boolean = false
     ): ImageLoader {
         return ImageLoader.Builder(context)
             .crossfade(true)
@@ -66,6 +68,7 @@ object CoilUtils {
                     }
                     add(factory)
                 }
+                if (isSvg) add(SvgDecoder.Factory())
             }
             .okHttpClient {
                 OkHttpClient.Builder().apply {
