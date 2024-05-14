@@ -40,7 +40,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.view.WindowManager.*
+import android.view.WindowManager.LayoutParams
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
@@ -52,7 +52,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle.*
+import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDirections
@@ -66,9 +66,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.load
-import com.github.razir.progressbutton.*
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
+import com.github.razir.progressbutton.attachTextChangeAnimator
+import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
