@@ -1,0 +1,58 @@
+[versions]
+androidGradlePlugin = "8.2.2"
+dotsindicator = "5.0"
+dragdropswipeRecyclerview = "1.2.0"
+firebaseMessagingKtx = "23.4.1"
+flexbox = "3.0.0"
+googleServices = "4.4.1"
+hiltAndroid = "2.51.1"
+hiltAndroidx = "1.2.0"
+jsoup = "1.17.2"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+kapt = "1.9.22"
+kotlin = "1.9.22"
+ksp = "1.9.22-1.0.17"
+leakcanaryAndroid = "2.12"
+lifecycleProcess = "2.7.0"
+lottie = "6.4.0"
+navigation = "2.7.7"
+realmKotlin = "1.15.0"
+sentryAndroidFragment = "7.8.0"
+webkit = "1.10.0"
+workConcurrentFutures = "1.1.0"
+workRuntimeKtx = "2.9.0"
+
+[libraries]
+dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
+dragdropswipe-recyclerview = { module = "com.ernestoyaquello.dragdropswiperecyclerview:drag-drop-swipe-recyclerview", version.ref = "dragdropswipeRecyclerview" }
+firebase-messaging-ktx = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
+hilt-compiler-androidx = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltAndroidx" }
+hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltAndroidx" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
+lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycleProcess" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
+realm-kotlin-base = { module = "io.realm.kotlin:library-base", version.ref = "realmKotlin" }
+sentry-android-fragment = { module = "io.sentry:sentry-android-fragment", version.ref = "sentryAndroidFragment" }
+webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
+work-concurrent-futures = { module = "androidx.concurrent:concurrent-futures-ktx", version.ref = "workConcurrentFutures" }
+work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+# Unit tests
+ext-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+junit = { module = "junit:junit", version.ref = "junit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+realm-kotlin = { id = "io.realm.kotlin", version.ref = "realmKotlin" }
