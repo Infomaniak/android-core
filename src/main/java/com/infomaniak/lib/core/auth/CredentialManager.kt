@@ -19,10 +19,7 @@ package com.infomaniak.lib.core.auth
 
 import androidx.collection.ArrayMap
 import androidx.lifecycle.LiveData
-import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.infomaniak.lib.core.BuildConfig
 import com.infomaniak.lib.core.models.user.User
-import com.infomaniak.lib.core.networking.GZipInterceptor
 import com.infomaniak.lib.core.networking.HttpClientConfig
 import com.infomaniak.lib.core.room.UserDatabase
 import com.infomaniak.lib.login.ApiToken
@@ -79,9 +76,6 @@ abstract class CredentialManager {
 
     private suspend fun getHttpClientUser(userId: Int, timeout: Long?): OkHttpClient {
         return OkHttpClient.Builder().apply {
-            if (BuildConfig.DEBUG) {
-                addNetworkInterceptor(StethoInterceptor())
-            }
             timeout?.let {
                 callTimeout(timeout, TimeUnit.SECONDS)
                 readTimeout(timeout, TimeUnit.SECONDS)
@@ -106,8 +100,8 @@ abstract class CredentialManager {
             }
 
             HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
+            HttpClientConfig.addCommonInterceptors(this)
 
-            addInterceptor(GZipInterceptor())
             addInterceptor(TokenInterceptor(tokenInterceptorListener))
             authenticator(TokenAuthenticator(tokenInterceptorListener))
         }.run {

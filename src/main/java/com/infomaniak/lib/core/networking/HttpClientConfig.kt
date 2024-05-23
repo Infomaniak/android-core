@@ -17,7 +17,11 @@
  */
 package com.infomaniak.lib.core.networking
 
+import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.infomaniak.lib.core.BuildConfig
+import io.sentry.okhttp.SentryOkHttpInterceptor
 import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import java.io.File
 
 object HttpClientConfig {
@@ -27,4 +31,12 @@ object HttpClientConfig {
     var cacheDir: File? = null
     var customInterceptors: List<Interceptor>? = null
     var customTimeoutMinutes = 2L
+
+    fun addCommonInterceptors(builder: OkHttpClient.Builder) = with(builder) {
+        if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
+        addInterceptor(GZipInterceptor())
+        addInterceptor(SentryOkHttpInterceptor(captureFailedRequests = true))
+        customInterceptors?.forEach(::addInterceptor)
+
+    }
 }

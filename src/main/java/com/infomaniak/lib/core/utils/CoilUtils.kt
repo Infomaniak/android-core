@@ -24,12 +24,9 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.infomaniak.lib.core.BuildConfig
 import com.infomaniak.lib.core.auth.TokenAuthenticator
 import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
-import com.infomaniak.lib.core.networking.GZipInterceptor
 import com.infomaniak.lib.core.networking.HttpClientConfig
 import com.infomaniak.lib.core.networking.HttpUtils
 import okhttp3.Cache
@@ -74,6 +71,7 @@ object CoilUtils {
                 OkHttpClient.Builder().apply {
 
                     HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
+                    HttpClientConfig.addCommonInterceptors(this)
 
                     tokenInterceptorListener?.let {
                         addInterceptor(Interceptor { chain ->
@@ -82,12 +80,9 @@ object CoilUtils {
                                 .build()
                                 .let(chain::proceed)
                         })
-                        addInterceptor(GZipInterceptor())
+
                         addInterceptor(TokenInterceptor(it))
                         authenticator(TokenAuthenticator(it))
-                    }
-                    if (BuildConfig.DEBUG) {
-                        addNetworkInterceptor(StethoInterceptor())
                     }
                 }.build()
             }
