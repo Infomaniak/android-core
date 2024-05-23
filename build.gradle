@@ -78,7 +78,6 @@ dependencies {
     def coilVersion = '2.6.0'
     api "io.coil-kt:coil-gif:$coilVersion"
     api "io.coil-kt:coil:$coilVersion"
-    api "io.coil-kt:coil-svg:$coilVersion"
 
     api 'com.github.infomaniak:android-login:2.8.0'
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
