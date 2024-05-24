@@ -67,6 +67,7 @@ import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.load
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
+import com.github.razir.progressbutton.TextChangeAnimatorParams
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
@@ -101,9 +102,20 @@ fun Context.showToast(title: Int, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, title, duration).show()
 }
 
-fun MaterialButton.initProgress(lifecycle: LifecycleOwner) {
+fun MaterialButton.initProgress(lifecycle: LifecycleOwner, color: Int? = null) {
+
     lifecycle.bindProgressButton(button = this)
-    attachTextChangeAnimator()
+
+    val params = color?.let {
+        TextChangeAnimatorParams().apply {
+            useCurrentTextColor = false
+            textColor = color
+            fadeInMills = 0L
+            fadeOutMills = 0L
+        }
+    }
+
+    attachTextChangeAnimator(params)
 }
 
 fun MaterialButton.showProgress(color: Int? = null) {
