@@ -106,10 +106,10 @@ fun MaterialButton.initProgress(lifecycle: LifecycleOwner) {
     attachTextChangeAnimator()
 }
 
-fun MaterialButton.showProgress(color: Int = Color.WHITE) {
+fun MaterialButton.showProgress(color: Int? = null) {
     isClickable = false
     showProgress {
-        progressColor = color
+        progressColor = color ?: Color.WHITE
         gravity = GRAVITY_CENTER
     }
 }
