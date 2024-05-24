@@ -66,12 +66,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.load
+import com.github.razir.progressbutton.*
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
-import com.github.razir.progressbutton.TextChangeAnimatorParams
-import com.github.razir.progressbutton.attachTextChangeAnimator
-import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
-import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
@@ -102,9 +99,9 @@ fun Context.showToast(title: Int, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, title, duration).show()
 }
 
-fun MaterialButton.initProgress(lifecycle: LifecycleOwner, color: Int? = null) {
+fun MaterialButton.initProgress(lifecycle: LifecycleOwner? = null, color: Int? = null) {
 
-    lifecycle.bindProgressButton(button = this)
+    lifecycle?.bindProgressButton(button = this)
 
     val params = color?.let {
         TextChangeAnimatorParams().apply {
@@ -116,6 +113,11 @@ fun MaterialButton.initProgress(lifecycle: LifecycleOwner, color: Int? = null) {
     }
 
     attachTextChangeAnimator(params)
+}
+
+fun MaterialButton.updateTextColor(color: Int?) {
+    detachTextChangeAnimator()
+    initProgress(color = color)
 }
 
 fun MaterialButton.showProgress(color: Int? = null) {
