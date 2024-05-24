@@ -36,6 +36,9 @@ object HttpClientConfig {
         if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
         addInterceptor(GZipInterceptor())
         addInterceptor(SentryOkHttpInterceptor(captureFailedRequests = true))
+
+        // Add custom interceptors after every other interceptor so everything is already setup correctly by other previous
+        // interceptors. Especially needed by the custom interceptors like AccessTokenUsageInterceptor
         customInterceptors?.forEach(::addInterceptor)
     }
 }

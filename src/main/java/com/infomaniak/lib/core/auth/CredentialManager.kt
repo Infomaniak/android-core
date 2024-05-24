@@ -100,10 +100,12 @@ abstract class CredentialManager {
             }
 
             HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
-            HttpClientConfig.addCommonInterceptors(this)
-
             addInterceptor(TokenInterceptor(tokenInterceptorListener))
             authenticator(TokenAuthenticator(tokenInterceptorListener))
+
+            // Add common interceptors after every other interceptor so everything is already setup correctly by other previous
+            // interceptors. Especially needed by the custom interceptors like AccessTokenUsageInterceptor
+            HttpClientConfig.addCommonInterceptors(this)
         }.run {
             build()
         }

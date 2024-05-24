@@ -39,7 +39,7 @@ class AccessTokenUsageInterceptor(
                 date = System.currentTimeMillis() / 1000,
             )
 
-            if (response.code != 401) {
+            if (response.code != 401) { // TODO: Normal if we still use refresh token
                 updateLastApiCall(currentApiCall)
                 return@runBlocking
             }
