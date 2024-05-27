@@ -43,7 +43,7 @@ class AccessTokenUsageInterceptor(
 
             val currentApiCall = ApiCallRecord(
                 accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return@runBlocking,
-                date = System.currentTimeMillis() / 1000,
+                date = System.currentTimeMillis() / 1_000L,
                 responseCode = response.code,
             )
 
@@ -66,7 +66,7 @@ class AccessTokenUsageInterceptor(
                     scope.setExtra("current api call date epoch", currentApiCall.date.toString())
                     scope.setExtra("current api call token", formatAccessTokenForSentry(currentApiCall.accessToken))
 
-                    Sentry.captureMessage("Got disconnected due to non working access token but it's not been a year yet")
+                    Sentry.captureMessage("Got disconnected due to non-working access token but it's not been a year yet")
                 }
             }
         }
@@ -80,6 +80,6 @@ class AccessTokenUsageInterceptor(
     data class ApiCallRecord(val accessToken: String, val date: Long, val responseCode: Int)
 
     companion object {
-        private const val ONE_YEAR = 60 * 60 * 24 * 365
+        private const val ONE_YEAR = 60 * 60 * 24 * 365 // In seconds
     }
 }
