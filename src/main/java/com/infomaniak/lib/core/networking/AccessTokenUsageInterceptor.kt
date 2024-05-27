@@ -65,8 +65,6 @@ class AccessTokenUsageInterceptor(
                     Sentry.captureMessage("Got disconnected due to non working access token but it's not been a year yet")
                 }
             }
-
-            updateLastApiCall(currentApiCall)
         }
 
         return response
