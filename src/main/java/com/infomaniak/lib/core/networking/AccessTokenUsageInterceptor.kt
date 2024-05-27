@@ -25,12 +25,14 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.net.ssl.HttpsURLConnection
 
 class AccessTokenUsageInterceptor(
     private val tokenInterceptorListener: TokenInterceptorListener,
     private val previousApiCall: ApiCallRecord?,
     private val updateLastApiCall: (ApiCallRecord) -> Unit,
 ) : Interceptor {
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response = chain.proceed(request)
@@ -45,7 +47,7 @@ class AccessTokenUsageInterceptor(
                 responseCode = response.code,
             )
 
-            if (response.code != 401) {
+            if (response.code != HttpsURLConnection.HTTP_UNAUTHORIZED) {
                 updateLastApiCall(currentApiCall)
                 return@runBlocking
             }
