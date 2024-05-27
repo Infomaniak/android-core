@@ -42,6 +42,7 @@ class AccessTokenUsageInterceptor(
             val currentApiCall = ApiCallRecord(
                 accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return@runBlocking,
                 date = System.currentTimeMillis() / 1000,
+                responseCode = response.code,
             )
 
             if (response.code != 401) {
@@ -58,6 +59,7 @@ class AccessTokenUsageInterceptor(
 
                     scope.setExtra("last known api call date epoch", previousApiCall.date.toString())
                     scope.setExtra("last known api call token", formatAccessTokenForSentry(previousApiCall.accessToken))
+                    scope.setExtra("last known api call response code", previousApiCall.responseCode.toString())
 
                     scope.setExtra("current api call date epoch", currentApiCall.date.toString())
                     scope.setExtra("current api call token", formatAccessTokenForSentry(currentApiCall.accessToken))
@@ -73,7 +75,7 @@ class AccessTokenUsageInterceptor(
     private fun formatAccessTokenForSentry(accessToken: String): String = accessToken.take(2) + "..." + accessToken.takeLast(2)
 
     @Serializable
-    data class ApiCallRecord(val accessToken: String, val date: Long)
+    data class ApiCallRecord(val accessToken: String, val date: Long, val responseCode: Int)
 
     companion object {
         private const val ONE_YEAR = 60 * 60 * 24 * 365
