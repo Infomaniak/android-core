@@ -54,7 +54,7 @@ class AccessTokenUsageInterceptor(
                 && currentApiCall.date < previousApiCall.date + ONE_YEAR
             ) {
                 Sentry.withScope { scope ->
-                    scope.level = SentryLevel.ERROR
+                    scope.level = SentryLevel.FATAL
 
                     scope.setExtra("last known api call date epoch", previousApiCall.date.toString())
                     scope.setExtra("last known api call token", formatAccessTokenForSentry(previousApiCall.accessToken))
@@ -62,7 +62,7 @@ class AccessTokenUsageInterceptor(
                     scope.setExtra("current api call date epoch", currentApiCall.date.toString())
                     scope.setExtra("current api call token", formatAccessTokenForSentry(currentApiCall.accessToken))
 
-                    Sentry.captureMessage("Got disconnected with non working access token but it's not been a year yet")
+                    Sentry.captureMessage("Got disconnected due to non working access token but it's not been a year yet")
                 }
             }
 
