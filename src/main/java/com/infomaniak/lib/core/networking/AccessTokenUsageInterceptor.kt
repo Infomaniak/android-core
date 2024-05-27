@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.networking
 
+import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import io.sentry.Sentry
 import io.sentry.SentryLevel
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 
 class AccessTokenUsageInterceptor(
+    private val tokenInterceptorListener: TokenInterceptorListener,
     private val previousApiCall: ApiCallRecord?,
     private val updateLastApiCall: (ApiCallRecord) -> Unit,
 ) : Interceptor {
@@ -34,12 +36,15 @@ class AccessTokenUsageInterceptor(
         val response = chain.proceed(request)
 
         runBlocking(Dispatchers.IO) {
+            // Only log api calls if we're not using refresh tokens
+            if (tokenInterceptorListener.getApiToken().refreshToken != null) return@runBlocking
+
             val currentApiCall = ApiCallRecord(
                 accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return@runBlocking,
                 date = System.currentTimeMillis() / 1000,
             )
 
-            if (response.code != 401) { // TODO: Normal if we still use refresh token
+            if (response.code != 401) {
                 updateLastApiCall(currentApiCall)
                 return@runBlocking
             }
