@@ -37,6 +37,5 @@ object HttpClientConfig {
         addInterceptor(GZipInterceptor())
         addInterceptor(SentryOkHttpInterceptor(captureFailedRequests = true))
         customInterceptors?.forEach(::addInterceptor)
-
     }
 }
