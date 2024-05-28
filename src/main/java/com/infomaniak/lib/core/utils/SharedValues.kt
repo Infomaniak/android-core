@@ -108,15 +108,17 @@ inline fun <reified E : Enum<E>> SharedValues.sharedValue(key: String, defaultVa
     }
 }
 
-inline fun <reified T : @Serializable Any> SharedValues.sharedValue(key: String, defaultValue: T?): ReadWriteProperty<Any, T?> {
-    return object : ReadWriteProperty<Any, T?> {
-        override fun getValue(thisRef: Any, property: KProperty<*>): T? {
-            val stringRepresentation = sharedPreferences.getString(key, null) ?: return defaultValue
-            return SharedValues.sharedValueJson.decodeFromString<T>(stringRepresentation)
-        }
+inline fun <reified T : @Serializable Any> SharedValues.sharedValue(
+    key: String,
+    defaultValue: T?,
+): ReadWriteProperty<Any, T?> = object : ReadWriteProperty<Any, T?> {
 
-        override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) = sharedPreferences.transaction {
-            putString(key, SharedValues.sharedValueJson.encodeToString(value))
-        }
+    override fun getValue(thisRef: Any, property: KProperty<*>): T? {
+        val stringRepresentation = sharedPreferences.getString(key, null) ?: return defaultValue
+        return SharedValues.sharedValueJson.decodeFromString<T>(stringRepresentation)
+    }
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) = sharedPreferences.transaction {
+        putString(key, SharedValues.sharedValueJson.encodeToString(value))
     }
 }
