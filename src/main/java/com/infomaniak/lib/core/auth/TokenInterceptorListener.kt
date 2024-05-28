@@ -22,5 +22,5 @@ import com.infomaniak.lib.login.ApiToken
 interface TokenInterceptorListener {
     suspend fun onRefreshTokenSuccess(apiToken: ApiToken)
     suspend fun onRefreshTokenError()
-    suspend fun getApiToken(): ApiToken
+    suspend fun getApiToken(): ApiToken?
 }

@@ -18,6 +18,7 @@
 package com.infomaniak.lib.core.utils
 
 import android.content.SharedPreferences
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.properties.ReadWriteProperty
@@ -81,17 +82,17 @@ interface SharedValues {
     fun sharedValue(key: String, defaultValue: List<String>): ReadWriteProperty<Any, List<String>> = with(sharedPreferences) {
         return object : ReadWriteProperty<Any, List<String>> {
             override fun getValue(thisRef: Any, property: KProperty<*>): List<String> {
-                return getString(key, null)?.let(json::decodeFromString) ?: defaultValue
+                return getString(key, null)?.let(sharedValueJson::decodeFromString) ?: defaultValue
             }
 
             override fun setValue(thisRef: Any, property: KProperty<*>, value: List<String>) {
-                transaction { putString(key, json.encodeToString(value)) }
+                transaction { putString(key, sharedValueJson.encodeToString(value)) }
             }
         }
     }
 
     companion object {
-        private val json = Json
+        val sharedValueJson = Json
     }
 }
 
@@ -104,5 +105,20 @@ inline fun <reified E : Enum<E>> SharedValues.sharedValue(key: String, defaultVa
         override fun setValue(thisRef: Any, property: KProperty<*>, value: E) {
             sharedPreferences.transaction { putString(key, value.name) }
         }
+    }
+}
+
+inline fun <reified T : @Serializable Any> SharedValues.sharedValue(
+    key: String,
+    defaultValue: T?,
+): ReadWriteProperty<Any, T?> = object : ReadWriteProperty<Any, T?> {
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): T? {
+        val stringRepresentation = sharedPreferences.getString(key, null) ?: return defaultValue
+        return SharedValues.sharedValueJson.decodeFromString<T>(stringRepresentation)
+    }
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) = sharedPreferences.transaction {
+        putString(key, SharedValues.sharedValueJson.encodeToString(value))
     }
 }

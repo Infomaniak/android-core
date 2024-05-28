@@ -32,10 +32,15 @@ object HttpClientConfig {
     var customInterceptors: List<Interceptor>? = null
     var customTimeoutMinutes = 2L
 
+    /**
+     * Add common interceptors after every other interceptor so everything is already setup correctly by other previous
+     * interceptors. Especially needed by the custom interceptors like AccessTokenUsageInterceptor
+     * */
     fun addCommonInterceptors(builder: OkHttpClient.Builder) = with(builder) {
         if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
         addInterceptor(GZipInterceptor())
         addInterceptor(SentryOkHttpInterceptor(captureFailedRequests = true))
+
         customInterceptors?.forEach(::addInterceptor)
     }
 }

@@ -93,17 +93,17 @@ abstract class CredentialManager {
                     user?.let { onRefreshTokenError?.invoke(it) }
                 }
 
-                override suspend fun getApiToken(): ApiToken {
+                override suspend fun getApiToken(): ApiToken? {
                     user = getUserById(userId)
-                    return user?.apiToken!!
+                    return user?.apiToken
                 }
             }
 
             HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
-            HttpClientConfig.addCommonInterceptors(this)
-
             addInterceptor(TokenInterceptor(tokenInterceptorListener))
             authenticator(TokenAuthenticator(tokenInterceptorListener))
+
+            HttpClientConfig.addCommonInterceptors(this) // Needs to be added last
         }.run {
             build()
         }

@@ -71,7 +71,6 @@ object CoilUtils {
                 OkHttpClient.Builder().apply {
 
                     HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
-                    HttpClientConfig.addCommonInterceptors(this)
 
                     tokenInterceptorListener?.let {
                         addInterceptor(Interceptor { chain ->
@@ -84,6 +83,8 @@ object CoilUtils {
                         addInterceptor(TokenInterceptor(it))
                         authenticator(TokenAuthenticator(it))
                     }
+
+                    HttpClientConfig.addCommonInterceptors(this) // Needs to be added last
                 }.build()
             }
             .memoryCache {

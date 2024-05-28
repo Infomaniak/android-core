@@ -19,6 +19,8 @@ package com.infomaniak.lib.core.auth
 
 import com.infomaniak.lib.core.api.ApiController
 import com.infomaniak.lib.login.ApiToken
+import io.sentry.Sentry
+import io.sentry.SentryLevel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -37,7 +39,10 @@ class TokenAuthenticator(
             mutex.withLock {
                 val request = response.request
                 val authorization = request.header("Authorization")
-                var apiToken = tokenInterceptorListener.getApiToken()
+                var apiToken = tokenInterceptorListener.getApiToken() ?: run {
+                    Sentry.captureMessage("Null ApiToken in TokenAuthenticator", SentryLevel.ERROR)
+                    return@runBlocking request
+                }
 
                 if (apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")) {
                     return@runBlocking changeAccessToken(request, apiToken)

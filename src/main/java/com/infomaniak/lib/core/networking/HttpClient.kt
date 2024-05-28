@@ -32,16 +32,18 @@ object HttpClient {
         this.tokenInterceptorListener = tokenInterceptorListener
     }
 
-    val okHttpClientNoTokenInterceptor: OkHttpClient by lazy { OkHttpClient.Builder().apply {
-        addCache()
-        addInterceptors()
-    }.build() }
+    val okHttpClientNoTokenInterceptor: OkHttpClient by lazy {
+        OkHttpClient.Builder().apply {
+            addCache()
+            addCommonInterceptors()
+        }.build()
+    }
 
     val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder().apply {
             addCache()
-            addInterceptors()
             addTokenInterceptor()
+            addCommonInterceptors()
         }.build()
     }
 
@@ -49,7 +51,7 @@ object HttpClient {
         OkHttpClient.Builder()
             .apply {
                 addCache()
-                addInterceptors()
+                addCommonInterceptors()
                 addCustomTimeout()
             }.build()
     }
@@ -58,8 +60,8 @@ object HttpClient {
         OkHttpClient.Builder()
             .apply {
                 addCache()
-                addInterceptors()
                 addTokenInterceptor()
+                addCommonInterceptors()
                 addCustomTimeout()
             }.build()
     }
@@ -68,7 +70,11 @@ object HttpClient {
         HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
     }
 
-    private fun OkHttpClient.Builder.addInterceptors() {
+    /**
+     * Add common interceptors after every other interceptor so everything is already setup correctly by other previous
+     * interceptors. Especially needed by the custom interceptors like AccessTokenUsageInterceptor
+     * */
+    private fun OkHttpClient.Builder.addCommonInterceptors() {
         HttpClientConfig.addCommonInterceptors(this)
     }
 
