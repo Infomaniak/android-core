@@ -62,12 +62,12 @@ class AccessTokenUsageInterceptor(
                 Sentry.withScope { scope ->
                     scope.level = SentryLevel.FATAL
 
-                    scope.setExtra("last known api call date epoch", previousApiCall.date.toString())
-                    scope.setExtra("last known api call token", formatAccessTokenForSentry(previousApiCall.accessToken))
-                    scope.setExtra("last known api call response code", previousApiCall.responseCode.toString())
+                    scope.setExtra("Last known api call date epoch", previousApiCall.date.toString())
+                    scope.setExtra("Last known api call token", formatAccessTokenForSentry(previousApiCall.accessToken))
+                    scope.setExtra("Last known api call response code", previousApiCall.responseCode.toString())
 
-                    scope.setExtra("current api call date epoch", currentApiCall.date.toString())
-                    scope.setExtra("current api call token", formatAccessTokenForSentry(currentApiCall.accessToken))
+                    scope.setExtra("Current api call date epoch", currentApiCall.date.toString())
+                    scope.setExtra("Current api call token", formatAccessTokenForSentry(currentApiCall.accessToken))
 
                     Sentry.captureMessage("Got disconnected due to non-working access token but it's not been a year yet")
                 }
@@ -83,6 +83,6 @@ class AccessTokenUsageInterceptor(
     data class ApiCallRecord(val accessToken: String, val date: Long, val responseCode: Int)
 
     companion object {
-        private const val ONE_YEAR = 60 * 60 * 24 * 365 // In seconds
+        private const val ONE_YEAR = 60 * 60 * 24 * 365L // In seconds
     }
 }
