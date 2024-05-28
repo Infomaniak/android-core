@@ -112,7 +112,7 @@ fun MaterialButton.initProgress(lifecycle: LifecycleOwner? = null, color: Int? =
         }
     }
 
-    attachTextChangeAnimator(params)
+    params?.let(::attachTextChangeAnimator) ?: attachTextChangeAnimator()
 }
 
 fun MaterialButton.updateTextColor(color: Int?) {
