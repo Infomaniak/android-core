@@ -52,6 +52,7 @@ object HttpClient {
             .apply {
                 addCache()
                 addCommonInterceptors()
+                addCustomTimeout()
             }.build()
     }
 
