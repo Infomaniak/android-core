@@ -38,8 +38,11 @@ class AccessTokenUsageInterceptor(
         val response = chain.proceed(request)
 
         runBlocking(Dispatchers.IO) {
+            // Only log api calls if we have an ApiToken
+            val apiToken = tokenInterceptorListener.getApiToken() ?: return@runBlocking
+
             // Only log api calls if we're not using refresh tokens
-            if (tokenInterceptorListener.getApiToken().refreshToken != null) return@runBlocking
+            if (apiToken.refreshToken != null) return@runBlocking
 
             val currentApiCall = ApiCallRecord(
                 accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return@runBlocking,
