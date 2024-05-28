@@ -78,7 +78,7 @@ fun Uri.calculateFileSize(contentResolver: ContentResolver): Long? {
     return runCatching {
         contentResolver.openInputStream(this)?.use { inputStream ->
             var currentSize: Int
-            val byteArray = ByteArray(8192) // 8 Ko
+            val byteArray = ByteArray(8_192) // 8 Ko
             var fileSize = 0L
             while (inputStream.read(byteArray).also { currentSize = it } != -1) {
                 fileSize += currentSize
