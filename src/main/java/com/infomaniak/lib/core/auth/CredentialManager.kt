@@ -103,9 +103,7 @@ abstract class CredentialManager {
             addInterceptor(TokenInterceptor(tokenInterceptorListener))
             authenticator(TokenAuthenticator(tokenInterceptorListener))
 
-            // Add common interceptors after every other interceptor so everything is already setup correctly by other previous
-            // interceptors. Especially needed by the custom interceptors like AccessTokenUsageInterceptor
-            HttpClientConfig.addCommonInterceptors(this)
+            HttpClientConfig.addCommonInterceptors(this) // Needs to be added last
         }.run {
             build()
         }
