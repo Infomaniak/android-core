@@ -72,7 +72,7 @@ dependencies {
     ksp "androidx.room:room-compiler:$roomVersion"
 
     api 'com.google.android.material:material:1.12.0'
-    api 'com.google.code.gson:gson:2.10.1'
+    api 'com.google.code.gson:gson:2.11.0'
 
     def coilVersion = '2.6.0'
     api "io.coil-kt:coil-gif:$coilVersion"
@@ -94,5 +94,5 @@ dependencies {
     testImplementation 'androidx.test.ext:junit:1.1.5'
     testImplementation 'androidx.test:core-ktx:1.5.0'
     testImplementation 'androidx.test:core:1.5.0'
-    testImplementation 'org.robolectric:robolectric:4.12'
+    testImplementation 'org.robolectric:robolectric:4.12.2'
 }
