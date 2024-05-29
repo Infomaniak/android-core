@@ -97,6 +97,8 @@ abstract class CredentialManager {
                     user = getUserById(userId)
                     return user?.apiToken
                 }
+
+                override fun getCurrentUserId() = null
             }
 
             HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
