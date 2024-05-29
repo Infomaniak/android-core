@@ -23,7 +23,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.CountDownTimer
 import androidx.core.os.LocaleListCompat
-import java.util.*
+import java.util.Locale
 import java.util.regex.Pattern
 import kotlin.math.min
 
