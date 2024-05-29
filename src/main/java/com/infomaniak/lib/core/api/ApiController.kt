@@ -20,7 +20,6 @@ package com.infomaniak.lib.core.api
 import androidx.annotation.StringRes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.lib.core.BuildConfig.LOGIN_ENDPOINT_URL
@@ -38,6 +37,7 @@ import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -49,6 +49,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.reflect.Type
 import java.net.UnknownHostException
 import java.util.Date
+import com.google.gson.JsonElement as GsonElement
 
 object ApiController {
 
@@ -87,7 +88,7 @@ object ApiController {
     fun generateRequestBody(body: Any?): RequestBody {
         val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val toJson = when (body) {
-            is JsonElement -> body.toString()
+            is JsonElement, is GsonElement -> body.toString()
             is String -> body
             else -> gson.toJson(body)
         }
