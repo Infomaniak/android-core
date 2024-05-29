@@ -49,6 +49,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.reflect.Type
 import java.net.UnknownHostException
 import java.util.Date
+import com.google.gson.JsonElement as GsonElement
 
 object ApiController {
 
@@ -87,7 +88,7 @@ object ApiController {
     fun generateRequestBody(body: Any?): RequestBody {
         val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val toJson = when (body) {
-            is JsonElement, is com.google.gson.JsonElement -> body.toString()
+            is JsonElement, is GsonElement -> body.toString()
             is String -> body
             else -> gson.toJson(body)
         }
