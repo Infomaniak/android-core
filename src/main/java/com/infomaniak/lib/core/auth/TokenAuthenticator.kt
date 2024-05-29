@@ -18,9 +18,8 @@
 package com.infomaniak.lib.core.auth
 
 import com.infomaniak.lib.core.api.ApiController
+import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.login.ApiToken
-import io.sentry.Sentry
-import io.sentry.SentryLevel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -34,21 +33,28 @@ class TokenAuthenticator(
     private val tokenInterceptorListener: TokenInterceptorListener
 ) : Authenticator {
 
-    override fun authenticate(route: Route?, response: Response): Request {
+    private val userId = tokenInterceptorListener.getCurrentUserId()
+
+    override fun authenticate(route: Route?, response: Response): Request? {
         return runBlocking(Dispatchers.IO) {
             mutex.withLock {
                 val request = response.request
                 val authorization = request.header("Authorization")
-                var apiToken = tokenInterceptorListener.getApiToken() ?: run {
-                    Sentry.captureMessage("Null ApiToken in TokenAuthenticator", SentryLevel.ERROR)
-                    return@runBlocking request
+                val apiToken = tokenInterceptorListener.getApiToken() ?: run {
+                    // The last user has been disconnected
+                    SentryLog.e("TokenAuthenticator", "Null ApiToken in TokenAuthenticator")
+                    return@runBlocking null
                 }
+                val isAlreadyRefreshed = apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")
+                val hasUserChanged = userId != tokenInterceptorListener.getCurrentUserId()
 
-                if (apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")) {
-                    return@runBlocking changeAccessToken(request, apiToken)
-                } else {
-                    apiToken = ApiController.refreshToken(apiToken.refreshToken, tokenInterceptorListener)
-                    return@runBlocking changeAccessToken(request, apiToken)
+                return@runBlocking when {
+                    hasUserChanged -> null
+                    isAlreadyRefreshed -> changeAccessToken(request, apiToken)
+                    else -> {
+                        val newToken = ApiController.refreshToken(apiToken.refreshToken, tokenInterceptorListener)
+                        changeAccessToken(request, newToken)
+                    }
                 }
             }
         }
