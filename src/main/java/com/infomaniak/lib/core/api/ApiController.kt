@@ -178,7 +178,7 @@ object ApiController {
                 return when {
                     response.code >= 500 -> {
                         createErrorResponse(
-                            apiError = ApiError(context = bodyResponse.bodyResponseToJson(), exception = ServerErrorException()),
+                            apiError = createApiError(useKotlinxSerialization, bodyResponse, ServerErrorException()),
                             translatedError = R.string.serverError,
                             buildErrorResult = buildErrorResult,
                         )
@@ -208,7 +208,7 @@ object ApiController {
             } else {
                 createErrorResponse(
                     translatedError = R.string.anErrorHasOccurred,
-                    apiError = ApiError(context = bodyResponse.bodyResponseToJson(), exception = exception),
+                    apiError = createApiError(useKotlinxSerialization, bodyResponse, exception = exception),
                     buildErrorResult = buildErrorResult,
                 )
             }
@@ -227,6 +227,12 @@ object ApiController {
         translatedError = if (noNetwork) R.string.noConnection else R.string.connectionError,
         apiError = ApiError(exception = NetworkException()),
         buildErrorResult = buildErrorResult,
+    )
+
+    fun createApiError(useKotlinxSerialization: Boolean, bodyResponse: String, exception: Exception) = ApiError(
+        contextJson = if (useKotlinxSerialization) bodyResponse.bodyResponseToJson() else null,
+        contextGson = if (useKotlinxSerialization) JsonParser.parseString(bodyResponse).asJsonObject else null,
+        exception = exception
     )
 
     inline fun <reified T> createErrorResponse(
