@@ -23,10 +23,6 @@
         android:fullBackupContent="false"
         tools:targetApi="UPSIDE_DOWN_CAKE">
 
-        <activity
-            android:name="com.infomaniak.lib.stores.ui.FeedbackWebViewActivity"
-            android:windowSoftInputMode="adjustResize" />
-
     </application>
 
 </manifest>
