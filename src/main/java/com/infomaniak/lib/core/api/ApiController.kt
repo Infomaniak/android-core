@@ -34,8 +34,6 @@ import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
 import com.infomaniak.lib.core.utils.isNetworkException
 import com.infomaniak.lib.login.ApiToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -110,41 +108,50 @@ object ApiController {
 
         if (InfomaniakCore.accessType == null) formBuilder.addFormDataPart("duration", "infinite")
 
-        return withContext(Dispatchers.IO) {
-            val request = Request.Builder()
-                .url("${LOGIN_ENDPOINT_URL}token")
-                .post(formBuilder.build())
-                .build()
+        val request = Request.Builder()
+            .url("${LOGIN_ENDPOINT_URL}token")
+            .post(formBuilder.build())
+            .build()
 
-            val response = HttpClient.okHttpClientNoTokenInterceptor.newCall(request).execute()
-            response.use {
-                val bodyResponse = it.body?.string()
+        val apiToken = HttpClient.okHttpClientNoTokenInterceptor.newCall(request).execute().use {
+            val bodyResponse = it.body?.string()
 
-                when {
-                    it.isSuccessful -> {
-                        val apiToken = gson.fromJson(bodyResponse, ApiToken::class.java)
-                        apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1_000)
-                        tokenInterceptorListener.onRefreshTokenSuccess(apiToken)
-                        return@withContext apiToken
-                    }
-                    else -> {
-                        var invalidGrant = false
-                        runCatching {
-                            invalidGrant = JsonParser.parseString(bodyResponse)
-                                .asJsonObject
-                                .getAsJsonPrimitive("error")
-                                .asString == "invalid_grant"
-                        }
-
-                        if (invalidGrant) {
-                            tokenInterceptorListener.onRefreshTokenError()
-                            throw RefreshTokenException()
-                        }
-                        throw Exception(bodyResponse)
-                    }
+            when {
+                it.isSuccessful -> {
+                    getApiToken(bodyResponse, tokenInterceptorListener)
+                }
+                else -> {
+                    handleInvalidGrant(bodyResponse, tokenInterceptorListener)
+                    throw Exception(bodyResponse)
                 }
             }
         }
+
+        return apiToken
+    }
+
+    private suspend fun handleInvalidGrant(bodyResponse: String?, tokenInterceptorListener: TokenInterceptorListener) {
+        val invalidGrant = runCatching {
+            JsonParser.parseString(bodyResponse)
+                .asJsonObject
+                .getAsJsonPrimitive("error")
+                .asString == "invalid_grant"
+        }.getOrDefault(false)
+
+        if (invalidGrant) {
+            tokenInterceptorListener.onRefreshTokenError()
+            throw RefreshTokenException()
+        }
+    }
+
+    private suspend fun getApiToken(
+        bodyResponse: String?,
+        tokenInterceptorListener: TokenInterceptorListener,
+    ): ApiToken {
+        val apiToken = gson.fromJson(bodyResponse, ApiToken::class.java)
+        apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1_000L)
+        tokenInterceptorListener.onRefreshTokenSuccess(apiToken)
+        return apiToken
     }
 
     class RefreshTokenException : Exception()
@@ -178,23 +185,13 @@ object ApiController {
                 return when {
                     response.code >= 500 -> {
                         createErrorResponse(
-                            apiError = ApiError(context = bodyResponse.bodyResponseToJson(), exception = ServerErrorException()),
+                            apiError = createApiError(useKotlinxSerialization, bodyResponse, ServerErrorException()),
                             translatedError = R.string.serverError,
                             buildErrorResult = buildErrorResult,
                         )
                     }
                     bodyResponse.isBlank() -> createInternetErrorResponse(buildErrorResult = buildErrorResult)
-                    else -> {
-                        val decodedApiResponse = if (useKotlinxSerialization) {
-                            json.decodeFromString<T>(bodyResponse)
-                        } else {
-                            gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
-                        }
-                        decodedApiResponse.apply {
-                            val apiResponse = this as? ApiResponse<*>
-                            if (apiResponse?.result == ERROR) apiResponse.translatedError = R.string.anErrorHasOccurred
-                        }
-                    }
+                    else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse)
                 }
             }
         } catch (refreshTokenException: RefreshTokenException) {
@@ -208,7 +205,7 @@ object ApiController {
             } else {
                 createErrorResponse(
                     translatedError = R.string.anErrorHasOccurred,
-                    apiError = ApiError(context = bodyResponse.bodyResponseToJson(), exception = exception),
+                    apiError = createApiError(useKotlinxSerialization, bodyResponse, exception = exception),
                     buildErrorResult = buildErrorResult,
                 )
             }
@@ -216,7 +213,20 @@ object ApiController {
         }
     }
 
-    fun String.bodyResponseToJson(): JsonObject {
+    inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String): T {
+        val apiResponse = when {
+            useKotlinxSerialization -> json.decodeFromString<T>(bodyResponse)
+            else -> gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
+        }
+
+        if (apiResponse is ApiResponse<*> && apiResponse.result == ERROR) {
+            apiResponse.translatedError = R.string.anErrorHasOccurred
+        }
+
+        return apiResponse
+    }
+
+    private fun String.bodyResponseToJson(): JsonObject {
         return JsonObject(mapOf("bodyResponse" to JsonPrimitive(this)))
     }
 
@@ -227,6 +237,12 @@ object ApiController {
         translatedError = if (noNetwork) R.string.noConnection else R.string.connectionError,
         apiError = ApiError(exception = NetworkException()),
         buildErrorResult = buildErrorResult,
+    )
+
+    fun createApiError(useKotlinxSerialization: Boolean, bodyResponse: String, exception: Exception) = ApiError(
+        contextJson = if (useKotlinxSerialization) bodyResponse.bodyResponseToJson() else null,
+        contextGson = if (useKotlinxSerialization) JsonParser.parseString(bodyResponse).asJsonObject else null,
+        exception = exception
     )
 
     inline fun <reified T> createErrorResponse(
