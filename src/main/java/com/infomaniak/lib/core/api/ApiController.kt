@@ -146,10 +146,10 @@ object ApiController {
 
     private suspend fun getApiToken(
         bodyResponse: String?,
-        tokenInterceptorListener: TokenInterceptorListener
+        tokenInterceptorListener: TokenInterceptorListener,
     ): ApiToken {
         val apiToken = gson.fromJson(bodyResponse, ApiToken::class.java)
-        apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1_000)
+        apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1_000L)
         tokenInterceptorListener.onRefreshTokenSuccess(apiToken)
         return apiToken
     }
