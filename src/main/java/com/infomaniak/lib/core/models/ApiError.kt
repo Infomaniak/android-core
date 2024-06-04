@@ -37,6 +37,4 @@ class ApiError(
     val errors: Array<ApiError>? = null,
     @Contextual
     val exception: Exception? = null
-) {
-
-}
+)
