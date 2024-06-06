@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores.ui
+package com.infomaniak.lib.core.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -23,12 +23,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
-import com.infomaniak.lib.stores.databinding.ActivityFeedbackWebviewBinding
+import com.infomaniak.lib.core.databinding.ActivityWebviewBinding
 
-class FeedbackWebViewActivity : AppCompatActivity() {
+class WebViewActivity : AppCompatActivity() {
 
-    private val binding by lazy { ActivityFeedbackWebviewBinding.inflate(layoutInflater) }
-    private val navArgs: FeedbackWebViewActivityArgs by navArgs()
+    private val binding by lazy { ActivityWebviewBinding.inflate(layoutInflater) }
+    private val navArgs: WebViewActivityArgs by navArgs()
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +43,8 @@ class FeedbackWebViewActivity : AppCompatActivity() {
     companion object {
 
         fun startActivity(context: Context, url: String) {
-            Intent(context, FeedbackWebViewActivity::class.java).apply {
-                putExtras(FeedbackWebViewActivityArgs(url).toBundle())
+            Intent(context, WebViewActivity::class.java).apply {
+                putExtras(WebViewActivityArgs(url).toBundle())
             }.also(context::startActivity)
         }
     }
