@@ -41,13 +41,15 @@ class LiveDataNetworkStatus(context: Context) : LiveData<Boolean>() {
     private val networkStateObject = object : ConnectivityManager.NetworkCallback() {
         override fun onLost(network: Network) {
             networks.remove(network)
-            postValue(!networks.all { !checkInternetConnectivity(it) })
+            postValue(hasAvailableNetwork())
         }
 
         override fun onAvailable(network: Network) {
             networks.add(network)
-            postValue(networks.any { checkInternetConnectivity(it) })
+            postValue(hasAvailableNetwork())
         }
+
+        private fun hasAvailableNetwork() = networks.any { checkInternetConnectivity(it) }
 
         fun checkInternetConnectivity(network: Network): Boolean {
             return try {
