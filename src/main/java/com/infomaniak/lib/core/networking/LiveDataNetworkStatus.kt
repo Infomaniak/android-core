@@ -27,7 +27,6 @@ import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import io.sentry.Sentry
-import java.net.UnknownHostException
 
 class LiveDataNetworkStatus(context: Context) : LiveData<Boolean>() {
 
@@ -41,21 +40,19 @@ class LiveDataNetworkStatus(context: Context) : LiveData<Boolean>() {
     private val networkStateObject = object : ConnectivityManager.NetworkCallback() {
         override fun onLost(network: Network) {
             networks.remove(network)
-            postValue(!networks.all { !checkInternetConnectivity(it) })
+            postValue(hasAvailableNetwork())
         }
 
         override fun onAvailable(network: Network) {
             networks.add(network)
-            postValue(checkInternetConnectivity(network))
+            postValue(hasAvailableNetwork())
         }
 
-        fun checkInternetConnectivity(network: Network): Boolean {
-            return try {
-                network.getByName(ROOT_SERVER_CHECK_URL) != null
-            } catch (e: UnknownHostException) {
-                false
-            }
-        }
+        private fun hasAvailableNetwork() = networks.any(::hasInternetConnectivity)
+
+        fun hasInternetConnectivity(network: Network): Boolean = runCatching {
+            network.getByName(ROOT_SERVER_CHECK_URL) != null
+        }.getOrDefault(false)
     }
 
     override fun onActive() {
