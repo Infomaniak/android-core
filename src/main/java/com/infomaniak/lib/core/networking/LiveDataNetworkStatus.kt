@@ -46,7 +46,7 @@ class LiveDataNetworkStatus(context: Context) : LiveData<Boolean>() {
 
         override fun onAvailable(network: Network) {
             networks.add(network)
-            postValue(checkInternetConnectivity(network))
+            postValue(networks.any { checkInternetConnectivity(it) })
         }
 
         fun checkInternetConnectivity(network: Network): Boolean {
