@@ -76,7 +76,6 @@ dependencies {
     api 'com.google.code.gson:gson:2.11.0'
 
     def coilVersion = '2.6.0'
-    api "io.coil-kt:coil-gif:$coilVersion"
     api "io.coil-kt:coil:$coilVersion"
 
     api 'com.github.infomaniak:android-login:2.8.0'

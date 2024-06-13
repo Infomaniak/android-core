@@ -18,11 +18,8 @@
 package com.infomaniak.lib.core.utils
 
 import android.content.Context
-import android.os.Build
 import coil.ImageLoader
 import coil.decode.Decoder
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import com.infomaniak.lib.core.auth.TokenAuthenticator
@@ -54,20 +51,11 @@ object CoilUtils {
     fun newImageLoader(
         context: Context,
         tokenInterceptorListener: TokenInterceptorListener? = null,
-        gifPreview: Boolean = false,
         customFactories: List<Decoder.Factory> = emptyList()
     ): ImageLoader {
         return ImageLoader.Builder(context)
             .crossfade(true)
             .components {
-                if (gifPreview) {
-                    val factory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        ImageDecoderDecoder.Factory()
-                    } else {
-                        GifDecoder.Factory()
-                    }
-                    add(factory)
-                }
                 customFactories.forEach { add(it) }
             }
             .okHttpClient {
