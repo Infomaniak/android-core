@@ -55,7 +55,7 @@ object CoilUtils {
         context: Context,
         tokenInterceptorListener: TokenInterceptorListener? = null,
         gifPreview: Boolean = false,
-        customComponents: List<Decoder.Factory> = emptyList()
+        customFactories: List<Decoder.Factory> = emptyList()
     ): ImageLoader {
         return ImageLoader.Builder(context)
             .crossfade(true)
@@ -68,7 +68,7 @@ object CoilUtils {
                     }
                     add(factory)
                 }
-                customComponents.forEach { add(it) }
+                customFactories.forEach { add(it) }
             }
             .okHttpClient {
                 OkHttpClient.Builder().apply {
