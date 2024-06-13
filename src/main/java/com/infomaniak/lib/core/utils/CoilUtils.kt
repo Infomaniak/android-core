@@ -20,6 +20,7 @@ package com.infomaniak.lib.core.utils
 import android.content.Context
 import android.os.Build
 import coil.ImageLoader
+import coil.decode.Decoder
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
@@ -54,6 +55,7 @@ object CoilUtils {
         context: Context,
         tokenInterceptorListener: TokenInterceptorListener? = null,
         gifPreview: Boolean = false,
+        customFactories: List<Decoder.Factory> = emptyList()
     ): ImageLoader {
         return ImageLoader.Builder(context)
             .crossfade(true)
@@ -66,6 +68,7 @@ object CoilUtils {
                     }
                     add(factory)
                 }
+                customFactories.forEach { add(it) }
             }
             .okHttpClient {
                 OkHttpClient.Builder().apply {
