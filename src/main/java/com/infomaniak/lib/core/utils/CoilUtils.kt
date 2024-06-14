@@ -56,7 +56,7 @@ object CoilUtils {
         return ImageLoader.Builder(context)
             .crossfade(true)
             .components {
-                customFactories.forEach { add(it) }
+                customFactories.forEach(::add)
             }
             .okHttpClient {
                 OkHttpClient.Builder().apply {
