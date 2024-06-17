@@ -108,7 +108,7 @@ class CommonConfetti private constructor(container: ViewGroup) {
         private var defaultVelocityFast = 0
         private var explosionRadius = 0
 
-        // region Pre-configured confetti animations
+        //region Pre-configured confetti animations
         /**
          * @param container the container viewgroup to host the confetti animation.
          * @param colors    the set of colors to colorize the confetti bitmaps.
@@ -157,7 +157,7 @@ class CommonConfetti private constructor(container: ViewGroup) {
         ) = CommonConfetti(container).apply {
             configureExplosion(container, x, y, colors)
         }
-        // endregion
+        //endregion
 
         private fun ensureStaticResources(resources: Resources) = with(resources) {
             if (defaultConfettiSize == 0) {

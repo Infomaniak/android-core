@@ -342,7 +342,7 @@ abstract class Confetto {
         percentAnimated: Float,
     )
 
-    // region Helper methods to set all of the necessary values for the confetto.
+    //region Helper methods to set all of the necessary values for the confetto.
     fun setInitialDelay(value: Long) {
         initialDelay = value
     }
@@ -402,7 +402,7 @@ abstract class Confetto {
     fun setFadeOut(fadeOutInterpolator: Interpolator?) {
         this.fadeOutInterpolator = fadeOutInterpolator
     }
-    // endregion
+    //endregion
 
     private companion object {
         const val MAX_ALPHA = 255
