@@ -27,6 +27,8 @@ object ApiRoutesStores {
         val store = StoreUtils.REQUIRED_UPDATE_STORE.apiValue
         val platform = Platform.ANDROID.apiValue
 
-        return "${BuildConfig.INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName"
+        val parameters = "?only=min_version,published_versions.tag&filter_versions[]=production"
+
+        return "${BuildConfig.INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName$parameters"
     }
 }
