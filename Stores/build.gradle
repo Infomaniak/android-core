@@ -33,7 +33,7 @@ dependencies {
     api 'androidx.datastore:datastore-preferences:1.1.1'
 
     implementation 'androidx.work:work-runtime-ktx:2.9.0'
-    implementation 'androidx.concurrent:concurrent-futures-ktx:1.1.0'
+    implementation 'androidx.concurrent:concurrent-futures-ktx:1.2.0'
 
     def appReviewVersion = "2.0.1"
     standardImplementation "com.google.android.play:review:$appReviewVersion"
