@@ -17,22 +17,7 @@
  */
 package com.infomaniak.lib.stores.updaterequired.data.models
 
-import com.google.gson.annotations.SerializedName
-import com.infomaniak.lib.core.utils.Utils.enumValueOfOrNull
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AppPublishedVersion(
-    var tag: String,
-    @SerializedName("type")
-    private var _type: String,
-) {
-
-    val type get() = enumValueOfOrNull<VersionType>(_type)
-
-    enum class VersionType(val apiValue: String) {
-        PRODUCTION("production"),
-        BETA("beta"),
-        INTERNAL("internal"),
-    }
-}
+data class AppPublishedVersion(var tag: String)
