@@ -28,8 +28,7 @@ data class AppVersion(
     @SerializedName("min_version")
     var minimalAcceptedVersion: String,
     @SerializedName("published_versions")
-    @Suppress("ArrayInDataClass")
-    var publishedVersions: Array<AppPublishedVersion>,
+    var publishedVersions: List<AppPublishedVersion>,
 ) {
 
     enum class Store(val apiValue: String) {
