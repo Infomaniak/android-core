@@ -18,7 +18,6 @@
 package com.infomaniak.lib.stores.updaterequired.data.models
 
 import com.google.gson.annotations.SerializedName
-import com.infomaniak.lib.stores.updaterequired.data.models.AppPublishedVersion.VersionType
 import io.sentry.Sentry
 import io.sentry.SentryLevel
 import kotlinx.serialization.Serializable
@@ -28,8 +27,7 @@ data class AppVersion(
     @SerializedName("min_version")
     var minimalAcceptedVersion: String,
     @SerializedName("published_versions")
-    @Suppress("ArrayInDataClass")
-    var publishedVersions: Array<AppPublishedVersion>,
+    var publishedVersions: List<AppPublishedVersion>,
 ) {
 
     enum class Store(val apiValue: String) {
@@ -60,7 +58,7 @@ data class AppVersion(
     }
 
     fun isMinimalVersionValid(minimalVersionNumbers: List<Int>): Boolean {
-        val productionVersion = publishedVersions.find { it.type == VersionType.PRODUCTION }?.tag ?: return false
+        val productionVersion = publishedVersions.singleOrNull()?.tag ?: return false
         val productionVersionNumbers = productionVersion.toVersionNumbers()
 
         return minimalVersionNumbers.compareVersionTo(productionVersionNumbers) <= 0
