@@ -89,7 +89,7 @@ class BugTrackerActivity : AppCompatActivity() {
                 } else if (descriptionTextInput.text.isNullOrBlank() || subjectTextInput.text.isNullOrBlank()) {
                     missingFieldsError.isVisible = true
                 } else {
-                    showProgress()
+                    showProgressCatching()
                     sendBugReport()
                 }
             }
@@ -114,7 +114,7 @@ class BugTrackerActivity : AppCompatActivity() {
                 showToast(R.string.bugTrackerFormSubmitSuccess)
                 finish()
             } else {
-                submitButton.hideProgress(R.string.bugTrackerSubmit)
+                submitButton.hideProgressCatching(R.string.bugTrackerSubmit)
                 showSnackbar(R.string.bugTrackerFormSubmitError)
             }
         }

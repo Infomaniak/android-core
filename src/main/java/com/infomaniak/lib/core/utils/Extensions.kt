@@ -68,7 +68,6 @@ import coil.ImageLoader
 import coil.load
 import com.github.razir.progressbutton.*
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
-import com.github.razir.progressbutton.hideProgress
 import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
@@ -120,17 +119,21 @@ fun MaterialButton.updateTextColor(color: Int?) {
     initProgress(color = color)
 }
 
-fun MaterialButton.showProgress(color: Int? = null) {
+fun MaterialButton.showProgressCatching(color: Int? = null) {
     isClickable = false
-    showProgress {
-        progressColor = color ?: Color.WHITE
-        gravity = GRAVITY_CENTER
+    // showProgress stores references to views which crashes when the view is freed
+    runCatching {
+        showProgress {
+            progressColor = color ?: Color.WHITE
+            gravity = GRAVITY_CENTER
+        }
     }
 }
 
-fun MaterialButton.hideProgress(@StringRes text: Int) {
+fun MaterialButton.hideProgressCatching(@StringRes text: Int) {
     isClickable = true
-    hideProgress(text)
+    // hideProgress stores references to views which crashes when the view is freed
+    runCatching { hideProgress(text) }
 }
 
 /**
