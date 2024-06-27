@@ -89,7 +89,7 @@ class BugTrackerActivity : AppCompatActivity() {
                 } else if (descriptionTextInput.text.isNullOrBlank() || subjectTextInput.text.isNullOrBlank()) {
                     missingFieldsError.isVisible = true
                 } else {
-                    showProgress()
+                    showProgressCatching()
                     sendBugReport()
                 }
             }
