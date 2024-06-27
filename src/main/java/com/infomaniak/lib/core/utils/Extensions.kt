@@ -76,8 +76,6 @@ import com.infomaniak.lib.core.utils.Utils.CAMEL_CASE_REGEX
 import com.infomaniak.lib.core.utils.Utils.SNAKE_CASE_REGEX
 import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
-import io.sentry.Sentry
-import io.sentry.SentryLevel
 import org.apache.commons.cli.MissingArgumentException
 import java.io.Serializable
 import kotlin.properties.ReadWriteProperty
@@ -122,34 +120,20 @@ fun MaterialButton.updateTextColor(color: Int?) {
 }
 
 fun MaterialButton.showProgressCatching(color: Int? = null) {
-    class ShowProgressException(cause: Throwable) : Exception("showProgressCatching failed to show progress", cause)
-
     isClickable = false
+    // showProgress stores references to views which crashes when the view is freed
     runCatching {
         showProgress {
             progressColor = color ?: Color.WHITE
             gravity = GRAVITY_CENTER
         }
-    }.onFailure { exception ->
-        Sentry.withScope { scope ->
-            scope.level = SentryLevel.INFO
-            Sentry.captureException(ShowProgressException(exception))
-        }
     }
 }
 
 fun MaterialButton.hideProgressCatching(@StringRes text: Int) {
-    class HideProgressException(cause: Throwable) : Exception("hideProgressCatching failed to hide progress", cause)
-
     isClickable = true
-    runCatching {
-        hideProgress(text)
-    }.onFailure { exception ->
-        Sentry.withScope { scope ->
-            scope.level = SentryLevel.INFO
-            Sentry.captureException(HideProgressException(exception))
-        }
-    }
+    // hideProgress stores references to views which crashes when the view is freed
+    runCatching { hideProgress(text) }
 }
 
 /**
