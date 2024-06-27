@@ -68,7 +68,6 @@ import coil.ImageLoader
 import coil.load
 import com.github.razir.progressbutton.*
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
-import com.github.razir.progressbutton.hideProgress
 import com.google.android.material.button.MaterialButton
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
@@ -139,9 +138,18 @@ fun MaterialButton.showProgressCatching(color: Int? = null) {
     }
 }
 
-fun MaterialButton.hideProgress(@StringRes text: Int) {
+fun MaterialButton.hideProgressCatching(@StringRes text: Int) {
+    class HideProgressException(cause: Throwable) : Exception("hideProgressCatching failed to hide progress", cause)
+
     isClickable = true
-    hideProgress(text)
+    runCatching {
+        hideProgress(text)
+    }.onFailure { exception ->
+        Sentry.withScope { scope ->
+            scope.level = SentryLevel.INFO
+            Sentry.captureException(HideProgressException(exception))
+        }
+    }
 }
 
 /**

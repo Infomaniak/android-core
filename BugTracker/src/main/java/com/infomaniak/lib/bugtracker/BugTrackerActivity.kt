@@ -114,7 +114,7 @@ class BugTrackerActivity : AppCompatActivity() {
                 showToast(R.string.bugTrackerFormSubmitSuccess)
                 finish()
             } else {
-                submitButton.hideProgress(R.string.bugTrackerSubmit)
+                submitButton.hideProgressCatching(R.string.bugTrackerSubmit)
                 showSnackbar(R.string.bugTrackerFormSubmitError)
             }
         }
