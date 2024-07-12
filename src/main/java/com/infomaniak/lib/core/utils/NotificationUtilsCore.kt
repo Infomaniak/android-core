@@ -25,7 +25,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.infomaniak.lib.core.R
 
 abstract class NotificationUtilsCore {
 
@@ -68,7 +67,7 @@ abstract class NotificationUtilsCore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    protected fun Context.buildNotificationChannel(
+    protected fun buildNotificationChannel(
         channelId: String,
         name: String,
         importance: Int,
@@ -78,18 +77,6 @@ abstract class NotificationUtilsCore {
         return NotificationChannel(channelId, name, importance).apply {
             description?.let { this.description = it }
             groupId?.let { group = it }
-            when (importance) {
-                NotificationManager.IMPORTANCE_HIGH -> {
-                    enableLights(true)
-                    setShowBadge(true)
-                    lightColor = getColor(R.color.primary)
-                }
-                else -> {
-                    enableLights(false)
-                    setShowBadge(false)
-                    enableVibration(false)
-                }
-            }
         }
     }
 
