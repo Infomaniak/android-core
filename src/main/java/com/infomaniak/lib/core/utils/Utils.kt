@@ -67,7 +67,9 @@ object Utils {
 
     @SuppressLint("SourceLockedOrientationActivity")
     fun Activity.lockOrientationForSmallScreens() {
-        val (screenHeightInches, screenWidthInches) = with(resources.displayMetrics) { (heightPixels / ydpi) to (widthPixels / xdpi) }
+        val (screenHeightInches, screenWidthInches) = with(resources.displayMetrics) {
+            (heightPixels / ydpi) to (widthPixels / xdpi)
+        }
 
         val aspectRatio = resources.configuration.screenLayout and Configuration.SCREENLAYOUT_LONG_MASK
         val isLongScreen = aspectRatio != Configuration.SCREENLAYOUT_LONG_NO
