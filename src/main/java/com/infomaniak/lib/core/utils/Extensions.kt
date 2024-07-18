@@ -30,7 +30,6 @@ import android.content.res.Resources
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.icu.text.Normalizer2
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -78,6 +77,7 @@ import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
 import org.apache.commons.cli.MissingArgumentException
 import java.io.Serializable
+import java.text.Normalizer
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -478,10 +478,7 @@ fun String.camelToSnakeCase() = replace(CAMEL_CASE_REGEX) { "_${it.value}" }.low
 
 fun String.snakeToCamelCase() = replace(SNAKE_CASE_REGEX) { it.value.replace("_", "").uppercase() }
 
-@RequiresApi(Build.VERSION_CODES.N)
-fun String.removeAccents(): String {
-    return ACCENTS_PATTERN.matcher(Normalizer2.getNFDInstance().normalize(this)).replaceAll("")
-}
+fun String.removeAccents(): String = ACCENTS_PATTERN.matcher(Normalizer.normalize(this, Normalizer.Form.NFD)).replaceAll("")
 
 inline val ViewBinding.context: Context get() = root.context
 
