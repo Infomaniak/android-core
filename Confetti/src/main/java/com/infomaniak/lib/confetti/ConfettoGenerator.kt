@@ -20,7 +20,7 @@ package com.infomaniak.lib.confetti
 import com.infomaniak.lib.confetti.confetto.Confetto
 import java.util.Random
 
-interface ConfettoGenerator {
+fun interface ConfettoGenerator {
     /**
      * Generate a random confetto to animate.
      *
