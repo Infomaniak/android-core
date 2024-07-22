@@ -36,6 +36,10 @@ enum class ApiResponseStatus {
     @SerializedName("asynchronous")
     ASYNCHRONOUS,
 
+    @SerialName("redirect")
+    @SerializedName("redirect")
+    REDIRECT,
+
     @SerialName("unknown")
     @SerializedName("unknown")
     UNKNOWN;
