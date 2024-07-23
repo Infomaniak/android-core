@@ -24,6 +24,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.stores.updatemanagers.WorkerUpdateManager
 import io.sentry.Sentry
+import io.sentry.SentryLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -78,7 +79,10 @@ class AppUpdateScheduler(
                 updateManager.installDownloadedUpdate(
                     onInstallSuccess = { completer.setResult(Result.success()) },
                     onInstallFailure = { exception ->
-                        Sentry.captureException(exception)
+                        Sentry.withScope {scope ->
+                            scope.setTag("message", exception.message ?: "Unknown error")
+                            Sentry.captureMessage("AppUpdate throwed an exception", SentryLevel.INFO)
+                        }
                         completer.setResult(Result.failure())
                     },
                 )
