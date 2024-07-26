@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2024 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,66 +18,21 @@
 package com.infomaniak.lib.core.networking
 
 import android.content.Context
-import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
-import android.util.Log
-import androidx.lifecycle.LiveData
-import io.sentry.Sentry
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 
-class NetworkExtensions(context: Context) : LiveData<Boolean>() {
+fun Context.networkStatusFlow(): Flow<Boolean> {
+    val networks = mutableSetOf<Network>()
+    val rootServerUrl = "a.root-servers.net"
 
-    companion object {
-        const val ROOT_SERVER_CHECK_URL = "a.root-servers.net"
-    }
-
-    private val connectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-    private val networks = mutableListOf<Network>()
-
-    private val networkStateObject = object : ConnectivityManager.NetworkCallback() {
-        override fun onLost(network: Network) {
-            networks.remove(network)
-            postValue(hasAvailableNetwork())
-        }
-
-        override fun onAvailable(network: Network) {
-            networks.add(network)
-            postValue(hasAvailableNetwork())
-        }
-
-        private fun hasAvailableNetwork() = networks.any(::hasInternetConnectivity)
-
-        fun hasInternetConnectivity(network: Network): Boolean = runCatching {
-            network.getByName(ROOT_SERVER_CHECK_URL) != null
-        }.getOrDefault(false)
-    }
-
-    override fun onActive() {
-        runCatching {
-            connectivityManager.registerNetworkCallback(networkRequestBuilder(), networkStateObject)
-        }.onFailure { exception ->
-            // Fix potential Exception thrown by ConnectivityManager on Android 11
-            // Already fixed in Android S and above
-            // https://issuetracker.google.com/issues/175055271
-            Log.e("LiveDataNetworkStatus", "onActive: registerNetworkCallback failed", exception)
-            Sentry.captureException(exception)
-        }
-        postValue(false) // Consider all networks "unavailable" on start of listening
-    }
-
-    override fun onInactive() {
-        runCatching {
-            connectivityManager.unregisterNetworkCallback(networkStateObject)
-        }.onFailure { exception ->
-            Log.e("LiveDataNetworkStatus", "onInactive: unregisterNetworkCallback failed", exception)
-            Sentry.captureException(exception)
-        }
-    }
-
-    private fun networkRequestBuilder(): NetworkRequest {
+    fun networkRequestBuilder(): NetworkRequest {
         return NetworkRequest.Builder().apply {
             addTransportType(NetworkCapabilities.TRANSPORT_BLUETOOTH)
             addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
@@ -88,5 +43,33 @@ class NetworkExtensions(context: Context) : LiveData<Boolean>() {
             addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) addTransportType(NetworkCapabilities.TRANSPORT_WIFI_AWARE)
         }.build()
+    }
+
+    fun hasInternetConnectivity(network: Network): Boolean = runCatching {
+        network.getByName(rootServerUrl) != null
+    }.getOrDefault(false)
+
+    fun hasAvailableNetwork() = networks.any(::hasInternetConnectivity)
+
+    return callbackFlow {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val callback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                networks.add(network)
+                launch { send(hasAvailableNetwork()) }
+            }
+
+            override fun onLost(network: Network) {
+                networks.remove(network)
+                launch { send(hasAvailableNetwork()) }
+            }
+        }
+
+        connectivityManager.registerNetworkCallback(networkRequestBuilder(), callback)
+
+        awaitClose {
+            connectivityManager.unregisterNetworkCallback(callback)
+        }
     }
 }
