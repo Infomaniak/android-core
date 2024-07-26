@@ -28,7 +28,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import io.sentry.Sentry
 
-class LiveDataNetworkStatus(context: Context) : LiveData<Boolean>() {
+class NetworkExtensions(context: Context) : LiveData<Boolean>() {
 
     companion object {
         const val ROOT_SERVER_CHECK_URL = "a.root-servers.net"
