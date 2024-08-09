@@ -40,6 +40,7 @@ class EndIconTextInputLayout @JvmOverloads constructor(
                 resources.getDimensionPixelSize(RCore.dimen.marginStandardMedium),
             )
             findViewById<CheckableImageButton>(R.id.text_input_end_icon)?.setPadding(padding)
+            findViewById<CheckableImageButton>(R.id.text_input_error_icon)?.setPadding(padding)
         }
     }
 }
