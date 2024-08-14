@@ -18,7 +18,6 @@
 package com.infomaniak.lib.core.auth
 
 import com.infomaniak.lib.core.api.ApiController
-import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -40,11 +39,7 @@ class TokenAuthenticator(
             mutex.withLock {
                 val request = response.request
                 val authorization = request.header("Authorization")
-                val apiToken = tokenInterceptorListener.getApiToken() ?: run {
-                    // The last user has been disconnected
-                    SentryLog.e("TokenAuthenticator", "Null ApiToken in TokenAuthenticator")
-                    return@runBlocking null
-                }
+                val apiToken = tokenInterceptorListener.getApiToken() ?: return@runBlocking null
                 val isAlreadyRefreshed = apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")
                 val hasUserChanged = userId != tokenInterceptorListener.getCurrentUserId()
 

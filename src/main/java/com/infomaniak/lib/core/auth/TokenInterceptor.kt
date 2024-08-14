@@ -18,8 +18,6 @@
 package com.infomaniak.lib.core.auth
 
 import com.infomaniak.lib.core.auth.TokenAuthenticator.Companion.changeAccessToken
-import io.sentry.Sentry
-import io.sentry.SentryLevel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -33,10 +31,7 @@ class TokenInterceptor(
         var request = chain.request()
 
         runBlocking(Dispatchers.IO) {
-            val apiToken = tokenInterceptorListener.getApiToken() ?: run {
-                Sentry.captureMessage("Null ApiToken in TokenInterceptor", SentryLevel.ERROR)
-                return@runBlocking
-            }
+            val apiToken = tokenInterceptorListener.getApiToken() ?: return@runBlocking
             val authorization = request.header("Authorization")
             if (apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")) {
                 request = changeAccessToken(request, apiToken)
