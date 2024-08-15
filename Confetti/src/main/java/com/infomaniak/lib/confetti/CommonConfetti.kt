@@ -23,8 +23,6 @@ import android.view.ViewGroup
 import com.infomaniak.lib.confetti.Utils.defaultAlphaInterpolator
 import com.infomaniak.lib.confetti.Utils.generateConfettiBitmaps
 import com.infomaniak.lib.confetti.confetto.BitmapConfetto
-import com.infomaniak.lib.confetti.confetto.Confetto
-import java.util.Random
 
 class CommonConfetti private constructor(container: ViewGroup) {
 
@@ -71,9 +69,7 @@ class CommonConfetti private constructor(container: ViewGroup) {
     private fun getDefaultGenerator(colors: IntArray): ConfettoGenerator {
         val bitmaps = generateConfettiBitmaps(colors, defaultConfettiSize)
         val numBitmaps = bitmaps.size
-        return object : ConfettoGenerator {
-            override fun generateConfetto(random: Random): Confetto = BitmapConfetto(bitmaps[random.nextInt(numBitmaps)])
-        }
+        return ConfettoGenerator { random -> BitmapConfetto(bitmaps[random.nextInt(numBitmaps)]) }
     }
 
     private fun configureRainingConfetti(container: ViewGroup, confettiSource: ConfettiSource, colors: IntArray) {
