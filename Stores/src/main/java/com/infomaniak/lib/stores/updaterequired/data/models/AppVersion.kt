@@ -47,11 +47,10 @@ data class AppVersion(
         return isMinimalVersionValid(minimalAcceptedVersionNumbers) &&
                 currentVersionNumbers.compareVersionTo(minimalAcceptedVersionNumbers) < 0
     }.getOrElse { exception ->
-        Sentry.withScope { scope ->
+        Sentry.captureException(exception) { scope ->
             scope.level = SentryLevel.ERROR
             scope.setExtra("Version from API", minimalAcceptedVersion)
             scope.setExtra("Current Version", currentVersion)
-            Sentry.captureException(exception)
         }
 
         return false
