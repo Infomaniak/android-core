@@ -32,10 +32,13 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class NetworkAvailability(private val context: Context, private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
     private val connectivityManager by lazy { context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
+    private val mutex = Mutex()
 
     val isNetworkAvailable: Flow<Boolean> = callbackFlow {
         val networks = mutableListOf<Network>()
@@ -43,13 +46,21 @@ class NetworkAvailability(private val context: Context, private val ioDispatcher
         val callback = object : NetworkCallback() {
 
             override fun onAvailable(network: Network) {
-                networks.add(network)
-                sendNetworkAvailability(networks)
+                launch {
+                    mutex.withLock {
+                        networks.add(network)
+                        sendNetworkAvailability(networks)
+                    }
+                }
             }
 
             override fun onLost(network: Network) {
-                networks.remove(network)
-                sendNetworkAvailability(networks)
+                launch {
+                    mutex.withLock {
+                        networks.remove(network)
+                        sendNetworkAvailability(networks)
+                    }
+                }
             }
         }
 
@@ -94,10 +105,8 @@ class NetworkAvailability(private val context: Context, private val ioDispatcher
         }
     }
 
-    private fun ProducerScope<Boolean>.sendNetworkAvailability(networks: MutableList<Network>) {
-        launch(ioDispatcher) {
-            send(hasAvailableNetwork(networks))
-        }
+    private fun ProducerScope<Boolean>.sendNetworkAvailability(networks: List<Network>) {
+        launch(ioDispatcher) { send(hasAvailableNetwork(networks)) }
     }
 
     private fun networkRequestBuilder(): NetworkRequest {
@@ -110,7 +119,7 @@ class NetworkAvailability(private val context: Context, private val ioDispatcher
         network.getByName(ROOT_SERVER_URL) != null
     }.getOrDefault(false)
 
-    private fun hasAvailableNetwork(networks: MutableList<Network>) = networks.any(::hasInternetConnectivity)
+    private suspend fun hasAvailableNetwork(networks: List<Network>) = mutex.withLock { networks.any(::hasInternetConnectivity) }
 
     companion object {
         private const val ROOT_SERVER_URL = "a.root-servers.net"
