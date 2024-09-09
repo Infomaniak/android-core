@@ -53,7 +53,7 @@ fun Context.getFileNameAndSize(uri: Uri): Pair<String, Long>? {
                 fileName to fileSize
             } else {
                 Sentry.captureMessage("$this has empty cursor") { scope ->
-                    scope.setExtra("available columns", cursor.columnNames.joinToString { it })
+                    scope.setExtra("available columns", cursor.columnNames.joinToString())
                 }
                 null
             }
