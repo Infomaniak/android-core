@@ -49,10 +49,10 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24'
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
     api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3'
 
-    def navigationVersion = '2.7.7'
+    def navigationVersion = '2.7.7' // Doesn't build when bumped to 2.8.0 (waiting for Kotlin 2.0)
     api "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     api "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
@@ -93,6 +93,6 @@ dependencies {
     testImplementation 'androidx.test.ext:junit:1.2.1'
     testImplementation 'androidx.test:core-ktx:1.6.1'
     testImplementation 'androidx.test:core:1.6.1'
-    //Don't update this because it breaks tests
+    // Don't update this because it breaks tests
     testImplementation 'org.robolectric:robolectric:4.13'
 }
