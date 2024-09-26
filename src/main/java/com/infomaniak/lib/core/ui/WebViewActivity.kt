@@ -24,6 +24,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import com.infomaniak.lib.core.databinding.ActivityWebviewBinding
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class WebViewActivity : AppCompatActivity() {
 
@@ -36,15 +38,16 @@ class WebViewActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.webview.apply {
             settings.javaScriptEnabled = true
-            loadUrl(navArgs.url)
+            val headers = navArgs.headers?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
+            loadUrl(navArgs.url, headers)
         }
     }
 
     companion object {
 
-        fun startActivity(context: Context, url: String) {
+        fun startActivity(context: Context, url: String, headers: Map<String, String>? = mapOf()) {
             Intent(context, WebViewActivity::class.java).apply {
-                putExtras(WebViewActivityArgs(url).toBundle())
+                putExtras(WebViewActivityArgs(url, Json.encodeToString(headers)).toBundle())
             }.also(context::startActivity)
         }
     }

@@ -24,6 +24,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.infomaniak.com/v3/mobile_login"'
+        buildConfigField 'String', 'TERMINATE_ACCOUNT_URL', '"https://manager.infomaniak.com/v3/ng/profile/user/dashboard?open-terminate-account-modal"'
         buildConfigField 'String', 'LOGIN_ENDPOINT_URL', '"https://login.infomaniak.com/"'
         buildConfigField 'String', 'INFOMANIAK_API_V1', '"https://api.infomaniak.com/1"'
         buildConfigField 'String', 'INFOMANIAK_API', '"https://api.infomaniak.com/2/"'

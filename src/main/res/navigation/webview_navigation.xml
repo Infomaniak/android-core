@@ -31,6 +31,11 @@
             android:name="url"
             app:argType="string" />
 
+        <argument
+            android:name="headers"
+            app:argType="string"
+            app:nullable="true"/>
+
     </activity>
 
 </navigation>
