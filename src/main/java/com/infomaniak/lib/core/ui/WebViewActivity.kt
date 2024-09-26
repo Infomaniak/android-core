@@ -21,6 +21,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import com.infomaniak.lib.core.databinding.ActivityWebviewBinding
@@ -37,6 +38,7 @@ class WebViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         binding.webview.apply {
+            webViewClient = WebViewClient()
             settings.javaScriptEnabled = true
             val headers = navArgs.headers?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
             loadUrl(navArgs.url, headers)
