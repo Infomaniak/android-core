@@ -436,10 +436,10 @@ fun ActivityResult.whenResultIsOk(completion: (Intent?) -> Unit) {
 /**
  * Send a value to the previous navigation
  */
-fun <T> Fragment.setBackNavigationResult(key: String, value: T) {
+fun <T> Fragment.setBackNavigationResult(key: String, value: T, withPopBackStack: Boolean = true) {
     findNavController().apply {
         previousBackStackEntry?.savedStateHandle?.set(key, value)
-        popBackStack()
+        if (withPopBackStack) popBackStack()
     }
 }
 
