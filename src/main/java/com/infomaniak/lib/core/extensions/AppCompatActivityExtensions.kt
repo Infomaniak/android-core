@@ -18,6 +18,7 @@
 package com.infomaniak.lib.core.extensions
 
 import android.os.Build
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.LocaleManagerCompat
@@ -42,4 +43,8 @@ private fun AppCompatActivity.noLocalesAreAccepted(): Boolean {
         if (systemLocales[i]?.language in acceptedLocale) return false
     }
     return true
+}
+
+fun AppCompatActivity.keepSplashscreenVisibleWhileLoading() {
+    findViewById<View>(android.R.id.content).viewTreeObserver.addOnPreDrawListener { false }
 }
