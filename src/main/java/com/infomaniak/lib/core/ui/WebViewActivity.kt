@@ -21,7 +21,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import com.infomaniak.lib.core.databinding.ActivityWebviewBinding
@@ -38,19 +41,52 @@ class WebViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         binding.webview.apply {
-            webViewClient = WebViewClient()
+            webViewClient = CustomWebViewClient(
+                urlToQuit = navArgs.urlToQuit,
+                onUrlToQuitReached = {
+                    setResult(RESULT_OK)
+                    finish()
+                },
+            )
             settings.javaScriptEnabled = true
             val headers = navArgs.headers?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
             loadUrl(navArgs.url, headers)
         }
     }
 
+    private class CustomWebViewClient(
+        private val urlToQuit: String?,
+        private val onUrlToQuitReached: () -> Unit,
+    ) : WebViewClient() {
+
+        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest?): Boolean {
+            return if (urlToQuit != null && request?.url?.toString()?.contains(urlToQuit) == true) {
+                onUrlToQuitReached()
+                true
+            } else {
+                super.shouldOverrideUrlLoading(view, request)
+            }
+        }
+    }
+
     companion object {
 
-        fun startActivity(context: Context, url: String, headers: Map<String, String>? = mapOf()) {
-            Intent(context, WebViewActivity::class.java).apply {
-                putExtras(WebViewActivityArgs(url, Json.encodeToString(headers)).toBundle())
-            }.also(context::startActivity)
+        fun startActivity(
+            context: Context,
+            url: String,
+            headers: Map<String, String>? = mapOf(),
+            urlToQuit: String? = null,
+            activityResultLauncher: ActivityResultLauncher<Intent>? = null,
+        ) {
+            val intent = Intent(context, WebViewActivity::class.java).apply {
+                val webViewActivityArgs = WebViewActivityArgs(url, Json.encodeToString(headers), urlToQuit)
+                putExtras(webViewActivityArgs.toBundle())
+            }
+            activityResultLauncher?.let {
+                activityResultLauncher.launch(intent)
+            } ?: run {
+                context.startActivity(intent)
+            }
         }
     }
 }

@@ -34,7 +34,12 @@
         <argument
             android:name="headers"
             app:argType="string"
-            app:nullable="true"/>
+            app:nullable="true" />
+
+        <argument
+            android:name="urlToQuit"
+            app:argType="string"
+            app:nullable="true" />
 
     </activity>
 
