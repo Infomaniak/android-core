@@ -26,6 +26,7 @@ import kotlinx.serialization.Serializable
 open class ApiResponse<T>(
     val result: ApiResponseStatus = ApiResponseStatus.UNKNOWN,
     val data: @RawValue T? = null,
+    val uri: String? = null,
     val error: ApiError? = null,
     val page: Int = 0,
     val pages: Int = 0,
