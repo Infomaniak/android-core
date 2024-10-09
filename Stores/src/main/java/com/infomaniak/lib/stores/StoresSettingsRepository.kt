@@ -20,33 +20,40 @@ package com.infomaniak.lib.stores
 import android.content.Context
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
+import com.infomaniak.lib.core.utils.SentryLog
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 //TODO: Inject this when kDrive will have hilt
 private val Context.dataStore by preferencesDataStore(name = StoresSettingsRepository.DATA_STORE_NAME)
 
+@Suppress("UNCHECKED_CAST")
 class StoresSettingsRepository(private val context: Context) {
 
-    @Suppress("UNCHECKED_CAST")
-    fun <T> flowOf(key: Preferences.Key<T>): Flow<T> {
-        val defaultValue = when (key) {
-            IS_USER_WANTING_UPDATES_KEY -> DEFAULT_IS_USER_WANTING_UPDATES
-            HAS_APP_UPDATE_DOWNLOADED_KEY -> DEFAULT_HAS_APP_UPDATE_DOWNLOADED
-            APP_UPDATE_LAUNCHES_KEY -> DEFAULT_APP_UPDATE_LAUNCHES
-            APP_REVIEW_LAUNCHES_KEY -> DEFAULT_APP_REVIEW_LAUNCHES
-            ALREADY_GAVE_REVIEW_KEY -> DEFAULT_ALREADY_GAVE_REVIEW
-            else -> throw IllegalArgumentException("Unknown Preferences.Key")
-        }
+    fun <T> flowOf(key: Preferences.Key<T>) = context.dataStore.data.map { it[key] ?: (getDefaultValue(key) as T) }
 
-        return context.dataStore.data.map { it[key] ?: (defaultValue as T) }
+    suspend fun <T> getValue(key: Preferences.Key<T>) = runCatching {
+        flowOf(key).first()
+    }.getOrElse { exception ->
+        SentryLog.e(TAG, "Error while trying to get value from DataStore for key : $key", exception)
+        getDefaultValue(key) as T
     }
 
-    suspend fun <T> getValue(key: Preferences.Key<T>): T = flowOf(key).first()
+    private fun <T> getDefaultValue(key: Preferences.Key<T>) = when (key) {
+        IS_USER_WANTING_UPDATES_KEY -> DEFAULT_IS_USER_WANTING_UPDATES
+        HAS_APP_UPDATE_DOWNLOADED_KEY -> DEFAULT_HAS_APP_UPDATE_DOWNLOADED
+        APP_UPDATE_LAUNCHES_KEY -> DEFAULT_APP_UPDATE_LAUNCHES
+        APP_REVIEW_LAUNCHES_KEY -> DEFAULT_APP_REVIEW_LAUNCHES
+        ALREADY_GAVE_REVIEW_KEY -> DEFAULT_ALREADY_GAVE_REVIEW
+        else -> throw IllegalArgumentException("Unknown Preferences.Key")
+    }
 
     suspend fun <T> setValue(key: Preferences.Key<T>, value: T) {
-        context.dataStore.edit { it[key] = value }
+        runCatching {
+            context.dataStore.edit { it[key] = value }
+        }.onFailure { exception ->
+            SentryLog.e(TAG, "Error while trying to set value into DataStore for key : $key", exception)
+        }
     }
 
     suspend fun clear() = context.dataStore.edit(MutablePreferences::clear)
@@ -63,6 +70,8 @@ class StoresSettingsRepository(private val context: Context) {
     }
 
     companion object {
+
+        private const val TAG = "StoresSettingsRepository"
 
         const val DEFAULT_APP_UPDATE_LAUNCHES = 20
 
