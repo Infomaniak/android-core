@@ -37,6 +37,12 @@ fun Cursor.getFileName(uri: Uri): String {
     return filename ?: URLDecoder.decode(uri.toString(), "UTF-8").substringAfterLast("/")
 }
 
+fun Context.getFileSize(cursor: Cursor, uri: Uri) = runCatching {
+        cursor.getFileSize()
+    }.getOrElse {
+        uri.calculateFileSize(contentResolver)
+    } ?: throw Exception("Cannot calculate size")
+
 fun Cursor.getFileSize() = getLong(getColumnIndexOrThrow(OpenableColumns.SIZE))
 
 fun Context.getFileNameAndSize(uri: Uri): Pair<String, Long>? {
@@ -44,11 +50,7 @@ fun Context.getFileNameAndSize(uri: Uri): Pair<String, Long>? {
         contentResolver.query(uri, null, null, null, null)?.use { cursor ->
             if (cursor.moveToFirst()) {
                 val fileName = cursor.getFileName(uri)
-                val fileSize = runCatching {
-                    cursor.getFileSize()
-                }.getOrElse {
-                    uri.calculateFileSize(contentResolver)
-                } ?: throw Exception("Cannot calculate size")
+                val fileSize = getFileSize(cursor, uri)
 
                 fileName to fileSize
             } else {
