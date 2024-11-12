@@ -16,5 +16,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <string name="errorNoAvailableUpdate">Kein Update verfügbar</string>
+    <string name="updateInstallButton">Installieren</string>
     <string name="updateRequiredDescription">Ihre Version der Anwendung wird nicht mehr unterstützt.\nInstallieren Sie die neueste Version und profitieren Sie von den neuesten Verbesserungen und Neuerungen.</string>
 </resources>
