@@ -149,13 +149,16 @@ class InAppUpdateManager(
             }
     }
 
-    override fun requireUpdate() {
+    override fun requireUpdate(onFailure: ((Exception) -> Unit)?) {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (updateType == AppUpdateType.IMMEDIATE) {
                 val isUpdateStalled =
                     appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
                 if (isUpdateStalled || !viewModel.isUpdateBottomSheetShown) startUpdateFlow(appUpdateInfo)
             }
+        }.addOnFailureListener {
+            it.printStackTrace()
+            onFailure?.invoke(it)
         }
     }
 

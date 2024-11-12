@@ -32,7 +32,7 @@ abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : 
 
     open fun installDownloadedUpdate() = Unit
 
-    open fun requireUpdate() = activity.goToPlayStore()
+    open fun requireUpdate(onFailure: ((Exception) -> Unit)? = null) = activity.goToPlayStore()
 
     open fun init(
         mustRequireImmediateUpdate: Boolean = false,
