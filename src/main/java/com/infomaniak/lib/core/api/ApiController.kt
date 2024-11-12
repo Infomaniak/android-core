@@ -93,9 +93,9 @@ object ApiController {
         return toJson.toRequestBody(jsonMediaType)
     }
 
-    suspend fun refreshToken(refreshToken: String?, tokenInterceptorListener: TokenInterceptorListener): ApiToken {
+    suspend fun refreshToken(refreshToken: String, tokenInterceptorListener: TokenInterceptorListener): ApiToken {
 
-        if (refreshToken.isNullOrBlank()) {
+        if (refreshToken.isBlank()) {
             tokenInterceptorListener.onRefreshTokenError()
             throw RefreshTokenException()
         }
