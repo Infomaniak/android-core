@@ -41,7 +41,6 @@ class TokenAuthenticator(
                 val request = response.request
                 val authorization = request.header("Authorization")
                 val apiToken = tokenInterceptorListener.getApiToken() ?: return@runBlocking null
-
                 val isAlreadyRefreshed = apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")
                 val hasUserChanged = userId != tokenInterceptorListener.getCurrentUserId()
 
