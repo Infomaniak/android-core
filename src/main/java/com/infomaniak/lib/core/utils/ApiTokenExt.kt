@@ -17,15 +17,8 @@
  */
 package com.infomaniak.lib.core.utils
 
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
+import com.infomaniak.lib.login.ApiToken
 
-object TokenUtils {
-    @OptIn(ExperimentalContracts::class)
-    fun isInfinite(refreshToken: String?): Boolean {
-        contract {
-            returns(false) implies (refreshToken != null)
-        }
-        return refreshToken == null
-    }
+object ApiTokenExt {
+    val ApiToken.isInfinite get() = refreshToken == null
 }

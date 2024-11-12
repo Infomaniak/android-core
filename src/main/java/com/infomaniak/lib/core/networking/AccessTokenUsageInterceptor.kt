@@ -18,7 +18,7 @@
 package com.infomaniak.lib.core.networking
 
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
-import com.infomaniak.lib.core.utils.TokenUtils
+import com.infomaniak.lib.core.utils.ApiTokenExt.isInfinite
 import io.sentry.Sentry
 import io.sentry.SentryLevel
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +43,7 @@ class AccessTokenUsageInterceptor(
             val apiToken = tokenInterceptorListener.getApiToken() ?: return@runBlocking
 
             // Only log api calls if we're not using refresh tokens
-            if (!TokenUtils.isInfinite(apiToken.refreshToken)) return@runBlocking
+            if (!apiToken.isInfinite) return@runBlocking
 
             val currentApiCall = ApiCallRecord(
                 accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return@runBlocking,
