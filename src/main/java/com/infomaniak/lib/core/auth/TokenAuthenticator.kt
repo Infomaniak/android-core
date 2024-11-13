@@ -18,6 +18,7 @@
 package com.infomaniak.lib.core.auth
 
 import com.infomaniak.lib.core.api.ApiController
+import com.infomaniak.lib.core.utils.ApiTokenExt.isInfinite
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -44,10 +45,10 @@ class TokenAuthenticator(
                 val hasUserChanged = userId != tokenInterceptorListener.getCurrentUserId()
 
                 return@runBlocking when {
-                    hasUserChanged -> null
+                    hasUserChanged || apiToken.isInfinite -> null
                     isAlreadyRefreshed -> changeAccessToken(request, apiToken)
                     else -> {
-                        val newToken = ApiController.refreshToken(apiToken.refreshToken, tokenInterceptorListener)
+                        val newToken = ApiController.refreshToken(apiToken.refreshToken!!, tokenInterceptorListener)
                         changeAccessToken(request, newToken)
                     }
                 }
