@@ -36,7 +36,16 @@ import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.stores.BaseInAppUpdateManager
 import com.infomaniak.lib.stores.StoreUtils
 import com.infomaniak.lib.stores.StoresSettingsRepository
+import io.sentry.Sentry
 
+/**
+ * Manager encapsulating all the needed logic for Google Play's in-app update api
+ * Implements [BaseInAppUpdateManager] to add compatibility with fDroid
+ *
+ * @param activity: Activity on which the lifecycleObserver will be bound
+ * @param appId: Parameter needed for the fDroid manager, won't compile without it
+ * @param versionCode: Parameter needed for the fDroid manager, won't compile without it
+ */
 class InAppUpdateManager(
     private val activity: FragmentActivity,
     appId: String,
@@ -101,7 +110,10 @@ class InAppUpdateManager(
         this.updateType = if (mustRequireImmediateUpdate) AppUpdateType.IMMEDIATE else AppUpdateType.FLEXIBLE
         this.onUserChoice = onUserChoice
         this.onInstallStart = onInstallStart
-        this.onInstallFailure = onInstallFailure
+        this.onInstallFailure = {
+            Sentry.captureException(it)
+            onInstallFailure?.invoke(it)
+        }
         this.onInstallSuccess = onInstallSuccess
 
         super.init(mustRequireImmediateUpdate, onInAppUpdateUiChange, onFDroidResult)
@@ -145,7 +157,7 @@ class InAppUpdateManager(
             .addOnSuccessListener { onInstallSuccess?.invoke() }
             .addOnFailureListener {
                 viewModel.resetUpdateSettings()
-                onInstallFailure?.invoke(it)
+                onInstallFailure?.invoke(AppUpdateException(it.message))
             }
     }
 
@@ -157,6 +169,9 @@ class InAppUpdateManager(
                 if (isUpdateStalled || !viewModel.isUpdateBottomSheetShown) startUpdateFlow(appUpdateInfo)
             }
         }.addOnFailureListener {
+            Sentry.captureMessage("Impossible to require update") { scope ->
+                scope.setTag("reason", it.message.toString())
+            }
             it.printStackTrace()
             onFailure?.invoke(it)
         }
@@ -192,4 +207,6 @@ class InAppUpdateManager(
             AppUpdateOptions.newBuilder(updateType).build(),
         )
     }
+
+    private class AppUpdateException(override val message: String?) : Exception()
 }

@@ -33,7 +33,6 @@ import com.infomaniak.lib.core.utils.goToPlayStore
 import com.infomaniak.lib.core.utils.showToast
 import com.infomaniak.lib.stores.databinding.ActivityUpdateRequiredBinding
 import com.infomaniak.lib.stores.updatemanagers.InAppUpdateManager
-import io.sentry.Sentry
 import kotlin.system.exitProcess
 import com.infomaniak.lib.core.R as RCore
 
@@ -52,7 +51,6 @@ class UpdateRequiredActivity : AppCompatActivity() {
         inAppUpdateManager.init(
             mustRequireImmediateUpdate = true,
             onInstallFailure = {
-                Sentry.captureException(it)
                 showToast(RCore.string.errorUpdateInstall)
                 goToPlayStore()
             },
