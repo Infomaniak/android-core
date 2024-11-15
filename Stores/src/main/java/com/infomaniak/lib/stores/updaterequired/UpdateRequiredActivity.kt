@@ -52,7 +52,6 @@ class UpdateRequiredActivity : AppCompatActivity() {
         inAppUpdateManager.init(
             mustRequireImmediateUpdate = true,
             onInstallFailure = {
-                Sentry.captureException(it)
                 showToast(RCore.string.errorUpdateInstall)
                 goToPlayStore()
             },

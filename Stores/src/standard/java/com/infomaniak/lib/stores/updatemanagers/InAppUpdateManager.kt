@@ -36,6 +36,7 @@ import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.stores.BaseInAppUpdateManager
 import com.infomaniak.lib.stores.StoreUtils
 import com.infomaniak.lib.stores.StoresSettingsRepository
+import io.sentry.Sentry
 
 class InAppUpdateManager(
     private val activity: FragmentActivity,
@@ -101,7 +102,10 @@ class InAppUpdateManager(
         this.updateType = if (mustRequireImmediateUpdate) AppUpdateType.IMMEDIATE else AppUpdateType.FLEXIBLE
         this.onUserChoice = onUserChoice
         this.onInstallStart = onInstallStart
-        this.onInstallFailure = onInstallFailure
+        this.onInstallFailure = {
+            Sentry.captureException(it)
+            onInstallFailure?.invoke(it)
+        }
         this.onInstallSuccess = onInstallSuccess
 
         super.init(mustRequireImmediateUpdate, onInAppUpdateUiChange, onFDroidResult)
