@@ -28,6 +28,10 @@ import java.util.Date
 import java.util.Locale
 
 const val FORMAT_DATE_CLEAR_MONTH = "dd MMM yyyy"
+const val FORMAT_DATE_CLEAR_FULL_MONTH = "EEEE d MMMM yyyy"
+const val FORMAT_DATE_DAY_MONTH = "EEE d MMM"
+const val FORMAT_DATE_DAY_MONTH_YEAR = "EEE d MMM yyyy"
+const val FORMAT_DATE_DAY_FULL_MONTH_WITH_TIME = "EEEE d MMMM HH:mm"
 const val FORMAT_DATE_DAY_FULL_MONTH_YEAR_WITH_TIME = "EEEE d MMMM yyyy HH:mm"
 const val FORMAT_DATE_CLEAR_MONTH_DAY_ONE_CHAR = "d MMM yyyy"
 const val FORMAT_DATE_DEFAULT = "dd.MM.yy"
@@ -122,15 +126,32 @@ fun Date.day(): Int =
         time = this@day
     }.get(Calendar.DAY_OF_MONTH)
 
+fun Date.setDay(day: Int): Date = Calendar.getInstance().apply {
+    time = this@setDay
+    set(Calendar.DAY_OF_MONTH, day)
+}.time
+
 fun Date.hours(): Int =
     Calendar.getInstance().apply {
         time = this@hours
     }.get(Calendar.HOUR_OF_DAY)
 
+fun Date.setHour(hour: Int): Date = Calendar.getInstance().apply {
+    time = this@setHour
+    set(Calendar.HOUR_OF_DAY, hour)
+
+    this@setHour.time = time.time
+}.time
+
 fun Date.minutes(): Int =
     Calendar.getInstance().apply {
         time = this@minutes
     }.get(Calendar.MINUTE)
+
+fun Date.setMinute(minute: Int): Date = Calendar.getInstance().apply {
+    time = this@setMinute
+    set(Calendar.MINUTE, minute)
+}.time
 
 fun Date.isSameDayAs(targetDate: Date): Boolean {
     return year() == targetDate.year() &&
@@ -157,6 +178,48 @@ fun Date.isThisWeek(): Boolean {
     return this in now.startOfTheWeek()..now.endOfTheWeek()
 }
 
+fun Date.isWeekend(): Boolean = this.day() in 6..7
+
 fun Date.isThisMonth(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() }
 
 fun Date.isThisYear(): Boolean = Date().let { now -> year() == now.year() }
+
+fun Date.roundUpToNextFiveMinutes(): Date = Calendar.getInstance().apply {
+    time = this@roundUpToNextFiveMinutes
+
+    val minutesToAdd = 5 - (get(Calendar.MINUTE) % 5)
+
+    add(Calendar.MINUTE, minutesToAdd)
+    set(Calendar.SECOND, 0)
+}.time
+
+fun Date.getTimeAtHour(hour: Int): Date = Calendar.getInstance().apply {
+    time = this@getTimeAtHour
+
+    set(Calendar.HOUR_OF_DAY, hour)
+    set(Calendar.MINUTE, 0)
+    set(Calendar.SECOND, 0)
+    set(Calendar.MILLISECOND, 0)
+}.time
+
+fun Date.getMorning(): Date = this.getTimeAtHour(8)
+
+fun Date.getAfternoon(): Date = this.getTimeAtHour(14)
+
+fun Date.getEvening(): Date = this.getTimeAtHour(18)
+
+fun Date.getTomorrow(): Date = Calendar.getInstance().apply {
+    time = this@getTomorrow
+    add(Calendar.DAY_OF_YEAR, 1)
+}.time
+
+fun Date.getNextMonday(): Date = Calendar.getInstance().apply {
+    time = this@getNextMonday
+
+    val daysToAdd = (Calendar.MONDAY - get(Calendar.DAY_OF_WEEK) + 7) % 7
+    if (daysToAdd == 0) {
+        add(Calendar.DAY_OF_YEAR, 7)
+    } else {
+        add(Calendar.DAY_OF_YEAR, daysToAdd)
+    }
+}.time
