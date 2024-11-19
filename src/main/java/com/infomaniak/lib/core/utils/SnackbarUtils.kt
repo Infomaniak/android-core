@@ -26,6 +26,7 @@ import com.infomaniak.lib.core.R
 
 object SnackbarUtils {
 
+    @JvmStatic
     fun Fragment.showSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
@@ -40,6 +41,7 @@ object SnackbarUtils {
         )
     }
 
+    @JvmStatic
     fun Fragment.showSnackbar(
         title: String,
         anchor: View? = null,
@@ -54,6 +56,7 @@ object SnackbarUtils {
         )
     }
 
+    @JvmStatic
     fun Activity.showSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
@@ -69,6 +72,7 @@ object SnackbarUtils {
         )
     }
 
+    @JvmStatic
     fun Activity.showSnackbar(
         title: String,
         anchor: View? = null,
@@ -84,6 +88,7 @@ object SnackbarUtils {
         )
     }
 
+    @JvmStatic
     fun Activity.showIndefiniteSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
@@ -98,6 +103,7 @@ object SnackbarUtils {
         onActionClicked = onActionClicked,
     )
 
+    @JvmStatic
     fun showSnackbar(
         view: View,
         @StringRes title: Int,
@@ -114,6 +120,7 @@ object SnackbarUtils {
         onActionClicked = onActionClicked,
     )
 
+    @JvmStatic
     fun showSnackbar(
         view: View,
         title: String,
