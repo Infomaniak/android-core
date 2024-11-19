@@ -37,6 +37,7 @@ import com.infomaniak.lib.stores.BaseInAppUpdateManager
 import com.infomaniak.lib.stores.StoreUtils
 import com.infomaniak.lib.stores.StoresSettingsRepository
 import io.sentry.Sentry
+import io.sentry.SentryLevel
 
 /**
  * Manager encapsulating all the needed logic for Google Play's in-app update api
@@ -199,13 +200,24 @@ class InAppUpdateManager(
     }
 
     private fun startUpdateFlow(appUpdateInfo: AppUpdateInfo) = with(appUpdateManager) {
-        registerListener(installStateUpdatedListener)
-        viewModel.isUpdateBottomSheetShown = true
-        startUpdateFlowForResult(
-            appUpdateInfo,
-            inAppUpdateResultLauncher,
-            AppUpdateOptions.newBuilder(updateType).build(),
-        )
+        runCatching {
+            registerListener(installStateUpdatedListener)
+            viewModel.isUpdateBottomSheetShown = true
+            startUpdateFlowForResult(
+                appUpdateInfo,
+                inAppUpdateResultLauncher,
+                AppUpdateOptions.newBuilder(updateType).build(),
+            )
+        }.onFailure { exception ->
+            exception.printStackTrace()
+            exception.message?.let {
+                Sentry.captureMessage(it, SentryLevel.WARNING) { scope ->
+                    scope.setExtra("contract", inAppUpdateResultLauncher.contract.toString())
+                    scope.setTag("updateType", updateType.toString())
+                    scope.setTag("onInstallFailure is null", (onInstallFailure == null).toString())
+                }
+            }
+        }
     }
 
     private class AppUpdateException(override val message: String?) : Exception()
