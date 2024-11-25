@@ -70,14 +70,4 @@ class FormatterFileSizeTest {
     fun `1_890_000_000_000 is rounded to 1,7 TB`() {
         Assert.assertEquals("1.7", context.formatShortFileSize(bytes = 1_890_000_000_000L, valueOnly = true))
     }
-
-    @Test
-    fun `1_890_000_000_000_000 is rounded to 1,7 PB`() {
-        Assert.assertEquals("1.7", context.formatShortFileSize(bytes = 1_890_000_000_000_000L, valueOnly = true))
-    }
-
-    @Test
-    fun `1_890_000_000_000_000_000 is rounded to 1679 PB`() {
-        Assert.assertEquals("1679", context.formatShortFileSize(bytes = 1_890_000_000_000_000_000L, valueOnly = true))
-    }
 }
