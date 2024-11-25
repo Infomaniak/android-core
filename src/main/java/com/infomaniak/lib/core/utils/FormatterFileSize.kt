@@ -18,7 +18,17 @@
 package com.infomaniak.lib.core.utils
 
 import android.content.Context
+import android.icu.text.DecimalFormat
+import android.icu.text.MeasureFormat
+import android.icu.text.MeasureFormat.FormatWidth
+import android.icu.text.NumberFormat
+import android.icu.util.Measure
+import android.icu.util.MeasureUnit
+import android.os.Build
 import android.text.format.Formatter
+import androidx.annotation.RequiresApi
+import java.math.BigDecimal
+import java.util.Locale
 import kotlin.math.abs
 
 object FormatterFileSize {
@@ -30,18 +40,19 @@ object FormatterFileSize {
     private const val FLAG_SI_UNITS = 1 shl 2
     private const val FLAG_SHORTER = 1 shl 0
 
-    fun Context.formatShortFileSize(bytes: Long, valueOnly: Boolean = false): String = runCatching {
-        val (value, unit) = formatFileSize(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly)
-        if (unit == null) {
-            value
+    fun Context.formatShortFileSize(bytes: Long, valueOnly: Boolean = false): String {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            runCatching {
+                formatFileSizeBeforeNougat(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly)
+            }.getOrElse {
+                Formatter.formatShortFileSize(this, bytes)
+            }
         } else {
-            getString(resources.getIdentifier("fileSizeSuffix", "string", "android"), value, unit)
+            formatFileSize(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly)
         }
-    }.getOrElse {
-        Formatter.formatShortFileSize(this, bytes)
     }
 
-    private fun Context.formatFileSize(bytes: Long, flags: Int, valueOnly: Boolean): Pair<String, String?> {
+    private fun Context.formatFileSizeBeforeNougat(bytes: Long, flags: Int, valueOnly: Boolean): String {
 
         fun getSuffix(suffixes: MutableList<String>): Int? {
             return if (valueOnly) null else resources.getIdentifier(suffixes.removeFirstOrNull(), "string", "android")
@@ -78,9 +89,80 @@ object FormatterFileSize {
         }
 
         result = abs(result)
-        val resultValue = String.format(roundFormat, result)
-        val resultUnit = suffix?.let(resources::getString)
 
-        return resultValue to resultUnit
+        val resultValue = String.format(roundFormat, result)
+        val resultValueFormatted = suffix?.let {
+            getString(resources.getIdentifier("fileSizeSuffix", "string", "android"), resultValue, resources.getString(it))
+        }
+
+        return resultValueFormatted ?: resultValue
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun Context.formatFileSize(bytes: Long, flags: Int, valueOnly: Boolean): String {
+
+        fun getSuffix(suffixes: MutableList<MeasureUnit>): MeasureUnit? {
+            return if (valueOnly) null else suffixes.removeFirstOrNull()
+        }
+
+        val suffixes = mutableListOf(
+            MeasureUnit.BYTE,
+            MeasureUnit.KILOBYTE,
+            MeasureUnit.MEGABYTE,
+            MeasureUnit.GIGABYTE,
+            MeasureUnit.TERABYTE,
+        )
+        val unit = if (flags and FLAG_IEC_UNITS != 0) KIBI_BYTE else KILO_BYTE
+        var multiplier = 1L
+
+        var result = abs(bytes).toFloat()
+        val suffixesCount = suffixes.count() - 1
+        var suffix = getSuffix(suffixes)
+
+        repeat(suffixesCount) {
+            if (result > 900) {
+                suffix = getSuffix(suffixes)
+                multiplier *= unit
+                result /= unit
+            }
+        }
+
+        val (roundFormat, roundedBytes) = when {
+            multiplier == 1L || result >= 100 -> "%.0f" to 0
+            result < 1 -> "%.2f" to 2
+            result < 10 -> if (flags and FLAG_SHORTER != 0) "%.1f" to 1 else "%.2f" to 2
+            else -> if (flags and FLAG_SHORTER != 0) "%.0f" to 0 else "%.2f" to 2 // 10 <= result < 100
+        }
+
+        result = abs(result)
+
+        val resultValue = String.format(roundFormat, result)
+        val resultValueFormatted = suffix?.let {
+            val locale = currentLocale()
+            formatMeasureShort(locale, getNumberFormatter(locale, roundedBytes), result, it)
+        }
+
+        return resultValueFormatted ?: resultValue
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun Context.currentLocale(): Locale = resources.configuration.locales[0]
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun getNumberFormatter(locale: Locale, fractionDigits: Int): NumberFormat {
+        return NumberFormat.getInstance(locale).apply {
+            minimumFractionDigits = fractionDigits
+            maximumFractionDigits = fractionDigits
+            isGroupingUsed = false
+            // We do this only for DecimalFormat, since in the general NumberFormat case,
+            // calling setRoundingMode may throw an exception.
+            if (this is DecimalFormat) setRoundingMode(BigDecimal.ROUND_HALF_UP)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun formatMeasureShort(locale: Locale, numberFormatter: NumberFormat, value: Float, units: MeasureUnit): String {
+        val measureFormatter = MeasureFormat.getInstance(locale, FormatWidth.SHORT, numberFormatter)
+        return measureFormatter.format(Measure(value, units))
     }
 }

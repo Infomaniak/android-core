@@ -28,6 +28,7 @@ import java.util.regex.Pattern
 import kotlin.math.min
 
 object Utils {
+
     private const val MIN_HEIGHT_FOR_LANDSCAPE = 4
 
     val ACCENTS_PATTERN: Pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
