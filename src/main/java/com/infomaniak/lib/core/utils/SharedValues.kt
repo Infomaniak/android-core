@@ -110,6 +110,7 @@ inline fun <reified E : Enum<E>> SharedValues.sharedValue(key: String, defaultVa
 
 /**
  * The order of enums used with this function MUST be kept stable across app versions, so that mismatches can't happen.
+ * Never remove an entry, an [IndexOutOfBoundsException] exception will be thrown otherwise.
  *
  * **When using this function with a new enum, make sure to add a test that checks that the order isn't changed.**
  * Here's an example for an enum (defined as `enum class MyEnum { A, B, C; }`):
