@@ -120,6 +120,7 @@ inline fun <reified E : Enum<E>> SharedValues.sharedValue(key: String, defaultVa
  *     assertEquals(0, MyEnum.A.ordinal)
  *     assertEquals(1, MyEnum.B.ordinal)
  *     assertEquals(2, MyEnum.C.ordinal)
+ *     // NEVER remove an enum entry and its test. Only renames and additions are okay.
  * }
  * ```
  */
