@@ -208,11 +208,29 @@ object ApiController {
         return JsonObject(mapOf("bodyResponse" to JsonPrimitive(this)))
     }
 
-    inline fun <reified T> getApiResponseInternetError() = ApiResponse<Any>(
-        result = ERROR,
-        error = ApiError(exception = NetworkException()),
-        translatedError = R.string.connectionError
-    ) as T
+    inline fun <reified T> createInternetErrorResponse(
+        noNetwork: Boolean = false,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
+    ) = createErrorResponse<T>(
+        translatedError = if (noNetwork) R.string.noConnection else R.string.connectionError,
+        apiError = ApiError(exception = NetworkException()),
+        buildErrorResult = buildErrorResult,
+    )
+
+    fun createApiError(useKotlinxSerialization: Boolean, bodyResponse: String, exception: Exception) = ApiError(
+        contextJson = if (useKotlinxSerialization) bodyResponse.bodyResponseToJson() else null,
+        contextGson = if (useKotlinxSerialization) null else JsonParser.parseString(bodyResponse).asJsonObject,
+        exception = exception
+    )
+
+    inline fun <reified T> createErrorResponse(
+        @StringRes translatedError: Int,
+        apiError: ApiError? = null,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
+    ): T {
+        return buildErrorResult?.invoke(apiError, translatedError)
+            ?: ApiResponse<Any>(result = ERROR, error = apiError, translatedError = translatedError) as T
+    }
 
     class NetworkException : Exception()
     class ServerErrorException : Exception()
