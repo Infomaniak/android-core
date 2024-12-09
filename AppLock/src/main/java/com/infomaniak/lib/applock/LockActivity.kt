@@ -196,8 +196,7 @@ class LockActivity : AppCompatActivity() {
             )
         }
 
-        //TODO: Inline into lockNow once lockAfterTimeout is removed.
-        private fun startAppLockActivity(
+        fun startAppLockActivity(
             context: Context,
             destinationClass: Class<*>,
             destinationClassArgs: Bundle? = null,
