@@ -38,6 +38,7 @@ import com.infomaniak.lib.applock.databinding.ActivityLockBinding
 import com.infomaniak.lib.core.utils.getAppName
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import splitties.init.appCtx
@@ -88,6 +89,7 @@ class LockActivity : AppCompatActivity() {
                 destinationClassArgs?.let(::putExtras)
             }.also(::startActivity)
         }
+        lockedByScreenTurnedOff = false
         finish()
     }
 
@@ -160,7 +162,7 @@ class LockActivity : AppCompatActivity() {
             if (it == Lifecycle.State.RESUMED) {
                 emit(hasBiometrics() && isAppLockEnabled())
             }
-        }
+        }.distinctUntilChanged()
 
         private fun lockIfNeeded(
             targetActivity: Activity,
