@@ -132,8 +132,7 @@ class LockActivity : AppCompatActivity() {
         ) {
            targetActivity.lifecycleScope.launch {
                targetActivity.shouldEnableAppLockFlow(isAppLockEnabled).collectLatest { shouldLock ->
-                   if (!shouldLock) return@collectLatest
-                   lockAppWhenNeeded(
+                   if (shouldLock) lockAppWhenNeeded(
                        targetActivity = targetActivity,
                        primaryColor = primaryColor,
                        autoLockTimeout = autoLockTimeout
@@ -142,23 +141,17 @@ class LockActivity : AppCompatActivity() {
            }
         }
 
-        private fun lockAppWhenNeeded(
+        private suspend fun lockAppWhenNeeded(
             targetActivity: ComponentActivity,
             @ColorInt primaryColor: Int,
             autoLockTimeout: Duration
-        ) = targetActivity.lifecycleScope.launch {
-            val lifecycle = targetActivity.lifecycle
-
-            launch {
-                lifecycle.currentStateFlow.collect { state ->
-                    if (state == Lifecycle.State.RESUMED) lockIfNeeded(
-                        targetActivity = targetActivity,
-                        lastAppClosingTime = lastAppClosingTime,
-                        primaryColor = primaryColor,
-                        autoLockTimeout = autoLockTimeout
-                    )
-                }
-            }
+        ): Nothing = targetActivity.lifecycle.currentStateFlow.collect { state ->
+            if (state == Lifecycle.State.RESUMED) lockIfNeeded(
+                targetActivity = targetActivity,
+                lastAppClosingTime = lastAppClosingTime,
+                primaryColor = primaryColor,
+                autoLockTimeout = autoLockTimeout
+            )
         }
 
         private fun ComponentActivity.shouldEnableAppLockFlow(
