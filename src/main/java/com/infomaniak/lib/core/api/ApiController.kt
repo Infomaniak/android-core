@@ -241,7 +241,7 @@ object ApiController {
 
     fun createApiError(useKotlinxSerialization: Boolean, bodyResponse: String, exception: Exception) = ApiError(
         contextJson = if (useKotlinxSerialization) bodyResponse.bodyResponseToJson() else null,
-        contextGson = if (useKotlinxSerialization) JsonParser.parseString(bodyResponse).asJsonObject else null,
+        contextGson = if (useKotlinxSerialization) null else JsonParser.parseString(bodyResponse).asJsonObject,
         exception = exception
     )
 
