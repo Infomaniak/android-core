@@ -108,6 +108,37 @@ inline fun <reified E : Enum<E>> SharedValues.sharedValue(key: String, defaultVa
     }
 }
 
+/**
+ * The order of enums used with this function MUST be kept stable across app versions, so that mismatches can't happen.
+ * Never remove an entry, an [IndexOutOfBoundsException] exception will be thrown otherwise.
+ *
+ * **When using this function with a new enum, make sure to add a test that checks that the order isn't changed.**
+ * Here's an example for an enum (defined as `enum class MyEnum { A, B, C; }`):
+ * ```kotlin
+ * @Test
+ * fun checkOrdinalsAreStable() {
+ *     // Ensure that the ordinals are kept stable
+ *     assertEquals(0, MyEnum.A.ordinal)
+ *     assertEquals(1, MyEnum.B.ordinal)
+ *     assertEquals(2, MyEnum.C.ordinal)
+ *     // NEVER remove an enum entry and its test. Only renames and additions are okay.
+ * }
+ * ```
+ */
+inline fun <reified E : Enum<E>> SharedValues.sharedValueWithOrdinal(key: String, defaultValue: E?): ReadWriteProperty<Any, E?> {
+    return object : ReadWriteProperty<Any, E?> {
+        override fun getValue(thisRef: Any, property: KProperty<*>): E? {
+            val ordinal = sharedPreferences.getInt(key, defaultValue?.ordinal ?: -1)
+            if (ordinal == -1) return null
+            return enumValues<E>()[ordinal]
+        }
+
+        override fun setValue(thisRef: Any, property: KProperty<*>, value: E?) {
+            sharedPreferences.transaction { putInt(key, value?.ordinal ?: -1) }
+        }
+    }
+}
+
 inline fun <reified T : @Serializable Any> SharedValues.sharedValue(
     key: String,
     defaultValue: T?,
