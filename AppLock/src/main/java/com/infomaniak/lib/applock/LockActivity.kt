@@ -90,6 +90,7 @@ class LockActivity : AppCompatActivity() {
             }.also(::startActivity)
         }
         lockedByScreenTurnedOff = false
+        lastAppClosingTime = System.currentTimeMillis() // Avoid locking again immediately
         finish()
     }
 
