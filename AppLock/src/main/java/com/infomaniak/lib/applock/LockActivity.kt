@@ -133,15 +133,15 @@ class LockActivity : AppCompatActivity() {
             autoLockTimeout: Duration = defaultAutoLockTimeout,
             isAppLockEnabled: () -> Boolean
         ) {
-           targetActivity.lifecycleScope.launch {
-               targetActivity.shouldEnableAppLockFlow(isAppLockEnabled).collectLatest { shouldLock ->
-                   if (shouldLock) lockAppWhenNeeded(
-                       targetActivity = targetActivity,
-                       primaryColor = primaryColor,
-                       autoLockTimeout = autoLockTimeout
-                   )
-               }
-           }
+            targetActivity.lifecycleScope.launch {
+                targetActivity.shouldEnableAppLockFlow(isAppLockEnabled).collectLatest { shouldLock ->
+                    if (shouldLock) lockAppWhenNeeded(
+                        targetActivity = targetActivity,
+                        primaryColor = primaryColor,
+                        autoLockTimeout = autoLockTimeout
+                    )
+                }
+            }
         }
 
         private suspend fun lockAppWhenNeeded(
@@ -158,7 +158,7 @@ class LockActivity : AppCompatActivity() {
         }
 
         private fun ComponentActivity.shouldEnableAppLockFlow(
-            isAppLockEnabled:() -> Boolean
+            isAppLockEnabled: () -> Boolean
         ): Flow<Boolean> = lifecycle.currentStateFlow.transform {
             if (it == Lifecycle.State.RESUMED) {
                 emit(hasBiometrics() && isAppLockEnabled())
