@@ -105,7 +105,7 @@ class LockActivity : AppCompatActivity() {
         private val defaultAutoLockTimeout = 1.minutes
 
         private val biometricsManager = BiometricManager.from(appCtx)
-        private const val authenticators = BIOMETRIC_WEAK or DEVICE_CREDENTIAL
+        internal const val authenticators = BIOMETRIC_WEAK or DEVICE_CREDENTIAL
 
         // On a cold start, do as if the app was left for more than the timeout.
         private var lastAppClosingTime = SystemClock.elapsedRealtime() - (defaultAutoLockTimeout.inWholeMilliseconds + 1)
@@ -213,7 +213,7 @@ class LockActivity : AppCompatActivity() {
             error("Stop using this. Calling scheduleLockIfNeeded() right from onCreate() is now enough.")
         }
 
-        private fun hasBiometrics(): Boolean {
+        fun hasBiometrics(): Boolean {
             return biometricsManager.canAuthenticate(authenticators) == BiometricManager.BIOMETRIC_SUCCESS
         }
 
