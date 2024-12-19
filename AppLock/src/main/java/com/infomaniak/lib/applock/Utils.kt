@@ -21,9 +21,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.CompoundButton
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
-import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -32,10 +29,6 @@ import com.infomaniak.lib.core.utils.getAppName
 object Utils {
 
     const val APP_LOCK_TAG = "App lock"
-    private const val authenticators = BIOMETRIC_WEAK or DEVICE_CREDENTIAL
-
-    fun Context.isKeyguardSecure() =
-        BiometricManager.from(this).canAuthenticate(authenticators) == BiometricManager.BIOMETRIC_SUCCESS
 
     @SuppressLint("NewApi")
     fun FragmentActivity.requestCredentials(onSuccess: () -> Unit) {
@@ -61,7 +54,7 @@ object Utils {
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(getAppName())
-            .setAllowedAuthenticators(authenticators)
+            .setAllowedAuthenticators(LockActivity.authenticators)
             .build()
 
         biometricPrompt.authenticate(promptInfo)
