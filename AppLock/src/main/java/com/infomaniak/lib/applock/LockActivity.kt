@@ -21,6 +21,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.Display
 import androidx.activity.ComponentActivity
@@ -84,13 +85,14 @@ class LockActivity : AppCompatActivity() {
 
     private fun onCredentialsSuccessful() = with(navigationArgs) {
         Log.i(Utils.APP_LOCK_TAG, "success")
+        lockedByScreenTurnedOff = false
+        lastAppClosingTime = SystemClock.elapsedRealtime() // Avoid locking again immediately
+        isLocked = false
         if (shouldStartActivity) {
             Intent(this@LockActivity, Class.forName(destinationClassName)).apply {
                 destinationClassArgs?.let(::putExtras)
             }.also(::startActivity)
         }
-        lockedByScreenTurnedOff = false
-        lastAppClosingTime = System.currentTimeMillis() // Avoid locking again immediately
         finish()
     }
 
@@ -106,16 +108,19 @@ class LockActivity : AppCompatActivity() {
         private val biometricsManager = BiometricManager.from(appCtx)
         private const val authenticators = BIOMETRIC_WEAK or DEVICE_CREDENTIAL
 
-        private var lastAppClosingTime = System.currentTimeMillis()
+        // On a cold start, do as if the app was left for more than the timeout.
+        private var lastAppClosingTime = SystemClock.elapsedRealtime() - (defaultAutoLockTimeout.inWholeMilliseconds + 1)
         private var lockedByScreenTurnedOff = false
+        private var isLocked = true
 
         init {
             val processLifecycleOwner = ProcessLifecycleOwner.get()
             processLifecycleOwner.lifecycleScope.launch {
                 launch {
                     processLifecycleOwner.lifecycle.eventFlow.collect { event ->
-                        if (event == Lifecycle.Event.ON_STOP) {
-                            lastAppClosingTime = System.currentTimeMillis()
+                        if (event == Lifecycle.Event.ON_STOP && !isLocked) {
+                            // If the app is left while being unlocked, we mark it to calculate elapsed on going back.
+                            lastAppClosingTime = SystemClock.elapsedRealtime()
                         }
                     }
                 }
@@ -175,7 +180,7 @@ class LockActivity : AppCompatActivity() {
                 lockNow(targetActivity, primaryColor)
                 lockedByScreenTurnedOff = false
             } else {
-                val now = System.currentTimeMillis()
+                val now = SystemClock.elapsedRealtime()
                 val timeoutExceeded = now > lastAppClosingTime + autoLockTimeout.inWholeMilliseconds
                 if (timeoutExceeded) {
                     lockNow(targetActivity, primaryColor)
@@ -184,14 +189,22 @@ class LockActivity : AppCompatActivity() {
         }
 
         private fun lockNow(originalActivity: Activity, primaryColor: Int) {
-            startAppLockActivity(
-                context = originalActivity,
-                destinationClass = originalActivity::class.java,
-                primaryColor = primaryColor,
-                shouldStartActivity = false
-            )
+            Intent(originalActivity, LockActivity::class.java).apply {
+                val args = LockActivityArgs(
+                    destinationClassName = originalActivity::class.java.name,
+                    primaryColor = primaryColor,
+                    shouldStartActivity = false,
+                    destinationClassArgs = null
+                )
+                putExtras(args.toBundle())
+            }.also(originalActivity::startActivity)
+            isLocked = true
         }
 
+        @Deprecated(
+            "Stop using this. Calling scheduleLockIfNeeded() right from onCreate() is now enough.",
+            level = DeprecationLevel.ERROR
+        )
         fun startAppLockActivity(
             context: Context,
             destinationClass: Class<*>,
@@ -199,10 +212,7 @@ class LockActivity : AppCompatActivity() {
             primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
             shouldStartActivity: Boolean = true,
         ) {
-            Intent(context, LockActivity::class.java).apply {
-                val args = LockActivityArgs(destinationClass.name, primaryColor, shouldStartActivity, destinationClassArgs)
-                putExtras(args.toBundle())
-            }.also(context::startActivity)
+            error("Stop using this. Calling scheduleLockIfNeeded() right from onCreate() is now enough.")
         }
 
         private fun hasBiometrics(): Boolean {
@@ -218,10 +228,7 @@ class LockActivity : AppCompatActivity() {
             primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
             securityTolerance: Int = defaultAutoLockTimeout.inWholeMilliseconds.toInt(),
         ) {
-            val lastCloseAppWithTolerance = Date(lastAppClosingTime + securityTolerance)
-            if (Date().after(lastCloseAppWithTolerance)) {
-                startAppLockActivity(context, destinationClass, primaryColor = primaryColor, shouldStartActivity = false)
-            }
+            error("Use the new scheduleLockIfNeeded() function right from onCreate()")
         }
     }
 }
