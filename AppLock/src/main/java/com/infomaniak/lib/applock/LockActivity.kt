@@ -43,7 +43,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import splitties.init.appCtx
-import java.util.Date
 import kotlin.system.exitProcess
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -178,7 +177,6 @@ class LockActivity : AppCompatActivity() {
         ) {
             if (lockedByScreenTurnedOff) {
                 lockNow(targetActivity, primaryColor)
-                lockedByScreenTurnedOff = false
             } else {
                 val now = SystemClock.elapsedRealtime()
                 val timeoutExceeded = now > lastAppClosingTime + autoLockTimeout.inWholeMilliseconds
