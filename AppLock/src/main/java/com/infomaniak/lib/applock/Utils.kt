@@ -30,15 +30,6 @@ object Utils {
 
     const val APP_LOCK_TAG = "App lock"
 
-    @Deprecated(
-        message = "Use LockActivity.hasBiometrics() instead.",
-        replaceWith = ReplaceWith(
-            "LockActivity.hasBiometrics()",
-            "com.infomaniak.lib.applock.LockActivity"
-        )
-    )
-    fun Context.isKeyguardSecure() = LockActivity.hasBiometrics()
-
     @SuppressLint("NewApi")
     fun FragmentActivity.requestCredentials(onSuccess: () -> Unit) {
         val biometricPrompt = BiometricPrompt(this,

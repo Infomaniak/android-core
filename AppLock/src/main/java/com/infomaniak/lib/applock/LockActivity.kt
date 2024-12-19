@@ -18,7 +18,6 @@
 package com.infomaniak.lib.applock
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
@@ -199,34 +198,8 @@ class LockActivity : AppCompatActivity() {
             isLocked = true
         }
 
-        @Deprecated(
-            "Stop using this. Calling scheduleLockIfNeeded() right from onCreate() is now enough.",
-            level = DeprecationLevel.ERROR
-        )
-        fun startAppLockActivity(
-            context: Context,
-            destinationClass: Class<*>,
-            destinationClassArgs: Bundle? = null,
-            primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
-            shouldStartActivity: Boolean = true,
-        ) {
-            error("Stop using this. Calling scheduleLockIfNeeded() right from onCreate() is now enough.")
-        }
-
         fun hasBiometrics(): Boolean {
             return biometricsManager.canAuthenticate(authenticators) == BiometricManager.BIOMETRIC_SUCCESS
-        }
-
-        //TODO: Remove once usages (kDrive and Infomaniak Mail) are updated.
-        @Deprecated("Use scheduleLockIfNeeded(…) right from onCreate() instead.", level = DeprecationLevel.ERROR)
-        fun lockAfterTimeout(
-            context: Context,
-            destinationClass: Class<*>,
-            lastAppClosingTime: Long,
-            primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
-            securityTolerance: Int = defaultAutoLockTimeout.inWholeMilliseconds.toInt(),
-        ) {
-            error("Use the new scheduleLockIfNeeded() function right from onCreate()")
         }
     }
 }
