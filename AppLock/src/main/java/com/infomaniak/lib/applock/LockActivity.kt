@@ -32,15 +32,16 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle.Event.*
 import androidx.navigation.navArgs
 import com.infomaniak.lib.applock.Utils.requestCredentials
 import com.infomaniak.lib.applock.databinding.ActivityLockBinding
 import com.infomaniak.lib.core.utils.getAppName
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.launch
 import splitties.init.appCtx
 import kotlin.system.exitProcess
 import kotlin.time.Duration
@@ -111,17 +112,10 @@ class LockActivity : AppCompatActivity() {
         private var lockedByScreenTurnedOff = false
         private var isLocked = true
 
+        private val scope = MainScope()
+
         init {
-            val processLifecycleOwner = ProcessLifecycleOwner.get()
-            processLifecycleOwner.lifecycleScope.launch {
-                launch {
-                    processLifecycleOwner.lifecycle.eventFlow.collect { event ->
-                        if (event == Lifecycle.Event.ON_STOP && !isLocked) {
-                            // If the app is left while being unlocked, we mark it to calculate elapsed on going back.
-                            lastAppClosingTime = SystemClock.elapsedRealtime()
-                        }
-                    }
-                }
+            scope.launch {
                 DisplayState.stateForDisplay(Display.DEFAULT_DISPLAY).collect { state ->
                     if (state != DisplayState.On) {
                         lockedByScreenTurnedOff = true
@@ -138,11 +132,28 @@ class LockActivity : AppCompatActivity() {
         ) {
             targetActivity.lifecycleScope.launch {
                 targetActivity.shouldEnableAppLockFlow(isAppLockEnabled).collectLatest { shouldLock ->
-                    if (shouldLock) lockAppWhenNeeded(
-                        targetActivity = targetActivity,
-                        primaryColor = primaryColor,
-                        autoLockTimeout = autoLockTimeout
-                    )
+                    if (shouldLock) coroutineScope {
+                        launch { keepAppClosingTime(targetActivity) }
+                        lockAppWhenNeeded(
+                            targetActivity = targetActivity,
+                            primaryColor = primaryColor,
+                            autoLockTimeout = autoLockTimeout
+                        )
+                    }
+                }
+            }
+        }
+
+        private suspend fun keepAppClosingTime(targetActivity: ComponentActivity) {
+            targetActivity.lifecycle.eventFlow.collect { event ->
+                if (isLocked) return@collect
+                when (event) {
+                    ON_RESUME, ON_STOP -> {
+                        // If the app is left, or opened back, all while being unlocked,
+                        // we mark it to calculate elapsed on going back.
+                        lastAppClosingTime = SystemClock.elapsedRealtime()
+                    }
+                    else -> Unit
                 }
             }
         }
