@@ -167,6 +167,17 @@ fun Date.addDays(amount: Int): Date = Calendar.getInstance().apply {
 
 fun Date.isInTheFuture(): Boolean = after(Date())
 
+// TODO: Check how much a date needs to be in the future (on the API side).
+fun Date.isAtLeastTenMinutesInTheFuture(): Boolean {
+    val dateTenMinutesLater = Calendar.getInstance().apply {
+        time = Date()
+
+        add(Calendar.MINUTE, 10)
+    }.time
+
+    return after(dateTenMinutesLater)
+}
+
 fun Date.isToday(): Boolean = isSameDayAs(Date())
 
 fun Date.isYesterday(): Boolean {
@@ -185,10 +196,14 @@ fun Date.isThisMonth(): Boolean = Date().let { now -> year() == now.year() && mo
 
 fun Date.isThisYear(): Boolean = Date().let { now -> year() == now.year() }
 
-fun Date.roundUpToNextFiveMinutes(): Date = Calendar.getInstance().apply {
-    time = this@roundUpToNextFiveMinutes
+fun Date.roundUpToNextTenMinutes(): Date = Calendar.getInstance().apply {
+    time = this@roundUpToNextTenMinutes
 
-    val minutesToAdd = 5 - (get(Calendar.MINUTE) % 5)
+    val currentMinute = get(Calendar.MINUTE)
+    val minutesToAdd = when {
+        currentMinute % 5 == 0 -> 10
+        else -> 5 - (currentMinute % 5) + 10
+    }
 
     add(Calendar.MINUTE, minutesToAdd)
     set(Calendar.SECOND, 0)
