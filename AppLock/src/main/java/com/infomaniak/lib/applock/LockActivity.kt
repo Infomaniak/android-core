@@ -87,9 +87,7 @@ class LockActivity : AppCompatActivity() {
 
     private fun onCredentialsSuccessful() = with(navigationArgs) {
         Log.i(Utils.APP_LOCK_TAG, "success")
-        lockedByScreenTurnedOff = false
-        lastAppClosingTime = SystemClock.elapsedRealtime() // Avoid locking again immediately
-        isLocked = false
+        unlock()
         if (shouldStartActivity) {
             Intent(this@LockActivity, Class.forName(destinationClassName)).apply {
                 destinationClassArgs?.let(::putExtras)
@@ -125,6 +123,15 @@ class LockActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        /**
+         * Meant to be used when enabling app lock, so the user doesn't experience a double lock.
+         */
+        fun unlock() {
+            lockedByScreenTurnedOff = false
+            lastAppClosingTime = SystemClock.elapsedRealtime() // Avoid locking again immediately
+            isLocked = false
         }
 
         fun scheduleLockIfNeeded(
