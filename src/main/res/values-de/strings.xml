@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
-  ~ Copyright (C) 2022-2023 Infomaniak Network SA
+  ~ Copyright (C) 2022-2024 Infomaniak Network SA
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -14,13 +14,15 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+  -->
 <resources>
     <string name="anErrorHasOccurred">Ein Fehler ist aufgetreten</string>
     <string name="androidActivateButton">Aktivieren</string>
     <string name="androidPermissionButton">Autorizzazione</string>
     <string name="androidPermissionTitle">Erlaubnis erforderlich</string>
     <string name="browserNotFound">Kein Browser gefunden</string>
+    <string name="buttonYes">Ja</string>
+    <string name="buttonNo">Nein</string>
     <string name="buttonCancel">Abbrechen</string>
     <string name="buttonLater">Später</string>
     <string name="buttonUpdate">Aktualisieren</string>
@@ -28,9 +30,14 @@
     <string name="connectionError">Problem mit der Internetverbindung</string>
     <string name="errorDownload">Fehler beim Download</string>
     <string name="errorDownloadInsufficientSpace">Download nicht möglich: Unzureichender Speicherplatz</string>
+    <string name="errorFileNotFound">Beim Öffnen dieser Datei ist ein Fehler aufgetreten</string>
+    <string name="errorNoSupportingAppFound">Diese Datei wird von keiner installierten Anwendung unterstützt</string>
     <string name="errorTitle">Fehler</string>
     <string name="errorTitleLabel">Ein Fehler ist aufgetreten</string>
+    <string name="errorUpdateInstall">Fehler bei der Update-Installation</string>
     <string name="errorUserAlreadyPresent">Fehler Benutzer bereits vorhanden</string>
+    <string name="noConnection">Keine Verbindung</string>
+    <string name="openWith">Öffnen mit</string>
     <string name="serverError">Server-Fehler</string>
     <string name="startButton">Start</string>
     <string name="typeAdmin">Administrator</string>
@@ -40,4 +47,5 @@
     <string name="updateAppTitle">Aktualisierung erforderlich</string>
     <string name="updateAvailableDescription">Mit Blick auf ein optimales %s-Benutzererlebnis empfehlen wir Ihnen, Ihre Anwendung zu aktualisieren.</string>
     <string name="updateAvailableTitle">Aktualisierung verfügbar!</string>
+    <string name="updateReadyTitle">Update bereit</string>
 </resources>

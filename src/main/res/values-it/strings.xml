@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
-  ~ Copyright (C) 2022-2023 Infomaniak Network SA
+  ~ Copyright (C) 2022-2024 Infomaniak Network SA
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -14,13 +14,15 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+  -->
 <resources>
     <string name="anErrorHasOccurred">Si è verificato un errore</string>
     <string name="androidActivateButton">Attiva</string>
     <string name="androidPermissionButton">Permiso</string>
     <string name="androidPermissionTitle">Autorizzazione necessaria</string>
     <string name="browserNotFound">Nessun browser trovato</string>
+    <string name="buttonYes">Sì</string>
+    <string name="buttonNo">No</string>
     <string name="buttonCancel">Annulla</string>
     <string name="buttonLater">Più tardi</string>
     <string name="buttonUpdate">Aggiorna</string>
@@ -28,9 +30,14 @@
     <string name="connectionError">Problema di connessione a Internet</string>
     <string name="errorDownload">Errore durante il download</string>
     <string name="errorDownloadInsufficientSpace">Impossibile scaricare: spazio insufficiente</string>
+    <string name="errorFileNotFound">Si è verificato un errore durante l’apertura di questo file</string>
+    <string name="errorNoSupportingAppFound">Il file non è supportato da nessuna delle applicazioni installate</string>
     <string name="errorTitle">Errore</string>
     <string name="errorTitleLabel">Si è verificato un errore</string>
+    <string name="errorUpdateInstall">Errore durante l’installazione dell’aggiornamento</string>
     <string name="errorUserAlreadyPresent">Errore utente già esistente</string>
+    <string name="noConnection">Nessuna connessione</string>
+    <string name="openWith">Apri con</string>
     <string name="serverError">Errore del server</string>
     <string name="startButton">Avvia</string>
     <string name="typeAdmin">Amministratore</string>
@@ -40,4 +47,5 @@
     <string name="updateAppTitle">Aggiornamento necessario</string>
     <string name="updateAvailableDescription">Per vivere la migliore esperienza con %s, ti consigliamo di aggiornare la tua applicazione.</string>
     <string name="updateAvailableTitle">Aggiornamento disponibile!</string>
+    <string name="updateReadyTitle">Aggiornamento pronto</string>
 </resources>

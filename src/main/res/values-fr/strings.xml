@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
-  ~ Copyright (C) 2022-2023 Infomaniak Network SA
+  ~ Copyright (C) 2022-2024 Infomaniak Network SA
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -14,13 +14,15 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+  -->
 <resources>
     <string name="anErrorHasOccurred">Une erreur est survenue</string>
     <string name="androidActivateButton">Activer</string>
     <string name="androidPermissionButton">Permission</string>
     <string name="androidPermissionTitle">Permission requise</string>
     <string name="browserNotFound">Aucun navigateur trouvé</string>
+    <string name="buttonYes">Oui</string>
+    <string name="buttonNo">Non</string>
     <string name="buttonCancel">Annuler</string>
     <string name="buttonLater">Plus tard</string>
     <string name="buttonUpdate">Mettre à jour</string>
@@ -28,9 +30,14 @@
     <string name="connectionError">Problème de connexion internet</string>
     <string name="errorDownload">Erreur lors du téléchargement</string>
     <string name="errorDownloadInsufficientSpace">Téléchargement impossible : Espace insuffisant</string>
+    <string name="errorFileNotFound">Une erreur est survenue lors de l’ouverture de ce fichier</string>
+    <string name="errorNoSupportingAppFound">Aucune application installée ne prend en charge ce fichier</string>
     <string name="errorTitle">Erreur</string>
     <string name="errorTitleLabel">Une erreur s’est produite</string>
+    <string name="errorUpdateInstall">Erreur lors de l’installation de la mise à jour</string>
     <string name="errorUserAlreadyPresent">Erreur utilisateur déjà présent</string>
+    <string name="noConnection">Pas de connexion</string>
+    <string name="openWith">Ouvrir avec</string>
     <string name="serverError">Erreur serveur</string>
     <string name="startButton">Démarrer</string>
     <string name="typeAdmin">Administrateur</string>
@@ -40,4 +47,5 @@
     <string name="updateAppTitle">Mise à jour requise</string>
     <string name="updateAvailableDescription">Afin de profiter d’une expérience optimale de %s, nous vous conseillons de mettre à jour votre application.</string>
     <string name="updateAvailableTitle">Mise à jour disponible !</string>
+    <string name="updateReadyTitle">Mise à jour prête</string>
 </resources>

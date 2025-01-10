@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.api
 
+import androidx.annotation.StringRes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
@@ -47,6 +48,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.reflect.Type
+import java.net.UnknownHostException
 import java.util.Date
 
 object ApiController {
@@ -77,9 +79,10 @@ object ApiController {
         body: Any? = null,
         okHttpClient: OkHttpClient = HttpClient.okHttpClient,
         useKotlinxSerialization: Boolean = false,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
     ): T {
         val requestBody: RequestBody = generateRequestBody(body)
-        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization)
+        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization, buildErrorResult)
     }
 
     fun generateRequestBody(body: Any?): RequestBody {
@@ -144,6 +147,7 @@ object ApiController {
         requestBody: RequestBody,
         okHttpClient: OkHttpClient,
         useKotlinxSerialization: Boolean,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
     ): T {
         var bodyResponse = ""
         try {
@@ -165,46 +169,49 @@ object ApiController {
                 bodyResponse = response.body?.string() ?: ""
                 return when {
                     response.code >= 500 -> {
-                        ApiResponse<Any>(
-                            result = ERROR,
-                            error = ApiError(context = bodyResponse.bodyResponseToJson(), exception = ServerErrorException()),
-                            translatedError = R.string.serverError
-                        ) as T
+                        createErrorResponse(
+                            apiError = createApiError(useKotlinxSerialization, bodyResponse, ServerErrorException()),
+                            translatedError = R.string.serverError,
+                            buildErrorResult = buildErrorResult,
+                        )
                     }
-                    bodyResponse.isBlank() -> getApiResponseInternetError()
-                    else -> {
-                        val decodedApiResponse = if (useKotlinxSerialization) {
-                            json.decodeFromString<T>(bodyResponse)
-                        } else {
-                            gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
-                        }
-                        decodedApiResponse.apply {
-                            val apiResponse = this as? ApiResponse<*>
-                            if (apiResponse?.result == ERROR) apiResponse.translatedError = R.string.anErrorHasOccurred
-                        }
-                    }
+                    bodyResponse.isBlank() -> createInternetErrorResponse(buildErrorResult = buildErrorResult)
+                    else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse)
                 }
             }
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
-            return ApiResponse<Any>(result = ERROR, translatedError = R.string.anErrorHasOccurred) as T
+            return createErrorResponse(translatedError = R.string.anErrorHasOccurred, buildErrorResult = buildErrorResult)
         } catch (exception: Exception) {
             exception.printStackTrace()
 
             return if (exception.isNetworkException()) {
-                getApiResponseInternetError()
+                createInternetErrorResponse(noNetwork = exception is UnknownHostException, buildErrorResult = buildErrorResult)
             } else {
-                ApiResponse<Any>(
-                    result = ERROR,
-                    error = ApiError(context = bodyResponse.bodyResponseToJson(), exception = exception),
-                    translatedError = R.string.anErrorHasOccurred
-                ) as T
+                createErrorResponse(
+                    translatedError = R.string.anErrorHasOccurred,
+                    apiError = createApiError(useKotlinxSerialization, bodyResponse, exception = exception),
+                    buildErrorResult = buildErrorResult,
+                )
             }
 
         }
     }
 
-    fun String.bodyResponseToJson(): JsonObject {
+    inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String): T {
+        val apiResponse = when {
+            useKotlinxSerialization -> json.decodeFromString<T>(bodyResponse)
+            else -> gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
+        }
+
+        if (apiResponse is ApiResponse<*> && apiResponse.result == ERROR) {
+            apiResponse.translatedError = R.string.anErrorHasOccurred
+        }
+
+        return apiResponse
+    }
+
+    private fun String.bodyResponseToJson(): JsonObject {
         return JsonObject(mapOf("bodyResponse" to JsonPrimitive(this)))
     }
 

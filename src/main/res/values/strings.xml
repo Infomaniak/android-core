@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
-  ~ Copyright (C) 2022-2023 Infomaniak Network SA
+  ~ Copyright (C) 2022-2024 Infomaniak Network SA
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+  -->
 <resources>
     <string name="infomaniak" translatable="false">Infomaniak</string>
 
@@ -23,6 +23,8 @@
     <string name="androidPermissionButton">Permission</string>
     <string name="androidPermissionTitle">Permission required</string>
     <string name="browserNotFound">No browser found</string>
+    <string name="buttonYes">Yes</string>
+    <string name="buttonNo">No</string>
     <string name="buttonCancel">Cancel</string>
     <string name="buttonLater">Later</string>
     <string name="buttonUpdate">Update</string>
@@ -30,9 +32,14 @@
     <string name="connectionError">Internet connection problem</string>
     <string name="errorDownload">Download error</string>
     <string name="errorDownloadInsufficientSpace">Cannot download : Insufficient space</string>
+    <string name="errorFileNotFound">An error has occurred while opening the file</string>
+    <string name="errorNoSupportingAppFound">This file is not supported by any installed application</string>
     <string name="errorTitle">Error</string>
     <string name="errorTitleLabel">An error occurred</string>
+    <string name="errorUpdateInstall">Error during update install</string>
     <string name="errorUserAlreadyPresent">Error, User already present</string>
+    <string name="noConnection">No connection</string>
+    <string name="openWith">Open with</string>
     <string name="serverError">Server Error</string>
     <string name="startButton">Get started</string>
     <string name="typeAdmin">Administrator</string>
@@ -42,4 +49,5 @@
     <string name="updateAppTitle">Update required</string>
     <string name="updateAvailableDescription">To get the best out of %s, we recommend you update your application.</string>
     <string name="updateAvailableTitle">Update available!</string>
+    <string name="updateReadyTitle">Update ready</string>
 </resources>
