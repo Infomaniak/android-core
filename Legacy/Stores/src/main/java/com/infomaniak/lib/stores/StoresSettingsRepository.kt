@@ -24,7 +24,7 @@ import com.infomaniak.lib.core.utils.SentryLog
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-//TODO: Inject this when kDrive will have hilt
+// TODO: Inject this when kDrive will have hilt
 private val Context.dataStore by preferencesDataStore(name = StoresSettingsRepository.DATA_STORE_NAME)
 
 @Suppress("UNCHECKED_CAST")
