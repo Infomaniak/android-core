@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -167,12 +167,11 @@ fun Date.addDays(amount: Int): Date = Calendar.getInstance().apply {
 
 fun Date.isInTheFuture(): Boolean = after(Date())
 
-// TODO: Check how much a date needs to be in the future (on the API side).
-fun Date.isAtLeastTenMinutesInTheFuture(): Boolean {
+fun Date.isAtLeastXMinutesInTheFuture(minutes: Int): Boolean {
     val dateTenMinutesLater = Calendar.getInstance().apply {
         time = Date()
 
-        add(Calendar.MINUTE, 10)
+        add(Calendar.MINUTE, minutes)
     }.time
 
     return after(dateTenMinutesLater)
