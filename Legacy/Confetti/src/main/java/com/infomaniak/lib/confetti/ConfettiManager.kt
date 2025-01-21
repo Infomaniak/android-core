@@ -486,7 +486,7 @@ class ConfettiManager(
                 val elapsedTime = valueAnimator.currentPlayTime
                 processNewEmission(elapsedTime, useGaussian)
                 updateConfetti(elapsedTime)
-                if (confetti.size == 0 && elapsedTime >= emissionDuration) {
+                if (confetti.isEmpty() && elapsedTime >= emissionDuration) {
                     terminate()
                 } else {
                     confettiView.invalidate()
