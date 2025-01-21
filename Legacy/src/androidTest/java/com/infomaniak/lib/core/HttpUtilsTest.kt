@@ -62,7 +62,7 @@ class HttpUtilsTest {
     }
 
     @Test
-    fun getHeaders_Test() {
+    fun getHeadersTest() {
         // Arrange (Already in setup)
 
         // Act
