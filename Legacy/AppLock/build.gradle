@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
-    namespace 'com.infomaniak.lib.bugtracker'
+    namespace 'com.infomaniak.lib.applock'
     compileSdk rootProject.ext.coreTargetSdk
 
     defaultConfig {
@@ -22,5 +22,10 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':Core')
+    implementation project(path: ':Core:Legacy')
+
+    implementation 'androidx.biometric:biometric-ktx:1.2.0-alpha05'
+    implementation("com.louiscad.splitties:splitties-appctx:3.0.0")
+    implementation("com.louiscad.splitties:splitties-mainhandler:3.0.0")
+    implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
 }
