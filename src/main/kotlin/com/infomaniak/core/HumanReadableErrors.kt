@@ -22,21 +22,21 @@ import com.infomaniak.core.DownloadStatus.Failed.RemoteIssue
 
 fun DownloadStatus.Failed.Reason.snackbarMsgResId(): Int = when (this) {
     is RemoteIssue -> when (this) {
-        RemoteIssue.HttpDataError -> R.string.errorDownload //TODO: Provide a more precise error message.
-        is RemoteIssue.HttpError -> R.string.errorDownload //TODO: Provide a more precise error message.
-        RemoteIssue.TooManyRedirects -> R.string.errorDownload //TODO: Provide a more precise error message.
-        RemoteIssue.UnhandledHttpCode -> R.string.errorDownload //TODO: Provide a more precise error message.
+        RemoteIssue.HttpDataError -> R.string.errorDownload // TODO: Provide a more precise error message.
+        is RemoteIssue.HttpError -> R.string.errorDownload // TODO: Provide a more precise error message.
+        RemoteIssue.TooManyRedirects -> R.string.errorDownload // TODO: Provide a more precise error message.
+        RemoteIssue.UnhandledHttpCode -> R.string.errorDownload // TODO: Provide a more precise error message.
     }
     is LocalIssue -> when (this) {
         LocalIssue.InsufficientSpace -> R.string.errorDownloadInsufficientSpace
-        LocalIssue.StorageDeviceNotFound -> R.string.errorDownload //TODO: Provide a more precise error message.
-        LocalIssue.FileError -> R.string.errorDownload //TODO: Provide a more precise error message.
-        LocalIssue.FileAlreadyExists -> R.string.errorDownload //TODO: Provide a more precise error message.
+        LocalIssue.StorageDeviceNotFound -> R.string.errorDownload // TODO: Provide a more precise error message.
+        LocalIssue.FileError -> R.string.errorDownload // TODO: Provide a more precise error message.
+        LocalIssue.FileAlreadyExists -> R.string.errorDownload // TODO: Provide a more precise error message.
     }
     DownloadStatus.Failed.Reason.CannotResume -> {
-        R.string.errorDownload //TODO: Provide a more precise error message.
+        R.string.errorDownload // TODO: Provide a more precise error message.
     }
     DownloadStatus.Failed.Reason.UnknownError -> {
-        R.string.errorDownload //TODO: Provide a more precise error message.
+        R.string.errorDownload // TODO: Provide a more precise error message.
     }
 }
