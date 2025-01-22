@@ -2,21 +2,25 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
+def legacyCompileSdk = rootProject.ext["legacyCompileSdk"]
+def legacyMinSdk = rootProject.ext["legacyMinSdk"]
+def javaVersion = rootProject.ext["javaVersion"]
+
 android {
     namespace 'com.infomaniak.lib.applock'
-    compileSdk rootProject.ext.coreTargetSdk
+    compileSdk legacyCompileSdk
 
     defaultConfig {
-        minSdk rootProject.ext.coreMinSdk
-        targetSdk rootProject.ext.coreTargetSdk
+        minSdk legacyMinSdk
+        targetSdk legacyCompileSdk
     }
 
     compileOptions {
-        sourceCompatibility rootProject.ext.javaVersion
-        targetCompatibility rootProject.ext.javaVersion
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
     }
 
-    kotlinOptions { jvmTarget = rootProject.ext.javaVersion }
+    kotlinOptions { jvmTarget = javaVersion }
 
     buildFeatures { viewBinding true }
 }
