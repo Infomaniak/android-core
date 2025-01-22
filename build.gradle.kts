@@ -6,8 +6,6 @@ plugins {
 rootProject.extra.apply {
     set("coreCompileSdk", 35)
     set("coreMinSdk", 24)
-    set("legacyCompileSdk", 34)
-    set("legacyMinSdk", 21)
     set("javaVersion", JavaVersion.VERSION_17)
 }
 
