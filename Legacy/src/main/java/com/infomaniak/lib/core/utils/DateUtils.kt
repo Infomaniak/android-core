@@ -117,6 +117,11 @@ fun Date.year(): Int =
         time = this@year
     }.get(Calendar.YEAR)
 
+fun Date.addYears(years: Int): Date = Calendar.getInstance().apply {
+    time = this@addYears
+    add(Calendar.YEAR, years)
+}.time
+
 fun Date.month(): Int =
     Calendar.getInstance().apply {
         time = this@month
