@@ -3,16 +3,16 @@ plugins {
     alias(core.plugins.kotlin.android)
 }
 
-val sharedCompileSdk: Int by rootProject.extra
-val sharedMinSdk: Int by rootProject.extra
-val sharedJavaVersion: JavaVersion by rootProject.extra
+val coreCompileSdk: Int by rootProject.extra
+val coreMinSdk: Int by rootProject.extra
+val javaVersion: JavaVersion by rootProject.extra
 
 android {
     namespace = "com.infomaniak.core.matomo"
-    compileSdk = sharedCompileSdk
+    compileSdk = coreCompileSdk
 
     defaultConfig {
-        minSdk = sharedMinSdk
+        minSdk = coreMinSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -28,8 +28,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = sharedJavaVersion
-        targetCompatibility = sharedJavaVersion
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
 
     buildFeatures {
@@ -37,7 +37,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = sharedJavaVersion.toString()
+        jvmTarget = javaVersion.toString()
     }
 }
 

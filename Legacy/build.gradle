@@ -5,20 +5,17 @@ apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
+def legacyCompileSdk = rootProject.ext["legacyCompileSdk"]
+def legacyMinSdk = rootProject.ext["legacyMinSdk"]
+def javaVersion = rootProject.ext["javaVersion"]
+
 android {
     namespace 'com.infomaniak.lib.core'
-
-    rootProject.ext {
-        coreMinSdk = 21
-        coreTargetSdk = 34
-        javaVersion = JavaVersion.VERSION_17
-    }
-
-    compileSdk rootProject.ext.coreTargetSdk
+    compileSdk legacyCompileSdk
 
     defaultConfig {
-        minSdkVersion rootProject.ext.coreMinSdk
-        targetSdkVersion rootProject.ext.coreTargetSdk
+        minSdk legacyMinSdk
+        targetSdk legacyCompileSdk
 
         testOptions.unitTests.includeAndroidResources = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -34,8 +31,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility rootProject.ext.javaVersion
-        targetCompatibility rootProject.ext.javaVersion
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
     }
 
     buildFeatures {
@@ -43,7 +40,7 @@ android {
         buildConfig true
     }
 
-    kotlinOptions { jvmTarget = rootProject.ext.javaVersion }
+    kotlinOptions { jvmTarget = javaVersion }
 }
 
 dependencies {
