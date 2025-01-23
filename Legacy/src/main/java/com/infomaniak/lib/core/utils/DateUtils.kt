@@ -192,7 +192,13 @@ fun Date.isThisWeek(): Boolean {
     return this in now.startOfTheWeek()..now.endOfTheWeek()
 }
 
-fun Date.isWeekend(): Boolean = this.day() == 6 || this.day() == 0
+fun Date.isWeekend(): Boolean {
+    val calendar = Calendar.getInstance().apply {
+        time = this@isWeekend
+    }
+    val day = calendar.get(Calendar.DAY_OF_WEEK)
+    return day == 1 || day == 7
+}
 
 fun Date.isThisMonth(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() }
 
