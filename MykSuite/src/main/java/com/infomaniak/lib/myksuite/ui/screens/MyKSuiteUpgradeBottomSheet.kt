@@ -18,24 +18,24 @@
 package com.infomaniak.lib.myksuite.ui.screens
 
 import android.content.res.Configuration
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.lib.myksuite.R
+import com.infomaniak.lib.myksuite.ui.screens.components.ButtonType
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
@@ -62,23 +62,30 @@ private fun BottomSheetContent(
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = Margin.Large)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        // Image(modifier = paddedModifier, imageVector = ImageVector.vectorResource(R.), contentDescription = null) // TODO add banner
-        Spacer(Modifier.height(Margin.Huge))
+        val paddedModifier = Modifier.padding(horizontal = Margin.Large)
+        Image(
+            imageVector = ImageVector.vectorResource(R.drawable.illu_banner),
+            contentScale = ContentScale.FillWidth,
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth(),
+        ) // TODO put the right banner
+        // Spacer(Modifier.height(Margin.Huge))
         Text(
-            text = "Donner plus d’espace à vos idées",
+            modifier = paddedModifier,
+            text = stringResource(R.string.myKSuiteUpgradeTitle),
             textAlign = TextAlign.Center,
-            style = MyKSuiteTheme.typography.bodyMedium,
+            style = MyKSuiteTheme.typography.h2,
             color = MyKSuiteTheme.colors.primaryTextColor,
         )
         Spacer(Modifier.height(Margin.Medium))
         Text(
-            text = "Plus d’espace, de possibilités et de flexibilité pour faire ce que vous aimez.",
+            modifier = paddedModifier,
+            text = stringResource(R.string.myKSuiteUpgradedescription),
             style = MyKSuiteTheme.typography.bodyRegular,
             color = MyKSuiteTheme.colors.secondaryTextColor,
         )
@@ -86,8 +93,13 @@ private fun BottomSheetContent(
 
         customFeatures?.let {
             it().forEach { customFeature ->
-                Row(Modifier.padding(vertical = Margin.Mini)) {
-                    Icon(ImageVector.vectorResource(customFeature.icon), contentDescription = null)
+                Row(
+                    modifier = paddedModifier
+                        .padding(vertical = Margin.Mini)
+                        .align(Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(ImageVector.vectorResource(customFeature.icon), contentDescription = null, tint = Color(0xff666666))
                     Spacer(Modifier.width(Margin.Mini))
                     Text(
                         text = stringResource(customFeature.title),
@@ -100,49 +112,25 @@ private fun BottomSheetContent(
         }
 
         Text(
-            text = "Pour bénéficier de my kSuite+, modifiez votre offre depuis votre interface web.",
+            modifier = paddedModifier,
+            text = stringResource(R.string.myKSuiteUpgradeDetails),
             style = MyKSuiteTheme.typography.bodyRegular,
             color = MyKSuiteTheme.colors.secondaryTextColor,
         )
         Spacer(Modifier.height(Margin.Huge))
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = paddedModifier
+                .fillMaxWidth()
+                .height(56.dp),
             colors = style.colors().buttonColors(),
             shape = style.shape,
             onClick = onButtonClicked,
         ) {
-            Text("Fermer") // TODO
+            Text(stringResource(R.string.buttonClose))
         }
+        Spacer(Modifier.height(Margin.Large))
     }
 }
-
-enum class ButtonType(val colors: @Composable () -> MyKSuiteButtonColors, val shape: Shape) {
-    Mail(
-        colors = { MyKSuiteButtonColors(containerColor = MyKSuiteTheme.colors.mailButton) },
-        shape = RoundedCornerShape(16.dp),
-    ),
-    Drive(
-        colors = { MyKSuiteButtonColors(containerColor = MyKSuiteTheme.colors.driveButton) },
-        shape = RoundedCornerShape(8.dp),
-    ),
-}
-
-data class MyKSuiteButtonColors(
-    val containerColor: Color = Color.Unspecified,
-    val contentColor: Color = Color.Unspecified,
-    val disabledContainerColor: Color = Color.Unspecified,
-    val disabledContentColor: Color = Color.Unspecified,
-) {
-    @Composable
-    fun buttonColors(): ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = containerColor,
-        contentColor = contentColor,
-        disabledContainerColor = disabledContainerColor,
-        disabledContentColor = disabledContentColor,
-    )
-}
-
-data class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(name = "(1) Light")
@@ -154,7 +142,12 @@ private fun Preview() {
             MyKSuiteUpgradeBottomSheet(
                 onDismissRequest = {},
                 style = ButtonType.Mail,
-                customFeatures = null,
+                customFeatures = {
+                    listOf(
+                        MyKSuiteUpgradeFeatures(title = R.string.buttonClose, icon = R.drawable.ic_gift),
+                        MyKSuiteUpgradeFeatures(title = R.string.buttonClose, icon = R.drawable.ic_gift),
+                    )
+                },
                 onButtonClicked = {},
             )
         }
