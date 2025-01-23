@@ -145,8 +145,6 @@ fun Date.hours(): Int =
 fun Date.setHour(hour: Int): Date = Calendar.getInstance().apply {
     time = this@setHour
     set(Calendar.HOUR_OF_DAY, hour)
-
-    this@setHour.time = time.time
 }.time
 
 fun Date.minutes(): Int =
@@ -194,7 +192,7 @@ fun Date.isThisWeek(): Boolean {
     return this in now.startOfTheWeek()..now.endOfTheWeek()
 }
 
-fun Date.isWeekend(): Boolean = this.day() in 6..7
+fun Date.isWeekend(): Boolean = this.day() == 6 || this.day() == 0
 
 fun Date.isThisMonth(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() }
 
