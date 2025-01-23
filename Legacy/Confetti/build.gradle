@@ -1,7 +1,5 @@
-plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
-}
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 def legacyCompileSdk = rootProject.ext["legacyCompileSdk"]
 def legacyMinSdk = rootProject.ext["legacyMinSdk"]

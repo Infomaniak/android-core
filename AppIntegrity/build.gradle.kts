@@ -1,7 +1,7 @@
 plugins {
-    alias(libs.plugins.android.library)
+    id("com.android.library")
     alias(core.plugins.kotlin.android)
-    kotlin("plugin.serialization") version libs.versions.kotlin
+    kotlin("plugin.serialization") version core.versions.kotlin
 }
 
 val coreCompileSdk: Int by rootProject.extra

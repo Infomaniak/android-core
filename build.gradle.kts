@@ -1,13 +1,11 @@
 plugins {
-    alias(libs.plugins.android.library)
+    id("com.android.library")
     alias(core.plugins.kotlin.android)
 }
 
 rootProject.extra.apply {
     set("coreCompileSdk", 35)
     set("coreMinSdk", 24)
-    set("legacyCompileSdk", 34)
-    set("legacyMinSdk", 21)
     set("javaVersion", JavaVersion.VERSION_17)
 }
 
