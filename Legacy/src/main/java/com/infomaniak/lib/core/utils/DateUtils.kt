@@ -44,6 +44,12 @@ const val FORMAT_FULL_DATE = "EEEE dd MMMM yyyy"
 const val FORMAT_FULL_DATE_WITH_HOUR = "EEEE MMM d yyyy HH:mm:ss"
 const val FORMAT_NEW_FILE = "yyyyMMdd_HHmmss"
 
+enum class FormatData {
+    DATE,
+    HOUR,
+    BOTH,
+}
+
 fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
     val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
     return simpleDateFormat.format(this)
@@ -60,97 +66,79 @@ fun Date.formatWithLocal(formatData: FormatData, formatStyle: FormatStyle, forma
     return toInstant().atZone(ZoneId.systemDefault()).format(formatter)
 }
 
-enum class FormatData {
-    DATE,
-    HOUR,
-    BOTH,
-}
+fun Date.startOfTheDay(): Date = Calendar.getInstance().apply {
+    time = this@startOfTheDay
+    set(Calendar.HOUR_OF_DAY, 0)
+    set(Calendar.MINUTE, 0)
+    set(Calendar.SECOND, 0)
+}.time
 
-fun Date.startOfTheDay(): Date =
-    Calendar.getInstance().apply {
-        time = this@startOfTheDay
-        set(Calendar.HOUR_OF_DAY, 0)
-        set(Calendar.MINUTE, 0)
-        set(Calendar.SECOND, 0)
-    }.time
+fun Date.endOfTheDay(): Date = Calendar.getInstance().apply {
+    time = this@endOfTheDay
+    set(Calendar.HOUR_OF_DAY, 23)
+    set(Calendar.MINUTE, 59)
+    set(Calendar.SECOND, 59)
+}.time
 
-fun Date.endOfTheDay(): Date =
-    Calendar.getInstance().apply {
-        time = this@endOfTheDay
-        set(Calendar.HOUR_OF_DAY, 23)
-        set(Calendar.MINUTE, 59)
-        set(Calendar.SECOND, 59)
-    }.time
+fun Date.startOfTomorrow(): Date = Calendar.getInstance().apply {
+    time = this@startOfTomorrow
+    add(Calendar.DATE, 1)
+}.time.startOfTheDay()
 
-fun Date.startOfTomorrow(): Date =
-    Calendar.getInstance().apply {
-        time = this@startOfTomorrow
-        add(Calendar.DATE, 1)
-    }.time.startOfTheDay()
+fun Date.endOfTomorrow(): Date = Calendar.getInstance().apply {
+    time = this@endOfTomorrow
+    add(Calendar.DATE, 1)
+}.time.endOfTheDay()
 
-fun Date.endOfTomorrow(): Date =
-    Calendar.getInstance().apply {
-        time = this@endOfTomorrow
-        add(Calendar.DATE, 1)
-    }.time.endOfTheDay()
+fun Date.startOfTheWeek(): Date = Calendar.getInstance().apply {
+    time = this@startOfTheWeek
+    set(Calendar.DAY_OF_WEEK, firstDayOfWeek)
+}.time.startOfTheDay()
 
-fun Date.startOfTheWeek(): Date =
-    Calendar.getInstance().apply {
-        time = this@startOfTheWeek
-        set(Calendar.DAY_OF_WEEK, firstDayOfWeek)
-    }.time.startOfTheDay()
+fun Date.endOfTheWeek(): Date = Calendar.getInstance().apply {
+    time = this@endOfTheWeek
+    set(Calendar.DAY_OF_WEEK, (firstDayOfWeek - 1 + 6) % 7 + 1)
+}.time.endOfTheDay()
 
-fun Date.endOfTheWeek(): Date =
-    Calendar.getInstance().apply {
-        time = this@endOfTheWeek
-        set(Calendar.DAY_OF_WEEK, (firstDayOfWeek - 1 + 6) % 7 + 1)
-    }.time.endOfTheDay()
+fun Date.monthsAgo(value: Int): Date = Calendar.getInstance().apply {
+    time = this@monthsAgo
+    add(Calendar.MONTH, -value)
+}.time
 
-fun Date.monthsAgo(value: Int): Date =
-    Calendar.getInstance().apply {
-        time = this@monthsAgo
-        add(Calendar.MONTH, -value)
-    }.time
-
-fun Date.year(): Int =
-    Calendar.getInstance().apply {
-        time = this@year
-    }.get(Calendar.YEAR)
+fun Date.year(): Int = Calendar.getInstance().apply {
+    time = this@year
+}.get(Calendar.YEAR)
 
 fun Date.addYears(years: Int): Date = Calendar.getInstance().apply {
     time = this@addYears
     add(Calendar.YEAR, years)
 }.time
 
-fun Date.month(): Int =
-    Calendar.getInstance().apply {
-        time = this@month
-    }.get(Calendar.MONTH)
+fun Date.month(): Int = Calendar.getInstance().apply {
+    time = this@month
+}.get(Calendar.MONTH)
 
-fun Date.day(): Int =
-    Calendar.getInstance().apply {
-        time = this@day
-    }.get(Calendar.DAY_OF_MONTH)
+fun Date.day(): Int = Calendar.getInstance().apply {
+    time = this@day
+}.get(Calendar.DAY_OF_MONTH)
 
 fun Date.setDay(day: Int): Date = Calendar.getInstance().apply {
     time = this@setDay
     set(Calendar.DAY_OF_MONTH, day)
 }.time
 
-fun Date.hours(): Int =
-    Calendar.getInstance().apply {
-        time = this@hours
-    }.get(Calendar.HOUR_OF_DAY)
+fun Date.hours(): Int = Calendar.getInstance().apply {
+    time = this@hours
+}.get(Calendar.HOUR_OF_DAY)
 
 fun Date.setHour(hour: Int): Date = Calendar.getInstance().apply {
     time = this@setHour
     set(Calendar.HOUR_OF_DAY, hour)
 }.time
 
-fun Date.minutes(): Int =
-    Calendar.getInstance().apply {
-        time = this@minutes
-    }.get(Calendar.MINUTE)
+fun Date.minutes(): Int = Calendar.getInstance().apply {
+    time = this@minutes
+}.get(Calendar.MINUTE)
 
 fun Date.setMinute(minute: Int): Date = Calendar.getInstance().apply {
     time = this@setMinute
@@ -173,7 +161,6 @@ fun Date.isInTheFuture(): Boolean = after(Date())
 fun Date.isAtLeastXMinutesInTheFuture(minutes: Int): Boolean {
     val dateTenMinutesLater = Calendar.getInstance().apply {
         time = Date()
-
         add(Calendar.MINUTE, minutes)
     }.time
 
