@@ -44,6 +44,7 @@ const val FORMAT_FULL_DATE = "EEEE dd MMMM yyyy"
 const val FORMAT_FULL_DATE_WITH_HOUR = "EEEE MMM d yyyy HH:mm:ss"
 const val FORMAT_NEW_FILE = "yyyyMMdd_HHmmss"
 
+//region Format Dates
 enum class FormatData {
     DATE,
     HOUR,
@@ -65,7 +66,9 @@ fun Date.formatWithLocal(formatData: FormatData, formatStyle: FormatStyle, forma
 
     return toInstant().atZone(ZoneId.systemDefault()).format(formatter)
 }
+//endregion
 
+//region Get a new Date relatively to a given Date
 fun Date.startOfTheDay(): Date = Calendar.getInstance().apply {
     time = this@startOfTheDay
     set(Calendar.HOUR_OF_DAY, 0)
@@ -80,15 +83,14 @@ fun Date.endOfTheDay(): Date = Calendar.getInstance().apply {
     set(Calendar.SECOND, 59)
 }.time
 
-fun Date.startOfTomorrow(): Date = Calendar.getInstance().apply {
-    time = this@startOfTomorrow
+fun Date.tomorrow(): Date = Calendar.getInstance().apply {
+    time = this@tomorrow
     add(Calendar.DATE, 1)
-}.time.startOfTheDay()
+}.time
 
-fun Date.endOfTomorrow(): Date = Calendar.getInstance().apply {
-    time = this@endOfTomorrow
-    add(Calendar.DATE, 1)
-}.time.endOfTheDay()
+fun Date.startOfTomorrow(): Date = tomorrow().startOfTheDay()
+
+fun Date.endOfTomorrow(): Date = tomorrow().endOfTheDay()
 
 fun Date.startOfTheWeek(): Date = Calendar.getInstance().apply {
     time = this@startOfTheWeek
@@ -105,91 +107,30 @@ fun Date.monthsAgo(value: Int): Date = Calendar.getInstance().apply {
     add(Calendar.MONTH, -value)
 }.time
 
-fun Date.year(): Int = Calendar.getInstance().apply {
-    time = this@year
-}.get(Calendar.YEAR)
-
 fun Date.addYears(years: Int): Date = Calendar.getInstance().apply {
     time = this@addYears
     add(Calendar.YEAR, years)
 }.time
-
-fun Date.month(): Int = Calendar.getInstance().apply {
-    time = this@month
-}.get(Calendar.MONTH)
-
-fun Date.day(): Int = Calendar.getInstance().apply {
-    time = this@day
-}.get(Calendar.DAY_OF_MONTH)
-
-fun Date.setDay(day: Int): Date = Calendar.getInstance().apply {
-    time = this@setDay
-    set(Calendar.DAY_OF_MONTH, day)
-}.time
-
-fun Date.hours(): Int = Calendar.getInstance().apply {
-    time = this@hours
-}.get(Calendar.HOUR_OF_DAY)
-
-fun Date.setHour(hour: Int): Date = Calendar.getInstance().apply {
-    time = this@setHour
-    set(Calendar.HOUR_OF_DAY, hour)
-}.time
-
-fun Date.minutes(): Int = Calendar.getInstance().apply {
-    time = this@minutes
-}.get(Calendar.MINUTE)
-
-fun Date.setMinute(minute: Int): Date = Calendar.getInstance().apply {
-    time = this@setMinute
-    set(Calendar.MINUTE, minute)
-}.time
-
-fun Date.isSameDayAs(targetDate: Date): Boolean {
-    return year() == targetDate.year() &&
-            month() == targetDate.month() &&
-            day() == targetDate.day()
-}
 
 fun Date.addDays(amount: Int): Date = Calendar.getInstance().apply {
     time = this@addDays
     add(Calendar.DATE, amount)
 }.time
 
-fun Date.isInTheFuture(): Boolean = after(Date())
+fun Date.setDay(day: Int): Date = Calendar.getInstance().apply {
+    time = this@setDay
+    set(Calendar.DAY_OF_MONTH, day)
+}.time
 
-fun Date.isAtLeastXMinutesInTheFuture(minutes: Int): Boolean {
-    val dateTenMinutesLater = Calendar.getInstance().apply {
-        time = Date()
-        add(Calendar.MINUTE, minutes)
-    }.time
+fun Date.setHour(hour: Int): Date = Calendar.getInstance().apply {
+    time = this@setHour
+    set(Calendar.HOUR_OF_DAY, hour)
+}.time
 
-    return after(dateTenMinutesLater)
-}
-
-fun Date.isToday(): Boolean = isSameDayAs(Date())
-
-fun Date.isYesterday(): Boolean {
-    val yesterday = Date().addDays(-1)
-    return isSameDayAs(yesterday)
-}
-
-fun Date.isThisWeek(): Boolean {
-    val now = Date()
-    return this in now.startOfTheWeek()..now.endOfTheWeek()
-}
-
-fun Date.isWeekend(): Boolean {
-    val calendar = Calendar.getInstance().apply {
-        time = this@isWeekend
-    }
-    val day = calendar.get(Calendar.DAY_OF_WEEK)
-    return day == 1 || day == 7
-}
-
-fun Date.isThisMonth(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() }
-
-fun Date.isThisYear(): Boolean = Date().let { now -> year() == now.year() }
+fun Date.setMinute(minute: Int): Date = Calendar.getInstance().apply {
+    time = this@setMinute
+    set(Calendar.MINUTE, minute)
+}.time
 
 fun Date.roundUpToNextTenMinutes(): Date = Calendar.getInstance().apply {
     time = this@roundUpToNextTenMinutes
@@ -219,11 +160,6 @@ fun Date.getAfternoon(): Date = this.getTimeAtHour(14)
 
 fun Date.getEvening(): Date = this.getTimeAtHour(18)
 
-fun Date.getTomorrow(): Date = Calendar.getInstance().apply {
-    time = this@getTomorrow
-    add(Calendar.DAY_OF_YEAR, 1)
-}.time
-
 fun Date.getNextMonday(): Date = Calendar.getInstance().apply {
     time = this@getNextMonday
 
@@ -234,3 +170,69 @@ fun Date.getNextMonday(): Date = Calendar.getInstance().apply {
         add(Calendar.DAY_OF_YEAR, daysToAdd)
     }
 }.time
+//endregion
+
+//region Get specific data about a given Date
+fun Date.year(): Int = Calendar.getInstance().apply {
+    time = this@year
+}.get(Calendar.YEAR)
+
+fun Date.month(): Int = Calendar.getInstance().apply {
+    time = this@month
+}.get(Calendar.MONTH)
+
+fun Date.day(): Int = Calendar.getInstance().apply {
+    time = this@day
+}.get(Calendar.DAY_OF_MONTH)
+
+fun Date.hours(): Int = Calendar.getInstance().apply {
+    time = this@hours
+}.get(Calendar.HOUR_OF_DAY)
+
+fun Date.minutes(): Int = Calendar.getInstance().apply {
+    time = this@minutes
+}.get(Calendar.MINUTE)
+//endregion
+
+//region Various checks about a given Date
+fun Date.isInTheFuture(): Boolean = after(Date())
+
+fun Date.isAtLeastXMinutesInTheFuture(minutes: Int): Boolean {
+    val dateTenMinutesLater = Calendar.getInstance().apply {
+        time = Date()
+        add(Calendar.MINUTE, minutes)
+    }.time
+
+    return after(dateTenMinutesLater)
+}
+
+fun Date.isSameDayAs(targetDate: Date): Boolean {
+    return year() == targetDate.year() &&
+            month() == targetDate.month() &&
+            day() == targetDate.day()
+}
+
+fun Date.isToday(): Boolean = isSameDayAs(Date())
+
+fun Date.isYesterday(): Boolean {
+    val yesterday = Date().addDays(-1)
+    return isSameDayAs(yesterday)
+}
+
+fun Date.isThisWeek(): Boolean {
+    val now = Date()
+    return this in now.startOfTheWeek()..now.endOfTheWeek()
+}
+
+fun Date.isWeekend(): Boolean {
+    val calendar = Calendar.getInstance().apply {
+        time = this@isWeekend
+    }
+    val day = calendar.get(Calendar.DAY_OF_WEEK)
+    return day == 1 || day == 7
+}
+
+fun Date.isThisMonth(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() }
+
+fun Date.isThisYear(): Boolean = Date().let { now -> year() == now.year() }
+//endregion
