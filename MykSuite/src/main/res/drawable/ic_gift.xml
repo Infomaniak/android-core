@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#666666"
+        android:fillType="evenOdd"
+        android:pathData="M4.5,0C4.086,0 3.75,0.336 3.75,0.75C3.75,2.677 4.747,4.371 6.146,5.563C6.325,5.717 6.512,5.862 6.706,6H2.25C1.653,6 1.081,6.237 0.659,6.659C0.237,7.081 0,7.653 0,8.25V10.5C0,10.898 0.158,11.279 0.439,11.561C0.721,11.842 1.102,12 1.5,12V21.75C1.5,22.347 1.737,22.919 2.159,23.341C2.581,23.763 3.153,24 3.75,24H20.25C20.847,24 21.419,23.763 21.841,23.341C22.263,22.919 22.5,22.347 22.5,21.75V12C22.898,12 23.279,11.842 23.561,11.561C23.842,11.279 24,10.898 24,10.5V8.25C24,7.653 23.763,7.081 23.341,6.659C22.919,6.237 22.347,6 21.75,6H17.294C17.488,5.862 17.675,5.717 17.854,5.563C19.253,4.371 20.25,2.677 20.25,0.75C20.25,0.336 19.914,0 19.5,0C17.649,0 15.792,0.745 14.396,1.937C13.182,2.972 12.27,4.385 12.051,6H11.949C11.73,4.385 10.818,2.972 9.604,1.937C8.208,0.745 6.351,0 4.5,0ZM9,7.5H2.25C2.051,7.5 1.86,7.579 1.72,7.72C1.579,7.86 1.5,8.051 1.5,8.25V10.5H9V7.5ZM9,12H3V21.75C3,21.949 3.079,22.14 3.22,22.28C3.36,22.421 3.551,22.5 3.75,22.5H9V12ZM10.5,22.5V12H13.5V22.5H10.5ZM15,22.5H20.25C20.449,22.5 20.64,22.421 20.78,22.28C20.921,22.14 21,21.949 21,21.75V12H15V22.5ZM15,10.5H22.5V8.25C22.5,8.051 22.421,7.86 22.28,7.72C22.14,7.579 21.949,7.5 21.75,7.5H15V10.5ZM13.5,7.5H10.5V10.5H13.5V7.5ZM15.369,3.078C16.301,2.283 17.476,1.739 18.667,1.563C18.448,2.642 17.802,3.637 16.881,4.422C15.949,5.217 14.774,5.761 13.583,5.937C13.802,4.858 14.448,3.863 15.369,3.078ZM7.119,4.422C8.051,5.217 9.226,5.761 10.417,5.937C10.198,4.858 9.552,3.863 8.631,3.078C7.699,2.283 6.524,1.739 5.332,1.563C5.552,2.642 6.198,3.637 7.119,4.422Z" />
+</vector>
