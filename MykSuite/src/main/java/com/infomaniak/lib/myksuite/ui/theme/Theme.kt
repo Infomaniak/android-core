@@ -22,7 +22,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import kotlin.text.Typography
 
 internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = staticCompositionLocalOf { MyKSuiteColors() }
 
@@ -30,12 +29,17 @@ internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = s
 internal fun MyKSuiteTheme(
     content: @Composable () -> Unit,
 ) {
-    val customColors = if (isSystemInDarkTheme()) MyKSuiteDarkColors else MyKSuiteLightColors
+    val isDarkTheme = isSystemInDarkTheme()
+    val customColors = if (isDarkTheme) MyKSuiteDarkColors else MyKSuiteLightColors
+
     CompositionLocalProvider(
         LocalTextStyle provides Typography.bodyRegular,
         LocalMyKSuiteColors provides customColors,
     ) {
-        MaterialTheme(content = content)
+        MaterialTheme(
+            colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme,
+            content = content,
+        )
     }
 }
 
@@ -52,6 +56,8 @@ internal data class MyKSuiteColors(
     val primaryTextColor: Color = Color.Unspecified,
     val secondaryTextColor: Color = Color.Unspecified,
     val tertiaryTextColor: Color = Color.Unspecified,
+    val background: Color = Color.Unspecified,
+    val surfaceContainerLow: Color = Color.Unspecified,
     val chipBackground: Color = Color.Unspecified,
     val drive: Color = Color.Unspecified,
     val mail: Color = Color.Unspecified,

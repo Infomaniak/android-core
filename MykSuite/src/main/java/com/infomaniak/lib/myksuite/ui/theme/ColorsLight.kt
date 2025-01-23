@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.myksuite.ui.theme
 
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 // TODO: Extract colors to a CoreUi module
@@ -29,11 +30,19 @@ private const val mouse = 0xFFE0E0E0
 private const val polar_bear = 0xFFF5F5F5
 private const val rabbit = 0xFFF1F1F1
 
+// Extra Palette
+private const val white = 0xFFFFFFFF
+
 // KSuite App colors
 private const val infomaniak = 0xFF0098FF
 private const val mailButton = 0xFFBC0055
 private const val mail = 0xFFF2357A
 private const val drive = 0xFF5C89F7
+
+internal val LightColorScheme = lightColorScheme(
+    onSurfaceVariant = Color(mouse), // Used for Bottomsheet drag handle
+    surfaceContainerLow = Color(white), // Same value as background. Used for bottom sheet backgrounds
+)
 
 internal val MyKSuiteLightColors = MyKSuiteColors(
     primaryTextColor = Color(orca),
