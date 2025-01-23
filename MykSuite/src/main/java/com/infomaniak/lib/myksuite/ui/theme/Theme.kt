@@ -19,6 +19,7 @@ package com.infomaniak.lib.myksuite.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
@@ -33,7 +34,7 @@ fun MyKSuiteTheme(
 ) {
     val customColors = if (isDarkTheme) CustomDarkColorScheme else CustomLightColorScheme
     CompositionLocalProvider(
-        // LocalTextStyle provides Typography.bodyRegular,
+        LocalTextStyle provides Typography.bodyRegular,
         LocalCustomColorScheme provides customColors,
         LocalIsDarkMode provides isDarkTheme,
     ) {
@@ -53,5 +54,12 @@ object MyKSuiteTheme {
 
 @Immutable
 data class CustomColorScheme(
+    val primaryTextColor: Color = Color.Unspecified,
+    val secondaryTextColor: Color = Color.Unspecified,
+    val tertiaryTextColor: Color = Color.Unspecified,
     val chipBackground: Color = Color.Unspecified,
+    val drive: Color = Color.Unspecified,
+    val mail: Color = Color.Unspecified,
+    val driveButton: Color = Color.Unspecified,
+    val mailButton: Color = Color.Unspecified,
 )

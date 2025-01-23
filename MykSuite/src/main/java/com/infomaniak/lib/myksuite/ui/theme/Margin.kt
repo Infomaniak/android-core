@@ -17,25 +17,21 @@
  */
 package com.infomaniak.lib.myksuite.ui.theme
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
-// Palette
-private const val dark1 = 0xFF152123
-private const val dark2 = 0xFF2B383B
-private const val dark3 = 0xFF3C4F52
-private const val elephant = 0xFF666666
-private const val shark = 0xFF9F9F9F
-private const val rabbit = 0xFFF1F1F1
-
-// KSuite App colors
-private const val infomaniak = 0xFF4CB7FF
-private const val mailButton = 0xFFEF8BA4
-
-val CustomDarkColorScheme = CustomColorScheme(
-    primaryTextColor = Color(rabbit),
-    secondaryTextColor = Color(shark),
-    tertiaryTextColor = Color(elephant),
-    chipBackground = Color(dark2),
-    driveButton = Color(infomaniak),
-    mailButton = Color(mailButton),
-)
+object Margin {
+    /** 4dp */
+    val Micro = 4.dp
+    /** 8dp */
+    val Mini = 8.dp
+    /** 12dp */
+    val Small = 12.dp
+    /** 16dp */
+    val Medium = 16.dp
+    /** 24dp */
+    val Large = 24.dp
+    /** 32dp */
+    val Huge = 32.dp
+    /** 48dp */
+    val Giant = 48.dp
+}
