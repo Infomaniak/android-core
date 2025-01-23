@@ -38,7 +38,7 @@ interface MatomoCore {
             // Put a tracker on app installs to have statistics on the number of times the app is installed or updated
             TrackHelper.track().download().identifier(DownloadTracker.Extra.ApkChecksum(this)).with(it)
             it.isOptOut = shouldOptOut
-        }
+        }azdazd
     }
 
     fun Context.addTrackingCallbackForDebugLog() {
