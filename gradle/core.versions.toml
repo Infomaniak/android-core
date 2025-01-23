@@ -2,8 +2,8 @@
 androidxCore = "1.15.0"
 composeBom = "2024.12.01"
 integrity = "1.4.0"
-junitAndroidx = "1.2.1"
 junit = "4.13.2"
+junitAndroidx = "1.2.1"
 kotlin = "2.0.21"
 kotlinxCoroutines = "1.9.0"
 kotlinxSerializationJson = "1.7.3"
@@ -38,13 +38,13 @@ matomo = { module = "com.github.matomo-org:matomo-sdk-android", version.ref = "m
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
 sentry-android = { module = "io.sentry:sentry-android", version.ref = "sentryAndroid" }
-splitties-toast = { module = "com.louiscad.splitties:splitties-toast", version.ref = "splitties" }
+splitties-appctx = { module = "com.louiscad.splitties:splitties-appctx", version.ref = "splitties" }
+splitties-collections = { module = "com.louiscad.splitties:splitties-collections", version.ref = "splitties" }
+splitties-coroutines = { module = "com.louiscad.splitties:splitties-coroutines", version.ref = "splitties" }
 splitties-mainhandler = { module = "com.louiscad.splitties:splitties-mainhandler", version.ref = "splitties" }
 splitties-mainthread = { module = "com.louiscad.splitties:splitties-mainthread", version.ref = "splitties" }
 splitties-systemservices = { module = "com.louiscad.splitties:splitties-systemservices", version.ref = "splitties" }
-splitties-coroutines = { module = "com.louiscad.splitties:splitties-coroutines", version.ref = "splitties" }
-splitties-collections = { module = "com.louiscad.splitties:splitties-collections", version.ref = "splitties" }
-splitties-appctx = { module = "com.louiscad.splitties:splitties-appctx", version.ref = "splitties" }
+splitties-toast = { module = "com.louiscad.splitties:splitties-toast", version.ref = "splitties" }
 # Tests
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitAndroidx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
