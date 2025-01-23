@@ -27,6 +27,19 @@ private const val mouse = 0xFFE0E0E0
 private const val polar_bear = 0xFFF5F5F5
 private const val rabbit = 0xFFF1F1F1
 
+// KSuite App colors
+private const val infomaniak = 0xFF0098FF
+private const val mailButton = 0xFFBC0055
+private const val mail = 0xFFF2357A
+private const val drive = 0xFF5C89F7
+
 val CustomLightColorScheme = CustomColorScheme(
+    primaryTextColor = Color(orca),
+    secondaryTextColor = Color(elephant),
+    tertiaryTextColor = Color(shark),
     chipBackground = Color(rabbit),
+    drive = Color(drive),
+    mail = Color(mail),
+    driveButton = Color(infomaniak),
+    mailButton = Color(mailButton),
 )
