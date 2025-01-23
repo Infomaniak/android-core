@@ -34,7 +34,7 @@ import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
-fun MyKSuitePlusChip(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun MyKSuitePlusChip(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
     ThemedChip(
         modifier = modifier,
         label = { Image(ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite_plus), contentDescription = "My kSuite +") },
@@ -43,7 +43,7 @@ fun MyKSuitePlusChip(modifier: Modifier = Modifier, onClick: () -> Unit) {
 }
 
 @Composable
-fun MyKSuiteChip(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun MyKSuiteChip(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
     ThemedChip(
         modifier = modifier,
         label = { Image(ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite), contentDescription = "My kSuite") },
