@@ -38,9 +38,10 @@ internal val DarkColorScheme = darkColorScheme(
 
 internal val MyKSuiteDarkColors = MyKSuiteColors(
     primaryTextColor = Color(rabbit),
-    secondaryTextColor = Color(shark),
+    secondaryTextColor = Color(rabbit),
     tertiaryTextColor = Color(elephant),
     chipBackground = Color(orca),
     driveButton = Color(infomaniak),
     mailButton = Color(mailButton),
+    iconColor = Color(rabbit),
 )
