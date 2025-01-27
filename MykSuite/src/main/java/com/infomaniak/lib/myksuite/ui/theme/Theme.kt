@@ -63,4 +63,5 @@ internal data class MyKSuiteColors(
     val mail: Color = Color.Unspecified,
     val driveButton: Color = Color.Unspecified,
     val mailButton: Color = Color.Unspecified,
+    val iconColor: Color = Color.Unspecified,
 )
