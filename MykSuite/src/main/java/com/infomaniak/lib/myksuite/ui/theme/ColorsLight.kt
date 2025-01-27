@@ -53,4 +53,5 @@ internal val MyKSuiteLightColors = MyKSuiteColors(
     mail = Color(mail),
     driveButton = Color(infomaniak),
     mailButton = Color(mailButton),
+    iconColor = Color(orca),
 )
