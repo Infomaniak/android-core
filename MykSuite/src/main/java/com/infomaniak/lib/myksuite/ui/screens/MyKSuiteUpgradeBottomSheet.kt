@@ -26,7 +26,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -73,8 +72,7 @@ private fun BottomSheetContent(
             contentScale = ContentScale.FillWidth,
             contentDescription = null,
             modifier = Modifier.fillMaxWidth(),
-        ) // TODO put the right banner
-        // Spacer(Modifier.height(Margin.Huge))
+        )
         Text(
             modifier = paddedModifier,
             text = stringResource(R.string.myKSuiteUpgradeTitle),
@@ -99,7 +97,11 @@ private fun BottomSheetContent(
                         .align(Alignment.Start),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(ImageVector.vectorResource(customFeature.icon), contentDescription = null, tint = Color(0xff666666))
+                    Icon(
+                        imageVector = ImageVector.vectorResource(customFeature.icon),
+                        contentDescription = null,
+                        tint = MyKSuiteTheme.colors.iconColor,
+                    )
                     Spacer(Modifier.width(Margin.Mini))
                     Text(
                         text = stringResource(customFeature.title),
