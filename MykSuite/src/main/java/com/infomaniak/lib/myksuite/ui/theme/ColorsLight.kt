@@ -41,7 +41,7 @@ private const val drive = 0xFF5C89F7
 
 internal val LightColorScheme = lightColorScheme(
     onSurfaceVariant = Color(mouse), // Used for Bottomsheet drag handle
-    surfaceContainerLow = Color(white), // Same value as background. Used for bottom sheet backgrounds
+    surfaceContainerLow = Color(white), // Used for bottom sheet backgrounds
 )
 
 internal val MyKSuiteLightColors = MyKSuiteColors(

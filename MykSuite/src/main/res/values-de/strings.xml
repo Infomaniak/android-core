@@ -17,7 +17,8 @@
   -->
 <resources>
     <string name="buttonClose">Schliessen</string>
+    <string name="myKSuiteUpgradeDescription">Mehr Platz, mehr Möglichkeiten und mehr Flexibilität, um das zu tun, was Sie lieben.</string>
     <string name="myKSuiteUpgradeDetails">Um my kSuite+ zu nutzen, ändern Sie Ihr Angebot von Ihrem Webinterface aus.</string>
+    <string name="myKSuiteUpgradeLabel">Und noch mehr!</string>
     <string name="myKSuiteUpgradeTitle">Geben Sie Ihren Ideen mehr Raum</string>
-    <string name="myKSuiteUpgradedescription">Mehr Platz, mehr Möglichkeiten und mehr Flexibilität, um das zu tun, was Sie lieben.</string>
 </resources>

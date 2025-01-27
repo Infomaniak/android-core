@@ -83,7 +83,7 @@ private fun BottomSheetContent(
         Spacer(Modifier.height(Margin.Medium))
         Text(
             modifier = paddedModifier,
-            text = stringResource(R.string.myKSuiteUpgradedescription),
+            text = stringResource(R.string.myKSuiteUpgradeDescription),
             style = MyKSuiteTheme.typography.bodyRegular,
             color = MyKSuiteTheme.colors.secondaryTextColor,
         )
@@ -145,10 +145,7 @@ private fun Preview() {
                 onDismissRequest = {},
                 style = ButtonType.Mail,
                 customFeatures = {
-                    listOf(
-                        MyKSuiteUpgradeFeatures(title = R.string.buttonClose, icon = R.drawable.ic_gift),
-                        MyKSuiteUpgradeFeatures(title = R.string.buttonClose, icon = R.drawable.ic_gift),
-                    )
+                    listOf(MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift))
                 },
                 onButtonClicked = {},
             )
