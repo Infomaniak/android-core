@@ -20,9 +20,8 @@ package com.infomaniak.lib.myksuite.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // Palette
-private const val dark1 = 0xFF152123
-private const val dark2 = 0xFF2B383B
-private const val dark3 = 0xFF3C4F52
+private const val bat = 0xFF1A1A1A
+private const val orca = 0xFF333333
 private const val elephant = 0xFF666666
 private const val shark = 0xFF9F9F9F
 private const val rabbit = 0xFFF1F1F1
@@ -35,7 +34,7 @@ val CustomDarkColorScheme = CustomColorScheme(
     primaryTextColor = Color(rabbit),
     secondaryTextColor = Color(shark),
     tertiaryTextColor = Color(elephant),
-    chipBackground = Color(dark2),
+    chipBackground = Color(orca),
     driveButton = Color(infomaniak),
     mailButton = Color(mailButton),
 )
