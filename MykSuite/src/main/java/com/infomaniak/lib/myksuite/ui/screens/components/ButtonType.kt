@@ -24,16 +24,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 enum class ButtonType(val colors: @Composable () -> MyKSuiteButtonColors, val shape: Shape) {
     Mail(
         colors = { MyKSuiteButtonColors(containerColor = MyKSuiteTheme.colors.mailButton) },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(Dimens.largeCornerRadius),
     ),
     Drive(
         colors = { MyKSuiteButtonColors(containerColor = MyKSuiteTheme.colors.driveButton) },
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(Dimens.smallCornerRadius),
     ),
 }
 
