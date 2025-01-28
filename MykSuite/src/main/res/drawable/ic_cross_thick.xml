@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#333333"
+        android:pathData="M23.634,2.134C24.122,1.646 24.122,0.854 23.634,0.366C23.146,-0.122 22.354,-0.122 21.866,0.366L12,10.232L2.134,0.366C1.646,-0.122 0.854,-0.122 0.366,0.366C-0.122,0.854 -0.122,1.646 0.366,2.134L10.232,12L0.366,21.866C-0.122,22.354 -0.122,23.146 0.366,23.634C0.854,24.122 1.646,24.122 2.134,23.634L12,13.768L21.866,23.634C22.354,24.122 23.146,24.122 23.634,23.634C24.122,23.146 24.122,22.354 23.634,21.866L13.768,12L23.634,2.134Z" />
+</vector>
