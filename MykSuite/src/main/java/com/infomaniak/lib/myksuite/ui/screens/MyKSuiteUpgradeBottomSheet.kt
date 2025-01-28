@@ -32,9 +32,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.screens.components.ButtonType
+import com.infomaniak.lib.myksuite.ui.screens.components.UpgradeFeature
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
@@ -90,32 +90,7 @@ private fun BottomSheetContent(
             color = MyKSuiteTheme.colors.secondaryTextColor,
         )
         Spacer(Modifier.height(Margin.Medium))
-
-        customFeatures?.let {
-            (it() + MyKSuiteUpgradeFeatures.MoreFeatures).forEach { customFeature ->
-                Row(
-                    modifier = paddedModifier
-                        .padding(vertical = Margin.Mini)
-                        .align(Alignment.Start),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        modifier = Modifier.size(Dimens.iconSize),
-                        imageVector = ImageVector.vectorResource(customFeature.icon),
-                        contentDescription = null,
-                        tint = MyKSuiteTheme.colors.iconColor,
-                    )
-                    Spacer(Modifier.width(Margin.Mini))
-                    Text(
-                        text = stringResource(customFeature.title),
-                        style = MyKSuiteTheme.typography.bodyRegular,
-                        color = MyKSuiteTheme.colors.secondaryTextColor,
-                    )
-                }
-            }
-            Spacer(Modifier.height(Margin.Large))
-        }
-
+        UpgradeFeatures(customFeatures, paddedModifier)
         Text(
             modifier = paddedModifier,
             text = stringResource(R.string.myKSuiteUpgradeDetails),
@@ -133,6 +108,18 @@ private fun BottomSheetContent(
         ) {
             Text(stringResource(R.string.buttonClose))
         }
+        Spacer(Modifier.height(Margin.Large))
+    }
+}
+
+@Composable
+private fun ColumnScope.UpgradeFeatures(
+    customFeatures: @Composable (() -> List<MyKSuiteUpgradeFeatures>)?,
+    modifier: Modifier,
+) {
+    customFeatures?.let {
+        it().forEach { UpgradeFeature(it, modifier) }
+        UpgradeFeature(MyKSuiteUpgradeFeatures.MoreFeatures, modifier)
         Spacer(Modifier.height(Margin.Large))
     }
 }
