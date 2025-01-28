@@ -2,6 +2,8 @@ plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
+    id("kotlin-parcelize")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -43,6 +45,8 @@ android {
 dependencies {
 
     implementation(core.androidx.core.ktx)
+    implementation(core.material)
+    implementation(core.navigation.fragment.ktx)
 
     // Compose
     implementation(platform(core.compose.bom))
