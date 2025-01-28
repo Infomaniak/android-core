@@ -42,14 +42,13 @@ import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 @Composable
 fun MyKSuiteUpgradeBottomSheet(
     modifier: Modifier = Modifier,
+    style: ButtonType,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismissRequest: () -> Unit,
     customFeatures: @Composable (() -> List<MyKSuiteUpgradeFeatures>)?,
-    style: ButtonType,
-    onButtonClicked: () -> Unit,
 ) {
     ModalBottomSheet(onDismissRequest, modifier, sheetState) {
-        BottomSheetContent(customFeatures, style, onButtonClicked)
+        BottomSheetContent(customFeatures, style, onDismissRequest)
     }
 }
 
@@ -90,7 +89,7 @@ private fun BottomSheetContent(
         Spacer(Modifier.height(Margin.Medium))
 
         customFeatures?.let {
-            it().forEach { customFeature ->
+            (it() + MyKSuiteUpgradeFeatures.MoreFeatures).forEach { customFeature ->
                 Row(
                     modifier = paddedModifier
                         .padding(vertical = Margin.Mini)
@@ -98,6 +97,7 @@ private fun BottomSheetContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
+                        modifier = Modifier.size(Margin.Large),
                         imageVector = ImageVector.vectorResource(customFeature.icon),
                         contentDescription = null,
                         tint = MyKSuiteTheme.colors.iconColor,
@@ -147,7 +147,6 @@ private fun Preview() {
                 customFeatures = {
                     listOf(MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift))
                 },
-                onButtonClicked = {},
             )
         }
     }
