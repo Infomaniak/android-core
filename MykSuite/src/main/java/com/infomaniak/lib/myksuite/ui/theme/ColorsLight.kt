@@ -45,6 +45,8 @@ private const val primaryContentColor = orca
 internal val LightColorScheme = lightColorScheme(
     onSurfaceVariant = Color(mouse), // Used for bottom sheet drag handle
     surfaceContainerLow = Color(white), // Used for bottom sheet backgrounds
+    surfaceContainerHighest = Color(white), // Used for Card backgrounds
+    outlineVariant = Color(mouse), // Used for divider's color
 )
 
 internal val MyKSuiteLightColors = MyKSuiteColors(
