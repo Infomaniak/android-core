@@ -47,8 +47,10 @@ fun MyKSuiteUpgradeBottomSheet(
     onDismissRequest: () -> Unit,
     customFeatures: @Composable (() -> List<MyKSuiteUpgradeFeatures>)?,
 ) {
-    ModalBottomSheet(onDismissRequest, modifier, sheetState) {
-        BottomSheetContent(customFeatures, style, onDismissRequest)
+    MyKSuiteTheme {
+        ModalBottomSheet(onDismissRequest, modifier, sheetState) {
+            BottomSheetContent(customFeatures, style, onDismissRequest)
+        }
     }
 }
 
