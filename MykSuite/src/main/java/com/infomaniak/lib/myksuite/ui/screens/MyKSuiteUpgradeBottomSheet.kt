@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.screens.components.ButtonType
+import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
@@ -99,7 +100,7 @@ private fun BottomSheetContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
-                        modifier = Modifier.size(Margin.Large),
+                        modifier = Modifier.size(Dimens.iconSize),
                         imageVector = ImageVector.vectorResource(customFeature.icon),
                         contentDescription = null,
                         tint = MyKSuiteTheme.colors.iconColor,
@@ -125,7 +126,7 @@ private fun BottomSheetContent(
         Button(
             modifier = paddedModifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(Dimens.buttonHeight),
             colors = style.colors().buttonColors(),
             shape = style.shape,
             onClick = onButtonClicked,

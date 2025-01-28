@@ -30,7 +30,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.lib.myksuite.R
-import com.infomaniak.lib.myksuite.ui.theme.Margin
+import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
@@ -59,10 +59,8 @@ private fun ThemedChip(modifier: Modifier = Modifier, label: @Composable () -> U
             onClick = onClick,
             label = label,
             border = null,
-            shape = RoundedCornerShape(Margin.Medium),
-            colors = SuggestionChipDefaults.suggestionChipColors(
-                containerColor = MyKSuiteTheme.colors.chipBackground,
-            ),
+            shape = RoundedCornerShape(Dimens.largeCornerRadius),
+            colors = SuggestionChipDefaults.suggestionChipColors(containerColor = MyKSuiteTheme.colors.chipBackground),
         )
     }
 }
