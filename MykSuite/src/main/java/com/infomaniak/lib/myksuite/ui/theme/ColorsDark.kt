@@ -37,6 +37,8 @@ private const val primaryContentColor = rabbit
 internal val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = Color(rabbit), // Used for bottom sheet drag handle
     surfaceContainerLow = Color(bat), // Used for bottom sheet backgrounds
+    surfaceContainerHighest = Color(bat), // Used for Card backgrounds
+    outlineVariant = Color(elephant), // Used for divider's color
 )
 
 internal val MyKSuiteDarkColors = MyKSuiteColors(
@@ -48,5 +50,6 @@ internal val MyKSuiteDarkColors = MyKSuiteColors(
     onDriveButton = Color(bat),
     mailButton = Color(mailButton),
     onMailButton = Color(onMailButton),
-    iconColor = Color(primaryContentColor),
+    iconColor = Color(rabbit),
+    cardBorderColor = Color(elephant),
 )
