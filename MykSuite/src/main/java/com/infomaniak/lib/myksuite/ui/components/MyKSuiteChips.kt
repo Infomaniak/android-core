@@ -35,7 +35,7 @@ import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
 fun MyKSuitePlusChip(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Chip(
+    ThemedChip(
         modifier = modifier,
         label = { Image(ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite_plus), contentDescription = "My kSuite +") },
         onClick = onClick,
@@ -44,7 +44,7 @@ fun MyKSuitePlusChip(modifier: Modifier = Modifier, onClick: () -> Unit) {
 
 @Composable
 fun MyKSuiteChip(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Chip(
+    ThemedChip(
         modifier = modifier,
         label = { Image(ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite), contentDescription = "My kSuite") },
         onClick = onClick,
@@ -52,17 +52,19 @@ fun MyKSuiteChip(modifier: Modifier = Modifier, onClick: () -> Unit) {
 }
 
 @Composable
-private fun Chip(modifier: Modifier = Modifier, label: @Composable () -> Unit, onClick: () -> Unit = {}) {
-    SuggestionChip(
-        modifier = modifier,
-        onClick = onClick,
-        label = label,
-        border = null,
-        shape = RoundedCornerShape(Margin.Medium),
-        colors = SuggestionChipDefaults.suggestionChipColors(
-            containerColor = MyKSuiteTheme.colors.chipBackground,
-        ),
-    )
+private fun ThemedChip(modifier: Modifier = Modifier, label: @Composable () -> Unit, onClick: () -> Unit = {}) {
+    MyKSuiteTheme {
+        SuggestionChip(
+            modifier = modifier,
+            onClick = onClick,
+            label = label,
+            border = null,
+            shape = RoundedCornerShape(Margin.Medium),
+            colors = SuggestionChipDefaults.suggestionChipColors(
+                containerColor = MyKSuiteTheme.colors.chipBackground,
+            ),
+        )
+    }
 }
 
 @Preview(name = "(1) Light")
