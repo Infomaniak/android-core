@@ -17,13 +17,16 @@
  */
 package com.infomaniak.lib.myksuite.ui.screens
 
+import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.infomaniak.lib.myksuite.R
+import kotlinx.parcelize.Parcelize
 
-data class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) {
+@Parcelize
+data class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) : Parcelable {
 
-    companion object {
+    internal companion object {
         val MoreFeatures = MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift)
     }
 }
