@@ -20,7 +20,6 @@ package com.infomaniak.lib.myksuite.ui.components
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
@@ -30,24 +29,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
-fun MyKSuitePlusChip(modifier: Modifier = Modifier) {
+fun MyKSuitePlusChip(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Chip(
         modifier = modifier,
         label = { Image(ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite_plus), contentDescription = "My kSuite +") },
+        onClick = onClick,
     )
 }
 
 @Composable
-fun MyKSuiteChip(modifier: Modifier = Modifier) {
+fun MyKSuiteChip(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Chip(
         modifier = modifier,
         label = { Image(ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite), contentDescription = "My kSuite") },
+        onClick = onClick,
     )
 }
 
@@ -72,8 +72,8 @@ private fun Preview() {
     MyKSuiteTheme {
         Surface {
             Column {
-                MyKSuitePlusChip()
-                MyKSuiteChip()
+                MyKSuitePlusChip {}
+                MyKSuiteChip {}
             }
         }
     }
