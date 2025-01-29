@@ -49,6 +49,7 @@ dependencies {
     implementation(core.navigation.fragment.ktx)
 
     // Compose
+    implementation(core.coil.compose)
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)
     debugImplementation(core.compose.ui.tooling)
