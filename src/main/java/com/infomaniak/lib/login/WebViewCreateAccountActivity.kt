@@ -24,7 +24,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.webkit.*
+import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
@@ -85,7 +85,7 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
         activity: Activity = this@WebViewCreateAccountActivity,
         progressBar: ProgressBar = binding.progressBar,
         appUID: String = "",
-    ) : LoginWebViewClient(activity, progressBar, appUID) {
+    ) : LoginWebViewClient(activity, progressBar, appUID, createAccountUrl) {
 
         @Deprecated("Support API below 24")
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {

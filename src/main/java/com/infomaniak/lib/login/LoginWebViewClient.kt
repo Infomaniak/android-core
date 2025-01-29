@@ -43,11 +43,15 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.SSL_ERROR_CODE
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED
+import okhttp3.HttpUrl.Companion.toHttpUrl
+
+private val INFOMANIAK_REGEX = Regex(".*\\.infomaniak\\.(com|ch)")
 
 open class LoginWebViewClient(
     private val activity: Activity,
     private val progressBar: ProgressBar,
-    private val appUID: String
+    private val appUID: String,
+    private val baseUrl: String,
 ) : WebViewClient() {
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -88,13 +92,14 @@ open class LoginWebViewClient(
         if (request?.method == "GET") errorResult(HTTP_ERROR_CODE)
     }
 
-    private fun isValidUrl(url: String?): Boolean {
-        if (url == null) return false
-        if (onAuthResponse(Uri.parse(url))) return false
-        return url.contains("login.infomaniak.com")
-                || url.contains("oauth2redirect")
-                || url.contains("gstatic.com")
-                || url.contains("google.com/recaptcha")
+    private fun isValidUrl(inputUrl: String?): Boolean {
+        if (inputUrl == null || onAuthResponse(Uri.parse(inputUrl))) return false
+        val baseUrlHost = baseUrl.toHttpUrl().host
+        val inputUrlHost = inputUrl.toHttpUrl().host
+
+        return inputUrlHost == baseUrlHost
+                || inputUrl.contains("oauth2redirect")
+                || !inputUrlHost.contains(INFOMANIAK_REGEX) // Allow all other redirects except unmanaged Infomaniak redirects
     }
 
     private fun onAuthResponse(uri: Uri?): Boolean {

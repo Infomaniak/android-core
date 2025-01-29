@@ -4,12 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
 import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
-import java.util.*
+import java.util.MissingFormatArgumentException
 
 class WebViewLoginActivity : AppCompatActivity() {
 
@@ -38,7 +37,8 @@ class WebViewLoginActivity : AppCompatActivity() {
             webViewClient = LoginWebViewClient(
                 activity = this@WebViewLoginActivity,
                 progressBar = binding.progressBar,
-                appUID = appUID
+                appUID = appUID,
+                baseUrl = loginUrl,
             )
             webChromeClient = ProgressWebChromeClient(binding.progressBar)
             loadUrl(loginUrl)
