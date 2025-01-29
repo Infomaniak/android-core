@@ -23,6 +23,8 @@ object Dimens {
 
     /** 56 dp */
     val buttonHeight = 56.dp
+    /** 48 dp */
+    val iconButtonSize = 48.dp
     /** 24 dp */
     val iconSize = 24.dp
     /** 16 dp */
