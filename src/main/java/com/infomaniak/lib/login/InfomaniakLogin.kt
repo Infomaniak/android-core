@@ -16,9 +16,9 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsServiceConnection
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import com.infomaniak.lib.login.ext.await
 import kotlinx.android.parcel.RawValue
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CancellationException
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -256,12 +256,7 @@ class InfomaniakLogin(
         }
     }
 
-    suspend fun getToken(
-        okHttpClient: OkHttpClient,
-        code: String,
-        onSuccess: (apiToken: ApiToken) -> Unit,
-        onError: (error: ErrorStatus) -> Unit
-    ) {
+    suspend fun getToken(okHttpClient: OkHttpClient, code: String): TokenResult {
         val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("grant_type", "authorization_code")
@@ -270,21 +265,10 @@ class InfomaniakLogin(
             .addFormDataPart("code_verifier", getCodeVerifier())
             .addFormDataPart("redirect_uri", getRedirectURI())
 
-        getToken(
-            okHttpClient = okHttpClient,
-            body = formBuilder.build(),
-            onSuccess = onSuccess,
-            onError = onError
-        )
+        return getToken(okHttpClient = okHttpClient, body = formBuilder.build())
     }
 
-    suspend fun getToken(
-        okHttpClient: OkHttpClient,
-        username: String,
-        password: String,
-        onSuccess: (apiToken: ApiToken) -> Unit,
-        onError: (error: ErrorStatus) -> Unit
-    ) {
+    suspend fun getToken(okHttpClient: OkHttpClient, username: String, password: String): TokenResult {
         val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("grant_type", "password")
@@ -294,104 +278,76 @@ class InfomaniakLogin(
 
         if (accessType != null) formBuilder.addFormDataPart("access_type", AccessType.OFFLINE.apiValue)
 
-        getToken(
-            okHttpClient = okHttpClient,
-            body = formBuilder.build(),
-            onSuccess = onSuccess,
-            onError = onError
-        )
+        return getToken(okHttpClient = okHttpClient, body = formBuilder.build())
     }
 
-    private suspend fun getToken(
-        okHttpClient: OkHttpClient,
-        body: RequestBody,
-        onSuccess: (apiToken: ApiToken) -> Unit,
-        onError: (error: ErrorStatus) -> Unit
-    ) = withContext(Dispatchers.IO) {
-        try {
+    private suspend fun getToken(okHttpClient: OkHttpClient, body: RequestBody): TokenResult {
+        return runCatching {
             val request = Request.Builder()
                 .url("${loginUrl}token")
                 .post(body)
                 .build()
 
-            val response = okHttpClient.newCall(request).execute()
+            val response = okHttpClient.newCall(request).await()
             val bodyResponse = response.body?.string()
 
-            if (verifyHttpResponseSuccess(response.code, bodyResponse, onError)) {
-                withContext(Dispatchers.Default) {
-                    val jsonResult = JsonParser.parseString(bodyResponse)
-                    val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
+            if (response.isSuccessful) {
+                val jsonResult = JsonParser.parseString(bodyResponse)
+                val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
 
-                    // Set the token expiration date (with margin-delay)
-                    apiToken.expiresAt = System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
+                // Set the token expiration date (with margin-delay)
+                apiToken.expiresAt = System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
 
-                    withContext(Dispatchers.Main) { onSuccess(apiToken) }
-                }
+                TokenResult.Success(apiToken)
+            } else {
+                TokenResult.Error(handleErrorResponse(response.code, bodyResponse))
             }
-        } catch (exception: Exception) {
+
+        }.getOrElse { exception ->
+            if (exception is CancellationException) throw exception
             exception.printStackTrace()
-            withContext(Dispatchers.Main) { onError(getErrorStatusFromException(exception)) }
+            return@getOrElse TokenResult.Error(getErrorStatusFromException(exception))
         }
     }
 
-    suspend fun deleteToken(
-        okHttpClient: OkHttpClient,
-        token: ApiToken,
-        onSuccess: () -> Unit = {},
-        onError: (error: ErrorStatus) -> Unit
-    ) = withContext(Dispatchers.IO) {
-        try {
+    /**
+     *  Delete the token from the api and return **null** otherwise an [ErrorStatus]
+     */
+    suspend fun deleteToken(okHttpClient: OkHttpClient, token: ApiToken): ErrorStatus? {
+        return runCatching {
             val request = Request.Builder()
                 .url("${loginUrl}token")
                 .addHeader("Authorization", "Bearer ${token.accessToken}")
                 .delete()
                 .build()
 
-            val response = okHttpClient.newCall(request).execute()
+            val response = okHttpClient.newCall(request).await()
             val bodyResponse = response.body?.string()
 
-            if (verifyHttpResponseSuccess(response.code, bodyResponse, onError)) {
-                withContext(Dispatchers.Default) {
-                    val jsonResult = JsonParser.parseString(bodyResponse)
+            if (response.isSuccessful) {
+                val jsonResult = JsonParser.parseString(bodyResponse)
 
-                    val apiResponse = gson.fromJson(jsonResult, ApiResponse::class.java)
-                    if (apiResponse.result == "error") {
-                        withContext(Dispatchers.Main) { onError(ErrorStatus.UNKNOWN) }
-                    }
-
-                    withContext(Dispatchers.Main) { onSuccess() }
-                }
+                val apiResponse = gson.fromJson(jsonResult, ApiResponse::class.java)
+                if (apiResponse.result == "error") ErrorStatus.UNKNOWN else null
+            } else {
+                handleErrorResponse(response.code, bodyResponse)
             }
-        } catch (exception: Exception) {
+
+        }.getOrElse { exception ->
+            if (exception is CancellationException) throw exception
             exception.printStackTrace()
-            withContext(Dispatchers.Main) { onError(getErrorStatusFromException(exception)) }
+            getErrorStatusFromException(exception)
         }
     }
 
-    private suspend fun verifyHttpResponseSuccess(
-        statusCode: Int,
-        bodyResponse: String?,
-        onError: (error: ErrorStatus) -> Unit
-    ): Boolean = when {
-        statusCode >= 500 -> {
-            withContext(Dispatchers.Main) { onError(ErrorStatus.SERVER) }
-            false
-        }
-
-        statusCode >= 400 -> {
-            withContext(Dispatchers.Main) { onError(ErrorStatus.AUTH) }
-            false
-        }
-
-        bodyResponse.isNullOrBlank() -> {
-            withContext(Dispatchers.Main) { onError(ErrorStatus.CONNECTION) }
-            false
-        }
-
-        else -> true
+    private fun handleErrorResponse(statusCode: Int, bodyResponse: String?): ErrorStatus = when {
+        statusCode >= 500 -> ErrorStatus.SERVER
+        statusCode >= 400 -> ErrorStatus.AUTH
+        bodyResponse.isNullOrBlank() -> ErrorStatus.CONNECTION
+        else -> ErrorStatus.UNKNOWN
     }
 
-    private fun getErrorStatusFromException(exception: Exception): ErrorStatus {
+    private fun getErrorStatusFromException(exception: Throwable): ErrorStatus {
         return if (
             exception.javaClass.name.contains("java.net.", ignoreCase = true) ||
             exception.javaClass.name.contains("javax.net.", ignoreCase = true)
@@ -417,6 +373,11 @@ class InfomaniakLogin(
 
     enum class AccessType(val apiValue: String) {
         OFFLINE("offline"),
+    }
+
+    sealed interface TokenResult {
+        data class Success(val apiToken: ApiToken) : TokenResult
+        data class Error(val errorStatus: ErrorStatus) : TokenResult
     }
 
     companion object {
