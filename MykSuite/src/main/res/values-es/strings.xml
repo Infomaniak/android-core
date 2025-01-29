@@ -17,6 +17,11 @@
   -->
 <resources>
     <string name="buttonClose">Cerrar</string>
+    <string name="myKSuiteDashboardFreeMailLabel">Una dirección de correo electrónico gratuita de por vida</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Personalice las horas no disponibles para los recordatorios y los envíos programados</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Envíos diarios limitados</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Almacenamiento para Mail y kDrive</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Funcionalidad limitada</string>
     <string name="myKSuiteUpgradeDescription">Más espacio, más posibilidades y más flexibilidad para hacer lo que le gusta.</string>
     <string name="myKSuiteUpgradeDetails">Para beneficiarse de mi kSuite+, modifique su oferta desde su interfaz web.</string>
     <string name="myKSuiteUpgradeLabel">Y aún más.</string>
