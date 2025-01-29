@@ -28,10 +28,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.R
@@ -49,40 +52,47 @@ fun MyKSuiteDashboardScreen(
 ) {
     val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
 
-    Image(
-        modifier = Modifier.fillMaxWidth(),
-        imageVector = ImageVector.vectorResource(R.drawable.illu_dashboard_background),
-        contentDescription = null,
-    )
-    Column {
-        TopAppBar(onClose)
-        Card(
-            modifier = paddedModifier.padding(top = Margin.Medium),
-            shape = RoundedCornerShape(Dimens.largeCornerRadius),
-            colors = CardDefaults.cardColors(),
-            elevation = CardDefaults.elevatedCardElevation(),
-            border = if (isSystemInDarkTheme()) BorderStroke(1.dp, MyKSuiteTheme.colors.cardBorderColor) else null,
-        ) {
-            Row(modifier = paddedModifier, verticalAlignment = Alignment.CenterVertically) {
-                // TODO avatar
-                Text(userName)
-                WeightOneSpacer(minWidth = Margin.Mini)
-                MyKSuiteChip()
+    Box {
+        Image(
+            modifier = Modifier.fillMaxWidth().fillMaxHeight(0.45f),
+            contentScale = ContentScale.FillBounds,
+            imageVector = ImageVector.vectorResource(R.drawable.illu_dashboard_background),
+            contentDescription = null,
+        )
+        Column(Modifier.fillMaxSize()) {
+            TopAppBar(onClose)
+            Card(
+                modifier = paddedModifier.padding(top = Margin.Medium),
+                shape = RoundedCornerShape(Dimens.largeCornerRadius),
+                colors = CardDefaults.cardColors(),
+                elevation = CardDefaults.elevatedCardElevation(),
+                border = if (isSystemInDarkTheme()) BorderStroke(1.dp, MyKSuiteTheme.colors.cardBorderColor) else null,
+            ) {
+                Row(
+                    modifier = paddedModifier.padding(top = Margin.Medium),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Margin.Mini)
+                ) {
+                    // TODO avatar
+                    Text(modifier = Modifier.weight(1.0f), text = userName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    MyKSuiteChip()
+                }
+                PaddedDivider(paddedModifier)
+                AppStorageQuotas(paddedModifier)
+                PaddedDivider(paddedModifier)
             }
-            PaddedDivider(paddedModifier)
-            AppStorageQuotas(paddedModifier)
-            PaddedDivider(paddedModifier)
         }
     }
 }
 
 @Composable
 private fun TopAppBar(onClose: () -> Unit) {
-    Row(modifier = Modifier.padding(top = 56.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier.padding(top = 56.dp, bottom = Margin.Medium, start = Margin.Mini, end = Margin.Mini),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         IconButton(
-            modifier = Modifier
-                .padding(start = Margin.Mini)
-                .size(48.dp),
+            modifier = Modifier.size(Dimens.iconButtonSize),
             onClick = onClose,
             colors = IconButtonDefaults.iconButtonColors(contentColor = MyKSuiteTheme.colors.iconColor),
         ) {
@@ -94,7 +104,7 @@ private fun TopAppBar(onClose: () -> Unit) {
         }
         Text(
             modifier = Modifier
-                .padding(end = 56.dp)
+                .padding(end = Dimens.iconButtonSize)
                 .fillMaxWidth(),
             text = "Mon abonnement",
             style = MyKSuiteTheme.typography.h2,
@@ -115,7 +125,7 @@ private fun AppStorageQuotas(modifier: Modifier) {
     Column(modifier = modifier) {
         KSuiteApp.entries.forEach {
             AppStorageQuota(app = it)
-            if (it.ordinal == KSuiteApp.entries.lastIndex) Spacer(Modifier.height(Margin.Medium))
+            if (it.ordinal != KSuiteApp.entries.lastIndex) Spacer(Modifier.height(Margin.Medium))
         }
     }
 }
@@ -123,17 +133,32 @@ private fun AppStorageQuotas(modifier: Modifier) {
 @Composable
 private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteApp) {
     Column(modifier) {
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(app.displayName)
             WeightOneSpacer(minWidth = Margin.Medium)
-            Text("0.2 Go / 20 Go", style = MyKSuiteTheme.typography.bodySmallRegular, color = MyKSuiteTheme.colors.secondaryTextColor)
+            Text(
+                "0.2 Go / 20 Go", // TODO: Use real data
+                style = MyKSuiteTheme.typography.bodySmallRegular,
+                color = MyKSuiteTheme.colors.secondaryTextColor,
+            )
         }
         Spacer(Modifier.height(Margin.Mini))
+        LinearProgressIndicator(
+            modifier = Modifier
+                .height(14.dp)
+                .fillMaxWidth(),
+            color = app.color(),
+            trackColor = MyKSuiteTheme.colors.chipBackground,
+            strokeCap = StrokeCap.Round,
+            gapSize = -Margin.Mini,
+            progress = { 0.5f }, // TODO: Use real values
+            drawStopIndicator = {},
+        )
     }
 }
 
-private enum class KSuiteApp(val displayName: String) {
-    Mail("Mail"), Drive("kDrive")
+private enum class KSuiteApp(val displayName: String, val color: @Composable () -> Color) {
+    Mail("Mail", { MyKSuiteTheme.colors.mail }), Drive("kDrive", { MyKSuiteTheme.colors.drive })
 }
 
 @Preview(name = "(1) Light")
@@ -141,7 +166,7 @@ private enum class KSuiteApp(val displayName: String) {
 @Composable
 private fun Preview() {
     MyKSuiteTheme {
-        Surface(color = Color.White) {
+        Surface(Modifier.fillMaxSize(), color = Color.White) {
             MyKSuiteDashboardScreen(userName = "Toto", avatarUri = "")
         }
     }
