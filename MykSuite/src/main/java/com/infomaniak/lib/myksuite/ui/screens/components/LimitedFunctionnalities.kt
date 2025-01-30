@@ -17,13 +17,16 @@
  */
 package com.infomaniak.lib.myksuite.ui.screens.components
 
+import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
@@ -55,4 +58,15 @@ private fun LimitedFunctionalityLabel(modifier: Modifier = Modifier, @StringRes 
         style = MyKSuiteTheme.typography.bodySmallRegular,
         color = MyKSuiteTheme.colors.secondaryTextColor,
     )
+}
+
+@Preview(name = "(1) Light")
+@Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
+@Composable
+private fun Preview() {
+    MyKSuiteTheme {
+        Surface {
+            LimitedFunctionalities(Modifier.padding(horizontal = Margin.Medium)) { "500" }
+        }
+    }
 }
