@@ -45,6 +45,7 @@ import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
 fun UserAvatar(avatarUri: String) {
+
     val context = LocalContext.current
     var shouldDisplayPreview by rememberSaveable(avatarUri) { mutableStateOf(true) }
 

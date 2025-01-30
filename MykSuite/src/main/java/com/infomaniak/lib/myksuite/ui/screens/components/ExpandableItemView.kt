@@ -35,6 +35,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.R
+import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
@@ -54,31 +55,31 @@ fun ExpendableActionItem(
                 .fillMaxWidth()
                 .run {
                     expendedView?.let {
-                        clickable(onClickLabel = "Show the limited functionalities") { // TODO put contentDesc in string
-                            isExpanded = !isExpanded
-                        }
+                        clickable { isExpanded = !isExpanded } // TODO add onClickLabel for accessibility
                     } ?: this
                 }
                 .padding(horizontal = Margin.Medium),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier.size(Dimens.smallIconSize),
                 imageVector = ImageVector.vectorResource(iconRes),
                 contentDescription = null,
                 tint = MyKSuiteTheme.colors.iconColor,
             )
             Spacer(Modifier.padding(Margin.Mini))
             Text(
-                modifier = Modifier
-                    .weight(1.0f),
+                modifier = Modifier.weight(1.0f),
                 text = stringResource(textRes),
                 style = MyKSuiteTheme.typography.bodyRegular,
+                color = MyKSuiteTheme.colors.primaryTextColor,
             )
             expendedView?.let {
+                val icon = ImageVector.vectorResource(if (isExpanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down)
                 Icon(
-                    imageVector = ImageVector.vectorResource(if (isExpanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down),
+                    imageVector = icon,
                     contentDescription = null, // TODO
+                    tint = MyKSuiteTheme.colors.iconColor,
                 )
             }
         }
