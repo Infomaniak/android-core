@@ -17,14 +17,17 @@
  */
 package com.infomaniak.lib.myksuite.ui.screens.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.ui.components.WeightOneSpacer
 import com.infomaniak.lib.myksuite.ui.theme.Margin
@@ -71,3 +74,13 @@ private enum class KSuiteApp(val displayName: String, val color: @Composable () 
     Mail("Mail", { MyKSuiteTheme.colors.mail }), Drive("kDrive", { MyKSuiteTheme.colors.drive })
 }
 
+@Preview(name = "(1) Light")
+@Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
+@Composable
+private fun Preview() {
+    MyKSuiteTheme {
+        Surface {
+            AppStorageQuotas(Modifier.padding(Margin.Medium))
+        }
+    }
+}
