@@ -33,7 +33,9 @@ internal suspend fun Call.await() = suspendCancellableCoroutine { continuation -
 
     enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
-            if (continuation.isCancelled) return // Avoid raising CancellationException
+            // Avoid raising IOException when already cancelled,
+            // so only the CancellationException will be raised by suspendCancellableCoroutine
+            if (continuation.isCancelled) return
             continuation.resumeWithException(e)
         }
 
@@ -43,6 +45,8 @@ internal suspend fun Call.await() = suspendCancellableCoroutine { continuation -
     })
 
     continuation.invokeOnCancellation {
+        // We don't need to throw an exception here, it's only reserved for resource releases as the doc says.
+        // So we make sure that OkHttp doesn't throw us an exception when we cancel it.
         runCatching { this@await.cancel() }
     }
 }
