@@ -42,7 +42,7 @@ fun ExpendableActionItem(
     expendedView: (@Composable () -> Unit)? = null,
 ) {
 
-    var isExpanded by remember { mutableStateOf(true) }
+    var isExpanded by remember { mutableStateOf(false) }
 
     Column {
         Row(
