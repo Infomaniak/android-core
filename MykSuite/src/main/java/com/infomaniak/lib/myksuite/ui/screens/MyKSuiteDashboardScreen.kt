@@ -116,7 +116,7 @@ private fun TopAppBar(onClose: () -> Unit) {
             modifier = Modifier
                 .padding(end = Dimens.iconButtonSize)
                 .fillMaxWidth(),
-            text = "Mon abonnement",
+            text = stringResource(R.string.myKSuiteDashboardTitle),
             style = MyKSuiteTheme.typography.h2,
             textAlign = TextAlign.Center,
         )
