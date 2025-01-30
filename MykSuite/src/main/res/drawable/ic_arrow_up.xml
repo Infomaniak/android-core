@@ -1,10 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="16dp"
     android:height="16dp"
     android:viewportWidth="16"
     android:viewportHeight="16">
-  <path
-      android:pathData="M8,6.3L3.024,11.275C2.79,11.509 2.41,11.509 2.176,11.275C1.941,11.04 1.941,10.661 2.176,10.426L7.321,5.282C7.321,5.281 7.321,5.281 7.321,5.281C7.321,5.281 7.321,5.281 7.321,5.281C7.41,5.192 7.516,5.121 7.632,5.073C7.749,5.025 7.874,5 8,5C8.126,5 8.251,5.025 8.368,5.073C8.484,5.121 8.59,5.192 8.679,5.281C8.679,5.281 8.679,5.281 8.679,5.281C8.679,5.281 8.679,5.281 8.679,5.282L13.824,10.426C14.059,10.661 14.059,11.04 13.824,11.275C13.59,11.509 13.21,11.509 12.976,11.275L8,6.3Z"
-      android:fillColor="#666666"
-      android:fillType="evenOdd"/>
+    <path
+        android:pathData="M8,6.3L3.024,11.275C2.79,11.509 2.41,11.509 2.176,11.275C1.941,11.04 1.941,10.661 2.176,10.426L7.321,5.282C7.321,5.281 7.321,5.281 7.321,5.281C7.321,5.281 7.321,5.281 7.321,5.281C7.41,5.192 7.516,5.121 7.632,5.073C7.749,5.025 7.874,5 8,5C8.126,5 8.251,5.025 8.368,5.073C8.484,5.121 8.59,5.192 8.679,5.281C8.679,5.281 8.679,5.281 8.679,5.281C8.679,5.281 8.679,5.281 8.679,5.282L13.824,10.426C14.059,10.661 14.059,11.04 13.824,11.275C13.59,11.509 13.21,11.509 12.976,11.275L8,6.3Z"
+        android:fillColor="#666666"/>
 </vector>

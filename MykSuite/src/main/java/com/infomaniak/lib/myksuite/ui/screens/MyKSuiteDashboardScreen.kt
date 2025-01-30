@@ -53,7 +53,11 @@ fun MyKSuiteDashboardScreen(
     dailySendingLimit: () -> String,
     onClose: () -> Unit = {},
 ) {
-    Box(Modifier.verticalScroll(rememberScrollState())) {
+    Box(
+        Modifier
+            .verticalScroll(rememberScrollState())
+            .background(MyKSuiteTheme.colors.background),
+    ) {
         Image(
             modifier = Modifier
                 .fillMaxWidth()
@@ -68,7 +72,8 @@ fun MyKSuiteDashboardScreen(
 
             TopAppBar(onClose)
             SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
-            MyKSuitePlusPromotionCard(paddedModifier) {}
+            // TODO: Add this line when we'll have In-app payments
+            //  MyKSuitePlusPromotionCard(paddedModifier) {}
         }
     }
 }
@@ -76,7 +81,7 @@ fun MyKSuiteDashboardScreen(
 @Composable
 private fun TopAppBar(onClose: () -> Unit) {
     Row(
-        modifier = Modifier.padding(top = 56.dp, bottom = Margin.Medium, start = Margin.Mini, end = Margin.Mini),
+        modifier = Modifier.padding(bottom = Margin.Medium, start = Margin.Mini, end = Margin.Mini),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
@@ -96,6 +101,7 @@ private fun TopAppBar(onClose: () -> Unit) {
                 .fillMaxWidth(),
             text = stringResource(R.string.myKSuiteDashboardTitle),
             style = MyKSuiteTheme.typography.h2,
+            color = MyKSuiteTheme.colors.primaryTextColor,
             textAlign = TextAlign.Center,
         )
     }
@@ -112,7 +118,7 @@ private fun SubscriptionInfoCard(
         modifier = paddedModifier.padding(top = Margin.Medium),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         colors = CardDefaults.cardColors(containerColor = MyKSuiteTheme.colors.background),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 5.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
         border = if (isSystemInDarkTheme()) BorderStroke(1.dp, MyKSuiteTheme.colors.cardBorderColor) else null,
     ) {
         Row(
@@ -121,7 +127,14 @@ private fun SubscriptionInfoCard(
             horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
         ) {
             UserAvatar(avatarUri)
-            Text(modifier = Modifier.weight(1.0f), text = userName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                modifier = Modifier.weight(1.0f),
+                style = MyKSuiteTheme.typography.bodyRegular,
+                color = MyKSuiteTheme.colors.primaryTextColor,
+                text = userName,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
             MyKSuiteChip()
         }
         PaddedDivider(paddedModifier)
@@ -144,6 +157,7 @@ private fun PaddedDivider(modifier: Modifier) {
     Spacer(Modifier.height(Margin.Large))
 }
 
+// TODO: Add this when we'll have in-app payments
 @Composable
 private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
     Card(
@@ -151,17 +165,8 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
             .padding(vertical = Margin.Large)
             .fillMaxSize(),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 5.dp),
-        border = BorderStroke(
-            width = 1.dp,
-            brush = Brush.linearGradient(
-                0.0f to Color(0xFF1DDDFD),
-                0.3f to Color(0xFF337CFF),
-                0.5f to Color(0xFFA055FC),
-                0.7f to Color(0xFFF34BBB),
-                1.0f to Color(0xFFFD8C3D),
-            ),
-        ),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
+        border = gradientBorder(),
     ) {
         Box(Modifier.padding(Margin.Medium)) {
             Column {
@@ -174,22 +179,22 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                     )
                     WeightOneSpacer(minWidth = Margin.Large)
                     Text(
+                        text = stringResource(R.string.myKSuiteDashboardFreeTrialTitle),
                         style = MyKSuiteTheme.typography.labelMedium,
                         color = MyKSuiteTheme.colors.primaryTextColor,
-                        text = stringResource(R.string.myKSuiteDashboardFreeTrialTitle),
                         modifier = Modifier
                             .background(
                                 color = MyKSuiteTheme.colors.secondaryBackground,
                                 shape = RoundedCornerShape(Dimens.largeCornerRadius),
                             )
-                            .padding(horizontal = Margin.Mini, vertical = Margin.Micro)
+                            .padding(horizontal = Margin.Mini, vertical = Margin.Micro),
                     )
                 }
                 Spacer(Modifier.height(Margin.Medium))
                 Text(
+                    text = stringResource(R.string.myKSuiteDashboardFreeTrialDescription),
                     style = MyKSuiteTheme.typography.bodySmallRegular,
                     color = MyKSuiteTheme.colors.primaryTextColor,
-                    text = stringResource(R.string.myKSuiteDashboardFreeTrialDescription),
                 )
                 Spacer(Modifier.height(Margin.Medium))
                 Button(
@@ -200,12 +205,26 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                     shape = RoundedCornerShape(Dimens.largeCornerRadius),
                     onClick = onButtonClicked,
                 ) {
-                    Text(stringResource(R.string.myKSuiteDashboardFreeTrialButton))
+                    Text(
+                        text = stringResource(R.string.myKSuiteDashboardFreeTrialButton),
+                        style = MyKSuiteTheme.typography.bodyMedium,
+                    )
                 }
             }
         }
     }
 }
+
+private fun gradientBorder() = BorderStroke(
+    width = 1.dp,
+    brush = Brush.linearGradient(
+        0.0f to Color(0xFF1DDDFD),
+        0.3f to Color(0xFF337CFF),
+        0.5f to Color(0xFFA055FC),
+        0.7f to Color(0xFFF34BBB),
+        1.0f to Color(0xFFFD8C3D),
+    ),
+)
 
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
