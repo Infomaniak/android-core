@@ -22,8 +22,14 @@ import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
 import com.infomaniak.core.DownloadStatus.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.invoke
+import kotlinx.coroutines.launch
 import splitties.mainhandler.mainHandler
 
 @JvmInline

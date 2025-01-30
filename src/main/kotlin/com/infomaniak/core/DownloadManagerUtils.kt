@@ -27,7 +27,7 @@ import com.infomaniak.core.extensions.appVersionName
 object DownloadManagerUtils {
 
     fun withoutProblematicCharacters(originalName: String): String {
-        return originalName.replace(regexInvalidSystemChar, "_").replace('%','_').let {
+        return originalName.replace(regexInvalidSystemChar, "_").replace('%', '_').let {
             // fix IllegalArgumentException only on Android 10 if multi dot
             if (SDK_INT == 29) it.replace(Regex("\\.{2,}"), ".") else it
         }
