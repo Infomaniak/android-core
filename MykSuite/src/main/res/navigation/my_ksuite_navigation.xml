@@ -18,7 +18,22 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/my_ksuite_navigation"
-    app:startDestination="@id/myKSuiteUpgradeBottomSheet">
+    app:startDestination="@id/myKSuiteDashboardFragment">
+
+    <fragment
+        android:id="@+id/myKSuiteDashboardFragment"
+        android:name="com.infomaniak.lib.myksuite.ui.views.MyKSuiteDashboardFragment"
+        android:label="MyKSuiteDashboardFragment">
+        <argument
+            android:name="userName"
+            app:argType="string" />
+        <argument
+            android:name="avatarUri"
+            app:argType="string" />
+        <argument
+            android:name="dailySendLimit"
+            app:argType="string" />
+    </fragment>
 
     <dialog
         android:id="@+id/myKSuiteUpgradeBottomSheet"
