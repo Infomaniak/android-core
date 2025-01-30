@@ -17,7 +17,6 @@ import androidx.browser.customtabs.CustomTabsServiceConnection
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.infomaniak.lib.login.ext.await
-import kotlinx.android.parcel.RawValue
 import kotlinx.coroutines.CancellationException
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -359,7 +358,6 @@ class InfomaniakLogin(
     private data class ApiResponse(
         val result: String,
         val error: String? = null,
-        val data: @RawValue Any? = null
     )
 
     enum class ErrorStatus {

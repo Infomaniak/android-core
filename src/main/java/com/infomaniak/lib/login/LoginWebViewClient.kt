@@ -81,7 +81,7 @@ open class LoginWebViewClient(
         onReceivedError(view, error.errorCode, error.description.toString(), request?.url.toString())
     }
 
-    @Deprecated("Support API below 23")
+    @Suppress("OVERRIDE_DEPRECATION") // We have this overload for api 22 and below
     override fun onReceivedError(view: WebView?, errorCode: Int, description: String, failingUrl: String) {
         if (isValidUrl(failingUrl)) {
             errorResult(description)
