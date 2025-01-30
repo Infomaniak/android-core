@@ -22,6 +22,7 @@
     <string name="myKSuiteDashboardFunctionalityLimit">Spedizioni giornaliere limitate</string>
     <string name="myKSuiteDashboardFunctionalityMailAndDrive">Archiviazione per posta e kDrive</string>
     <string name="myKSuiteDashboardLimitedFunctionalityLabel">Funzionalità limitata</string>
+    <string name="myKSuiteDashboardTitle">Il mio abbonamento</string>
     <string name="myKSuiteUpgradeDescription">Più spazio, più possibilità e più flessibilità per fare ciò che amate.</string>
     <string name="myKSuiteUpgradeDetails">Per beneficiare della mia kSuite+, modificate la vostra offerta dalla vostra interfaccia web.</string>
     <string name="myKSuiteUpgradeLabel">E anche di più!</string>
