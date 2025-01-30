@@ -33,9 +33,6 @@ internal suspend fun Call.await() = suspendCancellableCoroutine { continuation -
 
     enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
-            // Avoid raising IOException when already cancelled,
-            // so only the CancellationException will be raised by suspendCancellableCoroutine
-            if (continuation.isCancelled) return
             continuation.resumeWithException(e)
         }
 
