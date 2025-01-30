@@ -25,6 +25,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -36,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.components.MyKSuiteChip
+import com.infomaniak.lib.myksuite.ui.components.WeightOneSpacer
 import com.infomaniak.lib.myksuite.ui.screens.components.AppStorageQuotas
 import com.infomaniak.lib.myksuite.ui.screens.components.ExpendableActionItem
 import com.infomaniak.lib.myksuite.ui.screens.components.LimitedFunctionalities
@@ -66,6 +69,7 @@ fun MyKSuiteDashboardScreen(
 
             TopAppBar(onClose)
             SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
+            MyKSuitePlusPromotionCard(paddedModifier) {}
         }
     }
 }
@@ -108,7 +112,7 @@ private fun SubscriptionInfoCard(
     Card(
         modifier = paddedModifier.padding(top = Margin.Medium),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
-        colors = CardDefaults.cardColors(),
+        colors = CardDefaults.cardColors(containerColor = MyKSuiteTheme.colors.background),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 5.dp),
         border = if (isSystemInDarkTheme()) BorderStroke(1.dp, MyKSuiteTheme.colors.cardBorderColor) else null,
     ) {
@@ -139,6 +143,69 @@ private fun PaddedDivider(modifier: Modifier) {
     Spacer(Modifier.height(Margin.Large))
     HorizontalDivider(modifier)
     Spacer(Modifier.height(Margin.Large))
+}
+
+@Composable
+private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
+    Card(
+        modifier = modifier
+            .padding(vertical = Margin.Large)
+            .fillMaxSize(),
+        shape = RoundedCornerShape(Dimens.largeCornerRadius),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 5.dp),
+        border = BorderStroke(
+            width = 1.dp,
+            brush = Brush.linearGradient(
+                0.0f to Color(0xFF1DDDFD),
+                0.3f to Color(0xFF337CFF),
+                0.5f to Color(0xFFA055FC),
+                0.7f to Color(0xFFF34BBB),
+                1.0f to Color(0xFFFD8C3D),
+            ),
+        ),
+    ) {
+        Box(Modifier.padding(Margin.Medium)) {
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        modifier = Modifier.width(88.dp),
+                        contentScale = ContentScale.FillWidth,
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite_plus),
+                        contentDescription = "My kSuite +",
+                    )
+                    WeightOneSpacer(minWidth = Margin.Large)
+                    Text(
+                        style = MyKSuiteTheme.typography.labelMedium,
+                        color = MyKSuiteTheme.colors.primaryTextColor,
+                        text = stringResource(R.string.myKSuiteDashboardFreeTrialTitle),
+                        modifier = Modifier
+                            .background(
+                                color = MyKSuiteTheme.colors.secondaryBackground,
+                                shape = RoundedCornerShape(Dimens.largeCornerRadius),
+                            )
+                            .padding(horizontal = Margin.Mini, vertical = Margin.Micro)
+                    )
+                }
+                Spacer(Modifier.height(Margin.Medium))
+                Text(
+                    style = MyKSuiteTheme.typography.bodySmallRegular,
+                    color = MyKSuiteTheme.colors.primaryTextColor,
+                    text = stringResource(R.string.myKSuiteDashboardFreeTrialDescription),
+                )
+                Spacer(Modifier.height(Margin.Medium))
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(Dimens.buttonHeight),
+                    colors = ButtonDefaults.buttonColors(containerColor = MyKSuiteTheme.colors.driveButton),
+                    shape = RoundedCornerShape(Dimens.largeCornerRadius),
+                    onClick = onButtonClicked,
+                ) {
+                    Text(stringResource(R.string.myKSuiteDashboardFreeTrialButton))
+                }
+            }
+        }
+    }
 }
 
 @Preview(name = "(1) Light")
