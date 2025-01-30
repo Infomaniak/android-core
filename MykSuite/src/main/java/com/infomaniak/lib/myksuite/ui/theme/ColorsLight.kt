@@ -60,5 +60,5 @@ internal val MyKSuiteLightColors = MyKSuiteColors(
     onDriveButton = Color(white),
     mailButton = Color(mailButton),
     onMailButton = Color(onMailButton),
-    iconColor = Color(primaryContentColor),
+    iconColor = Color(elephant),
 )
