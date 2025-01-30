@@ -22,6 +22,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -48,6 +52,7 @@ import coil3.request.crossfade
 import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.components.MyKSuiteChip
 import com.infomaniak.lib.myksuite.ui.components.WeightOneSpacer
+import com.infomaniak.lib.myksuite.ui.screens.components.ExpendableActionItem
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
@@ -56,11 +61,12 @@ import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 fun MyKSuiteDashboardScreen(
     userName: String,
     avatarUri: String = "",
+    dailySendingLimit: () -> String,
     onClose: () -> Unit = {},
 ) {
     val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
 
-    Box {
+    Box(Modifier.verticalScroll(rememberScrollState())) {
         Image(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,7 +87,7 @@ fun MyKSuiteDashboardScreen(
                 Row(
                     modifier = paddedModifier.padding(top = Margin.Medium),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(Margin.Mini)
+                    horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
                 ) {
                     UserAvatar(avatarUri)
                     Text(modifier = Modifier.weight(1.0f), text = userName, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -222,7 +228,7 @@ private enum class KSuiteApp(val displayName: String, val color: @Composable () 
 private fun Preview() {
     MyKSuiteTheme {
         Surface(Modifier.fillMaxSize(), color = Color.White) {
-            MyKSuiteDashboardScreen(userName = "Toto", avatarUri = "")
+            MyKSuiteDashboardScreen(userName = "Toto", avatarUri = "", dailySendingLimit = { "500" })
         }
     }
 }
