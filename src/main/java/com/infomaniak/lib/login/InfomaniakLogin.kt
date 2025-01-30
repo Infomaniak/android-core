@@ -305,7 +305,6 @@ class InfomaniakLogin(
 
         }.getOrElse { exception ->
             if (exception is CancellationException) throw exception
-            exception.printStackTrace()
             return@getOrElse TokenResult.Error(getErrorStatusFromException(exception))
         }
     }
@@ -335,7 +334,6 @@ class InfomaniakLogin(
 
         }.getOrElse { exception ->
             if (exception is CancellationException) throw exception
-            exception.printStackTrace()
             getErrorStatusFromException(exception)
         }
     }
