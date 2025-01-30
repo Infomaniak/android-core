@@ -17,12 +17,14 @@
  */
 package com.infomaniak.lib.myksuite.ui.screens.components
 
+import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.theme.Margin
@@ -80,5 +83,23 @@ fun ExpendableActionItem(
             }
         }
         AnimatedVisibility(isExpanded) { expendedView?.invoke() }
+    }
+}
+
+@Preview(name = "(1) Light")
+@Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
+@Composable
+private fun Preview() {
+    MyKSuiteTheme {
+        Surface {
+            Column {
+                ExpendableActionItem(R.drawable.ic_padlock, R.string.myKSuiteDashboardLimitedFunctionalityLabel)
+                ExpendableActionItem(
+                    iconRes = R.drawable.ic_padlock,
+                    textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
+                    expendedView = { Text("") }
+                )
+            }
+        }
     }
 }
