@@ -51,8 +51,6 @@ fun MyKSuiteDashboardScreen(
     dailySendingLimit: () -> String,
     onClose: () -> Unit = {},
 ) {
-    val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
-
     Box(Modifier.verticalScroll(rememberScrollState())) {
         Image(
             modifier = Modifier
@@ -63,34 +61,11 @@ fun MyKSuiteDashboardScreen(
             contentDescription = null,
         )
         Column(Modifier.fillMaxSize()) {
+
+            val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
+
             TopAppBar(onClose)
-            Card(
-                modifier = paddedModifier.padding(top = Margin.Medium),
-                shape = RoundedCornerShape(Dimens.largeCornerRadius),
-                colors = CardDefaults.cardColors(),
-                elevation = CardDefaults.elevatedCardElevation(),
-                border = if (isSystemInDarkTheme()) BorderStroke(1.dp, MyKSuiteTheme.colors.cardBorderColor) else null,
-            ) {
-                Row(
-                    modifier = paddedModifier.padding(top = Margin.Medium),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
-                ) {
-                    UserAvatar(avatarUri)
-                    Text(modifier = Modifier.weight(1.0f), text = userName, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    MyKSuiteChip()
-                }
-                PaddedDivider(paddedModifier)
-                AppStorageQuotas(paddedModifier)
-                PaddedDivider(paddedModifier)
-                ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
-                ExpendableActionItem(
-                    iconRes = R.drawable.ic_padlock,
-                    textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
-                    expendedView = { LimitedFunctionalities(paddedModifier, dailySendingLimit) },
-                )
-                Spacer(Modifier.height(Margin.Medium))
-            }
+            SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
         }
     }
 }
@@ -124,11 +99,48 @@ private fun TopAppBar(onClose: () -> Unit) {
 }
 
 @Composable
+private fun SubscriptionInfoCard(
+    paddedModifier: Modifier,
+    avatarUri: String,
+    userName: String,
+    dailySendingLimit: () -> String,
+) {
+    Card(
+        modifier = paddedModifier.padding(top = Margin.Medium),
+        shape = RoundedCornerShape(Dimens.largeCornerRadius),
+        colors = CardDefaults.cardColors(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 5.dp),
+        border = if (isSystemInDarkTheme()) BorderStroke(1.dp, MyKSuiteTheme.colors.cardBorderColor) else null,
+    ) {
+        Row(
+            modifier = paddedModifier.padding(top = Margin.Medium),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
+        ) {
+            UserAvatar(avatarUri)
+            Text(modifier = Modifier.weight(1.0f), text = userName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            MyKSuiteChip()
+        }
+        PaddedDivider(paddedModifier)
+        AppStorageQuotas(paddedModifier)
+        PaddedDivider(paddedModifier)
+        ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
+        ExpendableActionItem(
+            iconRes = R.drawable.ic_padlock,
+            textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
+            expendedView = { LimitedFunctionalities(paddedModifier, dailySendingLimit) },
+        )
+        Spacer(Modifier.height(Margin.Medium))
+    }
+}
+
+@Composable
 private fun PaddedDivider(modifier: Modifier) {
     Spacer(Modifier.height(Margin.Large))
     HorizontalDivider(modifier)
     Spacer(Modifier.height(Margin.Large))
 }
+
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
