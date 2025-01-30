@@ -47,10 +47,14 @@ fun AppStorageQuotas(modifier: Modifier) {
 private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteApp) {
     Column(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(app.displayName)
+            Text(
+                text = app.displayName,
+                style = MyKSuiteTheme.typography.bodyRegular,
+                color = MyKSuiteTheme.colors.primaryTextColor,
+            )
             WeightOneSpacer(minWidth = Margin.Medium)
             Text(
-                "0.2 Go / 20 Go", // TODO: Use real data
+                text = "0.2 Go / 20 Go", // TODO: Use real data
                 style = MyKSuiteTheme.typography.bodySmallRegular,
                 color = MyKSuiteTheme.colors.secondaryTextColor,
             )
