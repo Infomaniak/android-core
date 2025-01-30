@@ -48,32 +48,33 @@ import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 fun MyKSuiteDashboardScreen(
     userName: String,
     avatarUri: String = "",
-    dailySendingLimit: () -> String,
+    dailySendingLimit: String,
     onClose: () -> Unit = {},
 ) {
-
-    Scaffold(
-        topBar = { TopAppBar(onClose) },
-        containerColor = MyKSuiteTheme.colors.onPrimaryButton,
-    ) { paddingValues ->
-        Box(
-            Modifier
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
-        ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.45f),
-                contentScale = ContentScale.FillBounds,
-                imageVector = ImageVector.vectorResource(R.drawable.illu_dashboard_background),
-                contentDescription = null,
-            )
-            Column(Modifier.padding(paddingValues), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
-                val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
-                SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
-                // TODO: Add this line when we'll have In-app payments
-                // MyKSuitePlusPromotionCard(paddedModifier) {}
+    MyKSuiteTheme {
+        Scaffold(
+            topBar = { TopAppBar(onClose) },
+            containerColor = MyKSuiteTheme.colors.onPrimaryButton,
+        ) { paddingValues ->
+            Box(
+                Modifier
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.45f),
+                    contentScale = ContentScale.FillBounds,
+                    imageVector = ImageVector.vectorResource(R.drawable.illu_dashboard_background),
+                    contentDescription = null,
+                )
+                Column(Modifier.padding(paddingValues), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
+                    val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
+                    SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
+                    // TODO: Add this line when we'll have In-app payments
+                    // MyKSuitePlusPromotionCard(paddedModifier) {}
+                }
             }
         }
     }
@@ -111,7 +112,7 @@ private fun SubscriptionInfoCard(
     paddedModifier: Modifier,
     avatarUri: String,
     userName: String,
-    dailySendingLimit: () -> String,
+    dailySendingLimit: String,
 ) {
     Card(
         modifier = paddedModifier.padding(top = Margin.Medium),
@@ -214,9 +215,7 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun Preview() {
-    MyKSuiteTheme {
-        Surface(Modifier.fillMaxSize(), color = Color.White) {
-            MyKSuiteDashboardScreen(userName = "Toto", avatarUri = "", dailySendingLimit = { "500" })
-        }
+    Surface(Modifier.fillMaxSize(), color = Color.White) {
+        MyKSuiteDashboardScreen(userName = "Toto", avatarUri = "", dailySendingLimit = "500")
     }
 }

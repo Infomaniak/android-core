@@ -32,7 +32,7 @@ import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
-fun LimitedFunctionalities(paddedModifier: Modifier, dailySendingLimit: () -> String) {
+fun LimitedFunctionalities(paddedModifier: Modifier, dailySendingLimit: String) {
     Column(
         modifier = paddedModifier.padding(top = Margin.Mini),
         verticalArrangement = Arrangement.spacedBy(Margin.Mini),
@@ -42,7 +42,7 @@ fun LimitedFunctionalities(paddedModifier: Modifier, dailySendingLimit: () -> St
             LimitedFunctionalityLabel(modifier = Modifier.weight(1.0f), R.string.myKSuiteDashboardFunctionalityLimit)
             Text(
                 modifier = Modifier.padding(start = Margin.Mini),
-                text = dailySendingLimit(),
+                text = dailySendingLimit,
                 style = MyKSuiteTheme.typography.bodySmallMedium,
             )
         }
@@ -66,7 +66,7 @@ private fun LimitedFunctionalityLabel(modifier: Modifier = Modifier, @StringRes 
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            LimitedFunctionalities(Modifier.padding(horizontal = Margin.Medium)) { "500" }
+            LimitedFunctionalities(Modifier.padding(horizontal = Margin.Medium), dailySendingLimit = "500")
         }
     }
 }
