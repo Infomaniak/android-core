@@ -19,14 +19,9 @@ package com.infomaniak.lib.myksuite.ui.views
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.compose.runtime.Composable
-import com.infomaniak.lib.myksuite.ui.components.MyKSuitePlusChip
 
 class MyKSuitePlusChipView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : BaseMyKSuiteChipView(context, attrs, defStyleAttr) {
-
-    override val chipContent = @Composable { MyKSuitePlusChip { onClick?.onClick(this) } }
-}
+) : BaseMyKSuiteChipView(context, attrs, defStyleAttr, isMyKSuitePlus = true)
