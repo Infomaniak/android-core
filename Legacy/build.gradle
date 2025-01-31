@@ -51,9 +51,9 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.25'
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
-    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3'
+    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1'
+    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0'
 
     def navigationVersion = '2.8.5'
     api "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
@@ -76,7 +76,7 @@ dependencies {
     ksp "androidx.room:room-compiler:$roomVersion"
 
     api 'com.google.android.material:material:1.12.0'
-    api 'com.google.code.gson:gson:2.11.0'
+    api 'com.google.code.gson:gson:2.12.0'
 
     api "io.coil-kt:coil:2.7.0"
 
@@ -84,7 +84,7 @@ dependencies {
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.squareup.okhttp3:okhttp:4.12.0'
 
-    def sentryVersion = '7.20.0'
+    def sentryVersion = '8.0.0'
     api "io.sentry:sentry-android:$sentryVersion"
     implementation "io.sentry:sentry-okhttp:$sentryVersion"
 
