@@ -28,8 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.myksuite.R
+import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
 fun LimitedFunctionalities(paddedModifier: Modifier, dailySendingLimit: String) {
@@ -43,7 +45,7 @@ fun LimitedFunctionalities(paddedModifier: Modifier, dailySendingLimit: String) 
             Text(
                 modifier = Modifier.padding(start = Margin.Mini),
                 text = dailySendingLimit,
-                style = MyKSuiteTheme.typography.bodySmallMedium,
+                style = Typography.bodySmallMedium,
             )
         }
         LimitedFunctionalityLabel(textRes = R.string.myKSuiteDashboardFunctionalityCustomReminders)
@@ -55,8 +57,8 @@ private fun LimitedFunctionalityLabel(modifier: Modifier = Modifier, @StringRes 
     Text(
         modifier = modifier.fillMaxWidth(0.9f),
         text = stringResource(textRes),
-        style = MyKSuiteTheme.typography.bodySmallRegular,
-        color = MyKSuiteTheme.colors.secondaryTextColor,
+        style = Typography.bodySmallRegular,
+        color = LocalMyKSuiteColors.current.secondaryTextColor,
     )
 }
 

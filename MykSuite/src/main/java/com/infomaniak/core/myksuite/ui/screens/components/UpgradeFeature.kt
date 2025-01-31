@@ -30,13 +30,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures
-import com.infomaniak.core.myksuite.ui.theme.Dimens
-import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
-import com.infomaniak.core.myksuite.ui.theme.Margin
-import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.*
 
 @Composable
 fun ColumnScope.UpgradeFeature(customFeature: MyKSuiteUpgradeFeatures, modifier: Modifier = Modifier) {
+    val localColors = LocalMyKSuiteColors.current
     Row(
         modifier = modifier
             .padding(vertical = Margin.Mini)
@@ -47,13 +45,13 @@ fun ColumnScope.UpgradeFeature(customFeature: MyKSuiteUpgradeFeatures, modifier:
             modifier = Modifier.size(Dimens.iconSize),
             imageVector = ImageVector.vectorResource(customFeature.icon),
             contentDescription = null,
-            tint = LocalMyKSuiteColors.current.secondaryTextColor,
+            tint = localColors.iconColor,
         )
         Spacer(Modifier.width(Margin.Mini))
         Text(
             text = stringResource(customFeature.title),
-            style = MyKSuiteTheme.typography.bodyRegular,
-            color = MyKSuiteTheme.colors.secondaryTextColor,
+            style = Typography.bodyRegular,
+            color = localColors.secondaryTextColor,
         )
     }
 }
