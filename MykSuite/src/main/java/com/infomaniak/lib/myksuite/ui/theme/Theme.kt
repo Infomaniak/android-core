@@ -18,42 +18,37 @@
 package com.infomaniak.lib.myksuite.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import kotlin.text.Typography
 
-val LocalIsDarkMode = staticCompositionLocalOf { false }
-val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> = staticCompositionLocalOf { CustomColorScheme() }
+internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = staticCompositionLocalOf { MyKSuiteColors() }
 
 @Composable
-fun MyKSuiteTheme(
-    isDarkTheme: Boolean = isSystemInDarkTheme(),
+internal fun MyKSuiteTheme(
     content: @Composable () -> Unit,
 ) {
-    val customColors = if (isDarkTheme) CustomDarkColorScheme else CustomLightColorScheme
+    val customColors = if (isSystemInDarkTheme()) MyKSuiteDarkColors else MyKSuiteLightColors
     CompositionLocalProvider(
         LocalTextStyle provides Typography.bodyRegular,
-        LocalCustomColorScheme provides customColors,
-        LocalIsDarkMode provides isDarkTheme,
+        LocalMyKSuiteColors provides customColors,
     ) {
         MaterialTheme(content = content)
     }
 }
 
-object MyKSuiteTheme {
+// TODO Remove this object and use Directly Typography and Color
+internal object MyKSuiteTheme {
     val typography = Typography
-    val colors: CustomColorScheme
+    val colors: MyKSuiteColors
         @Composable
-        get() = LocalCustomColorScheme.current
-    val materialColors: ColorScheme
-        @Composable
-        get() = MaterialTheme.colorScheme
+        get() = LocalMyKSuiteColors.current
 }
 
 @Immutable
-data class CustomColorScheme(
+internal data class MyKSuiteColors(
     val primaryTextColor: Color = Color.Unspecified,
     val secondaryTextColor: Color = Color.Unspecified,
     val tertiaryTextColor: Color = Color.Unspecified,
