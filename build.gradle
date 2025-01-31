@@ -65,7 +65,7 @@ afterEvaluate {
                 from components.findByName('release')
                 groupId = 'com.github.infomaniak'
                 artifactId = 'android-login'
-                version = "2.8.0"
+                version = "3.0.0"
             }
         }
     }
