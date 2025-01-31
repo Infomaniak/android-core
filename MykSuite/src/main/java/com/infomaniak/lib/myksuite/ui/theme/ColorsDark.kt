@@ -30,7 +30,7 @@ private const val rabbit = 0xFFF1F1F1
 private const val infomaniak = 0xFF4CB7FF
 private const val mailButton = 0xFFEF8BA4
 
-val CustomDarkColorScheme = CustomColorScheme(
+internal val MyKSuiteDarkColors = MyKSuiteColors(
     primaryTextColor = Color(rabbit),
     secondaryTextColor = Color(shark),
     tertiaryTextColor = Color(elephant),
