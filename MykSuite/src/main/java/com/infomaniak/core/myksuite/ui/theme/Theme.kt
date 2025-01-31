@@ -43,14 +43,6 @@ internal fun MyKSuiteTheme(
     }
 }
 
-// TODO Remove this object and use Directly Typography and Color
-internal object MyKSuiteTheme {
-    val typography = Typography
-    val colors: MyKSuiteColors
-        @Composable
-        get() = LocalMyKSuiteColors.current
-}
-
 @Immutable
 internal data class MyKSuiteColors(
     val primaryTextColor: Color = Color.Unspecified,

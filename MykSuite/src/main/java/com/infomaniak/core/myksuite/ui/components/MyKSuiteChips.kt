@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.myksuite.R
+import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 
@@ -42,7 +43,7 @@ fun MyKSuiteChip(modifier: Modifier = Modifier, tier: MyKSuiteTier) {
     Image(
         modifier = modifier
             .background(
-                color = MyKSuiteTheme.colors.chipBackground,
+                color = LocalMyKSuiteColors.current.chipBackground,
                 shape = CircleShape,
             )
             .padding(horizontal = Margin.Mini, vertical = Margin.Micro),
