@@ -30,8 +30,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.myksuite.ui.components.WeightOneSpacer
+import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
 fun AppStorageQuotas(modifier: Modifier) {
@@ -42,18 +44,19 @@ fun AppStorageQuotas(modifier: Modifier) {
 
 @Composable
 private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteApp) {
+    val localColors = LocalMyKSuiteColors.current
     Column(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = app.displayName,
-                style = MyKSuiteTheme.typography.bodyRegular,
-                color = MyKSuiteTheme.colors.primaryTextColor,
+                style = Typography.bodyRegular,
+                color = localColors.primaryTextColor,
             )
             WeightOneSpacer(minWidth = Margin.Medium)
             Text(
                 text = "0.2 Go / 20 Go", // TODO: Use real data
-                style = MyKSuiteTheme.typography.bodySmallRegular,
-                color = MyKSuiteTheme.colors.secondaryTextColor,
+                style = Typography.bodySmallRegular,
+                color = localColors.secondaryTextColor,
             )
         }
         Spacer(Modifier.height(Margin.Mini))
@@ -63,7 +66,7 @@ private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteApp) {
                 .height(progressIndicatorHeight)
                 .fillMaxWidth(),
             color = app.color(),
-            trackColor = MyKSuiteTheme.colors.chipBackground,
+            trackColor = localColors.chipBackground,
             strokeCap = StrokeCap.Round,
             gapSize = -progressIndicatorHeight,
             progress = { 0.5f }, // TODO: Use real values
@@ -73,7 +76,7 @@ private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteApp) {
 }
 
 private enum class KSuiteApp(val displayName: String, val color: @Composable () -> Color) {
-    Mail("Mail", { MyKSuiteTheme.colors.mail }), Drive("kDrive", { MyKSuiteTheme.colors.drive })
+    Mail("Mail", { LocalMyKSuiteColors.current.mail }), Drive("kDrive", { LocalMyKSuiteColors.current.drive })
 }
 
 @Preview(name = "(1) Light")

@@ -35,9 +35,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.myksuite.R
-import com.infomaniak.core.myksuite.ui.theme.Dimens
-import com.infomaniak.core.myksuite.ui.theme.Margin
-import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.*
 
 @Composable
 fun ExpendableActionItem(
@@ -47,6 +45,8 @@ fun ExpendableActionItem(
 ) {
 
     var isExpanded by remember { mutableStateOf(false) }
+
+    val localColors = LocalMyKSuiteColors.current
 
     Column {
         Row(
@@ -64,20 +64,20 @@ fun ExpendableActionItem(
                 modifier = Modifier.size(Dimens.smallIconSize),
                 imageVector = ImageVector.vectorResource(iconRes),
                 contentDescription = null,
-                tint = MyKSuiteTheme.colors.iconColor,
+                tint = localColors.iconColor,
             )
             Text(
                 modifier = Modifier.weight(1.0f),
                 text = stringResource(textRes),
-                style = MyKSuiteTheme.typography.bodyRegular,
-                color = MyKSuiteTheme.colors.primaryTextColor,
+                style = Typography.bodyRegular,
+                color = localColors.primaryTextColor,
             )
             expendedView?.let {
                 val icon = ImageVector.vectorResource(if (isExpanded) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down)
                 Icon(
                     imageVector = icon,
                     contentDescription = null, // TODO
-                    tint = MyKSuiteTheme.colors.iconColor,
+                    tint = localColors.iconColor,
                 )
             }
         }

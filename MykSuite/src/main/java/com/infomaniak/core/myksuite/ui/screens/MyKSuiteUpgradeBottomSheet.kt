@@ -36,9 +36,8 @@ import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.MyKSuitePrimaryButton
 import com.infomaniak.core.myksuite.ui.screens.components.ButtonType
 import com.infomaniak.core.myksuite.ui.screens.components.UpgradeFeature
-import com.infomaniak.core.myksuite.ui.theme.Dimens
-import com.infomaniak.core.myksuite.ui.theme.Margin
-import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.*
+import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +61,8 @@ private fun UpgradeBottomSheetContent(
     style: ButtonType,
     onButtonClicked: () -> Unit,
 ) {
+    val localColors = LocalMyKSuiteColors.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -80,23 +81,23 @@ private fun UpgradeBottomSheetContent(
             modifier = paddedModifier,
             text = stringResource(R.string.myKSuiteUpgradeTitle),
             textAlign = TextAlign.Center,
-            style = MyKSuiteTheme.typography.h2,
-            color = MyKSuiteTheme.colors.primaryTextColor,
+            style = Typography.h2,
+            color = localColors.primaryTextColor,
         )
         Spacer(Modifier.height(Margin.Medium))
         Text(
             modifier = paddedModifier,
             text = stringResource(R.string.myKSuiteUpgradeDescription),
-            style = MyKSuiteTheme.typography.bodyRegular,
-            color = MyKSuiteTheme.colors.secondaryTextColor,
+            style = Typography.bodyRegular,
+            color = localColors.secondaryTextColor,
         )
         Spacer(Modifier.height(Margin.Medium))
         UpgradeFeatures(customFeatures, paddedModifier)
         Text(
             modifier = paddedModifier,
             text = stringResource(R.string.myKSuiteUpgradeDetails),
-            style = MyKSuiteTheme.typography.bodyRegular,
-            color = MyKSuiteTheme.colors.secondaryTextColor,
+            style = Typography.bodyRegular,
+            color = localColors.secondaryTextColor,
         )
         Spacer(Modifier.height(Margin.Huge))
         MyKSuitePrimaryButton(

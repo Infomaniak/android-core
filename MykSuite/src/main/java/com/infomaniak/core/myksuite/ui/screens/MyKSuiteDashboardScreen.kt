@@ -35,13 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.*
-import com.infomaniak.core.myksuite.ui.components.MyKSuitePrimaryButton
-import com.infomaniak.core.myksuite.ui.components.myKSuiteGradient
 import com.infomaniak.core.myksuite.ui.screens.components.*
-import com.infomaniak.core.myksuite.ui.theme.Dimens
-import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
-import com.infomaniak.core.myksuite.ui.theme.Margin
-import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.*
+import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
 fun MyKSuiteDashboardScreen(
@@ -53,7 +49,7 @@ fun MyKSuiteDashboardScreen(
     MyKSuiteTheme {
         Scaffold(
             topBar = { TopAppBar(onClose) },
-            containerColor = MyKSuiteTheme.colors.onPrimaryButton,
+            containerColor = LocalMyKSuiteColors.current.onPrimaryButton,
         ) { paddingValues ->
             Box(
                 Modifier
@@ -83,6 +79,7 @@ fun MyKSuiteDashboardScreen(
 @Composable
 private fun TopAppBar(onClose: () -> Unit) {
     val localColors = LocalMyKSuiteColors.current
+
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = localColors.topAppBarBackground,
@@ -100,7 +97,7 @@ private fun TopAppBar(onClose: () -> Unit) {
         title = {
             Text(
                 text = stringResource(R.string.myKSuiteDashboardTitle),
-                style = MyKSuiteTheme.typography.h2,
+                style = Typography.h2,
             )
         }
     )
@@ -113,12 +110,14 @@ private fun SubscriptionInfoCard(
     userName: String,
     dailySendingLimit: String,
 ) {
+    val localColors = LocalMyKSuiteColors.current
+
     Card(
         modifier = paddedModifier.padding(top = Margin.Medium),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
-        colors = CardDefaults.cardColors(containerColor = MyKSuiteTheme.colors.background),
+        colors = CardDefaults.cardColors(containerColor = localColors.background),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
-        border = if (isSystemInDarkTheme()) BorderStroke(1.dp, MyKSuiteTheme.colors.cardBorderColor) else null,
+        border = if (isSystemInDarkTheme()) BorderStroke(1.dp, localColors.cardBorderColor) else null,
     ) {
         Row(
             modifier = paddedModifier.padding(top = Margin.Medium),
@@ -128,8 +127,8 @@ private fun SubscriptionInfoCard(
             UserAvatar(avatarUri)
             Text(
                 modifier = Modifier.weight(1.0f),
-                style = MyKSuiteTheme.typography.bodyRegular,
-                color = MyKSuiteTheme.colors.primaryTextColor,
+                style = Typography.bodyRegular,
+                color = localColors.primaryTextColor,
                 text = userName,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -159,6 +158,8 @@ private fun PaddedDivider(modifier: Modifier) {
 // TODO: Add this when we'll have in-app payments
 @Composable
 private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
+    val localColors = LocalMyKSuiteColors.current
+
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
@@ -177,11 +178,11 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                     WeightOneSpacer(minWidth = Margin.Large)
                     Text(
                         text = stringResource(R.string.myKSuiteDashboardFreeTrialTitle),
-                        style = MyKSuiteTheme.typography.labelMedium,
-                        color = MyKSuiteTheme.colors.primaryTextColor,
+                        style = Typography.labelMedium,
+                        color = localColors.primaryTextColor,
                         modifier = Modifier
                             .background(
-                                color = MyKSuiteTheme.colors.secondaryBackground,
+                                color = localColors.secondaryBackground,
                                 shape = RoundedCornerShape(Dimens.largeCornerRadius),
                             )
                             .padding(horizontal = Margin.Mini, vertical = Margin.Micro),
@@ -189,10 +190,9 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                 }
                 Text(
                     text = stringResource(R.string.myKSuiteDashboardFreeTrialDescription),
-                    style = MyKSuiteTheme.typography.bodySmallRegular,
-                    color = MyKSuiteTheme.colors.primaryTextColor,
+                    style = Typography.bodySmallRegular,
+                    color = localColors.primaryTextColor,
                 )
-                val localColors = LocalMyKSuiteColors.current
                 MyKSuitePrimaryButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.myKSuiteDashboardFreeTrialButton),

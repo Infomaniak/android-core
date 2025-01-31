@@ -39,6 +39,7 @@ import coil3.request.crossfade
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.myKSuiteGradient
 import com.infomaniak.core.myksuite.ui.theme.Dimens
+import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
@@ -79,7 +80,7 @@ private fun DefaultAvatar() {
         modifier = Modifier.size(Dimens.iconSize),
         imageVector = ImageVector.vectorResource(R.drawable.ic_person),
         contentDescription = null,
-        tint = MyKSuiteTheme.colors.iconColor,
+        tint = LocalMyKSuiteColors.current.iconColor,
     )
 }
 
