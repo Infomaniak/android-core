@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/myKSuiteDashboardFragment"
-        android:name="com.infomaniak.lib.myksuite.ui.views.MyKSuiteDashboardFragment"
+        android:name="com.infomaniak.core.myksuite.ui.views.MyKSuiteDashboardFragment"
         android:label="MyKSuiteDashboardFragment">
         <argument
             android:name="userName"
@@ -37,11 +37,11 @@
 
     <dialog
         android:id="@+id/myKSuiteUpgradeBottomSheet"
-        android:name="com.infomaniak.lib.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog"
+        android:name="com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog"
         android:label="MyKSuiteUpgradeBottomSheet">
         <argument
             android:name="upgradeFeatures"
-            app:argType="com.infomaniak.lib.myksuite.ui.screens.MyKSuiteUpgradeFeatures[]" />
+            app:argType="com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures[]" />
     </dialog>
 
 </navigation>

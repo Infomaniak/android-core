@@ -12,7 +12,7 @@ val javaVersion: JavaVersion by rootProject.extra
 
 android {
 
-    namespace = "com.infomaniak.lib.myksuite"
+    namespace = "com.infomaniak.core.myksuite"
     compileSdk = coreCompileSdk
 
     defaultConfig {
