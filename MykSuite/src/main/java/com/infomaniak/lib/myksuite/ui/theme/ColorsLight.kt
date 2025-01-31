@@ -19,6 +19,8 @@ package com.infomaniak.lib.myksuite.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// TODO: Extract colors to a CoreUi module
+
 // Palette
 private const val orca = 0xFF333333
 private const val elephant = 0xFF666666
@@ -33,7 +35,7 @@ private const val mailButton = 0xFFBC0055
 private const val mail = 0xFFF2357A
 private const val drive = 0xFF5C89F7
 
-val CustomLightColorScheme = CustomColorScheme(
+internal val MyKSuiteLightColors = MyKSuiteColors(
     primaryTextColor = Color(orca),
     secondaryTextColor = Color(elephant),
     tertiaryTextColor = Color(shark),
