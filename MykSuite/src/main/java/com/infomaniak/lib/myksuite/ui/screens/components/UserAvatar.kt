@@ -21,12 +21,13 @@ import android.content.res.Configuration
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -49,7 +50,7 @@ fun UserAvatar(avatarUri: String) {
     val context = LocalContext.current
     var shouldDisplayPreview by rememberSaveable(avatarUri) { mutableStateOf(true) }
 
-    Box {
+    Box(Modifier.clip(CircleShape)) {
         if (shouldDisplayPreview) {
             val imageRequest = remember(avatarUri) {
                 ImageRequest.Builder(context)
@@ -87,7 +88,7 @@ private fun DefaultAvatar() {
                     start = Offset(0.0f, 10.0f),
                     end = Offset(0.0f, 90.0f),
                 ),
-                shape = RoundedCornerShape(Dimens.largeCornerRadius),
+                shape = CircleShape,
             ),
         imageVector = ImageVector.vectorResource(R.drawable.ic_person),
         contentDescription = null,

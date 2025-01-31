@@ -1,6 +1,7 @@
 [versions]
 androidxCore = "1.13.1"  # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
 coil = "3.0.2"
+coilNetworkOkhttp = "3.0.4"
 composeBom = "2024.12.01"
 coreKtx = "1.6.1"
 integrity = "1.4.0"
@@ -24,6 +25,7 @@ androidx-core = { group = "androidx.core", name = "core", version.ref = "android
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
