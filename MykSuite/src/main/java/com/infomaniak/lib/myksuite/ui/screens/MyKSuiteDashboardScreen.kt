@@ -135,7 +135,7 @@ private fun SubscriptionInfoCard(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            MyKSuiteChip()
+            MyKSuiteChip(imageRes = R.drawable.ic_logo_my_ksuite)
         }
         PaddedDivider(paddedModifier)
         AppStorageQuotas(paddedModifier)
@@ -173,7 +173,7 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                         modifier = Modifier.width(88.dp),
                         contentScale = ContentScale.FillWidth,
                         imageVector = ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite_plus),
-                        contentDescription = "My kSuite +",
+                        contentDescription = stringResource(R.string.myKSuitePlusName),
                     )
                     WeightOneSpacer(minWidth = Margin.Large)
                     Text(
