@@ -21,23 +21,18 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AbstractComposeView
+import com.infomaniak.lib.myksuite.R
+import com.infomaniak.lib.myksuite.ui.components.MyKSuiteChip
 
 abstract class BaseMyKSuiteChipView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
+    val isMyKSuitePlus: Boolean,
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
-
-    protected var onClick: OnClickListener? = null
-    protected abstract val chipContent: @Composable () -> Unit
 
     @Composable
     override fun Content() {
-        chipContent()
-    }
-
-    override fun setOnClickListener(listerner: OnClickListener?) {
-        super.setOnClickListener(listerner)
-        onClick = listerner
+        MyKSuiteChip(imageRes = if (isMyKSuitePlus) R.drawable.ic_logo_my_ksuite_plus else R.drawable.ic_logo_my_ksuite)
     }
 }
