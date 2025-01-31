@@ -79,32 +79,4 @@ object Typography {
         fontSize = 12.sp,
         lineHeight = 18.sp,
     )
-
-    val specificMedium22 = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-    )
-
-    val specificMedium32 = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 32.sp,
-        lineHeight = 42.sp,
-    )
-
-    val specificLight22 = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Light,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-    )
-
-    val specificLight18 = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Light,
-        fontSize = 18.sp,
-        lineHeight = 24.sp,
-    )
 }
