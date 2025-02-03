@@ -38,6 +38,7 @@ import com.infomaniak.lib.myksuite.ui.screens.components.UpgradeFeature
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.lib.myksuite.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,18 +47,18 @@ fun MyKSuiteUpgradeBottomSheet(
     style: ButtonType,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismissRequest: () -> Unit,
-    customFeatures: @Composable (() -> List<MyKSuiteUpgradeFeatures>)?,
+    customFeatures: (() -> List<MyKSuiteUpgradeFeatures>)?,
 ) {
     MyKSuiteTheme {
         ModalBottomSheet(onDismissRequest, modifier, sheetState) {
-            BottomSheetContent(customFeatures, style, onDismissRequest)
+            UpgradeBottomSheetContent(customFeatures, style, onDismissRequest)
         }
     }
 }
 
 @Composable
-private fun BottomSheetContent(
-    customFeatures: @Composable (() -> List<MyKSuiteUpgradeFeatures>)?,
+private fun UpgradeBottomSheetContent(
+    customFeatures: (() -> List<MyKSuiteUpgradeFeatures>)?,
     style: ButtonType,
     onButtonClicked: () -> Unit,
 ) {
@@ -98,6 +99,7 @@ private fun BottomSheetContent(
             color = MyKSuiteTheme.colors.secondaryTextColor,
         )
         Spacer(Modifier.height(Margin.Huge))
+
         Button(
             modifier = paddedModifier
                 .fillMaxWidth()
@@ -106,7 +108,7 @@ private fun BottomSheetContent(
             shape = style.shape,
             onClick = onButtonClicked,
         ) {
-            Text(stringResource(R.string.buttonClose))
+            Text(text = stringResource(R.string.buttonClose), style = Typography.bodyMedium)
         }
         Spacer(Modifier.height(Margin.Large))
     }
@@ -114,7 +116,7 @@ private fun BottomSheetContent(
 
 @Composable
 private fun ColumnScope.UpgradeFeatures(
-    customFeatures: @Composable (() -> List<MyKSuiteUpgradeFeatures>)?,
+    customFeatures: (() -> List<MyKSuiteUpgradeFeatures>)?,
     modifier: Modifier,
 ) {
     customFeatures?.let {
@@ -124,19 +126,18 @@ private fun ColumnScope.UpgradeFeatures(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            MyKSuiteUpgradeBottomSheet(
-                onDismissRequest = {},
-                style = ButtonType.Mail,
+            UpgradeBottomSheetContent(
                 customFeatures = {
                     listOf(MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift))
                 },
+                style = ButtonType.Mail,
+                onButtonClicked = {}
             )
         }
     }
