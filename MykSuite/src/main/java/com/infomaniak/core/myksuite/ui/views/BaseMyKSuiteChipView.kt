@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteChip
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
+import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 
 abstract class BaseMyKSuiteChipView @JvmOverloads constructor(
     context: Context,
@@ -33,6 +34,6 @@ abstract class BaseMyKSuiteChipView @JvmOverloads constructor(
 
     @Composable
     override fun Content() {
-        MyKSuiteChip(tier = tier)
+        MyKSuiteTheme { MyKSuiteChip(tier = tier) }
     }
 }
