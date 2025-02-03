@@ -43,6 +43,7 @@ import com.infomaniak.lib.myksuite.ui.screens.components.ExpendableActionItem
 import com.infomaniak.lib.myksuite.ui.screens.components.LimitedFunctionalities
 import com.infomaniak.lib.myksuite.ui.screens.components.UserAvatar
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
+import com.infomaniak.lib.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
@@ -53,58 +54,65 @@ fun MyKSuiteDashboardScreen(
     dailySendingLimit: () -> String,
     onClose: () -> Unit = {},
 ) {
-    Box(
-        Modifier
-            .verticalScroll(rememberScrollState())
-            .background(MyKSuiteTheme.colors.background),
-    ) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.45f),
-            contentScale = ContentScale.FillBounds,
-            imageVector = ImageVector.vectorResource(R.drawable.illu_dashboard_background),
-            contentDescription = null,
-        )
-        Column(Modifier.fillMaxSize()) {
 
-            val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
-
-            TopAppBar(onClose)
-            SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
-            // TODO: Add this line when we'll have In-app payments
-            //  MyKSuitePlusPromotionCard(paddedModifier) {}
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = { TopAppBar(onClose) },
+        containerColor = MyKSuiteTheme.colors.onDriveButton,
+    ) { paddingValues ->
+        Box(Modifier.verticalScroll(rememberScrollState())) {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.45f),
+                contentScale = ContentScale.FillBounds,
+                imageVector = ImageVector.vectorResource(R.drawable.illu_dashboard_background),
+                contentDescription = null,
+            )
+            Column(Modifier.padding(paddingValues)) {
+                val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
+                SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
+                Spacer(Modifier.height(Margin.Large))
+                // TODO: Add this line when we'll have In-app payments
+                //  MyKSuitePlusPromotionCard(paddedModifier) {}
+            }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopAppBar(onClose: () -> Unit) {
-    Row(
-        modifier = Modifier.padding(bottom = Margin.Medium, start = Margin.Mini, end = Margin.Mini),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        IconButton(
-            modifier = Modifier.size(Dimens.iconButtonSize),
-            onClick = onClose,
-            colors = IconButtonDefaults.iconButtonColors(contentColor = MyKSuiteTheme.colors.iconColor),
-        ) {
-            Icon(
-                modifier = Modifier.size(Dimens.iconSize),
-                imageVector = ImageVector.vectorResource(R.drawable.ic_cross_thick),
-                contentDescription = stringResource(R.string.buttonClose),
+    val localColors = LocalMyKSuiteColors.current
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = localColors.topAppBarBackground,
+            titleContentColor = localColors.primaryTextColor,
+            navigationIconContentColor = localColors.primaryTextColor,
+        ),
+        navigationIcon = {
+            IconButton(
+                modifier = Modifier.size(Dimens.iconButtonSize),
+                onClick = onClose,
+            ) {
+                Icon(
+                    modifier = Modifier.size(Dimens.iconSize),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_cross_thick),
+                    contentDescription = stringResource(R.string.buttonClose),
+                )
+            }
+        },
+        title = {
+            Text(
+                modifier = Modifier
+                    .padding(end = Dimens.iconButtonSize)
+                    .fillMaxWidth(),
+                text = stringResource(R.string.myKSuiteDashboardTitle),
+                style = MyKSuiteTheme.typography.h2,
+                textAlign = TextAlign.Center,
             )
         }
-        Text(
-            modifier = Modifier
-                .padding(end = Dimens.iconButtonSize)
-                .fillMaxWidth(),
-            text = stringResource(R.string.myKSuiteDashboardTitle),
-            style = MyKSuiteTheme.typography.h2,
-            color = MyKSuiteTheme.colors.primaryTextColor,
-            textAlign = TextAlign.Center,
-        )
-    }
+    )
 }
 
 @Composable
