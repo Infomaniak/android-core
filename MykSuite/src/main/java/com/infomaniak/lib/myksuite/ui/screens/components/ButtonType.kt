@@ -29,12 +29,22 @@ import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 enum class ButtonType(val colors: @Composable () -> MyKSuiteButtonColors, val shape: Shape) {
     Mail(
-        colors = { MyKSuiteButtonColors(containerColor = MyKSuiteTheme.colors.mailButton) },
+        colors = {
+            MyKSuiteButtonColors(
+                containerColor = MyKSuiteTheme.colors.mailButton,
+                contentColor = MyKSuiteTheme.colors.onMailButton,
+            )
+        },
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
     ),
     Drive(
-        colors = { MyKSuiteButtonColors(containerColor = MyKSuiteTheme.colors.driveButton) },
-        shape = RoundedCornerShape(Dimens.smallCornerRadius),
+        colors = {
+            MyKSuiteButtonColors(
+                containerColor = MyKSuiteTheme.colors.driveButton,
+                contentColor = MyKSuiteTheme.colors.onDriveButton,
+            )
+        },
+        shape = RoundedCornerShape(10.dp),
     ),
 }
 
