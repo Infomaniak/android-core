@@ -49,6 +49,7 @@ internal val MyKSuiteDarkColors = MyKSuiteColors(
     tertiaryTextColor = Color(elephant),
     background = Color(bat),
     secondaryBackground = Color(orca),
+    topAppBarBackground = Color(orca),
     chipBackground = Color(orca),
     drive = Color(drive),
     mail = Color(mail),

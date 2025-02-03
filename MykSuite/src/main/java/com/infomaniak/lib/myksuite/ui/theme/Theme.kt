@@ -58,6 +58,7 @@ internal data class MyKSuiteColors(
     val tertiaryTextColor: Color = Color.Unspecified,
     val background: Color = Color.Unspecified,
     val secondaryBackground: Color = Color.Unspecified,
+    val topAppBarBackground: Color = Color.Unspecified,
     val chipBackground: Color = Color.Unspecified,
     val drive: Color = Color.Unspecified,
     val mail: Color = Color.Unspecified,
