@@ -25,8 +25,6 @@ object Dimens {
     val buttonHeight = 56.dp
     /** 24 dp */
     val iconSize = 24.dp
-    /** 8 dp */
-    val smallCornerRadius = 8.dp
     /** 16 dp */
     val largeCornerRadius = 16.dp
 }
