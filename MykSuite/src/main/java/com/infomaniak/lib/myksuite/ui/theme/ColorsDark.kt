@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.myksuite.ui.theme
 
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.ui.graphics.Color
 
 // Palette
@@ -29,12 +30,23 @@ private const val rabbit = 0xFFF1F1F1
 // KSuite App colors
 private const val infomaniak = 0xFF4CB7FF
 private const val mailButton = 0xFFEF8BA4
+private const val onMailButton = 0xFF3F0018
+
+private const val primaryContentColor = rabbit
+
+internal val DarkColorScheme = darkColorScheme(
+    onSurfaceVariant = Color(rabbit), // Used for bottom sheet drag handle
+    surfaceContainerLow = Color(bat), // Used for bottom sheet backgrounds
+)
 
 internal val MyKSuiteDarkColors = MyKSuiteColors(
-    primaryTextColor = Color(rabbit),
+    primaryTextColor = Color(primaryContentColor),
     secondaryTextColor = Color(shark),
     tertiaryTextColor = Color(elephant),
     chipBackground = Color(orca),
     driveButton = Color(infomaniak),
+    onDriveButton = Color(bat),
     mailButton = Color(mailButton),
+    onMailButton = Color(onMailButton),
+    iconColor = Color(primaryContentColor),
 )
