@@ -43,7 +43,7 @@ import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
-fun UserAvatar(avatarUri: String) {
+internal fun UserAvatar(avatarUri: String) {
 
     val context = LocalContext.current
     var shouldDisplayPreview by rememberSaveable(avatarUri) { mutableStateOf(true) }
