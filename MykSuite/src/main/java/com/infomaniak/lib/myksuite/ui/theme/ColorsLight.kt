@@ -41,8 +41,6 @@ private const val onMailButton = 0xFFFEF8F7
 private const val mail = 0xFFF2357A
 private const val drive = 0xFF5C89F7
 
-private const val primaryContentColor = orca
-
 internal val LightColorScheme = lightColorScheme(
     onSurfaceVariant = Color(mouse), // Used for bottom sheet drag handle
     surfaceContainerLow = Color(white), // Used for bottom sheet backgrounds
@@ -51,7 +49,7 @@ internal val LightColorScheme = lightColorScheme(
 )
 
 internal val MyKSuiteLightColors = MyKSuiteColors(
-    primaryTextColor = Color(primaryContentColor),
+    primaryTextColor = Color(orca),
     secondaryTextColor = Color(elephant),
     tertiaryTextColor = Color(shark),
     background = Color(white),
