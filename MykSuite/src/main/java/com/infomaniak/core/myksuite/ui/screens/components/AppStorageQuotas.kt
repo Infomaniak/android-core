@@ -38,12 +38,12 @@ import com.infomaniak.core.myksuite.ui.theme.Typography
 @Composable
 internal fun AppStorageQuotas(modifier: Modifier) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
-        KSuiteApp.entries.forEach { AppStorageQuota(app = it) }
+        KSuiteAppWithQuotas.entries.forEach { AppStorageQuota(app = it) }
     }
 }
 
 @Composable
-private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteApp) {
+private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteAppWithQuotas) {
     val localColors = LocalMyKSuiteColors.current
     Column(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -75,8 +75,9 @@ private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteApp) {
     }
 }
 
-private enum class KSuiteApp(val displayName: String, val color: @Composable () -> Color) {
-    Mail("Mail", { LocalMyKSuiteColors.current.mail }), Drive("kDrive", { LocalMyKSuiteColors.current.drive })
+private enum class KSuiteAppWithQuotas(val displayName: String, val color: @Composable () -> Color) {
+    Mail("Mail", { LocalMyKSuiteColors.current.mail }),
+    Drive("kDrive", { LocalMyKSuiteColors.current.drive }),
 }
 
 @Preview(name = "(1) Light")

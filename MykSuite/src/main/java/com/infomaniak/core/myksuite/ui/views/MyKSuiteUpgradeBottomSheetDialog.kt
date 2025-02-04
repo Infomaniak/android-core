@@ -28,7 +28,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeBottomSheet
-import com.infomaniak.core.myksuite.ui.screens.components.MyKSuiteButtonType
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
@@ -40,9 +39,8 @@ class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 MyKSuiteUpgradeBottomSheet(
-                    style = MyKSuiteButtonType.Mail,
                     onDismissRequest = this@MyKSuiteUpgradeBottomSheetDialog.findNavController()::popBackStack,
-                    customFeatures = { navigationArgs.upgradeFeatures.toList() }
+                    app = navigationArgs.kSuiteApp,
                 )
             }
         }
