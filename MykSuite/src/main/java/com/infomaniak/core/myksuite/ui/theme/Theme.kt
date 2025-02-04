@@ -26,9 +26,7 @@ import androidx.compose.ui.graphics.Color
 internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = staticCompositionLocalOf { MyKSuiteColors() }
 
 @Composable
-internal fun MyKSuiteTheme(
-    content: @Composable () -> Unit,
-) {
+internal fun MyKSuiteTheme(content: @Composable () -> Unit) {
     val isDarkTheme = isSystemInDarkTheme()
     val customColors = if (isDarkTheme) MyKSuiteDarkColors else MyKSuiteLightColors
 

@@ -20,7 +20,6 @@ package com.infomaniak.core.myksuite.ui.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
@@ -29,9 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.core.myksuite.R
-import com.infomaniak.core.myksuite.ui.screens.components.ButtonType
 import com.infomaniak.core.myksuite.ui.screens.components.MyKSuiteButtonColors
+import com.infomaniak.core.myksuite.ui.screens.components.MyKSuiteButtonType
 import com.infomaniak.core.myksuite.ui.theme.Dimens
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
@@ -64,14 +62,14 @@ private fun Preview() {
             Column(verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
                 MyKSuitePrimaryButton(
                     text = "Lorem",
-                    shape = ButtonType.Mail.shape,
-                    colors = ButtonType.Mail.colors,
+                    shape = MyKSuiteButtonType.Mail.shape,
+                    colors = MyKSuiteButtonType.Mail.colors,
                     onClick = {},
                 )
                 MyKSuitePrimaryButton(
                     text = "Close",
-                    shape = ButtonType.Drive.shape,
-                    colors = ButtonType.Drive.colors,
+                    shape = MyKSuiteButtonType.Drive.shape,
+                    colors = MyKSuiteButtonType.Drive.colors,
                     onClick = {},
                 )
             }

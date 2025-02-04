@@ -38,7 +38,7 @@ import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.theme.*
 
 @Composable
-fun ExpendableActionItem(
+internal fun ExpendableActionItem(
     @DrawableRes iconRes: Int,
     @StringRes textRes: Int,
     expendedView: (@Composable () -> Unit)? = null,

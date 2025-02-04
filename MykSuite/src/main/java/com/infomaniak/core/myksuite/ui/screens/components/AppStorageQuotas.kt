@@ -36,7 +36,7 @@ import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
-fun AppStorageQuotas(modifier: Modifier) {
+internal fun AppStorageQuotas(modifier: Modifier) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
         KSuiteApp.entries.forEach { AppStorageQuota(app = it) }
     }

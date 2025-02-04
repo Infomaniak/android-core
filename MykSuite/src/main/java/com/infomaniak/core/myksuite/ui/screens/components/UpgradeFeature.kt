@@ -33,7 +33,7 @@ import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures
 import com.infomaniak.core.myksuite.ui.theme.*
 
 @Composable
-fun ColumnScope.UpgradeFeature(customFeature: MyKSuiteUpgradeFeatures, modifier: Modifier = Modifier) {
+internal fun ColumnScope.UpgradeFeature(customFeature: MyKSuiteUpgradeFeatures, modifier: Modifier = Modifier) {
     val localColors = LocalMyKSuiteColors.current
     Row(
         modifier = modifier
