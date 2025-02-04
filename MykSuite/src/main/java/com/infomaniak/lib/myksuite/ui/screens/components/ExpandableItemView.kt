@@ -51,7 +51,7 @@ fun ExpendableActionItem(
     Column {
         Row(
             modifier = Modifier
-                .height(40.dp)
+                .heightIn(40.dp)
                 .fillMaxWidth()
                 .run {
                     expendedView?.let {
