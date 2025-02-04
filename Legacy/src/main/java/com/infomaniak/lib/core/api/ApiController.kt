@@ -258,7 +258,7 @@ object ApiController {
     }
 
     class NetworkException : Exception()
-    class ServerErrorException(val bodyResponse: String) : Exception()
+    class ServerErrorException(val bodyResponse: String) : Exception(bodyResponse)
 
     enum class ApiMethod {
         GET, PUT, POST, DELETE, PATCH
