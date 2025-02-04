@@ -28,19 +28,16 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.infomaniak.lib.myksuite.R
+import com.infomaniak.lib.myksuite.ui.components.myKSuiteGradient
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
@@ -50,7 +47,11 @@ fun UserAvatar(avatarUri: String) {
     val context = LocalContext.current
     var shouldDisplayPreview by rememberSaveable(avatarUri) { mutableStateOf(true) }
 
-    Box(Modifier.clip(CircleShape)) {
+    Box(
+        Modifier
+            .border(border = myKSuiteGradient(), shape = CircleShape)
+            .clip(CircleShape)
+    ) {
         if (shouldDisplayPreview) {
             val imageRequest = remember(avatarUri) {
                 ImageRequest.Builder(context)
@@ -75,21 +76,7 @@ fun UserAvatar(avatarUri: String) {
 @Composable
 private fun DefaultAvatar() {
     Icon(
-        modifier = Modifier
-            .size(Dimens.iconSize)
-            .border(
-                width = 1.dp,
-                brush = Brush.linearGradient(
-                    0.0f to Color(0xFF1DDDFD),
-                    0.1f to Color(0xFF337CFF),
-                    0.3f to Color(0xFFA055FC),
-                    0.4f to Color(0xFFF34BBB),
-                    0.6f to Color(0xFFFD8C3D),
-                    start = Offset(0.0f, 10.0f),
-                    end = Offset(0.0f, 90.0f),
-                ),
-                shape = CircleShape,
-            ),
+        modifier = Modifier.size(Dimens.iconSize),
         imageVector = ImageVector.vectorResource(R.drawable.ic_person),
         contentDescription = null,
         tint = MyKSuiteTheme.colors.iconColor,

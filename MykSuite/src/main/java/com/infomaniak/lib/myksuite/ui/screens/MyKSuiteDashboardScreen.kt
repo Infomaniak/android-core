@@ -25,7 +25,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -38,6 +37,7 @@ import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.components.MyKSuiteChip
 import com.infomaniak.lib.myksuite.ui.components.MyKSuitePrimaryButton
 import com.infomaniak.lib.myksuite.ui.components.WeightOneSpacer
+import com.infomaniak.lib.myksuite.ui.components.myKSuiteGradient
 import com.infomaniak.lib.myksuite.ui.screens.components.*
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.LocalMyKSuiteColors
@@ -73,7 +73,7 @@ fun MyKSuiteDashboardScreen(
                 val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
                 SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
                 // TODO: Add this line when we'll have In-app payments
-                MyKSuitePlusPromotionCard(paddedModifier) {}
+                // MyKSuitePlusPromotionCard(paddedModifier) {}
             }
         }
     }
@@ -163,7 +163,7 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
         modifier = modifier,
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
-        border = gradientBorder(),
+        border = myKSuiteGradient(),
     ) {
         Box(Modifier.padding(Margin.Medium)) {
             Column(verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
@@ -211,17 +211,6 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
         }
     }
 }
-
-private fun gradientBorder() = BorderStroke(
-    width = 1.dp,
-    brush = Brush.linearGradient(
-        0.0f to Color(0xFF1DDDFD),
-        0.3f to Color(0xFF337CFF),
-        0.5f to Color(0xFFA055FC),
-        0.7f to Color(0xFFF34BBB),
-        1.0f to Color(0xFFFD8C3D),
-    ),
-)
 
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
