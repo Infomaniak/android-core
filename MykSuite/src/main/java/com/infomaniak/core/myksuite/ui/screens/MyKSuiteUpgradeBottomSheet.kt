@@ -18,6 +18,7 @@
 package com.infomaniak.core.myksuite.ui.screens
 
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -40,29 +41,25 @@ import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
+import kotlinx.parcelize.Parcelize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyKSuiteUpgradeBottomSheet(
     modifier: Modifier = Modifier,
-    style: MyKSuiteButtonType,
+    app: KSuiteApp,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismissRequest: () -> Unit,
-    customFeatures: (() -> List<MyKSuiteUpgradeFeatures>)?,
 ) {
     MyKSuiteTheme {
         ModalBottomSheet(onDismissRequest, modifier, sheetState) {
-            UpgradeBottomSheetContent(customFeatures, style, onDismissRequest)
+            UpgradeBottomSheetContent(app, onDismissRequest)
         }
     }
 }
 
 @Composable
-private fun UpgradeBottomSheetContent(
-    customFeatures: (() -> List<MyKSuiteUpgradeFeatures>)?,
-    style: MyKSuiteButtonType,
-    onButtonClicked: () -> Unit,
-) {
+private fun UpgradeBottomSheetContent(app: KSuiteApp, onButtonClicked: () -> Unit) {
     val localColors = LocalMyKSuiteColors.current
 
     Column(
@@ -94,7 +91,8 @@ private fun UpgradeBottomSheetContent(
             color = localColors.secondaryTextColor,
         )
         Spacer(Modifier.height(Margin.Medium))
-        UpgradeFeatures(customFeatures, paddedModifier)
+        UpgradeFeatures(app, paddedModifier)
+        Spacer(Modifier.height(Margin.Large))
         Text(
             modifier = paddedModifier,
             text = stringResource(R.string.myKSuiteUpgradeDetails),
@@ -105,8 +103,8 @@ private fun UpgradeBottomSheetContent(
         MyKSuitePrimaryButton(
             modifier = paddedModifier.fillMaxWidth(),
             text = stringResource(R.string.buttonClose),
-            colors = style.colors,
-            shape = style.shape,
+            colors = app.buttonStyle.colors,
+            shape = app.buttonStyle.shape,
             onClick = onButtonClicked,
         )
         Spacer(Modifier.height(Margin.Large))
@@ -114,15 +112,27 @@ private fun UpgradeBottomSheetContent(
 }
 
 @Composable
-private fun ColumnScope.UpgradeFeatures(
-    customFeatures: (() -> List<MyKSuiteUpgradeFeatures>)?,
-    modifier: Modifier,
-) {
-    customFeatures?.let {
-        it().forEach { UpgradeFeature(it, modifier) }
-        UpgradeFeature(MyKSuiteUpgradeFeatures.MoreFeatures, modifier)
-        Spacer(Modifier.height(Margin.Large))
-    }
+private fun ColumnScope.UpgradeFeatures(app: KSuiteApp, modifier: Modifier) {
+    app.features.forEach { UpgradeFeature(it, modifier) }
+    UpgradeFeature(MyKSuiteUpgradeFeatures.MyKSuiteMoreFeatures(), modifier)
+}
+
+@Parcelize
+enum class KSuiteApp(val features: List<MyKSuiteUpgradeFeatures>, val buttonStyle: MyKSuiteButtonType): Parcelable {
+    Mail(
+        features = listOf(
+            MyKSuiteUpgradeFeatures.MyKSuiteMailUnlimitedFeature(),
+            MyKSuiteUpgradeFeatures.MyKSuiteMailOtherFeature(),
+        ),
+        buttonStyle = MyKSuiteButtonType.Mail,
+    ),
+    Drive(
+        features = listOf(
+            MyKSuiteUpgradeFeatures.MyKSuiteDriveStorageFeature(),
+            MyKSuiteUpgradeFeatures.MyKSuiteDriveDropboxFeature(),
+        ),
+        buttonStyle = MyKSuiteButtonType.Drive,
+    ),
 }
 
 @Preview(name = "(1) Light")
@@ -131,13 +141,7 @@ private fun ColumnScope.UpgradeFeatures(
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            UpgradeBottomSheetContent(
-                customFeatures = {
-                    listOf(MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift))
-                },
-                style = MyKSuiteButtonType.Mail,
-                onButtonClicked = {}
-            )
+            UpgradeBottomSheetContent(app = KSuiteApp.Mail, onButtonClicked = {})
         }
     }
 }
