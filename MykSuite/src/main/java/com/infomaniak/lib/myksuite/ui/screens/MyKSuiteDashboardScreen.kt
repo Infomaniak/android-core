@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,11 +55,14 @@ fun MyKSuiteDashboardScreen(
 ) {
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
         topBar = { TopAppBar(onClose) },
         containerColor = MyKSuiteTheme.colors.onDriveButton,
     ) { paddingValues ->
-        Box(Modifier.verticalScroll(rememberScrollState())) {
+        Box(
+            Modifier
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState()),
+        ) {
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -69,12 +71,11 @@ fun MyKSuiteDashboardScreen(
                 imageVector = ImageVector.vectorResource(R.drawable.illu_dashboard_background),
                 contentDescription = null,
             )
-            Column(Modifier.padding(paddingValues)) {
+            Column(Modifier.padding(paddingValues), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
                 val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
                 SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
-                Spacer(Modifier.height(Margin.Large))
                 // TODO: Add this line when we'll have In-app payments
-                //  MyKSuitePlusPromotionCard(paddedModifier) {}
+                // MyKSuitePlusPromotionCard(paddedModifier) {}
             }
         }
     }
@@ -84,19 +85,15 @@ fun MyKSuiteDashboardScreen(
 @Composable
 private fun TopAppBar(onClose: () -> Unit) {
     val localColors = LocalMyKSuiteColors.current
-    TopAppBar(
+    CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = localColors.topAppBarBackground,
             titleContentColor = localColors.primaryTextColor,
             navigationIconContentColor = localColors.primaryTextColor,
         ),
         navigationIcon = {
-            IconButton(
-                modifier = Modifier.size(Dimens.iconButtonSize),
-                onClick = onClose,
-            ) {
+            IconButton(onClick = onClose) {
                 Icon(
-                    modifier = Modifier.size(Dimens.iconSize),
                     imageVector = ImageVector.vectorResource(R.drawable.ic_cross_thick),
                     contentDescription = stringResource(R.string.buttonClose),
                 )
@@ -104,12 +101,8 @@ private fun TopAppBar(onClose: () -> Unit) {
         },
         title = {
             Text(
-                modifier = Modifier
-                    .padding(end = Dimens.iconButtonSize)
-                    .fillMaxWidth(),
                 text = stringResource(R.string.myKSuiteDashboardTitle),
                 style = MyKSuiteTheme.typography.h2,
-                textAlign = TextAlign.Center,
             )
         }
     )
@@ -169,15 +162,13 @@ private fun PaddedDivider(modifier: Modifier) {
 @Composable
 private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
     Card(
-        modifier = modifier
-            .padding(vertical = Margin.Large)
-            .fillMaxSize(),
+        modifier = modifier,
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
         border = gradientBorder(),
     ) {
         Box(Modifier.padding(Margin.Medium)) {
-            Column {
+            Column(verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         modifier = Modifier.width(88.dp),
@@ -198,13 +189,11 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                             .padding(horizontal = Margin.Mini, vertical = Margin.Micro),
                     )
                 }
-                Spacer(Modifier.height(Margin.Medium))
                 Text(
                     text = stringResource(R.string.myKSuiteDashboardFreeTrialDescription),
                     style = MyKSuiteTheme.typography.bodySmallRegular,
                     color = MyKSuiteTheme.colors.primaryTextColor,
                 )
-                Spacer(Modifier.height(Margin.Medium))
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
