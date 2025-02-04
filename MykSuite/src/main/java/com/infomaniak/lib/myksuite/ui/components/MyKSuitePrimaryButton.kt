@@ -18,7 +18,6 @@
 package com.infomaniak.lib.myksuite.ui.components
 
 import android.content.res.Configuration
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.screens.components.ButtonType
@@ -39,27 +37,21 @@ import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.lib.myksuite.ui.theme.Typography
 
-
 @Composable
 internal fun MyKSuitePrimaryButton(
     modifier: Modifier = Modifier,
-    @StringRes textRes: Int,
+    text: String,
     colors: @Composable () -> MyKSuiteButtonColors,
     shape: Shape,
     onClick: () -> Unit,
 ) {
     Button(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(Dimens.buttonHeight),
+        modifier = modifier.height(Dimens.buttonHeight),
         colors = colors().buttonColors(),
         shape = shape,
         onClick = onClick,
     ) {
-        Text(
-            text = stringResource(textRes),
-            style = Typography.bodyMedium,
-        )
+        Text(text = text, style = Typography.bodyMedium)
     }
 }
 
@@ -71,13 +63,13 @@ private fun Preview() {
         Surface {
             Column(verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
                 MyKSuitePrimaryButton(
-                    textRes = R.string.myKSuiteDashboardFreeTrialButton,
+                    text = "Lorem",
                     shape = ButtonType.Mail.shape,
                     colors = ButtonType.Mail.colors,
                     onClick = {},
                 )
                 MyKSuitePrimaryButton(
-                    textRes = R.string.myKSuiteDashboardFreeTrialButton,
+                    text = "Close",
                     shape = ButtonType.Drive.shape,
                     colors = ButtonType.Drive.colors,
                     onClick = {},

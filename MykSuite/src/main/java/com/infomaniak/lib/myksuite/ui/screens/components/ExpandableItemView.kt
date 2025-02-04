@@ -53,13 +53,12 @@ fun ExpendableActionItem(
             modifier = Modifier
                 .heightIn(40.dp)
                 .fillMaxWidth()
-                .run {
-                    expendedView?.let {
-                        clickable { isExpanded = !isExpanded } // TODO add onClickLabel for accessibility
-                    } ?: this
-                }
+                .then(  // TODO add onClickLabel for accessibility
+                    if (expendedView == null) Modifier else Modifier.clickable { isExpanded = !isExpanded }
+                )
                 .padding(horizontal = Margin.Medium),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
         ) {
             Icon(
                 modifier = Modifier.size(Dimens.smallIconSize),
@@ -67,7 +66,6 @@ fun ExpendableActionItem(
                 contentDescription = null,
                 tint = MyKSuiteTheme.colors.iconColor,
             )
-            Spacer(Modifier.padding(Margin.Mini))
             Text(
                 modifier = Modifier.weight(1.0f),
                 text = stringResource(textRes),
@@ -75,7 +73,7 @@ fun ExpendableActionItem(
                 color = MyKSuiteTheme.colors.primaryTextColor,
             )
             expendedView?.let {
-                val icon = ImageVector.vectorResource(if (isExpanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down)
+                val icon = ImageVector.vectorResource(if (isExpanded) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down)
                 Icon(
                     imageVector = icon,
                     contentDescription = null, // TODO

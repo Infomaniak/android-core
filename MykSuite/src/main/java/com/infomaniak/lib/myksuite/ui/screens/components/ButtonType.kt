@@ -48,10 +48,8 @@ enum class ButtonType(val colors: @Composable () -> MyKSuiteButtonColors, val sh
     ),
 }
 
-data class MyKSuiteButtonColors(
-    val containerColor: Color = Color.Unspecified,
-    val contentColor: Color = Color.Unspecified,
-) {
+data class MyKSuiteButtonColors(val containerColor: Color, val contentColor: Color) {
+
     @Composable
     fun buttonColors(): ButtonColors = ButtonDefaults.buttonColors(
         containerColor = containerColor,

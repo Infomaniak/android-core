@@ -31,6 +31,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.lib.myksuite.ui.screens.MyKSuiteUpgradeFeatures
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
+import com.infomaniak.lib.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
@@ -46,7 +47,7 @@ fun ColumnScope.UpgradeFeature(customFeature: MyKSuiteUpgradeFeatures, modifier:
             modifier = Modifier.size(Dimens.iconSize),
             imageVector = ImageVector.vectorResource(customFeature.icon),
             contentDescription = null,
-            tint = MyKSuiteTheme.colors.iconColor,
+            tint = LocalMyKSuiteColors.current.secondaryTextColor,
         )
         Spacer(Modifier.width(Margin.Mini))
         Text(

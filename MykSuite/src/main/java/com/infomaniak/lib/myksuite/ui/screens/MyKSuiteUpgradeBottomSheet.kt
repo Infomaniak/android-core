@@ -36,7 +36,6 @@ import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.components.MyKSuitePrimaryButton
 import com.infomaniak.lib.myksuite.ui.screens.components.ButtonType
 import com.infomaniak.lib.myksuite.ui.screens.components.UpgradeFeature
-import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
@@ -100,10 +99,8 @@ private fun UpgradeBottomSheetContent(
         )
         Spacer(Modifier.height(Margin.Huge))
         MyKSuitePrimaryButton(
-            modifier = paddedModifier
-                .fillMaxWidth()
-                .height(Dimens.buttonHeight),
-            textRes = R.string.buttonClose,
+            modifier = paddedModifier.fillMaxWidth(),
+            text = stringResource(R.string.buttonClose),
             colors = style.colors,
             shape = style.shape,
             onClick = onButtonClicked,

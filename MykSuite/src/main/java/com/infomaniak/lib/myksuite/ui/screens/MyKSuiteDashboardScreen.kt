@@ -194,10 +194,8 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                 )
                 val localColors = LocalMyKSuiteColors.current
                 MyKSuitePrimaryButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(Dimens.buttonHeight),
-                    textRes = R.string.myKSuiteDashboardFreeTrialButton,
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.myKSuiteDashboardFreeTrialButton),
                     colors = {
                         MyKSuiteButtonColors(
                             containerColor = localColors.primaryButton,

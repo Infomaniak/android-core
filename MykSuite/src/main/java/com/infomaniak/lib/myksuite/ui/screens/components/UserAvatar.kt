@@ -53,7 +53,7 @@ fun UserAvatar(avatarUri: String) {
             .clip(CircleShape)
     ) {
         if (shouldDisplayPreview) {
-            val imageRequest = remember(avatarUri) {
+            val imageRequest = remember(avatarUri, context) {
                 ImageRequest.Builder(context)
                     .data(avatarUri)
                     .crossfade(true)
