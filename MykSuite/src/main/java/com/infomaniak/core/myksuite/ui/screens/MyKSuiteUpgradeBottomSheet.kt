@@ -34,16 +34,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.MyKSuitePrimaryButton
-import com.infomaniak.core.myksuite.ui.screens.components.ButtonType
+import com.infomaniak.core.myksuite.ui.screens.components.MyKSuiteButtonType
 import com.infomaniak.core.myksuite.ui.screens.components.UpgradeFeature
-import com.infomaniak.core.myksuite.ui.theme.*
+import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
+import com.infomaniak.core.myksuite.ui.theme.Margin
+import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyKSuiteUpgradeBottomSheet(
     modifier: Modifier = Modifier,
-    style: ButtonType,
+    style: MyKSuiteButtonType,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismissRequest: () -> Unit,
     customFeatures: (() -> List<MyKSuiteUpgradeFeatures>)?,
@@ -58,7 +60,7 @@ fun MyKSuiteUpgradeBottomSheet(
 @Composable
 private fun UpgradeBottomSheetContent(
     customFeatures: (() -> List<MyKSuiteUpgradeFeatures>)?,
-    style: ButtonType,
+    style: MyKSuiteButtonType,
     onButtonClicked: () -> Unit,
 ) {
     val localColors = LocalMyKSuiteColors.current
@@ -133,7 +135,7 @@ private fun Preview() {
                 customFeatures = {
                     listOf(MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift))
                 },
-                style = ButtonType.Mail,
+                style = MyKSuiteButtonType.Mail,
                 onButtonClicked = {}
             )
         }
