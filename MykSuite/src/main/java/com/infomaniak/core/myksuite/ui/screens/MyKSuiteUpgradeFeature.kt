@@ -24,9 +24,27 @@ import com.infomaniak.core.myksuite.R
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) : Parcelable {
+sealed class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) : Parcelable {
 
-    internal companion object {
-        val MoreFeatures = MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift)
-    }
+    class MyKSuiteDriveStorageFeature : MyKSuiteUpgradeFeatures(
+        title = R.string.myKSuiteUpgradeDriveLabel,
+        icon = R.drawable.ic_drive_cloud,
+    )
+
+    class MyKSuiteDriveDropboxFeature : MyKSuiteUpgradeFeatures(
+        title = R.string.myKSuiteUpgradeDropboxLabel,
+        icon = R.drawable.ic_folder_circle_filled_arrow_up,
+    )
+
+    class MyKSuiteMailUnlimitedFeature : MyKSuiteUpgradeFeatures(
+        title = R.string.myKSuiteUpgradeUnlimitedMailLabel,
+        icon = R.drawable.ic_paperplane,
+    )
+
+    class MyKSuiteMailOtherFeature : MyKSuiteUpgradeFeatures(
+        title = R.string.myKSuiteUpgradeRedirectLabel,
+        icon = R.drawable.ic_enveloppe_italic,
+    )
+
+    class MyKSuiteMoreFeatures : MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift)
 }
