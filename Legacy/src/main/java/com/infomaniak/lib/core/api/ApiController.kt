@@ -185,7 +185,7 @@ object ApiController {
                 return when {
                     response.code >= 500 -> {
                         createErrorResponse(
-                            apiError = createApiError(useKotlinxSerialization, bodyResponse, ServerErrorException()),
+                            apiError = createApiError(useKotlinxSerialization, bodyResponse, ServerErrorException(bodyResponse)),
                             translatedError = R.string.serverError,
                             buildErrorResult = buildErrorResult,
                         )
@@ -241,7 +241,10 @@ object ApiController {
 
     fun createApiError(useKotlinxSerialization: Boolean, bodyResponse: String, exception: Exception) = ApiError(
         contextJson = if (useKotlinxSerialization) bodyResponse.bodyResponseToJson() else null,
-        contextGson = if (useKotlinxSerialization) null else JsonParser.parseString(bodyResponse).asJsonObject,
+        contextGson = when {
+            useKotlinxSerialization -> null
+            else -> runCatching { JsonParser.parseString(bodyResponse).asJsonObject }.getOrDefault(null)
+        },
         exception = exception
     )
 
@@ -255,7 +258,7 @@ object ApiController {
     }
 
     class NetworkException : Exception()
-    class ServerErrorException : Exception()
+    class ServerErrorException(val bodyResponse: String) : Exception(bodyResponse)
 
     enum class ApiMethod {
         GET, PUT, POST, DELETE, PATCH
