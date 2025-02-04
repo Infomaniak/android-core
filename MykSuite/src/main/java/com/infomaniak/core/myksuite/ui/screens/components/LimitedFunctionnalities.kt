@@ -34,7 +34,7 @@ import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
-fun LimitedFunctionalities(paddedModifier: Modifier, dailySendingLimit: String) {
+internal fun LimitedFunctionalities(paddedModifier: Modifier, dailySendingLimit: String) {
     Column(
         modifier = paddedModifier.padding(top = Margin.Mini),
         verticalArrangement = Arrangement.spacedBy(Margin.Mini),
