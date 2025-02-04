@@ -57,14 +57,15 @@ private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteApp) {
             )
         }
         Spacer(Modifier.height(Margin.Mini))
+        val progressIndicatorHeight = 14.dp
         LinearProgressIndicator(
             modifier = Modifier
-                .height(14.dp)
+                .height(progressIndicatorHeight)
                 .fillMaxWidth(),
             color = app.color(),
             trackColor = MyKSuiteTheme.colors.chipBackground,
             strokeCap = StrokeCap.Round,
-            gapSize = -Margin.Mini,
+            gapSize = -progressIndicatorHeight,
             progress = { 0.5f }, // TODO: Use real values
             drawStopIndicator = {},
         )
