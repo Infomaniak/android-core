@@ -35,11 +35,8 @@ import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
 fun AppStorageQuotas(modifier: Modifier) {
-    Column(modifier = modifier) {
-        KSuiteApp.entries.forEach {
-            AppStorageQuota(app = it)
-            if (it.ordinal != KSuiteApp.entries.lastIndex) Spacer(Modifier.height(Margin.Medium))
-        }
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
+        KSuiteApp.entries.forEach { AppStorageQuota(app = it) }
     }
 }
 
