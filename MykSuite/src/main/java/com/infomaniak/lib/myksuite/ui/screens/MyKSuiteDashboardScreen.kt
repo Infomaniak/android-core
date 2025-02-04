@@ -36,11 +36,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.components.MyKSuiteChip
+import com.infomaniak.lib.myksuite.ui.components.MyKSuitePrimaryButton
 import com.infomaniak.lib.myksuite.ui.components.WeightOneSpacer
-import com.infomaniak.lib.myksuite.ui.screens.components.AppStorageQuotas
-import com.infomaniak.lib.myksuite.ui.screens.components.ExpendableActionItem
-import com.infomaniak.lib.myksuite.ui.screens.components.LimitedFunctionalities
-import com.infomaniak.lib.myksuite.ui.screens.components.UserAvatar
+import com.infomaniak.lib.myksuite.ui.screens.components.*
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.lib.myksuite.ui.theme.Margin
@@ -56,7 +54,7 @@ fun MyKSuiteDashboardScreen(
 
     Scaffold(
         topBar = { TopAppBar(onClose) },
-        containerColor = MyKSuiteTheme.colors.onDriveButton,
+        containerColor = MyKSuiteTheme.colors.onPrimaryButton,
     ) { paddingValues ->
         Box(
             Modifier
@@ -75,7 +73,7 @@ fun MyKSuiteDashboardScreen(
                 val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
                 SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
                 // TODO: Add this line when we'll have In-app payments
-                // MyKSuitePlusPromotionCard(paddedModifier) {}
+                MyKSuitePlusPromotionCard(paddedModifier) {}
             }
         }
     }
@@ -194,19 +192,21 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                     style = MyKSuiteTheme.typography.bodySmallRegular,
                     color = MyKSuiteTheme.colors.primaryTextColor,
                 )
-                Button(
+                val localColors = LocalMyKSuiteColors.current
+                MyKSuitePrimaryButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(Dimens.buttonHeight),
-                    colors = ButtonDefaults.buttonColors(containerColor = MyKSuiteTheme.colors.driveButton),
+                    textRes = R.string.myKSuiteDashboardFreeTrialButton,
+                    colors = {
+                        MyKSuiteButtonColors(
+                            containerColor = localColors.primaryButton,
+                            contentColor = localColors.onPrimaryButton,
+                        )
+                    },
                     shape = RoundedCornerShape(Dimens.largeCornerRadius),
                     onClick = onButtonClicked,
-                ) {
-                    Text(
-                        text = stringResource(R.string.myKSuiteDashboardFreeTrialButton),
-                        style = MyKSuiteTheme.typography.bodyMedium,
-                    )
-                }
+                )
             }
         }
     }
