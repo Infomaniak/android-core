@@ -33,12 +33,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.lib.myksuite.R
+import com.infomaniak.lib.myksuite.ui.components.MyKSuitePrimaryButton
 import com.infomaniak.lib.myksuite.ui.screens.components.ButtonType
 import com.infomaniak.lib.myksuite.ui.screens.components.UpgradeFeature
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.lib.myksuite.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,17 +99,15 @@ private fun UpgradeBottomSheetContent(
             color = MyKSuiteTheme.colors.secondaryTextColor,
         )
         Spacer(Modifier.height(Margin.Huge))
-
-        Button(
+        MyKSuitePrimaryButton(
             modifier = paddedModifier
                 .fillMaxWidth()
                 .height(Dimens.buttonHeight),
-            colors = style.colors().buttonColors(),
+            textRes = R.string.buttonClose,
+            colors = style.colors,
             shape = style.shape,
             onClick = onButtonClicked,
-        ) {
-            Text(text = stringResource(R.string.buttonClose), style = Typography.bodyMedium)
-        }
+        )
         Spacer(Modifier.height(Margin.Large))
     }
 }
