@@ -30,8 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures
-import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures.MyKSuiteDriveDropboxFeature
-import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures.MyKSuiteMoreFeatures
+import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures.*
 import com.infomaniak.core.myksuite.ui.theme.*
 
 @Composable
@@ -65,8 +64,9 @@ private fun Preview() {
     MyKSuiteTheme {
         Surface {
             Column {
-                UpgradeFeature(MyKSuiteDriveDropboxFeature())
-                UpgradeFeature(MyKSuiteMoreFeatures())
+                UpgradeFeature(DriveStorageFeature)
+                UpgradeFeature(DriveDropboxFeature)
+                UpgradeFeature(MoreFeatures)
             }
         }
     }
