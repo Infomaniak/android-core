@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2024-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,10 +58,10 @@ class AccessTokenUsageInterceptor(
 
             if (previousApiCall != null &&
                 currentApiCall.accessToken == previousApiCall.accessToken &&
-                currentApiCall.date < previousApiCall.date + ONE_YEAR
+                currentApiCall.date < previousApiCall.date + SIX_MONTHS
             ) {
                 Sentry.captureMessage(
-                    "Got disconnected due to non-working access token but it's not been a year yet",
+                    "Got disconnected due to non-working access token but it's not been six months yet",
                     SentryLevel.FATAL,
                 ) { scope ->
                     scope.setExtra("Last known api call date epoch", previousApiCall.date.toString())
@@ -83,6 +83,6 @@ class AccessTokenUsageInterceptor(
     data class ApiCallRecord(val accessToken: String, val date: Long, val responseCode: Int)
 
     companion object {
-        private const val ONE_YEAR = 60 * 60 * 24 * 365L // In seconds
+        private const val SIX_MONTHS = 60 * 60 * 24 * 182L // In seconds
     }
 }
