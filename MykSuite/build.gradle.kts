@@ -3,6 +3,7 @@ plugins {
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
     kotlin("plugin.parcelize")
+    kotlin("plugin.serialization") version core.versions.kotlin
     id("androidx.navigation.safeargs.kotlin")
 }
 
@@ -47,6 +48,7 @@ dependencies {
     implementation(core.androidx.core.ktx)
     implementation(core.material)
     implementation(core.navigation.fragment.ktx)
+    implementation(core.kotlinx.serialization.json)
 
     // Compose
     implementation(core.coil.compose)
