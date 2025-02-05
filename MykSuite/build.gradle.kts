@@ -21,6 +21,8 @@ android {
         minSdk = legacyMinSdk
 
         consumerProguardFiles("consumer-rules.pro")
+
+        ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }
 
     buildTypes {
