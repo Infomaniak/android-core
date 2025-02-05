@@ -19,12 +19,13 @@ package com.infomaniak.lib.myksuite.ui.components
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -33,22 +34,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.lib.myksuite.R
-import com.infomaniak.lib.myksuite.ui.theme.Dimens
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
-fun MyKSuiteChip(modifier: Modifier = Modifier, @DrawableRes imageRes: Int) {
+fun MyKSuiteChip(modifier: Modifier = Modifier, tier: MyKSuiteTier) {
     Image(
         modifier = modifier
             .background(
                 color = MyKSuiteTheme.colors.chipBackground,
-                shape = RoundedCornerShape(Dimens.largeCornerRadius),
+                shape = CircleShape,
             )
             .padding(horizontal = Margin.Mini, vertical = Margin.Micro),
-        imageVector = ImageVector.vectorResource(imageRes),
-        contentDescription = stringResource(R.string.myKSuiteName),
+        imageVector = ImageVector.vectorResource(tier.iconRes),
+        contentDescription = stringResource(tier.descriptionName),
     )
+}
+
+enum class MyKSuiteTier(@DrawableRes val iconRes: Int, @StringRes val descriptionName: Int) {
+    Free(iconRes = R.drawable.ic_logo_my_ksuite, descriptionName = R.string.myKSuiteName),
+    Plus(iconRes = R.drawable.ic_logo_my_ksuite_plus, descriptionName = R.string.myKSuitePlusName),
 }
 
 @Preview(name = "(1) Light")
@@ -58,8 +63,8 @@ private fun Preview() {
     MyKSuiteTheme {
         Surface {
             Column(verticalArrangement = Arrangement.spacedBy(Margin.Micro)) {
-                MyKSuiteChip(imageRes = R.drawable.ic_logo_my_ksuite)
-                MyKSuiteChip(imageRes = R.drawable.ic_logo_my_ksuite_plus)
+                MyKSuiteChip(tier = MyKSuiteTier.Free)
+                MyKSuiteChip(tier = MyKSuiteTier.Plus)
             }
         }
     }
