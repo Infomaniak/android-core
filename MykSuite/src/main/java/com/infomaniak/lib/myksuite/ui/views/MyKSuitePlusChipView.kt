@@ -19,9 +19,10 @@ package com.infomaniak.lib.myksuite.ui.views
 
 import android.content.Context
 import android.util.AttributeSet
+import com.infomaniak.lib.myksuite.ui.components.MyKSuiteTier
 
 class MyKSuitePlusChipView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : BaseMyKSuiteChipView(context, attrs, defStyleAttr, isMyKSuitePlus = true)
+) : BaseMyKSuiteChipView(context, attrs, defStyleAttr, tier = MyKSuiteTier.Plus)
