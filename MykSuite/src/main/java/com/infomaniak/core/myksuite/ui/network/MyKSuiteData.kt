@@ -17,22 +17,35 @@
  */
 package com.infomaniak.core.myksuite.ui.network
 
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Entity
 data class MyKSuiteData(
-    val id: Int,
+    @PrimaryKey val id: Int,
     val status: String,
     @SerialName("pack_id")
+    @ColumnInfo("pack_id")
     val kSuitePackId: Int,
     @SerialName("pack")
+    @ColumnInfo("k_suite_pack_")
+    @Embedded("k_suite_pack_")
     val kSuitePack: KSuitePack? = null,
     @SerialName("is_free")
+    @ColumnInfo("is_free")
     val isFree: Boolean,
+    @Embedded("drive_")
     val drive: KSuiteDrive? = null,
     @SerialName("free_mail")
+    @ColumnInfo("free_mail")
+    @Embedded("free_mail_")
     val freeMail: KSuiteFreeMail? = null,
     @SerialName("has_auto_renew")
+    @ColumnInfo("has_auto_renew")
     val hasAutoRenew: Boolean,
 )
