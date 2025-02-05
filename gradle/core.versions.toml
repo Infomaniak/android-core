@@ -7,6 +7,7 @@ integrity = "1.4.0"
 junit = "4.13.2"
 junitAndroidx = "1.2.1"
 kotlin = "2.0.21"
+ksp = "2.0.21-1.0.28"
 kotlinxCoroutines = "1.9.0"
 kotlinxSerializationJson = "1.7.3"
 ktor = "3.0.1"
@@ -15,6 +16,7 @@ material = "1.12.0"
 matomo = "4.1.4"
 navigation = "2.8.5"
 playReview = "2.0.2"
+room = "2.6.1"
 sentryAndroid = "7.15.0"
 splitties = "3.0.0"
 
@@ -46,6 +48,9 @@ navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fr
 navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 sentry-android = { module = "io.sentry:sentry-android", version.ref = "sentryAndroid" }
 splitties-appctx = { module = "com.louiscad.splitties:splitties-appctx", version.ref = "splitties" }
 splitties-collections = { module = "com.louiscad.splitties:splitties-collections", version.ref = "splitties" }
@@ -61,3 +66,4 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
