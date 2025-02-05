@@ -15,18 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.myksuite.ui.network
+package com.infomaniak.core.myksuite.ui.data
 
 import androidx.room.ColumnInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class KSuiteDrive(
+data class KSuiteMail(
     val id: Int,
-    val name: String,
-    val size: Long,
+    val email: String,
+    @SerialName("daily_limit_sent")
+    @ColumnInfo("daily_limit_sent")
+    val dailyLimitSent: Int,
+    @SerialName("storage_size_limit")
+    @ColumnInfo("storage_size_limit")
+    val storageSizeLimit: Long,
     @SerialName("used_size")
     @ColumnInfo("used_size")
     val usedSize: Long,
 )
+
