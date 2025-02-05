@@ -18,44 +18,46 @@
 package com.infomaniak.lib.myksuite.ui.screens.components
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.lib.myksuite.ui.screens.MyKSuiteUpgradeFeatures
-import com.infomaniak.lib.myksuite.ui.theme.Dimens
-import com.infomaniak.lib.myksuite.ui.theme.LocalMyKSuiteColors
+import com.infomaniak.lib.myksuite.R
 import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
-fun ColumnScope.UpgradeFeature(customFeature: MyKSuiteUpgradeFeatures, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .padding(vertical = Margin.Mini)
-            .align(Alignment.Start),
-        verticalAlignment = Alignment.CenterVertically,
+fun LimitedFunctionalities(paddedModifier: Modifier, dailySendingLimit: () -> String) {
+    Column(
+        modifier = paddedModifier.padding(top = Margin.Mini),
+        verticalArrangement = Arrangement.spacedBy(Margin.Mini),
     ) {
-        Icon(
-            modifier = Modifier.size(Dimens.iconSize),
-            imageVector = ImageVector.vectorResource(customFeature.icon),
-            contentDescription = null,
-            tint = LocalMyKSuiteColors.current.secondaryTextColor,
-        )
-        Spacer(Modifier.width(Margin.Mini))
-        Text(
-            text = stringResource(customFeature.title),
-            style = MyKSuiteTheme.typography.bodyRegular,
-            color = MyKSuiteTheme.colors.secondaryTextColor,
-        )
+        LimitedFunctionalityLabel(textRes = R.string.myKSuiteDashboardFunctionalityMailAndDrive)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            LimitedFunctionalityLabel(modifier = Modifier.weight(1.0f), R.string.myKSuiteDashboardFunctionalityLimit)
+            Text(
+                modifier = Modifier.padding(start = Margin.Mini),
+                text = dailySendingLimit(),
+                style = MyKSuiteTheme.typography.bodySmallMedium,
+            )
+        }
+        LimitedFunctionalityLabel(textRes = R.string.myKSuiteDashboardFunctionalityCustomReminders)
     }
+}
+
+@Composable
+private fun LimitedFunctionalityLabel(modifier: Modifier = Modifier, @StringRes textRes: Int) {
+    Text(
+        modifier = modifier.fillMaxWidth(0.9f),
+        text = stringResource(textRes),
+        style = MyKSuiteTheme.typography.bodySmallRegular,
+        color = MyKSuiteTheme.colors.secondaryTextColor,
+    )
 }
 
 @Preview(name = "(1) Light")
@@ -64,10 +66,7 @@ fun ColumnScope.UpgradeFeature(customFeature: MyKSuiteUpgradeFeatures, modifier:
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            Column {
-                UpgradeFeature(MyKSuiteUpgradeFeatures.MoreFeatures)
-                UpgradeFeature(MyKSuiteUpgradeFeatures.MoreFeatures)
-            }
+            LimitedFunctionalities(Modifier.padding(horizontal = Margin.Medium)) { "500" }
         }
     }
 }

@@ -18,50 +18,40 @@
 package com.infomaniak.lib.myksuite.ui.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.lib.myksuite.R
+import com.infomaniak.lib.myksuite.ui.screens.components.ButtonType
+import com.infomaniak.lib.myksuite.ui.screens.components.MyKSuiteButtonColors
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
+import com.infomaniak.lib.myksuite.ui.theme.Margin
 import com.infomaniak.lib.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.lib.myksuite.ui.theme.Typography
 
 @Composable
-fun MyKSuitePlusChip(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
-    ThemedChip(
-        modifier = modifier,
-        label = { Image(ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite_plus), contentDescription = "My kSuite +") },
+internal fun MyKSuitePrimaryButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    colors: @Composable () -> MyKSuiteButtonColors,
+    shape: Shape,
+    onClick: () -> Unit,
+) {
+    Button(
+        modifier = modifier.height(Dimens.buttonHeight),
+        colors = colors().buttonColors(),
+        shape = shape,
         onClick = onClick,
-    )
-}
-
-@Composable
-fun MyKSuiteChip(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
-    ThemedChip(
-        modifier = modifier,
-        label = { Image(ImageVector.vectorResource(R.drawable.ic_logo_my_ksuite), contentDescription = "My kSuite") },
-        onClick = onClick,
-    )
-}
-
-@Composable
-private fun ThemedChip(modifier: Modifier = Modifier, label: @Composable () -> Unit, onClick: () -> Unit = {}) {
-    MyKSuiteTheme {
-        SuggestionChip(
-            modifier = modifier,
-            onClick = onClick,
-            label = label,
-            border = null,
-            shape = RoundedCornerShape(Dimens.largeCornerRadius),
-            colors = SuggestionChipDefaults.suggestionChipColors(containerColor = MyKSuiteTheme.colors.chipBackground),
-        )
+    ) {
+        Text(text = text, style = Typography.bodyMedium)
     }
 }
 
@@ -71,9 +61,19 @@ private fun ThemedChip(modifier: Modifier = Modifier, label: @Composable () -> U
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            Column {
-                MyKSuitePlusChip {}
-                MyKSuiteChip {}
+            Column(verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
+                MyKSuitePrimaryButton(
+                    text = "Lorem",
+                    shape = ButtonType.Mail.shape,
+                    colors = ButtonType.Mail.colors,
+                    onClick = {},
+                )
+                MyKSuitePrimaryButton(
+                    text = "Close",
+                    shape = ButtonType.Drive.shape,
+                    colors = ButtonType.Drive.colors,
+                    onClick = {},
+                )
             }
         }
     }

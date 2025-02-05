@@ -31,22 +31,30 @@ private const val rabbit = 0xFFF1F1F1
 private const val infomaniak = 0xFF4CB7FF
 private const val mailButton = 0xFFEF8BA4
 private const val onMailButton = 0xFF3F0018
-
-private const val primaryContentColor = rabbit
+private const val mail = 0xFFF2357A
+private const val drive = 0xFF5C89F7
 
 internal val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = Color(rabbit), // Used for bottom sheet drag handle
     surfaceContainerLow = Color(bat), // Used for bottom sheet backgrounds
+    surfaceContainerHighest = Color(bat), // Used for Card backgrounds
+    outlineVariant = Color(elephant), // Used for divider's color
 )
 
 internal val MyKSuiteDarkColors = MyKSuiteColors(
-    primaryTextColor = Color(primaryContentColor),
+    primaryTextColor = Color(rabbit),
     secondaryTextColor = Color(shark),
     tertiaryTextColor = Color(elephant),
+    background = Color(bat),
+    secondaryBackground = Color(orca),
+    topAppBarBackground = Color(orca),
     chipBackground = Color(orca),
-    driveButton = Color(infomaniak),
-    onDriveButton = Color(bat),
+    drive = Color(drive),
+    mail = Color(mail),
+    primaryButton = Color(infomaniak),
+    onPrimaryButton = Color(bat),
     mailButton = Color(mailButton),
     onMailButton = Color(onMailButton),
-    iconColor = Color(primaryContentColor),
+    iconColor = Color(rabbit),
+    cardBorderColor = Color(elephant),
 )

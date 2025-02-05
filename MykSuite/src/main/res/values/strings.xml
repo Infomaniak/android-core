@@ -16,7 +16,21 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <string name="androidMyKSuiteDashboardSubscriptionButton">Manage my offer</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">To manage or cancel your subscription, log on to the kSuite web interface.</string>
     <string name="buttonClose">Close</string>
+    <string name="myKSuiteDashboardFreeMailLabel">A free mail address for life</string>
+    <string name="myKSuiteDashboardFreeTrialButton">Start your free trial</string>
+    <string name="myKSuiteDashboardFreeTrialDescription">Get more functionality and storage with my kSuite+</string>
+    <string name="myKSuiteDashboardFreeTrialTitle">30 days free</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Customize unavailable times for reminders and scheduled mailings</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Limited daily shipments</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Storage for Mail and kDrive</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Limited functionality</string>
+    <string name="myKSuiteDashboardPaymentMethod">Method of payment</string>
+    <string name="myKSuiteDashboardTitle">My subscription</string>
+    <string name="myKSuiteDashboardTrialPeriod">Trial period</string>
+    <string name="myKSuiteDashboardUntil">Until %s</string>
     <string name="myKSuiteUpgradeDescription">More space, more possibilities and more flexibility to do what you love.</string>
     <string name="myKSuiteUpgradeDetails">To benefit from my kSuite+, modify your offer from your web interface.</string>
     <string name="myKSuiteUpgradeLabel">And even more!</string>

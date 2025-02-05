@@ -40,25 +40,19 @@ enum class ButtonType(val colors: @Composable () -> MyKSuiteButtonColors, val sh
     Drive(
         colors = {
             MyKSuiteButtonColors(
-                containerColor = MyKSuiteTheme.colors.driveButton,
-                contentColor = MyKSuiteTheme.colors.onDriveButton,
+                containerColor = MyKSuiteTheme.colors.primaryButton,
+                contentColor = MyKSuiteTheme.colors.onPrimaryButton,
             )
         },
         shape = RoundedCornerShape(10.dp),
     ),
 }
 
-data class MyKSuiteButtonColors(
-    val containerColor: Color = Color.Unspecified,
-    val contentColor: Color = Color.Unspecified,
-    val disabledContainerColor: Color = Color.Unspecified,
-    val disabledContentColor: Color = Color.Unspecified,
-) {
+data class MyKSuiteButtonColors(val containerColor: Color, val contentColor: Color) {
+
     @Composable
     fun buttonColors(): ButtonColors = ButtonDefaults.buttonColors(
         containerColor = containerColor,
         contentColor = contentColor,
-        disabledContainerColor = disabledContainerColor,
-        disabledContentColor = disabledContentColor,
     )
 }

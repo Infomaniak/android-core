@@ -16,7 +16,21 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <string name="androidMyKSuiteDashboardSubscriptionButton">Gestisci la mia offerta</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">Per gestire o annullare l\'abbonamento, accedere all\'interfaccia web di kSuite.</string>
     <string name="buttonClose">Chiudere</string>
+    <string name="myKSuiteDashboardFreeMailLabel">Un indirizzo e-mail gratuito a vita</string>
+    <string name="myKSuiteDashboardFreeTrialButton">Inizia la prova gratuita</string>
+    <string name="myKSuiteDashboardFreeTrialDescription">Ottieni più funzionalità e spazio di archiviazione con la mia kSuite+</string>
+    <string name="myKSuiteDashboardFreeTrialTitle">30 giorni gratis</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Personalizzare gli orari di indisponibilità per i promemoria e gli invii programmati</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Spedizioni giornaliere limitate</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Archiviazione per posta e kDrive</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Funzionalità limitata</string>
+    <string name="myKSuiteDashboardPaymentMethod">Metodo di pagamento</string>
+    <string name="myKSuiteDashboardTitle">Il mio abbonamento</string>
+    <string name="myKSuiteDashboardTrialPeriod">Periodo di prova</string>
+    <string name="myKSuiteDashboardUntil">Fino a %s</string>
     <string name="myKSuiteUpgradeDescription">Più spazio, più possibilità e più flessibilità per fare ciò che amate.</string>
     <string name="myKSuiteUpgradeDetails">Per beneficiare della mia kSuite+, modificate la vostra offerta dalla vostra interfaccia web.</string>
     <string name="myKSuiteUpgradeLabel">E anche di più!</string>

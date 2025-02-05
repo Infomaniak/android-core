@@ -15,20 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.myksuite.ui.theme
+package com.infomaniak.lib.myksuite.ui.components
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-object Dimens {
-
-    /** 56 dp */
-    val buttonHeight = 56.dp
-    /** 16 dp */
-    val smallIconSize = 16.dp
-    /** 24 dp */
-    val iconSize = 24.dp
-    /** 16 dp */
-    val largeCornerRadius = 16.dp
-    /** 5 dp */
-    val cardElevation = 5.dp
-}
+internal fun myKSuiteGradient() = BorderStroke(
+    width = 1.dp,
+    brush = Brush.linearGradient(
+        0.0f to Color(0xFF1DDDFD),
+        0.3f to Color(0xFF337CFF),
+        0.5f to Color(0xFFA055FC),
+        0.7f to Color(0xFFF34BBB),
+        1.0f to Color(0xFFFD8C3D),
+        start = Offset.Zero,
+        end = Offset(Float.POSITIVE_INFINITY, 0.0f),
+    ),
+)
