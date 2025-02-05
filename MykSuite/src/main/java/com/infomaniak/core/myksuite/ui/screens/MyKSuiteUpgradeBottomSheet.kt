@@ -114,23 +114,17 @@ private fun UpgradeBottomSheetContent(app: KSuiteApp, onButtonClicked: () -> Uni
 @Composable
 private fun ColumnScope.UpgradeFeatures(app: KSuiteApp, modifier: Modifier) {
     app.features.forEach { UpgradeFeature(it, modifier) }
-    UpgradeFeature(MyKSuiteUpgradeFeatures.MyKSuiteMoreFeatures(), modifier)
+    UpgradeFeature(MyKSuiteUpgradeFeatures.MoreFeatures, modifier)
 }
 
 @Parcelize
-enum class KSuiteApp(val features: List<MyKSuiteUpgradeFeatures>, val buttonStyle: MyKSuiteButtonType): Parcelable {
+enum class KSuiteApp(val features: List<MyKSuiteUpgradeFeatures>, val buttonStyle: MyKSuiteButtonType) : Parcelable {
     Mail(
-        features = listOf(
-            MyKSuiteUpgradeFeatures.MyKSuiteMailUnlimitedFeature(),
-            MyKSuiteUpgradeFeatures.MyKSuiteMailOtherFeature(),
-        ),
+        features = listOf(MyKSuiteUpgradeFeatures.MailUnlimitedFeature, MyKSuiteUpgradeFeatures.MailOtherFeature),
         buttonStyle = MyKSuiteButtonType.Mail,
     ),
     Drive(
-        features = listOf(
-            MyKSuiteUpgradeFeatures.MyKSuiteDriveStorageFeature(),
-            MyKSuiteUpgradeFeatures.MyKSuiteDriveDropboxFeature(),
-        ),
+        features = listOf(MyKSuiteUpgradeFeatures.DriveStorageFeature, MyKSuiteUpgradeFeatures.DriveDropboxFeature),
         buttonStyle = MyKSuiteButtonType.Drive,
     ),
 }

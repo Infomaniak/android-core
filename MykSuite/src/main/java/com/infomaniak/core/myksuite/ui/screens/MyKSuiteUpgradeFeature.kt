@@ -17,34 +17,31 @@
  */
 package com.infomaniak.core.myksuite.ui.screens
 
-import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.infomaniak.core.myksuite.R
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-sealed class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) : Parcelable {
+enum class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) {
 
-    class MyKSuiteDriveStorageFeature : MyKSuiteUpgradeFeatures(
+    DriveStorageFeature(
         title = R.string.myKSuiteUpgradeDriveLabel,
         icon = R.drawable.ic_drive_cloud,
-    )
+    ),
 
-    class MyKSuiteDriveDropboxFeature : MyKSuiteUpgradeFeatures(
+    DriveDropboxFeature(
         title = R.string.myKSuiteUpgradeDropboxLabel,
         icon = R.drawable.ic_folder_circle_filled_arrow_up,
-    )
+    ),
 
-    class MyKSuiteMailUnlimitedFeature : MyKSuiteUpgradeFeatures(
+    MailUnlimitedFeature(
         title = R.string.myKSuiteUpgradeUnlimitedMailLabel,
         icon = R.drawable.ic_paperplane,
-    )
+    ),
 
-    class MyKSuiteMailOtherFeature : MyKSuiteUpgradeFeatures(
+    MailOtherFeature(
         title = R.string.myKSuiteUpgradeRedirectLabel,
         icon = R.drawable.ic_enveloppe_italic,
-    )
+    ),
 
-    class MyKSuiteMoreFeatures : MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift)
+    MoreFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift),
 }
