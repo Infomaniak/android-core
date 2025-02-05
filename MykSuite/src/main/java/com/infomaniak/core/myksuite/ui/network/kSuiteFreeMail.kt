@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.myksuite.ui.network
 
+import androidx.room.ColumnInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,10 +26,13 @@ data class KSuiteFreeMail(
     val id: Int,
     val email: String,
     @SerialName("daily_limit_sent")
+    @ColumnInfo("daily_limit_sent")
     val dailyLimitSent: Int,
     @SerialName("storage_size_limit")
+    @ColumnInfo("storage_size_limit")
     val storageSizeLimit: Long,
     @SerialName("used_size")
+    @ColumnInfo("used_size")
     val usedSize: Long,
 )
 

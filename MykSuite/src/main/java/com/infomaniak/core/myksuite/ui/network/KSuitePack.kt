@@ -17,19 +17,24 @@
  */
 package com.infomaniak.core.myksuite.ui.network
 
+import androidx.room.ColumnInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class KSuitePack(
     val id: Int,
-    val name: String,
+    val name: String = "",
     @SerialName("drive_storage")
-    val driveStorage: Long,
+    @ColumnInfo("drive_storage")
+    val driveStorage: Long = 0,
     @SerialName("mail_storage")
-    val mailStorage: Long,
+    @ColumnInfo("mail_storage")
+    val mailStorage: Long = 0,
     @SerialName("mail_daily_limit_send")
-    val mailDailyLimitSend: Int,
+    @ColumnInfo("mail_daily_limit_send")
+    val mailDailyLimitSend: Int = 0,
     @SerialName("is_max_storage_offer")
-    val isMaxStorageOffer: Boolean,
+    @ColumnInfo("is_max_storage_offer")
+    val isMaxStorageOffer: Boolean = false,
 )
