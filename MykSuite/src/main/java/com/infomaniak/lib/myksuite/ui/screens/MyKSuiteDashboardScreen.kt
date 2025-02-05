@@ -34,9 +34,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.lib.myksuite.R
-import com.infomaniak.lib.myksuite.ui.components.MyKSuiteChip
+import com.infomaniak.lib.myksuite.ui.components.*
 import com.infomaniak.lib.myksuite.ui.components.MyKSuitePrimaryButton
-import com.infomaniak.lib.myksuite.ui.components.WeightOneSpacer
 import com.infomaniak.lib.myksuite.ui.components.myKSuiteGradient
 import com.infomaniak.lib.myksuite.ui.screens.components.*
 import com.infomaniak.lib.myksuite.ui.theme.Dimens
@@ -135,7 +134,7 @@ private fun SubscriptionInfoCard(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            MyKSuiteChip(imageRes = R.drawable.ic_logo_my_ksuite)
+            MyKSuiteChip(tier = MyKSuiteTier.Free)
         }
         PaddedDivider(paddedModifier)
         AppStorageQuotas(paddedModifier)
