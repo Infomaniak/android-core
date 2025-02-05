@@ -21,12 +21,13 @@ import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.utils.ApiTokenExt.isInfinite
 import io.sentry.Sentry
 import io.sentry.SentryLevel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.net.ssl.HttpsURLConnection
+
+private var lastReportEpoch: Long? = null
 
 class AccessTokenUsageInterceptor(
     private val tokenInterceptorListener: TokenInterceptorListener,
@@ -38,39 +39,48 @@ class AccessTokenUsageInterceptor(
         val request = chain.request()
         val response = chain.proceed(request)
 
-        runBlocking(Dispatchers.IO) {
+        val apiToken = runBlocking {
             // Only log api calls if we have an ApiToken
-            val apiToken = tokenInterceptorListener.getApiToken() ?: return@runBlocking
+            tokenInterceptorListener.getApiToken()
+        } ?: return response
 
-            // Only log api calls if we're not using refresh tokens
-            if (!apiToken.isInfinite) return@runBlocking
+        // Only log api calls if we're not using refresh tokens
+        if (!apiToken.isInfinite) return response
 
-            val currentApiCall = ApiCallRecord(
-                accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return@runBlocking,
-                date = System.currentTimeMillis() / 1_000L,
-                responseCode = response.code,
-            )
+        val currentApiCall = ApiCallRecord(
+            accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return response,
+            date = System.currentTimeMillis() / 1_000L,
+            responseCode = response.code,
+        )
 
-            if (response.code != HttpsURLConnection.HTTP_UNAUTHORIZED) {
-                updateLastApiCall(currentApiCall)
-                return@runBlocking
-            }
+        if (response.code != HttpsURLConnection.HTTP_UNAUTHORIZED) {
+            updateLastApiCall(currentApiCall)
+            return response
+        }
 
-            if (previousApiCall != null &&
-                currentApiCall.accessToken == previousApiCall.accessToken &&
-                currentApiCall.date < previousApiCall.date + SIX_MONTHS
-            ) {
-                Sentry.captureMessage(
-                    "Got disconnected due to non-working access token but it's not been six months yet",
-                    SentryLevel.FATAL,
-                ) { scope ->
-                    scope.setExtra("Last known api call date epoch", previousApiCall.date.toString())
-                    scope.setExtra("Last known api call token", formatAccessTokenForSentry(previousApiCall.accessToken))
-                    scope.setExtra("Last known api call response code", previousApiCall.responseCode.toString())
+        // If multiple calls are received at the same time with the HTTP_UNAUTHORIZED, only send the first one to sentry
+        // TODO: Check condition
+        // TODO: Make lastReportEpoch resistant to concurrency
+        val lastReport = lastReportEpoch
+        if (lastReport != null && lastReport < currentApiCall.date && currentApiCall.date - lastReport < TEN_SECONDS) {
+            return response
+        }
+        lastReportEpoch = currentApiCall.date
 
-                    scope.setExtra("Current api call date epoch", currentApiCall.date.toString())
-                    scope.setExtra("Current api call token", formatAccessTokenForSentry(currentApiCall.accessToken))
-                }
+        if (previousApiCall != null &&
+            currentApiCall.accessToken == previousApiCall.accessToken &&
+            currentApiCall.date < previousApiCall.date + SIX_MONTHS
+        ) {
+            Sentry.captureMessage(
+                "Got disconnected due to non-working access token but it's not been six months yet",
+                SentryLevel.FATAL,
+            ) { scope ->
+                scope.setExtra("Last known api call date epoch", previousApiCall.date.toString())
+                scope.setExtra("Last known api call token", formatAccessTokenForSentry(previousApiCall.accessToken))
+                scope.setExtra("Last known api call response code", previousApiCall.responseCode.toString())
+
+                scope.setExtra("Current api call date epoch", currentApiCall.date.toString())
+                scope.setExtra("Current api call token", formatAccessTokenForSentry(currentApiCall.accessToken))
             }
         }
 
@@ -84,5 +94,6 @@ class AccessTokenUsageInterceptor(
 
     companion object {
         private const val SIX_MONTHS = 60 * 60 * 24 * 182L // In seconds
+        private const val TEN_SECONDS = 10 // In seconds
     }
 }
