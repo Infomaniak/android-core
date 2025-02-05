@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.myksuite.ui.network
 
+import androidx.room.ColumnInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -26,5 +27,6 @@ data class KSuiteDrive(
     val name: String,
     val size: Long,
     @SerialName("used_size")
+    @ColumnInfo("used_size")
     val usedSize: Long,
 )
