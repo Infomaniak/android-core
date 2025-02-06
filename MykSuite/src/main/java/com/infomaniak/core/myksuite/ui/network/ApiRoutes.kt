@@ -21,5 +21,5 @@ object ApiRoutes {
 
     private const val BASE_URL = "https://api.staging-myksuite.dev.infomaniak.ch"
 
-    val myKSuiteData = "$BASE_URL/1/my_ksuite/current?with=*"
+    fun myKSuiteData() = "$BASE_URL/1/my_ksuite/current?with=*"
 }
