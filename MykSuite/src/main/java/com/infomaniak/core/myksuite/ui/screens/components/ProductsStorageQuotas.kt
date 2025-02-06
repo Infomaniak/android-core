@@ -18,6 +18,7 @@
 package com.infomaniak.core.myksuite.ui.screens.components
 
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
@@ -34,27 +35,28 @@ import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
+import kotlinx.parcelize.Parcelize
 
 @Composable
-internal fun ProductsStorageQuotas(modifier: Modifier) {
+internal fun ProductsStorageQuotas(modifier: Modifier, kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
-        KSuiteProductsWithQuotas.entries.forEach { ProductStorageQuota(app = it) }
+        kSuiteProductsWithQuotas().forEach { ProductStorageQuota(product = it) }
     }
 }
 
 @Composable
-private fun ProductStorageQuota(modifier: Modifier = Modifier, app: KSuiteProductsWithQuotas) {
+private fun ProductStorageQuota(modifier: Modifier = Modifier, product: KSuiteProductsWithQuotas) {
     val localColors = LocalMyKSuiteColors.current
     Column(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = app.displayName,
+                text = product.displayName,
                 style = Typography.bodyRegular,
                 color = localColors.primaryTextColor,
             )
             WeightOneSpacer(minWidth = Margin.Medium)
             Text(
-                text = "0.2 Go / 20 Go", // TODO: Use real data
+                text = "${product.usedSize()} / ${product.maxSize()}",
                 style = Typography.bodySmallRegular,
                 color = localColors.secondaryTextColor,
             )
@@ -65,19 +67,31 @@ private fun ProductStorageQuota(modifier: Modifier = Modifier, app: KSuiteProduc
             modifier = Modifier
                 .height(progressIndicatorHeight)
                 .fillMaxWidth(),
-            color = app.color(),
+            color = product.color(),
             trackColor = localColors.chipBackground,
             strokeCap = StrokeCap.Round,
             gapSize = -progressIndicatorHeight,
-            progress = { 0.5f }, // TODO: Use real values
+            progress = product.progress,
             drawStopIndicator = {},
         )
     }
 }
 
-private enum class KSuiteProductsWithQuotas(val displayName: String, val color: @Composable () -> Color) {
-    Mail("Mail", { LocalMyKSuiteColors.current.mail }),
-    Drive("kDrive", { LocalMyKSuiteColors.current.drive }),
+@Parcelize
+sealed class KSuiteProductsWithQuotas(
+    internal val displayName: String,
+    internal val color: @Composable () -> Color,
+    open val usedSize: () -> String,
+    open val maxSize: () -> String,
+    open val progress: () -> Float,
+) : Parcelable {
+
+    class Mail(override val usedSize: () -> String, override val maxSize: () -> String, override val progress: () -> Float) :
+        KSuiteProductsWithQuotas("Mail", { LocalMyKSuiteColors.current.mail }, usedSize, maxSize, progress)
+
+    data class Drive(override val usedSize: () -> String, override val maxSize: () -> String, override val progress: () -> Float) :
+        KSuiteProductsWithQuotas("kDrive", { LocalMyKSuiteColors.current.drive }, usedSize, maxSize, progress)
+
 }
 
 @Preview(name = "(1) Light")
@@ -86,7 +100,23 @@ private enum class KSuiteProductsWithQuotas(val displayName: String, val color: 
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            ProductsStorageQuotas(Modifier.padding(Margin.Medium))
+            ProductsStorageQuotas(
+                modifier = Modifier.padding(Margin.Medium),
+                kSuiteProductsWithQuotas = {
+                    listOf(
+                        KSuiteProductsWithQuotas.Mail(
+                            usedSize = { "0.2 Go" },
+                            maxSize = { "20 Go" },
+                            progress = { 0.01f }
+                        ),
+                        KSuiteProductsWithQuotas.Drive(
+                            usedSize = { "6 Go" },
+                            maxSize = { "15 Go" },
+                            progress = { 0.4f },
+                        ),
+                    )
+                },
+            )
         }
     }
 }

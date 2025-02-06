@@ -43,7 +43,8 @@ import com.infomaniak.core.myksuite.ui.theme.Typography
 fun MyKSuiteDashboardScreen(
     userName: String,
     avatarUri: String = "",
-    dailySendingLimit: String,
+    dailySendingLimit: () -> String,
+    kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
     onClose: () -> Unit = {},
 ) {
     MyKSuiteTheme {
@@ -66,7 +67,13 @@ fun MyKSuiteDashboardScreen(
                 )
                 Column(Modifier.padding(paddingValues), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
                     val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
-                    SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
+                    SubscriptionInfoCard(
+                        paddedModifier = paddedModifier,
+                        avatarUri = avatarUri,
+                        userName = userName,
+                        dailySendingLimit = dailySendingLimit,
+                        kSuiteProductsWithQuotas = kSuiteProductsWithQuotas,
+                    )
                     // TODO: Add this line when we'll have In-app payments
                     // MyKSuitePlusPromotionCard(paddedModifier) {}
                 }
@@ -108,7 +115,8 @@ private fun SubscriptionInfoCard(
     paddedModifier: Modifier,
     avatarUri: String,
     userName: String,
-    dailySendingLimit: String,
+    dailySendingLimit: () -> String,
+    kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
 ) {
     val localColors = LocalMyKSuiteColors.current
 
@@ -136,7 +144,7 @@ private fun SubscriptionInfoCard(
             MyKSuiteChip(tier = MyKSuiteTier.Free)
         }
         PaddedDivider(paddedModifier)
-        ProductsStorageQuotas(paddedModifier)
+        ProductsStorageQuotas(paddedModifier, kSuiteProductsWithQuotas)
         PaddedDivider(paddedModifier)
         ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
         ExpendableActionItem(
@@ -215,6 +223,24 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
 @Composable
 private fun Preview() {
     Surface(Modifier.fillMaxSize(), color = Color.White) {
-        MyKSuiteDashboardScreen(userName = "Toto", avatarUri = "", dailySendingLimit = "500")
+        MyKSuiteDashboardScreen(
+            userName = "Toto",
+            avatarUri = "",
+            dailySendingLimit = { "500" },
+            kSuiteProductsWithQuotas = {
+                listOf(
+                    KSuiteProductsWithQuotas.Mail(
+                        usedSize = { "0.2 Go" },
+                        maxSize = { "20 Go" },
+                        progress = { 0.01f }
+                    ),
+                    KSuiteProductsWithQuotas.Drive(
+                        usedSize = { "6 Go" },
+                        maxSize = { "15 Go" },
+                        progress = { 0.4f },
+                    ),
+                )
+            },
+        )
     }
 }
