@@ -21,7 +21,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.infomaniak.core.myksuite.R
 
-enum class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) {
+internal enum class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) {
 
     DriveStorageFeature(
         title = R.string.myKSuiteUpgradeDriveLabel,
