@@ -118,7 +118,7 @@ private fun ColumnScope.UpgradeFeatures(app: KSuiteApp, modifier: Modifier) {
 }
 
 @Parcelize
-enum class KSuiteApp(val features: List<MyKSuiteUpgradeFeatures>, val buttonStyle: MyKSuiteButtonType) : Parcelable {
+enum class KSuiteApp(internal val features: List<MyKSuiteUpgradeFeatures>, internal val buttonStyle: MyKSuiteButtonType) : Parcelable {
     Mail(
         features = listOf(MyKSuiteUpgradeFeatures.MailUnlimitedFeature, MyKSuiteUpgradeFeatures.MailOtherFeature),
         buttonStyle = MyKSuiteButtonType.Mail,
