@@ -33,6 +33,9 @@
         <argument
             android:name="dailySendLimit"
             app:argType="string" />
+        <argument
+            android:name="kSuiteAppsWithQuotas"
+            app:argType="com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas[]" />
     </fragment>
 
     <dialog

@@ -41,7 +41,8 @@ open class MyKSuiteDashboardFragment : Fragment() {
                     MyKSuiteDashboardScreen(
                         userName = userName,
                         avatarUri = avatarUri,
-                        dailySendingLimit = dailySendLimit,
+                        dailySendingLimit = { dailySendLimit },
+                        kSuiteProductsWithQuotas = { kSuiteAppsWithQuotas.toList() },
                         onClose = onClose,
                     )
                 }
