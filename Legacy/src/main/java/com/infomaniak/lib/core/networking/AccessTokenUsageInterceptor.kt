@@ -34,7 +34,7 @@ import okhttp3.Response
 import javax.net.ssl.HttpsURLConnection
 
 private var lastReportEpoch: Long? = null
-private val mutex = Mutex()
+private val lastReportMutext = Mutex()
 
 class AccessTokenUsageInterceptor(
     private val tokenInterceptorListener: TokenInterceptorListener,
@@ -74,7 +74,7 @@ class AccessTokenUsageInterceptor(
             }
 
             // If multiple unauthorized calls are received at the same time, only send the first one to sentry
-            mutex.withLock {
+            lastReportMutext.withLock {
                 val lastReport = lastReportEpoch
                 if (lastReport != null && lastReport <= currentApiCall.date && currentApiCall.date - lastReport < TEN_SECONDS) {
                     return@launch
