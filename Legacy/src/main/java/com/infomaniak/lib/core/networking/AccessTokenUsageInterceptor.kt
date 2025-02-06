@@ -24,6 +24,7 @@ import io.sentry.SentryLevel
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
 import javax.net.ssl.HttpsURLConnection
 
@@ -39,31 +40,38 @@ class AccessTokenUsageInterceptor(
         val request = chain.request()
         val response = chain.proceed(request)
 
+        processAccessTokenUsage(request, response.code)
+
+        return response
+    }
+
+    private fun processAccessTokenUsage(request: Request, responseCode: Int) {
         val apiToken = runBlocking {
             // Only log api calls if we have an ApiToken
             tokenInterceptorListener.getApiToken()
-        } ?: return response
+        } ?: return
 
         // Only log api calls if we're not using refresh tokens
-        if (!apiToken.isInfinite) return response
+        if (!apiToken.isInfinite) return
 
         val currentApiCall = ApiCallRecord(
-            accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return response,
+            accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return,
             date = System.currentTimeMillis() / 1_000L,
-            responseCode = response.code,
+            responseCode = responseCode,
         )
 
-        if (response.code != HttpsURLConnection.HTTP_UNAUTHORIZED) {
+        // Only log api calls that triggered an unauthorized response
+        if (responseCode != HttpsURLConnection.HTTP_UNAUTHORIZED) {
             updateLastApiCall(currentApiCall)
-            return response
+            return
         }
 
-        // If multiple calls are received at the same time with the HTTP_UNAUTHORIZED, only send the first one to sentry
+        // If multiple unauthorized calls are received at the same time, only send the first one to sentry
         // TODO: Check condition
         // TODO: Make lastReportEpoch resistant to concurrency
         val lastReport = lastReportEpoch
         if (lastReport != null && lastReport < currentApiCall.date && currentApiCall.date - lastReport < TEN_SECONDS) {
-            return response
+            return
         }
         lastReportEpoch = currentApiCall.date
 
@@ -83,8 +91,6 @@ class AccessTokenUsageInterceptor(
                 scope.setExtra("Current api call token", formatAccessTokenForSentry(currentApiCall.accessToken))
             }
         }
-
-        return response
     }
 
     private fun formatAccessTokenForSentry(accessToken: String): String = accessToken.take(2) + "..." + accessToken.takeLast(2)
