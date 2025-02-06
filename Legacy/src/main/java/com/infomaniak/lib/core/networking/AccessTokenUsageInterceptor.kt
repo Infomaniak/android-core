@@ -74,10 +74,9 @@ class AccessTokenUsageInterceptor(
             }
 
             // If multiple unauthorized calls are received at the same time, only send the first one to sentry
-            // TODO: Check condition
             mutex.withLock {
                 val lastReport = lastReportEpoch
-                if (lastReport != null && lastReport < currentApiCall.date && currentApiCall.date - lastReport < TEN_SECONDS) {
+                if (lastReport != null && lastReport <= currentApiCall.date && currentApiCall.date - lastReport < TEN_SECONDS) {
                     return@launch
                 }
                 lastReportEpoch = currentApiCall.date
