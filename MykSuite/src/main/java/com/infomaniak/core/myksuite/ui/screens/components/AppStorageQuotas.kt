@@ -36,14 +36,14 @@ import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
-internal fun AppStorageQuotas(modifier: Modifier) {
+internal fun ProductsStorageQuotas(modifier: Modifier) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
-        KSuiteAppWithQuotas.entries.forEach { AppStorageQuota(app = it) }
+        KSuiteProductsWithQuotas.entries.forEach { ProductStorageQuota(app = it) }
     }
 }
 
 @Composable
-private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteAppWithQuotas) {
+private fun ProductStorageQuota(modifier: Modifier = Modifier, app: KSuiteProductsWithQuotas) {
     val localColors = LocalMyKSuiteColors.current
     Column(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -75,7 +75,7 @@ private fun AppStorageQuota(modifier: Modifier = Modifier, app: KSuiteAppWithQuo
     }
 }
 
-private enum class KSuiteAppWithQuotas(val displayName: String, val color: @Composable () -> Color) {
+private enum class KSuiteProductsWithQuotas(val displayName: String, val color: @Composable () -> Color) {
     Mail("Mail", { LocalMyKSuiteColors.current.mail }),
     Drive("kDrive", { LocalMyKSuiteColors.current.drive }),
 }
@@ -86,7 +86,7 @@ private enum class KSuiteAppWithQuotas(val displayName: String, val color: @Comp
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            AppStorageQuotas(Modifier.padding(Margin.Medium))
+            ProductsStorageQuotas(Modifier.padding(Margin.Medium))
         }
     }
 }
