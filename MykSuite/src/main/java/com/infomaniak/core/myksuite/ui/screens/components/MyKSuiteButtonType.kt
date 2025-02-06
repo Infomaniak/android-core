@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.core.myksuite.ui.theme.Dimens
 import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 
-enum class MyKSuiteButtonType(val colors: @Composable () -> MyKSuiteButtonColors, val shape: Shape) {
+internal enum class MyKSuiteButtonType(val colors: @Composable () -> MyKSuiteButtonColors, val shape: Shape) {
     Mail(
         colors = {
             val localColors = LocalMyKSuiteColors.current
@@ -50,7 +50,7 @@ enum class MyKSuiteButtonType(val colors: @Composable () -> MyKSuiteButtonColors
     ),
 }
 
-data class MyKSuiteButtonColors(val containerColor: Color, val contentColor: Color) {
+internal data class MyKSuiteButtonColors(val containerColor: Color, val contentColor: Color) {
 
     @Composable
     fun buttonColors(): ButtonColors = ButtonDefaults.buttonColors(
