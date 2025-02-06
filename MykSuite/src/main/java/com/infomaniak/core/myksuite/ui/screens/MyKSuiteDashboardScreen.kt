@@ -136,7 +136,7 @@ private fun SubscriptionInfoCard(
             MyKSuiteChip(tier = MyKSuiteTier.Free)
         }
         PaddedDivider(paddedModifier)
-        AppStorageQuotas(paddedModifier)
+        ProductsStorageQuotas(paddedModifier)
         PaddedDivider(paddedModifier)
         ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
         ExpendableActionItem(
