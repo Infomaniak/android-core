@@ -21,8 +21,9 @@ import android.content.Context
 
 abstract class MyKSuiteDataManager {
 
-    abstract var currentMyKSuiteId: Int
-    abstract var currentMyKSuite: MyKSuiteData?
+    abstract var myKSuiteId: Int
+    abstract var myKSuite: MyKSuiteData?
+    abstract val userId: Int
 
     private var myKSuiteDatabase: MyKSuiteDatabase? = null
 
@@ -30,15 +31,22 @@ abstract class MyKSuiteDataManager {
         myKSuiteDatabase = MyKSuiteDatabase.getDatabase(appContext)
     }
 
-    suspend fun getKSuiteData(id: Int): MyKSuiteData? = myKSuiteDatabase?.myKSuiteDataDao()?.findById(id)
+    suspend fun requestKSuiteData(id: Int? = null) {
+        myKSuite = id?.let { getKSuiteData(it) } ?: getKSuiteDataByUser()
+    }
 
     suspend fun upsertKSuiteData(kSuiteData: MyKSuiteData) {
-        currentMyKSuite = kSuiteData
-        myKSuiteDatabase?.myKSuiteDataDao()?.upsert(kSuiteData)
+        myKSuite = kSuiteData
+        myKSuiteDatabase?.myKSuiteDataDao()?.upsert(kSuiteData.apply { userId = this@MyKSuiteDataManager.userId })
     }
 
     suspend fun deleteKSuiteData(kSuiteData: MyKSuiteData) {
-        currentMyKSuite = null
+        myKSuite = null
         myKSuiteDatabase?.myKSuiteDataDao()?.delete(kSuiteData)
     }
+
+    // TODO remove if not useful
+    private suspend fun getKSuiteData(id: Int) = myKSuiteDatabase?.myKSuiteDataDao()?.findById(id)
+
+    private suspend fun getKSuiteDataByUser() = myKSuiteDatabase?.myKSuiteDataDao()?.findByUserId(userId)
 }

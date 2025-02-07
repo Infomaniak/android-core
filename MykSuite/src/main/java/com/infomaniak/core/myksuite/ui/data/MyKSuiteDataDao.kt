@@ -31,6 +31,9 @@ interface MyKSuiteDataDao {
     @Query("SELECT * FROM MyKSuiteData WHERE id = :id LIMIT 1")
     suspend fun findById(id: Int): MyKSuiteData?
 
+    @Query("SELECT * FROM MyKSuiteData WHERE user_id = :userId LIMIT 1")
+    suspend fun findByUserId(userId: Int): MyKSuiteData?
+
     @Upsert
     suspend fun upsert(data: MyKSuiteData)
 
