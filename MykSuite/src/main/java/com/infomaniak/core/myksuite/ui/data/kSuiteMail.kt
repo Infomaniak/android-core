@@ -34,5 +34,6 @@ data class KSuiteMail(
     @SerialName("used_size")
     @ColumnInfo("used_size")
     val usedSize: Long,
+    @SerialName("mailbox_id")
+    val mailboxId: Int,
 )
-
