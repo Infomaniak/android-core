@@ -17,16 +17,31 @@
  */
 package com.infomaniak.core.myksuite.ui.screens
 
-import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.infomaniak.core.myksuite.R
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) : Parcelable {
+internal enum class MyKSuiteUpgradeFeatures(@StringRes val title: Int, @DrawableRes val icon: Int) {
 
-    internal companion object {
-        val MoreFeatures = MyKSuiteUpgradeFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift)
-    }
+    DriveStorageFeature(
+        title = R.string.myKSuiteUpgradeDriveLabel,
+        icon = R.drawable.ic_drive_cloud,
+    ),
+
+    DriveDropboxFeature(
+        title = R.string.myKSuiteUpgradeDropboxLabel,
+        icon = R.drawable.ic_folder_circle_filled_arrow_up,
+    ),
+
+    MailUnlimitedFeature(
+        title = R.string.myKSuiteUpgradeUnlimitedMailLabel,
+        icon = R.drawable.ic_paperplane,
+    ),
+
+    MailOtherFeature(
+        title = R.string.myKSuiteUpgradeRedirectLabel,
+        icon = R.drawable.ic_enveloppe_italic,
+    ),
+
+    MoreFeatures(title = R.string.myKSuiteUpgradeLabel, icon = R.drawable.ic_gift),
 }
