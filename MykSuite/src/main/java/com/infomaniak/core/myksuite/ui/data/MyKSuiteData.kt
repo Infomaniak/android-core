@@ -23,6 +23,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 @Entity
@@ -34,19 +35,29 @@ data class MyKSuiteData(
     val kSuitePackId: Int,
     @SerialName("pack")
     @Embedded("k_suite_pack_")
-    val kSuitePack: KSuitePack? = null,
+    val kSuitePack: KSuitePack,
     @SerialName("trial_expiry_at")
     val trialExpiryAt: Long? = null,
     @SerialName("is_free")
     @ColumnInfo("is_free")
     val isFree: Boolean,
     @Embedded("drive_")
-    val drive: KSuiteDrive? = null,
+    val drive: KSuiteDrive,
     @Embedded("mail_")
-    val mail: KSuiteMail? = null,
+    val mail: KSuiteMail,
     @SerialName("has_auto_renew")
     @ColumnInfo("has_auto_renew")
     val hasAutoRenew: Boolean,
     @SerialName("can_trial")
     val canTrial: Boolean,
-)
+) {
+
+    @Transient
+    @ColumnInfo("user_id")
+    var userId: Int = 0
+
+    val isMyKSuite get() = kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE
+    val isMyKSuitePlus
+        get() = kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE_PLUS ||
+                kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE_PLUS_DRIVE_SOLO
+}
