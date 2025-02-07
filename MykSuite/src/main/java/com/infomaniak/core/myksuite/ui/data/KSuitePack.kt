@@ -17,7 +17,9 @@
  */
 package com.infomaniak.core.myksuite.ui.data
 
+import androidx.annotation.StringRes
 import androidx.room.ColumnInfo
+import com.infomaniak.core.myksuite.R
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -37,4 +39,13 @@ data class KSuitePack(
     @SerialName("is_max_storage_offer")
     @ColumnInfo("is_max_storage_offer")
     val isMaxStorageOffer: Boolean = false,
-)
+) {
+
+    val type get() = runCatching { enumValueOf<KSuitePackType>(name.uppercase()) }.getOrNull()
+
+    enum class KSuitePackType(@StringRes val displayNameRes: Int) {
+        MY_KSUITE(R.string.myKSuiteName),
+        MY_KSUITE_PLUS(R.string.myKSuitePlusName),
+        MY_KSUITE_PLUS_DRIVE_SOLO(R.string.myKSuitePlusName),
+    }
+}
