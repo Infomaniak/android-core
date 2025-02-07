@@ -25,7 +25,7 @@
         android:name="com.infomaniak.core.myksuite.ui.views.MyKSuiteDashboardFragment"
         android:label="MyKSuiteDashboardFragment">
         <argument
-            android:name="userName"
+            android:name="email"
             app:argType="string" />
         <argument
             android:name="avatarUri"

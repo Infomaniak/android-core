@@ -39,7 +39,7 @@ open class MyKSuiteDashboardFragment : Fragment() {
                 val onClose: () -> Unit = { this@MyKSuiteDashboardFragment.findNavController().popBackStack() }
                 with(navigationArgs) {
                     MyKSuiteDashboardScreen(
-                        userName = userName,
+                        email = email,
                         avatarUri = avatarUri,
                         dailySendingLimit = { dailySendLimit },
                         kSuiteProductsWithQuotas = { kSuiteAppsWithQuotas.toList() },

@@ -41,7 +41,7 @@ import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
 fun MyKSuiteDashboardScreen(
-    userName: String,
+    email: String,
     avatarUri: String = "",
     dailySendingLimit: () -> String,
     kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
@@ -69,8 +69,8 @@ fun MyKSuiteDashboardScreen(
                     val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
                     SubscriptionInfoCard(
                         paddedModifier = paddedModifier,
+                        email = email,
                         avatarUri = avatarUri,
-                        userName = userName,
                         dailySendingLimit = dailySendingLimit,
                         kSuiteProductsWithQuotas = kSuiteProductsWithQuotas,
                     )
@@ -113,8 +113,8 @@ private fun TopAppBar(onClose: () -> Unit) {
 @Composable
 private fun SubscriptionInfoCard(
     paddedModifier: Modifier,
+    email: String,
     avatarUri: String,
-    userName: String,
     dailySendingLimit: () -> String,
     kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
 ) {
@@ -137,7 +137,7 @@ private fun SubscriptionInfoCard(
                 modifier = Modifier.weight(1.0f),
                 style = Typography.bodyRegular,
                 color = localColors.primaryTextColor,
-                text = userName,
+                text = email,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -224,7 +224,7 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
 private fun Preview() {
     Surface(Modifier.fillMaxSize(), color = Color.White) {
         MyKSuiteDashboardScreen(
-            userName = "Toto",
+            email = "Toto",
             avatarUri = "",
             dailySendingLimit = { "500" },
             kSuiteProductsWithQuotas = {
