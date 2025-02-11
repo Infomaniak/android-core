@@ -29,6 +29,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -39,11 +40,11 @@ import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
-fun MyKSuiteChip(modifier: Modifier = Modifier, tier: MyKSuiteTier) {
+fun MyKSuiteChip(modifier: Modifier = Modifier, tier: MyKSuiteTier, backgroundColor: Int? = null) {
     Image(
         modifier = modifier
             .background(
-                color = LocalMyKSuiteColors.current.chipBackground,
+                color = backgroundColor?.let(::Color) ?: LocalMyKSuiteColors.current.chipBackground,
                 shape = CircleShape,
             )
             .padding(horizontal = Margin.Mini, vertical = Margin.Micro),
