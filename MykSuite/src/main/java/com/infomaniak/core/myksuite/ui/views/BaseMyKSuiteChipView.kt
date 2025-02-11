@@ -21,6 +21,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AbstractComposeView
+import androidx.core.content.res.ResourcesCompat
+import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteChip
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
@@ -32,8 +34,18 @@ abstract class BaseMyKSuiteChipView @JvmOverloads constructor(
     val tier: MyKSuiteTier,
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
+    private var backgroundColor: Int = ResourcesCompat.ID_NULL
+
+    init {
+        context.obtainStyledAttributes(attrs, R.styleable.BaseMyKSuiteChipView, defStyleAttr, 0).apply {
+            backgroundColor = getInt(R.styleable.BaseMyKSuiteChipView_backgroundColor, ResourcesCompat.ID_NULL)
+            recycle()
+        }
+    }
+
     @Composable
     override fun Content() {
-        MyKSuiteTheme { MyKSuiteChip(tier = tier) }
+        val colorRes = if (backgroundColor == ResourcesCompat.ID_NULL) null else backgroundColor
+        MyKSuiteTheme { MyKSuiteChip(tier = tier, backgroundColor = colorRes) }
     }
 }
