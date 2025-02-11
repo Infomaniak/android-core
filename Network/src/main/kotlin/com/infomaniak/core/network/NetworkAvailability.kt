@@ -102,6 +102,7 @@ class NetworkAvailability(private val context: Context, private val ioDispatcher
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             connectivityManager.activeNetwork?.let(::hasInternetConnectivity) ?: false
         } else {
+            @Suppress("deprecation")
             connectivityManager.activeNetworkInfo?.isConnected ?: false
         }
     }
