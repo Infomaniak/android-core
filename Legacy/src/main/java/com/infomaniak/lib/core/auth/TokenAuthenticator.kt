@@ -45,7 +45,11 @@ class TokenAuthenticator(
                 val hasUserChanged = userId != tokenInterceptorListener.getCurrentUserId()
 
                 return@runBlocking when {
-                    hasUserChanged || apiToken.isInfinite -> null
+                    hasUserChanged -> null
+                    apiToken.isInfinite -> {
+                        tokenInterceptorListener.onRefreshTokenError()
+                        null
+                    }
                     isAlreadyRefreshed -> changeAccessToken(request, apiToken)
                     else -> {
                         val newToken = ApiController.refreshToken(apiToken.refreshToken!!, tokenInterceptorListener)
