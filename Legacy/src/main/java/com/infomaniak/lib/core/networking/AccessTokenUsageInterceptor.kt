@@ -67,7 +67,7 @@ class AccessTokenUsageInterceptor(
                 responseCode = responseCode,
             )
 
-            // Only report api calls that triggered an unauthorized response else log the call for future checks
+            // Only report api calls that triggered an unauthorized response else record the call for future checks
             if (responseCode != HttpsURLConnection.HTTP_UNAUTHORIZED) {
                 updateLastApiCall(currentApiCall)
                 return@launch
