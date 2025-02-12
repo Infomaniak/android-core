@@ -2,7 +2,7 @@
 androidxCore = "1.13.1"  # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
 coil = "3.0.2"
 coilNetworkOkhttp = "3.0.4"
-composeBom = "2024.12.01"
+composeBom = "2025.01.01"
 coreKtx = "1.6.1"
 integrity = "1.4.0"
 junit = "4.13" # Don't update this because it breaks tests
