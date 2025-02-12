@@ -230,14 +230,14 @@ private fun Preview() {
             kSuiteProductsWithQuotas = {
                 listOf(
                     KSuiteProductsWithQuotas.Mail(
-                        usedSize = { "0.2 Go" },
-                        maxSize = { "20 Go" },
-                        progress = { 0.01f }
+                        usedSize = "0.2 Go",
+                        maxSize = "20 Go",
+                        progress = 0.01f,
                     ),
                     KSuiteProductsWithQuotas.Drive(
-                        usedSize = { "6 Go" },
-                        maxSize = { "15 Go" },
-                        progress = { 0.4f },
+                        usedSize = "6 Go",
+                        maxSize = "15 Go",
+                        progress = 0.4f,
                     ),
                 )
             },

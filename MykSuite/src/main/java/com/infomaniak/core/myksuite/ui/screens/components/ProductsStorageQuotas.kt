@@ -26,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,7 +55,7 @@ private fun ProductStorageQuota(modifier: Modifier = Modifier, product: KSuitePr
             )
             WeightOneSpacer(minWidth = Margin.Medium)
             Text(
-                text = "${product.usedSize()} / ${product.maxSize()}",
+                text = "${product.usedSize} / ${product.maxSize}",
                 style = Typography.bodySmallRegular,
                 color = localColors.secondaryTextColor,
             )
@@ -67,11 +66,11 @@ private fun ProductStorageQuota(modifier: Modifier = Modifier, product: KSuitePr
             modifier = Modifier
                 .height(progressIndicatorHeight)
                 .fillMaxWidth(),
-            color = product.color(),
+            color = product.getColor(),
             trackColor = localColors.chipBackground,
             strokeCap = StrokeCap.Round,
             gapSize = -progressIndicatorHeight,
-            progress = product.progress,
+            progress = { product.progress },
             drawStopIndicator = {},
         )
     }
@@ -80,18 +79,19 @@ private fun ProductStorageQuota(modifier: Modifier = Modifier, product: KSuitePr
 @Parcelize
 sealed class KSuiteProductsWithQuotas(
     internal val displayName: String,
-    internal val color: @Composable () -> Color,
-    open val usedSize: () -> String,
-    open val maxSize: () -> String,
-    open val progress: () -> Float,
+    open val usedSize: String,
+    open val maxSize: String,
+    open val progress: Float,
 ) : Parcelable {
 
-    class Mail(override val usedSize: () -> String, override val maxSize: () -> String, override val progress: () -> Float) :
-        KSuiteProductsWithQuotas("Mail", { LocalMyKSuiteColors.current.mail }, usedSize, maxSize, progress)
+    class Mail(override val usedSize: String, override val maxSize: String, override val progress: Float) :
+        KSuiteProductsWithQuotas("Mail", usedSize, maxSize, progress)
 
-    data class Drive(override val usedSize: () -> String, override val maxSize: () -> String, override val progress: () -> Float) :
-        KSuiteProductsWithQuotas("kDrive", { LocalMyKSuiteColors.current.drive }, usedSize, maxSize, progress)
+    data class Drive(override val usedSize: String, override val maxSize: String, override val progress: Float) :
+        KSuiteProductsWithQuotas("kDrive", usedSize, maxSize, progress)
 
+    @Composable
+    fun getColor() = if (this is Mail) LocalMyKSuiteColors.current.mail else LocalMyKSuiteColors.current.drive
 }
 
 @Preview(name = "(1) Light")
@@ -104,16 +104,8 @@ private fun Preview() {
                 modifier = Modifier.padding(Margin.Medium),
                 kSuiteProductsWithQuotas = {
                     listOf(
-                        KSuiteProductsWithQuotas.Mail(
-                            usedSize = { "0.2 Go" },
-                            maxSize = { "20 Go" },
-                            progress = { 0.01f }
-                        ),
-                        KSuiteProductsWithQuotas.Drive(
-                            usedSize = { "6 Go" },
-                            maxSize = { "15 Go" },
-                            progress = { 0.4f },
-                        ),
+                        KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
+                        KSuiteProductsWithQuotas.Drive(usedSize = "6 Go", maxSize = "15 Go", progress = 0.4f),
                     )
                 },
             )
