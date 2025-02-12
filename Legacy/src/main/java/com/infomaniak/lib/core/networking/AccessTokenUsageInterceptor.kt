@@ -90,12 +90,13 @@ class AccessTokenUsageInterceptor(
                     "Got disconnected due to non-working access token but it's not been six months yet",
                     SentryLevel.FATAL,
                 ) { scope ->
-                    scope.setExtra("Last known api call date epoch", previousApiCall.date.toString())
-                    scope.setExtra("Last known api call token", formatAccessTokenForSentry(previousApiCall.accessToken))
-                    scope.setExtra("Last known api call response code", previousApiCall.responseCode.toString())
-
                     scope.setExtra("Current api call date epoch", currentApiCall.date.toString())
+                    scope.setExtra("Current api call response code", currentApiCall.responseCode.toString())
                     scope.setExtra("Current api call token", formatAccessTokenForSentry(currentApiCall.accessToken))
+
+                    scope.setExtra("Last known api call date epoch", previousApiCall.date.toString())
+                    scope.setExtra("Last known api call response code", previousApiCall.responseCode.toString())
+                    scope.setExtra("Last known api call token", formatAccessTokenForSentry(previousApiCall.accessToken))
                 }
             }
         }
