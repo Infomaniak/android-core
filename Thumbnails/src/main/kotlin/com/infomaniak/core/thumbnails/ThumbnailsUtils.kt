@@ -27,57 +27,48 @@ import android.media.MediaMetadataRetriever
 import android.media.MediaMetadataRetriever.BitmapParams
 import android.media.ThumbnailUtils
 import android.net.Uri
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import android.provider.DocumentsContract
-import android.provider.MediaStore
+import android.provider.MediaStore.Images
+import android.provider.MediaStore.Video
 import android.util.Size
+import androidx.annotation.RequiresApi
 import androidx.core.net.toFile
 import java.io.File
 import kotlin.math.min
 
 object ThumbnailsUtils {
 
-    private const val THUMBNAIL_SIZE = 500
+    private const val THUMBNAIL_SIZE = 500 // Image size, in pixels
+    private const val SEGMENT_DELIMITER = ":"
+    private const val DOCUMENTS_AUTHORITY = "com.android.externalstorage.documents"
 
     fun Context.getLocalThumbnail(fileUri: Uri, isVideo: Boolean, thumbnailSize: Int = THUMBNAIL_SIZE): Bitmap? {
-        return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            getThumbnailAfterAndroidPie(fileUri, isVideo, thumbnailSize)
+        return if (SDK_INT >= 29) {
+            getThumbnail(fileUri, isVideo, thumbnailSize)
         } else {
-            getThumbnailUntilAndroidPie(fileUri, isVideo, thumbnailSize)
+            getThumbnailBeforeAndroid29(fileUri, isVideo, thumbnailSize)
         }
     }
 
-    private fun Context.getThumbnailAfterAndroidPie(fileUri: Uri, isVideo: Boolean, thumbnailSize: Int): Bitmap? {
-        return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+    @RequiresApi(29)
+    private fun Context.getThumbnail(fileUri: Uri, isVideo: Boolean, thumbnailSize: Int): Bitmap? {
+        return runCatching {
             val size = Size(thumbnailSize, thumbnailSize)
-            try {
-                if (fileUri.scheme?.equals(ContentResolver.SCHEME_FILE) == true) {
-                    if (isVideo) {
-                        ThumbnailUtils.createVideoThumbnail(fileUri.toFile(), size, null)
-                    } else {
-                        ThumbnailUtils.createImageThumbnail(fileUri.toFile(), size, null)
-                    }
-                } else {
-                    if (isVideo) {
-                        generateVideoThumbnail(fileUri)
-                    } else {
-                        contentResolver.loadThumbnail(fileUri, size, null)
-                    }
-                }
-            } catch (e: Exception) {
-                null
+            val isSchemeFile = fileUri.scheme?.equals(ContentResolver.SCHEME_FILE) == true
+            when {
+                isSchemeFile && isVideo -> ThumbnailUtils.createVideoThumbnail(fileUri.toFile(), size, null)
+                isSchemeFile && !isVideo -> ThumbnailUtils.createImageThumbnail(fileUri.toFile(), size, null)
+                isVideo -> generateVideoThumbnail(fileUri)
+                else -> contentResolver.loadThumbnail(fileUri, size, null)
             }
-        } else {
-            null
-        }
+        }.getOrNull()
     }
 
-    private fun Context.getThumbnailUntilAndroidPie(fileUri: Uri, isVideo: Boolean, thumbnailSize: Int): Bitmap? {
+    private fun Context.getThumbnailBeforeAndroid29(fileUri: Uri, isVideo: Boolean, thumbnailSize: Int): Bitmap? {
         val isSchemeFile = fileUri.scheme?.equals(ContentResolver.SCHEME_FILE) == true
-        val localFile = fileUri.lastPathSegment?.split(":")?.let { list ->
-            list.getOrNull(1)?.let { path -> File(path) }
-        }
+        val localFile = fileUri.lastPathSegment?.split(SEGMENT_DELIMITER)?.let { list -> list.firstOrNull()?.let(::File) }
         val externalRealPath = getExternalRealPath(fileUri, isSchemeFile, localFile)
 
         return if (isSchemeFile || externalRealPath.isNotBlank()) {
@@ -89,12 +80,8 @@ object ThumbnailsUtils {
 
     private fun Context.getExternalRealPath(fileUri: Uri, isSchemeFile: Boolean, localFile: File?): String {
         return when {
-            !isSchemeFile && localFile?.exists() == true -> {
-                localFile.absolutePath
-            }
-            fileUri.authority == "com.android.externalstorage.documents" -> {
-                getRealPathFromExternalStorage(this, fileUri)
-            }
+            !isSchemeFile && localFile?.exists() == true -> localFile.absolutePath
+            fileUri.authority == DOCUMENTS_AUTHORITY -> getRealPathFromExternalStorage(this, fileUri)
             else -> ""
         }
     }
@@ -104,7 +91,7 @@ object ThumbnailsUtils {
         val path = externalRealPath.ifBlank { fileUri.path ?: return null }
 
         return if (isVideo) {
-            ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MICRO_KIND)
+            ThumbnailUtils.createVideoThumbnail(path, Video.Thumbnails.MICRO_KIND)
         } else {
             extractThumbnail(path, thumbnailSize, thumbnailSize)
         }
@@ -112,30 +99,22 @@ object ThumbnailsUtils {
 
     @Suppress("DEPRECATION")
     private fun Context.getBitmapFromFileId(fileUri: Uri, thumbnailSize: Int): Bitmap? {
-        return try {
+
+        val fileId = runCatching {
             ContentUris.parseId(fileUri)
-        } catch (e: Exception) {
-            fileUri.lastPathSegment?.split(":")?.let { it.getOrNull(1)?.toLongOrNull() }
-        }?.let { fileId ->
-            val options = BitmapFactory.Options().apply {
-                outWidth = thumbnailSize
-                outHeight = thumbnailSize
-            }
-            if (contentResolver.getType(fileUri)?.contains("video") == true) {
-                MediaStore.Video.Thumbnails.getThumbnail(
-                    contentResolver,
-                    fileId,
-                    MediaStore.Video.Thumbnails.MICRO_KIND,
-                    options,
-                )
-            } else {
-                MediaStore.Images.Thumbnails.getThumbnail(
-                    contentResolver,
-                    fileId,
-                    MediaStore.Images.Thumbnails.MICRO_KIND,
-                    options,
-                )
-            }
+        }.getOrElse {
+            fileUri.lastPathSegment?.split(SEGMENT_DELIMITER)?.let { it.firstOrNull()?.toLongOrNull() }
+        } ?: return null
+
+        val options = BitmapFactory.Options().apply {
+            outWidth = thumbnailSize
+            outHeight = thumbnailSize
+        }
+
+        return if (contentResolver.getType(fileUri)?.contains("video") == true) {
+            Video.Thumbnails.getThumbnail(contentResolver, fileId, Video.Thumbnails.MICRO_KIND, options)
+        } else {
+            Images.Thumbnails.getThumbnail(contentResolver, fileId, Images.Thumbnails.MICRO_KIND, options)
         }
     }
 
@@ -143,12 +122,12 @@ object ThumbnailsUtils {
     private fun getRealPathFromExternalStorage(context: Context, uri: Uri): String {
         // ExternalStorageProvider
         val docId = DocumentsContract.getDocumentId(uri)
-        val split = docId.split(":").dropLastWhile { it.isEmpty() }.toTypedArray()
+        val split = docId.split(SEGMENT_DELIMITER).dropLastWhile { it.isEmpty() }.toTypedArray()
         val type = split.first()
-        val relativePath = split.getOrNull(1) ?: return ""
+        val relativePath = split.firstOrNull() ?: return ""
         val external = context.externalMediaDirs
         return when {
-            "primary".equals(type, true) -> Environment.getExternalStorageDirectory().toString() + "/" + relativePath
+            type.equals("primary", ignoreCase = true) -> Environment.getExternalStorageDirectory().toString() + "/" + relativePath
             external.size > 1 -> {
                 val filePath = external[1].absolutePath
                 filePath.substring(0, filePath.indexOf("Android")) + relativePath
@@ -170,9 +149,7 @@ object ThumbnailsUtils {
         val heightScale = bitmapOptions.outHeight.toFloat() / height
         val scale = min(widthScale, heightScale)
         var sampleSize = 1
-        while (sampleSize < scale) {
-            sampleSize *= 2
-        }
+        while (sampleSize < scale) sampleSize *= 2
         bitmapOptions.inSampleSize = sampleSize
         bitmapOptions.inJustDecodeBounds = false
 
@@ -180,31 +157,29 @@ object ThumbnailsUtils {
     }
 
     private fun Context.generateVideoThumbnail(fileUri: Uri): Bitmap? {
-        var retriever: MediaMetadataRetriever? = null
-        try {
-            retriever = MediaMetadataRetriever()
+
+        val retriever = runCatching { MediaMetadataRetriever() }.getOrNull() ?: return null
+
+        return runCatching {
             retriever.setDataSource(this, fileUri)
 
             val durationString = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
             val duration = durationString?.toLongOrNull() ?: 0L
-            val sampleTime = duration / 2 * 1000 // Middle of the video in microseconds
+            val sampleTime = duration / 2 * 1_000 // Middle of the video in microseconds
 
             val videoWidth = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toInt() ?: 0
             val videoHeight = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toInt() ?: 0
 
             if (videoWidth == 0 || videoHeight == 0) {
-                return retriever.getFrameAtTime(sampleTime, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+                return@runCatching retriever.getFrameAtTime(sampleTime, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
             }
 
             val originalSize = Size(videoWidth, videoHeight)
             val requestedSize = Size(THUMBNAIL_SIZE, THUMBNAIL_SIZE)
             val targetSize = calculateTargetSize(originalSize, requestedSize)
 
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                val params = BitmapParams().apply {
-                    preferredConfig = Bitmap.Config.ARGB_8888
-                }
-
+            return@runCatching if (SDK_INT >= 30) {
+                val params = BitmapParams().apply { preferredConfig = Bitmap.Config.ARGB_8888 }
                 retriever.getScaledFrameAtTime(
                     sampleTime,
                     MediaMetadataRetriever.OPTION_CLOSEST_SYNC,
@@ -217,11 +192,11 @@ object ThumbnailsUtils {
                     Bitmap.createScaledBitmap(it, targetSize.width, targetSize.height, false)
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return null
-        } finally {
-            retriever?.release()
+        }.getOrElse {
+            it.printStackTrace()
+            return@getOrElse null
+        }.also {
+            retriever.release()
         }
     }
 
