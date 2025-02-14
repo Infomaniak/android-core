@@ -47,7 +47,7 @@ enum class FileType(val icon: ImageVector, private val colorLight: Color, privat
     }
 
     companion object {
-        // TODO: Move this method into Core
+        // TODO: Delete `String.guessMimeType()` from Legacy, and use this instead
         fun guessMimeTypeFromFileName(fileName: String): String? {
             return fileName.extractExtension()?.let { extension ->
                 MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
