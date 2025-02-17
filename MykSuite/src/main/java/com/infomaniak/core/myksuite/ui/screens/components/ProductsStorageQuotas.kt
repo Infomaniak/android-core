@@ -27,8 +27,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.myksuite.R
+import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
 import com.infomaniak.core.myksuite.ui.components.WeightOneSpacer
 import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
@@ -37,15 +40,25 @@ import com.infomaniak.core.myksuite.ui.theme.Typography
 import kotlinx.parcelize.Parcelize
 
 @Composable
-internal fun ProductsStorageQuotas(modifier: Modifier, kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>) {
+internal fun ProductsStorageQuotas(
+    modifier: Modifier,
+    myKSuiteTier: () -> MyKSuiteTier,
+    kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
+) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
-        kSuiteProductsWithQuotas().forEach { ProductStorageQuota(product = it) }
+        kSuiteProductsWithQuotas().forEach { ProductStorageQuota(myKSuiteTier = myKSuiteTier, product = it) }
     }
 }
 
 @Composable
-private fun ProductStorageQuota(modifier: Modifier = Modifier, product: KSuiteProductsWithQuotas) {
+private fun ProductStorageQuota(
+    modifier: Modifier = Modifier,
+    myKSuiteTier: () -> MyKSuiteTier,
+    product: KSuiteProductsWithQuotas,
+) {
     val localColors = LocalMyKSuiteColors.current
+    val isUnlimitedMail = myKSuiteTier() == MyKSuiteTier.Plus && product is KSuiteProductsWithQuotas.Mail
+
     Column(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -55,24 +68,36 @@ private fun ProductStorageQuota(modifier: Modifier = Modifier, product: KSuitePr
             )
             WeightOneSpacer(minWidth = Margin.Medium)
             Text(
-                text = "${product.usedSize} / ${product.maxSize}",
+                text = computeQuotasString(isUnlimitedMail, product),
                 style = Typography.bodySmallRegular,
                 color = localColors.secondaryTextColor,
             )
         }
-        Spacer(Modifier.height(Margin.Mini))
-        val progressIndicatorHeight = 14.dp
-        LinearProgressIndicator(
-            modifier = Modifier
-                .height(progressIndicatorHeight)
-                .fillMaxWidth(),
-            color = product.getColor(),
-            trackColor = localColors.chipBackground,
-            strokeCap = StrokeCap.Round,
-            gapSize = -progressIndicatorHeight,
-            progress = { product.progress },
-            drawStopIndicator = {},
-        )
+
+        if (!isUnlimitedMail) {
+            Spacer(Modifier.height(Margin.Mini))
+            val progressIndicatorHeight = 14.dp
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .height(progressIndicatorHeight)
+                    .fillMaxWidth(),
+                color = product.getColor(),
+                trackColor = localColors.chipBackground,
+                strokeCap = StrokeCap.Round,
+                gapSize = -progressIndicatorHeight,
+                progress = { product.progress },
+                drawStopIndicator = {},
+            )
+        }
+    }
+}
+
+@Composable
+private fun computeQuotasString(isUnlimitedMail: Boolean, product: KSuiteProductsWithQuotas): String {
+    return if (isUnlimitedMail) {
+        stringResource(R.string.myKSuiteDashboardDataUnlimited)
+    } else {
+        "${product.usedSize} / ${product.maxSize}"
     }
 }
 
@@ -102,6 +127,7 @@ private fun Preview() {
         Surface {
             ProductsStorageQuotas(
                 modifier = Modifier.padding(Margin.Medium),
+                myKSuiteTier = { MyKSuiteTier.Plus },
                 kSuiteProductsWithQuotas = {
                     listOf(
                         KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
