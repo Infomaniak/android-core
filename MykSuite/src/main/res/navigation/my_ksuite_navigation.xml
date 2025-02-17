@@ -25,6 +25,9 @@
         android:name="com.infomaniak.core.myksuite.ui.views.MyKSuiteDashboardFragment"
         android:label="MyKSuiteDashboardFragment">
         <argument
+            android:name="myKSuiteTier"
+            app:argType="com.infomaniak.core.myksuite.ui.components.MyKSuiteTier" />
+        <argument
             android:name="email"
             app:argType="string" />
         <argument
