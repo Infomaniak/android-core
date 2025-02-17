@@ -48,6 +48,8 @@ android {
 
 dependencies {
 
+    implementation(project(":Core"))
+
     implementation(core.androidx.core.ktx)
     implementation(core.material)
     implementation(core.navigation.fragment.ktx)

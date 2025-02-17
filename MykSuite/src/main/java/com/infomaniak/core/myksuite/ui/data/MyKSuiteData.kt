@@ -24,6 +24,7 @@ import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.Date
 
 @Serializable
 @Entity
@@ -62,4 +63,6 @@ data class MyKSuiteData(
     val isMyKSuitePlus
         get() = kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE_PLUS ||
                 kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE_PLUS_DRIVE_SOLO
+
+    inline val trialExpiryDate get() = trialExpiryAt?.let { Date(it * 1000) }
 }

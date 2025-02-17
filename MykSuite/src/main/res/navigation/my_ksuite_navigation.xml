@@ -39,6 +39,10 @@
         <argument
             android:name="kSuiteAppsWithQuotas"
             app:argType="com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas[]" />
+        <argument
+            android:name="trialExpiryDate"
+            app:argType="java.util.Date"
+            app:nullable="true" />
     </fragment>
 
     <dialog
