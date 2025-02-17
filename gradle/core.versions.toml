@@ -1,5 +1,5 @@
 [versions]
-androidxCore = "1.13.1"  # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
+androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
 coil = "3.0.2"
 coilNetworkOkhttp = "3.0.4"
 composeBom = "2025.01.01"
