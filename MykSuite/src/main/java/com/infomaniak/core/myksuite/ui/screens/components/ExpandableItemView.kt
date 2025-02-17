@@ -51,7 +51,7 @@ internal fun ExpendableActionItem(
     Column {
         Row(
             modifier = Modifier
-                .heightIn(40.dp)
+                .heightIn(min = 40.dp)
                 .fillMaxWidth()
                 .then(  // TODO add onClickLabel for accessibility
                     if (expendedView == null) Modifier else Modifier.clickable { isExpanded = !isExpanded }

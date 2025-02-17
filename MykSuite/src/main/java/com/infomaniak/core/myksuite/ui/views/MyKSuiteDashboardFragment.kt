@@ -44,6 +44,7 @@ open class MyKSuiteDashboardFragment : Fragment() {
                         avatarUri = { avatarUri },
                         dailySendingLimit = { dailySendLimit },
                         kSuiteProductsWithQuotas = { kSuiteAppsWithQuotas.toList() },
+                        trialExpiryDate = { trialExpiryDate },
                         onClose = onClose,
                     )
                 }
