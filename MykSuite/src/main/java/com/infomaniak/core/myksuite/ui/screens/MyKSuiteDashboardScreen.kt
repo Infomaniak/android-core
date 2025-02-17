@@ -41,8 +41,9 @@ import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
 fun MyKSuiteDashboardScreen(
+    myKSuiteTier: () -> MyKSuiteTier,
     email: String,
-    avatarUri: String = "",
+    avatarUri: () -> String = { "" },
     dailySendingLimit: () -> String,
     kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
     onClose: () -> Unit = {},
@@ -69,6 +70,7 @@ fun MyKSuiteDashboardScreen(
                     val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
                     SubscriptionInfoCard(
                         paddedModifier = paddedModifier,
+                        myKSuiteTier = myKSuiteTier,
                         email = email,
                         avatarUri = avatarUri,
                         dailySendingLimit = dailySendingLimit,
@@ -113,8 +115,9 @@ private fun TopAppBar(onClose: () -> Unit) {
 @Composable
 private fun SubscriptionInfoCard(
     paddedModifier: Modifier,
+    myKSuiteTier: () -> MyKSuiteTier,
     email: String,
-    avatarUri: String,
+    avatarUri: () -> String,
     dailySendingLimit: () -> String,
     kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
 ) {
@@ -132,7 +135,7 @@ private fun SubscriptionInfoCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
         ) {
-            UserAvatar(avatarUri)
+            UserAvatar(avatarUri())
             Text(
                 modifier = Modifier.weight(1.0f),
                 style = Typography.bodyRegular,
@@ -141,10 +144,10 @@ private fun SubscriptionInfoCard(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            MyKSuiteChip(tier = MyKSuiteTier.Free)
+            MyKSuiteChip(tier = myKSuiteTier())
         }
         PaddedDivider(paddedModifier)
-        ProductsStorageQuotas(paddedModifier, kSuiteProductsWithQuotas)
+        ProductsStorageQuotas(paddedModifier, myKSuiteTier, kSuiteProductsWithQuotas)
         PaddedDivider(paddedModifier)
         ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
         ExpendableActionItem(
@@ -224,8 +227,9 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
 private fun Preview() {
     Surface(Modifier.fillMaxSize(), color = Color.White) {
         MyKSuiteDashboardScreen(
+            myKSuiteTier = { MyKSuiteTier.Plus },
             email = "Toto",
-            avatarUri = "",
+            avatarUri = { "" },
             dailySendingLimit = { "500" },
             kSuiteProductsWithQuotas = {
                 listOf(
