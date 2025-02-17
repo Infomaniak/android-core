@@ -33,11 +33,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.FORMAT_DATE_SIMPLE
+import com.infomaniak.core.format
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.*
 import com.infomaniak.core.myksuite.ui.screens.components.*
 import com.infomaniak.core.myksuite.ui.theme.*
 import com.infomaniak.core.myksuite.ui.theme.Typography
+import java.util.Date
 
 @Composable
 fun MyKSuiteDashboardScreen(
@@ -46,6 +49,7 @@ fun MyKSuiteDashboardScreen(
     avatarUri: () -> String = { "" },
     dailySendingLimit: () -> String,
     kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
+    trialExpiryDate: () -> Date?,
     onClose: () -> Unit = {},
 ) {
     MyKSuiteTheme {
@@ -75,6 +79,7 @@ fun MyKSuiteDashboardScreen(
                         avatarUri = avatarUri,
                         dailySendingLimit = dailySendingLimit,
                         kSuiteProductsWithQuotas = kSuiteProductsWithQuotas,
+                        trialExpiryDate = trialExpiryDate,
                     )
                     // TODO: Add this line when we'll have In-app payments
                     // MyKSuitePlusPromotionCard(paddedModifier) {}
@@ -120,6 +125,7 @@ private fun SubscriptionInfoCard(
     avatarUri: () -> String,
     dailySendingLimit: () -> String,
     kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
+    trialExpiryDate: () -> Date?,
 ) {
     val localColors = LocalMyKSuiteColors.current
 
@@ -149,12 +155,23 @@ private fun SubscriptionInfoCard(
         PaddedDivider(paddedModifier)
         ProductsStorageQuotas(paddedModifier, myKSuiteTier, kSuiteProductsWithQuotas)
         PaddedDivider(paddedModifier)
-        ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
-        ExpendableActionItem(
-            iconRes = R.drawable.ic_padlock,
-            textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
-            expendedView = { LimitedFunctionalities(paddedModifier, dailySendingLimit) },
-        )
+
+        if (myKSuiteTier() == MyKSuiteTier.Free) {
+            ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
+            ExpendableActionItem(
+                iconRes = R.drawable.ic_padlock,
+                textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
+                expendedView = { LimitedFunctionalities(paddedModifier, dailySendingLimit) },
+            )
+        } else {
+            trialExpiryDate()?.let { expiryDate ->
+                MyKSuitePlusTextItem(
+                    modifier = paddedModifier,
+                    title = stringResource(R.string.myKSuiteDashboardTrialPeriod),
+                    value = stringResource(R.string.myKSuiteDashboardUntil, expiryDate.format(FORMAT_DATE_SIMPLE)),
+                )
+            }
+        }
         Spacer(Modifier.height(Margin.Medium))
     }
 }
@@ -245,6 +262,7 @@ private fun Preview() {
                     ),
                 )
             },
+            trialExpiryDate = { Date() }
         )
     }
 }
