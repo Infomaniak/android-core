@@ -38,7 +38,7 @@ import com.infomaniak.core.myksuite.ui.components.TextWithIcon
 import com.infomaniak.core.myksuite.ui.theme.*
 
 @Composable
-fun InformationBlock(modifier: Modifier = Modifier, text: String, buttonText: String, onClick: () -> Unit) {
+internal fun InformationBlock(modifier: Modifier = Modifier, text: String, buttonText: String, onClick: () -> Unit) {
     val localColors = LocalMyKSuiteColors.current
 
     Column(
