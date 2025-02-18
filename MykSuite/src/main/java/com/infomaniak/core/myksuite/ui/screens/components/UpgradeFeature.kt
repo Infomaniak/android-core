@@ -25,34 +25,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures.*
 import com.infomaniak.core.myksuite.ui.theme.*
 
 @Composable
-internal fun ColumnScope.UpgradeFeature(customFeature: MyKSuiteUpgradeFeatures, modifier: Modifier = Modifier) {
+internal fun ColumnScope.UpgradeFeature(
+    modifier: Modifier = Modifier,
+    customFeature: MyKSuiteUpgradeFeatures,
+    iconSize: Dp = Dimens.iconSize,
+    textColor: Color = Color.Unspecified,
+) {
     val localColors = LocalMyKSuiteColors.current
     Row(
         modifier = modifier
-            .padding(vertical = Margin.Mini)
             .align(Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            modifier = Modifier.size(Dimens.iconSize),
+            modifier = Modifier.size(iconSize),
             imageVector = ImageVector.vectorResource(customFeature.icon),
             contentDescription = null,
             tint = localColors.iconColor,
         )
         Spacer(Modifier.width(Margin.Mini))
         Text(
+            modifier = modifier,
             text = stringResource(customFeature.title),
             style = Typography.bodyRegular,
-            color = localColors.secondaryTextColor,
+            color = textColor,
         )
     }
 }
@@ -63,10 +70,10 @@ internal fun ColumnScope.UpgradeFeature(customFeature: MyKSuiteUpgradeFeatures, 
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            Column {
-                UpgradeFeature(DriveStorageFeature)
-                UpgradeFeature(DriveDropboxFeature)
-                UpgradeFeature(MoreFeatures)
+            Column(verticalArrangement = Arrangement.spacedBy(Margin.Mini)) {
+                UpgradeFeature(customFeature = DriveStorageFeature)
+                UpgradeFeature(customFeature = DriveDropboxFeature)
+                UpgradeFeature(customFeature = MoreFeatures)
             }
         }
     }
