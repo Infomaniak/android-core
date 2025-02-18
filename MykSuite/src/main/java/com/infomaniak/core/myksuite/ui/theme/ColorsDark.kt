@@ -48,6 +48,7 @@ internal val MyKSuiteDarkColors = MyKSuiteColors(
     background = Color(bat),
     secondaryBackground = Color(orca),
     topAppBarBackground = Color(orca),
+    informationBlockBackground = Color(orca), // TODO put real color when Design explicit it
     chipBackground = Color(orca),
     drive = Color(drive),
     mail = Color(mail),
