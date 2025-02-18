@@ -28,6 +28,8 @@ object Dimens {
     /** 24 dp */
     val iconSize = 24.dp
     /** 16 dp */
+    val smallCornerRadius = 8.dp
+    /** 16 dp */
     val largeCornerRadius = 16.dp
     /** 5 dp */
     val cardElevation = 5.dp

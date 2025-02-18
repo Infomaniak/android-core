@@ -55,6 +55,7 @@ internal val MyKSuiteLightColors = MyKSuiteColors(
     background = Color(white),
     secondaryBackground = Color(white),
     topAppBarBackground = Color(sky),
+    informationBlockBackground = Color(polar_bear),
     chipBackground = Color(rabbit),
     drive = Color(drive),
     mail = Color(mail),
