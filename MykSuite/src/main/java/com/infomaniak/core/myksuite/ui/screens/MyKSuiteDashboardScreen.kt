@@ -171,6 +171,13 @@ private fun SubscriptionInfoCard(
                     value = stringResource(R.string.myKSuiteDashboardUntil, expiryDate.format(FORMAT_DATE_SIMPLE)),
                 )
             }
+            Spacer(Modifier.height(Margin.Medium))
+            InformationBlock(
+                modifier = paddedModifier,
+                text = stringResource(R.string.myKSuiteManageSubscriptionDescription),
+                buttonText = stringResource(R.string.myKSuiteManageSubscriptionButton),
+                onClick = {} // TODO
+            )
         }
         Spacer(Modifier.height(Margin.Medium))
     }
