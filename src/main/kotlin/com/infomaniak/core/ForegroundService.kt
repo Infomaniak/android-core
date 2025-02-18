@@ -118,7 +118,8 @@ abstract class ForegroundService(
         val fgsType: Int
     ) : CancellationException("timeout reached for foreground service type: $fgsType")
 
-    final override fun onCreate() {
+    @CallSuper
+    override fun onCreate() {
         @OptIn(InternalApi::class)
         companion.markCreated()
         super.onCreate()
