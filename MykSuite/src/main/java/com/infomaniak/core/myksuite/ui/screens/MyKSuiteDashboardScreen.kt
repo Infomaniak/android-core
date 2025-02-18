@@ -46,15 +46,7 @@ import com.infomaniak.core.utils.format
 import java.util.Date
 
 @Composable
-fun MyKSuiteDashboardScreen(
-    myKSuiteTier: () -> MyKSuiteTier,
-    email: String,
-    avatarUri: () -> String = { "" },
-    dailySendingLimit: () -> String,
-    kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
-    trialExpiryDate: () -> Date?,
-    onClose: () -> Unit = {},
-) {
+fun MyKSuiteDashboardScreen(dashboardScreenData: () -> MyKSuiteDashboardScreenData, onClose: () -> Unit = {}) {
     MyKSuiteTheme {
         Scaffold(
             topBar = { TopAppBar(onClose) },
@@ -75,17 +67,9 @@ fun MyKSuiteDashboardScreen(
                 )
                 Column(Modifier.padding(paddingValues), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
                     val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
-                    SubscriptionInfoCard(
-                        paddedModifier = paddedModifier,
-                        myKSuiteTier = myKSuiteTier,
-                        email = email,
-                        avatarUri = avatarUri,
-                        dailySendingLimit = dailySendingLimit,
-                        kSuiteProductsWithQuotas = kSuiteProductsWithQuotas,
-                        trialExpiryDate = trialExpiryDate,
-                    )
+                    SubscriptionInfoCard(paddedModifier = paddedModifier, dashboardScreenData = dashboardScreenData)
 
-                    if (myKSuiteTier() == MyKSuiteTier.Free) {
+                    if (dashboardScreenData().myKSuiteTier == MyKSuiteTier.Free) {
                         // TODO: Add this line when we'll have In-app payments
                         // MyKSuitePlusPromotionCard(paddedModifier) {}
                     } else {
@@ -126,15 +110,7 @@ private fun TopAppBar(onClose: () -> Unit) {
 }
 
 @Composable
-private fun SubscriptionInfoCard(
-    paddedModifier: Modifier,
-    myKSuiteTier: () -> MyKSuiteTier,
-    email: String,
-    avatarUri: () -> String,
-    dailySendingLimit: () -> String,
-    kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
-    trialExpiryDate: () -> Date?,
-) {
+private fun SubscriptionInfoCard(paddedModifier: Modifier, dashboardScreenData: () -> MyKSuiteDashboardScreenData) {
     val context = LocalContext.current
     val localColors = LocalMyKSuiteColors.current
 
@@ -150,30 +126,37 @@ private fun SubscriptionInfoCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
         ) {
-            UserAvatar(avatarUri())
+            UserAvatar(dashboardScreenData().avatarUri)
             Text(
                 modifier = Modifier.weight(1.0f),
                 style = Typography.bodyRegular,
                 color = localColors.primaryTextColor,
-                text = email,
+                text = dashboardScreenData().email,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            MyKSuiteChip(tier = myKSuiteTier())
+            MyKSuiteChip(tier = dashboardScreenData().myKSuiteTier)
         }
         PaddedDivider(paddedModifier)
-        ProductsStorageQuotas(paddedModifier, myKSuiteTier, kSuiteProductsWithQuotas)
+        ProductsStorageQuotas(
+            paddedModifier,
+            dashboardScreenData().myKSuiteTier,
+            { dashboardScreenData().kSuiteProductsWithQuotas })
         PaddedDivider(paddedModifier)
 
-        if (myKSuiteTier() == MyKSuiteTier.Free) {
+        if (dashboardScreenData().myKSuiteTier == MyKSuiteTier.Free) {
             ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
             ExpendableActionItem(
                 iconRes = R.drawable.ic_padlock,
                 textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
-                expendedView = { LimitedFunctionalities(paddedModifier, dailySendingLimit) },
+                expendedView = {
+                    LimitedFunctionalities(
+                        paddedModifier,
+                        dailySendingLimit = { dashboardScreenData().dailySendingLimit })
+                },
             )
         } else {
-            trialExpiryDate()?.let { expiryDate ->
+            dashboardScreenData().trialExpiryDate?.let { expiryDate ->
                 MyKSuitePlusTextItem(
                     modifier = paddedModifier,
                     title = stringResource(R.string.myKSuiteDashboardTrialPeriod),
@@ -274,31 +257,41 @@ private fun AdvantagesCard(modifier: Modifier = Modifier) {
     }
 }
 
+data class MyKSuiteDashboardScreenData(
+    val myKSuiteTier: MyKSuiteTier,
+    val email: String,
+    val dailySendingLimit: String,
+    val kSuiteProductsWithQuotas: List<KSuiteProductsWithQuotas>,
+    val trialExpiryDate: Date?,
+    val avatarUri: String = "",
+)
+
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun Preview() {
+    val dashboardScreenData = MyKSuiteDashboardScreenData(
+        myKSuiteTier = MyKSuiteTier.Plus,
+        email = "Toto",
+        avatarUri = "",
+        dailySendingLimit = "500",
+        kSuiteProductsWithQuotas =
+        listOf(
+            KSuiteProductsWithQuotas.Mail(
+                usedSize = "0.2 Go",
+                maxSize = "20 Go",
+                progress = 0.01f,
+            ),
+            KSuiteProductsWithQuotas.Drive(
+                usedSize = "6 Go",
+                maxSize = "15 Go",
+                progress = 0.4f,
+            ),
+        ),
+        trialExpiryDate = Date(),
+    )
+
     Surface(Modifier.fillMaxSize(), color = Color.White) {
-        MyKSuiteDashboardScreen(
-            myKSuiteTier = { MyKSuiteTier.Plus },
-            email = "Toto",
-            avatarUri = { "" },
-            dailySendingLimit = { "500" },
-            kSuiteProductsWithQuotas = {
-                listOf(
-                    KSuiteProductsWithQuotas.Mail(
-                        usedSize = "0.2 Go",
-                        maxSize = "20 Go",
-                        progress = 0.01f,
-                    ),
-                    KSuiteProductsWithQuotas.Drive(
-                        usedSize = "6 Go",
-                        maxSize = "15 Go",
-                        progress = 0.4f,
-                    ),
-                )
-            },
-            trialExpiryDate = { Date() }
-        )
+        MyKSuiteDashboardScreen(dashboardScreenData = { dashboardScreenData })
     }
 }
