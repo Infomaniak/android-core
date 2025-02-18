@@ -112,13 +112,23 @@ private fun UpgradeBottomSheetContent(app: KSuiteApp, onButtonClicked: () -> Uni
 }
 
 @Composable
-private fun ColumnScope.UpgradeFeatures(app: KSuiteApp, modifier: Modifier) {
-    app.features.forEach { UpgradeFeature(it, modifier) }
-    UpgradeFeature(MyKSuiteUpgradeFeatures.MoreFeatures, modifier)
+private fun UpgradeFeatures(app: KSuiteApp, modifier: Modifier) {
+    val upgradeFeatureModifier = Modifier.fillMaxWidth()
+    val textColor = LocalMyKSuiteColors.current.secondaryTextColor
+
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
+        app.features.forEach { UpgradeFeature(modifier = upgradeFeatureModifier, customFeature = it, textColor = textColor) }
+        UpgradeFeature(
+            modifier = upgradeFeatureModifier,
+            customFeature = MyKSuiteUpgradeFeatures.MoreFeatures,
+            textColor = textColor,
+        )
+    }
 }
 
 @Parcelize
-enum class KSuiteApp(internal val features: List<MyKSuiteUpgradeFeatures>, internal val buttonStyle: MyKSuiteButtonType) : Parcelable {
+enum class KSuiteApp(internal val features: List<MyKSuiteUpgradeFeatures>, internal val buttonStyle: MyKSuiteButtonType) :
+    Parcelable {
     Mail(
         features = listOf(MyKSuiteUpgradeFeatures.MailUnlimitedFeature, MyKSuiteUpgradeFeatures.MailOtherFeature),
         buttonStyle = MyKSuiteButtonType.Mail,
