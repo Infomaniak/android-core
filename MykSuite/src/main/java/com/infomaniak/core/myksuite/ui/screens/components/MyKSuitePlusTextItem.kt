@@ -35,7 +35,7 @@ import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import java.util.Date
 
 @Composable
-fun MyKSuitePlusTextItem(modifier: Modifier = Modifier, title: String, value: String) {
+internal fun MyKSuitePlusTextItem(modifier: Modifier = Modifier, title: String, value: String) {
     Row(
         modifier = modifier
             .heightIn(min = 40.dp)
