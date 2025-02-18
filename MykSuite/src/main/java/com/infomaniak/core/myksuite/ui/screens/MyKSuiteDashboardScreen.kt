@@ -18,6 +18,7 @@
 package com.infomaniak.core.myksuite.ui.screens
 
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,6 +44,7 @@ import com.infomaniak.core.myksuite.ui.network.ApiRoutes
 import com.infomaniak.core.myksuite.ui.screens.components.*
 import com.infomaniak.core.myksuite.ui.theme.*
 import com.infomaniak.core.myksuite.ui.theme.Typography
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 
 @Composable
@@ -257,6 +259,7 @@ private fun AdvantagesCard(modifier: Modifier = Modifier) {
     }
 }
 
+@Parcelize
 data class MyKSuiteDashboardScreenData(
     val myKSuiteTier: MyKSuiteTier,
     val email: String,
@@ -264,7 +267,7 @@ data class MyKSuiteDashboardScreenData(
     val kSuiteProductsWithQuotas: List<KSuiteProductsWithQuotas>,
     val trialExpiryDate: Date?,
     val avatarUri: String = "",
-)
+) : Parcelable
 
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
@@ -275,8 +278,7 @@ private fun Preview() {
         email = "Toto",
         avatarUri = "",
         dailySendingLimit = "500",
-        kSuiteProductsWithQuotas =
-        listOf(
+        kSuiteProductsWithQuotas = listOf(
             KSuiteProductsWithQuotas.Mail(
                 usedSize = "0.2 Go",
                 maxSize = "20 Go",
