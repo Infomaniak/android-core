@@ -28,13 +28,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.extensions.openUrl
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.*
+import com.infomaniak.core.myksuite.ui.network.ApiRoutes
 import com.infomaniak.core.myksuite.ui.screens.components.*
 import com.infomaniak.core.myksuite.ui.theme.*
 import com.infomaniak.core.myksuite.ui.theme.Typography
@@ -132,6 +135,7 @@ private fun SubscriptionInfoCard(
     kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
     trialExpiryDate: () -> Date?,
 ) {
+    val context = LocalContext.current
     val localColors = LocalMyKSuiteColors.current
 
     Card(
@@ -181,7 +185,7 @@ private fun SubscriptionInfoCard(
                 modifier = paddedModifier,
                 text = stringResource(R.string.myKSuiteManageSubscriptionDescription),
                 buttonText = stringResource(R.string.myKSuiteManageSubscriptionButton),
-                onClick = {} // TODO
+                onClick = { context.openUrl(ApiRoutes.MANAGER_URL) }
             )
         }
         Spacer(Modifier.height(Margin.Medium))
