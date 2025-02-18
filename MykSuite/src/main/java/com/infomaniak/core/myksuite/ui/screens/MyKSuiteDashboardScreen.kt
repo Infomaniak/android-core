@@ -81,8 +81,13 @@ fun MyKSuiteDashboardScreen(
                         kSuiteProductsWithQuotas = kSuiteProductsWithQuotas,
                         trialExpiryDate = trialExpiryDate,
                     )
-                    // TODO: Add this line when we'll have In-app payments
-                    // MyKSuitePlusPromotionCard(paddedModifier) {}
+
+                    if (myKSuiteTier() == MyKSuiteTier.Free) {
+                        // TODO: Add this line when we'll have In-app payments
+                        // MyKSuitePlusPromotionCard(paddedModifier) {}
+                    } else {
+                        AdvantagesCard(paddedModifier)
+                    }
                 }
             }
         }
@@ -241,6 +246,26 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                     onClick = onButtonClicked,
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun AdvantagesCard(modifier: Modifier = Modifier) {
+    val localColors = LocalMyKSuiteColors.current
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(Dimens.largeCornerRadius),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
+        colors = CardDefaults.elevatedCardColors(containerColor = localColors.background),
+    ) {
+        Column(modifier = Modifier.padding(Margin.Medium), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
+            Text(stringResource(R.string.myKSuiteUpgradeBenefitsTitle), color = localColors.secondaryTextColor)
+            val upgradeFeatureModifier = Modifier.fillMaxWidth()
+            val iconSize = Dimens.smallIconSize
+            UpgradeFeature(upgradeFeatureModifier, MyKSuiteUpgradeFeatures.DriveStorageFeature, iconSize)
+            UpgradeFeature(upgradeFeatureModifier, MyKSuiteUpgradeFeatures.MailUnlimitedFeature, iconSize)
+            UpgradeFeature(upgradeFeatureModifier, MyKSuiteUpgradeFeatures.MoreFeatures, iconSize)
         }
     }
 }
