@@ -26,11 +26,8 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
-import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreen
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
-import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
 
 open class MyKSuiteDashboardFragment : Fragment() {
 
@@ -40,43 +37,21 @@ open class MyKSuiteDashboardFragment : Fragment() {
     private val onClose: () -> Unit by lazy { { this@MyKSuiteDashboardFragment.findNavController().popBackStack() } }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val dashboardScreenData = with(navigationArgs) {
-            MyKSuiteDashboardScreenData(
-                myKSuiteTier = myKSuiteTier,
-                email = email,
-                avatarUri = avatarUri,
-                dailySendingLimit = dailySendLimit,
-                kSuiteProductsWithQuotas = kSuiteAppsWithQuotas.toList(),
-                trialExpiryDate = trialExpiryDate,
-            )
-        }
-
         return ComposeView(requireContext()).apply {
             composeView = this
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                MyKSuiteDashboardScreen({ dashboardScreenData }, onClose)
+                MyKSuiteDashboardScreen({ navigationArgs.dashboardData }, onClose)
             }
         }
     }
 
-    protected fun resetContent(myKSuiteData: MyKSuiteData, avatarUri: String, products: List<KSuiteProductsWithQuotas>) {
-        with(myKSuiteData) {
-            composeView.setContent {
-                MyKSuiteDashboardScreen(
-                    dashboardScreenData = {
-                        MyKSuiteDashboardScreenData(
-                            myKSuiteTier = if (isMyKSuitePlus) MyKSuiteTier.Plus else MyKSuiteTier.Free,
-                            email = mail.email,
-                            avatarUri = avatarUri,
-                            dailySendingLimit = mail.dailyLimitSent.toString(),
-                            kSuiteProductsWithQuotas = products,
-                            trialExpiryDate = trialExpiryDate,
-                        )
-                    },
-                    onClose = onClose,
-                )
-            }
+    protected fun resetContent(dashboardData: MyKSuiteDashboardScreenData) {
+        composeView.setContent {
+            MyKSuiteDashboardScreen(
+                dashboardScreenData = { dashboardData },
+                onClose = onClose,
+            )
         }
     }
 }
