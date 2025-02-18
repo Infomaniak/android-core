@@ -26,17 +26,22 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
+import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreen
+import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
 
 open class MyKSuiteDashboardFragment : Fragment() {
 
     private val navigationArgs: MyKSuiteDashboardFragmentArgs by navArgs()
+    private lateinit var composeView: ComposeView
+
+    private val onClose: () -> Unit by lazy { { this@MyKSuiteDashboardFragment.findNavController().popBackStack() } }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val onClose: () -> Unit = { this@MyKSuiteDashboardFragment.findNavController().popBackStack() }
                 with(navigationArgs) {
                     MyKSuiteDashboardScreen(
                         myKSuiteTier = { myKSuiteTier },
@@ -48,6 +53,23 @@ open class MyKSuiteDashboardFragment : Fragment() {
                         onClose = onClose,
                     )
                 }
+                composeView = this
+            }
+        }
+    }
+
+    protected fun resetContent(myKSuiteData: MyKSuiteData, avatarUri: String, products: List<KSuiteProductsWithQuotas>) {
+        composeView.setContent {
+            with(myKSuiteData) {
+                MyKSuiteDashboardScreen(
+                    myKSuiteTier = { if (isMyKSuitePlus) MyKSuiteTier.Plus else MyKSuiteTier.Free },
+                    email = mail.email,
+                    avatarUri = { avatarUri },
+                    dailySendingLimit = { mail.dailyLimitSent.toString() },
+                    kSuiteProductsWithQuotas = { products },
+                    trialExpiryDate = { trialExpiryDate },
+                    onClose = onClose,
+                )
             }
         }
     }
