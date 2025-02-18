@@ -101,7 +101,7 @@ private fun Preview() {
         val localColors = LocalMyKSuiteColors.current
         Surface {
             TextWithIcon(
-                // The icon's horizontal size is 16dp, the iconRightPadding is 12dp, so here by passing 32dp as the Text padding
+                // The icon's horizontal size is 16dp, the iconRightPadding is 12dp. So here by passing 32dp as the Text padding,
                 // it will result in a 32 - (16 + 12) = 4dp start padding for the icon
                 modifier = Modifier.padding(start = Margin.Huge),
                 text = getLoremText(35), icon = ImageVector.vectorResource(R.drawable.ic_circle_i),
