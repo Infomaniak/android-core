@@ -42,7 +42,7 @@ import kotlinx.parcelize.Parcelize
 @Composable
 internal fun ProductsStorageQuotas(
     modifier: Modifier,
-    myKSuiteTier: () -> MyKSuiteTier,
+    myKSuiteTier: MyKSuiteTier,
     kSuiteProductsWithQuotas: () -> List<KSuiteProductsWithQuotas>,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
@@ -53,11 +53,11 @@ internal fun ProductsStorageQuotas(
 @Composable
 private fun ProductStorageQuota(
     modifier: Modifier = Modifier,
-    myKSuiteTier: () -> MyKSuiteTier,
+    myKSuiteTier: MyKSuiteTier,
     product: KSuiteProductsWithQuotas,
 ) {
     val localColors = LocalMyKSuiteColors.current
-    val isUnlimitedMail = myKSuiteTier() == MyKSuiteTier.Plus && product is KSuiteProductsWithQuotas.Mail
+    val isUnlimitedMail = myKSuiteTier == MyKSuiteTier.Plus && product is KSuiteProductsWithQuotas.Mail
 
     Column(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -127,7 +127,7 @@ private fun Preview() {
         Surface {
             ProductsStorageQuotas(
                 modifier = Modifier.padding(Margin.Medium),
-                myKSuiteTier = { MyKSuiteTier.Plus },
+                myKSuiteTier = MyKSuiteTier.Plus,
                 kSuiteProductsWithQuotas = {
                     listOf(
                         KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
