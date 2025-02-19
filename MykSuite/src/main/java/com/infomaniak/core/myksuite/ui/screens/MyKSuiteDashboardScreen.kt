@@ -164,8 +164,8 @@ private fun SubscriptionInfoCard(
             )
         } else {
             dashboardScreenData().trialExpiryDate?.let { expiryDate ->
-                MyKSuitePlusTextItem(
-                    modifier = paddedModifier,
+                MyKSuiteTextItem(
+                    modifier = paddedModifier.heightIn(min = Dimens.textItemMinHeight),
                     title = stringResource(R.string.myKSuiteDashboardTrialPeriod),
                     value = stringResource(R.string.myKSuiteDashboardUntil, expiryDate.format(FORMAT_DATE_SIMPLE)),
                 )
