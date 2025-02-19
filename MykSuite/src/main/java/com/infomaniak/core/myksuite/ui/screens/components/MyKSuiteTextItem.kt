@@ -17,34 +17,42 @@
  */
 package com.infomaniak.core.myksuite.ui.screens.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.FORMAT_DATE_SIMPLE
 import com.infomaniak.core.format
 import com.infomaniak.core.myksuite.R
-import com.infomaniak.core.myksuite.ui.theme.Dimens
 import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.Typography
 import java.util.Date
 
 @Composable
-internal fun MyKSuitePlusTextItem(modifier: Modifier = Modifier, title: String, value: String) {
+internal fun MyKSuiteTextItem(
+    modifier: Modifier = Modifier,
+    title: String,
+    value: String,
+    valueStyle: TextStyle = Typography.bodyRegular,
+) {
+    val localColors = LocalMyKSuiteColors.current
     Row(
-        modifier = modifier
-            .heightIn(min = Dimens.textItemMinHeight)
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = title)
-        Text(text = value, color = LocalMyKSuiteColors.current.secondaryTextColor)
+        Text(text = title, color = localColors.primaryTextColor)
+        Text(text = value, color = localColors.secondaryTextColor, style = valueStyle)
     }
 }
 
@@ -53,7 +61,7 @@ internal fun MyKSuitePlusTextItem(modifier: Modifier = Modifier, title: String, 
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            MyKSuitePlusTextItem(
+            MyKSuiteTextItem(
                 modifier = Modifier.padding(horizontal = Margin.Medium),
                 title = stringResource(R.string.myKSuiteDashboardTrialPeriod),
                 value = stringResource(R.string.myKSuiteDashboardUntil, Date().format(FORMAT_DATE_SIMPLE)),
