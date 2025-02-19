@@ -69,7 +69,7 @@ fun MyKSuiteDashboardScreen(dashboardScreenData: () -> MyKSuiteDashboardScreenDa
                 )
                 Column(Modifier.padding(paddingValues), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
                     val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
-                    SubscriptionInfoCard(paddedModifier = paddedModifier, dashboardScreenData = dashboardScreenData)
+                    SubscriptionInfoCard(paddedModifier, dashboardScreenData)
 
                     if (dashboardScreenData().myKSuiteTier == MyKSuiteTier.Free) {
                         // TODO: Add this line when we'll have In-app payments
@@ -112,7 +112,10 @@ private fun TopAppBar(onClose: () -> Unit) {
 }
 
 @Composable
-private fun SubscriptionInfoCard(paddedModifier: Modifier, dashboardScreenData: () -> MyKSuiteDashboardScreenData) {
+private fun SubscriptionInfoCard(
+    paddedModifier: Modifier,
+    dashboardScreenData: () -> MyKSuiteDashboardScreenData,
+) {
     val context = LocalContext.current
     val localColors = LocalMyKSuiteColors.current
 
@@ -121,7 +124,7 @@ private fun SubscriptionInfoCard(paddedModifier: Modifier, dashboardScreenData: 
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         colors = CardDefaults.cardColors(containerColor = localColors.background),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
-        border = if (isSystemInDarkTheme()) BorderStroke(1.dp, localColors.cardBorderColor) else null,
+        border = cardBorder(),
     ) {
         Row(
             modifier = paddedModifier.padding(top = Margin.Medium),
@@ -242,13 +245,14 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
 }
 
 @Composable
-private fun AdvantagesCard(modifier: Modifier = Modifier) {
+private fun AdvantagesCard(modifier: Modifier) {
     val localColors = LocalMyKSuiteColors.current
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
         colors = CardDefaults.elevatedCardColors(containerColor = localColors.background),
+        border = cardBorder(),
     ) {
         Column(modifier = Modifier.padding(Margin.Medium), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
             Text(
@@ -265,6 +269,9 @@ private fun AdvantagesCard(modifier: Modifier = Modifier) {
         }
     }
 }
+
+@Composable
+private fun cardBorder() = if (isSystemInDarkTheme()) BorderStroke(1.dp, LocalMyKSuiteColors.current.cardBorderColor) else null
 
 @Parcelize
 data class MyKSuiteDashboardScreenData(
