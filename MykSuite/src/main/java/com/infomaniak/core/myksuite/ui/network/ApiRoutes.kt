@@ -19,7 +19,10 @@ package com.infomaniak.core.myksuite.ui.network
 
 object ApiRoutes {
 
-    private const val BASE_URL = "https://api.staging-myksuite.dev.infomaniak.ch"
+    const val MANAGER_URL = "https://manager.infomaniak.com/v3/ng/home"
 
-    val myKSuiteData = "$BASE_URL/1/my_ksuite/current?with=*"
+    private const val BASE_URL = "https://api.infomaniak.com"
+
+    fun myKSuiteData() = "$BASE_URL/1/my_ksuite/current?with=drive,mail,pack,can_trial,has_auto_renew"
+
 }

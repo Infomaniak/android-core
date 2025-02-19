@@ -33,15 +33,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.theme.*
 
 @Composable
-internal fun ExpendableActionItem(
+internal fun ExpandableActionItem(
     @DrawableRes iconRes: Int,
     @StringRes textRes: Int,
-    expendedView: (@Composable () -> Unit)? = null,
+    expandedView: (@Composable () -> Unit)? = null,
 ) {
 
     var isExpanded by remember { mutableStateOf(false) }
@@ -51,10 +50,10 @@ internal fun ExpendableActionItem(
     Column {
         Row(
             modifier = Modifier
-                .heightIn(40.dp)
+                .heightIn(min = Dimens.textItemMinHeight)
                 .fillMaxWidth()
                 .then(  // TODO add onClickLabel for accessibility
-                    if (expendedView == null) Modifier else Modifier.clickable { isExpanded = !isExpanded }
+                    if (expandedView == null) Modifier else Modifier.clickable { isExpanded = !isExpanded }
                 )
                 .padding(horizontal = Margin.Medium),
             verticalAlignment = Alignment.CenterVertically,
@@ -72,7 +71,7 @@ internal fun ExpendableActionItem(
                 style = Typography.bodyRegular,
                 color = localColors.primaryTextColor,
             )
-            expendedView?.let {
+            expandedView?.let {
                 val icon = ImageVector.vectorResource(if (isExpanded) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down)
                 Icon(
                     imageVector = icon,
@@ -81,7 +80,7 @@ internal fun ExpendableActionItem(
                 )
             }
         }
-        AnimatedVisibility(isExpanded) { expendedView?.invoke() }
+        AnimatedVisibility(isExpanded) { expandedView?.invoke() }
     }
 }
 
@@ -92,11 +91,11 @@ private fun Preview() {
     MyKSuiteTheme {
         Surface {
             Column {
-                ExpendableActionItem(R.drawable.ic_padlock, R.string.myKSuiteDashboardLimitedFunctionalityLabel)
-                ExpendableActionItem(
+                ExpandableActionItem(R.drawable.ic_padlock, R.string.myKSuiteDashboardLimitedFunctionalityLabel)
+                ExpandableActionItem(
                     iconRes = R.drawable.ic_padlock,
                     textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
-                    expendedView = { Text("") }
+                    expandedView = { Text("") }
                 )
             }
         }

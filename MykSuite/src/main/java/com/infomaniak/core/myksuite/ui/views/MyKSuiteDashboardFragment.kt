@@ -27,25 +27,26 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreen
+import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
 
 open class MyKSuiteDashboardFragment : Fragment() {
 
     private val navigationArgs: MyKSuiteDashboardFragmentArgs by navArgs()
+    private var composeView: ComposeView? = null
+
+    private val onClose: () -> Unit by lazy { { this@MyKSuiteDashboardFragment.findNavController().popBackStack() } }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ComposeView(requireContext()).apply {
+            composeView = this
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val onClose: () -> Unit = { this@MyKSuiteDashboardFragment.findNavController().popBackStack() }
-                with(navigationArgs) {
-                    MyKSuiteDashboardScreen(
-                        userName = userName,
-                        avatarUri = avatarUri,
-                        dailySendingLimit = dailySendLimit,
-                        onClose = onClose,
-                    )
-                }
+                MyKSuiteDashboardScreen({ navigationArgs.dashboardData }, onClose)
             }
         }
+    }
+
+    protected fun resetContent(dashboardData: MyKSuiteDashboardScreenData) {
+        composeView?.setContent { MyKSuiteDashboardScreen(dashboardScreenData = { dashboardData }, onClose = onClose) }
     }
 }

@@ -25,14 +25,8 @@
         android:name="com.infomaniak.core.myksuite.ui.views.MyKSuiteDashboardFragment"
         android:label="MyKSuiteDashboardFragment">
         <argument
-            android:name="userName"
-            app:argType="string" />
-        <argument
-            android:name="avatarUri"
-            app:argType="string" />
-        <argument
-            android:name="dailySendLimit"
-            app:argType="string" />
+            android:name="dashboardData"
+            app:argType="com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData" />
     </fragment>
 
     <dialog

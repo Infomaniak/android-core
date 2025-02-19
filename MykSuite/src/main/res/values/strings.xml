@@ -17,8 +17,8 @@
   -->
 <resources>
 
-    <string name="myKSuiteName" translatable="false">My kSuite</string>
-    <string name="myKSuitePlusName" translatable="false">My kSuite +</string>
+    <string name="myKSuiteName" translatable="false">my kSuite</string>
+    <string name="myKSuitePlusName" translatable="false">my kSuite+</string>
 
     <string name="androidMyKSuiteDashboardSubscriptionButton">Manage my offer</string>
     <string name="androidMyKSuiteDashboardSubscriptionLabel">To manage or cancel your subscription, log on to the kSuite web interface.</string>

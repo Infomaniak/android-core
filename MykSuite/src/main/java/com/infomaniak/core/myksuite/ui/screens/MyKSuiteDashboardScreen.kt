@@ -18,6 +18,7 @@
 package com.infomaniak.core.myksuite.ui.screens
 
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,24 +29,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.FORMAT_DATE_SIMPLE
+import com.infomaniak.core.extensions.openUrl
+import com.infomaniak.core.format
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.*
+import com.infomaniak.core.myksuite.ui.network.ApiRoutes
 import com.infomaniak.core.myksuite.ui.screens.components.*
 import com.infomaniak.core.myksuite.ui.theme.*
 import com.infomaniak.core.myksuite.ui.theme.Typography
+import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 @Composable
-fun MyKSuiteDashboardScreen(
-    userName: String,
-    avatarUri: String = "",
-    dailySendingLimit: String,
-    onClose: () -> Unit = {},
-) {
+fun MyKSuiteDashboardScreen(dashboardScreenData: () -> MyKSuiteDashboardScreenData, onClose: () -> Unit = {}) {
     MyKSuiteTheme {
         Scaffold(
             topBar = { TopAppBar(onClose) },
@@ -66,9 +69,14 @@ fun MyKSuiteDashboardScreen(
                 )
                 Column(Modifier.padding(paddingValues), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
                     val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
-                    SubscriptionInfoCard(paddedModifier, avatarUri, userName, dailySendingLimit)
-                    // TODO: Add this line when we'll have In-app payments
-                    // MyKSuitePlusPromotionCard(paddedModifier) {}
+                    SubscriptionInfoCard(paddedModifier, dashboardScreenData)
+
+                    if (dashboardScreenData().myKSuiteTier == MyKSuiteTier.Free) {
+                        // TODO: Add this line when we'll have In-app payments
+                        // MyKSuitePlusPromotionCard(paddedModifier) {}
+                    } else {
+                        AdvantagesCard(paddedModifier)
+                    }
                 }
             }
         }
@@ -106,10 +114,9 @@ private fun TopAppBar(onClose: () -> Unit) {
 @Composable
 private fun SubscriptionInfoCard(
     paddedModifier: Modifier,
-    avatarUri: String,
-    userName: String,
-    dailySendingLimit: String,
+    dashboardScreenData: () -> MyKSuiteDashboardScreenData,
 ) {
+    val context = LocalContext.current
     val localColors = LocalMyKSuiteColors.current
 
     Card(
@@ -117,33 +124,60 @@ private fun SubscriptionInfoCard(
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         colors = CardDefaults.cardColors(containerColor = localColors.background),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
-        border = if (isSystemInDarkTheme()) BorderStroke(1.dp, localColors.cardBorderColor) else null,
+        border = cardBorder(),
     ) {
         Row(
             modifier = paddedModifier.padding(top = Margin.Medium),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
         ) {
-            UserAvatar(avatarUri)
+            UserAvatar(dashboardScreenData().avatarUri)
             Text(
                 modifier = Modifier.weight(1.0f),
                 style = Typography.bodyRegular,
                 color = localColors.primaryTextColor,
-                text = userName,
+                text = dashboardScreenData().email,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            MyKSuiteChip(tier = MyKSuiteTier.Free)
+            MyKSuiteChip(tier = dashboardScreenData().myKSuiteTier)
         }
         PaddedDivider(paddedModifier)
-        AppStorageQuotas(paddedModifier)
-        PaddedDivider(paddedModifier)
-        ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
-        ExpendableActionItem(
-            iconRes = R.drawable.ic_padlock,
-            textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
-            expendedView = { LimitedFunctionalities(paddedModifier, dailySendingLimit) },
+        ProductsStorageQuotas(
+            modifier = paddedModifier,
+            myKSuiteTier = dashboardScreenData().myKSuiteTier,
+            kSuiteProductsWithQuotas = { dashboardScreenData().kSuiteProductsWithQuotas },
         )
+        PaddedDivider(paddedModifier)
+
+        if (dashboardScreenData().myKSuiteTier == MyKSuiteTier.Free) {
+            ExpandableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
+            ExpandableActionItem(
+                iconRes = R.drawable.ic_padlock,
+                textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
+                expandedView = {
+                    LimitedFunctionalities(
+                        modifier = paddedModifier,
+                        dailySendingLimit = { dashboardScreenData().dailySendingLimit },
+                    )
+                },
+            )
+        } else {
+            dashboardScreenData().trialExpiryDate?.let { expiryDate ->
+                MyKSuiteTextItem(
+                    modifier = paddedModifier.heightIn(min = Dimens.textItemMinHeight),
+                    title = stringResource(R.string.myKSuiteDashboardTrialPeriod),
+                    value = stringResource(R.string.myKSuiteDashboardUntil, expiryDate.format(FORMAT_DATE_SIMPLE)),
+                )
+            }
+            Spacer(Modifier.height(Margin.Large))
+            InformationBlock(
+                modifier = paddedModifier,
+                text = stringResource(R.string.myKSuiteManageSubscriptionDescription),
+                buttonText = stringResource(R.string.myKSuiteManageSubscriptionButton),
+                onClick = { context.openUrl(ApiRoutes.MANAGER_URL) },
+            )
+        }
         Spacer(Modifier.height(Margin.Medium))
     }
 }
@@ -210,11 +244,70 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
     }
 }
 
+@Composable
+private fun AdvantagesCard(modifier: Modifier) {
+    val localColors = LocalMyKSuiteColors.current
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(Dimens.largeCornerRadius),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
+        colors = CardDefaults.elevatedCardColors(containerColor = localColors.background),
+        border = cardBorder(),
+    ) {
+        Column(modifier = Modifier.padding(Margin.Medium), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
+            Text(
+                text = stringResource(R.string.myKSuiteUpgradeBenefitsTitle),
+                color = localColors.secondaryTextColor,
+                style = Typography.bodySmallRegular,
+            )
+
+            val upgradeFeatureModifier = Modifier.fillMaxWidth()
+            val iconSize = Dimens.smallIconSize
+            UpgradeFeature(upgradeFeatureModifier, MyKSuiteUpgradeFeatures.DriveStorageFeature, iconSize)
+            UpgradeFeature(upgradeFeatureModifier, MyKSuiteUpgradeFeatures.MailUnlimitedFeature, iconSize)
+            UpgradeFeature(upgradeFeatureModifier, MyKSuiteUpgradeFeatures.MoreFeatures, iconSize)
+        }
+    }
+}
+
+@Composable
+private fun cardBorder() = if (isSystemInDarkTheme()) BorderStroke(1.dp, LocalMyKSuiteColors.current.cardBorderColor) else null
+
+@Parcelize
+data class MyKSuiteDashboardScreenData(
+    val myKSuiteTier: MyKSuiteTier,
+    val email: String,
+    val dailySendingLimit: String,
+    val kSuiteProductsWithQuotas: List<KSuiteProductsWithQuotas>,
+    val trialExpiryDate: Date?,
+    val avatarUri: String = "",
+) : Parcelable
+
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun Preview() {
+    val dashboardScreenData = MyKSuiteDashboardScreenData(
+        myKSuiteTier = MyKSuiteTier.Plus,
+        email = "Toto",
+        avatarUri = "",
+        dailySendingLimit = "500",
+        kSuiteProductsWithQuotas = listOf(
+            KSuiteProductsWithQuotas.Mail(
+                usedSize = "0.2 Go",
+                maxSize = "20 Go",
+                progress = 0.01f,
+            ),
+            KSuiteProductsWithQuotas.Drive(
+                usedSize = "6 Go",
+                maxSize = "15 Go",
+                progress = 0.4f,
+            ),
+        ),
+        trialExpiryDate = Date(),
+    )
+
     Surface(Modifier.fillMaxSize(), color = Color.White) {
-        MyKSuiteDashboardScreen(userName = "Toto", avatarUri = "", dailySendingLimit = "500")
+        MyKSuiteDashboardScreen(dashboardScreenData = { dashboardScreenData })
     }
 }
