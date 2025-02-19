@@ -37,6 +37,7 @@ data class MyKSuiteData(
     @Embedded("k_suite_pack_")
     val kSuitePack: KSuitePack,
     @SerialName("trial_expiry_at")
+    @ColumnInfo("trial_expiry_at")
     val trialExpiryAt: Long? = null,
     @SerialName("is_free")
     @ColumnInfo("is_free")
@@ -49,6 +50,7 @@ data class MyKSuiteData(
     @ColumnInfo("has_auto_renew")
     val hasAutoRenew: Boolean,
     @SerialName("can_trial")
+    @ColumnInfo("can_trial")
     val canTrial: Boolean,
 ) {
 
