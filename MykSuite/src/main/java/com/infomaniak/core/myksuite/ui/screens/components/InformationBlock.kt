@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.myksuite.ui.screens.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,17 +45,15 @@ internal fun InformationBlock(modifier: Modifier = Modifier, text: String, butto
     Column(
         modifier
             .background(color = localColors.informationBlockBackground, shape = RoundedCornerShape(Dimens.smallCornerRadius))
-            .padding(horizontal = Margin.Medium)
-            .padding(top = Margin.Medium),
+            .padding(start = Margin.Medium, top = Margin.Medium, end = Margin.Medium),
     ) {
-        val icon = ImageVector.vectorResource(R.drawable.ic_circle_i)
         TextWithIcon(
             text = text,
-            icon = icon,
+            icon = ImageVector.vectorResource(R.drawable.ic_circle_i),
             iconTint = localColors.iconColor,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 28.dp),
+                .padding(start = 28.dp), // Icon size + iconRightPadding
             style = Typography.bodyRegular,
             iconRightPadding = Margin.Small,
         )
@@ -68,7 +67,9 @@ internal fun InformationBlock(modifier: Modifier = Modifier, text: String, butto
     }
 }
 
-@Preview
+
+@Preview(name = "(1) Light")
+@Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun Preview() {
 

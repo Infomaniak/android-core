@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.myksuite.R
+import com.infomaniak.core.myksuite.ui.theme.Dimens
 import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
@@ -38,7 +39,7 @@ import java.util.Date
 internal fun MyKSuitePlusTextItem(modifier: Modifier = Modifier, title: String, value: String) {
     Row(
         modifier = modifier
-            .heightIn(min = 40.dp)
+            .heightIn(min = Dimens.textItemMinHeight)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
