@@ -33,9 +33,8 @@
         android:id="@+id/myKSuiteUpgradeBottomSheet"
         android:name="com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog"
         android:label="MyKSuiteUpgradeBottomSheet">
-        <argument
-            android:name="kSuiteApp"
-            app:argType="com.infomaniak.core.myksuite.ui.screens.KSuiteApp" />
+
+        <deepLink app:uri="android-app://com.infomaniak.core.myksuite/myKSuiteUpgradeBottomSheet/{kSuiteApp}" />
     </dialog>
 
 </navigation>
