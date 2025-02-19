@@ -32,7 +32,7 @@ import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
 open class MyKSuiteDashboardFragment : Fragment() {
 
     private val navigationArgs: MyKSuiteDashboardFragmentArgs by navArgs()
-    private lateinit var composeView: ComposeView
+    private var composeView: ComposeView? = null
 
     private val onClose: () -> Unit by lazy { { this@MyKSuiteDashboardFragment.findNavController().popBackStack() } }
 
@@ -47,6 +47,6 @@ open class MyKSuiteDashboardFragment : Fragment() {
     }
 
     protected fun resetContent(dashboardData: MyKSuiteDashboardScreenData) {
-        composeView.setContent { MyKSuiteDashboardScreen(dashboardScreenData = { dashboardData }, onClose = onClose) }
+        composeView?.setContent { MyKSuiteDashboardScreen(dashboardScreenData = { dashboardData }, onClose = onClose) }
     }
 }

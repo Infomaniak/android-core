@@ -64,5 +64,5 @@ data class MyKSuiteData(
         get() = kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE_PLUS ||
                 kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE_PLUS_DRIVE_SOLO
 
-    inline val trialExpiryDate get() = trialExpiryAt?.let { Date(it * 1000) }
+    inline val trialExpiryDate get() = trialExpiryAt?.let { Date(it * 1_000) }
 }
