@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7b5e43bd9cc17b034cf90891e63090d7",
+    "identityHash": "daf7033b58a05ae65b82dee555601e73",
     "entities": [
       {
         "tableName": "MyKSuiteData",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `status` TEXT NOT NULL, `pack_id` INTEGER NOT NULL, `trialExpiryAt` INTEGER, `is_free` INTEGER NOT NULL, `has_auto_renew` INTEGER NOT NULL, `canTrial` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `k_suite_pack_id` INTEGER NOT NULL, `k_suite_pack_name` TEXT NOT NULL, `k_suite_pack_drive_storage` INTEGER NOT NULL, `k_suite_pack_mail_storage` INTEGER NOT NULL, `k_suite_pack_mail_daily_limit_send` INTEGER NOT NULL, `k_suite_pack_is_max_storage_offer` INTEGER NOT NULL, `drive_id` INTEGER NOT NULL, `drive_name` TEXT NOT NULL, `drive_size` INTEGER NOT NULL, `drive_used_size` INTEGER NOT NULL, `mail_id` INTEGER NOT NULL, `mail_email` TEXT NOT NULL, `mail_daily_limit_sent` INTEGER NOT NULL, `mail_storage_size_limit` INTEGER NOT NULL, `mail_used_size` INTEGER NOT NULL, `mail_mailboxId` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `trial_expiry_at` INTEGER, `is_free` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `drive_id` INTEGER NOT NULL, `drive_name` TEXT NOT NULL, `drive_size` INTEGER NOT NULL, `drive_used_size` INTEGER NOT NULL, `mail_id` INTEGER NOT NULL, `mail_email` TEXT NOT NULL, `mail_daily_limit_sent` INTEGER NOT NULL, `mail_storage_size_limit` INTEGER NOT NULL, `mail_used_size` INTEGER NOT NULL, `mail_mailbox_id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,20 +15,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "status",
-            "columnName": "status",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "kSuitePackId",
-            "columnName": "pack_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "trialExpiryAt",
-            "columnName": "trialExpiryAt",
+            "columnName": "trial_expiry_at",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -39,56 +27,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "hasAutoRenew",
-            "columnName": "has_auto_renew",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "canTrial",
-            "columnName": "canTrial",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "userId",
             "columnName": "user_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "kSuitePack.id",
-            "columnName": "k_suite_pack_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "kSuitePack.name",
-            "columnName": "k_suite_pack_name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "kSuitePack.driveStorage",
-            "columnName": "k_suite_pack_drive_storage",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "kSuitePack.mailStorage",
-            "columnName": "k_suite_pack_mail_storage",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "kSuitePack.mailDailyLimitSend",
-            "columnName": "k_suite_pack_mail_daily_limit_send",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "kSuitePack.isMaxStorageOffer",
-            "columnName": "k_suite_pack_is_max_storage_offer",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -148,7 +88,7 @@
           },
           {
             "fieldPath": "mail.mailboxId",
-            "columnName": "mail_mailboxId",
+            "columnName": "mail_mailbox_id",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -166,7 +106,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7b5e43bd9cc17b034cf90891e63090d7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'daf7033b58a05ae65b82dee555601e73')"
     ]
   }
 }

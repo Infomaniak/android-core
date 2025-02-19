@@ -21,6 +21,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.infomaniak.core.myksuite.R
+import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -30,13 +32,6 @@ import java.util.Date
 @Entity
 data class MyKSuiteData(
     @PrimaryKey val id: Int,
-    val status: String,
-    @SerialName("pack_id")
-    @ColumnInfo("pack_id")
-    val kSuitePackId: Int,
-    @SerialName("pack")
-    @Embedded("k_suite_pack_")
-    val kSuitePack: KSuitePack,
     @SerialName("trial_expiry_at")
     @ColumnInfo("trial_expiry_at")
     val trialExpiryAt: Long? = null,
@@ -47,22 +42,13 @@ data class MyKSuiteData(
     val drive: KSuiteDrive,
     @Embedded("mail_")
     val mail: KSuiteMail,
-    @SerialName("has_auto_renew")
-    @ColumnInfo("has_auto_renew")
-    val hasAutoRenew: Boolean,
-    @SerialName("can_trial")
-    @ColumnInfo("can_trial")
-    val canTrial: Boolean,
 ) {
 
     @Transient
     @ColumnInfo("user_id")
     var userId: Int = 0
 
-    val isMyKSuite get() = kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE
-    val isMyKSuitePlus
-        get() = kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE_PLUS ||
-                kSuitePack.type == KSuitePack.KSuitePackType.MY_KSUITE_PLUS_DRIVE_SOLO
-
+    inline val name get() = if (isFree) R.string.myKSuiteName else R.string.myKSuitePlusName
+    inline val tier get() = if (isFree) MyKSuiteTier.Free else MyKSuiteTier.Plus
     inline val trialExpiryDate get() = trialExpiryAt?.let { Date(it * 1_000) }
 }
