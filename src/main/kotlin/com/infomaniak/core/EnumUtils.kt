@@ -20,3 +20,11 @@ package com.infomaniak.core
 inline fun <reified T : Enum<T>> enumValueOfOrNull(value: String?): T? {
     return value?.let { runCatching { enumValueOf<T>(it) }.getOrNull() }
 }
+
+inline fun <reified T> apiEnumValueOfOrNull(value: String?): T? where T : Enum<T>, T : ApiEnum {
+    return value?.let { runCatching { enumValues<T>().firstOrNull { it.apiValue == value } }.getOrNull() }
+}
+
+interface ApiEnum {
+    val apiValue: String
+}
