@@ -33,7 +33,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
-import androidx.compose.ui.unit.dp
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.TextWithIcon
 import com.infomaniak.core.myksuite.ui.theme.*
@@ -51,9 +50,7 @@ internal fun InformationBlock(modifier: Modifier = Modifier, text: String, butto
             text = text,
             icon = ImageVector.vectorResource(R.drawable.ic_circle_i),
             iconTint = localColors.iconColor,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 28.dp), // Icon size + iconRightPadding
+            modifier = Modifier.fillMaxWidth(),
             style = Typography.bodyRegular,
             iconRightPadding = Margin.Small,
         )
