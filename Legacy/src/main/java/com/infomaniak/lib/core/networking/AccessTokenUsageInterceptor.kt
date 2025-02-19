@@ -24,7 +24,6 @@ import io.sentry.SentryLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable
@@ -42,6 +41,8 @@ class AccessTokenUsageInterceptor(
     private val updateLastApiCall: (ApiCallRecord) -> Unit,
 ) : Interceptor {
 
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response = chain.proceed(request)
@@ -52,11 +53,9 @@ class AccessTokenUsageInterceptor(
     }
 
     private fun processAccessTokenUsageAsync(request: Request, responseCode: Int) {
-        CoroutineScope(Dispatchers.Default).launch {
-            val apiToken = runBlocking {
-                // Only log api calls if we have an ApiToken
-                tokenInterceptorListener.getApiToken()
-            } ?: return@launch
+        coroutineScope.launch {
+            // Only log api calls if we have an ApiToken
+            val apiToken = tokenInterceptorListener.getApiToken() ?: return@launch
 
             // Only log api calls if we're not using refresh tokens
             if (!apiToken.isInfinite) return@launch
