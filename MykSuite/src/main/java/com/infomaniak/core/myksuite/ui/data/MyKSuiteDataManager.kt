@@ -45,7 +45,6 @@ abstract class MyKSuiteDataManager {
         myKSuiteDatabase?.myKSuiteDataDao()?.delete(kSuiteData)
     }
 
-    // TODO remove if not useful
     private suspend fun getKSuiteData(id: Int) = myKSuiteDatabase?.myKSuiteDataDao()?.findById(id)
 
     private suspend fun getKSuiteDataByUser() = myKSuiteDatabase?.myKSuiteDataDao()?.findByUserId(userId)
