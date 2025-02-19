@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,8 +30,9 @@ class TokenInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
 
-        runBlocking(Dispatchers.IO) {
-            val apiToken = tokenInterceptorListener.getApiToken() ?: return@runBlocking
+        runBlocking(Dispatchers.Default) {
+            tokenInterceptorListener.getApiToken()
+        }?.let { apiToken ->
             val authorization = request.header("Authorization")
             if (apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")) {
                 request = changeAccessToken(request, apiToken)
