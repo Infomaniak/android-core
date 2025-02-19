@@ -2,9 +2,9 @@ plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
+    alias(core.plugins.ksp)
     kotlin("plugin.parcelize")
     kotlin("plugin.serialization") version core.versions.kotlin
-    alias(core.plugins.ksp)
     id("androidx.navigation.safeargs.kotlin")
 }
 
