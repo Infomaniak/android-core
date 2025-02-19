@@ -21,9 +21,8 @@ import android.content.Context
 
 abstract class MyKSuiteDataManager {
 
-    abstract var myKSuiteId: Int
     abstract var myKSuite: MyKSuiteData?
-    abstract val userId: Int
+    protected abstract val currentUserId: Int
 
     private var myKSuiteDatabase: MyKSuiteDatabase? = null
 
@@ -37,15 +36,17 @@ abstract class MyKSuiteDataManager {
 
     suspend fun upsertKSuiteData(kSuiteData: MyKSuiteData) {
         myKSuite = kSuiteData
-        myKSuiteDatabase?.myKSuiteDataDao()?.upsert(kSuiteData.apply { userId = this@MyKSuiteDataManager.userId })
+        myKSuiteDatabase?.myKSuiteDataDao()?.upsert(kSuiteData.apply { userId = this@MyKSuiteDataManager.currentUserId })
     }
 
-    suspend fun deleteKSuiteData(kSuiteData: MyKSuiteData) {
+    suspend fun deleteKSuiteData(userId: Int) {
+        (getKSuiteDataByUser(userId) ?: myKSuite)?.let { myKSuiteDatabase?.myKSuiteDataDao()?.delete(it) }
         myKSuite = null
-        myKSuiteDatabase?.myKSuiteDataDao()?.delete(kSuiteData)
     }
 
     private suspend fun getKSuiteData(id: Int) = myKSuiteDatabase?.myKSuiteDataDao()?.findById(id)
 
-    private suspend fun getKSuiteDataByUser() = myKSuiteDatabase?.myKSuiteDataDao()?.findByUserId(userId)
+    private suspend fun getKSuiteDataByUser(userId: Int? = null): MyKSuiteData? {
+        return myKSuiteDatabase?.myKSuiteDataDao()?.findByUserId(userId ?: currentUserId)
+    }
 }

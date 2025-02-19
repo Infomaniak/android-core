@@ -24,10 +24,6 @@ import androidx.room.Upsert
 
 @Dao
 interface MyKSuiteDataDao {
-
-    @Query("SELECT * FROM MyKSuiteData")
-    suspend fun getAll(): List<MyKSuiteData>
-
     @Query("SELECT * FROM MyKSuiteData WHERE id = :id LIMIT 1")
     suspend fun findById(id: Int): MyKSuiteData?
 

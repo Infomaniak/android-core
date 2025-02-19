@@ -23,6 +23,5 @@ object ApiRoutes {
 
     private const val BASE_URL = "https://api.infomaniak.com"
 
-    fun myKSuiteData() = "$BASE_URL/1/my_ksuite/current?with=drive,mail,pack,can_trial,has_auto_renew"
-
+    fun myKSuiteData() = "$BASE_URL/1/my_ksuite/current?with=drive,mail"
 }
