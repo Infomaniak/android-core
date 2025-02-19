@@ -141,20 +141,22 @@ private fun SubscriptionInfoCard(paddedModifier: Modifier, dashboardScreenData: 
         }
         PaddedDivider(paddedModifier)
         ProductsStorageQuotas(
-            paddedModifier,
-            dashboardScreenData().myKSuiteTier,
-            { dashboardScreenData().kSuiteProductsWithQuotas })
+            modifier = paddedModifier,
+            myKSuiteTier = dashboardScreenData().myKSuiteTier,
+            kSuiteProductsWithQuotas = { dashboardScreenData().kSuiteProductsWithQuotas },
+        )
         PaddedDivider(paddedModifier)
 
         if (dashboardScreenData().myKSuiteTier == MyKSuiteTier.Free) {
-            ExpendableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
-            ExpendableActionItem(
+            ExpandableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
+            ExpandableActionItem(
                 iconRes = R.drawable.ic_padlock,
                 textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
-                expendedView = {
+                expandedView = {
                     LimitedFunctionalities(
-                        paddedModifier,
-                        dailySendingLimit = { dashboardScreenData().dailySendingLimit })
+                        modifier = paddedModifier,
+                        dailySendingLimit = { dashboardScreenData().dailySendingLimit },
+                    )
                 },
             )
         } else {
@@ -170,7 +172,7 @@ private fun SubscriptionInfoCard(paddedModifier: Modifier, dashboardScreenData: 
                 modifier = paddedModifier,
                 text = stringResource(R.string.myKSuiteManageSubscriptionDescription),
                 buttonText = stringResource(R.string.myKSuiteManageSubscriptionButton),
-                onClick = { context.openUrl(ApiRoutes.MANAGER_URL) }
+                onClick = { context.openUrl(ApiRoutes.MANAGER_URL) },
             )
         }
         Spacer(Modifier.height(Margin.Medium))
@@ -249,7 +251,12 @@ private fun AdvantagesCard(modifier: Modifier = Modifier) {
         colors = CardDefaults.elevatedCardColors(containerColor = localColors.background),
     ) {
         Column(modifier = Modifier.padding(Margin.Medium), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
-            Text(stringResource(R.string.myKSuiteUpgradeBenefitsTitle), color = localColors.secondaryTextColor)
+            Text(
+                text = stringResource(R.string.myKSuiteUpgradeBenefitsTitle),
+                color = localColors.secondaryTextColor,
+                style = Typography.bodySmallRegular,
+            )
+
             val upgradeFeatureModifier = Modifier.fillMaxWidth()
             val iconSize = Dimens.smallIconSize
             UpgradeFeature(upgradeFeatureModifier, MyKSuiteUpgradeFeatures.DriveStorageFeature, iconSize)

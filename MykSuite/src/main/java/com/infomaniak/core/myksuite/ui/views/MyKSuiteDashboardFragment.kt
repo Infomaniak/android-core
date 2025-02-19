@@ -47,11 +47,6 @@ open class MyKSuiteDashboardFragment : Fragment() {
     }
 
     protected fun resetContent(dashboardData: MyKSuiteDashboardScreenData) {
-        composeView.setContent {
-            MyKSuiteDashboardScreen(
-                dashboardScreenData = { dashboardData },
-                onClose = onClose,
-            )
-        }
+        composeView.setContent { MyKSuiteDashboardScreen(dashboardScreenData = { dashboardData }, onClose = onClose) }
     }
 }
