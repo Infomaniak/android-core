@@ -37,4 +37,7 @@ data class KSuiteMail(
     @SerialName("mailbox_id")
     @ColumnInfo("mailbox_id")
     val mailboxId: Int,
-)
+) {
+    // TODO: To remove the day the back will finally return us the size in Bytes instead of kiloBytes
+    inline val usedSizeInBytes get() = usedSize * 1_024
+}
