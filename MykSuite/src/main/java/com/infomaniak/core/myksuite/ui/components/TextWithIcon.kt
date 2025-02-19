@@ -46,6 +46,8 @@ import com.infomaniak.core.myksuite.ui.theme.Typography
  *
  *  IMPORTANT: You need to define the passed modifier's startPadding as at least the sum of [icon]'s horizontal dp size and
  *  [iconRightPadding] to display correctly the icon.
+ *
+ *  This code comes from [here](https://stackoverflow.com/questions/70708056/how-to-centrally-align-icon-to-first-line-of-a-text-component-in-compose/71312465#71312465)
  */
 @Composable
 internal fun TextWithIcon(
@@ -83,7 +85,7 @@ internal fun TextWithIcon(
                         left = lineLeft - imageSize.width - rightPadding,
                         top = lineTop + (lineBottom - lineTop) / 2 - imageSize.height / 2,
                     ) {
-                        draw(painter.intrinsicSize, colorFilter = ColorFilter.tint(iconTint))
+                        draw(size = intrinsicSize, colorFilter = ColorFilter.tint(iconTint))
                     }
                 }
             }
