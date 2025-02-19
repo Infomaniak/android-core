@@ -34,9 +34,9 @@ import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
-internal fun LimitedFunctionalities(paddedModifier: Modifier, dailySendingLimit: () -> String) {
+internal fun LimitedFunctionalities(modifier: Modifier, dailySendingLimit: () -> String) {
     Column(
-        modifier = paddedModifier.padding(top = Margin.Mini),
+        modifier = modifier.padding(top = Margin.Mini),
         verticalArrangement = Arrangement.spacedBy(Margin.Mini),
     ) {
         LimitedFunctionalityLabel(textRes = R.string.myKSuiteDashboardFunctionalityMailAndDrive)
