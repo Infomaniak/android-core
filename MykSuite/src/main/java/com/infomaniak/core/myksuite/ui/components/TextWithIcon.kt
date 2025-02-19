@@ -43,15 +43,11 @@ import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
 
 /** This component allows to put an icon on any line of the text, thanks to the [iconLine] parameter
- *
- *  IMPORTANT: You need to define the passed modifier's startPadding as at least the sum of [icon]'s horizontal dp size and
- *  [iconRightPadding] to display correctly the icon.
- *
  *  This code comes from [here](https://stackoverflow.com/questions/70708056/how-to-centrally-align-icon-to-first-line-of-a-text-component-in-compose/71312465#71312465)
  */
 @Composable
 internal fun TextWithIcon(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     text: String,
     icon: ImageVector,
     color: Color = Color.Unspecified,
@@ -79,16 +75,18 @@ internal fun TextWithIcon(
                     lineLeft = layoutResult.getLineLeft(iconLine)
                 }
             },
-            modifier = modifier.drawBehind {
-                with(painter) {
-                    translate(
-                        left = lineLeft - imageSize.width - rightPadding,
-                        top = lineTop + (lineBottom - lineTop) / 2 - imageSize.height / 2,
-                    ) {
-                        draw(size = intrinsicSize, colorFilter = ColorFilter.tint(iconTint))
+            modifier = modifier
+                .padding(start = icon.defaultWidth + iconRightPadding)
+                .drawBehind {
+                    with(painter) {
+                        translate(
+                            left = lineLeft - imageSize.width - rightPadding,
+                            top = lineTop + (lineBottom - lineTop) / 2 - imageSize.height / 2,
+                        ) {
+                            draw(size = intrinsicSize, colorFilter = ColorFilter.tint(iconTint))
+                        }
                     }
                 }
-            }
         )
     }
 }
@@ -103,9 +101,6 @@ private fun Preview() {
         val localColors = LocalMyKSuiteColors.current
         Surface {
             TextWithIcon(
-                // The icon's horizontal size is 16dp, the iconRightPadding is 12dp. So here by passing 32dp as the Text padding,
-                // it will result in a 32 - (16 + 12) = 4dp start padding for the icon
-                modifier = Modifier.padding(start = Margin.Huge),
                 text = getLoremText(35), icon = ImageVector.vectorResource(R.drawable.ic_circle_i),
                 color = localColors.primaryTextColor,
                 style = Typography.bodyRegular,
