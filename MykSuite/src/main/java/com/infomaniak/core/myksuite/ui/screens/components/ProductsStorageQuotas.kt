@@ -22,9 +22,7 @@ import android.os.Parcelable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
@@ -32,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
-import com.infomaniak.core.myksuite.ui.components.WeightOneSpacer
 import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
@@ -51,28 +48,16 @@ internal fun ProductsStorageQuotas(
 }
 
 @Composable
-private fun ProductStorageQuota(
-    modifier: Modifier = Modifier,
-    myKSuiteTier: MyKSuiteTier,
-    product: KSuiteProductsWithQuotas,
-) {
+private fun ProductStorageQuota(myKSuiteTier: MyKSuiteTier, product: KSuiteProductsWithQuotas) {
     val localColors = LocalMyKSuiteColors.current
     val isUnlimitedMail = myKSuiteTier == MyKSuiteTier.Plus && product is KSuiteProductsWithQuotas.Mail
 
-    Column(modifier) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = product.displayName,
-                style = Typography.bodyRegular,
-                color = localColors.primaryTextColor,
-            )
-            WeightOneSpacer(minWidth = Margin.Medium)
-            Text(
-                text = computeQuotasString(isUnlimitedMail, product),
-                style = Typography.bodySmallRegular,
-                color = localColors.secondaryTextColor,
-            )
-        }
+    Column {
+        MyKSuiteTextItem(
+            title = product.displayName,
+            value = computeQuotasString(isUnlimitedMail, product),
+            valueStyle = Typography.bodySmallRegular,
+        )
 
         if (!isUnlimitedMail) {
             Spacer(Modifier.height(Margin.Mini))
