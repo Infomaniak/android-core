@@ -67,6 +67,6 @@ dependencies {
     implementation(core.compose.runtime)
     debugImplementation(core.compose.ui.tooling)
     implementation(core.compose.material3)
-    api(core.compose.ui)
+    implementation(core.compose.ui)
     implementation(core.compose.ui.tooling.preview)
 }

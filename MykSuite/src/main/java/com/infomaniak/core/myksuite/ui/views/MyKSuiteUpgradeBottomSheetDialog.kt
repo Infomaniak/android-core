@@ -25,24 +25,36 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.infomaniak.core.enumValueOfOrNull
+import com.infomaniak.core.extensions.capitalizeFirstChar
+import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
 
-    private val navigationArgs: MyKSuiteUpgradeBottomSheetDialogArgs by navArgs()
+    private val kSuiteApp by lazy {
+        arguments?.getString(K_SUITE_APP_KEY)?.let { app -> enumValueOfOrNull<KSuiteApp>(app.lowercase().capitalizeFirstChar()) }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        if (kSuiteApp == null) findNavController().popBackStack()
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                MyKSuiteUpgradeBottomSheet(
-                    onDismissRequest = this@MyKSuiteUpgradeBottomSheetDialog.findNavController()::popBackStack,
-                    app = navigationArgs.kSuiteApp,
-                )
+            kSuiteApp?.let {
+                setContent {
+                    MyKSuiteUpgradeBottomSheet(
+                        onDismissRequest = this@MyKSuiteUpgradeBottomSheetDialog.findNavController()::popBackStack,
+                        app = it,
+                    )
+                }
             }
         }
+    }
+
+    companion object {
+        private const val K_SUITE_APP_KEY = "kSuiteApp" // Must kept the same value as the deepLink's in `my_ksuite_navigation`
     }
 }
