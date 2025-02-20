@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.infomaniak.core.extensions.capitalizeFirstChar
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeBottomSheet
 import com.infomaniak.core.utils.enumValueOfOrNull
@@ -35,7 +34,7 @@ import com.infomaniak.core.utils.enumValueOfOrNull
 class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
 
     private val kSuiteApp by lazy {
-        arguments?.getString(K_SUITE_APP_KEY)?.let { app -> enumValueOfOrNull<KSuiteApp>(app.lowercase().capitalizeFirstChar()) }
+        arguments?.getString(K_SUITE_APP_KEY)?.let { app -> enumValueOfOrNull<KSuiteApp>(app) }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -56,5 +55,7 @@ class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
 
     companion object {
         private const val K_SUITE_APP_KEY = "kSuiteApp" // Must kept the same value as the deepLink's in `my_ksuite_navigation`
+
+        fun getDeeplink(app: KSuiteApp) = "android-app://com.infomaniak.core.myksuite/myKSuiteUpgradeBottomSheet/${app.name}"
     }
 }
