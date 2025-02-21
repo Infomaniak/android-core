@@ -29,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.infomaniak.core.enumValueOfOrNull
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeBottomSheet
+import com.infomaniak.core.myksuite.ui.utils.MyKSuiteUiUtils.DEEPLINK_BASE
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
@@ -56,6 +57,6 @@ class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
     companion object {
         private const val K_SUITE_APP_KEY = "kSuiteApp" // Must kept the same value as the deepLink's in `my_ksuite_navigation`
 
-        fun getDeeplink(app: KSuiteApp) = "android-app://com.infomaniak.core.myksuite/myKSuiteUpgradeBottomSheet/${app.name}"
+        internal fun getDeeplink(app: KSuiteApp) = "$DEEPLINK_BASE/myKSuiteUpgradeBottomSheet/${app.name}"
     }
 }

@@ -24,9 +24,8 @@
         android:id="@+id/myKSuiteDashboardFragment"
         android:name="com.infomaniak.core.myksuite.ui.views.MyKSuiteDashboardFragment"
         android:label="MyKSuiteDashboardFragment">
-        <argument
-            android:name="dashboardData"
-            app:argType="com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData" />
+
+        <deepLink app:uri="android-app://com.infomaniak.core.myksuite/myKSuiteDashboardFragment/{dashboardData}" />
     </fragment>
 
     <dialog
