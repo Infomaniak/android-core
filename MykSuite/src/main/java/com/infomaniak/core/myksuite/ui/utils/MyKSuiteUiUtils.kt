@@ -17,11 +17,15 @@
  */
 package com.infomaniak.core.myksuite.ui.utils
 
+import android.content.Context
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkRequest
+import com.infomaniak.core.FormatterFileSize.formatShortFileSize
+import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
+import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteDashboardFragment
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog
 
@@ -41,5 +45,41 @@ object MyKSuiteUiUtils {
             .fromUri(MyKSuiteDashboardFragment.getDeeplink(data).toUri())
             .build()
             .also(::navigate)
+    }
+
+    fun getDashboardData(context: Context, myKSuiteData: MyKSuiteData, avatarUri: String?): MyKSuiteDashboardScreenData {
+        return MyKSuiteDashboardScreenData(
+            myKSuiteTier = myKSuiteData.tier,
+            email = myKSuiteData.mail.email,
+            avatarUri = avatarUri ?: "",
+            dailySendingLimit = myKSuiteData.mail.dailyLimitSent.toString(),
+            kSuiteProductsWithQuotas = context.getKSuiteQuotasApp(myKSuiteData).toList(),
+            trialExpiryAt = myKSuiteData.trialExpiryAtMillisecond,
+        )
+    }
+
+    private fun Context.getKSuiteQuotasApp(myKSuite: MyKSuiteData): Array<KSuiteProductsWithQuotas> {
+
+        fun computeProgress(usedSize: Long, maxSize: Long): Float {
+            return if (maxSize == 0L) 0.0f else (usedSize.toDouble() / maxSize.toDouble()).toFloat()
+        }
+
+        val mailProduct = with(myKSuite.mail) {
+            KSuiteProductsWithQuotas.Mail(
+                mailUsedSize = formatShortFileSize(usedSizeInBytes),
+                mailMaxSize = formatShortFileSize(storageSizeLimit),
+                mailProgress = computeProgress(usedSizeInBytes, storageSizeLimit),
+            )
+        }
+
+        val driveProduct = with(myKSuite.drive) {
+            KSuiteProductsWithQuotas.Drive(
+                driveUsedSize = formatShortFileSize(usedSize),
+                driveMaxSize = formatShortFileSize(size),
+                driveProgress = computeProgress(usedSize, size),
+            )
+        }
+
+        return arrayOf(mailProduct, driveProduct)
     }
 }
