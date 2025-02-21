@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.core.utils
+package com.infomaniak.core.utils
 
-import android.os.Build
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.time.ZoneId
@@ -27,22 +26,27 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-const val FORMAT_DATE_CLEAR_MONTH = "dd MMM yyyy"
 const val FORMAT_DATE_CLEAR_FULL_MONTH = "EEEE d MMMM yyyy"
-const val FORMAT_DATE_DAY_MONTH = "EEE d MMM"
-const val FORMAT_DATE_DAY_MONTH_YEAR = "EEE d MMM yyyy"
+const val FORMAT_DATE_CLEAR_MONTH = "dd MMM yyyy"
+const val FORMAT_DATE_CLEAR_MONTH_DAY_ONE_CHAR = "d MMM yyyy"
 const val FORMAT_DATE_DAY_FULL_MONTH_WITH_TIME = "EEEE d MMMM HH:mm"
 const val FORMAT_DATE_DAY_FULL_MONTH_YEAR_WITH_TIME = "EEEE d MMMM yyyy HH:mm"
-const val FORMAT_DATE_CLEAR_MONTH_DAY_ONE_CHAR = "d MMM yyyy"
+const val FORMAT_DATE_DAY_MONTH = "EEE d MMM"
+const val FORMAT_DATE_DAY_MONTH_YEAR = "EEE d MMM yyyy"
 const val FORMAT_DATE_DEFAULT = "dd.MM.yy"
-const val FORMAT_DATE_HOUR_MINUTE = "HH:mm"
+const val FORMAT_DATE_FULL = "EEEE d MMMM"
 const val FORMAT_DATE_SHORT_DAY_ONE_CHAR = "d MMM"
-const val FORMAT_SCHEDULE_MAIL = "yyyy-MM-dd'T'HH:mm:ssXXX"
+const val FORMAT_DATE_SIMPLE = "dd/MM/yyyy"
+const val FORMAT_DATE_TITLE = "E d MMMM"
 const val FORMAT_DATE_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZ"
 const val FORMAT_EVENT_DATE = "dd/MM/yyyy HH:mm"
 const val FORMAT_FULL_DATE = "EEEE dd MMMM yyyy"
 const val FORMAT_FULL_DATE_WITH_HOUR = "EEEE MMM d yyyy HH:mm:ss"
+const val FORMAT_HOUR_MINUTES = "HH:mm"
 const val FORMAT_NEW_FILE = "yyyyMMdd_HHmmss"
+const val FORMAT_SCHEDULE_MAIL = "yyyy-MM-dd'T'HH:mm:ssXXX"
+
+const val SECONDS_IN_A_DAY = 86_400L
 
 //region Format Dates
 enum class FormatData {
@@ -51,12 +55,9 @@ enum class FormatData {
     BOTH,
 }
 
-fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String {
-    val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
-    return simpleDateFormat.format(this)
-}
+fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String = SimpleDateFormat(pattern, Locale.getDefault()).format(this)
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(26)
 fun Date.formatWithLocal(formatData: FormatData, formatStyle: FormatStyle, formatStyleSecondary: FormatStyle? = null): String {
     val formatter = when (formatData) {
         FormatData.DATE -> DateTimeFormatter.ofLocalizedDate(formatStyle)
@@ -69,6 +70,10 @@ fun Date.formatWithLocal(formatData: FormatData, formatStyle: FormatStyle, forma
 //endregion
 
 //region Get a new Date relatively to a given Date
+fun Date.yesterday(): Date = addDays(-1)
+
+fun Date.tomorrow(): Date = addDays(1)
+
 fun Date.startOfTheDay(): Date = Calendar.getInstance().apply {
     time = this@startOfTheDay
     set(Calendar.HOUR_OF_DAY, 0)
@@ -81,11 +86,6 @@ fun Date.endOfTheDay(): Date = Calendar.getInstance().apply {
     set(Calendar.HOUR_OF_DAY, 23)
     set(Calendar.MINUTE, 59)
     set(Calendar.SECOND, 59)
-}.time
-
-fun Date.tomorrow(): Date = Calendar.getInstance().apply {
-    time = this@tomorrow
-    add(Calendar.DATE, 1)
 }.time
 
 fun Date.startOfTomorrow(): Date = tomorrow().startOfTheDay()
@@ -212,17 +212,11 @@ fun Date.isSameDayAs(targetDate: Date): Boolean {
             day() == targetDate.day()
 }
 
+fun Date.isYesterday(): Boolean = isSameDayAs(Date().yesterday())
+
 fun Date.isToday(): Boolean = isSameDayAs(Date())
 
-fun Date.isYesterday(): Boolean {
-    val yesterday = Date().addDays(-1)
-    return isSameDayAs(yesterday)
-}
-
-fun Date.isThisWeek(): Boolean {
-    val now = Date()
-    return this in now.startOfTheWeek()..now.endOfTheWeek()
-}
+fun Date.isTomorrow(): Boolean = isSameDayAs(Date().tomorrow())
 
 fun Date.isWeekend(): Boolean {
     val calendar = Calendar.getInstance().apply {
@@ -231,6 +225,8 @@ fun Date.isWeekend(): Boolean {
     val day = calendar.get(Calendar.DAY_OF_WEEK)
     return day == 1 || day == 7
 }
+
+fun Date.isThisWeek(): Boolean = Date().let { now -> this in now.startOfTheWeek()..now.endOfTheWeek() }
 
 fun Date.isThisMonth(): Boolean = Date().let { now -> year() == now.year() && month() == now.month() }
 
