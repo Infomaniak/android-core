@@ -15,17 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core
+package com.infomaniak.core.utils
 
-import android.os.Build
+import android.util.Patterns
 
-fun buildUserAgent(
-    appId: String,
-    appVersionCode: Int,
-    appVersionName: String,
-): String {
-    val androidVersion = "Android ${Build.VERSION.RELEASE}"
-    val arch = System.getProperty("os.arch")
-    return "$appId/$appVersionName-$appVersionCode (${Build.MODEL}; $androidVersion; $arch)"
-}
-
+fun String.isValidEmail(): Boolean = Patterns.EMAIL_ADDRESS.matcher(trim()).matches()

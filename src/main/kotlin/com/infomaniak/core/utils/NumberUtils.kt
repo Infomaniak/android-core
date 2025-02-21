@@ -15,16 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core
+package com.infomaniak.core.utils
 
-inline fun <reified T : Enum<T>> enumValueOfOrNull(value: String?): T? {
-    return value?.let { runCatching { enumValueOf<T>(it) }.getOrNull() }
-}
+import java.util.Locale
 
-inline fun <reified T> apiEnumValueOfOrNull(value: String?): T? where T : Enum<T>, T : ApiEnum {
-    return value?.let { runCatching { enumValues<T>().firstOrNull { it.apiValue == value } }.getOrNull() }
-}
-
-interface ApiEnum {
-    val apiValue: String
+fun percent(currentValue: Long, totalValue: Long): String {
+    val percentage = (currentValue.toFloat() / totalValue.toFloat())
+    return String.format(Locale.getDefault(), "%d", (percentage * 100.0f).toInt())
 }

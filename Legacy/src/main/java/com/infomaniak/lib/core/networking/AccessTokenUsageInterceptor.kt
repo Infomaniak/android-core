@@ -106,7 +106,8 @@ class AccessTokenUsageInterceptor(
     data class ApiCallRecord(val accessToken: String, val date: Long, val responseCode: Int)
 
     companion object {
-        private const val SIX_MONTHS = 60 * 60 * 24 * 182L // In seconds
+        private const val SECONDS_IN_A_DAY = 86_400L
+        private const val SIX_MONTHS = SECONDS_IN_A_DAY * 182L // In seconds
         private const val TEN_SECONDS = 10 // In seconds
     }
 }

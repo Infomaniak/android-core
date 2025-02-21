@@ -26,5 +26,5 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':Core:Legacy')
+    implementation project(':Core:Legacy')
 }
