@@ -39,7 +39,7 @@ abstract class MyKSuiteDataManager {
         myKSuiteDatabase?.myKSuiteDataDao()?.upsert(kSuiteData.apply { userId = this@MyKSuiteDataManager.currentUserId })
     }
 
-    suspend fun deleteKSuiteData(userId: Int) {
+    suspend fun deleteData(userId: Int) {
         (getKSuiteDataByUser(userId) ?: myKSuite)?.let { myKSuiteDatabase?.myKSuiteDataDao()?.delete(it) }
         myKSuite = null
     }
