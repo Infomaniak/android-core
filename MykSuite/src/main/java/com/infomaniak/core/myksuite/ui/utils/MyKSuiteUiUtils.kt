@@ -21,13 +21,24 @@ import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkRequest
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
+import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
+import com.infomaniak.core.myksuite.ui.views.MyKSuiteDashboardFragment
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog
 
 object MyKSuiteUiUtils {
 
+    internal const val DEEPLINK_BASE = "android-app://com.infomaniak.core.myksuite"
+
     fun NavController.openMyKSuiteUpgradeBottomSheet(app: KSuiteApp) {
         NavDeepLinkRequest.Builder
             .fromUri(MyKSuiteUpgradeBottomSheetDialog.getDeeplink(app).toUri())
+            .build()
+            .also(::navigate)
+    }
+
+    fun NavController.openMyKSuiteDashboard(data: MyKSuiteDashboardScreenData) {
+        NavDeepLinkRequest.Builder
+            .fromUri(MyKSuiteDashboardFragment.getDeeplink(data).toUri())
             .build()
             .also(::navigate)
     }
