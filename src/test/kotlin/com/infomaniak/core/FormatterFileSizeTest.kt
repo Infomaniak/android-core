@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2024-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package com.infomaniak.lib.core
+package com.infomaniak.core
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.infomaniak.lib.core.utils.FormatterFileSize.formatShortFileSize
+import com.infomaniak.core.FormatterFileSize.formatShortFileSize
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,9 @@ import android.icu.text.MeasureFormat.FormatWidth
 import android.icu.text.NumberFormat
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
+import android.os.Build.VERSION.SDK_INT
+import android.text.format.Formatter
+import androidx.annotation.RequiresApi
 import java.math.BigDecimal
 import java.util.Locale
 import kotlin.math.abs
@@ -38,9 +41,64 @@ object FormatterFileSize {
     private const val FLAG_SHORTER = 1 shl 0
 
     fun Context.formatShortFileSize(bytes: Long, valueOnly: Boolean = false): String {
-        return formatFileSize(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly)
+        return if (SDK_INT < 24) {
+            runCatching {
+                formatFileSizeBeforeNougat(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly)
+            }.getOrElse {
+                Formatter.formatShortFileSize(this, bytes)
+            }
+        } else {
+            formatFileSize(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly)
+        }
     }
 
+    private fun Context.formatFileSizeBeforeNougat(bytes: Long, flags: Int, valueOnly: Boolean): String {
+
+        fun getSuffix(suffixes: MutableList<String>): Int? {
+            return if (valueOnly) null else resources.getIdentifier(suffixes.removeFirstOrNull(), "string", "android")
+        }
+
+        val suffixes = mutableListOf(
+            "byteShort",
+            "kilobyteShort",
+            "megabyteShort",
+            "gigabyteShort",
+            "terabyteShort",
+            "petabyteShort",
+        )
+        val unit = if (flags and FLAG_IEC_UNITS != 0) KIBI_BYTE else KILO_BYTE
+        var multiplier = 1L
+
+        var result = abs(bytes).toFloat()
+        val suffixesCount = suffixes.count() - 1
+        var suffix = getSuffix(suffixes)
+
+        repeat(suffixesCount) {
+            if (result > 900) {
+                suffix = getSuffix(suffixes)
+                multiplier *= unit
+                result /= unit
+            }
+        }
+
+        val roundFormat = when {
+            multiplier == 1L || result >= 100 -> "%.0f"
+            result < 1 -> "%.2f"
+            result < 10 -> if (flags and FLAG_SHORTER != 0) "%.1f" else "%.2f"
+            else -> if (flags and FLAG_SHORTER != 0) "%.0f" else "%.2f" // 10 <= result < 100
+        }
+
+        result = abs(result)
+
+        val resultValue = String.format(roundFormat, result)
+        val resultValueFormatted = suffix?.let {
+            getString(resources.getIdentifier("fileSizeSuffix", "string", "android"), resultValue, resources.getString(it))
+        }
+
+        return resultValueFormatted ?: resultValue
+    }
+
+    @RequiresApi(24)
     private fun Context.formatFileSize(bytes: Long, flags: Int, valueOnly: Boolean): String {
 
         fun getSuffix(suffixes: MutableList<MeasureUnit>): MeasureUnit? {
@@ -87,8 +145,10 @@ object FormatterFileSize {
         return resultValueFormatted ?: resultValue
     }
 
+    @RequiresApi(24)
     private fun Context.currentLocale(): Locale = resources.configuration.locales[0]
 
+    @RequiresApi(24)
     private fun getNumberFormatter(locale: Locale, fractionDigits: Int): NumberFormat {
         return NumberFormat.getInstance(locale).apply {
             minimumFractionDigits = fractionDigits
@@ -101,6 +161,7 @@ object FormatterFileSize {
         }
     }
 
+    @RequiresApi(24)
     private fun formatMeasureShort(locale: Locale, numberFormatter: NumberFormat, value: Float, units: MeasureUnit): String {
         val measureFormatter = MeasureFormat.getInstance(locale, FormatWidth.SHORT, numberFormatter)
         return measureFormatter.format(Measure(value, units))
