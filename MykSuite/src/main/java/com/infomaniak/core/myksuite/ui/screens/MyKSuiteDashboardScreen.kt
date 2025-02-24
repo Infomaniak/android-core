@@ -18,6 +18,7 @@
 package com.infomaniak.core.myksuite.ui.screens
 
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,7 +44,7 @@ import com.infomaniak.core.myksuite.ui.theme.*
 import com.infomaniak.core.myksuite.ui.theme.Typography
 import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
 import com.infomaniak.core.utils.format
-import kotlinx.serialization.Serializable
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 
 @Composable
@@ -162,11 +163,11 @@ private fun SubscriptionInfoCard(
                 },
             )
         } else {
-            dashboardScreenData().trialExpiryAt?.let { expiryAt ->
+            dashboardScreenData().trialExpiryDate?.let { expiryDate ->
                 MyKSuiteTextItem(
                     modifier = paddedModifier.heightIn(min = Dimens.textItemMinHeight),
                     title = stringResource(R.string.myKSuiteDashboardTrialPeriod),
-                    value = stringResource(R.string.myKSuiteDashboardUntil, Date(expiryAt).format(FORMAT_DATE_SIMPLE)),
+                    value = stringResource(R.string.myKSuiteDashboardUntil, expiryDate.format(FORMAT_DATE_SIMPLE)),
                 )
             }
             Spacer(Modifier.height(Margin.Large))
@@ -272,15 +273,15 @@ private fun AdvantagesCard(modifier: Modifier) {
 @Composable
 private fun cardBorder() = if (isSystemInDarkTheme()) BorderStroke(1.dp, LocalMyKSuiteColors.current.cardBorderColor) else null
 
-@Serializable
+@Parcelize
 data class MyKSuiteDashboardScreenData(
     val myKSuiteTier: MyKSuiteTier,
     val email: String,
     val dailySendingLimit: String,
     val kSuiteProductsWithQuotas: List<KSuiteProductsWithQuotas>,
-    val trialExpiryAt: Long?,
+    val trialExpiryDate: Date?,
     val avatarUri: String = "",
-)
+) : Parcelable
 
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
@@ -292,18 +293,10 @@ private fun Preview() {
         avatarUri = "",
         dailySendingLimit = "500",
         kSuiteProductsWithQuotas = listOf(
-            KSuiteProductsWithQuotas.Mail(
-                mailUsedSize = "0.2 Go",
-                mailMaxSize = "20 Go",
-                mailProgress = 0.01f,
-            ),
-            KSuiteProductsWithQuotas.Drive(
-                driveUsedSize = "6 Go",
-                driveMaxSize = "15 Go",
-                driveProgress = 0.4f,
-            ),
+            KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
+            KSuiteProductsWithQuotas.Drive(usedSize = "6 Go", maxSize = "15 Go", progress = 0.4f),
         ),
-        trialExpiryAt = Date().time,
+        trialExpiryDate = Date(),
     )
 
     Surface(Modifier.fillMaxSize(), color = Color.White) {
