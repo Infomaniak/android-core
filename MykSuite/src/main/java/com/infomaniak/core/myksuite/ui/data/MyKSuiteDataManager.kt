@@ -24,7 +24,7 @@ abstract class MyKSuiteDataManager {
     abstract var myKSuite: MyKSuiteData?
     protected abstract val currentUserId: Int
 
-    abstract suspend fun fetchMyKSuiteData(): MyKSuiteData?
+    abstract suspend fun fetchData(): MyKSuiteData?
 
     private var myKSuiteDatabase: MyKSuiteDatabase? = null
 

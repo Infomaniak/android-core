@@ -45,12 +45,12 @@ object MyKSuiteUiUtils {
             email = myKSuiteData.mail.email,
             avatarUri = avatarUri ?: "",
             dailySendingLimit = myKSuiteData.mail.dailyLimitSent.toString(),
-            kSuiteProductsWithQuotas = context.getKSuiteQuotasApp(myKSuiteData).toList(),
+            kSuiteProductsWithQuotas = getKSuiteQuotasApp(context, myKSuiteData).toList(),
             trialExpiryDate = myKSuiteData.trialExpiryDate,
         )
     }
 
-    private fun Context.getKSuiteQuotasApp(myKSuite: MyKSuiteData): Array<KSuiteProductsWithQuotas> {
+    private fun getKSuiteQuotasApp(context: Context, myKSuite: MyKSuiteData): Array<KSuiteProductsWithQuotas> {
 
         fun computeProgress(usedSize: Long, maxSize: Long): Float {
             return if (maxSize == 0L) 0.0f else (usedSize.toDouble() / maxSize.toDouble()).toFloat()
@@ -58,16 +58,16 @@ object MyKSuiteUiUtils {
 
         val mailProduct = with(myKSuite.mail) {
             KSuiteProductsWithQuotas.Mail(
-                usedSize = formatShortFileSize(usedSizeInBytes),
-                maxSize = formatShortFileSize(storageSizeLimit),
+                usedSize = context.formatShortFileSize(usedSizeInBytes),
+                maxSize = context.formatShortFileSize(storageSizeLimit),
                 progress = computeProgress(usedSizeInBytes, storageSizeLimit),
             )
         }
 
         val driveProduct = with(myKSuite.drive) {
             KSuiteProductsWithQuotas.Drive(
-                usedSize = formatShortFileSize(usedSize),
-                maxSize = formatShortFileSize(size),
+                usedSize = context.formatShortFileSize(usedSize),
+                maxSize = context.formatShortFileSize(size),
                 progress = computeProgress(usedSize, size),
             )
         }

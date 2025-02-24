@@ -33,7 +33,6 @@ open class MyKSuiteDashboardFragment : Fragment() {
 
     private val navigationArgs: MyKSuiteDashboardFragmentArgs by navArgs()
 
-
     private var composeView: ComposeView? = null
 
     private val onClose: () -> Unit by lazy { { this@MyKSuiteDashboardFragment.findNavController().popBackStack() } }
@@ -42,7 +41,7 @@ open class MyKSuiteDashboardFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             composeView = this
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent { MyKSuiteDashboardScreen({ navigationArgs.dashboardData }, onClose) }
+            setContent { MyKSuiteDashboardScreen(dashboardScreenData = { navigationArgs.dashboardData }, onClose = onClose) }
         }
     }
 
