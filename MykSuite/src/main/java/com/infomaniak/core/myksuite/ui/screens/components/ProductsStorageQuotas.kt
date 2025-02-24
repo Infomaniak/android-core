@@ -18,6 +18,7 @@
 package com.infomaniak.core.myksuite.ui.screens.components
 
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
@@ -33,7 +34,7 @@ import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
-import kotlinx.serialization.Serializable
+import kotlinx.parcelize.Parcelize
 
 @Composable
 internal fun ProductsStorageQuotas(
@@ -85,21 +86,19 @@ private fun computeQuotasString(isUnlimitedMail: Boolean, product: KSuiteProduct
     }
 }
 
-@Serializable
+@Parcelize
 sealed class KSuiteProductsWithQuotas(
     internal val displayName: String,
     open val usedSize: String,
     open val maxSize: String,
     open val progress: Float,
-) {
+) : Parcelable {
 
-    @Serializable
-    class Mail(val mailUsedSize: String, val mailMaxSize: String, val mailProgress: Float) :
-        KSuiteProductsWithQuotas("Mail", mailUsedSize, mailMaxSize, mailProgress)
+    class Mail(override val usedSize: String, override val maxSize: String, override val progress: Float) :
+        KSuiteProductsWithQuotas("Mail", usedSize, maxSize, progress)
 
-    @Serializable
-    data class Drive(val driveUsedSize: String, val driveMaxSize: String, val driveProgress: Float) :
-        KSuiteProductsWithQuotas("kDrive", driveUsedSize, driveMaxSize, driveProgress)
+    data class Drive(override val usedSize: String, override val maxSize: String, override val progress: Float) :
+        KSuiteProductsWithQuotas("kDrive", usedSize, maxSize, progress)
 
     @Composable
     fun getColor() = if (this is Mail) LocalMyKSuiteColors.current.mail else LocalMyKSuiteColors.current.drive
@@ -116,8 +115,8 @@ private fun Preview() {
                 myKSuiteTier = MyKSuiteTier.Plus,
                 kSuiteProductsWithQuotas = {
                     listOf(
-                        KSuiteProductsWithQuotas.Mail(mailUsedSize = "0.2 Go", mailMaxSize = "20 Go", mailProgress = 0.01f),
-                        KSuiteProductsWithQuotas.Drive(driveUsedSize = "6 Go", driveMaxSize = "15 Go", driveProgress = 0.4f),
+                        KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
+                        KSuiteProductsWithQuotas.Drive(usedSize = "6 Go", maxSize = "15 Go", progress = 0.4f),
                     )
                 },
             )

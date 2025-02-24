@@ -26,6 +26,7 @@ import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.Date
 
 @Serializable
 @Entity
@@ -49,5 +50,5 @@ data class MyKSuiteData(
 
     inline val name get() = if (isFree) R.string.myKSuiteName else R.string.myKSuitePlusName
     inline val tier get() = if (isFree) MyKSuiteTier.Free else MyKSuiteTier.Plus
-    inline val trialExpiryAtMillisecond get() = trialExpiryAt?.times(1_000)
+    inline val trialExpiryDate get() = trialExpiryAt?.let { Date(it * 1_000) }
 }

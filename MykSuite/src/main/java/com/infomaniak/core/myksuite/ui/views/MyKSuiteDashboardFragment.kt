@@ -25,45 +25,28 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreen
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
-import com.infomaniak.core.myksuite.ui.utils.MyKSuiteUiUtils.DEEPLINK_BASE
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 open class MyKSuiteDashboardFragment : Fragment() {
 
-    private val dashboardData: MyKSuiteDashboardScreenData? by lazy {
-        arguments?.getString(DASHBOARD_DATA_KEY)?.let { jsonData ->
-            runCatching { Json.decodeFromString(jsonData) as MyKSuiteDashboardScreenData }.getOrNull()
-        }
-    }
+    private val navigationArgs: MyKSuiteDashboardFragmentArgs by navArgs()
+
 
     private var composeView: ComposeView? = null
 
     private val onClose: () -> Unit by lazy { { this@MyKSuiteDashboardFragment.findNavController().popBackStack() } }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        if (dashboardData == null) findNavController().popBackStack()
-
         return ComposeView(requireContext()).apply {
             composeView = this
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-
-            dashboardData?.let { data -> setContent { MyKSuiteDashboardScreen({ data }, onClose) } }
+            setContent { MyKSuiteDashboardScreen({ navigationArgs.dashboardData }, onClose) }
         }
     }
 
     protected fun resetContent(dashboardData: MyKSuiteDashboardScreenData) {
         composeView?.setContent { MyKSuiteDashboardScreen(dashboardScreenData = { dashboardData }, onClose = onClose) }
-    }
-
-    companion object {
-        // Must kept the same value as the deepLink's in `my_ksuite_navigation`
-        private const val DASHBOARD_DATA_KEY = "dashboardData"
-
-        internal fun getDeeplink(dashboardData: MyKSuiteDashboardScreenData): String {
-            return "$DEEPLINK_BASE/myKSuiteDashboardFragment/${Json.encodeToString(dashboardData)}"
-        }
     }
 }

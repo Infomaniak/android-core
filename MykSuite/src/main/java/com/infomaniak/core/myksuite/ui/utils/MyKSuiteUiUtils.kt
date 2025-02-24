@@ -26,7 +26,6 @@ import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
 import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
-import com.infomaniak.core.myksuite.ui.views.MyKSuiteDashboardFragment
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog
 
 object MyKSuiteUiUtils {
@@ -40,13 +39,6 @@ object MyKSuiteUiUtils {
             .also(::navigate)
     }
 
-    fun NavController.openMyKSuiteDashboard(data: MyKSuiteDashboardScreenData) {
-        NavDeepLinkRequest.Builder
-            .fromUri(MyKSuiteDashboardFragment.getDeeplink(data).toUri())
-            .build()
-            .also(::navigate)
-    }
-
     fun getDashboardData(context: Context, myKSuiteData: MyKSuiteData, avatarUri: String?): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,
@@ -54,7 +46,7 @@ object MyKSuiteUiUtils {
             avatarUri = avatarUri ?: "",
             dailySendingLimit = myKSuiteData.mail.dailyLimitSent.toString(),
             kSuiteProductsWithQuotas = context.getKSuiteQuotasApp(myKSuiteData).toList(),
-            trialExpiryAt = myKSuiteData.trialExpiryAtMillisecond,
+            trialExpiryDate = myKSuiteData.trialExpiryDate,
         )
     }
 
@@ -66,17 +58,17 @@ object MyKSuiteUiUtils {
 
         val mailProduct = with(myKSuite.mail) {
             KSuiteProductsWithQuotas.Mail(
-                mailUsedSize = formatShortFileSize(usedSizeInBytes),
-                mailMaxSize = formatShortFileSize(storageSizeLimit),
-                mailProgress = computeProgress(usedSizeInBytes, storageSizeLimit),
+                usedSize = formatShortFileSize(usedSizeInBytes),
+                maxSize = formatShortFileSize(storageSizeLimit),
+                progress = computeProgress(usedSizeInBytes, storageSizeLimit),
             )
         }
 
         val driveProduct = with(myKSuite.drive) {
             KSuiteProductsWithQuotas.Drive(
-                driveUsedSize = formatShortFileSize(usedSize),
-                driveMaxSize = formatShortFileSize(size),
-                driveProgress = computeProgress(usedSize, size),
+                usedSize = formatShortFileSize(usedSize),
+                maxSize = formatShortFileSize(size),
+                progress = computeProgress(usedSize, size),
             )
         }
 
