@@ -49,4 +49,10 @@ dependencies {
     implementation(core.splitties.mainthread)
     implementation(core.androidx.core)
     implementation(core.androidx.lifecycle.runtime.ktx)
+
+    testImplementation(core.androidx.junit)
+    testImplementation(core.androidx.test.core.ktx)
+    testImplementation(core.androidx.test.core)
+    testImplementation(core.junit)
+    testImplementation(core.robolectric)
 }

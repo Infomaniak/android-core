@@ -1,8 +1,9 @@
 [versions]
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
 composeBom = "2024.12.01"
+coreKtx = "1.6.1"
 integrity = "1.4.0"
-junit = "4.13.2"
+junit = "4.13" # Don't update this because it breaks tests
 junitAndroidx = "1.2.1"
 kotlin = "2.0.21"
 kotlinxCoroutines = "1.9.0"
@@ -11,6 +12,7 @@ ktor = "3.0.1"
 lifecycleRuntimeKtx = "2.8.7"
 matomo = "4.1.4"
 playReview = "2.0.2"
+robolectric = "4.13"
 sentryAndroid = "7.15.0"
 splitties = "3.0.0"
 
@@ -47,7 +49,10 @@ splitties-systemservices = { module = "com.louiscad.splitties:splitties-systemse
 splitties-toast = { module = "com.louiscad.splitties:splitties-toast", version.ref = "splitties" }
 # Tests
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitAndroidx" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "coreKtx" }
+androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
