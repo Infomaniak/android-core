@@ -151,7 +151,7 @@ private fun SubscriptionInfoCard(
         PaddedDivider(paddedModifier)
 
         if (dashboardScreenData().myKSuiteTier == MyKSuiteTier.Free) {
-            ExpandableActionItem(iconRes = R.drawable.ic_envelope, textRes = R.string.myKSuiteDashboardFreeMailLabel)
+            ExpandableActionItem(iconRes = R.drawable.ic_envelope_bold, textRes = R.string.myKSuiteDashboardFreeMailLabel)
             ExpandableActionItem(
                 iconRes = R.drawable.ic_padlock,
                 textRes = R.string.myKSuiteDashboardLimitedFunctionalityLabel,
