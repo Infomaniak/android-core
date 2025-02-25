@@ -25,8 +25,13 @@ fun <T, R> StateFlow<T>.mapSync(transform: (T) -> R): StateFlow<R> = object : St
     override val replayCache: List<R> get() = listOf(value)
 
     override suspend fun collect(collector: FlowCollector<R>): Nothing {
-        this@mapSync.collect {
-            collector.emit(transform(it))
+        var lastEmittedValue: Any? = nullSurrogate
+        this@mapSync.collect { newValue ->
+            val transformedValue = transform(newValue)
+            if (transformedValue != lastEmittedValue) {
+                lastEmittedValue = transformedValue
+                collector.emit(transformedValue)
+            }
         }
     }
 
@@ -43,3 +48,5 @@ fun <T, R> StateFlow<T>.mapSync(transform: (T) -> R): StateFlow<R> = object : St
             return newValue
         }
 }
+
+private val nullSurrogate = Any()
