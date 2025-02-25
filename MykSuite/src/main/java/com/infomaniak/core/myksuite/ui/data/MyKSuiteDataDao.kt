@@ -15,28 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.extensions
+package com.infomaniak.core.myksuite.ui.data
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.core.content.ContextCompat
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Query
+import androidx.room.Upsert
 
-tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
+@Dao
+interface MyKSuiteDataDao {
+    @Query("SELECT * FROM MyKSuiteData WHERE id = :id LIMIT 1")
+    suspend fun findById(id: Int): MyKSuiteData?
 
-fun Context.hasPermissions(permissions: Array<String>): Boolean {
-    return permissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-}
+    @Query("SELECT * FROM MyKSuiteData WHERE user_id = :userId LIMIT 1")
+    suspend fun findByUserId(userId: Int): MyKSuiteData?
 
-fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    @Upsert
+    suspend fun upsert(data: MyKSuiteData)
+
+    @Delete
+    suspend fun delete(data: MyKSuiteData)
 }

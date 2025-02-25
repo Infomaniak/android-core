@@ -15,28 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.extensions
+package com.infomaniak.core.myksuite.ui.data
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.core.content.ContextCompat
+import androidx.room.ColumnInfo
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
-
-fun Context.hasPermissions(permissions: Array<String>): Boolean {
-    return permissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-}
-
-fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-}
+@Serializable
+data class KSuiteDrive(
+    val id: Int,
+    val name: String,
+    val size: Long,
+    @SerialName("used_size")
+    @ColumnInfo("used_size")
+    val usedSize: Long,
+)

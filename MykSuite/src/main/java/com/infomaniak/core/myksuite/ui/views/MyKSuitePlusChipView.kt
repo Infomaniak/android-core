@@ -15,28 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.extensions
+package com.infomaniak.core.myksuite.ui.views
 
-import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.core.content.ContextCompat
+import android.util.AttributeSet
+import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
 
-tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
-
-fun Context.hasPermissions(permissions: Array<String>): Boolean {
-    return permissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-}
-
-fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-}
+class MyKSuitePlusChipView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+) : BaseMyKSuiteChipView(context, attrs, defStyleAttr, tier = MyKSuiteTier.Plus)

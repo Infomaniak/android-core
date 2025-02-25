@@ -15,28 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.extensions
+package com.infomaniak.core.myksuite.ui.components
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.core.content.ContextCompat
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 
-tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
+// TODO Add in CoreUi
+@Composable
+fun ColumnScope.WeightOneSpacer(minHeight: Dp) {
+    Spacer(Modifier.height(minHeight))
+    Spacer(Modifier.weight(1.0f))
 }
 
-fun Context.hasPermissions(permissions: Array<String>): Boolean {
-    return permissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-}
-
-fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+@Composable
+fun RowScope.WeightOneSpacer(minWidth: Dp) {
+    Spacer(Modifier.width(minWidth))
+    Spacer(Modifier.weight(1.0f))
 }

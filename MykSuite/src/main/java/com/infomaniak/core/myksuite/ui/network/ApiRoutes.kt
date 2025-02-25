@@ -15,28 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.extensions
+package com.infomaniak.core.myksuite.ui.network
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.core.content.ContextCompat
+object ApiRoutes {
 
-tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
+    const val MANAGER_URL = "https://manager.infomaniak.com/v3/ng/home"
 
-fun Context.hasPermissions(permissions: Array<String>): Boolean {
-    return permissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-}
+    private const val BASE_URL = "https://api.infomaniak.com"
 
-fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    fun myKSuiteData() = "$BASE_URL/1/my_ksuite/current?with=drive,mail"
 }

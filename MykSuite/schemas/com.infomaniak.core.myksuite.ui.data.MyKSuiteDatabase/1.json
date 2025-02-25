@@ -1,0 +1,112 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "daf7033b58a05ae65b82dee555601e73",
+    "entities": [
+      {
+        "tableName": "MyKSuiteData",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `trial_expiry_at` INTEGER, `is_free` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `drive_id` INTEGER NOT NULL, `drive_name` TEXT NOT NULL, `drive_size` INTEGER NOT NULL, `drive_used_size` INTEGER NOT NULL, `mail_id` INTEGER NOT NULL, `mail_email` TEXT NOT NULL, `mail_daily_limit_sent` INTEGER NOT NULL, `mail_storage_size_limit` INTEGER NOT NULL, `mail_used_size` INTEGER NOT NULL, `mail_mailbox_id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trialExpiryAt",
+            "columnName": "trial_expiry_at",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isFree",
+            "columnName": "is_free",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "drive.id",
+            "columnName": "drive_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "drive.name",
+            "columnName": "drive_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "drive.size",
+            "columnName": "drive_size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "drive.usedSize",
+            "columnName": "drive_used_size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mail.id",
+            "columnName": "mail_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mail.email",
+            "columnName": "mail_email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mail.dailyLimitSent",
+            "columnName": "mail_daily_limit_sent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mail.storageSizeLimit",
+            "columnName": "mail_storage_size_limit",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mail.usedSize",
+            "columnName": "mail_used_size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mail.mailboxId",
+            "columnName": "mail_mailbox_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'daf7033b58a05ae65b82dee555601e73')"
+    ]
+  }
+}

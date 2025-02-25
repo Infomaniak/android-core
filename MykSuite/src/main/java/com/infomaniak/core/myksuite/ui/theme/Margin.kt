@@ -15,28 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.extensions
+package com.infomaniak.core.myksuite.ui.theme
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.unit.dp
 
-tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
-
-fun Context.hasPermissions(permissions: Array<String>): Boolean {
-    return permissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-}
-
-fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+object Margin {
+    /** 4dp */
+    val Micro = 4.dp
+    /** 8dp */
+    val Mini = 8.dp
+    /** 12dp */
+    val Small = 12.dp
+    /** 16dp */
+    val Medium = 16.dp
+    /** 24dp */
+    val Large = 24.dp
+    /** 32dp */
+    val Huge = 32.dp
+    /** 48dp */
+    val Giant = 48.dp
 }

@@ -15,28 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.extensions
+package com.infomaniak.core.myksuite.ui.theme
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.unit.dp
 
-tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
+object Dimens {
 
-fun Context.hasPermissions(permissions: Array<String>): Boolean {
-    return permissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-}
-
-fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    /** 56 dp */
+    val buttonHeight = 56.dp
+    /** 16 dp */
+    val smallIconSize = 16.dp
+    /** 24 dp */
+    val iconSize = 24.dp
+    /** 8 dp */
+    val smallCornerRadius = 8.dp
+    /** 16 dp */
+    val largeCornerRadius = 16.dp
+    /** 5 dp */
+    val cardElevation = 5.dp
+    /** 40 dp */
+    val textItemMinHeight = 40.dp
 }

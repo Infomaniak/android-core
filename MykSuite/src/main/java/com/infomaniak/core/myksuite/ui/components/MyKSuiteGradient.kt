@@ -15,28 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.extensions
+package com.infomaniak.core.myksuite.ui.components
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.core.content.ContextCompat
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
-tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
-
-fun Context.hasPermissions(permissions: Array<String>): Boolean {
-    return permissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-}
-
-fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-}
+internal fun myKSuiteGradient() = BorderStroke(
+    width = 1.dp,
+    brush = Brush.linearGradient(
+        0.0f to Color(0xFF1DDDFD),
+        0.3f to Color(0xFF337CFF),
+        0.5f to Color(0xFFA055FC),
+        0.7f to Color(0xFFF34BBB),
+        1.0f to Color(0xFFFD8C3D),
+        start = Offset.Zero,
+        end = Offset(Float.POSITIVE_INFINITY, 0.0f),
+    ),
+)

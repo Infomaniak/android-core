@@ -1,18 +1,24 @@
 [versions]
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
-composeBom = "2024.12.01"
+coil = "3.0.2"
+coilNetworkOkhttp = "3.0.4"
+composeBom = "2025.01.01"
 coreKtx = "1.6.1"
 integrity = "1.4.0"
 junit = "4.13" # Don't update this because it breaks tests
 junitAndroidx = "1.2.1"
 kotlin = "2.0.21"
+ksp = "2.0.21-1.0.28"
 kotlinxCoroutines = "1.9.0"
 kotlinxSerializationJson = "1.7.3"
 ktor = "3.0.1"
 lifecycleRuntimeKtx = "2.8.7"
+material = "1.12.0"
 matomo = "4.1.4"
+navigation = "2.8.5"
 playReview = "2.0.2"
 robolectric = "4.13"
+room = "2.6.1"
 sentryAndroid = "7.15.0"
 splitties = "3.0.0"
 
@@ -20,6 +26,8 @@ splitties = "3.0.0"
 androidx-core = { group = "androidx.core", name = "core", version.ref = "androidxCore" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
@@ -36,9 +44,15 @@ ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = 
 ktor-client-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 matomo = { module = "com.github.matomo-org:matomo-sdk-android", version.ref = "matomo" }
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 sentry-android = { module = "io.sentry:sentry-android", version.ref = "sentryAndroid" }
 splitties-appctx = { module = "com.louiscad.splitties:splitties-appctx", version.ref = "splitties" }
 splitties-collections = { module = "com.louiscad.splitties:splitties-collections", version.ref = "splitties" }
@@ -57,3 +71,4 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
