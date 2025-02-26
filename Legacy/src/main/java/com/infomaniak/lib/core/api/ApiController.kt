@@ -28,6 +28,7 @@ import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.models.ApiError
 import com.infomaniak.lib.core.models.ApiResponse
+import com.infomaniak.lib.core.models.ApiResponseStatus
 import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
@@ -47,6 +48,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.reflect.Type
 import java.net.UnknownHostException
 import java.util.Date
+import kotlin.reflect.typeOf
 import com.google.gson.JsonElement as GsonElement
 
 object ApiController {
@@ -191,7 +193,7 @@ object ApiController {
                         )
                     }
                     bodyResponse.isBlank() -> createInternetErrorResponse(buildErrorResult = buildErrorResult)
-                    else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse)
+                    else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse, response.code)
                 }
             }
         } catch (refreshTokenException: RefreshTokenException) {
@@ -213,9 +215,10 @@ object ApiController {
         }
     }
 
-    inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String): T {
+    inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String, codeResponse: Int): T {
         val apiResponse = when {
             useKotlinxSerialization -> json.decodeFromString<T>(bodyResponse)
+            isApiResponseOfByteArray<T>() -> wrapByteArrayResponse<T>(bodyResponse, codeResponse)
             else -> gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
         }
 
@@ -224,6 +227,17 @@ object ApiController {
         }
 
         return apiResponse
+    }
+
+    inline fun <reified T> wrapByteArrayResponse(bodyResponse: String, code: Int): T {
+        return ApiResponse<ByteArray>(
+            result = if (code > 200) ApiResponseStatus.UNKNOWN else ApiResponseStatus.SUCCESS,
+            data = bodyResponse.toByteArray()
+        ) as T
+    }
+
+    inline fun <reified T> isApiResponseOfByteArray(): Boolean {
+        return typeOf<T>() == typeOf<ApiResponse<ByteArray>>()
     }
 
     private fun String.bodyResponseToJson(): JsonObject {
