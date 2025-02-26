@@ -28,8 +28,8 @@ import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.models.ApiError
 import com.infomaniak.lib.core.models.ApiResponse
-import com.infomaniak.lib.core.models.ApiResponseStatus
 import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
+import com.infomaniak.lib.core.models.ApiResponseStatus.SUCCESS
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
@@ -217,8 +217,8 @@ object ApiController {
 
     inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String, codeResponse: Int): T {
         val apiResponse = when {
-            useKotlinxSerialization -> json.decodeFromString<T>(bodyResponse)
             isApiResponseOfByteArray<T>() -> wrapByteArrayResponse<T>(bodyResponse, codeResponse)
+            useKotlinxSerialization -> json.decodeFromString<T>(bodyResponse)
             else -> gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
         }
 
@@ -230,10 +230,15 @@ object ApiController {
     }
 
     inline fun <reified T> wrapByteArrayResponse(bodyResponse: String, code: Int): T {
-        return ApiResponse<ByteArray>(
-            result = if (code > 200) ApiResponseStatus.UNKNOWN else ApiResponseStatus.SUCCESS,
-            data = bodyResponse.toByteArray()
-        ) as T
+        return if (code >= 300) {
+            createErrorResponse(
+                translatedError = R.string.anErrorHasOccurred,
+                apiError = createApiError(false, bodyResponse, exception = ByteArrayException(bodyResponse, code)),
+                buildErrorResult = null,
+            )
+        } else {
+            ApiResponse<ByteArray>(result = SUCCESS, data = bodyResponse.toByteArray()) as T
+        }
     }
 
     inline fun <reified T> isApiResponseOfByteArray(): Boolean {
@@ -272,7 +277,8 @@ object ApiController {
     }
 
     class NetworkException : Exception()
-    class ServerErrorException(val bodyResponse: String) : Exception(bodyResponse)
+    class ServerErrorException(bodyResponse: String) : Exception(bodyResponse)
+    class ByteArrayException(bodyResponse: String, codeResponse: Int) : Exception("Error $codeResponse: $bodyResponse")
 
     enum class ApiMethod {
         GET, PUT, POST, DELETE, PATCH
