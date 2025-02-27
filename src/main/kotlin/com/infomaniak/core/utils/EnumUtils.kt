@@ -17,12 +17,23 @@
  */
 package com.infomaniak.core.utils
 
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KMutableProperty0
+import kotlin.reflect.KProperty
+
 inline fun <reified T : Enum<T>> enumValueOfOrNull(value: String?): T? {
     return value?.let { runCatching { enumValueOf<T>(it) }.getOrNull() }
 }
 
 inline fun <reified T> apiEnumValueOfOrNull(value: String?): T? where T : Enum<T>, T : ApiEnum {
     return value?.let { runCatching { enumValues<T>().firstOrNull { it.apiValue == value } }.getOrNull() }
+}
+
+inline fun <reified T> apiEnum(backingFieldProperty: KMutableProperty0<String?>): ReadWriteProperty<Any?, T?> where T : Enum<T>, T : ApiEnum {
+    return object : ReadWriteProperty<Any?, T?> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): T? = apiEnumValueOfOrNull<T>(backingFieldProperty.get())
+        override fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) = backingFieldProperty.set(value?.apiValue)
+    }
 }
 
 interface ApiEnum {
