@@ -29,8 +29,8 @@ import com.google.android.material.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
 import com.infomaniak.lib.core.utils.clearStack
-import com.infomaniak.lib.core.utils.goToPlayStore
 import com.infomaniak.lib.core.utils.showToast
+import com.infomaniak.lib.stores.StoreUtils.goToPlayStore
 import com.infomaniak.lib.stores.databinding.ActivityUpdateRequiredBinding
 import com.infomaniak.lib.stores.updatemanagers.InAppUpdateManager
 import kotlin.system.exitProcess
