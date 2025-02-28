@@ -21,7 +21,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import com.infomaniak.lib.core.utils.goToPlayStore
+import com.infomaniak.lib.stores.StoreUtils.goToPlayStore
 
 abstract class BaseInAppUpdateManager(private val activity: FragmentActivity) : DefaultLifecycleObserver {
 

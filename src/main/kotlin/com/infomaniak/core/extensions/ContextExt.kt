@@ -18,6 +18,7 @@
 package com.infomaniak.core.extensions
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -39,4 +40,12 @@ fun Context.hasPermissions(permissions: Array<String>): Boolean {
 
 fun Context.openUrl(url: String) {
     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+}
+
+fun Context.goToPlayStore(appPackageName: String = packageName) {
+    try {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+    } catch (_: ActivityNotFoundException) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+    }
 }
