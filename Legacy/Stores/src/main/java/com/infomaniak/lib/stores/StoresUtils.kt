@@ -17,6 +17,10 @@
  */
 package com.infomaniak.lib.stores
 
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.StyleRes
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -53,5 +57,15 @@ internal interface StoresUtils {
 
     //region In-App Review
     fun FragmentActivity.launchInAppReview() = Unit
+    //endregion
+
+    //region Context Extensions
+    fun Context.goToPlayStore(appPackageName: String = packageName) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+        } catch (_: ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+        }
+    }
     //endregion
 }
