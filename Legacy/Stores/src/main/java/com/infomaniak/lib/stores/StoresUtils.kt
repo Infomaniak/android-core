@@ -60,6 +60,7 @@ internal interface StoresUtils {
     //endregion
 
     //region Context Extensions
+    // TODO: When the Stores module will be moved from Legacy to the new Core, we'll be able to remove this function.
     fun Context.goToPlayStore(appPackageName: String = packageName) {
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
