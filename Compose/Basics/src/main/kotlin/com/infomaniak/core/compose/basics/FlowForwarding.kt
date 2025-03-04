@@ -18,8 +18,13 @@
 package com.infomaniak.core.compose.basics
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 fun <T> Flow<T>.withForwardTo(onNewValue: (T) -> Unit, defaultValue: T): Flow<T> = flow {
     try {
@@ -40,5 +45,25 @@ fun <T> Flow<T>.withForwardTo(state: MutableState<T>, defaultValue: T): Flow<T> 
         }
     } finally {
         state.value = defaultValue
+    }
+}
+
+fun <T> StateFlow<T>.collectAsStateIn(scope: CoroutineScope): State<T> {
+    return mutableStateOf(value).also { state ->
+        scope.launch {
+            collect { newValue ->
+                state.value = newValue
+            }
+        }
+    }
+}
+
+fun <T> Flow<T>.collectAsStateIn(scope: CoroutineScope, initialValue: T): State<T> {
+    return mutableStateOf(initialValue).also { state ->
+        scope.launch {
+            collect { newValue ->
+                state.value = newValue
+            }
+        }
     }
 }
