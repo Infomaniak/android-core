@@ -25,6 +25,7 @@ splitties = "3.0.0"
 [libraries]
 androidx-core = { group = "androidx.core", name = "core", version.ref = "androidxCore" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
@@ -55,8 +56,11 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 sentry-android = { module = "io.sentry:sentry-android", version.ref = "sentryAndroid" }
 splitties-appctx = { module = "com.louiscad.splitties:splitties-appctx", version.ref = "splitties" }
+splitties-bitflags = { module = "com.louiscad.splitties:splitties-bitflags", version.ref = "splitties" }
+splitties-bundle = { module = "com.louiscad.splitties:splitties-bundle", version.ref = "splitties" }
 splitties-collections = { module = "com.louiscad.splitties:splitties-collections", version.ref = "splitties" }
 splitties-coroutines = { module = "com.louiscad.splitties:splitties-coroutines", version.ref = "splitties" }
+splitties-intents = { module = "com.louiscad.splitties:splitties-intents", version.ref = "splitties" }
 splitties-mainhandler = { module = "com.louiscad.splitties:splitties-mainhandler", version.ref = "splitties" }
 splitties-mainthread = { module = "com.louiscad.splitties:splitties-mainthread", version.ref = "splitties" }
 splitties-systemservices = { module = "com.louiscad.splitties:splitties-systemservices", version.ref = "splitties" }
