@@ -22,10 +22,11 @@ import splitties.systemservices.powerManager
 
 @Suppress("WakelockTimeout")
 inline fun <R> withPartialWakeLock(
-    tag: String = "default",
+    appName: String,
+    tagSuffix: String = "default",
     block: () -> R
 ): R {
-    val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "sac:$tag")
+    val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$appName:$tagSuffix")
     return try {
         wakeLock.acquire()
         block()
