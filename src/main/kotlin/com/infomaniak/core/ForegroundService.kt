@@ -79,6 +79,9 @@ abstract class ForegroundService(
     @RequiresOptIn(level = RequiresOptIn.Level.ERROR)
     private annotation class InternalApi
 
+    private val timeoutAsync = CompletableDeferred<TimeoutCancellationException>()
+    private var foregroundStarted = false
+
     /**
      * `stopSelf()` is automatically called on this Service once this function finishes its
      * execution.
@@ -136,8 +139,6 @@ abstract class ForegroundService(
         }
     }
 
-    private val timeoutAsync = CompletableDeferred<TimeoutCancellationException>()
-
     @RequiresApi(35)
     @CallSuper
     override fun onTimeout(startId: Int, fgsType: Int) {
@@ -150,7 +151,6 @@ abstract class ForegroundService(
         timeoutAsync.complete(TimeoutCancellationException(foregroundServiceType))
     }
 
-    private var foregroundStarted = false
 
     @OptIn(InternalApi::class)
     final override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
