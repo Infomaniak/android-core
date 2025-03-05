@@ -121,7 +121,7 @@ abstract class ForegroundService(
         val fgsType: Int
     ) : CancellationException("timeout reached for foreground service type: $fgsType")
 
-    @CallSuper
+    @CallSuper // Not final to allow Dagger/Hilt to be used by subclasses, if needed.
     override fun onCreate() {
         @OptIn(InternalApi::class)
         companion.markCreated()
