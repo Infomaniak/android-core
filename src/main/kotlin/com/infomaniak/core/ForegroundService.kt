@@ -48,7 +48,6 @@ import splitties.intents.ServiceIntentSpec
 import splitties.intents.intent
 import splitties.mainhandler.mainHandler
 import splitties.mainthread.isMainThread
-import splitties.systemservices.notificationManager
 
 /**
  * Usage:
@@ -102,12 +101,7 @@ abstract class ForegroundService(
             mainHandler.post { updateNotification(notification) }
             return
         }
-        if (foregroundStarted) {
-            notificationManager.notify(companion.notificationId, notification)
-        } else {
-            startForegroundWithType(companion.notificationId, notification)
-            foregroundStarted = true
-        }
+        startForegroundWithType(companion.notificationId, notification)
     }
 
     /**
@@ -164,7 +158,6 @@ abstract class ForegroundService(
                 isReDelivery = flags.hasFlag(START_FLAG_REDELIVERY)
             )
             startForegroundWithType(companion.notificationId, notification)
-            foregroundStarted = true
         }
         return if (redeliverIntentIfKilled) START_REDELIVER_INTENT else START_NOT_STICKY
     }
@@ -175,6 +168,7 @@ abstract class ForegroundService(
         } else {
             startForeground(notificationId, notification)
         }
+        foregroundStarted = true
     }
 
     final override fun onDestroy() {
