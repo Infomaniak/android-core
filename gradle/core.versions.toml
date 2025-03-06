@@ -1,4 +1,5 @@
 [versions]
+activityCompose = "1.9.3" # TODO: Bump when compileSdk will be at least 35
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
 coil = "3.0.2"
 coilNetworkOkhttp = "3.0.4"
@@ -23,6 +24,7 @@ sentryAndroid = "8.2.0"
 splitties = "3.0.0"
 
 [libraries]
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-core = { group = "androidx.core", name = "core", version.ref = "androidxCore" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleRuntimeKtx" }
