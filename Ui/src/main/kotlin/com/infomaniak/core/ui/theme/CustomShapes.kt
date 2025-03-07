@@ -1,6 +1,6 @@
 /*
  * Infomaniak SwissTransfer - Android
- * Copyright (C) 2025-2025 Infomaniak Network SA
+ * Copyright (C) 2024-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,15 @@
  */
 package com.infomaniak.core.ui.theme
 
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
-object Margin {
-    /** 4dp */
-    val Micro = 4.dp
-    /** 8dp */
-    val Mini = 8.dp
-    /** 12dp */
-    val Small = 12.dp
-    /** 16dp */
-    val Medium = 16.dp
-    /** 24dp */
-    val Large = 24.dp
-    /** 32dp */
-    val Huge = 32.dp
-    /** 48dp */
-    val Giant = 48.dp
+object CustomShapes {
+    val NONE = RoundedCornerShape(0)
+    val ROUNDED = CircleShape
+    val EXTRA_SMALL = RoundedCornerShape(4.dp)
+    val SMALL = RoundedCornerShape(8.dp)
+    val MEDIUM = RoundedCornerShape(16.dp)
+    val LARGE = RoundedCornerShape(24.dp)
 }
