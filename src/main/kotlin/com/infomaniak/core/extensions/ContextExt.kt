@@ -24,6 +24,7 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 
 tailrec fun Context.findActivity(): Activity? = when (this) {
@@ -48,4 +49,8 @@ fun Context.goToPlayStore(appPackageName: String = packageName) {
     } catch (_: ActivityNotFoundException) {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
     }
+}
+
+fun Context.showToast(title: Int, duration: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(this, title, duration).show()
 }

@@ -1,6 +1,11 @@
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
+    alias(core.plugins.compose.compiler)
+
+    alias(core.plugins.ksp)
+    kotlin("plugin.parcelize")
+    kotlin("plugin.serialization") version core.versions.kotlin
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -15,6 +20,8 @@ android {
         minSdk = coreMinSdk
 
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField("String", "INFOMANIAK_API_V1", "\"https://api.infomaniak.com/1\"")
     }
 
     buildTypes {
@@ -29,6 +36,22 @@ android {
         targetCompatibility = javaVersion
     }
 
+    buildFeatures {
+        flavorDimensions += "distribution"
+        compose = true
+        buildConfig = true
+    }
+
+    productFlavors {
+        create("standard") {
+            dimension = "distribution"
+            isDefault = true
+        }
+
+        // standard { getIsDefault().set(true) }
+        // fdroid
+    }
+
     kotlinOptions {
         jvmTarget = javaVersion.toString()
     }
@@ -36,6 +59,34 @@ android {
 
 dependencies {
     implementation(project(":Core"))
+    implementation(project(":Core:Sentry"))
+    implementation(project(":Core:Ui"))
+    // implementation(project(":Core:WebView")) // TODO: Uncomment this line when the WebView module is merged.
     implementation(core.play.review)
     implementation(core.play.review.ktx)
+    implementation(core.appUpdate)
+    implementation(core.appUpdate.ktx)
+    implementation(core.work.runtime.ktx)
+    implementation(core.concurrent.futures.ktx)
+    implementation(core.datastore.preferences)
+    implementation(core.gson)
+    implementation(core.appcompat)
+
+    implementation(core.ktor.client.core)
+    implementation(core.ktor.client.okhttp)
+
+    // TODO: Delete?
+    implementation(core.material)
+
+    // Compose
+    // TODO: Delete unused implementations.
+    implementation(core.coil.compose)
+    implementation(core.coil.network.okhttp)
+    implementation(platform(core.compose.bom))
+    implementation(core.compose.runtime)
+    debugImplementation(core.compose.ui.tooling)
+    implementation(core.compose.material3)
+    implementation(core.compose.ui)
+    implementation(core.compose.ui.tooling.preview)
+    implementation(core.activity.compose)
 }

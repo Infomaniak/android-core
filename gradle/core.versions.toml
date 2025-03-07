@@ -1,10 +1,15 @@
 [versions]
 activityCompose = "1.9.3" # TODO: Bump when compileSdk will be at least 35
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
+appcompat = '1.7.0'
+appUpdate = "2.1.0"
 coil = "3.0.2" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 coilNetworkOkhttp = "3.0.4" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 composeBom = "2025.02.00" # TODO: Update SwissTransfer before bumping this
+concurrentFutures = "1.2.0"
 coreKtx = "1.6.1"
+datastorePreferences = "1.1.2"
+gson = "2.12.1"
 integrity = "1.4.0"
 junit = "4.13" # Don't update this because it breaks tests
 junitAndroidx = "1.2.1"
@@ -22,6 +27,7 @@ robolectric = "4.13" # Don't update this because it breaks tests
 room = "2.7.1"
 sentryAndroid = "8.9.0" # TODO: Upgrade once SwissTransfer updates Sentry Gradle plugin past 5.4.0
 splitties = "3.0.0"
+workRuntimeKtx = "2.9.1"
 
 [libraries]
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -29,6 +35,9 @@ androidx-core = { group = "androidx.core", name = "core", version.ref = "android
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+appUpdate = { module = "com.google.android.play:app-update", version.ref = "appUpdate" }
+appUpdate-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdate" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -38,6 +47,9 @@ compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+concurrent-futures-ktx = { module = "androidx.concurrent:concurrent-futures-ktx", version.ref = "concurrentFutures" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
@@ -67,6 +79,7 @@ splitties-mainhandler = { module = "com.louiscad.splitties:splitties-mainhandler
 splitties-mainthread = { module = "com.louiscad.splitties:splitties-mainthread", version.ref = "splitties" }
 splitties-systemservices = { module = "com.louiscad.splitties:splitties-systemservices", version.ref = "splitties" }
 splitties-toast = { module = "com.louiscad.splitties:splitties-toast", version.ref = "splitties" }
+work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 # Tests
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitAndroidx" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "coreKtx" }
