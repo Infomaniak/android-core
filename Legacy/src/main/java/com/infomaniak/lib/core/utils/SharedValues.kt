@@ -19,7 +19,6 @@ package com.infomaniak.lib.core.utils
 
 import android.content.SharedPreferences
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
