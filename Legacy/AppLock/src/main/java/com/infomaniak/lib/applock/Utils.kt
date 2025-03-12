@@ -18,7 +18,6 @@
 package com.infomaniak.lib.applock
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Log
 import android.widget.CompoundButton
 import androidx.biometric.BiometricPrompt

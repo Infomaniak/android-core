@@ -28,7 +28,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import com.infomaniak.lib.core.databinding.ActivityWebviewBinding
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class WebViewActivity : AppCompatActivity() {
