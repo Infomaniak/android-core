@@ -21,6 +21,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View.MeasureSpec.*
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -79,6 +80,7 @@ class LoaderTextView @JvmOverloads constructor(
 
     override fun setText(text: CharSequence, type: BufferType) {
         super.setText(text, type)
+        requestLayout() // This is to force the view to recompute the size when the view is recycled
         if (text.isNotBlank()) loaderController.stopLoading()
     }
 
