@@ -33,7 +33,10 @@ import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
 import com.infomaniak.lib.core.utils.isNetworkException
+import com.infomaniak.lib.core.utils.isSerializationException
 import com.infomaniak.lib.login.ApiToken
+import io.sentry.Sentry
+import io.sentry.SentryLevel
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -184,6 +187,9 @@ object ApiController {
                 bodyResponse = response.body?.string() ?: ""
                 return when {
                     response.code >= 500 -> {
+                        Sentry.captureMessage("An API error 500 occurred", SentryLevel.ERROR) { scope ->
+                            scope.setExtra("bodyResponse", bodyResponse)
+                        }
                         createErrorResponse(
                             apiError = createApiError(useKotlinxSerialization, bodyResponse, ServerErrorException(bodyResponse)),
                             translatedError = R.string.serverError,
@@ -203,13 +209,19 @@ object ApiController {
             return if (exception.isNetworkException()) {
                 createInternetErrorResponse(noNetwork = exception is UnknownHostException, buildErrorResult = buildErrorResult)
             } else {
+
+                if (exception.isSerializationException()) {
+                    Sentry.captureMessage("Error while decoding API Response", SentryLevel.ERROR) { scope ->
+                        scope.setExtra("bodyResponse", bodyResponse)
+                    }
+                }
+
                 createErrorResponse(
                     translatedError = R.string.anErrorHasOccurred,
                     apiError = createApiError(useKotlinxSerialization, bodyResponse, exception = exception),
                     buildErrorResult = buildErrorResult,
                 )
             }
-
         }
     }
 
@@ -258,7 +270,7 @@ object ApiController {
     }
 
     class NetworkException : Exception()
-    class ServerErrorException(val bodyResponse: String) : Exception(bodyResponse)
+    class ServerErrorException(bodyResponse: String) : Exception(bodyResponse)
 
     enum class ApiMethod {
         GET, PUT, POST, DELETE, PATCH
