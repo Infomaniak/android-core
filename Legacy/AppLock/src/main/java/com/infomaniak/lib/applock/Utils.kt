@@ -31,7 +31,8 @@ object Utils {
 
     @SuppressLint("NewApi")
     fun FragmentActivity.requestCredentials(onSuccess: () -> Unit) {
-        val biometricPrompt = BiometricPrompt(this,
+        val biometricPrompt = BiometricPrompt(
+            this,
             ContextCompat.getMainExecutor(this),
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
