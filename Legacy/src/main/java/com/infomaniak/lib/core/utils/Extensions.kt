@@ -67,6 +67,7 @@ import coil.load
 import com.github.razir.progressbutton.*
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
 import com.google.android.material.button.MaterialButton
+import com.google.gson.JsonSyntaxException
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.utils.CoilUtils.simpleImageLoader
 import com.infomaniak.lib.core.utils.Utils.ACCENTS_PATTERN
@@ -74,6 +75,7 @@ import com.infomaniak.lib.core.utils.Utils.CAMEL_CASE_REGEX
 import com.infomaniak.lib.core.utils.Utils.SNAKE_CASE_REGEX
 import com.infomaniak.lib.core.utils.UtilsUi.generateInitialsAvatarDrawable
 import com.infomaniak.lib.core.utils.UtilsUi.getBackgroundColorBasedOnId
+import kotlinx.serialization.SerializationException
 import org.apache.commons.cli.MissingArgumentException
 import java.io.Serializable
 import java.text.Normalizer
@@ -211,6 +213,10 @@ fun Exception.isNetworkException(): Boolean {
             this is java.io.InterruptedIOException ||
             this is okhttp3.internal.http2.StreamResetException ||
             (this is java.io.IOException && this.message?.lowercase() in okHttpException)
+}
+
+fun Exception.isSerializationException(): Boolean {
+    return this is JsonSyntaxException || this is SerializationException || this is IllegalArgumentException
 }
 
 fun String.firstOrEmpty(): String = if (isNotEmpty()) first().toString() else ""
