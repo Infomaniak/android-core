@@ -193,11 +193,19 @@ abstract class ForegroundService(
             notificationId: Int
         ) : Companion<S, Nothing>(intentSpec, notificationId) {
 
-            suspend fun runUntilCancelled(): Nothing = try {
-                start()
-                awaitCancellation()
-            } finally {
-                stop()
+            suspend fun runUntilCancelled(): Nothing {
+                currentCoroutineContext().ensureActive() // Don't start if we would stop immediately.
+                try {
+                    start()
+                    awaitCancellation()
+                } finally {
+                    withContext(Dispatchers.Main.immediate + NonCancellable) {
+                        yield() // Ensure start and stop don't happen in the same event loop.
+                        // Otherwise, the system can throw a `ForegroundServiceDidNotStartInTimeException` because of
+                        // timing issues in Android where calls to `Service.startForeground()` are not taken into account.
+                        stop()
+                    }
+                }
             }
 
             @CallSuper
