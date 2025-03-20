@@ -26,6 +26,7 @@ import com.google.android.play.core.integrity.StandardIntegrityManager.*
 import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.appintegrity.exceptions.UnexpectedApiErrorFormatException
+import com.infomaniak.core.cancellable
 import com.infomaniak.core.sentry.SentryLog
 import io.sentry.Sentry
 import io.sentry.SentryLevel
@@ -107,7 +108,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) {
 
         return runCatching {
             token.await()
-        }.getOrElse { exception ->
+        }.cancellable().getOrElse { exception ->
             throw IntegrityException(exception)
         }
     }
@@ -135,7 +136,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) {
                 challengeId = challengeId,
             )
             return apiResponse.data ?: error("Integrity ApiResponse cannot contain null data")
-        }.getOrElse { exception ->
+        }.cancellable().getOrElse { exception ->
             if (exception is UnexpectedApiErrorFormatException && exception.bodyResponse.contains("invalid_attestation")) {
                 throw IntegrityException(exception)
             } else {
@@ -156,7 +157,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) {
                 "Error demo route : ${apiResponse.error?.errorCode}"
             }
             Log.d(APP_INTEGRITY_MANAGER_TAG, logMessage)
-        }.getOrElse {
+        }.cancellable().getOrElse {
             it.printStackTrace()
         }
     }

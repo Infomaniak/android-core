@@ -48,6 +48,7 @@ android {
 dependencies {
 
     implementation(project(":Core:Sentry"))
+    implementation(project(":Core"))
 
     implementation(core.integrity)
     implementation(core.ktor.client.core)
