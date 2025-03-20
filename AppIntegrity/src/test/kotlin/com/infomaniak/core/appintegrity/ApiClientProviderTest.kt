@@ -19,6 +19,7 @@ package com.infomaniak.core.appintegrity
 
 import com.infomaniak.core.appintegrity.exceptions.UnknownException
 import com.infomaniak.core.appintegrity.models.ApiResponse
+import com.infomaniak.core.cancellable
 import io.ktor.client.call.body
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -60,6 +61,6 @@ class ApiClientProviderTest {
     }
 
     private suspend inline fun <reified R> HttpResponse.decode(): R {
-        return runCatching { body<R>() }.getOrElse { throw UnknownException(it) }
+        return runCatching { body<R>() }.cancellable().getOrElse { throw UnknownException(it) }
     }
 }

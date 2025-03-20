@@ -23,6 +23,7 @@ import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.appintegrity.exceptions.UnexpectedApiErrorFormatException
 import com.infomaniak.core.appintegrity.exceptions.UnknownException
 import com.infomaniak.core.appintegrity.models.ApiResponse
+import com.infomaniak.core.cancellable
 import io.ktor.client.call.body
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
@@ -82,7 +83,7 @@ internal class AppIntegrityRepository(userAgent: String) {
     }
 
     private suspend inline fun <reified R> HttpResponse.decode(): R {
-        return runCatching { body<R>() }.getOrElse { exception ->
+        return runCatching { body<R>() }.cancellable().getOrElse { exception ->
             when (exception) {
                 is ApiException, is NetworkException, is UnexpectedApiErrorFormatException -> throw exception
                 else -> throw UnknownException(exception)

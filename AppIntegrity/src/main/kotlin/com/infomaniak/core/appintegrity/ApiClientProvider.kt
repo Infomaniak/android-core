@@ -22,6 +22,7 @@ import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.appintegrity.exceptions.UnexpectedApiErrorFormatException
 import com.infomaniak.core.appintegrity.exceptions.UnknownException
 import com.infomaniak.core.appintegrity.models.ApiError
+import com.infomaniak.core.cancellable
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
@@ -35,6 +36,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CancellationException
 import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
 
@@ -82,13 +84,14 @@ internal class ApiClientProvider(
                         runCatching {
                             val apiError = json.decodeFromString<ApiError>(bodyResponse)
                             throw ApiException(apiError.errorCode, apiError.message)
-                        }.onFailure {
+                        }.cancellable().onFailure {
                             throw UnexpectedApiErrorFormatException(statusCode, bodyResponse)
                         }
                     }
                 }
                 handleResponseExceptionWithRequest { cause, _ ->
                     when (cause) {
+                        is CancellationException -> throw cause
                         is IOException -> throw NetworkException("Network error: ${cause.message}")
                         is ApiException, is UnexpectedApiErrorFormatException -> throw cause
                         else -> throw UnknownException(cause)
