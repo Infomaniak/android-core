@@ -39,12 +39,12 @@ const val FORMAT_DATE_SHORT_DAY_ONE_CHAR = "d MMM"
 const val FORMAT_DATE_SIMPLE = "dd/MM/yyyy"
 const val FORMAT_DATE_TITLE = "E d MMMM"
 const val FORMAT_DATE_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZ"
+const val FORMAT_ISO_8601_WITH_TIMEZONE_SEPARATOR = "yyyy-MM-dd'T'HH:mm:ssXXX"
 const val FORMAT_EVENT_DATE = "dd/MM/yyyy HH:mm"
 const val FORMAT_FULL_DATE = "EEEE dd MMMM yyyy"
 const val FORMAT_FULL_DATE_WITH_HOUR = "EEEE MMM d yyyy HH:mm:ss"
 const val FORMAT_HOUR_MINUTES = "HH:mm"
 const val FORMAT_NEW_FILE = "yyyyMMdd_HHmmss"
-const val FORMAT_SCHEDULE_MAIL = "yyyy-MM-dd'T'HH:mm:ssXXX"
 
 const val SECONDS_IN_A_DAY = 86_400L
 
