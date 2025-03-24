@@ -25,6 +25,7 @@ import com.infomaniak.core.FormatterFileSize.formatShortFileSize
 import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
+import com.infomaniak.core.myksuite.ui.screens.components.AvatarData
 import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog
 
@@ -39,11 +40,15 @@ object MyKSuiteUiUtils {
             .also(::navigate)
     }
 
-    fun getDashboardData(context: Context, myKSuiteData: MyKSuiteData, avatarUri: String?): MyKSuiteDashboardScreenData {
+    fun getDashboardData(
+        context: Context,
+        myKSuiteData: MyKSuiteData,
+        avatarData: AvatarData,
+    ): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,
             email = myKSuiteData.mail.email,
-            avatarUri = avatarUri ?: "",
+            avatarData = avatarData,
             dailySendingLimit = myKSuiteData.mail.dailyLimitSent.toString(),
             kSuiteProductsWithQuotas = getKSuiteQuotasApp(context, myKSuiteData).toList(),
             trialExpiryDate = myKSuiteData.trialExpiryDate,

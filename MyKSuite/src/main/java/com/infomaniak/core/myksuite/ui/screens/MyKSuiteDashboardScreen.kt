@@ -131,7 +131,7 @@ private fun SubscriptionInfoCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
         ) {
-            UserAvatar(dashboardScreenData().avatarUri)
+            UserAvatar(dashboardScreenData().avatarData)
             Text(
                 modifier = Modifier.weight(1.0f),
                 style = Typography.bodyRegular,
@@ -280,7 +280,7 @@ data class MyKSuiteDashboardScreenData(
     val dailySendingLimit: String,
     val kSuiteProductsWithQuotas: List<KSuiteProductsWithQuotas>,
     val trialExpiryDate: Date?,
-    val avatarUri: String = "",
+    val avatarData: AvatarData,
 ) : Parcelable
 
 @Preview(name = "(1) Light")
@@ -290,7 +290,7 @@ private fun Preview() {
     val dashboardScreenData = MyKSuiteDashboardScreenData(
         myKSuiteTier = MyKSuiteTier.Plus,
         email = "Toto",
-        avatarUri = "",
+        avatarData = AvatarData(),
         dailySendingLimit = "500",
         kSuiteProductsWithQuotas = listOf(
             KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
