@@ -25,6 +25,6 @@ import kotlinx.parcelize.Parcelize
 data class AvatarData(
     val uri: String = "",
     val userInitials: String = "",
-    @ColorInt val iconColorId: Int? = null,
-    @ColorInt val backgroundColorId: Int? = null,
+    @ColorInt val iconColor: Int? = null,
+    @ColorInt val backgroundColor: Int? = null,
 ) : Parcelable

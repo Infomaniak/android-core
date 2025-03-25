@@ -66,11 +66,11 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
             .sizeIn(minWidth = minAvatarSize, minHeight = minAvatarSize)
             .clip(CircleShape)
             .then(if (border == null) Modifier else Modifier.border(border = border, shape = CircleShape))
-            .then(if (avatarData.backgroundColorId == null) Modifier else Modifier.background(color = Color(avatarData.backgroundColorId))),
+            .then(if (avatarData.backgroundColor == null) Modifier else Modifier.background(color = Color(avatarData.backgroundColor))),
     ) {
         when {
             isAvatarError && avatarDisplayState == AvatarDisplayState.Initials -> InitialsTextAvatar(avatarData)
-            isAvatarError -> DefaultIconAvatar(avatarData.iconColorId)
+            isAvatarError -> DefaultIconAvatar(avatarData.iconColor)
             else -> {
                 val imageRequest = remember(avatarData.uri, context) {
                     ImageRequest.Builder(context)

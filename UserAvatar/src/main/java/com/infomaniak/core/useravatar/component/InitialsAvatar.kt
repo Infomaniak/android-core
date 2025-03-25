@@ -31,7 +31,7 @@ import com.infomaniak.core.useravatar.AvatarData
 internal fun InitialsTextAvatar(avatarData: AvatarData) = with(avatarData) {
     Text(
         text = userInitials,
-        color = iconColorId?.let(::Color)
+        color = iconColor?.let(::Color)
             ?: if (isSystemInDarkTheme()) Color(0xFF333333) else Color.White, // TODO use CoreUi icon color
         textAlign = TextAlign.Center,
         modifier = Modifier.wrapContentSize(align = Alignment.Center),
