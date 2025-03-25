@@ -25,9 +25,9 @@ import com.infomaniak.core.FormatterFileSize.formatShortFileSize
 import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
-import com.infomaniak.core.myksuite.ui.screens.components.AvatarData
 import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog
+import com.infomaniak.core.useravatar.AvatarDataModule
 
 object MyKSuiteUiUtils {
 
@@ -43,7 +43,7 @@ object MyKSuiteUiUtils {
     fun getDashboardData(
         context: Context,
         myKSuiteData: MyKSuiteData,
-        avatarData: AvatarData,
+        avatarData: AvatarDataModule,
     ): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,

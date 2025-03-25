@@ -42,6 +42,8 @@ import com.infomaniak.core.myksuite.ui.network.ApiRoutes
 import com.infomaniak.core.myksuite.ui.screens.components.*
 import com.infomaniak.core.myksuite.ui.theme.*
 import com.infomaniak.core.myksuite.ui.theme.Typography
+import com.infomaniak.core.useravatar.AvatarDataModule
+import com.infomaniak.core.useravatar.UserAvatarModule
 import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
 import com.infomaniak.core.utils.format
 import kotlinx.parcelize.Parcelize
@@ -131,7 +133,7 @@ private fun SubscriptionInfoCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
         ) {
-            UserAvatar(dashboardScreenData().avatarData)
+            UserAvatarModule(dashboardScreenData().avatarData, border = myKSuiteGradient())
             Text(
                 modifier = Modifier.weight(1.0f),
                 style = Typography.bodyRegular,
@@ -280,7 +282,7 @@ data class MyKSuiteDashboardScreenData(
     val dailySendingLimit: String,
     val kSuiteProductsWithQuotas: List<KSuiteProductsWithQuotas>,
     val trialExpiryDate: Date?,
-    val avatarData: AvatarData,
+    val avatarData: AvatarDataModule,
 ) : Parcelable
 
 @Preview(name = "(1) Light")
@@ -290,7 +292,7 @@ private fun Preview() {
     val dashboardScreenData = MyKSuiteDashboardScreenData(
         myKSuiteTier = MyKSuiteTier.Plus,
         email = "Toto",
-        avatarData = AvatarData(),
+        avatarData = AvatarDataModule(userInitials = "IK",),
         dailySendingLimit = "500",
         kSuiteProductsWithQuotas = listOf(
             KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),

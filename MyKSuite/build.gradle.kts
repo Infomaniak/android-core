@@ -49,6 +49,7 @@ android {
 dependencies {
 
     implementation(project(":Core"))
+    implementation(project(":Core:UserAvatar"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)
