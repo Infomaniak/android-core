@@ -27,7 +27,7 @@ import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
 import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog
-import com.infomaniak.core.useravatar.AvatarDataModule
+import com.infomaniak.core.useravatar.AvatarData
 
 object MyKSuiteUiUtils {
 
@@ -43,7 +43,7 @@ object MyKSuiteUiUtils {
     fun getDashboardData(
         context: Context,
         myKSuiteData: MyKSuiteData,
-        avatarData: AvatarDataModule,
+        avatarData: AvatarData,
     ): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,
