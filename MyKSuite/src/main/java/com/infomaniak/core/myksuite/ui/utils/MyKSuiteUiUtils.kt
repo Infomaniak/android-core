@@ -43,12 +43,18 @@ object MyKSuiteUiUtils {
     fun getDashboardData(
         context: Context,
         myKSuiteData: MyKSuiteData,
-        avatarData: AvatarData,
+        avatarUri: String = "",
+        userInitials: String = "",
+        userInitialsBackgroundColorId: Int? = null,
     ): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,
             email = myKSuiteData.mail.email,
-            avatarData = avatarData,
+            avatarData = AvatarData(
+                uri = avatarUri,
+                userInitials = userInitials,
+                backgroundColorId = userInitialsBackgroundColorId,
+            ),
             dailySendingLimit = myKSuiteData.mail.dailyLimitSent.toString(),
             kSuiteProductsWithQuotas = getKSuiteQuotasApp(context, myKSuiteData).toList(),
             trialExpiryDate = myKSuiteData.trialExpiryDate,

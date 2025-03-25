@@ -48,10 +48,10 @@ import com.infomaniak.core.useravatar.component.InitialsTextAvatar
 fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: BorderStroke? = null) {
 
     val context = LocalContext.current
-    var isAvatarError by rememberSaveable(avatarData.avatarUri) { mutableStateOf(false) }
+    var isAvatarError by rememberSaveable(avatarData.uri) { mutableStateOf(false) }
     var avatarDisplayState by rememberSaveable(avatarData, isAvatarError) {
         val avatarState = when {
-            avatarData.avatarUri.isNotBlank() -> AvatarDisplayState.Avatar
+            avatarData.uri.isNotBlank() -> AvatarDisplayState.Avatar
             avatarData.userInitials.isNotBlank() -> AvatarDisplayState.Initials
             else -> AvatarDisplayState.UnknownUser
         }
@@ -72,9 +72,9 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
             isAvatarError && avatarDisplayState == AvatarDisplayState.Initials -> InitialsTextAvatar(avatarData)
             isAvatarError -> DefaultIconAvatar(avatarData.iconColorId)
             else -> {
-                val imageRequest = remember(avatarData.avatarUri, context) {
+                val imageRequest = remember(avatarData.uri, context) {
                     ImageRequest.Builder(context)
-                        .data(avatarData.avatarUri)
+                        .data(avatarData.uri)
                         .crossfade(true)
                         .build()
                 }
