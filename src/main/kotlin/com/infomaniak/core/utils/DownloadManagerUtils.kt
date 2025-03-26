@@ -23,6 +23,8 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import com.infomaniak.core.extensions.appName
 import com.infomaniak.core.extensions.appVersionName
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.invoke
 
 object DownloadManagerUtils {
 
@@ -35,7 +37,7 @@ object DownloadManagerUtils {
 
     private val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]")
 
-    fun requestFor(
+    suspend fun requestFor(
         url: String,
         nameWithoutProblematicChars: String,
         mimeType: String?,
@@ -45,7 +47,9 @@ object DownloadManagerUtils {
         req.setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
         req.setTitle(nameWithoutProblematicChars)
         req.setDescription(appName)
-        req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+        Dispatchers.IO {
+            req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+        }
         req.setMimeType(mimeType)
         req.addHeaders(userAgent, extraHeaders)
 
