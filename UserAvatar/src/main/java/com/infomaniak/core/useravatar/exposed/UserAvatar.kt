@@ -42,8 +42,8 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.AvatarDisplayState
-import com.infomaniak.core.useravatar.component.DefaultIconAvatar
 import com.infomaniak.core.useravatar.component.InitialsTextAvatar
+import com.infomaniak.core.useravatar.component.UnknownUserIcon
 
 @Composable
 fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: BorderStroke? = null) {
@@ -59,14 +59,6 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
     }
 
     val minAvatarSize = 32.dp
-    val context = LocalContext.current
-    val imageRequest = remember(avatarData.uri, context) {
-        ImageRequest.Builder(context)
-            .data(avatarData.uri)
-            .crossfade(true)
-            .build()
-    }
-
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -77,14 +69,23 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
     ) {
         when {
             isAvatarError && avatarDisplayState == AvatarDisplayState.Initials -> InitialsTextAvatar(avatarData)
-            isAvatarError -> DefaultIconAvatar(avatarData.iconColor)
-            else -> AsyncImage(
-                model = imageRequest,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                onSuccess = { isAvatarError = false },
-                onError = { isAvatarError = true },
-            )
+            isAvatarError -> UnknownUserIcon(avatarData.iconColor)
+            else -> {
+                val context = LocalContext.current
+                val imageRequest = remember(avatarData.uri, context) {
+                    ImageRequest.Builder(context)
+                        .data(avatarData.uri)
+                        .crossfade(true)
+                        .build()
+                }
+                AsyncImage(
+                    model = imageRequest,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    onSuccess = { isAvatarError = false },
+                    onError = { isAvatarError = true },
+                )
+            }
         }
     }
 }

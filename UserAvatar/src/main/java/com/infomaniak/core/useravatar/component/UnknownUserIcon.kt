@@ -27,7 +27,7 @@ import androidx.compose.ui.res.vectorResource
 import com.infomaniak.core.useravatar.R
 
 @Composable
-internal fun DefaultIconAvatar(@ColorInt iconColorRes: Int?) {
+internal fun UnknownUserIcon(@ColorInt iconColorRes: Int?) {
     Icon(
         imageVector = ImageVector.vectorResource(R.drawable.ic_person),
         contentDescription = null,

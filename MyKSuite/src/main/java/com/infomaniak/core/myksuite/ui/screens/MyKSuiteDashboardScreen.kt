@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -296,7 +297,7 @@ private fun Preview() {
     val dashboardScreenData = MyKSuiteDashboardScreenData(
         myKSuiteTier = MyKSuiteTier.Plus,
         email = "Toto",
-        avatarData = AvatarData(userInitials = "IK"),
+        avatarData = AvatarData(userInitials = "IK", iconColor = Color.Red.toArgb()),
         dailySendingLimit = "500",
         kSuiteProductsWithQuotas = listOf(
             KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
