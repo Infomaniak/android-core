@@ -71,14 +71,19 @@ object UtilsUi {
     }
 
     fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(getBackgroundColorResBasedOnId(id, array))
+        }
+    }
+
+    fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
         val arrayResource = array ?: R.array.organizationColors
         val colors = resources.getIntArray(arrayResource)
         val colorIndex = Math.floorMod(id, colors.count())
         val organizationColor = colors[colorIndex]
-        return GradientDrawable().apply {
-            shape = GradientDrawable.OVAL
-            setColor(organizationColor)
-        }
+
+        return organizationColor
     }
 
     fun Context.generateInitialsAvatarDrawable(

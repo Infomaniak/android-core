@@ -27,6 +27,7 @@ import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
 import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog
+import com.infomaniak.core.useravatar.AvatarData
 
 object MyKSuiteUiUtils {
 
@@ -39,11 +40,23 @@ object MyKSuiteUiUtils {
             .also(::navigate)
     }
 
-    fun getDashboardData(context: Context, myKSuiteData: MyKSuiteData, avatarUri: String?): MyKSuiteDashboardScreenData {
+    fun getDashboardData(
+        context: Context,
+        myKSuiteData: MyKSuiteData,
+        avatarUri: String? = null,
+        userInitials: String? = null,
+        iconColor: Int? = null,
+        userInitialsBackgroundColor: Int? = null,
+    ): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,
             email = myKSuiteData.mail.email,
-            avatarUri = avatarUri ?: "",
+            avatarData = AvatarData(
+                uri = avatarUri ?: "",
+                userInitials = userInitials ?: "",
+                iconColor = iconColor,
+                backgroundColor = userInitialsBackgroundColor,
+            ),
             dailySendingLimit = myKSuiteData.mail.dailyLimitSent.toString(),
             kSuiteProductsWithQuotas = getKSuiteQuotasApp(context, myKSuiteData).toList(),
             trialExpiryDate = myKSuiteData.trialExpiryDate,

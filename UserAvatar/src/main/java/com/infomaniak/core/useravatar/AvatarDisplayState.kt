@@ -15,26 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.myksuite.ui.theme
+package com.infomaniak.core.useravatar
 
-import androidx.compose.ui.unit.dp
-
-object Dimens {
-
-    /** 56 dp */
-    val buttonHeight = 56.dp
-    /** 16 dp */
-    val smallIconSize = 16.dp
-    /** 24 dp */
-    val iconSize = 24.dp
-    /** 32 dp */
-    val avatarSize = 32.dp
-    /** 8 dp */
-    val smallCornerRadius = 8.dp
-    /** 16 dp */
-    val largeCornerRadius = 16.dp
-    /** 5 dp */
-    val cardElevation = 5.dp
-    /** 40 dp */
-    val textItemMinHeight = 40.dp
+internal enum class AvatarDisplayState {
+    Avatar, Initials, UnknownUser
 }

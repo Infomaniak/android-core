@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -42,6 +43,8 @@ import com.infomaniak.core.myksuite.ui.network.ApiRoutes
 import com.infomaniak.core.myksuite.ui.screens.components.*
 import com.infomaniak.core.myksuite.ui.theme.*
 import com.infomaniak.core.myksuite.ui.theme.Typography
+import com.infomaniak.core.useravatar.AvatarData
+import com.infomaniak.core.useravatar.exposed.UserAvatar
 import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
 import com.infomaniak.core.utils.format
 import kotlinx.parcelize.Parcelize
@@ -131,7 +134,11 @@ private fun SubscriptionInfoCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
         ) {
-            UserAvatar(dashboardScreenData().avatarUri)
+            UserAvatar(
+                modifier = Modifier.size(Dimens.avatarSize),
+                avatarData = dashboardScreenData().avatarData,
+                border = myKSuiteGradient(),
+            )
             Text(
                 modifier = Modifier.weight(1.0f),
                 style = Typography.bodyRegular,
@@ -280,7 +287,7 @@ data class MyKSuiteDashboardScreenData(
     val dailySendingLimit: String,
     val kSuiteProductsWithQuotas: List<KSuiteProductsWithQuotas>,
     val trialExpiryDate: Date?,
-    val avatarUri: String = "",
+    val avatarData: AvatarData,
 ) : Parcelable
 
 @Preview(name = "(1) Light")
@@ -290,7 +297,7 @@ private fun Preview() {
     val dashboardScreenData = MyKSuiteDashboardScreenData(
         myKSuiteTier = MyKSuiteTier.Plus,
         email = "Toto",
-        avatarUri = "",
+        avatarData = AvatarData(userInitials = "IK", iconColor = Color.Red.toArgb()),
         dailySendingLimit = "500",
         kSuiteProductsWithQuotas = listOf(
             KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
