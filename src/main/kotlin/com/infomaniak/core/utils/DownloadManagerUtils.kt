@@ -23,6 +23,8 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import com.infomaniak.core.extensions.appName
 import com.infomaniak.core.extensions.appVersionName
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.invoke
 
 object DownloadManagerUtils {
 
@@ -35,7 +37,7 @@ object DownloadManagerUtils {
 
     private val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]")
 
-    fun requestFor(
+    suspend fun requestFor(
         url: String,
         nameWithoutProblematicChars: String,
         mimeType: String?,
@@ -45,7 +47,19 @@ object DownloadManagerUtils {
         req.setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
         req.setTitle(nameWithoutProblematicChars)
         req.setDescription(appName)
-        req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+        Dispatchers.IO {
+            try {
+                req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+            } catch (e: IllegalStateException) {
+                // The call above tries to create the directory if it doesn't exist,
+                // and throws an `IllegalStateException` if its attempt at creating the directory fails…
+                // but the reason it failed might because of a race condition,
+                // like the DownloadManager app creating it in parallel, just after the `exists()` check,
+                // and before the `mkdirs()` call tries to create the directory.
+                // That's why we try once more if that case happens.
+                req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+            }
+        }
         req.setMimeType(mimeType)
         req.addHeaders(userAgent, extraHeaders)
 
