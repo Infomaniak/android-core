@@ -44,8 +44,8 @@ dependencies {
     implementation(core.coil.network.okhttp)
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)
-    debugImplementation(core.compose.ui.tooling)
     implementation(core.compose.material3)
     implementation(core.compose.ui)
+    debugImplementation(core.compose.ui.tooling)
     implementation(core.compose.ui.tooling.preview)
 }

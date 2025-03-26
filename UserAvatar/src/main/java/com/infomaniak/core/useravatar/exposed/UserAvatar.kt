@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,9 +48,8 @@ import com.infomaniak.core.useravatar.component.InitialsTextAvatar
 @Composable
 fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: BorderStroke? = null) {
 
-    val context = LocalContext.current
     var isAvatarError by rememberSaveable(avatarData.uri) { mutableStateOf(false) }
-    var avatarDisplayState by rememberSaveable(avatarData, isAvatarError) {
+    val avatarDisplayState by rememberSaveable(avatarData, isAvatarError) {
         val avatarState = when {
             avatarData.uri.isNotBlank() -> AvatarDisplayState.Avatar
             avatarData.userInitials.isNotBlank() -> AvatarDisplayState.Initials
@@ -59,6 +59,13 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
     }
 
     val minAvatarSize = 32.dp
+    val context = LocalContext.current
+    val imageRequest = remember(avatarData.uri, context) {
+        ImageRequest.Builder(context)
+            .data(avatarData.uri)
+            .crossfade(true)
+            .build()
+    }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -71,22 +78,13 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
         when {
             isAvatarError && avatarDisplayState == AvatarDisplayState.Initials -> InitialsTextAvatar(avatarData)
             isAvatarError -> DefaultIconAvatar(avatarData.iconColor)
-            else -> {
-                val imageRequest = remember(avatarData.uri, context) {
-                    ImageRequest.Builder(context)
-                        .data(avatarData.uri)
-                        .crossfade(true)
-                        .build()
-                }
-
-                AsyncImage(
-                    model = imageRequest,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    onSuccess = { isAvatarError = false },
-                    onError = { isAvatarError = true },
-                )
-            }
+            else -> AsyncImage(
+                model = imageRequest,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                onSuccess = { isAvatarError = false },
+                onError = { isAvatarError = true },
+            )
         }
     }
 }
@@ -98,12 +96,12 @@ private fun Preview() {
     Surface {
         Column {
             UserAvatar(
-                avatarData = AvatarData(),
+                avatarData = AvatarData(iconColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Red),
             )
             UserAvatar(
-                avatarData = AvatarData(userInitials = "IK"),
-                border = BorderStroke(width = 1.dp, color = Color.Red),
+                avatarData = AvatarData(userInitials = "IK", backgroundColor = Color.LightGray.toArgb()),
+                border = BorderStroke(width = 1.dp, color = Color.Cyan),
             )
         }
     }

@@ -19,11 +19,8 @@ package com.infomaniak.core.useravatar.component
 
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -32,7 +29,6 @@ import com.infomaniak.core.useravatar.R
 @Composable
 internal fun DefaultIconAvatar(@ColorInt iconColorRes: Int?) {
     Icon(
-        modifier = Modifier.wrapContentSize(align = Alignment.Center),
         imageVector = ImageVector.vectorResource(R.drawable.ic_person),
         contentDescription = null,
         tint = iconColorRes?.let(::Color)
