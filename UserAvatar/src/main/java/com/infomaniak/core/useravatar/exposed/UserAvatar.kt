@@ -21,9 +21,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
@@ -45,19 +43,17 @@ import com.infomaniak.core.useravatar.AvatarDisplayState
 import com.infomaniak.core.useravatar.component.InitialsTextAvatar
 import com.infomaniak.core.useravatar.component.UnknownUserIcon
 
+private val minAvatarSize = 32.dp
+
 @Composable
 fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: BorderStroke? = null) {
 
-    var isAvatarError by rememberSaveable(avatarData.uri) { mutableStateOf(false) }
-    val avatarDisplayState by rememberSaveable(avatarData, isAvatarError) {
-        mutableStateOf(computeAvatarState(avatarData, isAvatarError))
-    }
-
-    val minAvatarSize = 32.dp
+    var avatarDisplayState by rememberSaveable(avatarData) { mutableStateOf(computeAvatarState(avatarData)) }
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .sizeIn(minWidth = minAvatarSize, minHeight = minAvatarSize)
+            .size(minAvatarSize)
             .clip(CircleShape)
             .then(if (border == null) Modifier else Modifier.border(border = border, shape = CircleShape))
             .then(if (avatarData.backgroundColor == null) Modifier else Modifier.background(color = Color(avatarData.backgroundColor))),
@@ -77,16 +73,15 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
                     model = imageRequest,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    onSuccess = { isAvatarError = false },
-                    onError = { isAvatarError = true },
+                    onError = { avatarDisplayState = computeAvatarState(avatarData, hasLoadingFailed = true) },
                 )
             }
         }
     }
 }
 
-private fun computeAvatarState(avatarData: AvatarData, isAvatarError: Boolean): AvatarDisplayState = when {
-    avatarData.uri.isNotBlank() && !isAvatarError -> AvatarDisplayState.Avatar
+private fun computeAvatarState(avatarData: AvatarData, hasLoadingFailed: Boolean = false): AvatarDisplayState = when {
+    avatarData.uri.isNotBlank() && !hasLoadingFailed -> AvatarDisplayState.Avatar
     avatarData.userInitials.isNotBlank() -> AvatarDisplayState.Initials
     else -> AvatarDisplayState.UnknownUser
 }
@@ -96,7 +91,7 @@ private fun computeAvatarState(avatarData: AvatarData, isAvatarError: Boolean): 
 @Composable
 private fun Preview() {
     Surface {
-        Column {
+        Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
             UserAvatar(
                 avatarData = AvatarData(uri = "aaa", iconColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Red),

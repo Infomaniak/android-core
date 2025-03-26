@@ -17,9 +17,11 @@
  */
 package com.infomaniak.core.useravatar.component
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.infomaniak.core.useravatar.AvatarData
@@ -28,9 +30,9 @@ import com.infomaniak.core.useravatar.AvatarData
 internal fun InitialsTextAvatar(avatarData: AvatarData) = with(avatarData) {
     // TODO: Use BasicText with autosize when Mail and Drive will be targeting api >= 35
     Text(
+        modifier = Modifier.wrapContentSize(align = Alignment.Center),
         text = userInitials,
-        color = iconColor?.let(::Color)
-            ?: if (isSystemInDarkTheme()) Color(0xFF333333) else Color.White, // TODO use CoreUi icon color
+        color = iconColor?.let(::Color) ?: getDefaultIconColor(),
         textAlign = TextAlign.Center,
     )
 }

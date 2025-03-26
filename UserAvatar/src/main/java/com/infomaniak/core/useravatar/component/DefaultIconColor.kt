@@ -17,22 +17,14 @@
  */
 package com.infomaniak.core.useravatar.component
 
-import androidx.annotation.ColorInt
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
-import com.infomaniak.core.useravatar.R
+
+
+// TODO: Remove this file when using CoreUi
+
+private const val iconColorDark = 0xFF333333
 
 @Composable
-internal fun UnknownUserIcon(@ColorInt iconColorRes: Int?) {
-    Icon(
-        modifier = Modifier.fillMaxSize(),
-        imageVector = ImageVector.vectorResource(R.drawable.ic_person),
-        contentDescription = null,
-        tint = iconColorRes?.let(::Color) ?: getDefaultIconColor()
-    )
-}
+fun getDefaultIconColor() = if (isSystemInDarkTheme()) Color(iconColorDark) else Color.White
