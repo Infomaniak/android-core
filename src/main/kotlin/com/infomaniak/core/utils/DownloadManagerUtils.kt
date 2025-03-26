@@ -48,7 +48,17 @@ object DownloadManagerUtils {
         req.setTitle(nameWithoutProblematicChars)
         req.setDescription(appName)
         Dispatchers.IO {
-            req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+            try {
+                req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+            } catch (e: IllegalStateException) {
+                // The call above tries to create the directory if it doesn't exist,
+                // and throws an `IllegalStateException` if its attempt at creating the directory fails…
+                // but the reason it failed might because of a race condition,
+                // like the DownloadManager app creating it in parallel, just after the `exists()` check,
+                // and before the `mkdirs()` call tries to create the directory.
+                // That's why we try once more if that case happens.
+                req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+            }
         }
         req.setMimeType(mimeType)
         req.addHeaders(userAgent, extraHeaders)
