@@ -50,12 +50,7 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
 
     var isAvatarError by rememberSaveable(avatarData.uri) { mutableStateOf(false) }
     val avatarDisplayState by rememberSaveable(avatarData, isAvatarError) {
-        val avatarState = when {
-            avatarData.uri.isNotBlank() -> AvatarDisplayState.Avatar
-            avatarData.userInitials.isNotBlank() -> AvatarDisplayState.Initials
-            else -> AvatarDisplayState.UnknownUser
-        }
-        mutableStateOf(avatarState)
+        mutableStateOf(computeAvatarState(avatarData, isAvatarError))
     }
 
     val minAvatarSize = 32.dp
@@ -67,10 +62,10 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
             .then(if (border == null) Modifier else Modifier.border(border = border, shape = CircleShape))
             .then(if (avatarData.backgroundColor == null) Modifier else Modifier.background(color = Color(avatarData.backgroundColor))),
     ) {
-        when {
-            isAvatarError && avatarDisplayState == AvatarDisplayState.Initials -> InitialsTextAvatar(avatarData)
-            isAvatarError -> UnknownUserIcon(avatarData.iconColor)
-            else -> {
+        when (avatarDisplayState) {
+            AvatarDisplayState.Initials -> InitialsTextAvatar(avatarData)
+            AvatarDisplayState.UnknownUser -> UnknownUserIcon(avatarData.iconColor)
+            AvatarDisplayState.Avatar -> {
                 val context = LocalContext.current
                 val imageRequest = remember(avatarData.uri, context) {
                     ImageRequest.Builder(context)
@@ -90,6 +85,12 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
     }
 }
 
+private fun computeAvatarState(avatarData: AvatarData, isAvatarError: Boolean): AvatarDisplayState = when {
+    avatarData.uri.isNotBlank() && !isAvatarError -> AvatarDisplayState.Avatar
+    avatarData.userInitials.isNotBlank() -> AvatarDisplayState.Initials
+    else -> AvatarDisplayState.UnknownUser
+}
+
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
@@ -97,7 +98,7 @@ private fun Preview() {
     Surface {
         Column {
             UserAvatar(
-                avatarData = AvatarData(iconColor = Color.LightGray.toArgb()),
+                avatarData = AvatarData(uri = "aaa", iconColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Red),
             )
             UserAvatar(
