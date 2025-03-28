@@ -21,7 +21,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-
 // TODO: Remove this file when using CoreUi
 
 private const val iconColorDark = 0xFF333333
