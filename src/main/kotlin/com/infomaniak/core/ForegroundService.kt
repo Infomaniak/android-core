@@ -141,7 +141,6 @@ abstract class ForegroundService(
         timeoutAsync.complete(TimeoutCancellationException(foregroundServiceType))
     }
 
-
     @OptIn(InternalApi::class)
     final override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)

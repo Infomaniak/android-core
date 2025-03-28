@@ -5,7 +5,6 @@ plugins {
     kotlin("plugin.parcelize")
 }
 
-
 val coreCompileSdk: Int by rootProject.extra
 val legacyMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra

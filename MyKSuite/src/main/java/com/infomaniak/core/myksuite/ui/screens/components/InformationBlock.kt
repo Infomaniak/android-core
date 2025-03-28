@@ -64,7 +64,6 @@ internal fun InformationBlock(modifier: Modifier = Modifier, text: String, butto
     }
 }
 
-
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
