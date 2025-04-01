@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreen
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
+import com.infomaniak.core.myksuite.ui.theme.MyKSuiteXMLTheme
 
 open class MyKSuiteDashboardFragment : Fragment() {
 
@@ -41,11 +42,13 @@ open class MyKSuiteDashboardFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             composeView = this
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent { MyKSuiteDashboardScreen(dashboardScreenData = { navigationArgs.dashboardData }, onClose = onClose) }
+            resetContent(navigationArgs.dashboardData)
         }
     }
 
     protected fun resetContent(dashboardData: MyKSuiteDashboardScreenData) {
-        composeView?.setContent { MyKSuiteDashboardScreen(dashboardScreenData = { dashboardData }, onClose = onClose) }
+        composeView?.setContent {
+            MyKSuiteXMLTheme { MyKSuiteDashboardScreen(dashboardScreenData = { dashboardData }, onClose = onClose) }
+        }
     }
 }

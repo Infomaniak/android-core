@@ -51,10 +51,8 @@ fun MyKSuiteUpgradeBottomSheet(
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismissRequest: () -> Unit,
 ) {
-    MyKSuiteTheme {
-        ModalBottomSheet(onDismissRequest, modifier, sheetState) {
-            UpgradeBottomSheetContent(app, onDismissRequest)
-        }
+    ModalBottomSheet(onDismissRequest, modifier, sheetState) {
+        UpgradeBottomSheetContent(app, onDismissRequest)
     }
 }
 

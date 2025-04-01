@@ -25,7 +25,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteChip
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
-import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.MyKSuiteXMLTheme
 
 abstract class BaseMyKSuiteChipView @JvmOverloads constructor(
     context: Context,
@@ -46,6 +46,6 @@ abstract class BaseMyKSuiteChipView @JvmOverloads constructor(
     @Composable
     override fun Content() {
         val colorRes = if (backgroundColor == ResourcesCompat.ID_NULL) null else backgroundColor
-        MyKSuiteTheme { MyKSuiteChip(tier = tier, backgroundColor = colorRes) }
+        MyKSuiteXMLTheme { MyKSuiteChip(tier = tier, backgroundColor = colorRes) }
     }
 }

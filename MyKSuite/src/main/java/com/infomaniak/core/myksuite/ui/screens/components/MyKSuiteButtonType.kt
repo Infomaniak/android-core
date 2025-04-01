@@ -20,6 +20,7 @@ package com.infomaniak.core.myksuite.ui.screens.components
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -30,10 +31,9 @@ import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 internal enum class MyKSuiteButtonType(val colors: @Composable () -> MyKSuiteButtonColors, val shape: Shape) {
     Mail(
         colors = {
-            val localColors = LocalMyKSuiteColors.current
             MyKSuiteButtonColors(
-                containerColor = localColors.mailButton,
-                contentColor = localColors.onMailButton,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
             )
         },
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
