@@ -29,6 +29,9 @@ import com.google.android.material.R as RMaterial
 
 internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = staticCompositionLocalOf { MyKSuiteColors() }
 
+/**
+ * This theme should be used in any XML View's wrapper class, as it uses the XML material attributes
+ */
 @Composable
 internal fun MyKSuiteXMLTheme(content: @Composable () -> Unit) {
     val context = LocalContext.current
@@ -39,6 +42,9 @@ internal fun MyKSuiteXMLTheme(content: @Composable () -> Unit) {
     )
 }
 
+/**
+ * Basic theme to use if the components are called from Compose
+ */
 @Composable
 internal fun MyKSuiteTheme(
     primaryColor: Color = MaterialTheme.colorScheme.primary,
