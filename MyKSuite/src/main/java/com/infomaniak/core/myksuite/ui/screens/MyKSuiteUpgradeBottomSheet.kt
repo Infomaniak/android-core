@@ -101,7 +101,6 @@ private fun UpgradeBottomSheetContent(app: KSuiteApp, onButtonClicked: () -> Uni
         MyKSuitePrimaryButton(
             modifier = paddedModifier.fillMaxWidth(),
             text = stringResource(R.string.buttonClose),
-            colors = app.buttonStyle.colors,
             shape = app.buttonStyle.shape,
             onClick = onButtonClicked,
         )

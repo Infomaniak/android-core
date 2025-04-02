@@ -48,7 +48,7 @@ internal fun MyKSuiteXMLTheme(content: @Composable () -> Unit) {
 @Composable
 internal fun MyKSuiteTheme(
     primaryColor: Color = MaterialTheme.colorScheme.primary,
-    onPrimaryColor: Color = MaterialTheme.colorScheme.primary,
+    onPrimaryColor: Color = MaterialTheme.colorScheme.onPrimary,
     content: @Composable () -> Unit,
 ) {
     val isDarkTheme = isSystemInDarkTheme()

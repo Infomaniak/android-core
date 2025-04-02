@@ -237,12 +237,6 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
                 MyKSuitePrimaryButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.myKSuiteDashboardFreeTrialButton),
-                    colors = {
-                        MyKSuiteButtonColors(
-                            containerColor = localColors.primaryButton,
-                            contentColor = localColors.onPrimaryButton,
-                        )
-                    },
                     shape = RoundedCornerShape(Dimens.largeCornerRadius),
                     onClick = onButtonClicked,
                 )
