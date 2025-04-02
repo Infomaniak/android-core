@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -361,15 +361,23 @@ fun ImageView.loadAvatar(
     }
 }
 
+
+/**
+ * @param currentClassName a fake departure class name for when we're not navigating from the Fragment we're allowed to navigate
+ * from. Despite the name, it doesn't represent the class we're currently at when navigating but it represents the only class we
+ * want to allow departure from.
+ */
 fun Fragment.canNavigate(currentClassName: String? = null): Boolean {
-    val className = currentClassName ?: when (val currentDestination = findNavController().currentDestination) {
+    val currentlyAtClassName = when (val currentDestination = findNavController().currentDestination) {
         is FragmentNavigator.Destination -> currentDestination.className
         is DialogFragmentNavigator.Destination -> currentDestination.className
-        null -> javaClass.name
-        else -> null
+        null -> return true
+        else -> return false
     }
 
-    return javaClass.name == className
+    val allowedDepartureClassName = currentClassName ?: javaClass.name
+
+    return allowedDepartureClassName == currentlyAtClassName
 }
 
 fun Fragment.safeNavigate(directions: NavDirections, currentClassName: String? = null) = with(findNavController()) {
