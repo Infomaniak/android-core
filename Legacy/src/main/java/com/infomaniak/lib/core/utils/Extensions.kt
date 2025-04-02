@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
@@ -362,14 +363,18 @@ fun ImageView.loadAvatar(
 }
 
 fun Fragment.canNavigate(currentClassName: String? = null): Boolean {
-    val className = currentClassName ?: when (val currentDestination = findNavController().currentDestination) {
+    return findNavController().canNavigate(allowedStartingClassName = javaClass.name, currentClassName)
+}
+
+fun NavController.canNavigate(allowedStartingClassName: String, currentClassName: String? = null): Boolean {
+    val className = currentClassName ?: when (val currentDestination = currentDestination) {
         is FragmentNavigator.Destination -> currentDestination.className
         is DialogFragmentNavigator.Destination -> currentDestination.className
-        null -> javaClass.name
+        null -> allowedStartingClassName
         else -> null
     }
 
-    return javaClass.name == className
+    return allowedStartingClassName == className
 }
 
 fun Fragment.safeNavigate(directions: NavDirections, currentClassName: String? = null) = with(findNavController()) {
