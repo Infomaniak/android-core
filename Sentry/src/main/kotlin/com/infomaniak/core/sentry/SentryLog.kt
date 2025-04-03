@@ -28,6 +28,18 @@ object SentryLog {
 
     private val TAG = SentryLog::class.java.simpleName
 
+    inline fun <R> i(tag: String, msg: String, block: () -> R): R {
+        try {
+            i(tag, "$msg entered")
+            val result = block()
+            i(tag, "$msg exited successfully")
+            return result
+        } catch (t: Throwable) {
+            i(tag, "$msg exited with throwable", t)
+            throw t
+        }
+    }
+
     fun v(tag: String, msg: String, throwable: Throwable? = null) {
         val formattedMessage = formatLogMessage(tag, msg)
         Log.v(TAG, formattedMessage, throwable)
