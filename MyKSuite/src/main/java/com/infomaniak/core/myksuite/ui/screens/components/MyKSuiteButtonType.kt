@@ -18,43 +18,11 @@
 package com.infomaniak.core.myksuite.ui.screens.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.myksuite.ui.theme.Dimens
-import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 
-internal enum class MyKSuiteButtonType(val colors: @Composable () -> MyKSuiteButtonColors, val shape: Shape) {
-    Mail(
-        colors = {
-            val localColors = LocalMyKSuiteColors.current
-            MyKSuiteButtonColors(
-                containerColor = localColors.mailButton,
-                contentColor = localColors.onMailButton,
-            )
-        },
-        shape = RoundedCornerShape(Dimens.largeCornerRadius),
-    ),
-    Drive(
-        colors = {
-            val localColors = LocalMyKSuiteColors.current
-            MyKSuiteButtonColors(
-                containerColor = localColors.primaryButton,
-                contentColor = localColors.onPrimaryButton,
-            )
-        },
-        shape = RoundedCornerShape(10.dp),
-    ),
-}
-
-internal data class MyKSuiteButtonColors(val containerColor: Color, val contentColor: Color) {
-
-    @Composable
-    fun buttonColors(): ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = containerColor,
-        contentColor = contentColor,
-    )
+internal enum class MyKSuiteButtonType(val shape: Shape) {
+    Mail(shape = RoundedCornerShape(Dimens.largeCornerRadius)),
+    Drive(shape = RoundedCornerShape(10.dp)),
 }

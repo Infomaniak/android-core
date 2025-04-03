@@ -19,13 +19,13 @@ package com.infomaniak.core.myksuite.ui.views
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.annotation.ColorInt
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AbstractComposeView
-import androidx.core.content.res.ResourcesCompat
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteChip
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
-import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.MyKSuiteXMLTheme
 
 abstract class BaseMyKSuiteChipView @JvmOverloads constructor(
     context: Context,
@@ -34,18 +34,20 @@ abstract class BaseMyKSuiteChipView @JvmOverloads constructor(
     val tier: MyKSuiteTier,
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
-    private var backgroundColor: Int = ResourcesCompat.ID_NULL
+    @ColorInt
+    private var backgroundColor: Int? = null
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.BaseMyKSuiteChipView, defStyleAttr, 0).apply {
-            backgroundColor = getInt(R.styleable.BaseMyKSuiteChipView_backgroundColor, ResourcesCompat.ID_NULL)
+            backgroundColor = getColor(R.styleable.BaseMyKSuiteChipView_backgroundColor, 0).takeIf {
+                hasValue(R.styleable.BaseMyKSuiteChipView_backgroundColor)
+            }
             recycle()
         }
     }
 
     @Composable
     override fun Content() {
-        val colorRes = if (backgroundColor == ResourcesCompat.ID_NULL) null else backgroundColor
-        MyKSuiteTheme { MyKSuiteChip(tier = tier, backgroundColor = colorRes) }
+        MyKSuiteXMLTheme { MyKSuiteChip(tier = tier, backgroundColor = backgroundColor) }
     }
 }

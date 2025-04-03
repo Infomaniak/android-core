@@ -41,7 +41,9 @@ private const val onMailButton = 0xFFFEF8F7
 private const val mail = 0xFFF2357A
 private const val drive = 0xFF5C89F7
 
-internal val LightColorScheme = lightColorScheme(
+internal fun getLightColorScheme(primaryColor: Color, onPrimaryColor: Color) = lightColorScheme(
+    primary = primaryColor,
+    onPrimary = onPrimaryColor,
     onSurfaceVariant = Color(mouse), // Used for bottom sheet drag handle
     surfaceContainerLow = Color(white), // Used for bottom sheet backgrounds
     surfaceContainerHighest = Color(sky), // Used for Card backgrounds

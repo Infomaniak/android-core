@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeBottomSheet
+import com.infomaniak.core.myksuite.ui.theme.MyKSuiteXMLTheme
 import com.infomaniak.core.myksuite.ui.utils.MyKSuiteUiUtils.DEEPLINK_BASE
 import com.infomaniak.core.utils.enumValueOfOrNull
 
@@ -45,10 +46,12 @@ class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             kSuiteApp?.let {
                 setContent {
-                    MyKSuiteUpgradeBottomSheet(
-                        onDismissRequest = this@MyKSuiteUpgradeBottomSheetDialog.findNavController()::popBackStack,
-                        app = it,
-                    )
+                    MyKSuiteXMLTheme {
+                        MyKSuiteUpgradeBottomSheet(
+                            onDismissRequest = this@MyKSuiteUpgradeBottomSheetDialog.findNavController()::popBackStack,
+                            app = it,
+                        )
+                    }
                 }
             }
         }

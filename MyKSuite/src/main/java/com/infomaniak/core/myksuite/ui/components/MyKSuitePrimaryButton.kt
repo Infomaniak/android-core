@@ -21,14 +21,11 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.core.myksuite.ui.screens.components.MyKSuiteButtonColors
 import com.infomaniak.core.myksuite.ui.screens.components.MyKSuiteButtonType
 import com.infomaniak.core.myksuite.ui.theme.Dimens
 import com.infomaniak.core.myksuite.ui.theme.Margin
@@ -39,13 +36,15 @@ import com.infomaniak.core.myksuite.ui.theme.Typography
 internal fun MyKSuitePrimaryButton(
     modifier: Modifier = Modifier,
     text: String,
-    colors: @Composable () -> MyKSuiteButtonColors,
     shape: Shape,
     onClick: () -> Unit,
 ) {
     Button(
         modifier = modifier.height(Dimens.buttonHeight),
-        colors = colors().buttonColors(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        ),
         shape = shape,
         onClick = onClick,
     ) {
@@ -63,13 +62,11 @@ private fun Preview() {
                 MyKSuitePrimaryButton(
                     text = "Lorem",
                     shape = MyKSuiteButtonType.Mail.shape,
-                    colors = MyKSuiteButtonType.Mail.colors,
                     onClick = {},
                 )
                 MyKSuitePrimaryButton(
                     text = "Close",
                     shape = MyKSuiteButtonType.Drive.shape,
-                    colors = MyKSuiteButtonType.Drive.colors,
                     onClick = {},
                 )
             }

@@ -17,16 +17,41 @@
  */
 package com.infomaniak.core.myksuite.ui.theme
 
+import android.content.Context
+import androidx.annotation.AttrRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.R as RMaterial
 
 internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = staticCompositionLocalOf { MyKSuiteColors() }
 
+/**
+ * This theme should be used in any XML View's wrapper class, as it uses the XML material attributes
+ */
 @Composable
-internal fun MyKSuiteTheme(content: @Composable () -> Unit) {
+internal fun MyKSuiteXMLTheme(content: @Composable () -> Unit) {
+    val context = LocalContext.current
+    MyKSuiteTheme(
+        primaryColor = getMaterialColor(context, RMaterial.attr.colorPrimary),
+        onPrimaryColor = getMaterialColor(context, RMaterial.attr.colorOnPrimary),
+        content = content,
+    )
+}
+
+/**
+ * Basic theme to use if the components are called from Compose
+ */
+@Composable
+internal fun MyKSuiteTheme(
+    primaryColor: Color = MaterialTheme.colorScheme.primary,
+    onPrimaryColor: Color = MaterialTheme.colorScheme.onPrimary,
+    content: @Composable () -> Unit,
+) {
     val isDarkTheme = isSystemInDarkTheme()
     val customColors = if (isDarkTheme) MyKSuiteDarkColors else MyKSuiteLightColors
 
@@ -35,7 +60,11 @@ internal fun MyKSuiteTheme(content: @Composable () -> Unit) {
         LocalMyKSuiteColors provides customColors,
     ) {
         MaterialTheme(
-            colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme,
+            colorScheme = if (isDarkTheme) {
+                getDarkColorScheme(primaryColor, onPrimaryColor)
+            } else {
+                getLightColorScheme(primaryColor, onPrimaryColor)
+            },
             content = content,
         )
     }
@@ -60,3 +89,5 @@ internal data class MyKSuiteColors(
     val iconColor: Color = Color.Unspecified,
     val cardBorderColor: Color = Color.Unspecified,
 )
+
+private fun getMaterialColor(context: Context, @AttrRes colorId: Int) = Color(MaterialColors.getColor(context, colorId, 0))

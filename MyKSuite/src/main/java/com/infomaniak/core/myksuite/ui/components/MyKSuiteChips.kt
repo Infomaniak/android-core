@@ -18,6 +18,7 @@
 package com.infomaniak.core.myksuite.ui.components
 
 import android.content.res.Configuration
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -40,7 +41,7 @@ import com.infomaniak.core.myksuite.ui.theme.Margin
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 
 @Composable
-fun MyKSuiteChip(modifier: Modifier = Modifier, tier: MyKSuiteTier, backgroundColor: Int? = null) {
+fun MyKSuiteChip(modifier: Modifier = Modifier, tier: MyKSuiteTier, @ColorInt backgroundColor: Int? = null) {
     Image(
         modifier = modifier
             .background(
