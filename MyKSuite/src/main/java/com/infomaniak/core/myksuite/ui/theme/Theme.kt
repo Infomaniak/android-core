@@ -18,6 +18,7 @@
 package com.infomaniak.core.myksuite.ui.theme
 
 import android.content.Context
+import androidx.annotation.AttrRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -89,4 +90,4 @@ internal data class MyKSuiteColors(
     val cardBorderColor: Color = Color.Unspecified,
 )
 
-private fun getMaterialColor(context: Context, colorId: Int) = Color(MaterialColors.getColor(context, colorId, 0))
+private fun getMaterialColor(context: Context, @AttrRes colorId: Int) = Color(MaterialColors.getColor(context, colorId, 0))
