@@ -53,7 +53,7 @@ dependencies {
 
     api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.20'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1'
-    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0'
+    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1'
 
     def navigationVersion = '2.8.9'
     api "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
@@ -84,7 +84,7 @@ dependencies {
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.squareup.okhttp3:okhttp:4.12.0'
 
-    def sentryVersion = '8.5.0'
+    def sentryVersion = '8.6.0'
     api "io.sentry:sentry-android:$sentryVersion"
     implementation "io.sentry:sentry-okhttp:$sentryVersion"
 
