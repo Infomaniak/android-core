@@ -49,7 +49,7 @@ class ApiClientProviderTest {
     @Test
     fun apiClientProviderTest() {
         runBlocking {
-            post<ApiResponse<String>>(Url("toto"), data = mapOf("toto" to 1))
+            post<ApiResponse<String>>(Url("gigi"), data = mapOf("gigi" to 1))
         }
     }
 
