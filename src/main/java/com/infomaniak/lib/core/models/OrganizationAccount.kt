@@ -27,7 +27,7 @@ import kotlinx.parcelize.Parcelize
 data class OrganizationAccount(
     val id: Int,
     val name: String,
-    val type: Type,
+    val type: Type?,
     val billing: Boolean,
     val mailing: Boolean,
     @SerializedName("no_access")
