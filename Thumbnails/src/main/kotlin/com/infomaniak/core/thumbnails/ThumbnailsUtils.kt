@@ -190,7 +190,7 @@ object ThumbnailsUtils {
                 )
             } else {
                 retriever.getFrameAtTime(sampleTime, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
-                    ?.scale(targetSize.width, targetSize.height, false)
+                    ?.scale(width = targetSize.width, height = targetSize.height, filter = false)
             }
         }.getOrElse {
             it.printStackTrace()
