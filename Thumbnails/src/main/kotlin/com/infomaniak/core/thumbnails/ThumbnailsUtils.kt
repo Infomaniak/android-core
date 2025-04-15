@@ -37,6 +37,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.net.toFile
 import java.io.File
 import kotlin.math.min
+import androidx.core.graphics.scale
 
 object ThumbnailsUtils {
 
@@ -188,9 +189,8 @@ object ThumbnailsUtils {
                     params
                 )
             } else {
-                retriever.getFrameAtTime(sampleTime, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)?.let {
-                    Bitmap.createScaledBitmap(it, targetSize.width, targetSize.height, false)
-                }
+                retriever.getFrameAtTime(sampleTime, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+                    ?.scale(width = targetSize.width, height = targetSize.height, filter = false)
             }
         }.getOrElse {
             it.printStackTrace()
