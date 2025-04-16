@@ -19,7 +19,7 @@ package com.infomaniak.lib.login
 
 import android.webkit.CookieManager
 
-object WebViewUtils {
+internal object WebViewUtils {
 
     fun flushAllCookies() {
         CookieManager.getInstance().removeAllCookies(null)
