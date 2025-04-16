@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
 import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
+import com.infomaniak.lib.login.ext.handleEdgeToEdge
 import java.util.MissingFormatArgumentException
 
 class WebViewLoginActivity : AppCompatActivity() {
@@ -31,6 +32,7 @@ class WebViewLoginActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         if (removeCookies) WebViewUtils.flushAllCookies()
+        binding.handleEdgeToEdge()
 
         binding.webview.apply {
             settings.javaScriptEnabled = true

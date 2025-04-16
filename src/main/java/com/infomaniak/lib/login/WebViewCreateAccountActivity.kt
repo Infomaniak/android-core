@@ -32,6 +32,7 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.CANCEL_HOST_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.CREATE_ACCOUNT_URL_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
 import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
+import com.infomaniak.lib.login.ext.handleEdgeToEdge
 import java.util.MissingFormatArgumentException
 
 class WebViewCreateAccountActivity : AppCompatActivity() {
@@ -55,6 +56,7 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         WebViewUtils.flushAllCookies()
+        binding.handleEdgeToEdge()
 
         binding.toolbar.title = getString(R.string.create_account)
         binding.webview.apply {
