@@ -362,10 +362,25 @@ fun ImageView.loadAvatar(
     }
 }
 
+@Deprecated(
+    "Providing a currentClassName will bypass any form of verification. Use the new method exposed through the FragmentNavigation module instead",
+    ReplaceWith(
+        expression = "isAtInitialDestination()",
+        imports = ["com.infomaniak.core.fragmentnavigation.isAtInitialDestination"],
+    )
+)
+@Suppress("DEPRECATION")
 fun Fragment.canNavigate(currentClassName: String? = null): Boolean {
     return findNavController().canNavigate(allowedStartingClassName = javaClass.name, currentClassName)
 }
 
+@Deprecated(
+    "Providing a currentClassName will bypass any form of verification. Use the new method exposed through the FragmentNavigation module instead",
+    ReplaceWith(
+        expression = "isAtInitialDestination(allowedStartingClassName)",
+        imports = ["com.infomaniak.core.fragmentnavigation.isAtInitialDestination"],
+    )
+)
 fun NavController.canNavigate(allowedStartingClassName: String, currentClassName: String? = null): Boolean {
     val className = currentClassName ?: when (val currentDestination = currentDestination) {
         is FragmentNavigator.Destination -> currentDestination.className
@@ -377,12 +392,28 @@ fun NavController.canNavigate(allowedStartingClassName: String, currentClassName
     return allowedStartingClassName == className
 }
 
+@Deprecated(
+    "Providing a currentClassName won't have any impact",
+    ReplaceWith(
+        expression = "safelyNavigate(directions)",
+        imports = ["com.infomaniak.core.fragmentnavigation.safelyNavigate"],
+    )
+)
+@Suppress("DEPRECATION")
 fun Fragment.safeNavigate(directions: NavDirections, currentClassName: String? = null) = with(findNavController()) {
     if (canNavigate(currentClassName) && currentDestination?.getAction(directions.actionId) != null) {
         navigate(directions)
     }
 }
 
+@Deprecated(
+    "Providing a currentClassName will bypass any form of verification. Use the new method exposed through the FragmentNavigation module instead",
+    ReplaceWith(
+        expression = "safelyNavigate(resId, args, navOptions, navigatorExtras, currentClassName)",
+        imports = ["com.infomaniak.core.fragmentnavigation.safelyNavigate"],
+    )
+)
+@Suppress("DEPRECATION")
 fun Fragment.safeNavigate(
     @IdRes resId: Int,
     args: Bundle? = null,
