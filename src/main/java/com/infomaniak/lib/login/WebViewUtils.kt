@@ -25,5 +25,5 @@ internal object WebViewUtils {
         CookieManager.getInstance().removeAllCookies(null)
         CookieManager.getInstance().flush()
     }
-    
+
 }
