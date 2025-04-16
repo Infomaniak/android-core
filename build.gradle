@@ -9,11 +9,11 @@ android {
 
     namespace 'com.infomaniak.lib.login'
 
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 35
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
