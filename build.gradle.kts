@@ -22,6 +22,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField("Integer", "MIN_SDK", coreMinSdk.toString())
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
