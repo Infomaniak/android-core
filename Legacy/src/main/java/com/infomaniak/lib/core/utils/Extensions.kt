@@ -393,7 +393,7 @@ fun NavController.canNavigate(allowedStartingClassName: String, currentClassName
 }
 
 @Deprecated(
-    "Providing a currentClassName won't have any impact",
+    "Providing a currentClassName won't have any impact. Use the new method exposed through the FragmentNavigation module instead",
     ReplaceWith(
         expression = "safelyNavigate(directions)",
         imports = ["com.infomaniak.core.fragmentnavigation.safelyNavigate"],
