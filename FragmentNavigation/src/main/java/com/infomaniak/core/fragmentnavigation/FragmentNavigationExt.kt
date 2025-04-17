@@ -43,12 +43,10 @@ fun NavController.isAtInitialDestination(allowedInitialClassName: String): Boole
     return allowedInitialClassName == currentlyAtClassName
 }
 
-fun Fragment.safelyNavigate(directions: NavDirections) = findNavController().let { navController ->
-    // Checks whether we're currently at the destination where the action was defined from. NavDirections still needs to be
-    // executed when we can find its actionId inside currentDestination.
-    if (navController.currentDestination?.getAction(directions.actionId) != null) {
-        navController.navigate(directions)
-    }
+fun Fragment.safelyNavigate(directions: NavDirections) = with(findNavController()) {
+    // Checks whether we're currently at the destination where the action was defined from.
+    // NavDirections still needs to be executed when we can find its actionId inside currentDestination.
+    if (currentDestination?.getAction(directions.actionId) != null) navigate(directions)
 }
 
 fun Fragment.safelyNavigate(
