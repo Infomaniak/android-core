@@ -27,6 +27,7 @@ import android.icu.util.MeasureUnit
 import android.os.Build.VERSION.SDK_INT
 import android.text.format.Formatter
 import androidx.annotation.RequiresApi
+import splitties.bitflags.withFlag
 import java.math.BigDecimal
 import java.util.Locale
 import kotlin.math.abs
@@ -48,9 +49,27 @@ object FormatterFileSize {
                 Formatter.formatShortFileSize(this, bytes)
             }
         } else {
-            formatFileSize(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly)
+            formatFileSize(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly, maxUnit = null)
         }
     }
+
+    @RequiresApi(24)
+    fun Context.formatFileSize(
+        bytes: Long,
+        useIecUnits: Boolean = false,
+        short: Boolean = true,
+        valueOnly: Boolean,
+        maxUnit: MeasureUnit? = null
+    ): String = formatFileSize(
+        bytes = bytes,
+        flags = 0.withFlag(
+            if (short) FLAG_SHORTER else 0
+        ).withFlag(
+            if (useIecUnits) FLAG_IEC_UNITS else FLAG_SI_UNITS
+        ),
+        valueOnly = valueOnly,
+        maxUnit = maxUnit
+    )
 
     private fun Context.formatFileSizeBeforeNougat(bytes: Long, flags: Int, valueOnly: Boolean): String {
 
@@ -99,31 +118,34 @@ object FormatterFileSize {
     }
 
     @RequiresApi(24)
-    private fun Context.formatFileSize(bytes: Long, flags: Int, valueOnly: Boolean): String {
+    private fun Context.formatFileSize(bytes: Long, flags: Int, valueOnly: Boolean, maxUnit: MeasureUnit?): String {
 
-        fun getSuffix(suffixes: MutableList<MeasureUnit>): MeasureUnit? {
+        fun getUnit(suffixes: MutableList<MeasureUnit>): MeasureUnit? {
             return if (valueOnly) null else suffixes.removeFirstOrNull()
         }
 
-        val suffixes = mutableListOf(
+        val orderedUnits = mutableListOf(
             MeasureUnit.BYTE,
             MeasureUnit.KILOBYTE,
             MeasureUnit.MEGABYTE,
             MeasureUnit.GIGABYTE,
             MeasureUnit.TERABYTE,
         )
-        val unit = if (flags and FLAG_IEC_UNITS != 0) KIBI_BYTE else KILO_BYTE
+
+        if (maxUnit != null) orderedUnits.removeAll { it.prefixPower > maxUnit.prefixPower }
+
+        val unitType = if (flags and FLAG_IEC_UNITS != 0) KIBI_BYTE else KILO_BYTE
         var multiplier = 1L
 
         var result = abs(bytes).toFloat()
-        val suffixesCount = suffixes.count() - 1
-        var suffix = getSuffix(suffixes)
+        val unitsCount = orderedUnits.count() - 1
+        var unit = getUnit(orderedUnits)
 
-        repeat(suffixesCount) {
+        repeat(unitsCount) {
             if (result > 900) {
-                suffix = getSuffix(suffixes)
-                multiplier *= unit
-                result /= unit
+                unit = getUnit(orderedUnits)
+                multiplier *= unitType
+                result /= unitType
             }
         }
 
@@ -137,12 +159,22 @@ object FormatterFileSize {
         result = abs(result)
 
         val resultValue = String.format(roundFormat, result)
-        val resultValueFormatted = suffix?.let {
+        val resultValueFormatted = unit?.let {
             val locale = currentLocale()
             formatMeasureShort(locale, getNumberFormatter(locale, roundedBytes), result, it)
         }
 
         return resultValueFormatted ?: resultValue
+    }
+
+    @get:RequiresApi(24)
+    private val MeasureUnit.prefixPower: Int get() = if (SDK_INT >= 34) prefix.power else when (this) {
+        MeasureUnit.BYTE -> 0
+        MeasureUnit.KILOBYTE -> 3
+        MeasureUnit.MEGABYTE -> 6
+        MeasureUnit.GIGABYTE -> 9
+        MeasureUnit.TERABYTE -> 12
+        else -> throw UnsupportedOperationException("Unsupported measureUnit: $this")
     }
 
     @RequiresApi(24)
