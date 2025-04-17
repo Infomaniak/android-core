@@ -369,8 +369,8 @@ fun ImageView.loadAvatar(
         imports = ["com.infomaniak.core.fragmentnavigation.isAtInitialDestination"],
     )
 )
-@Suppress("DEPRECATION")
 fun Fragment.canNavigate(currentClassName: String? = null): Boolean {
+    @Suppress("DEPRECATION")
     return findNavController().canNavigate(allowedStartingClassName = javaClass.name, currentClassName)
 }
 
@@ -399,8 +399,8 @@ fun NavController.canNavigate(allowedStartingClassName: String, currentClassName
         imports = ["com.infomaniak.core.fragmentnavigation.safelyNavigate"],
     )
 )
-@Suppress("DEPRECATION")
 fun Fragment.safeNavigate(directions: NavDirections, currentClassName: String? = null) = with(findNavController()) {
+    @Suppress("DEPRECATION")
     if (canNavigate(currentClassName) && currentDestination?.getAction(directions.actionId) != null) {
         navigate(directions)
     }
@@ -413,7 +413,6 @@ fun Fragment.safeNavigate(directions: NavDirections, currentClassName: String? =
         imports = ["com.infomaniak.core.fragmentnavigation.safelyNavigate"],
     )
 )
-@Suppress("DEPRECATION")
 fun Fragment.safeNavigate(
     @IdRes resId: Int,
     args: Bundle? = null,
@@ -421,6 +420,7 @@ fun Fragment.safeNavigate(
     navigatorExtras: Navigator.Extras? = null,
     currentClassName: String? = null,
 ) {
+    @Suppress("DEPRECATION")
     if (canNavigate(currentClassName)) findNavController().navigate(resId, args, navOptions, navigatorExtras)
 }
 
