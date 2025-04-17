@@ -17,6 +17,8 @@
  */
 package com.infomaniak.core.extensions
 
+import android.os.Build
+import com.infomaniak.core.BuildConfig
 import splitties.init.appCtx
 import kotlin.LazyThreadSafetyMode.NONE
 
@@ -26,6 +28,10 @@ internal val appName: String by lazy(NONE) {
 
 internal val appVersionName: String by lazy(NONE) {
     packageManager.getPackageInfo(appCtx.packageName, 0).versionName.toString()
+}
+
+internal val minSdkVersion: Int by lazy(NONE) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) applicationInfo.minSdkVersion else BuildConfig.CORE_MIN_SDK
 }
 
 private val packageManager = appCtx.packageManager

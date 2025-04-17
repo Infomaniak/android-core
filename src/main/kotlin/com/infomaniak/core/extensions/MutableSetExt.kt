@@ -18,11 +18,10 @@
 package com.infomaniak.core.extensions
 
 import android.os.Build
-import com.infomaniak.core.BuildConfig
 
 fun MutableSet<String>.addPermission(
     permission: String,
-    minSdk: Int = BuildConfig.MIN_SDK,
+    minSdk: Int = minSdkVersion,
     maxSdk: Int = Build.VERSION_CODES.CUR_DEVELOPMENT,
 ) {
     if (Build.VERSION.SDK_INT in minSdk..<maxSdk) add(permission)

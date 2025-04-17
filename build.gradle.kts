@@ -23,7 +23,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField("Integer", "MIN_SDK", coreMinSdk.toString())
+        buildConfigField("Integer", "CORE_MIN_SDK", coreMinSdk.toString())
     }
 
     buildFeatures {
