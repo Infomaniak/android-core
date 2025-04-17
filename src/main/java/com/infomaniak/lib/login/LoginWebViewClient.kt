@@ -83,13 +83,11 @@ open class LoginWebViewClient(
 
     @Suppress("OVERRIDE_DEPRECATION") // We have this overload for api 22 and below
     override fun onReceivedError(view: WebView?, errorCode: Int, description: String, failingUrl: String) {
-        if (isValidUrl(failingUrl)) {
-            errorResult(description)
-        }
+        if (isValidUrl(failingUrl)) errorResult(description)
     }
 
     override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
-        if (request?.method == "GET") errorResult(HTTP_ERROR_CODE)
+        if (isValidUrl(request?.url.toString())) errorResult(HTTP_ERROR_CODE)
     }
 
     private fun isValidUrl(inputUrl: String?): Boolean {
