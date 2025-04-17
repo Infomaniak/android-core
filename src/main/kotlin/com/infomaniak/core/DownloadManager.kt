@@ -79,7 +79,15 @@ sealed interface DownloadStatus {
 }
 
 suspend fun DownloadManager.startDownloadingFile(request: DownloadManager.Request): UniqueDownloadId? {
-    val uniqueDownloadId = Dispatchers.IO { enqueue(request) }
+    val uniqueDownloadId = Dispatchers.IO {
+        try {
+            enqueue(request)
+        } catch (_: NullPointerException) {
+            // enqueue is supposed to return -1 in case the operation fails,
+            // but on Xiaomi and Redmi devices, it throws NPEs instead…
+            -1L
+        }
+    }
     return if (uniqueDownloadId == -1L) null else UniqueDownloadId(uniqueDownloadId)
 }
 
