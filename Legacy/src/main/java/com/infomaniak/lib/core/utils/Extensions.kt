@@ -362,10 +362,25 @@ fun ImageView.loadAvatar(
     }
 }
 
+@Deprecated(
+    "Providing a currentClassName will bypass any form of verification. Use the new method exposed through the FragmentNavigation module instead",
+    ReplaceWith(
+        expression = "isAtInitialDestination()",
+        imports = ["com.infomaniak.core.fragmentnavigation.isAtInitialDestination"],
+    )
+)
 fun Fragment.canNavigate(currentClassName: String? = null): Boolean {
+    @Suppress("DEPRECATION")
     return findNavController().canNavigate(allowedStartingClassName = javaClass.name, currentClassName)
 }
 
+@Deprecated(
+    "Providing a currentClassName will bypass any form of verification. Use the new method exposed through the FragmentNavigation module instead",
+    ReplaceWith(
+        expression = "isAtInitialDestination(allowedStartingClassName)",
+        imports = ["com.infomaniak.core.fragmentnavigation.isAtInitialDestination"],
+    )
+)
 fun NavController.canNavigate(allowedStartingClassName: String, currentClassName: String? = null): Boolean {
     val className = currentClassName ?: when (val currentDestination = currentDestination) {
         is FragmentNavigator.Destination -> currentDestination.className
@@ -377,12 +392,27 @@ fun NavController.canNavigate(allowedStartingClassName: String, currentClassName
     return allowedStartingClassName == className
 }
 
+@Deprecated(
+    "Providing a currentClassName won't have any impact. Use the new method exposed through the FragmentNavigation module instead",
+    ReplaceWith(
+        expression = "safelyNavigate(directions)",
+        imports = ["com.infomaniak.core.fragmentnavigation.safelyNavigate"],
+    )
+)
 fun Fragment.safeNavigate(directions: NavDirections, currentClassName: String? = null) = with(findNavController()) {
+    @Suppress("DEPRECATION")
     if (canNavigate(currentClassName) && currentDestination?.getAction(directions.actionId) != null) {
         navigate(directions)
     }
 }
 
+@Deprecated(
+    "Providing a currentClassName will bypass any form of verification. Use the new method exposed through the FragmentNavigation module instead",
+    ReplaceWith(
+        expression = "safelyNavigate(resId, args, navOptions, navigatorExtras, currentClassName)",
+        imports = ["com.infomaniak.core.fragmentnavigation.safelyNavigate"],
+    )
+)
 fun Fragment.safeNavigate(
     @IdRes resId: Int,
     args: Bundle? = null,
@@ -390,6 +420,7 @@ fun Fragment.safeNavigate(
     navigatorExtras: Navigator.Extras? = null,
     currentClassName: String? = null,
 ) {
+    @Suppress("DEPRECATION")
     if (canNavigate(currentClassName)) findNavController().navigate(resId, args, navOptions, navigatorExtras)
 }
 
