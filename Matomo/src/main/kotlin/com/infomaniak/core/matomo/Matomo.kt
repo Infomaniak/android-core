@@ -31,11 +31,10 @@ interface Matomo {
     val tracker: Tracker
     val siteId: Int
 
-    fun buildTracker(shouldOptOut: Boolean = false): Tracker {
+    fun buildTracker(): Tracker {
         return TrackerBuilder(BuildConfig.MATOMO_URL, siteId, "AndroidTracker").build(Matomo.getInstance(appCtx)).also {
             // Put a tracker on app installs to have statistics on the number of times the app is installed or updated
             TrackHelper.track().download().identifier(DownloadTracker.Extra.ApkChecksum(appCtx)).with(it)
-            it.isOptOut = shouldOptOut
         }
     }
 
