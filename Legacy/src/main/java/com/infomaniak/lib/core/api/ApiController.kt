@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
+import com.infomaniak.lib.core.utils.ErrorCode
 import com.infomaniak.lib.core.utils.isNetworkException
 import com.infomaniak.lib.core.utils.isSerializationException
 import com.infomaniak.lib.login.ApiToken
@@ -245,11 +246,19 @@ object ApiController {
     inline fun <reified T> createInternetErrorResponse(
         noNetwork: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
-    ) = createErrorResponse<T>(
-        translatedError = if (noNetwork) R.string.noConnection else R.string.connectionError,
-        apiError = ApiError(exception = NetworkException()),
-        buildErrorResult = buildErrorResult,
-    )
+    ): T {
+        val internalNetworkError = if (noNetwork) {
+            TranslatedInternalErrorCode.NoConnection
+        } else {
+            TranslatedInternalErrorCode.ConnectionError
+        }
+
+        return createErrorResponse<T>(
+            translatedError = internalNetworkError.translateRes,
+            apiError = internalNetworkError.toApiError(NetworkException()),
+            buildErrorResult = buildErrorResult,
+        )
+    }
 
     fun createApiError(useKotlinxSerialization: Boolean, bodyResponse: String, exception: Exception) = ApiError(
         contextJson = if (useKotlinxSerialization) bodyResponse.bodyResponseToJson() else null,
@@ -275,4 +284,14 @@ object ApiController {
     enum class ApiMethod {
         GET, PUT, POST, DELETE, PATCH
     }
+
+    enum class TranslatedInternalErrorCode(
+        override val code: String,
+        @StringRes override val translateRes: Int,
+    ) : ErrorCode.Translated {
+        NoConnection("no_connection", R.string.noConnection),
+        ConnectionError("connection_error", R.string.connectionError),
+    }
+
+    fun ErrorCode.toApiError(exception: Exception): ApiError = ApiError(code = code, exception = exception)
 }
