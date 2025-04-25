@@ -18,6 +18,7 @@
 package com.infomaniak.lib.stores
 
 import android.content.Context
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.infomaniak.lib.core.utils.SentryLog
@@ -25,7 +26,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 // TODO: Inject this when kDrive will have hilt
-private val Context.dataStore by preferencesDataStore(name = StoresSettingsRepository.DATA_STORE_NAME)
+private val Context.dataStore by preferencesDataStore(
+    name = StoresSettingsRepository.DATA_STORE_NAME,
+    // In case we have a CorruptionException, we want to clear all DataStore preferences
+    corruptionHandler = ReplaceFileCorruptionHandler<Preferences> { emptyPreferences() },
+)
 
 @Suppress("UNCHECKED_CAST")
 class StoresSettingsRepository(private val context: Context) {
