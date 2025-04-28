@@ -192,12 +192,8 @@ object ApiController {
                             scope.setExtra("bodyResponse", bodyResponse)
                         }
                         createErrorResponse(
-                            apiError = TranslatedInternalErrorCode.ServerError.toApiError(
-                                useKotlinxSerialization,
-                                bodyResponse,
-                                ServerErrorException(bodyResponse),
-                            ),
-                            translatedError = TranslatedInternalErrorCode.ServerError.translateRes,
+                            TranslatedInternalErrorCode.ServerError,
+                            InternalErrorPayload(ServerErrorException(bodyResponse), useKotlinxSerialization, bodyResponse),
                             buildErrorResult = buildErrorResult,
                         )
                     }
@@ -207,11 +203,7 @@ object ApiController {
             }
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
-            return createErrorResponse(
-                translatedError = TranslatedInternalErrorCode.UnknownError.translateRes,
-                apiError = TranslatedInternalErrorCode.UnknownError.toApiError(),
-                buildErrorResult = buildErrorResult,
-            )
+            return createErrorResponse(TranslatedInternalErrorCode.UnknownError, buildErrorResult = buildErrorResult)
         } catch (exception: Exception) {
             exception.printStackTrace()
 
@@ -226,12 +218,8 @@ object ApiController {
                 }
 
                 createErrorResponse(
-                    translatedError = TranslatedInternalErrorCode.UnknownError.translateRes,
-                    apiError = TranslatedInternalErrorCode.UnknownError.toApiError(
-                        useKotlinxSerialization,
-                        bodyResponse,
-                        exception,
-                    ),
+                    TranslatedInternalErrorCode.UnknownError,
+                    InternalErrorPayload(exception, useKotlinxSerialization, bodyResponse),
                     buildErrorResult = buildErrorResult,
                 )
             }
@@ -258,40 +246,20 @@ object ApiController {
     inline fun <reified T> createInternetErrorResponse(
         noNetwork: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
-    ): T {
-        val internalNetworkError = if (noNetwork) {
-            TranslatedInternalErrorCode.NoConnection
-        } else {
-            TranslatedInternalErrorCode.ConnectionError
-        }
-
-        return createErrorResponse<T>(
-            translatedError = internalNetworkError.translateRes,
-            apiError = internalNetworkError.toApiError(NetworkException()),
-            buildErrorResult = buildErrorResult,
-        )
-    }
-
-    fun createApiError(
-        useKotlinxSerialization: Boolean,
-        bodyResponse: String,
-        exception: Exception,
-        code: String? = null,
-    ) = ApiError(
-        code = code,
-        contextJson = if (useKotlinxSerialization) bodyResponse.bodyResponseToJson() else null,
-        contextGson = when {
-            useKotlinxSerialization -> null
-            else -> runCatching { JsonParser.parseString(bodyResponse).asJsonObject }.getOrDefault(null)
-        },
-        exception = exception
+    ): T = createErrorResponse<T>(
+        if (noNetwork) TranslatedInternalErrorCode.NoConnection else TranslatedInternalErrorCode.ConnectionError,
+        InternalErrorPayload(NetworkException()),
+        buildErrorResult = buildErrorResult,
     )
 
     inline fun <reified T> createErrorResponse(
-        @StringRes translatedError: Int,
-        apiError: ApiError? = null,
+        internalErrorCode: TranslatedInternalErrorCode,
+        payload: InternalErrorPayload? = null,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
     ): T {
+        val apiError = internalErrorCode.toApiError(payload)
+        val translatedError = internalErrorCode.translateRes
+
         return buildErrorResult?.invoke(apiError, translatedError)
             ?: ApiResponse<Any>(result = ERROR, error = apiError, translatedError = translatedError) as T
     }
@@ -303,6 +271,12 @@ object ApiController {
         GET, PUT, POST, DELETE, PATCH
     }
 
+    data class InternalErrorPayload(
+        val exception: Exception? = null,
+        val useKotlinxSerialization: Boolean? = null,
+        val bodyResponse: String? = null,
+    )
+
     enum class TranslatedInternalErrorCode(
         override val code: String,
         @StringRes override val translateRes: Int,
@@ -313,11 +287,16 @@ object ApiController {
         UnknownError("an_error_has_occurred", R.string.anErrorHasOccurred),
     }
 
-    fun ErrorCode.toApiError(exception: Exception? = null): ApiError = ApiError(code = code, exception = exception)
-
-    fun ErrorCode.toApiError(
-        useKotlinxSerialization: Boolean,
-        bodyResponse: String,
-        exception: Exception,
-    ): ApiError = createApiError(useKotlinxSerialization, bodyResponse, exception, code)
+    fun ErrorCode.toApiError(payload: InternalErrorPayload?): ApiError {
+        val useKotlinxSerialization = payload?.useKotlinxSerialization
+        return ApiError(
+            code = code,
+            contextJson = if (useKotlinxSerialization == true) payload.bodyResponse?.bodyResponseToJson() else null,
+            contextGson = when {
+                useKotlinxSerialization == true -> null
+                else -> runCatching { payload?.let { JsonParser.parseString(it.bodyResponse).asJsonObject } }.getOrDefault(null)
+            },
+            exception = payload?.exception
+        )
+    }
 }

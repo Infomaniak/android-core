@@ -26,7 +26,6 @@ interface ErrorCode {
     val code: String
 
     interface Translated : ErrorCode {
-        override val code: String
         @get:StringRes
         val translateRes: Int
     }
