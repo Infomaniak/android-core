@@ -192,7 +192,7 @@ object ApiController {
                             scope.setExtra("bodyResponse", bodyResponse)
                         }
                         createErrorResponse(
-                            TranslatedInternalErrorCode.ServerError,
+                            TranslatedInternalErrorCode.UnknownError,
                             InternalErrorPayload(ServerErrorException(bodyResponse), useKotlinxSerialization, bodyResponse),
                             buildErrorResult = buildErrorResult,
                         )
@@ -283,7 +283,6 @@ object ApiController {
     ) : ErrorCode.Translated {
         NoConnection("no_connection", R.string.noConnection),
         ConnectionError("connection_error", R.string.connectionError),
-        ServerError("server_error", R.string.serverError),
         UnknownError("an_error_has_occurred", R.string.anErrorHasOccurred),
     }
 
