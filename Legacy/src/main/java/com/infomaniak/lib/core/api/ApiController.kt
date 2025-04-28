@@ -192,8 +192,12 @@ object ApiController {
                             scope.setExtra("bodyResponse", bodyResponse)
                         }
                         createErrorResponse(
-                            apiError = createApiError(useKotlinxSerialization, bodyResponse, ServerErrorException(bodyResponse)),
-                            translatedError = R.string.serverError,
+                            apiError = TranslatedInternalErrorCode.ServerError.toApiError(
+                                useKotlinxSerialization,
+                                bodyResponse,
+                                ServerErrorException(bodyResponse),
+                            ),
+                            translatedError = TranslatedInternalErrorCode.ServerError.translateRes,
                             buildErrorResult = buildErrorResult,
                         )
                     }
@@ -260,7 +264,13 @@ object ApiController {
         )
     }
 
-    fun createApiError(useKotlinxSerialization: Boolean, bodyResponse: String, exception: Exception) = ApiError(
+    fun createApiError(
+        useKotlinxSerialization: Boolean,
+        bodyResponse: String,
+        exception: Exception,
+        code: String? = null,
+    ) = ApiError(
+        code = code,
         contextJson = if (useKotlinxSerialization) bodyResponse.bodyResponseToJson() else null,
         contextGson = when {
             useKotlinxSerialization -> null
@@ -291,7 +301,14 @@ object ApiController {
     ) : ErrorCode.Translated {
         NoConnection("no_connection", R.string.noConnection),
         ConnectionError("connection_error", R.string.connectionError),
+        ServerError("server_error", R.string.serverError),
     }
 
     fun ErrorCode.toApiError(exception: Exception): ApiError = ApiError(code = code, exception = exception)
+
+    fun ErrorCode.toApiError(
+        useKotlinxSerialization: Boolean,
+        bodyResponse: String,
+        exception: Exception,
+    ): ApiError = createApiError(useKotlinxSerialization, bodyResponse, exception, code)
 }
