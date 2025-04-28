@@ -34,7 +34,11 @@ open class ApiResponse<T>(
     @SerializedName("response_at")
     val responseAt: Long = 0,
     val total: Int = 0,
-    @Deprecated("(╯°□°)╯︵ ┻━┻") // TODO
+    @Deprecated(
+        "translatedError doesn't take into account project specific translated errors specified through " +
+                "InfomaniakCore.apiErrorCodes. Use translateError() instead",
+        ReplaceWith("translateError()", "com.infomaniak.lib.core.utils.ApiErrorCode.Companion.translateError"),
+    )
     var translatedError: Int = 0,
     @SerialName("items_per_page")
     @SerializedName("items_per_page")
