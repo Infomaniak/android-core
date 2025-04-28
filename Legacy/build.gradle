@@ -76,7 +76,7 @@ dependencies {
     ksp "androidx.room:room-compiler:$roomVersion"
 
     api 'com.google.android.material:material:1.12.0'
-    api 'com.google.code.gson:gson:2.13.0'
+    api 'com.google.code.gson:gson:2.13.1'
 
     api "io.coil-kt:coil:2.7.0"
 
@@ -84,7 +84,7 @@ dependencies {
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.squareup.okhttp3:okhttp:4.12.0'
 
-    def sentryVersion = '8.8.0'
+    def sentryVersion = '8.10.0'
     api "io.sentry:sentry-android:$sentryVersion"
     implementation "io.sentry:sentry-okhttp:$sentryVersion"
 
