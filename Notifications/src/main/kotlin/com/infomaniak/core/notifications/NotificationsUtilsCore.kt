@@ -22,7 +22,7 @@ import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -87,10 +87,7 @@ fun Context.buildNotification(
 
 @SuppressLint("MissingPermission")
 fun NotificationManagerCompat.notifyCompat(context: Context, notificationId: Int, build: Notification) {
-    if (
-        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-        context.hasPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
-    ) {
+    if (SDK_INT < 33 || context.hasPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))) {
         notify(notificationId, build)
     }
 }

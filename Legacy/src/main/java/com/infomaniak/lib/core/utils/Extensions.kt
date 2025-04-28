@@ -233,20 +233,19 @@ fun Context.isNightModeEnabled(): Boolean {
 // TODO: Fix deprecated
 fun Window.lightStatusBar(enabled: Boolean) {
     // TODO: DOESN'T WORK
-    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    // if (SDK_INT >= 30) {
     //     if (enabled) {
     //         insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
     //     } else {
     //         insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
     //     }
-    // } else
-    if (SDK_INT >= 23) {
-        if (enabled) {
-            decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        } else {
-            decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-        }
+    // } else {
+    if (enabled) {
+        decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    } else {
+        decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
     }
+    // }
 }
 
 // TODO: Fix deprecated

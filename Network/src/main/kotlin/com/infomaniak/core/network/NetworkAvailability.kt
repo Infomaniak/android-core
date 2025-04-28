@@ -23,8 +23,6 @@ import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Build
-import android.os.Build.VERSION.*
 import com.infomaniak.core.sentry.SentryLog
 import io.sentry.Sentry
 import kotlinx.coroutines.CoroutineDispatcher
@@ -100,12 +98,7 @@ class NetworkAvailability(private val context: Context, private val ioDispatcher
     }
 
     private fun getInitialNetworkAvailability(connectivityManager: ConnectivityManager): Boolean {
-        return if (SDK_INT >= 23) {
-            connectivityManager.activeNetwork?.let(::hasInternetConnectivity) ?: false
-        } else {
-            @Suppress("deprecation")
-            connectivityManager.activeNetworkInfo?.isConnected ?: false
-        }
+        return connectivityManager.activeNetwork?.let(::hasInternetConnectivity) == true
     }
 
     private fun networkRequestBuilder(): NetworkRequest {

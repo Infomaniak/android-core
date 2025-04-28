@@ -92,10 +92,6 @@ abstract class NotificationUtilsCore {
     }
 
     companion object {
-        val pendingIntentFlags = if (SDK_INT >= 23) {
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        } else {
-            PendingIntent.FLAG_UPDATE_CURRENT
-        }
+        const val PENDING_INTENT_FLAGS = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     }
 }
