@@ -19,7 +19,6 @@ package com.infomaniak.lib.core.utils
 
 import androidx.annotation.StringRes
 import com.infomaniak.lib.core.InfomaniakCore
-import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.api.ApiController.TranslatedInternalErrorCode
 import com.infomaniak.lib.core.models.ApiResponse
 
@@ -34,24 +33,18 @@ interface ErrorCode {
 }
 
 data class ApiErrorCode(override val code: String, @StringRes override val translateRes: Int) : ErrorCode.Translated {
-
     companion object {
-
-        const val AN_ERROR_HAS_OCCURRED = "an_error_has_occured"
-
-        private val defaultApiErrorCode = ApiErrorCode(AN_ERROR_HAS_OCCURRED, R.string.anErrorHasOccurred)
-
         @StringRes
         fun <T> ApiResponse<T>.translateError(): Int = formatError().translateRes
 
         fun <T> ApiResponse<T>.formatError(): ErrorCode.Translated {
             val errorCode = error?.code
             return if (errorCode == null) {
-                defaultApiErrorCode
+                TranslatedInternalErrorCode.UnknownError
             } else {
                 InfomaniakCore.apiErrorCodes?.firstOrNull { it.code.equals(errorCode, ignoreCase = true) }
                     ?: TranslatedInternalErrorCode.entries.firstOrNull { it.code.equals(errorCode, ignoreCase = true) }
-                    ?: defaultApiErrorCode
+                    ?: TranslatedInternalErrorCode.UnknownError
             }
         }
     }

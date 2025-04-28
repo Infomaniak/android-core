@@ -207,7 +207,11 @@ object ApiController {
             }
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
-            return createErrorResponse(translatedError = R.string.anErrorHasOccurred, buildErrorResult = buildErrorResult)
+            return createErrorResponse(
+                translatedError = TranslatedInternalErrorCode.UnknownError.translateRes,
+                apiError = TranslatedInternalErrorCode.UnknownError.toApiError(),
+                buildErrorResult = buildErrorResult,
+            )
         } catch (exception: Exception) {
             exception.printStackTrace()
 
@@ -222,8 +226,12 @@ object ApiController {
                 }
 
                 createErrorResponse(
-                    translatedError = R.string.anErrorHasOccurred,
-                    apiError = createApiError(useKotlinxSerialization, bodyResponse, exception = exception),
+                    translatedError = TranslatedInternalErrorCode.UnknownError.translateRes,
+                    apiError = TranslatedInternalErrorCode.UnknownError.toApiError(
+                        useKotlinxSerialization,
+                        bodyResponse,
+                        exception,
+                    ),
                     buildErrorResult = buildErrorResult,
                 )
             }
@@ -302,9 +310,10 @@ object ApiController {
         NoConnection("no_connection", R.string.noConnection),
         ConnectionError("connection_error", R.string.connectionError),
         ServerError("server_error", R.string.serverError),
+        UnknownError("an_error_has_occurred", R.string.anErrorHasOccurred),
     }
 
-    fun ErrorCode.toApiError(exception: Exception): ApiError = ApiError(code = code, exception = exception)
+    fun ErrorCode.toApiError(exception: Exception? = null): ApiError = ApiError(code = code, exception = exception)
 
     fun ErrorCode.toApiError(
         useKotlinxSerialization: Boolean,
