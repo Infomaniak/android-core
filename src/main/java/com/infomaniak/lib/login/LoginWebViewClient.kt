@@ -101,14 +101,16 @@ open class LoginWebViewClient(
     }
 
     private fun onAuthResponse(uri: Uri?): Boolean {
-        return if (uri?.scheme == appUID) {
-            uri.getQueryParameter("code")?.let { code ->
-                successResult(code)
-            } ?: run {
-                errorResult(uri.getQueryParameter("error") ?: "")
-            }
-            true
-        } else false
+        if (uri?.scheme != appUID) return false
+
+        val code = uri.getQueryParameter("code")
+        if (code == null) {
+            errorResult(uri.getQueryParameter("error") ?: "")
+        } else {
+            successResult(code)
+        }
+
+        return true
     }
 
     private fun successResult(code: String) = with(activity) {
