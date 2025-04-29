@@ -19,7 +19,7 @@ package com.infomaniak.lib.core.utils
 
 import androidx.annotation.StringRes
 import com.infomaniak.lib.core.InfomaniakCore
-import com.infomaniak.lib.core.api.ApiController.TranslatedInternalErrorCode
+import com.infomaniak.lib.core.api.InternalTranslatedErrorCode
 import com.infomaniak.lib.core.models.ApiResponse
 
 interface ErrorCode {
@@ -39,11 +39,11 @@ data class ApiErrorCode(override val code: String, @StringRes override val trans
         fun <T> ApiResponse<T>.formatError(): ErrorCode.Translated {
             val errorCode = error?.code
             return if (errorCode == null) {
-                TranslatedInternalErrorCode.UnknownError
+                InternalTranslatedErrorCode.UnknownError
             } else {
                 InfomaniakCore.apiErrorCodes?.firstOrNull { it.code.equals(errorCode, ignoreCase = true) }
-                    ?: TranslatedInternalErrorCode.entries.firstOrNull { it.code.equals(errorCode, ignoreCase = true) }
-                    ?: TranslatedInternalErrorCode.UnknownError
+                    ?: InternalTranslatedErrorCode.entries.firstOrNull { it.code.equals(errorCode, ignoreCase = true) }
+                    ?: InternalTranslatedErrorCode.UnknownError
             }
         }
     }

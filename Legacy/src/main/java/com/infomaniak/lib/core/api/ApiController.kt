@@ -17,7 +17,6 @@
  */
 package com.infomaniak.lib.core.api
 
-import androidx.annotation.StringRes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -192,7 +191,7 @@ object ApiController {
                             scope.setExtra("bodyResponse", bodyResponse)
                         }
                         createErrorResponse(
-                            TranslatedInternalErrorCode.UnknownError,
+                            InternalTranslatedErrorCode.UnknownError,
                             InternalErrorPayload(ServerErrorException(bodyResponse), useKotlinxSerialization, bodyResponse),
                             buildErrorResult = buildErrorResult,
                         )
@@ -203,7 +202,7 @@ object ApiController {
             }
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
-            return createErrorResponse(TranslatedInternalErrorCode.UnknownError, buildErrorResult = buildErrorResult)
+            return createErrorResponse(InternalTranslatedErrorCode.UnknownError, buildErrorResult = buildErrorResult)
         } catch (exception: Exception) {
             exception.printStackTrace()
 
@@ -218,7 +217,7 @@ object ApiController {
                 }
 
                 createErrorResponse(
-                    TranslatedInternalErrorCode.UnknownError,
+                    InternalTranslatedErrorCode.UnknownError,
                     InternalErrorPayload(exception, useKotlinxSerialization, bodyResponse),
                     buildErrorResult = buildErrorResult,
                 )
@@ -247,13 +246,13 @@ object ApiController {
         noNetwork: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
     ): T = createErrorResponse<T>(
-        if (noNetwork) TranslatedInternalErrorCode.NoConnection else TranslatedInternalErrorCode.ConnectionError,
+        if (noNetwork) InternalTranslatedErrorCode.NoConnection else InternalTranslatedErrorCode.ConnectionError,
         InternalErrorPayload(NetworkException()),
         buildErrorResult = buildErrorResult,
     )
 
     inline fun <reified T> createErrorResponse(
-        internalErrorCode: TranslatedInternalErrorCode,
+        internalErrorCode: InternalTranslatedErrorCode,
         payload: InternalErrorPayload? = null,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
     ): T {
@@ -277,16 +276,7 @@ object ApiController {
         val bodyResponse: String? = null,
     )
 
-    enum class TranslatedInternalErrorCode(
-        override val code: String,
-        @StringRes override val translateRes: Int,
-    ) : ErrorCode.Translated {
-        NoConnection("no_connection", R.string.noConnection),
-        ConnectionError("connection_error", R.string.connectionError),
-        UnknownError("an_error_has_occurred", R.string.anErrorHasOccurred),
-    }
-
-    fun ErrorCode.toApiError(payload: InternalErrorPayload?): ApiError {
+    fun ErrorCode.toApiError(payload: InternalErrorPayload? = null): ApiError {
         val useKotlinxSerialization = payload?.useKotlinxSerialization
         return ApiError(
             code = code,
