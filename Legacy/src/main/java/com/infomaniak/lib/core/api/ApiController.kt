@@ -23,7 +23,6 @@ import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.lib.core.BuildConfig.LOGIN_ENDPOINT_URL
 import com.infomaniak.lib.core.InfomaniakCore
-import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.models.ApiError
 import com.infomaniak.lib.core.models.ApiResponse
@@ -232,7 +231,8 @@ object ApiController {
         }
 
         if (apiResponse is ApiResponse<*> && apiResponse.result == ERROR) {
-            apiResponse.translatedError = R.string.anErrorHasOccurred
+            apiResponse.translatedError = InternalTranslatedErrorCode.UnknownError.translateRes
+            apiResponse.error = InternalTranslatedErrorCode.UnknownError.toApiError()
         }
 
         return apiResponse
