@@ -24,10 +24,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.CANCEL_HOST_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.CREATE_ACCOUNT_URL_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
@@ -89,23 +90,22 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
         appUID: String = "",
     ) : LoginWebViewClient(activity, progressBar, appUID, createAccountUrl) {
 
-        @Deprecated("Support API below 24")
-        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-            when (url.toUri().host) {
+        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+            val url = request.url
+            when (url.host) {
                 successUrl -> successResult()
                 cancelUrl -> {
-                    openUrl(url)
+                    openUrl(url.toString())
                     cancelResult()
                 }
-
-                else -> openUrl(url)
+                else -> openUrl(url.toString())
             }
             return true
         }
 
-        @Deprecated("Support API below 23")
-        override fun onReceivedError(view: WebView?, errorCode: Int, description: String, failingUrl: String) {
-            errorResult(description)
+
+        override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
+            errorResult(error.description.toString())
         }
 
         private fun openUrl(url: String) = runCatching {

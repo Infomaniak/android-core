@@ -22,7 +22,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
-import android.os.Build
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -30,7 +29,6 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -64,9 +62,8 @@ open class LoginWebViewClient(
         progressBar.isGone = true
     }
 
-    @Deprecated("Support API below 24")
-    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-        return !isValidUrl(url)
+    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+        return !isValidUrl(request.url.toString())
     }
 
     override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
@@ -76,14 +73,8 @@ open class LoginWebViewClient(
         errorResult(SSL_ERROR_CODE)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError) {
-        onReceivedError(view, error.errorCode, error.description.toString(), request?.url.toString())
-    }
-
-    @Suppress("OVERRIDE_DEPRECATION") // We have this overload for api 22 and below
-    override fun onReceivedError(view: WebView?, errorCode: Int, description: String, failingUrl: String) {
-        if (isValidUrl(failingUrl)) errorResult(description)
+    override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
+        if (isValidUrl(request.url.toString())) errorResult(error.description.toString())
     }
 
     override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
