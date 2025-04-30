@@ -41,9 +41,7 @@ import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.*
 import com.infomaniak.core.myksuite.ui.network.ApiRoutes
 import com.infomaniak.core.myksuite.ui.screens.components.*
-import com.infomaniak.core.myksuite.ui.theme.Dimens
-import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
-import com.infomaniak.core.myksuite.ui.theme.Margin
+import com.infomaniak.core.myksuite.ui.theme.*
 import com.infomaniak.core.myksuite.ui.theme.Typography
 import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.exposed.UserAvatar
@@ -54,32 +52,42 @@ import java.util.Date
 
 @Composable
 fun MyKSuiteDashboardScreen(dashboardScreenData: () -> MyKSuiteDashboardScreenData, onClose: () -> Unit = {}) {
-    Scaffold(
-        topBar = { TopAppBar(onClose) },
-        containerColor = LocalMyKSuiteColors.current.onPrimaryButton,
-    ) { paddingValues ->
-        Box(
-            Modifier
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
-        ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.45f),
-                contentScale = ContentScale.FillBounds,
-                imageVector = ImageVector.vectorResource(R.drawable.illu_dashboard_background),
-                contentDescription = null,
-            )
-            Column(Modifier.padding(paddingValues), verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
-                val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
-                SubscriptionInfoCard(paddedModifier, dashboardScreenData)
 
-                if (dashboardScreenData().myKSuiteTier == MyKSuiteTier.Free) {
-                    // TODO: Add this line when we'll have In-app payments
-                    // MyKSuitePlusPromotionCard(paddedModifier) {}
-                } else {
-                    AdvantagesCard(paddedModifier)
+    Box(modifier = Modifier.background(LocalMyKSuiteColors.current.background)) {
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.45f),
+            contentScale = ContentScale.FillBounds,
+            imageVector = ImageVector.vectorResource(R.drawable.illu_dashboard_background),
+            contentDescription = null,
+        )
+
+        Scaffold(
+            topBar = { TopAppBar(onClose) },
+            containerColor = Color.Unspecified,
+            modifier = Modifier.safeDrawingPadding()
+        ) { paddingValues ->
+            Box(
+                Modifier
+                    .fillMaxHeight()
+                    .padding(bottom = Margin.Large)
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                Column(
+                    Modifier
+                        .padding(paddingValues),
+                    verticalArrangement = Arrangement.spacedBy(Margin.Large)
+                ) {
+                    val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
+                    SubscriptionInfoCard(paddedModifier, dashboardScreenData)
+
+                    if (dashboardScreenData().myKSuiteTier == MyKSuiteTier.Free) {
+                        // TODO: Add this line when we'll have In-app payments
+                        // MyKSuitePlusPromotionCard(paddedModifier) {}
+                    } else {
+                        AdvantagesCard(paddedModifier)
+                    }
                 }
             }
         }
@@ -300,7 +308,9 @@ private fun Preview() {
         trialExpiryDate = Date(),
     )
 
-    Surface(Modifier.fillMaxSize(), color = Color.White) {
-        MyKSuiteDashboardScreen(dashboardScreenData = { dashboardScreenData })
+    MyKSuiteTheme {
+        Surface(Modifier.fillMaxSize(), color = Color.White) {
+            MyKSuiteDashboardScreen(dashboardScreenData = { dashboardScreenData })
+        }
     }
 }
