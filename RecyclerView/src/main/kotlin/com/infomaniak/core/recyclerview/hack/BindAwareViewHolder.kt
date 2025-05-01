@@ -22,10 +22,18 @@ package androidx.recyclerview.widget
 
 import android.view.View
 
+/**
+ * Mostly inspired by [suspend-bind](https://github.com/yigit/suspend-bind/blob/f4e2716904095c31f5e6fb3d6237335a5a484fe7/app/src/main/java/com/birbit/suspendbind/BindAwareViewHolder.kt)
+ * from Yigit Boyar, who led Android Architecture Components (incl. lifecycles), and worked on [RecyclerView] at Google.
+ *
+ * [RecyclerView] is unlikely to drastically change, and Kotlin and Android won't adopt Java 9's Jigsaw modules that
+ * prevent from "hacking" a package to access package-private symbols, so this is quite safe to keep.
+ */
 abstract class BindAwareViewHolder<V : View>(
     @JvmField val view: V
 ) : RecyclerView.ViewHolder(view) {
 
+    @Suppress("unused") // Here to be visible in auto-completion, and redirect to the type view property.
     @Deprecated(
         message = "Use view instead",
         replaceWith = ReplaceWith("view"),
