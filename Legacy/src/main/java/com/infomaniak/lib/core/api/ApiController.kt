@@ -30,7 +30,7 @@ import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
-import com.infomaniak.lib.core.utils.ErrorCode
+import com.infomaniak.lib.core.utils.ErrorCodeTranslated
 import com.infomaniak.lib.core.utils.isNetworkException
 import com.infomaniak.lib.core.utils.isSerializationException
 import com.infomaniak.lib.login.ApiToken
@@ -277,7 +277,7 @@ object ApiController {
         val bodyResponse: String? = null,
     )
 
-    fun ErrorCode.toApiError(payload: InternalErrorPayload? = null): ApiError {
+    fun ErrorCodeTranslated.toApiError(payload: InternalErrorPayload? = null): ApiError {
         val useKotlinxSerialization = payload?.useKotlinxSerialization
         return ApiError(
             code = code,

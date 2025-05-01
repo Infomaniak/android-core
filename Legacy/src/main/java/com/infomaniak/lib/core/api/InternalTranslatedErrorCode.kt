@@ -19,12 +19,12 @@ package com.infomaniak.lib.core.api
 
 import androidx.annotation.StringRes
 import com.infomaniak.lib.core.R
-import com.infomaniak.lib.core.utils.ErrorCode
+import com.infomaniak.lib.core.utils.ErrorCodeTranslated
 
 enum class InternalTranslatedErrorCode(
     override val code: String,
     @StringRes override val translateRes: Int,
-) : ErrorCode.Translated {
+) : ErrorCodeTranslated {
     NoConnection("no_connection", R.string.noConnection),
     ConnectionError("connection_error", R.string.connectionError),
     UnknownError("an_error_has_occurred", R.string.anErrorHasOccurred),

@@ -22,21 +22,18 @@ import com.infomaniak.lib.core.InfomaniakCore
 import com.infomaniak.lib.core.api.InternalTranslatedErrorCode
 import com.infomaniak.lib.core.models.ApiResponse
 
-interface ErrorCode {
+interface ErrorCodeTranslated {
     val code: String
-
-    interface Translated : ErrorCode {
-        @get:StringRes
-        val translateRes: Int
-    }
+    @get:StringRes
+    val translateRes: Int
 }
 
-data class ApiErrorCode(override val code: String, @StringRes override val translateRes: Int) : ErrorCode.Translated {
+data class ApiErrorCode(override val code: String, @StringRes override val translateRes: Int) : ErrorCodeTranslated {
     companion object {
         @StringRes
         fun <T> ApiResponse<T>.translateError(): Int = formatError().translateRes
 
-        fun <T> ApiResponse<T>.formatError(): ErrorCode.Translated {
+        fun <T> ApiResponse<T>.formatError(): ErrorCodeTranslated {
             val errorCode = error?.code
             return if (errorCode == null) {
                 InternalTranslatedErrorCode.UnknownError
