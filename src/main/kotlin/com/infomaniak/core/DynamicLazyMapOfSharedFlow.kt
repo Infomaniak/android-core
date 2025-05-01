@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 
 fun <K, E> DynamicLazyMap.Companion.sharedFlow(
-    waitForCacheExpiration: (suspend (K, SharedFlow<E>) -> Unit)? = null,
+    waitForCacheExpiration: (suspend DynamicLazyMap<K, SharedFlow<E>>.(key: K, flow: SharedFlow<E>) -> Unit)? = null,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     createFlow: CoroutineScope.(K) -> Flow<E>,
 ): DynamicLazyMap<K, SharedFlow<E>> = DynamicLazyMap<K, SharedFlow<E>>(
