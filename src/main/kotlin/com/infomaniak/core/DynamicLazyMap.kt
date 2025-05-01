@@ -32,6 +32,12 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 /**
+ * Allows sharing and caching an element for a given key.
+ *
+ * It's similar to a read-only [Map], with these differences:
+ * - Elements are lazily created with the passed [createElement] lambda.
+ * - The use scope of an element is taken into account (with the block passed to [useElement] or [useElements]).
+ * - An element is removed only after it's no longer used, and after the [waitForCacheExpiration] lambda completes.
  * Satisfies [this use-case](https://github.com/Kotlin/kotlinx.coroutines/issues/1097)
  */
 @OptIn(DynamicLazyMap.Internals::class, ExperimentalContracts::class)
@@ -43,6 +49,7 @@ class DynamicLazyMap<K, E>(
 
     companion object;
 
+    /** Get and use an element for the given [key]. */
     inline fun <R> useElement(
         key: K,
         block: (E) -> R
@@ -56,6 +63,7 @@ class DynamicLazyMap<K, E>(
         }
     }
 
+    /** Get and use all elements for the given [keys]. */
     inline fun <R> useElements(
         keys: Set<K>,
         block: (Map<K, E>) -> R
