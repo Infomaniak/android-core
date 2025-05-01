@@ -22,6 +22,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -38,11 +41,21 @@ import kotlin.contracts.contract
  * - Elements are lazily created with the passed [createElement] lambda.
  * - The use scope of an element is taken into account (with the block passed to [useElement] or [useElements]).
  * - An element is removed only after it's no longer used, and after the [waitForCacheExpiration] lambda completes.
- * Satisfies [this use-case](https://github.com/Kotlin/kotlinx.coroutines/issues/1097)
+ *
+ * Note that the [waitForCacheExpiration] lambda can access the [DynamicLazyMap] instance it's running on,
+ * and can access these [StateFlow] properties:
+ * - [unusedElementsCount]
+ * - [usedElementsCount]
+ * - [totalElementsCount]
+ *
+ * This can be used to clean the cache dynamically, if it grows past a certain threshold, under certain circumstances.
+ *
+ * [DynamicLazyMap] Satisfies [this request de-duplication use-case](https://github.com/Kotlin/kotlinx.coroutines/issues/1097),
+ * and other ones.
  */
 @OptIn(DynamicLazyMap.Internals::class, ExperimentalContracts::class)
 class DynamicLazyMap<K, E>(
-    private val waitForCacheExpiration: (suspend (key: K, element: E) -> Unit)? = null,
+    private val waitForCacheExpiration: (suspend DynamicLazyMap<K, E>.(key: K, element: E) -> Unit)? = null,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     private val createElement: CoroutineScope.(K) -> E,
 ) {
@@ -77,6 +90,30 @@ class DynamicLazyMap<K, E>(
         }
     }
 
+    /**
+     * The number of elements that are not used, but still in the cache.
+     *
+     * @see usedElementsCount
+     * @see totalElementsCount
+     */
+    val unusedElementsCount: StateFlow<Int>
+
+    /**
+     * The number of elements actively used.
+     *
+     * @see unusedElementsCount
+     * @see totalElementsCount
+     */
+    val usedElementsCount: StateFlow<Int>
+
+    /**
+     * The number of elements that are present (used, or cached).
+     *
+     * @see unusedElementsCount
+     * @see usedElementsCount
+     */
+    val totalElementsCount: StateFlow<Int>
+
     @RequiresOptIn
     @Retention(AnnotationRetention.BINARY)
     private annotation class Internals
@@ -86,14 +123,52 @@ class DynamicLazyMap<K, E>(
         val subScope: CoroutineScope
     )
 
+    private var _unusedElementsCount by MutableStateFlow(0).also { unusedElementsCount = it.asStateFlow() }::value
+    private var _usedElementsCount by MutableStateFlow(0).also { usedElementsCount = it.asStateFlow() }::value
+    private var _totalElementsCount by MutableStateFlow(0).also { totalElementsCount = it.asStateFlow() }::value
+
     private val refCounts = mutableScatterMapOf<K, Int>()
     private val elements = mutableScatterMapOf<K, Entry>()
     private val removers = mutableScatterMapOf<K, Job>()
     private val mapsEditLock: ReentrantLock = ReentrantLock()
 
+    private fun updateCounts() {
+        val total = elements.size
+        val removersCount = removers.size
+        _unusedElementsCount = removersCount
+        _usedElementsCount = total - removersCount
+        _totalElementsCount = total
+    }
+
     @Internals
     @PublishedApi
     internal fun getOrCreateElementWithRefCounting(key: K): E = mapsEditLock.withLock {
+        getOrCreateElementWithRefCountingUnchecked(key).also { updateCounts() }
+    }
+
+    @Internals
+    @PublishedApi
+    internal fun getOrCreateElementsWithRefCounting(keys: Set<K>): Map<K, E> = mapsEditLock.withLock {
+        keys.associateWith { key ->
+            getOrCreateElementWithRefCountingUnchecked(key)
+        }.also { updateCounts() }
+    }
+
+    @Internals
+    @PublishedApi
+    internal fun releaseRefForElement(key: K, element: E) = mapsEditLock.withLock {
+        releaseRefForElementUnchecked(key, element)
+        updateCounts()
+    }
+
+    @Internals
+    @PublishedApi
+    internal fun releaseRefForElements(elementMap: Map<K, E>) = mapsEditLock.withLock {
+        elementMap.forEach { (key, element) -> releaseRefForElementUnchecked(key, element) }
+        updateCounts()
+    }
+
+    private fun getOrCreateElementWithRefCountingUnchecked(key: K): E {
         val currentCount = refCounts[key] ?: 0
         refCounts[key] = currentCount + 1
         val remover = removers[key]
@@ -101,27 +176,17 @@ class DynamicLazyMap<K, E>(
             remover.cancel()
             removers.remove(key)
         }
-        elements.getOrPut(key) {
+        return elements.getOrPut(key) {
             val newJob = Job(parent = coroutineScope.coroutineContext.job)
             val subScope = coroutineScope + newJob
             Entry(
                 element = with(subScope) { createElement(key) },
                 subScope = subScope
             )
-        }.element
+        }.element.also { updateCounts() }
     }
 
-    @Internals
-    @PublishedApi
-    internal fun getOrCreateElementsWithRefCounting(keys: Set<K>): Map<K, E> = mapsEditLock.withLock {
-        keys.associateWith { key ->
-            getOrCreateElementWithRefCounting(key)
-        }
-    }
-
-    @Internals
-    @PublishedApi
-    internal fun releaseRefForElement(key: K, element: E) = mapsEditLock.withLock {
+    private fun releaseRefForElementUnchecked(key: K, element: E) {
         val newCount = refCounts[key]!! - 1
         if (newCount == 0) {
             refCounts.remove(key)
@@ -132,17 +197,12 @@ class DynamicLazyMap<K, E>(
                     if (refCounts[key] == null) {
                         removers.remove(key)
                         elements.remove(key)?.subScope?.cancel()
+                        updateCounts()
                     }
                 }
             }
         } else {
             refCounts[key] = newCount
         }
-    }
-
-    @Internals
-    @PublishedApi
-    internal fun releaseRefForElements(elementMap: Map<K, E>) = mapsEditLock.withLock {
-        elementMap.forEach { (key, element) -> releaseRefForElement(key, element) }
     }
 }
