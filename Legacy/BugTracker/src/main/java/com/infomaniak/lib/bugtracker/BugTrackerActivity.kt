@@ -24,6 +24,8 @@ import android.text.format.Formatter
 import android.webkit.MimeTypeMap
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -58,6 +60,13 @@ class BugTrackerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         super.onCreate(savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            with(systemBars) { view.setMargins(top = top, left = left, right = right, bottom = bottom) }
+            WindowInsetsCompat.CONSUMED
+        }
+
         setContentView(root)
 
         toolbar.setNavigationOnClickListener { finish() }
