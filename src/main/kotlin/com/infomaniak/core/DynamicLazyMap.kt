@@ -25,7 +25,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
-import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.contracts.ExperimentalContracts
@@ -82,7 +81,7 @@ class DynamicLazyMap<K, E>(
     private val refCounts = mutableScatterMapOf<K, Int>()
     private val elements = mutableScatterMapOf<K, Entry>()
     private val removers = mutableScatterMapOf<K, Job>()
-    private val mapsEditLock: Lock = ReentrantLock()
+    private val mapsEditLock: ReentrantLock = ReentrantLock()
 
     @Internals
     @PublishedApi
@@ -108,21 +107,7 @@ class DynamicLazyMap<K, E>(
     @PublishedApi
     internal fun getOrCreateElementsWithRefCounting(keys: Set<K>): Map<K, E> = mapsEditLock.withLock {
         keys.associateWith { key ->
-            val currentCount = refCounts[key] ?: 0
-            refCounts[key] = currentCount + 1
-            val remover = removers[key]
-            if (remover != null) {
-                remover.cancel()
-                removers.remove(key)
-            }
-            elements.getOrPut(key) {
-                val newJob = Job(parent = coroutineScope.coroutineContext.job)
-                val subScope = coroutineScope + newJob
-                Entry(
-                    element = with(subScope) { createElement(key) },
-                    subScope = subScope
-                )
-            }.element
+            getOrCreateElementWithRefCounting(key)
         }
     }
 
@@ -134,7 +119,7 @@ class DynamicLazyMap<K, E>(
             refCounts.remove(key)
             if (waitForCacheExpiration == null) elements.remove(key)?.subScope?.cancel()
             else removers[key] = coroutineScope.launch {
-                waitForCacheExpiration.invoke(key, element)
+                waitForCacheExpiration(key, element)
                 mapsEditLock.withLock {
                     if (refCounts[key] == null) {
                         removers.remove(key)
@@ -150,23 +135,6 @@ class DynamicLazyMap<K, E>(
     @Internals
     @PublishedApi
     internal fun releaseRefForElements(elementMap: Map<K, E>) = mapsEditLock.withLock {
-        elementMap.forEach { (key, element) ->
-            val newCount = refCounts[key]!! - 1
-            if (newCount == 0) {
-                refCounts.remove(key)
-                if (waitForCacheExpiration == null) elements.remove(key)?.subScope?.cancel()
-                else removers[key] = coroutineScope.launch {
-                    waitForCacheExpiration.invoke(key, element)
-                    mapsEditLock.withLock {
-                        if (refCounts[key] == null) {
-                            removers.remove(key)
-                            elements.remove(key)?.subScope?.cancel()
-                        }
-                    }
-                }
-            } else {
-                refCounts[key] = newCount
-            }
-        }
+        elementMap.forEach { (key, element) -> releaseRefForElement(key, element) }
     }
 }
