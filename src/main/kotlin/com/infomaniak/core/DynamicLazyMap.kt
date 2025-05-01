@@ -36,7 +36,7 @@ import kotlin.contracts.contract
  */
 @OptIn(DynamicLazyMap.Internals::class, ExperimentalContracts::class)
 class DynamicLazyMap<K, E>(
-    private val waitForCacheExpiration: (suspend (K, E) -> Unit)? = null,
+    private val waitForCacheExpiration: (suspend (key: K, element: E) -> Unit)? = null,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     private val createElement: CoroutineScope.(K) -> E,
 ) {
