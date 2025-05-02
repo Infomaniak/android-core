@@ -257,7 +257,7 @@ object ApiController {
         payload: InternalErrorPayload? = null,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
     ): T {
-        val apiError = internalErrorCode.toApiError(payload)
+        val apiError = createDetailedApiError(internalErrorCode, payload)
         val translatedError = internalErrorCode.translateRes
 
         return buildErrorResult?.invoke(apiError, translatedError)
@@ -277,14 +277,18 @@ object ApiController {
         val bodyResponse: String? = null,
     )
 
-    fun ErrorCodeTranslated.toApiError(payload: InternalErrorPayload? = null): ApiError {
+    fun ErrorCodeTranslated.toApiError(): ApiError = createDetailedApiError(this, null)
+
+    fun createDetailedApiError(errorCode: ErrorCodeTranslated, payload: InternalErrorPayload? = null): ApiError {
         val useKotlinxSerialization = payload?.useKotlinxSerialization
         return ApiError(
-            code = code,
+            code = errorCode.code,
             contextJson = if (useKotlinxSerialization == true) payload.bodyResponse?.bodyResponseToJson() else null,
             contextGson = when {
                 useKotlinxSerialization == true -> null
-                else -> runCatching { payload?.let { JsonParser.parseString(it.bodyResponse).asJsonObject } }.getOrDefault(null)
+                else -> errorCode.runCatching {
+                    payload?.let { JsonParser.parseString(it.bodyResponse).asJsonObject }
+                }.getOrDefault(null)
             },
             exception = payload?.exception
         )
