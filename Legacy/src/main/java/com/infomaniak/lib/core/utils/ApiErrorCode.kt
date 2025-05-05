@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2024 Infomaniak Network SA
+ * Copyright (C) 2023-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,26 +19,28 @@ package com.infomaniak.lib.core.utils
 
 import androidx.annotation.StringRes
 import com.infomaniak.lib.core.InfomaniakCore
-import com.infomaniak.lib.core.R
+import com.infomaniak.lib.core.api.InternalTranslatedErrorCode
 import com.infomaniak.lib.core.models.ApiResponse
 
-data class ApiErrorCode(val code: String, @StringRes val translateRes: Int) {
+interface ErrorCodeTranslated {
+    val code: String
+    @get:StringRes
+    val translateRes: Int
+}
 
+data class ApiErrorCode(override val code: String, @StringRes override val translateRes: Int) : ErrorCodeTranslated {
     companion object {
-
-        const val AN_ERROR_HAS_OCCURRED = "an_error_has_occured"
-
-        private val defaultApiErrorCode = ApiErrorCode(AN_ERROR_HAS_OCCURRED, R.string.anErrorHasOccurred)
-
         @StringRes
         fun <T> ApiResponse<T>.translateError(): Int = formatError().translateRes
 
-        fun <T> ApiResponse<T>.formatError(): ApiErrorCode {
+        fun <T> ApiResponse<T>.formatError(): ErrorCodeTranslated {
             val errorCode = error?.code
             return if (errorCode == null) {
-                defaultApiErrorCode
+                InternalTranslatedErrorCode.UnknownError
             } else {
-                InfomaniakCore.apiErrorCodes?.firstOrNull { it.code.equals(errorCode, ignoreCase = true) } ?: defaultApiErrorCode
+                InfomaniakCore.apiErrorCodes?.firstOrNull { it.code.equals(errorCode, ignoreCase = true) }
+                    ?: InternalTranslatedErrorCode.entries.firstOrNull { it.code.equals(errorCode, ignoreCase = true) }
+                    ?: InternalTranslatedErrorCode.UnknownError
             }
         }
     }

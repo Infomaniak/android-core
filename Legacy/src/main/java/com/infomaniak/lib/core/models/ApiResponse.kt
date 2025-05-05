@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,13 +27,18 @@ open class ApiResponse<T>(
     val result: ApiResponseStatus = ApiResponseStatus.UNKNOWN,
     val data: @RawValue T? = null,
     val uri: String? = null,
-    val error: ApiError? = null,
+    var error: ApiError? = null,
     val page: Int = 0,
     val pages: Int = 0,
     @SerialName("response_at")
     @SerializedName("response_at")
     val responseAt: Long = 0,
     val total: Int = 0,
+    @Deprecated(
+        "translatedError doesn't take into account project specific translated errors specified through " +
+                "InfomaniakCore.apiErrorCodes. Use translateError() instead",
+        ReplaceWith("translateError()", "com.infomaniak.lib.core.utils.ApiErrorCode.Companion.translateError"),
+    )
     var translatedError: Int = 0,
     @SerialName("items_per_page")
     @SerializedName("items_per_page")

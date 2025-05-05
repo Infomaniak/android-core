@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,12 @@
  */
 package com.infomaniak.lib.core.api
 
-import androidx.annotation.StringRes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.lib.core.BuildConfig.LOGIN_ENDPOINT_URL
 import com.infomaniak.lib.core.InfomaniakCore
-import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.models.ApiError
 import com.infomaniak.lib.core.models.ApiResponse
@@ -32,6 +30,7 @@ import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
+import com.infomaniak.lib.core.utils.ErrorCodeTranslated
 import com.infomaniak.lib.core.utils.isNetworkException
 import com.infomaniak.lib.core.utils.isSerializationException
 import com.infomaniak.lib.login.ApiToken
@@ -191,8 +190,8 @@ object ApiController {
                             scope.setExtra("bodyResponse", bodyResponse)
                         }
                         createErrorResponse(
-                            apiError = createApiError(useKotlinxSerialization, bodyResponse, ServerErrorException(bodyResponse)),
-                            translatedError = R.string.serverError,
+                            InternalTranslatedErrorCode.UnknownError,
+                            InternalErrorPayload(ServerErrorException(bodyResponse), useKotlinxSerialization, bodyResponse),
                             buildErrorResult = buildErrorResult,
                         )
                     }
@@ -202,7 +201,7 @@ object ApiController {
             }
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
-            return createErrorResponse(translatedError = R.string.anErrorHasOccurred, buildErrorResult = buildErrorResult)
+            return createErrorResponse(InternalTranslatedErrorCode.UnknownError, buildErrorResult = buildErrorResult)
         } catch (exception: Exception) {
             exception.printStackTrace()
 
@@ -217,8 +216,8 @@ object ApiController {
                 }
 
                 createErrorResponse(
-                    translatedError = R.string.anErrorHasOccurred,
-                    apiError = createApiError(useKotlinxSerialization, bodyResponse, exception = exception),
+                    InternalTranslatedErrorCode.UnknownError,
+                    InternalErrorPayload(exception, useKotlinxSerialization, bodyResponse),
                     buildErrorResult = buildErrorResult,
                 )
             }
@@ -232,7 +231,9 @@ object ApiController {
         }
 
         if (apiResponse is ApiResponse<*> && apiResponse.result == ERROR) {
-            apiResponse.translatedError = R.string.anErrorHasOccurred
+            @Suppress("DEPRECATION")
+            apiResponse.translatedError = InternalTranslatedErrorCode.UnknownError.translateRes
+            apiResponse.error = InternalTranslatedErrorCode.UnknownError.toApiError()
         }
 
         return apiResponse
@@ -245,26 +246,20 @@ object ApiController {
     inline fun <reified T> createInternetErrorResponse(
         noNetwork: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
-    ) = createErrorResponse<T>(
-        translatedError = if (noNetwork) R.string.noConnection else R.string.connectionError,
-        apiError = ApiError(exception = NetworkException()),
+    ): T = createErrorResponse<T>(
+        if (noNetwork) InternalTranslatedErrorCode.NoConnection else InternalTranslatedErrorCode.ConnectionError,
+        InternalErrorPayload(NetworkException()),
         buildErrorResult = buildErrorResult,
     )
 
-    fun createApiError(useKotlinxSerialization: Boolean, bodyResponse: String, exception: Exception) = ApiError(
-        contextJson = if (useKotlinxSerialization) bodyResponse.bodyResponseToJson() else null,
-        contextGson = when {
-            useKotlinxSerialization -> null
-            else -> runCatching { JsonParser.parseString(bodyResponse).asJsonObject }.getOrDefault(null)
-        },
-        exception = exception
-    )
-
     inline fun <reified T> createErrorResponse(
-        @StringRes translatedError: Int,
-        apiError: ApiError? = null,
+        internalErrorCode: InternalTranslatedErrorCode,
+        payload: InternalErrorPayload? = null,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
     ): T {
+        val apiError = createDetailedApiError(internalErrorCode, payload)
+        val translatedError = internalErrorCode.translateRes
+
         return buildErrorResult?.invoke(apiError, translatedError)
             ?: ApiResponse<Any>(result = ERROR, error = apiError, translatedError = translatedError) as T
     }
@@ -274,5 +269,28 @@ object ApiController {
 
     enum class ApiMethod {
         GET, PUT, POST, DELETE, PATCH
+    }
+
+    data class InternalErrorPayload(
+        val exception: Exception? = null,
+        val useKotlinxSerialization: Boolean? = null,
+        val bodyResponse: String? = null,
+    )
+
+    fun ErrorCodeTranslated.toApiError(): ApiError = createDetailedApiError(this, null)
+
+    fun createDetailedApiError(errorCode: ErrorCodeTranslated, payload: InternalErrorPayload? = null): ApiError {
+        val useKotlinxSerialization = payload?.useKotlinxSerialization
+        return ApiError(
+            code = errorCode.code,
+            contextJson = if (useKotlinxSerialization == true) payload.bodyResponse?.bodyResponseToJson() else null,
+            contextGson = when {
+                useKotlinxSerialization == true -> null
+                else -> errorCode.runCatching {
+                    payload?.let { JsonParser.parseString(it.bodyResponse).asJsonObject }
+                }.getOrDefault(null)
+            },
+            exception = payload?.exception
+        )
     }
 }
