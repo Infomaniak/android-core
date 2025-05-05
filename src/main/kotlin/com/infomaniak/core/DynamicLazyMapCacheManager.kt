@@ -90,6 +90,6 @@ private class DynamicLazyMapCacheManager<K, E>(
     }
 
     override fun dropUnusedElements(count: Int) {
-        mutationLock.withLock { repeat(count) { i -> unusedElements.removeFirstOrNull()?.resume(Unit) } }
+        mutationLock.withLock { repeat(count) { unusedElements.removeFirstOrNull()?.resume(Unit) } }
     }
 }
