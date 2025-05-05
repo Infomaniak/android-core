@@ -18,16 +18,10 @@
 package com.infomaniak.core
 
 import androidx.collection.mutableScatterMapOf
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.contracts.ExperimentalContracts
@@ -40,10 +34,11 @@ import kotlin.contracts.contract
  * It's similar to a read-only [Map], with these differences:
  * - Elements are lazily created with the passed [createElement] lambda.
  * - The use scope of an element is taken into account (with the block passed to [useElement] or [useElements]).
- * - An element is removed only after it's no longer used, and after the [waitForCacheExpiration] lambda completes.
+ * - An element is removed only after these 2 things happen without cancellation:
+ *     1. It's no longer used
+ *     2. The `waitForCacheExpiration` function of the passed [cacheManager] lambda completes.
  *
- * Note that the [waitForCacheExpiration] lambda can access the [DynamicLazyMap] instance it's running on,
- * and can access these [StateFlow] properties:
+ * Note that [cacheManager] can access the [DynamicLazyMap] instance it's running on, giving access these [StateFlow] properties:
  * - [unusedElementsCount]
  * - [usedElementsCount]
  * - [totalElementsCount]
@@ -55,12 +50,17 @@ import kotlin.contracts.contract
  */
 @OptIn(DynamicLazyMap.Internals::class, ExperimentalContracts::class)
 class DynamicLazyMap<K, E>(
-    private val waitForCacheExpiration: (suspend DynamicLazyMap<K, E>.(key: K, element: E) -> Unit)? = null,
+    private val cacheManager: CacheManager<K, E>? = null,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     private val createElement: CoroutineScope.(K) -> E,
 ) {
 
     companion object;
+
+    fun interface CacheManager<K, E> {
+        companion object;
+        suspend fun DynamicLazyMap<K, E>.waitForCacheExpiration(key: K, element: E)
+    }
 
     /** Get and use an element for the given [key]. */
     inline fun <R> useElement(
@@ -190,9 +190,9 @@ class DynamicLazyMap<K, E>(
         val newCount = refCounts[key]!! - 1
         if (newCount == 0) {
             refCounts.remove(key)
-            if (waitForCacheExpiration == null) elements.remove(key)?.subScope?.cancel()
+            if (cacheManager == null) elements.remove(key)?.subScope?.cancel()
             else removers[key] = coroutineScope.launch {
-                waitForCacheExpiration(key, element)
+                with(cacheManager) { waitForCacheExpiration(key, element) }
                 mapsEditLock.withLock {
                     if (refCounts[key] == null) {
                         removers.remove(key)

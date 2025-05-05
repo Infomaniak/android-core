@@ -17,14 +17,10 @@
  */
 package com.infomaniak.core
 
+import com.infomaniak.core.DynamicLazyMap.CacheManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.*
 
 /**
  * Helper to create a [DynamicLazyMap] of [SharedFlow]s with a [Flow] factory.
@@ -32,11 +28,11 @@ import kotlinx.coroutines.flow.shareIn
  * @see flowForKey
  */
 fun <K, E> DynamicLazyMap.Companion.sharedFlow(
-    waitForCacheExpiration: (suspend DynamicLazyMap<K, SharedFlow<E>>.(key: K, flow: SharedFlow<E>) -> Unit)? = null,
+    cacheManager: CacheManager<K, SharedFlow<E>>? = null,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     createFlow: CoroutineScope.(K) -> Flow<E>,
 ): DynamicLazyMap<K, SharedFlow<E>> = DynamicLazyMap<K, SharedFlow<E>>(
-    waitForCacheExpiration = waitForCacheExpiration,
+    cacheManager = cacheManager,
     coroutineScope = coroutineScope,
     createElement = { key -> createFlow(key).shareIn(this, SharingStarted.Lazily, replay = 1) }
 )
