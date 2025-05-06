@@ -67,11 +67,14 @@ class DynamicLazyMapTest {
         val map = DynamicLazyMap<String, Boolean>(coroutineScope = this, createElement = { Random.nextBoolean() })
         val keys = buildSet(numberOfElements) { repeat(numberOfElements) { add("$it") } }
         val usedElements by map.usedElementsCount::value
+
+        // Test with useElements
         assertEquals(expected = 0, actual = usedElements)
         map.useElements(keys) {
             assertEquals(expected = numberOfElements, actual = usedElements)
         }
         assertEquals(expected = 0, actual = usedElements)
+
         if (numberOfElements > 1) {
             // Test with combination of useElement and useElements
             map.useElements(keys.asSequence().drop(1).toSet()) {
@@ -82,6 +85,7 @@ class DynamicLazyMapTest {
                 assertEquals(expected = numberOfElements - 1, actual = usedElements)
             }
             assertEquals(expected = 0, actual = usedElements)
+            // Test multiple concurrent calls to useElement
             val elementUsingJobs = launch(start = CoroutineStart.UNDISPATCHED) {
                 keys.forEach { key ->
                     launch(start = CoroutineStart.UNDISPATCHED) {
