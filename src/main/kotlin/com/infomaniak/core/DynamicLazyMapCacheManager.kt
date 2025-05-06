@@ -53,7 +53,7 @@ fun <K, E> DynamicLazyMap.CacheManager.Companion.unusedCountBased(
 }
 
 interface CacheExpirationScope {
-    fun dropUnusedElements(count: Int)
+    suspend fun dropUnusedElements(count: Int)
 }
 
 private class DynamicLazyMapCacheManager<K, E>(
@@ -89,7 +89,14 @@ private class DynamicLazyMapCacheManager<K, E>(
         }
     }
 
-    override fun dropUnusedElements(count: Int) {
+    override suspend fun dropUnusedElements(count: Int) {
+        withContext(NonCancellable) {
+            // We need to let any freshly launched coroutine that calls `waitForCacheExpiration`
+            // to have the time to reach suspendCancellableCoroutine,
+            // where its continuation is put inside `unusedElements`.
+            // Otherwise, we arrive too early and could remove nothing.
+            yield()
+        }
         mutationLock.withLock { repeat(count) { unusedElements.removeFirstOrNull()?.resume(Unit) } }
     }
 }
