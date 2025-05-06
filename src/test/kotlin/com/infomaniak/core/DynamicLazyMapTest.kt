@@ -117,6 +117,6 @@ class DynamicLazyMapTest {
         }
     }
 
+    //TODO: Test elements are shared and are not created over and over.
     //TODO: Test values totalElements and unusedElements
-    //TODO: Test CacheManager in another file named something like DynamicLazyMapCacheTest.
 }

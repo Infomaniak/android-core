@@ -56,6 +56,7 @@ dependencies {
     implementation(core.androidx.lifecycle.runtime.ktx)
 
     testImplementation(kotlin("test"))
+    testImplementation(core.kotest.assertions)
     testImplementation(core.kotlinx.coroutines.test)
     testImplementation(core.androidx.junit)
     testImplementation(core.androidx.test.core.ktx)

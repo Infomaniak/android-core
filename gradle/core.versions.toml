@@ -11,6 +11,7 @@ junit = "4.13" # Don't update this because it breaks tests
 junitAndroidx = "1.2.1"
 kotlin = "2.0.21"
 ksp = "2.0.21-1.0.28"
+kotest = "5.9.0"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerializationJson = "1.8.1"
 ktor = "3.0.3"
@@ -41,6 +42,7 @@ compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
