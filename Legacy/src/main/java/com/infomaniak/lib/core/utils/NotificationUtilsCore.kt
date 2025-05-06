@@ -21,7 +21,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -48,7 +48,7 @@ abstract class NotificationUtilsCore {
         notificationManager.cancel(notificationId)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(26)
     fun Context.createNotificationChannels(
         channelList: List<NotificationChannel>,
         groupList: List<NotificationChannelGroup>? = null
@@ -59,14 +59,14 @@ abstract class NotificationUtilsCore {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(26)
     fun Context.deleteNotificationChannels(channelList: List<String>) {
         (getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager).apply {
             channelList.forEach { deleteNotificationChannel(it) }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(26)
     protected fun buildNotificationChannel(
         channelId: String,
         name: String,
@@ -82,7 +82,7 @@ abstract class NotificationUtilsCore {
 
     @SuppressLint("MissingPermission")
     fun NotificationManagerCompat.notifyCompat(context: Context, notificationId: Int, build: Notification) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (SDK_INT >= 33) {
             if (context.hasPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))) {
                 notify(notificationId, build)
             }
@@ -92,7 +92,7 @@ abstract class NotificationUtilsCore {
     }
 
     companion object {
-        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val pendingIntentFlags = if (SDK_INT >= 23) {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         } else {
             PendingIntent.FLAG_UPDATE_CURRENT

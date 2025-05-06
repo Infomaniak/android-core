@@ -34,10 +34,10 @@ import android.provider.MediaStore.Images
 import android.provider.MediaStore.Video
 import android.util.Size
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.scale
 import androidx.core.net.toFile
 import java.io.File
 import kotlin.math.min
-import androidx.core.graphics.scale
 
 object ThumbnailsUtils {
 
