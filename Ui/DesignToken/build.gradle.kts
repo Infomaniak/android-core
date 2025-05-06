@@ -10,7 +10,7 @@ val javaVersion: JavaVersion by rootProject.extra
 
 android {
 
-    namespace = "com.infomaniak.core.ui"
+    namespace = "com.infomaniak.core.ui.designtoken"
     compileSdk = coreCompileSdk
 
     defaultConfig {
