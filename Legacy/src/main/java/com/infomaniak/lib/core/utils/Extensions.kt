@@ -30,7 +30,7 @@ import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
@@ -196,7 +196,7 @@ fun Context.openAppNotificationSettings() {
     Intent().apply {
         action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
         when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+            SDK_INT >= 26 -> putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
             else -> {
                 putExtra("app_package", packageName)
                 putExtra("app_uid", applicationInfo.uid)
@@ -240,7 +240,7 @@ fun Window.lightStatusBar(enabled: Boolean) {
     //         insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
     //     }
     // } else
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    if (SDK_INT >= 23) {
         if (enabled) {
             decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         } else {
@@ -252,7 +252,7 @@ fun Window.lightStatusBar(enabled: Boolean) {
 // TODO: Fix deprecated
 fun Window.lightNavigationBar(enabled: Boolean) {
     // TODO Android 11
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    if (SDK_INT >= 26) {
         if (enabled) {
             decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         } else {
@@ -448,17 +448,17 @@ fun AttributeSet.getAttributes(
 }
 
 inline fun <reified T : Parcelable> Intent.parcelableExtra(key: String): T? = when {
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
+    SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
     else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
 }
 
 inline fun <reified T : Parcelable> Intent.parcelableArrayListExtra(key: String): List<T>? = when {
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArrayListExtra(key, T::class.java)
+    SDK_INT >= 33 -> getParcelableArrayListExtra(key, T::class.java)
     else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
 }
 
 inline fun <reified T : Serializable> Intent.serializableExtra(key: String): T? = when {
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
+    SDK_INT >= 33 -> getSerializableExtra(key, T::class.java)
     else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
 }
 

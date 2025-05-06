@@ -17,7 +17,7 @@
  */
 package com.infomaniak.lib.core.extensions
 
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -31,7 +31,7 @@ private val defaultLocale = Locale.ENGLISH
 fun AppCompatActivity.setDefaultLocaleIfNeeded() {
     if (noLocalesAreAccepted()) {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(defaultLocale))
-    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && !AppCompatDelegate.getApplicationLocales().isEmpty) {
+    } else if (SDK_INT < 33 && !AppCompatDelegate.getApplicationLocales().isEmpty) {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
     }
 }

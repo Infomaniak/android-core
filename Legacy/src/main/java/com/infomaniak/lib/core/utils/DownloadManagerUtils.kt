@@ -21,7 +21,7 @@ import android.app.DownloadManager
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.networking.HttpUtils
@@ -34,7 +34,7 @@ object DownloadManagerUtils {
     fun scheduleDownload(context: Context, url: String, name: String) {
         val formattedName = name.replace(regexInvalidSystemChar, "_").replace("%", "_").let {
             // fix IllegalArgumentException only on Android 10 if multi dot
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) it.replace(Regex("\\.{2,}"), ".") else it
+            if (SDK_INT == 29) it.replace(Regex("\\.{2,}"), ".") else it
         }
 
         DownloadManager.Request(Uri.parse(url)).apply {

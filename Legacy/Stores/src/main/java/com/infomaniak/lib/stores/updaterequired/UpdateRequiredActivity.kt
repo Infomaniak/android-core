@@ -19,7 +19,7 @@ package com.infomaniak.lib.stores.updaterequired
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.view.ContextThemeWrapper
 import androidx.activity.addCallback
@@ -68,7 +68,7 @@ class UpdateRequiredActivity : AppCompatActivity() {
         }
     }
 
-    private fun MaterialButton.getPrimaryColor() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    private fun MaterialButton.getPrimaryColor() = if (SDK_INT >= 23) {
         MaterialColors.getColor(ContextThemeWrapper(context, theme), R.attr.colorPrimary, UNDEFINED_PRIMARY_COLOR)
     } else {
         UNDEFINED_PRIMARY_COLOR
