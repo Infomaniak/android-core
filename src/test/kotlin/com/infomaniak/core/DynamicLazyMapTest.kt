@@ -56,6 +56,24 @@ class DynamicLazyMapTest {
     }
 
     @Test
+    fun `Contains the correct elements`() = runTest {
+        val numberOfElements = 12
+        val map = DynamicLazyMap<UInt, String>(coroutineScope = this, createElement = { it.toString() })
+        val keys = buildSet(numberOfElements) { repeat(numberOfElements) { add(it.toUInt()) } }
+
+        val wasExecuted: Boolean
+        map.useElements(keys) { elementsMap ->
+            assertEquals(expected = numberOfElements, elementsMap.size)
+            elementsMap.forEach { (key, value) ->
+                assertEquals(key.toUInt(), value.toUInt())
+            }
+            wasExecuted = true
+        }
+        @Suppress("KotlinConstantConditions") // We're testing the contract is honored.
+        assertTrue(wasExecuted)
+    }
+
+    @Test
     fun `Size matches used elements`() = runTest {
         repeat(3) {
             testSizeMatchesUsedElements(numberOfElements = it)
@@ -99,6 +117,6 @@ class DynamicLazyMapTest {
         }
     }
 
-    //TODO: Test that the content is correct.
+    //TODO: Test values totalElements and unusedElements
     //TODO: Test CacheManager in another file named something like DynamicLazyMapCacheTest.
 }
