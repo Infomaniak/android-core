@@ -17,11 +17,14 @@
  */
 package com.infomaniak.core
 
+import androidx.collection.mutableObjectListOf
 import androidx.collection.mutableScatterMapOf
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import splitties.bitflags.hasFlag
+import splitties.bitflags.withFlag
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.contracts.ExperimentalContracts
@@ -59,7 +62,37 @@ class DynamicLazyMap<K, E>(
 
     fun interface CacheManager<K, E> {
         companion object;
+
+        fun onUnused(
+            currentCacheSize: Int,
+            usedElementsCount: Int,
+        ): OnUnusedBehavior = OnUnusedBehavior(cacheUntilExpired = true, evictOldest = false)
+
         suspend fun DynamicLazyMap<K, E>.waitForCacheExpiration(key: K, element: E)
+    }
+
+    @JvmInline
+    value class OnUnusedBehavior internal constructor(internal val flags: UInt) {
+        constructor(
+            cacheUntilExpired: Boolean,
+            evictOldest: Boolean,
+        ) : this(
+            0u.let {
+                if (cacheUntilExpired) it.withFlag(Flags.cacheUntilExpired) else it
+            }.let {
+                if (evictOldest) it.withFlag(Flags.evictOldest) else it
+            }
+        )
+
+        val cacheUntilExpired: Boolean get() = flags.hasFlag(Flags.cacheUntilExpired)
+        val evictOldest: Boolean get() = flags.hasFlag(Flags.evictOldest)
+
+        internal object Flags {
+            //@formatter:off
+            val cacheUntilExpired: UInt = 0b0000_0000_0000_0000_0000_0000_0000_0001u
+            val evictOldest:       UInt = 0b0000_0000_0000_0000_0000_0000_0000_0010u
+            //@formatter:on
+        }
     }
 
     /** Get and use an element for the given [key]. */
@@ -130,6 +163,7 @@ class DynamicLazyMap<K, E>(
     private val refCounts = mutableScatterMapOf<K, Int>()
     private val elements = mutableScatterMapOf<K, Entry>()
     private val removers = mutableScatterMapOf<K, Job>()
+    private val removersOrderedKeys = mutableObjectListOf<K>() // Because `removers` is a ScatterMap, which doesn't keep order.
     private val mapsEditLock: ReentrantLock = ReentrantLock()
 
     private fun updateCounts() {
@@ -177,6 +211,7 @@ class DynamicLazyMap<K, E>(
         if (remover != null) {
             remover.cancel()
             removers.remove(key)
+            removersOrderedKeys.remove(key)
         }
         return elements.getOrPut(key) {
             val newJob = Job(parent = coroutineScope.coroutineContext.job)
@@ -193,19 +228,45 @@ class DynamicLazyMap<K, E>(
         val newCount = refCounts[key]!! - 1
         if (newCount == 0) {
             refCounts.remove(key)
-            if (cacheManager == null) elements.remove(key)?.subScope?.cancel()
-            else removers[key] = coroutineScope.launch {
-                with(cacheManager) { waitForCacheExpiration(key, element) }
-                mapsEditLock.withLock {
-                    if (refCounts[key] == null) {
-                        removers.remove(key)
-                        elements.remove(key)?.subScope?.cancel()
-                        updateCounts()
+            if (cacheManager == null) {
+                elements.remove(key)?.subScope?.cancel()
+                return
+            }
+            val behavior = cacheManager.onUnused(
+                currentCacheSize = removers.size,
+                usedElementsCount = elements.size - removers.size
+            )
+            if (behavior.evictOldest) {
+                if (removersOrderedKeys.isEmpty()) {
+                    elements.remove(key)?.subScope?.cancel()
+                    return
+                }
+                val keyOfOldestElement = removersOrderedKeys.first()
+                removeFromCache(keyOfOldestElement)
+            }
+            if (behavior.cacheUntilExpired) {
+                removersOrderedKeys.add(key)
+                removers[key] = coroutineScope.launch {
+                    with(cacheManager) { waitForCacheExpiration(key, element) }
+                    mapsEditLock.withLock {
+                        if (refCounts[key] == null) {
+                            removeFromCache(key, cancelRemover = false)
+                            updateCounts()
+                        }
                     }
                 }
             }
         } else {
             refCounts[key] = newCount
         }
+    }
+
+    private fun removeFromCache(key: K, cancelRemover: Boolean = true) {
+        check(mapsEditLock.isHeldByCurrentThread)
+        removers.remove(key)?.also {
+            if (cancelRemover) it.cancel()
+        }
+        removersOrderedKeys.remove(key)
+        elements.remove(key)?.subScope?.cancel()
     }
 }
