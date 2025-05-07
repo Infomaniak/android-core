@@ -17,10 +17,9 @@
  */
 package com.infomaniak.core.inappstore
 
+import android.app.Activity
 import androidx.annotation.DrawableRes
 import androidx.annotation.StyleRes
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.inappstore.updaterequired.UpdateRequiredActivity
 import com.infomaniak.core.inappstore.updaterequired.data.models.AppVersion
 import com.infomaniak.core.inappstore.updaterequired.data.models.AppVersion.Platform
@@ -28,6 +27,7 @@ import com.infomaniak.inappstore.StoreUtils
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -47,13 +47,13 @@ internal interface StoresUtils {
     }
 
     //region In-App Update
-    fun FragmentActivity.checkUpdateIsRequired(
+    fun Activity.checkUpdateIsRequired(
         appId: String,
         appVersion: String,
         versionCode: Int,
         @StyleRes themeRes: Int,
         @DrawableRes appIllustration: Int,
-    ) = lifecycleScope.launch(Dispatchers.IO) {
+    ) = CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
 
         val apiResponse = HttpClient().get(appVersion(appId))
         val data = apiResponse.body<AppVersion>()
@@ -74,6 +74,6 @@ internal interface StoresUtils {
     //endregion
 
     //region In-App Review
-    fun FragmentActivity.launchInAppReview() = Unit
+    fun Activity.launchInAppReview() = Unit
     //endregion
 }

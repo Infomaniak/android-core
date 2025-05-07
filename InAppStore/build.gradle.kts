@@ -60,7 +60,7 @@ android {
 dependencies {
     implementation(project(":Core"))
     implementation(project(":Core:Sentry"))
-    implementation(project(":Core:Ui"))
+    implementation(project(":Core:Ui:DesignToken"))
     // implementation(project(":Core:WebView")) // TODO: Uncomment this line when the WebView module is merged.
     implementation(core.play.review)
     implementation(core.play.review.ktx)

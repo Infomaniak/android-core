@@ -17,6 +17,7 @@
  */
 package com.infomaniak.inappstore.updatemanagers
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -108,6 +109,8 @@ class InAppUpdateManager(
         onInAppUpdateUiChange: ((Boolean) -> Unit)?,
         onFDroidResult: ((Boolean) -> Unit)?,
     ) {
+        Log.e("TOTO", "init - IN APP UPDATE MANAGER")
+
         this.updateType = if (mustRequireImmediateUpdate) AppUpdateType.IMMEDIATE else AppUpdateType.FLEXIBLE
         this.onUserChoice = onUserChoice
         this.onInstallStart = onInstallStart
@@ -169,13 +172,19 @@ class InAppUpdateManager(
                     appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
                 if (isUpdateStalled || !viewModel.isUpdateBottomSheetShown) startUpdateFlow(appUpdateInfo)
             }
+
+            Log.e("TOTO", "requireUpdate - SUCCESS")
         }.addOnFailureListener {
             Sentry.captureMessage("Impossible to require update") { scope ->
                 scope.setTag("reason", it.message.toString())
             }
             it.printStackTrace()
             onFailure?.invoke(it)
+
+            Log.e("TOTO", "requireUpdate - FAILURE")
         }
+
+        Log.e("TOTO", "requireUpdate - COUCOU")
     }
 
     private fun observeAppUpdateDownload() {

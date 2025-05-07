@@ -20,13 +20,14 @@ package com.infomaniak.core.inappstore.updaterequired
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
-import androidx.compose.runtime.LaunchedEffect
 import com.infomaniak.core.extensions.clearStack
 import com.infomaniak.core.extensions.goToPlayStore
 import com.infomaniak.core.extensions.showToast
+import com.infomaniak.core.inappstore.BuildConfig
 import com.infomaniak.core.inappstore.R
 import com.infomaniak.core.inappstore.ui.screen.UpdateRequired
 import com.infomaniak.inappstore.updatemanagers.InAppUpdateManager
@@ -34,30 +35,41 @@ import kotlin.system.exitProcess
 
 class UpdateRequiredActivity : ComponentActivity() {
 
-    private val appId = intent.getStringExtra(EXTRA_APP_ID) ?: ""
-    private val versionCode = intent.getIntExtra(EXTRA_VERSION_CODE, 0)
-    private val appIllustration = intent.getIntExtra(EXTRA_APP_ILLUSTRATION, -1)
+    private val appId by lazy { intent.getStringExtra(EXTRA_APP_ID) ?: "" }
+    private val versionCode by lazy { intent.getIntExtra(EXTRA_VERSION_CODE, 0) }
+    private val appIllustration by lazy { intent.getIntExtra(EXTRA_APP_ILLUSTRATION, -1) }
 
     private val inAppUpdateManager by lazy { InAppUpdateManager(this, appId, versionCode) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
-            LaunchedEffect(Unit) {
-                inAppUpdateManager.init(
-                    mustRequireImmediateUpdate = true,
-                    onInstallFailure = {
-                        showToast(R.string.errorUpdateInstall)
-                        goToPlayStore()
-                    },
-                )
-            }
+        Log.e("TOTO", "onCreate - HERE")
 
+        inAppUpdateManager.init(
+            mustRequireImmediateUpdate = true,
+            onInstallFailure = {
+                showToast(R.string.errorUpdateInstall)
+                goToPlayStore()
+            },
+        )
+
+        setContent {
             UpdateRequired(
                 onBack = {
                     finishAffinity()
                     exitProcess(0)
+                },
+                onInstallButtonClicked = {
+                    inAppUpdateManager.requireUpdate {
+                        // TODO: Maybe we want to use the BottomSheet provided by Google.
+                        if (BuildConfig.DEBUG) {
+                            // The appended `.debug` to the packageName in debug mode should be removed if we want to test this.
+                            goToPlayStore("com.infomaniak.swisstransfer")
+                        } else {
+                            goToPlayStore()
+                        }
+                    }
                 },
                 appIllustration
             )

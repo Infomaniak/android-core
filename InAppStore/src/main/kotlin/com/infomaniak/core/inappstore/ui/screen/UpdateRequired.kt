@@ -21,6 +21,7 @@ import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,47 +36,59 @@ import com.infomaniak.core.inappstore.ui.theme.InAppStoreTheme
 import com.infomaniak.core.ui.theme.Margin
 
 @Composable
-fun UpdateRequired(onBack: () -> Unit, @DrawableRes appIllustration: Int) {
+fun UpdateRequired(onBack: () -> Unit, onInstallButtonClicked: () -> Unit, @DrawableRes appIllustration: Int) {
     BackHandler { onBack() }
 
     Scaffold { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
+        Column {
+            Box(modifier = Modifier.weight(1.0f)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
 
-            // TODO: Use the drawable corresponding to the different apps.
-            Image(
-                modifier = paddedModifier,
-                painter = painterResource(appIllustration),
-                contentDescription = null
-            )
+                    // TODO: Use the drawable corresponding to the different apps.
+                    Image(
+                        modifier = paddedModifier,
+                        painter = painterResource(appIllustration),
+                        contentDescription = null,
+                    )
 
-            Spacer(Modifier.height(Margin.Large))
+                    Spacer(Modifier.height(Margin.Large))
 
-            Text(
-                text = stringResource(R.string.updateAppTitle),
-                textAlign = TextAlign.Center,
-                style = InAppStoreTheme.typography.bodyMedium,
-                color = InAppStoreTheme.colors.primaryTextColor,
-                modifier = paddedModifier,
-            )
+                    Text(
+                        text = stringResource(R.string.updateAppTitle),
+                        textAlign = TextAlign.Center,
+                        style = InAppStoreTheme.typography.bodyMedium,
+                        color = InAppStoreTheme.colors.primaryTextColor,
+                        modifier = paddedModifier,
+                    )
 
-            Spacer(Modifier.height(Margin.Large))
+                    Spacer(Modifier.height(Margin.Large))
 
-            Text(
-                text = stringResource(R.string.updateRequiredDescription),
-                textAlign = TextAlign.Center,
-                style = InAppStoreTheme.typography.bodyRegular,
-                color = InAppStoreTheme.colors.secondaryTextColor,
-                modifier = paddedModifier,
-            )
+                    Text(
+                        text = stringResource(R.string.updateRequiredDescription),
+                        textAlign = TextAlign.Center,
+                        style = InAppStoreTheme.typography.bodyRegular,
+                        color = InAppStoreTheme.colors.secondaryTextColor,
+                        modifier = paddedModifier,
+                    )
+                }
+            }
 
-            // TODO: Add the update button at the very bottom of the screen.
+            // TODO: Style the update button (use the app theme too).
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Margin.Small),
+                onClick = onInstallButtonClicked,
+            ) {
+                Text(stringResource(R.string.updateInstallButton))
+            }
         }
     }
 }
@@ -83,5 +96,5 @@ fun UpdateRequired(onBack: () -> Unit, @DrawableRes appIllustration: Int) {
 @Preview
 @Composable
 private fun Preview() {
-    UpdateRequired(onBack = {}, appIllustration = R.drawable.illu_update_required_example)
+    UpdateRequired(onBack = {}, onInstallButtonClicked = {}, appIllustration = R.drawable.illu_update_required_example)
 }

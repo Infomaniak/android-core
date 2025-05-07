@@ -17,7 +17,7 @@
  */
 package com.infomaniak.inappstore
 
-import androidx.fragment.app.FragmentActivity
+import android.app.Activity
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.infomaniak.core.inappstore.StoresUtils
@@ -30,7 +30,7 @@ object StoreUtils : StoresUtils {
     override val REQUIRED_UPDATE_STORE = Store.PLAY_STORE
 
     //region In-App Review
-    override fun FragmentActivity.launchInAppReview() {
+    override fun Activity.launchInAppReview() {
         ReviewManagerFactory.create(this).apply {
             requestReviewFlow().addOnCompleteListener { request ->
                 if (request.isSuccessful) launchReviewFlow(this@launchInAppReview, request.result)
