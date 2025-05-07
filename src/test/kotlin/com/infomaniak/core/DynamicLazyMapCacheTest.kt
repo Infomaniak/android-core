@@ -20,10 +20,13 @@ package com.infomaniak.core
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.seconds
 
 @RunWith(AndroidJUnit4::class)
 class DynamicLazyMapCacheTest {
@@ -100,5 +103,73 @@ class DynamicLazyMapCacheTest {
             }
             cacheSize shouldBe maxCacheSize
         }
+    }
+
+    @Test
+    fun `Immediate cleanup if CacheManager#onUnusedElement says to not cache nor to evict oldest element`() = runTest {
+        val concurrentElements = 3
+        val concurrentUsagesPerElement = 3
+        require(concurrentUsagesPerElement > 1)
+
+        val cacheManager = object : DynamicLazyMap.CacheManager<Int, String> {
+
+            override fun onUnused(
+                currentCacheSize: Int,
+                usedElementsCount: Int
+            ) = DynamicLazyMap.OnUnusedBehavior(
+                cacheUntilExpired = false,
+                evictOldest = false
+            )
+
+            override suspend fun DynamicLazyMap<Int, String>.waitForCacheExpiration(
+                key: Int,
+                element: String
+            ) = Unit
+        }
+
+        val createElementCallsCountSummary = buildMap(capacity = concurrentElements) {
+            for (elementKey in 1..concurrentElements) this[elementKey] = AtomicInteger()
+        }
+
+        val map = DynamicLazyMap<Int, String>(
+            coroutineScope = this,
+            cacheManager = cacheManager,
+            createElement = { key ->
+                createElementCallsCountSummary.getValue(key).incrementAndGet()
+                key.toString()
+            }
+        )
+        val cacheSize by map.cachedElementsCount::value
+        val usedElements by map.usedElementsCount::value
+        val totalElements by map.totalElementsCount::value
+
+        // Test multiple concurrent calls to useElement
+        coroutineScope {
+            for (elementKey in 1..concurrentElements) repeat(concurrentUsagesPerElement) {
+                launch { map.useElement(elementKey) { delay(1.seconds) } }
+            }
+        }
+        createElementCallsCountSummary.forEach { (_, createElementCallsCount) ->
+            createElementCallsCount.get() shouldBe 1
+        }
+        cacheSize shouldBe 0
+        usedElements shouldBe 0
+        totalElements shouldBe 0
+
+        // Test with concurrent calls to useElements
+        coroutineScope {
+            val keys = buildSet(concurrentElements) {
+                for (elementKey in 1..concurrentElements) add(elementKey)
+            }
+            repeat(concurrentUsagesPerElement) {
+                launch { map.useElements(keys) { delay(1.seconds) } }
+            }
+        }
+        createElementCallsCountSummary.forEach { (_, createElementCallsCount) ->
+            createElementCallsCount.get() shouldBe 2
+        }
+        cacheSize shouldBe 0
+        usedElements shouldBe 0
+        totalElements shouldBe 0
     }
 }
