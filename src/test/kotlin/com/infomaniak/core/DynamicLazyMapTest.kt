@@ -21,11 +21,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 
 @RunWith(AndroidJUnit4::class)
 class DynamicLazyMapTest {
@@ -86,6 +88,36 @@ class DynamicLazyMapTest {
     }
 
     @Test
+    fun `elements with same key are reused while used at least once`() = runTest {
+        checkElementsReuse(concurrentElements = 1, concurrentUsagesPerElement = 2)
+        checkElementsReuse(concurrentElements = 10, concurrentUsagesPerElement = 7)
+    }
+
+    private suspend fun checkElementsReuse(concurrentElements: Int, concurrentUsagesPerElement: Int) = coroutineScope {
+        require(concurrentUsagesPerElement > 1)
+        val createElementCallsCountSummary = buildMap(capacity = concurrentElements) {
+            for (elementKey in 1..concurrentElements) {
+                this[elementKey] = AtomicInteger()
+            }
+        }
+        val map = DynamicLazyMap<Int, String>(
+            coroutineScope = this,
+            createElement = { key ->
+                createElementCallsCountSummary.getValue(key).incrementAndGet()
+                key.toString()
+            }
+        )
+        coroutineScope {
+            for (elementKey in 1..concurrentElements) repeat(concurrentUsagesPerElement) {
+                launch { map.useElement(elementKey) { delay(1.seconds) } }
+            }
+        }
+        createElementCallsCountSummary.forEach { (_, createElementCallsCount) ->
+            assertEquals(expected = 1, actual = createElementCallsCount.get())
+        }
+    }
+
+    @Test
     fun `Size matches used elements`() = runTest {
         repeat(3) {
             testSizeMatchesUsedElements(numberOfElements = it)
@@ -129,6 +161,5 @@ class DynamicLazyMapTest {
         }
     }
 
-    //TODO: Test elements are shared and are not created over and over.
     //TODO: Test values totalElements and unusedElements
 }
