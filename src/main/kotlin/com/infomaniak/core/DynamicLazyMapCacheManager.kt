@@ -85,7 +85,7 @@ private class DynamicLazyMapCacheManager<K, E>(
     init {
         coroutineScope.launch {
             val dynamicLazyMap = dynamicLazyMapAsync.await()
-            handleUnusedElements(dynamicLazyMap.unusedElementsCount)
+            handleUnusedElements(dynamicLazyMap.cachedElementsCount)
         }
     }
 

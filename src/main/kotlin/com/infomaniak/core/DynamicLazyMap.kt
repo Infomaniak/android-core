@@ -39,7 +39,7 @@ import kotlin.contracts.contract
  *     2. The `waitForCacheExpiration` function of the passed [cacheManager] lambda completes.
  *
  * Note that [cacheManager] can access the [DynamicLazyMap] instance it's running on, giving access these [StateFlow] properties:
- * - [unusedElementsCount]
+ * - [cachedElementsCount]
  * - [usedElementsCount]
  * - [totalElementsCount]
  *
@@ -96,12 +96,12 @@ class DynamicLazyMap<K, E>(
      * @see usedElementsCount
      * @see totalElementsCount
      */
-    val unusedElementsCount: StateFlow<Int>
+    val cachedElementsCount: StateFlow<Int>
 
     /**
      * The number of elements actively used.
      *
-     * @see unusedElementsCount
+     * @see cachedElementsCount
      * @see totalElementsCount
      */
     val usedElementsCount: StateFlow<Int>
@@ -109,7 +109,7 @@ class DynamicLazyMap<K, E>(
     /**
      * The number of elements that are present (used, or cached).
      *
-     * @see unusedElementsCount
+     * @see cachedElementsCount
      * @see usedElementsCount
      */
     val totalElementsCount: StateFlow<Int>
@@ -123,7 +123,7 @@ class DynamicLazyMap<K, E>(
         val subScope: CoroutineScope
     )
 
-    private var _unusedElementsCount by MutableStateFlow(0).also { unusedElementsCount = it.asStateFlow() }::value
+    private var _cachedElementsCount by MutableStateFlow(0).also { cachedElementsCount = it.asStateFlow() }::value
     private var _usedElementsCount by MutableStateFlow(0).also { usedElementsCount = it.asStateFlow() }::value
     private var _totalElementsCount by MutableStateFlow(0).also { totalElementsCount = it.asStateFlow() }::value
 
@@ -136,7 +136,7 @@ class DynamicLazyMap<K, E>(
         check(mapsEditLock.isHeldByCurrentThread)
         val total = elements.size
         val removersCount = removers.size
-        _unusedElementsCount = removersCount
+        _cachedElementsCount = removersCount
         _usedElementsCount = total - removersCount
         _totalElementsCount = total
     }

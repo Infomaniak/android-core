@@ -77,7 +77,7 @@ class DynamicLazyMapCacheTest {
                 createElementCallCount shouldBe 4
             }
             repeat(3) { yield() }
-            map.unusedElementsCount.value shouldBe 2
+            map.cachedElementsCount.value shouldBe 2
             map.useElement(1) {
                 createElementCallCount shouldBe 5
             }
