@@ -226,38 +226,45 @@ class DynamicLazyMap<K, E>(
     private fun releaseRefForElementUnchecked(key: K, element: E) {
         check(mapsEditLock.isHeldByCurrentThread)
         val newCount = refCounts[key]!! - 1
-        if (newCount == 0) {
-            refCounts.remove(key)
-            if (cacheManager == null) {
+        when (newCount) {
+            0 -> releaseOrCacheUnusedElement(key, element)
+            else -> refCounts[key] = newCount
+        }
+    }
+
+    private fun releaseOrCacheUnusedElement(key: K, element: E) {
+        check(mapsEditLock.isHeldByCurrentThread)
+        refCounts.remove(key)
+        if (cacheManager == null) {
+            elements.remove(key)?.subScope?.cancel()
+            return
+        }
+        val behavior = cacheManager.onUnused(
+            currentCacheSize = removers.size,
+            usedElementsCount = elements.size - removers.size
+        )
+        if (behavior.evictOldest) {
+            if (removersOrderedKeys.isEmpty()) {
                 elements.remove(key)?.subScope?.cancel()
                 return
             }
-            val behavior = cacheManager.onUnused(
-                currentCacheSize = removers.size,
-                usedElementsCount = elements.size - removers.size
-            )
-            if (behavior.evictOldest) {
-                if (removersOrderedKeys.isEmpty()) {
-                    elements.remove(key)?.subScope?.cancel()
-                    return
-                }
-                val keyOfOldestElement = removersOrderedKeys.first()
-                removeFromCache(keyOfOldestElement)
-            }
-            if (behavior.cacheUntilExpired) {
-                removersOrderedKeys.add(key)
-                removers[key] = coroutineScope.launch {
-                    with(cacheManager) { waitForCacheExpiration(key, element) }
-                    mapsEditLock.withLock {
-                        if (refCounts[key] == null) {
-                            removeFromCache(key, cancelRemover = false)
-                            updateCounts()
-                        }
+            val keyOfOldestElement = removersOrderedKeys.first()
+            removeFromCache(keyOfOldestElement)
+        }
+        if (behavior.cacheUntilExpired) {
+            removersOrderedKeys.add(key)
+            removers[key] = coroutineScope.launch {
+                with(cacheManager) { waitForCacheExpiration(key, element) }
+                mapsEditLock.withLock {
+                    if (refCounts[key] == null) {
+                        removeFromCache(
+                            key = key,
+                            cancelRemover = false // Because we're in said remover, which is about to complete.
+                        )
+                        updateCounts()
                     }
                 }
             }
-        } else {
-            refCounts[key] = newCount
         }
     }
 
