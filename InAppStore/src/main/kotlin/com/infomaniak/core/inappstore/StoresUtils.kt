@@ -64,7 +64,6 @@ internal interface StoresUtils {
                     this@checkUpdateIsRequired,
                     appId,
                     versionCode,
-                    themeRes,
                     appIllustration,
                 )
                 finish()

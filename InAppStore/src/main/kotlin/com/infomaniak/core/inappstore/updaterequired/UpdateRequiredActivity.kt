@@ -20,9 +20,9 @@ package com.infomaniak.core.inappstore.updaterequired
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
 import com.infomaniak.core.extensions.clearStack
 import com.infomaniak.core.extensions.goToPlayStore
@@ -30,6 +30,7 @@ import com.infomaniak.core.extensions.showToast
 import com.infomaniak.core.inappstore.BuildConfig
 import com.infomaniak.core.inappstore.R
 import com.infomaniak.core.inappstore.ui.screen.UpdateRequired
+import com.infomaniak.core.inappstore.ui.theme.InAppStoreXMLTheme
 import com.infomaniak.inappstore.updatemanagers.InAppUpdateManager
 import kotlin.system.exitProcess
 
@@ -44,7 +45,7 @@ class UpdateRequiredActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.e("TOTO", "onCreate - HERE")
+        enableEdgeToEdge()
 
         inAppUpdateManager.init(
             mustRequireImmediateUpdate = true,
@@ -55,24 +56,25 @@ class UpdateRequiredActivity : ComponentActivity() {
         )
 
         setContent {
-            UpdateRequired(
-                onBack = {
-                    finishAffinity()
-                    exitProcess(0)
-                },
-                onInstallButtonClicked = {
-                    inAppUpdateManager.requireUpdate {
-                        // TODO: Maybe we want to use the BottomSheet provided by Google.
-                        if (BuildConfig.DEBUG) {
-                            // The appended `.debug` to the packageName in debug mode should be removed if we want to test this.
-                            goToPlayStore("com.infomaniak.swisstransfer")
-                        } else {
-                            goToPlayStore()
+            InAppStoreXMLTheme {
+                UpdateRequired(
+                    onBack = {
+                        finishAffinity()
+                        exitProcess(0)
+                    },
+                    onInstallButtonClicked = {
+                        inAppUpdateManager.requireUpdate {
+                            if (BuildConfig.DEBUG) {
+                                // The appended `.debug` to the packageName in debug mode should be removed if we want to test this.
+                                goToPlayStore("com.infomaniak.swisstransfer")
+                            } else {
+                                goToPlayStore()
+                            }
                         }
-                    }
-                },
-                appIllustration
-            )
+                    },
+                    appIllustration
+                )
+            }
         }
 
         /*
@@ -100,31 +102,20 @@ class UpdateRequiredActivity : ComponentActivity() {
         */
     }
 
-    // private fun MaterialButton.getPrimaryColor() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-    //     MaterialColors.getColor(ContextThemeWrapper(context, theme), RMaterial.attr.colorPrimary, UNDEFINED_PRIMARY_COLOR)
-    // } else {
-    //     UNDEFINED_PRIMARY_COLOR
-    // }
-
     companion object {
         private const val EXTRA_APP_ID = "EXTRA_APP_ID"
         private const val EXTRA_VERSION_CODE = "EXTRA_VERSION_CODE"
-        private const val EXTRA_APP_THEME = "EXTRA_APP_THEME"
         private const val EXTRA_APP_ILLUSTRATION = "EXTRA_APP_ILLUSTRATION"
-
-        private const val UNDEFINED_PRIMARY_COLOR = 0
 
         fun startUpdateRequiredActivity(
             context: Context,
             appId: String,
             versionCode: Int,
-            appTheme: Int,
             @DrawableRes appIllustration: Int,
         ) {
             Intent(context, UpdateRequiredActivity::class.java).apply {
                 putExtra(EXTRA_APP_ID, appId)
                 putExtra(EXTRA_VERSION_CODE, versionCode)
-                putExtra(EXTRA_APP_THEME, appTheme)
                 putExtra(EXTRA_APP_ILLUSTRATION, appIllustration)
 
                 clearStack()

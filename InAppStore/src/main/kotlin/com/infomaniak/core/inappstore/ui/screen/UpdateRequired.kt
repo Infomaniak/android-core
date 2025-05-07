@@ -22,24 +22,29 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.inappstore.R
-import com.infomaniak.core.inappstore.ui.theme.InAppStoreTheme
 import com.infomaniak.core.ui.theme.Margin
 
 @Composable
 fun UpdateRequired(onBack: () -> Unit, onInstallButtonClicked: () -> Unit, @DrawableRes appIllustration: Int) {
     BackHandler { onBack() }
 
-    Scaffold { padding ->
+    LocalContext.current
+
+    Scaffold(
+        modifier = Modifier.safeDrawingPadding(),
+    ) { padding ->
         Column {
             Box(modifier = Modifier.weight(1.0f)) {
                 Column(
@@ -51,7 +56,6 @@ fun UpdateRequired(onBack: () -> Unit, onInstallButtonClicked: () -> Unit, @Draw
                 ) {
                     val paddedModifier = Modifier.padding(horizontal = Margin.Medium)
 
-                    // TODO: Use the drawable corresponding to the different apps.
                     Image(
                         modifier = paddedModifier,
                         painter = painterResource(appIllustration),
@@ -63,8 +67,8 @@ fun UpdateRequired(onBack: () -> Unit, onInstallButtonClicked: () -> Unit, @Draw
                     Text(
                         text = stringResource(R.string.updateAppTitle),
                         textAlign = TextAlign.Center,
-                        style = InAppStoreTheme.typography.bodyMedium,
-                        color = InAppStoreTheme.colors.primaryTextColor,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         modifier = paddedModifier,
                     )
 
@@ -73,8 +77,8 @@ fun UpdateRequired(onBack: () -> Unit, onInstallButtonClicked: () -> Unit, @Draw
                     Text(
                         text = stringResource(R.string.updateRequiredDescription),
                         textAlign = TextAlign.Center,
-                        style = InAppStoreTheme.typography.bodyRegular,
-                        color = InAppStoreTheme.colors.secondaryTextColor,
+                        // style = InAppStoreTheme.typography.bodyRegular,
+                        // color = InAppStoreTheme.colors.secondaryTextColor,
                         modifier = paddedModifier,
                     )
                 }
@@ -92,6 +96,12 @@ fun UpdateRequired(onBack: () -> Unit, onInstallButtonClicked: () -> Unit, @Draw
         }
     }
 }
+
+// private fun MaterialButton.getPrimaryColor() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//     MaterialColors.getColor(ContextThemeWrapper(context, theme), RMaterial.attr.colorPrimary, UNDEFINED_PRIMARY_COLOR)
+// } else {
+//     UNDEFINED_PRIMARY_COLOR
+// }
 
 @Preview
 @Composable

@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025-2025 Infomaniak Network SA
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,66 +15,80 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.infomaniak.core.inappstore.ui.theme
 
+import android.content.Context
+import androidx.annotation.AttrRes
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import com.infomaniak.core.ui.theme.CustomShapes
-import com.infomaniak.core.ui.theme.Typography
+import androidx.compose.ui.platform.LocalContext
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.R as RMaterial
 
-val LocalIsDarkMode = staticCompositionLocalOf { false }
-val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> = staticCompositionLocalOf { CustomColorScheme() }
+internal val LocalInAppStoreColors: ProvidableCompositionLocal<InAppStoreColors> = staticCompositionLocalOf { InAppStoreColors() }
 
+/**
+ * This theme should be used in any XML View's wrapper class, as it uses the XML material attributes
+ */
 @Composable
-fun InAppStoreTheme(
-    isDarkTheme: Boolean = isSystemInDarkTheme(),
+internal fun InAppStoreXMLTheme(content: @Composable () -> Unit) {
+    val context = LocalContext.current
+
+    InAppStoreTheme(
+        primaryColor = getMaterialColor(context, RMaterial.attr.colorPrimary),
+        onPrimaryColor = getMaterialColor(context, RMaterial.attr.colorOnPrimary),
+        content = content,
+    )
+}
+
+/**
+ * Basic theme to use if the components are called from Compose
+ */
+@Composable
+internal fun InAppStoreTheme(
+    primaryColor: Color = MaterialTheme.colorScheme.primary,
+    onPrimaryColor: Color = MaterialTheme.colorScheme.onPrimary,
     content: @Composable () -> Unit,
 ) {
-    val customColors = if (isDarkTheme) CustomDarkColorScheme else CustomLightColorScheme
+    val isDarkTheme = isSystemInDarkTheme()
+    val customColors = if (isDarkTheme) InAppStoreDarkColors else InAppStoreLightColors
+
     CompositionLocalProvider(
         LocalTextStyle provides Typography.bodyRegular,
-        LocalCustomColorScheme provides customColors,
-        LocalIsDarkMode provides isDarkTheme,
+        LocalInAppStoreColors provides customColors,
     ) {
         MaterialTheme(
-            colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme,
-            shapes = Shapes,
+            colorScheme = if (isDarkTheme) {
+                getDarkColorScheme(primaryColor, onPrimaryColor)
+            } else {
+                getLightColorScheme(primaryColor, onPrimaryColor)
+            },
             content = content,
         )
     }
 }
 
-object InAppStoreTheme {
-    val typography = Typography
-    val colors: CustomColorScheme
-        @Composable
-        get() = LocalCustomColorScheme.current
-    val materialColors: ColorScheme
-        @Composable
-        get() = MaterialTheme.colorScheme
-}
-
 @Immutable
-data class CustomColorScheme(
+internal data class InAppStoreColors(
     val primaryTextColor: Color = Color.Unspecified,
     val secondaryTextColor: Color = Color.Unspecified,
     val tertiaryTextColor: Color = Color.Unspecified,
+    val background: Color = Color.Unspecified,
+    val secondaryBackground: Color = Color.Unspecified,
+    val topAppBarBackground: Color = Color.Unspecified,
+    val informationBlockBackground: Color = Color.Unspecified,
+    val chipBackground: Color = Color.Unspecified,
+    val drive: Color = Color.Unspecified,
+    val mail: Color = Color.Unspecified,
+    val primaryButton: Color = Color.Unspecified,
+    val onPrimaryButton: Color = Color.Unspecified,
+    val mailButton: Color = Color.Unspecified,
+    val onMailButton: Color = Color.Unspecified,
     val iconColor: Color = Color.Unspecified,
-    val navigationItemBackground: Color = Color.Unspecified,
-    val tertiaryButtonBackground: Color = Color.Unspecified,
-    val warning: Color = Color.Unspecified,
+    val cardBorderColor: Color = Color.Unspecified,
 )
 
-private val Shapes = Shapes(
-    extraSmall = CustomShapes.EXTRA_SMALL,
-    small = CustomShapes.SMALL,
-    medium = CustomShapes.MEDIUM,
-    large = CustomShapes.LARGE,
-    // extraLarge: uses default values, for the bottom sheet corners
-)
+private fun getMaterialColor(context: Context, @AttrRes colorId: Int) = Color(MaterialColors.getColor(context, colorId, 0))
