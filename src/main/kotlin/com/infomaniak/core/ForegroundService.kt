@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 @file:Suppress("ObsoleteSdkInt")
 @file:OptIn(ExperimentalSplittiesApi::class)
 
@@ -169,12 +168,7 @@ abstract class ForegroundService(
     final override fun onDestroy() {
         @OptIn(InternalApi::class)
         companion.markDestroyed()
-        if (SDK_INT >= 24) {
-            stopForeground(STOP_FOREGROUND_REMOVE)
-        } else {
-            @Suppress("deprecation")
-            stopForeground(true)
-        }
+        stopForeground(STOP_FOREGROUND_REMOVE)
         super.onDestroy()
     }
 

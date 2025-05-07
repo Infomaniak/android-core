@@ -19,6 +19,7 @@ package com.infomaniak.lib.bugtracker
 
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.text.format.Formatter
 import android.webkit.MimeTypeMap
@@ -179,7 +180,7 @@ class BugTrackerActivity : AppCompatActivity() {
         val extraUserDisplayName = navigationArgs.user.displayName ?: "undefined"
 
         val brand = Build.BRAND
-        val osVersion = Build.VERSION.SDK_INT.toString()
+        val osVersion = SDK_INT.toString()
         val device = Build.DEVICE
         val appVersion = navigationArgs.appBuildNumber
 

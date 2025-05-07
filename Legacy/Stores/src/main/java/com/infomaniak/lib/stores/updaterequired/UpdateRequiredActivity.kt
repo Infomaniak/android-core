@@ -68,10 +68,8 @@ class UpdateRequiredActivity : AppCompatActivity() {
         }
     }
 
-    private fun MaterialButton.getPrimaryColor() = if (SDK_INT >= 23) {
-        MaterialColors.getColor(ContextThemeWrapper(context, theme), R.attr.colorPrimary, UNDEFINED_PRIMARY_COLOR)
-    } else {
-        UNDEFINED_PRIMARY_COLOR
+    private fun MaterialButton.getPrimaryColor(): Int {
+        return MaterialColors.getColor(ContextThemeWrapper(context, theme), R.attr.colorPrimary, UNDEFINED_PRIMARY_COLOR)
     }
 
     companion object {

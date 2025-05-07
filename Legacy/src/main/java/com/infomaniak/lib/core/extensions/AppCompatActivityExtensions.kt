@@ -29,10 +29,13 @@ private val acceptedLocale = arrayOf("en", "de", "es", "fr", "it")
 private val defaultLocale = Locale.ENGLISH
 
 fun AppCompatActivity.setDefaultLocaleIfNeeded() {
-    if (noLocalesAreAccepted()) {
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(defaultLocale))
-    } else if (SDK_INT < 33 && !AppCompatDelegate.getApplicationLocales().isEmpty) {
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
+    when {
+        noLocalesAreAccepted() -> {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(defaultLocale))
+        }
+        SDK_INT < 33 && !AppCompatDelegate.getApplicationLocales().isEmpty -> {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
+        }
     }
 }
 
