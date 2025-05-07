@@ -103,9 +103,7 @@ class DynamicLazyMapTest {
     ) = coroutineScope {
         require(concurrentUsagesPerElement > 1)
         val createElementCallsCountSummary = buildMap(capacity = concurrentElements) {
-            for (elementKey in 1..concurrentElements) {
-                this[elementKey] = AtomicInteger()
-            }
+            for (elementKey in 1..concurrentElements) this[elementKey] = AtomicInteger()
         }
         val stopCachingSignal = Job()
         val map = DynamicLazyMap<Int, String>(
@@ -130,7 +128,7 @@ class DynamicLazyMapTest {
         // Test with concurrent calls to useElements
         coroutineScope {
             val keys = buildSet(concurrentElements) {
-                for (elementKey in 1..concurrentElements) { add(elementKey) }
+                for (elementKey in 1..concurrentElements) add(elementKey)
             }
             repeat(concurrentUsagesPerElement) {
                 launch { map.useElements(keys) { delay(1.seconds) } }
