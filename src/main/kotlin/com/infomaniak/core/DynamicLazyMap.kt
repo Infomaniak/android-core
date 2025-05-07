@@ -133,6 +133,7 @@ class DynamicLazyMap<K, E>(
     private val mapsEditLock: ReentrantLock = ReentrantLock()
 
     private fun updateCounts() {
+        check(mapsEditLock.isHeldByCurrentThread)
         val total = elements.size
         val removersCount = removers.size
         _unusedElementsCount = removersCount
@@ -169,6 +170,7 @@ class DynamicLazyMap<K, E>(
     }
 
     private fun getOrCreateElementWithRefCountingUnchecked(key: K): E {
+        check(mapsEditLock.isHeldByCurrentThread)
         val currentCount = refCounts[key] ?: 0
         refCounts[key] = currentCount + 1
         val remover = removers[key]
@@ -187,6 +189,7 @@ class DynamicLazyMap<K, E>(
     }
 
     private fun releaseRefForElementUnchecked(key: K, element: E) {
+        check(mapsEditLock.isHeldByCurrentThread)
         val newCount = refCounts[key]!! - 1
         if (newCount == 0) {
             refCounts.remove(key)
