@@ -197,6 +197,4 @@ class DynamicLazyMapTest {
             assertEquals(expected = 0, actual = usedElements)
         }
     }
-
-    //TODO: Test values totalElements and unusedElements
 }

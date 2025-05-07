@@ -42,20 +42,26 @@ class DynamicLazyMapCacheTest {
                 }
             )
             val cacheSize by map.cachedElementsCount::value
+            val totalElements by map.totalElementsCount::value
             createElementCallCount shouldBe 0
+            totalElements shouldBe 0
             coroutineScope {
                 map.useElement(1) {
                     createElementCallCount shouldBe 1
+                    totalElements shouldBe 1
                     launch {
                         map.useElement(1) {
                             createElementCallCount shouldBe 1
+                            totalElements shouldBe 1
                         }
                     }
                 }
             }
             cacheSize shouldBe 1.coerceAtMost(maxCacheSize)
+            totalElements shouldBe 1
             map.useElement(2) {
                 createElementCallCount shouldBe 2
+                totalElements shouldBe 2
             }
             cacheSize shouldBe 2.coerceAtMost(maxCacheSize)
             map.useElement(1) {
