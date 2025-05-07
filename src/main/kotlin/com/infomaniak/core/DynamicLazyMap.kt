@@ -236,7 +236,7 @@ class DynamicLazyMap<K, E>(
         check(mapsEditLock.isHeldByCurrentThread)
         refCounts.remove(key)
         if (cacheManager == null) {
-            elements.remove(key)?.subScope?.cancel()
+            removeElement(key)
             return
         }
         val behavior = cacheManager.onUnused(
@@ -245,7 +245,7 @@ class DynamicLazyMap<K, E>(
         )
         if (behavior.evictOldest) {
             if (removersOrderedKeys.isEmpty()) {
-                elements.remove(key)?.subScope?.cancel()
+                removeElement(key)
                 return
             }
             val keyOfOldestElement = removersOrderedKeys.first()
@@ -266,8 +266,12 @@ class DynamicLazyMap<K, E>(
                 }
             }
         } else {
-            elements.remove(key)?.subScope?.cancel()
+            removeElement(key)
         }
+    }
+
+    private fun removeElement(key: K) {
+        elements.remove(key)?.subScope?.cancel()
     }
 
     private fun removeFromCache(key: K, cancelRemover: Boolean = true) {
@@ -276,6 +280,6 @@ class DynamicLazyMap<K, E>(
             if (cancelRemover) it.cancel()
         }
         removersOrderedKeys.remove(key)
-        elements.remove(key)?.subScope?.cancel()
+        removeElement(key)
     }
 }
