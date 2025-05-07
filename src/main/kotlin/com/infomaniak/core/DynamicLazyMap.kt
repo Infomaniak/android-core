@@ -265,6 +265,8 @@ class DynamicLazyMap<K, E>(
                     }
                 }
             }
+        } else {
+            elements.remove(key)?.subScope?.cancel()
         }
     }
 
