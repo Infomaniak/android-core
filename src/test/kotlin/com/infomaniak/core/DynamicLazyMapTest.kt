@@ -64,6 +64,7 @@ class DynamicLazyMapTest {
         val keys = buildSet(numberOfElements) { repeat(numberOfElements) { add(it.toUInt()) } }
 
         val wasExecuted: Boolean
+        // Test with useElements
         dynamicMap.useElements(keys) { elementsMap ->
             assertEquals(expected = numberOfElements, elementsMap.size)
             elementsMap.forEach { (key, value) ->
@@ -71,6 +72,7 @@ class DynamicLazyMapTest {
             }
             wasExecuted = true
         }
+        // Test multiple concurrent calls to useElement
         val callCount = AtomicInteger()
         coroutineScope {
             keys.forEach { key ->
