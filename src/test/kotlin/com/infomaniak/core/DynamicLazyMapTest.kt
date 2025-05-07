@@ -93,22 +93,32 @@ class DynamicLazyMapTest {
     fun `elements with same key are reused while used at least once`() = runTest {
         checkElementsReuse(concurrentElements = 1, concurrentUsagesPerElement = 2)
         checkElementsReuse(concurrentElements = 10, concurrentUsagesPerElement = 7)
+        checkElementsReuse(concurrentElements = 10, concurrentUsagesPerElement = 7, cacheIndefinitely = true)
     }
 
-    private suspend fun checkElementsReuse(concurrentElements: Int, concurrentUsagesPerElement: Int) = coroutineScope {
+    private suspend fun checkElementsReuse(
+        concurrentElements: Int,
+        concurrentUsagesPerElement: Int,
+        cacheIndefinitely: Boolean = false,
+    ) = coroutineScope {
         require(concurrentUsagesPerElement > 1)
         val createElementCallsCountSummary = buildMap(capacity = concurrentElements) {
             for (elementKey in 1..concurrentElements) {
                 this[elementKey] = AtomicInteger()
             }
         }
+        val stopCachingSignal = Job()
         val map = DynamicLazyMap<Int, String>(
             coroutineScope = this,
+            cacheManager = if (cacheIndefinitely) {
+                DynamicLazyMap.CacheManager { _, _ -> stopCachingSignal.join() }
+            } else null,
             createElement = { key ->
                 createElementCallsCountSummary.getValue(key).incrementAndGet()
                 key.toString()
             }
         )
+        // Test multiple concurrent calls to useElement
         coroutineScope {
             for (elementKey in 1..concurrentElements) repeat(concurrentUsagesPerElement) {
                 launch { map.useElement(elementKey) { delay(1.seconds) } }
@@ -116,6 +126,33 @@ class DynamicLazyMapTest {
         }
         createElementCallsCountSummary.forEach { (_, createElementCallsCount) ->
             assertEquals(expected = 1, actual = createElementCallsCount.get())
+        }
+        // Test with concurrent calls to useElements
+        coroutineScope {
+            val keys = buildSet(concurrentElements) {
+                for (elementKey in 1..concurrentElements) { add(elementKey) }
+            }
+            repeat(concurrentUsagesPerElement) {
+                launch { map.useElements(keys) { delay(1.seconds) } }
+            }
+        }
+        createElementCallsCountSummary.forEach { (_, createElementCallsCount) ->
+            assertEquals(
+                expected = if (cacheIndefinitely) 1 else 2,
+                actual = createElementCallsCount.get()
+            )
+        }
+        if (cacheIndefinitely) {
+            stopCachingSignal.complete()
+            yield() // Let the cache be evicted.
+            coroutineScope {
+                for (elementKey in 1..concurrentElements) repeat(concurrentUsagesPerElement) {
+                    launch { map.useElement(elementKey) { delay(1.seconds) } }
+                }
+            }
+            createElementCallsCountSummary.forEach { (_, createElementCallsCount) ->
+                assertEquals(expected = 2, actual = createElementCallsCount.get())
+            }
         }
     }
 
