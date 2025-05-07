@@ -22,7 +22,6 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.yield
 import org.junit.runner.RunWith
 import kotlin.test.Test
 
@@ -33,17 +32,16 @@ class DynamicLazyMapCacheTest {
     fun `maxElements should cache and cleanup as needed`() = runTest {
         autoCancelScope {
             var createElementCallCount = 0
+            val maxCacheSize = 2
             val map = DynamicLazyMap<Int, String>(
-                cacheManager = DynamicLazyMap.CacheManager.maxElements(
-                    coroutineScope = this,
-                    maxUnusedElementsCount = 2
-                ),
+                cacheManager = DynamicLazyMap.CacheManager.maxElements(maxCacheSize = maxCacheSize),
                 coroutineScope = this,
                 createElement = { key ->
                     createElementCallCount++
                     key.toString()
                 }
             )
+            val cacheSize by map.cachedElementsCount::value
             createElementCallCount shouldBe 0
             coroutineScope {
                 map.useElement(1) {
@@ -55,18 +53,26 @@ class DynamicLazyMapCacheTest {
                     }
                 }
             }
+            cacheSize shouldBe 1.coerceAtMost(maxCacheSize)
             map.useElement(2) {
                 createElementCallCount shouldBe 2
             }
+            cacheSize shouldBe 2.coerceAtMost(maxCacheSize)
             map.useElement(1) {
+                cacheSize shouldBe 1.coerceAtMost(maxCacheSize)
                 createElementCallCount shouldBe 2
             }
+            cacheSize shouldBe 2.coerceAtMost(maxCacheSize)
             map.useElement(2) {
+                cacheSize shouldBe 1.coerceAtMost(maxCacheSize)
                 createElementCallCount shouldBe 2
             }
+            cacheSize shouldBe 2.coerceAtMost(maxCacheSize)
             map.useElement(3) {
+                cacheSize shouldBe 2.coerceAtMost(maxCacheSize)
                 createElementCallCount shouldBe 3
             }
+            cacheSize shouldBe 3.coerceAtMost(maxCacheSize)
             map.useElement(2) {
                 createElementCallCount shouldBe 3
             }
@@ -76,18 +82,17 @@ class DynamicLazyMapCacheTest {
             map.useElement(4) {
                 createElementCallCount shouldBe 4
             }
-            repeat(3) { yield() }
-            map.cachedElementsCount.value shouldBe 2
+            cacheSize shouldBe maxCacheSize
             map.useElement(1) {
                 createElementCallCount shouldBe 5
             }
             map.useElement(4) {
                 createElementCallCount shouldBe 5
             }
-            repeat(3) { yield() }
             map.useElement(3) {
                 createElementCallCount shouldBe 6
             }
+            cacheSize shouldBe maxCacheSize
         }
     }
 }

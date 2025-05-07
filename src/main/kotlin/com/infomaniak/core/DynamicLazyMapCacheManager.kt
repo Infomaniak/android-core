@@ -28,18 +28,23 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 fun <K, E> DynamicLazyMap.CacheManager.Companion.maxElements(
-    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-    maxUnusedElementsCount: Int
-): DynamicLazyMap.CacheManager<K, E> {
-    return unusedCountBased(
-        coroutineScope = coroutineScope,
-        handleUnusedElements = { unusedCount ->
-            unusedCount.collect { unusedElementsCount ->
-                val aboveTheLimitCount = unusedElementsCount - maxUnusedElementsCount
-                if (aboveTheLimitCount > 0) dropUnusedElements(aboveTheLimitCount)
-            }
-        }
+    maxCacheSize: Int,
+    waitForElementExpiration: suspend DynamicLazyMap<K, E>.(key: K, element: E) -> Unit = { _, _ ->
+        awaitCancellation()
+    },
+): DynamicLazyMap.CacheManager<K, E> = object : DynamicLazyMap.CacheManager<K, E> {
+
+    override fun onUnused(
+        currentCacheSize: Int,
+        usedElementsCount: Int
+    ) = DynamicLazyMap.OnUnusedBehavior(
+        cacheUntilExpired = true,
+        evictOldest = currentCacheSize >= maxCacheSize
     )
+
+    override suspend fun DynamicLazyMap<K, E>.waitForCacheExpiration(key: K, element: E) {
+        waitForElementExpiration(key, element)
+    }
 }
 
 fun <K, E> DynamicLazyMap.CacheManager.Companion.unusedCountBased(
