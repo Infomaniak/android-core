@@ -58,17 +58,29 @@ class DynamicLazyMapTest {
     @Test
     fun `Contains the correct elements`() = runTest {
         val numberOfElements = 12
-        val map = DynamicLazyMap<UInt, String>(coroutineScope = this, createElement = { it.toString() })
+        val dynamicMap = DynamicLazyMap<UInt, String>(coroutineScope = this, createElement = { it.toString() })
         val keys = buildSet(numberOfElements) { repeat(numberOfElements) { add(it.toUInt()) } }
 
         val wasExecuted: Boolean
-        map.useElements(keys) { elementsMap ->
+        dynamicMap.useElements(keys) { elementsMap ->
             assertEquals(expected = numberOfElements, elementsMap.size)
             elementsMap.forEach { (key, value) ->
                 assertEquals(key.toUInt(), value.toUInt())
             }
             wasExecuted = true
         }
+        val callCount = AtomicInteger()
+        coroutineScope {
+            keys.forEach { key ->
+                launch {
+                    dynamicMap.useElement(key) { value: String ->
+                        assertEquals(expected = key.toUInt(), actual = value.toUInt())
+                        callCount.incrementAndGet()
+                    }
+                }
+            }
+        }
+        assertEquals(expected = keys.size, actual = callCount.get())
         @Suppress("KotlinConstantConditions") // We're testing the contract is honored.
         assertTrue(wasExecuted)
     }
