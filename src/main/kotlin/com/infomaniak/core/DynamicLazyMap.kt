@@ -77,11 +77,9 @@ class DynamicLazyMap<K, E>(
             cacheUntilExpired: Boolean,
             evictOldest: Boolean,
         ) : this(
-            0u.let {
-                if (cacheUntilExpired) it.withFlag(Flags.cacheUntilExpired) else it
-            }.let {
-                if (evictOldest) it.withFlag(Flags.evictOldest) else it
-            }
+            0u
+                .withFlag(if (cacheUntilExpired) Flags.cacheUntilExpired else 0u)
+                .withFlag(if (evictOldest) Flags.evictOldest else 0u)
         )
 
         val cacheUntilExpired: Boolean get() = flags.hasFlag(Flags.cacheUntilExpired)
