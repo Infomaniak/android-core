@@ -87,7 +87,7 @@ class DynamicLazyMap<K, E>(
         val cacheUntilExpired: Boolean get() = flags.hasFlag(Flags.cacheUntilExpired)
         val evictOldest: Boolean get() = flags.hasFlag(Flags.evictOldest)
 
-        internal object Flags {
+        private object Flags {
             //@formatter:off
             val cacheUntilExpired: UInt = 0b0000_0000_0000_0000_0000_0000_0000_0001u
             val evictOldest:       UInt = 0b0000_0000_0000_0000_0000_0000_0000_0010u
