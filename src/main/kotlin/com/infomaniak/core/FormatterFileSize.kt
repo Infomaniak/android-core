@@ -52,7 +52,9 @@ object FormatterFileSize {
             MeasureUnit.MEGABYTE,
             MeasureUnit.GIGABYTE,
             MeasureUnit.TERABYTE,
-        )
+        ).apply {
+            if (SDK_INT >= 30) add(MeasureUnit.PETABYTE)
+        }
 
         if (maxUnit != null) orderedUnits.removeAll { it.prefixPower > maxUnit.prefixPower }
 
@@ -90,13 +92,18 @@ object FormatterFileSize {
     }
 
     private val MeasureUnit.prefixPower: Int
-        get() = if (SDK_INT >= 34) prefix.power else when (this) {
-            MeasureUnit.BYTE -> 0
-            MeasureUnit.KILOBYTE -> 3
-            MeasureUnit.MEGABYTE -> 6
-            MeasureUnit.GIGABYTE -> 9
-            MeasureUnit.TERABYTE -> 12
-            else -> throw UnsupportedOperationException("Unsupported measureUnit: $this")
+        get() = if (SDK_INT >= 34) {
+            prefix.power
+        } else {
+            when {
+                this == MeasureUnit.BYTE -> 0
+                this == MeasureUnit.KILOBYTE -> 3
+                this == MeasureUnit.MEGABYTE -> 6
+                this == MeasureUnit.GIGABYTE -> 9
+                this == MeasureUnit.TERABYTE -> 12
+                SDK_INT >= 30 && this == MeasureUnit.PETABYTE -> 15
+                else -> throw UnsupportedOperationException("Unsupported measureUnit: $this")
+            }
         }
 
     private fun Context.currentLocale(): Locale = resources.configuration.locales[0]
