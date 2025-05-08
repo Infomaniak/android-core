@@ -35,6 +35,8 @@ fun <K, E> DynamicLazyMap.CacheManager.Companion.maxElements(
 ): DynamicLazyMap.CacheManager<K, E> = object : DynamicLazyMap.CacheManager<K, E> {
 
     override fun onUnused(
+        key: K,
+        element: E,
         currentCacheSize: Int,
         usedElementsCount: Int
     ) = DynamicLazyMap.OnUnusedBehavior(

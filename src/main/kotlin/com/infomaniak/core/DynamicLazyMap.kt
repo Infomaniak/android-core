@@ -64,6 +64,8 @@ class DynamicLazyMap<K, E>(
         companion object;
 
         fun onUnused(
+            key: K,
+            element: E,
             currentCacheSize: Int,
             usedElementsCount: Int,
         ): OnUnusedBehavior = OnUnusedBehavior(cacheUntilExpired = true, evictOldest = false)
@@ -239,6 +241,8 @@ class DynamicLazyMap<K, E>(
             return
         }
         val behavior = cacheManager.onUnused(
+            key = key,
+            element = element,
             currentCacheSize = removers.size,
             usedElementsCount = elements.size - removers.size
         )

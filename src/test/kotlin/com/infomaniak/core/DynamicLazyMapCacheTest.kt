@@ -114,6 +114,8 @@ class DynamicLazyMapCacheTest {
         val cacheManager = object : DynamicLazyMap.CacheManager<Int, String> {
 
             override fun onUnused(
+                key: Int,
+                element: String,
                 currentCacheSize: Int,
                 usedElementsCount: Int
             ) = DynamicLazyMap.OnUnusedBehavior(
