@@ -219,7 +219,7 @@ class DynamicLazyMap<K, E>(
                 element = with(subScope) { createElement(key) },
                 subScope = subScope
             )
-        }.element.also { updateCounts() }
+        }.element
     }
 
     private fun releaseRefForElementUnchecked(key: K, element: E) {
