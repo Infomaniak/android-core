@@ -77,7 +77,7 @@ class DynamicLazyMap<K, E>(
             cacheUntilExpired: Boolean,
             evictOldest: Boolean,
         ) : this(
-            0u
+            flags = 0u
                 .withFlag(if (cacheUntilExpired) Flags.cacheUntilExpired else 0u)
                 .withFlag(if (evictOldest) Flags.evictOldest else 0u)
         )
