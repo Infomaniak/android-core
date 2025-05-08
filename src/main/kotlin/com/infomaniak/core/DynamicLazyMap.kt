@@ -17,6 +17,8 @@
  */
 package com.infomaniak.core
 
+import androidx.collection.ScatterMap
+import androidx.collection.mutableObjectIntMapOf
 import androidx.collection.mutableObjectListOf
 import androidx.collection.mutableScatterMapOf
 import kotlinx.coroutines.*
@@ -173,7 +175,7 @@ class DynamicLazyMap<K, E>(
      * Contains the number of concurrent usages per element.
      * The entry is removed when the last usage ends, so all the values inside are strictly greater than 1.
      */
-    private val refCounts = mutableScatterMapOf<K, Int>()
+    private val refCounts = mutableObjectIntMapOf<K>()
 
     /** Contains used **and** cached entries. */
     private val elements = mutableScatterMapOf<K, Entry>()
@@ -231,7 +233,7 @@ class DynamicLazyMap<K, E>(
 
     private fun getOrCreateElementWithRefCountingUnchecked(key: K): E {
         check(mapsEditLock.isHeldByCurrentThread)
-        val currentCount = refCounts[key] ?: 0
+        val currentCount = refCounts.getOrDefault(key = key, defaultValue = 0)
         refCounts[key] = currentCount + 1
         val remover = removers[key]
         if (remover != null) {
@@ -251,7 +253,7 @@ class DynamicLazyMap<K, E>(
 
     private fun releaseRefForElementUnchecked(key: K, element: E) {
         check(mapsEditLock.isHeldByCurrentThread)
-        val newCount = refCounts[key]!! - 1
+        val newCount = refCounts[key] - 1
         when (newCount) {
             0 -> releaseOrCacheUnusedElement(key, element)
             else -> refCounts[key] = newCount
@@ -285,7 +287,7 @@ class DynamicLazyMap<K, E>(
             removers[key] = coroutineScope.launch {
                 with(cacheManager) { waitForCacheExpiration(key, element) }
                 mapsEditLock.withLock {
-                    if (refCounts[key] == null) {
+                    if (key !in refCounts) { // A new usage might have popped-up as cache was about to expire.
                         removeFromCache(
                             key = key,
                             cancelRemover = false // Because we're in said remover, which is about to complete.
