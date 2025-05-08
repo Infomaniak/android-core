@@ -82,25 +82,13 @@ class DynamicLazyMapCacheTest {
                 createElementCallCount shouldBe 3
             }
             cacheSize shouldBe 3.coerceAtMost(maxCacheSize)
-            map.useElement(2) {
-                createElementCallCount shouldBe 3
-            }
-            map.useElement(3) {
-                createElementCallCount shouldBe 3
-            }
-            map.useElement(4) {
-                createElementCallCount shouldBe 4
-            }
+            map.useElement(2) { createElementCallCount shouldBe 3 }
+            map.useElement(3) { createElementCallCount shouldBe 3 }
+            map.useElement(4) { createElementCallCount shouldBe 4 }
             cacheSize shouldBe maxCacheSize
-            map.useElement(1) {
-                createElementCallCount shouldBe 5
-            }
-            map.useElement(4) {
-                createElementCallCount shouldBe 5
-            }
-            map.useElement(3) {
-                createElementCallCount shouldBe 6
-            }
+            map.useElement(1) { createElementCallCount shouldBe 5 }
+            map.useElement(4) { createElementCallCount shouldBe 5 }
+            map.useElement(3) { createElementCallCount shouldBe 6 }
             cacheSize shouldBe maxCacheSize
         }
     }
