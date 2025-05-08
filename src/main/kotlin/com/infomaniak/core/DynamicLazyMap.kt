@@ -71,6 +71,7 @@ class DynamicLazyMap<K, E>(
         suspend fun DynamicLazyMap<K, E>.waitForCacheExpiration(key: K, element: E)
     }
 
+    // We use an inline value class with bit flags to avoid the memory allocation overhead.
     @JvmInline
     value class OnUnusedBehavior internal constructor(internal val flags: UInt) {
         constructor(
