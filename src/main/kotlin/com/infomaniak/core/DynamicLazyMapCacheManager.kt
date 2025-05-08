@@ -15,55 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalSplittiesApi::class)
-
 package com.infomaniak.core
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.StateFlow
-import splitties.experimental.ExperimentalSplittiesApi
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
-fun <K, E> DynamicLazyMap.CacheManager.Companion.maxElements(
-    maxCacheSize: Int,
-    waitForElementExpiration: suspend DynamicLazyMap<K, E>.(key: K, element: E) -> Unit = { _, _ ->
-        awaitCancellation()
-    },
-): DynamicLazyMap.CacheManager<K, E> = object : DynamicLazyMap.CacheManager<K, E> {
-
-    override fun onUnused(
-        key: K,
-        element: E,
-        currentCacheSize: Int,
-        usedElementsCount: Int
-    ) = DynamicLazyMap.OnUnusedBehavior(
-        cacheUntilExpired = true,
-        evictOldest = currentCacheSize >= maxCacheSize
-    )
-
-    override suspend fun DynamicLazyMap<K, E>.waitForCacheExpiration(key: K, element: E) {
-        waitForElementExpiration(key, element)
-    }
-}
-
-fun <K, E> DynamicLazyMap.CacheManager.Companion.unusedCountBased(
-    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-    handleUnusedElements: suspend CacheExpirationScope.(unusedCount: StateFlow<Int>) -> Nothing
-): DynamicLazyMap.CacheManager<K, E> {
-    return DynamicLazyMapCacheManager<K, E>(
-        coroutineScope = coroutineScope,
-        handleUnusedElements = handleUnusedElements
-    )
-}
-
-interface CacheExpirationScope {
-    suspend fun dropUnusedElements(count: Int)
-}
-
-private class DynamicLazyMapCacheManager<K, E>(
+@NotTestedNorUsed
+internal class DynamicLazyMapCacheManager<K, E>(
     @Suppress("can_be_parameter") // To avoid this issue: https://github.com/Kotlin/kotlinx.coroutines/issues/1061
     private val coroutineScope: CoroutineScope,
     handleUnusedElements: suspend CacheExpirationScope.(unusedElements: StateFlow<Int>) -> Nothing
