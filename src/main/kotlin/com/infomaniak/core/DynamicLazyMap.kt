@@ -63,6 +63,12 @@ class DynamicLazyMap<K, E>(
     fun interface CacheManager<K, E> {
         companion object;
 
+        /**
+         * Called when the last usage of a given element ends.
+         * If [OnUnusedBehavior.cacheUntilExpired] is true (default), the [waitForCacheExpiration] function will be called,
+         * and if it completes without the element being used again, the element will be evicted from the cache, and
+         * further attempts to request the same element will lead to [DynamicLazyMap.createElement] being called again.
+         */
         fun onUnused(
             key: K,
             element: E,
