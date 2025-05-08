@@ -68,6 +68,8 @@ class DynamicLazyMap<K, E>(
          * If [OnUnusedBehavior.cacheUntilExpired] is true (default), the [waitForCacheExpiration] function will be called,
          * and if it completes without the element being used again, the element will be evicted from the cache, and
          * further attempts to request the same element will lead to [DynamicLazyMap.createElement] being called again.
+         *
+         * If [OnUnusedBehavior.cacheUntilExpired] is false, the element will not be cached.
          */
         fun onUnused(
             key: K,
