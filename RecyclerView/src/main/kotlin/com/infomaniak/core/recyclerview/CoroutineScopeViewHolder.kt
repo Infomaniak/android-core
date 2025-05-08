@@ -46,7 +46,7 @@ abstract class CoroutineScopeViewHolder<V : View>(
         parentScope + Job(parent = parentScope.coroutineContext.job)
     }
 
-    var currentBindScope: CoroutineScope by currentBindScopeDelegate
+    val currentBindScope: CoroutineScope by currentBindScopeDelegate
 
     override fun onBind() = Unit
 
