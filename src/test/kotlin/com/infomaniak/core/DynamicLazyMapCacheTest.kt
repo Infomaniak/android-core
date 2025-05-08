@@ -17,10 +17,13 @@
  */
 package com.infomaniak.core
 
+import androidx.collection.mutableIntListOf
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
@@ -30,6 +33,75 @@ import kotlin.time.Duration.Companion.seconds
 
 @RunWith(AndroidJUnit4::class)
 class DynamicLazyMapCacheTest {
+
+    @Test
+    fun `maxElements should cache until maxSize`() = runTest {
+        autoCancelScope {
+            var createElementCallCount = 0
+            val maxCacheSize = 8
+            val map = DynamicLazyMap<Int, String>(
+                cacheManager = DynamicLazyMap.CacheManager.maxElements(maxCacheSize = maxCacheSize),
+                coroutineScope = this,
+                createElement = { key ->
+                    createElementCallCount++
+                    key.toString()
+                }
+            )
+            var expectedCreateElementCallCount = 0
+
+            // Fill the cache and check createElement was called the right number of times
+            repeat(maxCacheSize) { index ->
+                expectedCreateElementCallCount++
+                map.useElement(key = index) { createElementCallCount shouldBe expectedCreateElementCallCount }
+                createElementCallCount shouldBe expectedCreateElementCallCount
+            }
+
+            // Same elements should be retrieved from the cache
+            repeat(maxCacheSize) { index -> map.useElement(key = index) {} }
+            createElementCallCount shouldBe expectedCreateElementCallCount
+
+            val extraElements = 11
+            repeat(maxCacheSize + extraElements) { index -> map.useElement(key = index) {} }
+            expectedCreateElementCallCount += extraElements
+            createElementCallCount shouldBe expectedCreateElementCallCount
+        }
+    }
+
+    @Test
+    fun `maxElements should cleanup cache beyond maxSize`() = runTest {
+        autoCancelScope {
+            var createElementCallCount = 0
+            val cancelledJobs = mutableIntListOf()
+            val maxCacheSize = 8
+            val map = DynamicLazyMap<Int, String>(
+                cacheManager = DynamicLazyMap.CacheManager.maxElements(maxCacheSize = maxCacheSize),
+                coroutineScope = this,
+                createElement = { key ->
+                    createElementCallCount++
+                    coroutineContext.job.invokeOnCompletion { if (it != null) cancelledJobs.add(key) }
+                    key.toString()
+                }
+            )
+
+            // Fill the cache
+            var expectedCreateElementCallCount = maxCacheSize
+            repeat(maxCacheSize) { index -> map.useElement(key = index) {} }
+            createElementCallCount shouldBe expectedCreateElementCallCount
+
+            // Same elements should be retrieved from the cache
+            repeat(maxCacheSize) { index -> map.useElement(key = index) {} }
+            createElementCallCount shouldBe expectedCreateElementCallCount
+
+            // All previously cached values should be evicted as we request values for different keys with the max cache size.
+            for (index in maxCacheSize until maxCacheSize * 2) map.useElement(key = index) {}
+            expectedCreateElementCallCount += maxCacheSize
+            createElementCallCount shouldBe expectedCreateElementCallCount
+
+            // The given scopes shall be cancelled.
+            cancelledJobs.size shouldBe maxCacheSize
+            repeat(maxCacheSize) { index -> (index in cancelledJobs).shouldBeTrue() }
+        }
+    }
 
     @Test
     fun `maxElements should cache and cleanup as needed`() = runTest {
