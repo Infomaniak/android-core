@@ -253,12 +253,13 @@ class DynamicLazyMap<K, E>(
             usedElementsCount = elements.size - removers.size
         )
         if (behavior.evictOldest) {
-            if (removersOrderedKeys.isEmpty()) {
+            if (removersOrderedKeys.isNotEmpty()) {
+                val keyOfOldestElement = removersOrderedKeys.first()
+                removeFromCache(keyOfOldestElement)
+            } else if (behavior.cacheUntilExpired.not()) {
                 removeElement(key)
                 return
             }
-            val keyOfOldestElement = removersOrderedKeys.first()
-            removeFromCache(keyOfOldestElement)
         }
         if (behavior.cacheUntilExpired) {
             removersOrderedKeys.add(key)
