@@ -75,7 +75,7 @@ class DynamicLazyMap<K, E>(
 
     // We use an inline value class with bit flags to avoid the memory allocation overhead.
     @JvmInline
-    value class OnUnusedBehavior internal constructor(internal val flags: UInt) {
+    value class OnUnusedBehavior private constructor(private val flags: UInt) {
         constructor(
             cacheUntilExpired: Boolean,
             evictOldest: Boolean,
