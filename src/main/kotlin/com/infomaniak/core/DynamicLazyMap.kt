@@ -169,9 +169,26 @@ class DynamicLazyMap<K, E>(
     private var _usedElementsCount by MutableStateFlow(0).also { usedElementsCount = it.asStateFlow() }::value
     private var _totalElementsCount by MutableStateFlow(0).also { totalElementsCount = it.asStateFlow() }::value
 
+    /**
+     * Contains the number of concurrent usages per element.
+     * The entry is removed when the last usage ends, so all the values inside are strictly greater than 1.
+     */
     private val refCounts = mutableScatterMapOf<K, Int>()
+
+    /** Contains used **and** cached entries. */
     private val elements = mutableScatterMapOf<K, Entry>()
+
+    /**
+     * Contains references to coroutines that are running the [CacheManager.waitForCacheExpiration] function,
+     * and that will remove the cached element, if not cancelled because a new usage.
+     * @see removersOrderedKeys
+     */
     private val removers = mutableScatterMapOf<K, Job>()
+
+    /**
+     * Keeps the insertion order of [removers], so we can evict the oldest when [OnUnusedBehavior.evictOldest] is true.
+     * We can't just use [removers] because it is a [ScatterMap], which doesn't keep the insertion order.
+     */
     private val removersOrderedKeys = mutableObjectListOf<K>() // Because `removers` is a ScatterMap, which doesn't keep order.
     private val mapsEditLock: ReentrantLock = ReentrantLock()
 
