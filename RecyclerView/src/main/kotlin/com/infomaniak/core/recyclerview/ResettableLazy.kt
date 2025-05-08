@@ -30,15 +30,6 @@ internal class ResettableLazy<T : Any>(private val initializer: () -> T) {
         return value ?: initializer().apply { value = this }
     }
 
-    operator fun setValue(
-        @Suppress("unused") thisRef: Any?,
-        @Suppress("unused") prop: KProperty<*>,
-        value: T
-    ) {
-        check(this.value == value) { "New values aren't accepted to reset this delegated property" }
-        invalidate()
-    }
-
     fun invalidate() {
         value = null
     }
