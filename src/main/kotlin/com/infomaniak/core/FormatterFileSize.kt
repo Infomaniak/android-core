@@ -25,6 +25,7 @@ import android.icu.text.NumberFormat
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import android.os.Build.VERSION.SDK_INT
+import splitties.bitflags.withFlag
 import java.math.BigDecimal
 import java.util.Locale
 import kotlin.math.abs
@@ -41,6 +42,23 @@ object FormatterFileSize {
     fun Context.formatShortFileSize(bytes: Long, valueOnly: Boolean = false): String {
         return formatFileSize(bytes, FLAG_IEC_UNITS or FLAG_SHORTER, valueOnly, maxUnit = null)
     }
+
+    fun Context.formatFileSize(
+        bytes: Long,
+        useIecUnits: Boolean = false,
+        short: Boolean = true,
+        valueOnly: Boolean,
+        maxUnit: MeasureUnit? = null
+    ): String = formatFileSize(
+        bytes = bytes,
+        flags = 0.withFlag(
+            if (short) FLAG_SHORTER else 0
+        ).withFlag(
+            if (useIecUnits) FLAG_IEC_UNITS else FLAG_SI_UNITS
+        ),
+        valueOnly = valueOnly,
+        maxUnit = maxUnit
+    )
 
     private fun Context.formatFileSize(bytes: Long, flags: Int, valueOnly: Boolean, maxUnit: MeasureUnit?): String {
 
