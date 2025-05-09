@@ -19,7 +19,10 @@
     <string name="anErrorHasOccurred">Ein Fehler ist aufgetreten</string>
     <string name="buttonCancel">Abbrechen</string>
     <string name="buttonNext">Weiter</string>
+    <string name="buttonNo">Nein</string>
     <string name="buttonRetry">Wiederholen</string>
+    <string name="buttonYes">Ja</string>
     <string name="errorDownload">Fehler beim Download</string>
     <string name="errorDownloadInsufficientSpace">Download nicht möglich: Unzureichender Speicherplatz</string>
+    <string name="reviewAlertTitle">Mögen Sie %s?</string>
 </resources>
