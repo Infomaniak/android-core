@@ -24,7 +24,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import com.infomaniak.core.webview.ui.components.WebView
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class WebViewActivity : ComponentActivity() {
