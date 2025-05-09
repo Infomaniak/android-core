@@ -42,5 +42,6 @@ android {
 
 dependencies {
     implementation(core.activity.compose)
+    implementation(core.compose.foundation)
     implementation(core.kotlinx.serialization.json)
 }
