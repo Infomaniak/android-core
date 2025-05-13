@@ -17,8 +17,10 @@
  */
 package com.infomaniak.lib.core.networking
 
+import android.util.Log
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.utils.ApiTokenExt.isInfinite
+import com.infomaniak.lib.core.utils.SentryLog
 import io.sentry.Sentry
 import io.sentry.SentryLevel
 import kotlinx.coroutines.CoroutineScope
@@ -45,11 +47,23 @@ class AccessTokenUsageInterceptor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
+        sentryLogTokenSizeInEachCall(request)
         val response = chain.proceed(request)
 
         processAccessTokenUsageAsync(request, response.code)
 
         return response
+    }
+
+    private fun sentryLogTokenSizeInEachCall(request: Request) {
+        val accessToken = request.extractAccessToken()
+        if (accessToken == null) {
+            SentryLog.d(TAG, "Could not extract access token from api call for call ${request.url}")
+            Log.d(TAG, "Could not extract access token from api call for call ${request.url}")
+        } else {
+            SentryLog.d(TAG, "Call using accessToken: ${formatAccessTokenForSentry(accessToken)} for call ${request.url}")
+            Log.d(TAG, "Call using accessToken: ${formatAccessTokenForSentry(accessToken)} for call ${request.url}")
+        }
     }
 
     private fun processAccessTokenUsageAsync(request: Request, responseCode: Int) {
@@ -61,7 +75,7 @@ class AccessTokenUsageInterceptor(
             if (!apiToken.isInfinite) return@launch
 
             val currentApiCall = ApiCallRecord(
-                accessToken = request.header("Authorization")?.replaceFirst("Bearer ", "") ?: return@launch,
+                accessToken = request.extractAccessToken() ?: return@launch,
                 date = System.currentTimeMillis() / 1_000L,
                 responseCode = responseCode,
             )
@@ -100,7 +114,10 @@ class AccessTokenUsageInterceptor(
         }
     }
 
-    private fun formatAccessTokenForSentry(accessToken: String): String = accessToken.take(2) + "..." + accessToken.takeLast(2)
+    private fun Request.extractAccessToken() = header("Authorization")?.replaceFirst("Bearer ", "")
+
+    private fun formatAccessTokenForSentry(accessToken: String): String =
+        accessToken.take(2) + "(" + (accessToken.length - 4) + ")" + accessToken.takeLast(2)
 
     @Serializable
     data class ApiCallRecord(val accessToken: String, val date: Long, val responseCode: Int)
@@ -109,5 +126,7 @@ class AccessTokenUsageInterceptor(
         private const val SECONDS_IN_A_DAY = 86_400L
         private const val SIX_MONTHS = SECONDS_IN_A_DAY * 182L // In seconds
         private const val TEN_SECONDS = 10 // In seconds
+
+        private val TAG = AccessTokenUsageInterceptor::class.java.simpleName
     }
 }
