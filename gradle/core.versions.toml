@@ -23,7 +23,7 @@ playReview = "2.0.2"
 recyclerView = "1.3.2" # Waiting for SDK 35 to update to 1.4.0+
 robolectric = "4.13" # Don't update this because it breaks tests
 room = "2.7.1"
-sentryAndroid = "8.9.0" # TODO: Upgrade once SwissTransfer updates Sentry Gradle plugin past 5.4.0
+sentryAndroid = "8.11.1" # TODO: Upgrade once SwissTransfer updates Sentry Gradle plugin past 5.5.0
 splitties = "3.0.0"
 
 [libraries]
