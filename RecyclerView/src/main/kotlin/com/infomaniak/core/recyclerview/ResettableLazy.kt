@@ -30,7 +30,8 @@ internal class ResettableLazy<T : Any>(private val initializer: () -> T) {
         return value ?: initializer().apply { value = this }
     }
 
-    fun invalidate() {
-        value = null
-    }
+    /**
+     * Returns the value prior to invalidation/removal.
+     */
+    fun invalidate(): T? = value.also { value = null }
 }
