@@ -19,13 +19,33 @@
 
 package com.infomaniak.core
 
+import android.os.SystemClock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.nanoseconds
 
 suspend fun <R> Flow<Boolean>.tryCompletingWhileTrue(
     block: suspend () -> R
 ): R = transformLatest {
     if (it) emit(block())
 }.first()
+
+fun <T> Flow<T>.rateLimit(minInterval: Duration): Flow<T> = channelFlow {
+    var lastEmitElapsedNanos = 0L
+    collectLatest { newValue ->
+        val nanosSinceLastEmit = SystemClock.elapsedRealtimeNanos() - lastEmitElapsedNanos
+        val timeSinceLastEmit = nanosSinceLastEmit.nanoseconds
+        val timeToWait = minInterval - timeSinceLastEmit.coerceAtMost(minInterval)
+        delay(timeToWait)
+        // We use `sendAtomic` instead of just `send` to ensure `lastEmitElapsedNanos` is updated
+        // if the value was successfully sent while cancellation was happening.
+        // That ensures we count every value being sent, and respect the desired rate limiting.
+        // FYI, as its documentation states, `send` can deliver the value to the receiver,
+        // and throw a `CancellationException` instead of returning (if coroutine's `Job` gets cancelled).
+        sendAtomic(newValue)
+        lastEmitElapsedNanos = SystemClock.elapsedRealtimeNanos()
+    }
+}.buffer(Channel.RENDEZVOUS)
