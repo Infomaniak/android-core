@@ -4,7 +4,7 @@ plugins {
     alias(core.plugins.compose.compiler)
     alias(core.plugins.ksp)
     kotlin("plugin.parcelize")
-    kotlin("plugin.serialization") version core.versions.kotlin
+    kotlin("plugin.serialization")
     id("androidx.navigation.safeargs.kotlin")
 }
 
