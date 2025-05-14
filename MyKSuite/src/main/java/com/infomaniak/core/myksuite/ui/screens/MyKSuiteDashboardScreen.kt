@@ -71,8 +71,8 @@ fun MyKSuiteDashboardScreen(dashboardScreenData: () -> MyKSuiteDashboardScreenDa
             Box(
                 Modifier
                     .fillMaxHeight()
-                    .padding(bottom = Margin.Large)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = Margin.Large),
             ) {
                 Column(
                     Modifier
