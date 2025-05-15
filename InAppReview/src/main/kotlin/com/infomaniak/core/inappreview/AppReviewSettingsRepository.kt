@@ -34,8 +34,8 @@ private val Context.dataStore by preferencesDataStore(
 @Suppress("UNCHECKED_CAST")
 class AppReviewSettingsRepository(private val context: Context) {
 
-    private var appReviewThreshold = DEFAULT_APP_REVIEW_THRESHOLD
-    private var maxAppReviewThreshold = appReviewThreshold * 10
+    internal var appReviewThreshold = DEFAULT_APP_REVIEW_THRESHOLD
+    internal var maxAppReviewThreshold = appReviewThreshold * 10
 
     fun <T> flowOf(key: Preferences.Key<T>) = context.dataStore.data.map { it[key] ?: (getDefaultValue(key) as T) }
 
@@ -64,17 +64,6 @@ class AppReviewSettingsRepository(private val context: Context) {
 
     suspend fun resetReviewSettings() {
         setValue(APP_REVIEW_THRESHOLD_KEY, maxAppReviewThreshold)
-    }
-
-    /**
-     * Set the thresholds at which the app review dialog will be displayed.
-     *
-     * @param reviewThreshold: The threshold at which the appReview dialog displays for the first time
-     * @param maxReviewThreshold: The threshold at which the appReview dialog displays after the first time
-     */
-    fun setAppReviewThreshold(reviewThreshold: Int, maxReviewThreshold: Int? = null) {
-        appReviewThreshold = reviewThreshold
-        maxReviewThreshold?.let { maxAppReviewThreshold = it }
     }
 
     companion object {

@@ -22,5 +22,17 @@ import androidx.lifecycle.DefaultLifecycleObserver
 
 
 abstract class BaseInAppReviewManager(private val activity: ComponentActivity) : DefaultLifecycleObserver {
-    open fun init() = Unit
+
+    open fun init(
+        countdownBehavior: Behavior = Behavior.LifecycleBased,
+        appReviewThreshold: Int? = null,
+        maxAppReviewThreshold: Int? = null,
+    ) = Unit
+
+    enum class Behavior {
+        /** This behavior uses the activity's lifecycle observer to automatically update the countdown */
+        LifecycleBased,
+        /** This let the user decides when to update the countdown */
+        Manual,
+    }
 }

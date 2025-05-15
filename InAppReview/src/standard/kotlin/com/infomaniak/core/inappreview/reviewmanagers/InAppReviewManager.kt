@@ -36,54 +36,54 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
 
     private val appReviewSettingsRepository = AppReviewSettingsRepository(activity)
 
-    private val appReviewCounter = appReviewSettingsRepository.flowOf(APP_REVIEW_THRESHOLD_KEY)
+    private val appReviewCountdown = appReviewSettingsRepository.flowOf(APP_REVIEW_THRESHOLD_KEY)
     private val alreadyGaveReview = appReviewSettingsRepository.flowOf(ALREADY_GAVE_REVIEW_KEY)
 
     val shouldDisplayReviewDialog =
-        alreadyGaveReview.combine(appReviewCounter) { alreadyGaveFeedback, numberOfLaunches ->
+        alreadyGaveReview.combine(appReviewCountdown) { alreadyGaveFeedback, numberOfLaunches ->
             !alreadyGaveFeedback && numberOfLaunches < 0
         }.distinctUntilChanged()
 
-    override fun init() {
-        activity.lifecycle.addObserver(observer = this)
-        super.init()
+    override fun init(countdownBehavior: Behavior, appReviewThreshold: Int?, maxAppReviewThreshold: Int?) {
+        if (countdownBehavior == Behavior.LifecycleBased) activity.lifecycle.addObserver(observer = this)
+        appReviewThreshold?.let { appReviewSettingsRepository.appReviewThreshold = it }
+        maxAppReviewThreshold?.let { appReviewSettingsRepository.maxAppReviewThreshold = it }
     }
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        decrementAppReviewLaunches()
+        decrementAppReviewCountdown()
     }
 
+    //region public interface
     fun onUserWantsToReview() {
-        changeReviewStatus(true)
+        setAppReviewedStatus()
         activity.launchInAppReview()
     }
 
     fun onUserWantsToGiveFeedback(feedbackUrl: String) {
-        changeReviewStatus(true)
         WebViewActivity.startActivity(activity, feedbackUrl)
     }
 
     fun onUserWantsToDismiss() {
-        resetReviewSettings()
+        resetAppReviewSettings()
     }
 
-    //region AppReviewSettings
-    fun <T> set(key: Preferences.Key<T>, value: T) = activity.lifecycleScope.launch(Dispatchers.IO) {
-        appReviewSettingsRepository.setValue(key, value)
+    fun decrementAppReviewCountdown() = activity.lifecycleScope.launch(Dispatchers.IO) {
+        val appReviewCountdown = appReviewSettingsRepository.getValue(APP_REVIEW_THRESHOLD_KEY)
+        set(APP_REVIEW_THRESHOLD_KEY, appReviewCountdown - 1)
     }
+    //endregion
 
-    fun resetReviewSettings() = activity.lifecycleScope.launch(Dispatchers.IO) {
+    private fun resetAppReviewSettings() = activity.lifecycleScope.launch(Dispatchers.IO) {
         appReviewSettingsRepository.resetReviewSettings()
     }
 
-    fun decrementAppReviewLaunches() = activity.lifecycleScope.launch(Dispatchers.IO) {
-        val appReviewLaunches = appReviewSettingsRepository.getValue(APP_REVIEW_THRESHOLD_KEY)
-        set(APP_REVIEW_THRESHOLD_KEY, appReviewLaunches - 1)
+    private fun setAppReviewedStatus() = activity.lifecycleScope.launch(Dispatchers.IO) {
+        set(ALREADY_GAVE_REVIEW_KEY, false)
     }
 
-    fun changeReviewStatus(hasGivenReview: Boolean) = activity.lifecycleScope.launch(Dispatchers.IO) {
-        set(ALREADY_GAVE_REVIEW_KEY, hasGivenReview)
+    private fun <T> set(key: Preferences.Key<T>, value: T) = activity.lifecycleScope.launch(Dispatchers.IO) {
+        appReviewSettingsRepository.setValue(key, value)
     }
-    //endregion
 }
