@@ -51,6 +51,7 @@ abstract class CoroutineScopeViewHolder<V : View>(
     override fun onBind() = Unit
 
     override fun onUnbind() {
-        currentBindScopeDelegate.invalidate()?.cancel()
+        currentBindScopeDelegate.value?.cancel()
+        currentBindScopeDelegate.reset()
     }
 }
