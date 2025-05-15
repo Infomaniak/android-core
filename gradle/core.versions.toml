@@ -9,8 +9,6 @@ coreKtx = "1.6.1"
 integrity = "1.4.0"
 junit = "4.13" # Don't update this because it breaks tests
 junitAndroidx = "1.2.1"
-kotlin = "2.0.21" # Don't bump because of realm-kotlin in mail
-ksp = "2.0.21-1.0.28" # Don't bump because of realm-kotlin in mail
 kotest = "5.9.1"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerializationJson = "1.8.1"
@@ -82,6 +80,6 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose" }
+kotlin-android = { id = "org.jetbrains.kotlin.android" }
+ksp = { id = "com.google.devtools.ksp" }
