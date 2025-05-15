@@ -77,7 +77,8 @@ abstract class CredentialManager {
     private suspend fun getHttpClientUser(userId: Int, timeout: Long?): OkHttpClient {
         return OkHttpClient.Builder().apply {
             timeout?.let {
-                callTimeout(timeout, TimeUnit.SECONDS)
+                // NEVER set `callTimeout` to a too low value, because it would break users on slow connexions.
+                // Think hours or minutes for uploads, and tens of seconds for other calls.
                 readTimeout(timeout, TimeUnit.SECONDS)
                 writeTimeout(timeout, TimeUnit.SECONDS)
                 connectTimeout(timeout, TimeUnit.SECONDS)
