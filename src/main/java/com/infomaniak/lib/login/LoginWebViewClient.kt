@@ -22,12 +22,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
-import android.webkit.SslErrorHandler
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
@@ -42,6 +37,7 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CON
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import androidx.core.net.toUri
 
 private val INFOMANIAK_REGEX = Regex(".*\\.infomaniak\\.(com|ch)")
 
@@ -82,7 +78,7 @@ open class LoginWebViewClient(
     }
 
     private fun isValidUrl(inputUrl: String?): Boolean {
-        if (inputUrl == null || onAuthResponse(Uri.parse(inputUrl))) return false
+        if (inputUrl == null || onAuthResponse(inputUrl.toUri()) || inputUrl.startsWith("intent://")) return false
         val baseUrlHost = baseUrl.toHttpUrl().host
         val inputUrlHost = inputUrl.toHttpUrl().host
 
