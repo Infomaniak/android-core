@@ -21,7 +21,8 @@ import kotlin.reflect.KProperty
 
 internal class ResettableLazy<T : Any>(private val initializer: () -> T) {
 
-    private var value: T? = null
+    var value: T? = null
+        private set
 
     operator fun getValue(
         @Suppress("unused") thisRef: Any?,
