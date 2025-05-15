@@ -21,11 +21,11 @@ import androidx.activity.ComponentActivity
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.infomaniak.core.inappreview.AppReviewSettingsRepository
+import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.ALREADY_GAVE_REVIEW_KEY
+import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.APP_REVIEW_THRESHOLD_KEY
 import com.infomaniak.core.inappreview.BaseInAppReviewManager
 import com.infomaniak.core.inappreview.StoreUtils.launchInAppReview
-import com.infomaniak.core.inappreview.StoresSettingsRepository
-import com.infomaniak.core.inappreview.StoresSettingsRepository.Companion.ALREADY_GAVE_REVIEW_KEY
-import com.infomaniak.core.inappreview.StoresSettingsRepository.Companion.APP_REVIEW_LAUNCHES_KEY
 import com.infomaniak.core.webview.ui.WebViewActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
@@ -34,13 +34,13 @@ import kotlinx.coroutines.launch
 
 class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppReviewManager(activity) {
 
-    private val storesSettingsRepository = StoresSettingsRepository(activity)
+    private val appReviewSettingsRepository = AppReviewSettingsRepository(activity)
 
-    private val numberOfLaunchesForReview = storesSettingsRepository.flowOf(APP_REVIEW_LAUNCHES_KEY)
-    private val alreadyGaveReview = storesSettingsRepository.flowOf(ALREADY_GAVE_REVIEW_KEY)
+    private val appReviewCounter = appReviewSettingsRepository.flowOf(APP_REVIEW_THRESHOLD_KEY)
+    private val alreadyGaveReview = appReviewSettingsRepository.flowOf(ALREADY_GAVE_REVIEW_KEY)
 
     val shouldDisplayReviewDialog =
-        alreadyGaveReview.combine(numberOfLaunchesForReview) { alreadyGaveFeedback, numberOfLaunches ->
+        alreadyGaveReview.combine(appReviewCounter) { alreadyGaveFeedback, numberOfLaunches ->
             !alreadyGaveFeedback && numberOfLaunches < 0
         }.distinctUntilChanged()
 
@@ -68,16 +68,18 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
         resetReviewSettings()
     }
 
-    //region StoresSettings
+    //region AppReviewSettings
     fun <T> set(key: Preferences.Key<T>, value: T) = activity.lifecycleScope.launch(Dispatchers.IO) {
-        storesSettingsRepository.setValue(key, value)
+        appReviewSettingsRepository.setValue(key, value)
     }
 
-    fun resetReviewSettings() = activity.lifecycleScope.launch(Dispatchers.IO) { storesSettingsRepository.resetReviewSettings() }
+    fun resetReviewSettings() = activity.lifecycleScope.launch(Dispatchers.IO) {
+        appReviewSettingsRepository.resetReviewSettings()
+    }
 
     fun decrementAppReviewLaunches() = activity.lifecycleScope.launch(Dispatchers.IO) {
-        val appReviewLaunches = storesSettingsRepository.getValue(APP_REVIEW_LAUNCHES_KEY)
-        set(APP_REVIEW_LAUNCHES_KEY, appReviewLaunches - 1)
+        val appReviewLaunches = appReviewSettingsRepository.getValue(APP_REVIEW_THRESHOLD_KEY)
+        set(APP_REVIEW_THRESHOLD_KEY, appReviewLaunches - 1)
     }
 
     fun changeReviewStatus(hasGivenReview: Boolean) = activity.lifecycleScope.launch(Dispatchers.IO) {
