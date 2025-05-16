@@ -21,7 +21,9 @@ import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.serialization.json.Json
 
@@ -32,23 +34,25 @@ fun WebView(
     onUrlToQuitReached: () -> Unit,
     urlToQuit: String?,
 ) {
-    AndroidView(factory = {
-        WebView(it).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
+    AndroidView(
+        modifier = Modifier.safeDrawingPadding(),
+        factory = {
+            WebView(it).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
 
-            webViewClient = CustomWebViewClient(
-                urlToQuit = urlToQuit,
-                onUrlToQuitReached = onUrlToQuitReached,
-            )
+                webViewClient = CustomWebViewClient(
+                    urlToQuit = urlToQuit,
+                    onUrlToQuitReached = onUrlToQuitReached,
+                )
 
-            settings.javaScriptEnabled = true
-            val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
-            loadUrl(url, headers)
-        }
-    })
+                settings.javaScriptEnabled = true
+                val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
+                loadUrl(url, headers)
+            }
+        })
 }
 
 private class CustomWebViewClient(

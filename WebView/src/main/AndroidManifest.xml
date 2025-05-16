@@ -24,8 +24,6 @@
         android:minSdkVersion="33" />
 
     <application
-        android:allowBackup="false"
-        android:fullBackupContent="false"
         android:usesCleartextTraffic="false"
         tools:targetApi="UPSIDE_DOWN_CAKE">
 
