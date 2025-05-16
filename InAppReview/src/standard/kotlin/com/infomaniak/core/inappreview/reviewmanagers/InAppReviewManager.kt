@@ -21,11 +21,11 @@ import androidx.activity.ComponentActivity
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.infomaniak.core.inappreview.AppReviewSettingsRepository
 import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.ALREADY_GAVE_REVIEW_KEY
 import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.APP_REVIEW_THRESHOLD_KEY
 import com.infomaniak.core.inappreview.BaseInAppReviewManager
-import com.infomaniak.core.inappreview.StoreUtils.launchInAppReview
 import com.infomaniak.core.webview.ui.WebViewActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -57,25 +57,27 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
     }
 
     //region public interface
-    fun onUserWantsToReview() {
+    override fun onUserWantsToReview() {
         resetAppReviewSettings()
         setAppReviewedStatus()
-        activity.launchInAppReview()
+        launchInAppReview()
     }
 
-    fun onUserWantsToGiveFeedback(feedbackUrl: String) {
+    override fun onUserWantsToGiveFeedback(feedbackUrl: String) {
         resetAppReviewSettings()
         WebViewActivity.startActivity(activity, feedbackUrl)
     }
 
-    fun onUserWantsToDismiss() {
+    override fun onUserWantsToDismiss() {
         resetAppReviewSettings()
     }
 
-    fun decrementAppReviewCountdown() = activity.lifecycleScope.launch(Dispatchers.IO) {
-        val appReviewCountdown = appReviewSettingsRepository.getValue(APP_REVIEW_THRESHOLD_KEY)
-        alreadyGaveReview.collectLatest { hasGivenReview ->
-            if (!hasGivenReview) set(APP_REVIEW_THRESHOLD_KEY, appReviewCountdown - 1)
+    override fun decrementAppReviewCountdown() {
+        activity.lifecycleScope.launch(Dispatchers.IO) {
+            val appReviewCountdown = appReviewSettingsRepository.getValue(APP_REVIEW_THRESHOLD_KEY)
+            alreadyGaveReview.collectLatest { hasGivenReview ->
+                if (!hasGivenReview) set(APP_REVIEW_THRESHOLD_KEY, appReviewCountdown - 1)
+            }
         }
     }
     //endregion
@@ -90,5 +92,13 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
 
     private fun <T> set(key: Preferences.Key<T>, value: T) = activity.lifecycleScope.launch(Dispatchers.IO) {
         appReviewSettingsRepository.setValue(key, value)
+    }
+
+    private fun launchInAppReview() {
+        ReviewManagerFactory.create(activity).apply {
+            requestReviewFlow().addOnCompleteListener { request ->
+                if (request.isSuccessful) launchReviewFlow(activity, request.result)
+            }
+        }
     }
 }
