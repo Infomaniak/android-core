@@ -24,5 +24,5 @@
     <string name="buttonYes">Oui</string>
     <string name="errorDownload">Erreur lors du téléchargement</string>
     <string name="errorDownloadInsufficientSpace">Téléchargement impossible : Espace insuffisant</string>
-    <string name="reviewAlertTitle">Vous aimez les %s ?</string>
+    <string name="reviewAlertTitle">Vous aimez %s ?</string>
 </resources>
