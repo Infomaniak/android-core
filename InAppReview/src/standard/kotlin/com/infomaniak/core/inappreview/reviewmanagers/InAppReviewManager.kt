@@ -28,6 +28,7 @@ import com.infomaniak.core.inappreview.BaseInAppReviewManager
 import com.infomaniak.core.inappreview.StoreUtils.launchInAppReview
 import com.infomaniak.core.webview.ui.WebViewActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -40,8 +41,8 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
     private val alreadyGaveReview = appReviewSettingsRepository.flowOf(ALREADY_GAVE_REVIEW_KEY)
 
     val shouldDisplayReviewDialog =
-        alreadyGaveReview.combine(appReviewCountdown) { alreadyGaveFeedback, numberOfLaunches ->
-            !alreadyGaveFeedback && numberOfLaunches < 0
+        alreadyGaveReview.combine(appReviewCountdown) { alreadyGaveReview, countdown ->
+            !alreadyGaveReview && countdown <= 0
         }.distinctUntilChanged()
 
     override fun init(countdownBehavior: Behavior, appReviewThreshold: Int?, maxAppReviewThreshold: Int?) {
@@ -57,11 +58,13 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
 
     //region public interface
     fun onUserWantsToReview() {
+        resetAppReviewSettings()
         setAppReviewedStatus()
         activity.launchInAppReview()
     }
 
     fun onUserWantsToGiveFeedback(feedbackUrl: String) {
+        resetAppReviewSettings()
         WebViewActivity.startActivity(activity, feedbackUrl)
     }
 
@@ -71,7 +74,9 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
 
     fun decrementAppReviewCountdown() = activity.lifecycleScope.launch(Dispatchers.IO) {
         val appReviewCountdown = appReviewSettingsRepository.getValue(APP_REVIEW_THRESHOLD_KEY)
-        set(APP_REVIEW_THRESHOLD_KEY, appReviewCountdown - 1)
+        alreadyGaveReview.collectLatest { hasGivenReview ->
+            if (!hasGivenReview) set(APP_REVIEW_THRESHOLD_KEY, appReviewCountdown - 1)
+        }
     }
     //endregion
 
@@ -80,7 +85,7 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
     }
 
     private fun setAppReviewedStatus() = activity.lifecycleScope.launch(Dispatchers.IO) {
-        set(ALREADY_GAVE_REVIEW_KEY, false)
+        set(ALREADY_GAVE_REVIEW_KEY, true)
     }
 
     private fun <T> set(key: Preferences.Key<T>, value: T) = activity.lifecycleScope.launch(Dispatchers.IO) {
