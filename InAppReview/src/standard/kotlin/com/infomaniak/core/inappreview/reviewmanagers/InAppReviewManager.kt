@@ -40,7 +40,7 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
     private val appReviewCountdown = appReviewSettingsRepository.flowOf(APP_REVIEW_THRESHOLD_KEY)
     private val alreadyGaveReview = appReviewSettingsRepository.flowOf(ALREADY_GAVE_REVIEW_KEY)
 
-    val shouldDisplayReviewDialog =
+    override val shouldDisplayReviewDialog =
         alreadyGaveReview.combine(appReviewCountdown) { alreadyGaveReview, countdown ->
             !alreadyGaveReview && countdown <= 0
         }.distinctUntilChanged()

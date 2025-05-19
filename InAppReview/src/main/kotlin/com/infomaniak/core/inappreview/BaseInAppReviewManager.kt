@@ -19,10 +19,12 @@ package com.infomaniak.core.inappreview
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
+import kotlinx.coroutines.flow.emptyFlow
 
 
 abstract class BaseInAppReviewManager(private val activity: ComponentActivity) : DefaultLifecycleObserver {
 
+    open val shouldDisplayReviewDialog = emptyFlow<Boolean>()
     open fun init(
         countdownBehavior: Behavior = Behavior.LifecycleBased,
         appReviewThreshold: Int? = null,
