@@ -21,7 +21,6 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import kotlinx.coroutines.flow.emptyFlow
 
-
 abstract class BaseInAppReviewManager(private val activity: ComponentActivity) : DefaultLifecycleObserver {
 
     open val shouldDisplayReviewDialog = emptyFlow<Boolean>()
