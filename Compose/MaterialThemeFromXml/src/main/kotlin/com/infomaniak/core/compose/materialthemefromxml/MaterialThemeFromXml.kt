@@ -19,10 +19,8 @@ package com.infomaniak.core.compose.materialthemefromxml
 
 import android.content.Context
 import androidx.annotation.AttrRes
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -34,91 +32,52 @@ import com.google.android.material.R as RMaterial
  * this is called.
  */
 @Composable
-fun MaterialThemeFromXml(content: @Composable () -> Unit) {
-    val context = LocalContext.current
+fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalContext.current) {
+    val primary = getMaterialColor(RMaterial.attr.colorPrimary)
 
     MaterialTheme(
-        colorScheme = if (isSystemInDarkTheme()) {
-            darkColorScheme(
-                primary = getMaterialColor(context, RMaterial.attr.colorPrimary),
-                onPrimary = getMaterialColor(context, RMaterial.attr.colorOnPrimary),
-                primaryContainer = getMaterialColor(context, RMaterial.attr.colorPrimaryContainer),
-                onPrimaryContainer = getMaterialColor(context, RMaterial.attr.colorOnPrimaryContainer),
-                inversePrimary = getMaterialColor(context, RMaterial.attr.colorPrimaryInverse),
-                secondary = getMaterialColor(context, RMaterial.attr.colorSecondary),
-                onSecondary = getMaterialColor(context, RMaterial.attr.colorOnSecondary),
-                secondaryContainer = getMaterialColor(context, RMaterial.attr.colorSecondaryContainer),
-                onSecondaryContainer = getMaterialColor(context, RMaterial.attr.colorOnSecondaryContainer),
-                tertiary = getMaterialColor(context, RMaterial.attr.colorTertiary),
-                onTertiary = getMaterialColor(context, RMaterial.attr.colorOnTertiary),
-                tertiaryContainer = getMaterialColor(context, RMaterial.attr.colorTertiaryContainer),
-                onTertiaryContainer = getMaterialColor(context, RMaterial.attr.colorOnTertiaryContainer),
-                background = getMaterialColor(context, RMaterial.attr.background),
-                onBackground = getMaterialColor(context, RMaterial.attr.colorOnBackground),
-                surface = getMaterialColor(context, RMaterial.attr.colorSurface),
-                onSurface = getMaterialColor(context, RMaterial.attr.colorOnSurface),
-                surfaceVariant = getMaterialColor(context, RMaterial.attr.colorSurfaceVariant),
-                onSurfaceVariant = getMaterialColor(context, RMaterial.attr.colorOnSurfaceVariant),
-                // surfaceTint doesn't exist in xml theming, in jetpack compose it automatically gets defaulted to `primary`
-                inverseSurface = getMaterialColor(context, RMaterial.attr.colorSurfaceInverse),
-                inverseOnSurface = getMaterialColor(context, RMaterial.attr.colorOnSurfaceInverse),
-                error = getMaterialColor(context, RMaterial.attr.colorError),
-                onError = getMaterialColor(context, RMaterial.attr.colorOnError),
-                errorContainer = getMaterialColor(context, RMaterial.attr.colorErrorContainer),
-                onErrorContainer = getMaterialColor(context, RMaterial.attr.colorOnErrorContainer),
-                outline = getMaterialColor(context, RMaterial.attr.colorOutline),
-                outlineVariant = getMaterialColor(context, RMaterial.attr.colorOutlineVariant),
-                scrim = getMaterialColor(context, RMaterial.attr.scrimBackground),
-                surfaceBright = getMaterialColor(context, RMaterial.attr.colorSurfaceBright),
-                surfaceContainer = getMaterialColor(context, RMaterial.attr.colorSurfaceContainer),
-                surfaceContainerHigh = getMaterialColor(context, RMaterial.attr.colorSurfaceContainerHigh),
-                surfaceContainerHighest = getMaterialColor(context, RMaterial.attr.colorSurfaceContainerHighest),
-                surfaceContainerLow = getMaterialColor(context, RMaterial.attr.colorSurfaceContainerLow),
-                surfaceContainerLowest = getMaterialColor(context, RMaterial.attr.colorSurfaceContainerLowest),
-                surfaceDim = getMaterialColor(context, RMaterial.attr.colorSurfaceDim),
-            )
-        } else {
-            lightColorScheme(
-                primary = getMaterialColor(context, RMaterial.attr.colorPrimary),
-                onPrimary = getMaterialColor(context, RMaterial.attr.colorOnPrimary),
-                primaryContainer = getMaterialColor(context, RMaterial.attr.colorPrimaryContainer),
-                onPrimaryContainer = getMaterialColor(context, RMaterial.attr.colorOnPrimaryContainer),
-                inversePrimary = getMaterialColor(context, RMaterial.attr.colorPrimaryInverse),
-                secondary = getMaterialColor(context, RMaterial.attr.colorSecondary),
-                onSecondary = getMaterialColor(context, RMaterial.attr.colorOnSecondary),
-                secondaryContainer = getMaterialColor(context, RMaterial.attr.colorSecondaryContainer),
-                onSecondaryContainer = getMaterialColor(context, RMaterial.attr.colorOnSecondaryContainer),
-                tertiary = getMaterialColor(context, RMaterial.attr.colorTertiary),
-                onTertiary = getMaterialColor(context, RMaterial.attr.colorOnTertiary),
-                tertiaryContainer = getMaterialColor(context, RMaterial.attr.colorTertiaryContainer),
-                onTertiaryContainer = getMaterialColor(context, RMaterial.attr.colorOnTertiaryContainer),
-                background = getMaterialColor(context, RMaterial.attr.background),
-                onBackground = getMaterialColor(context, RMaterial.attr.colorOnBackground),
-                surface = getMaterialColor(context, RMaterial.attr.colorSurface),
-                onSurface = getMaterialColor(context, RMaterial.attr.colorOnSurface),
-                surfaceVariant = getMaterialColor(context, RMaterial.attr.colorSurfaceVariant),
-                onSurfaceVariant = getMaterialColor(context, RMaterial.attr.colorOnSurfaceVariant),
-                // surfaceTint doesn't exist in xml theming, in jetpack compose it automatically gets defaulted to `primary`
-                inverseSurface = getMaterialColor(context, RMaterial.attr.colorSurfaceInverse),
-                inverseOnSurface = getMaterialColor(context, RMaterial.attr.colorOnSurfaceInverse),
-                error = getMaterialColor(context, RMaterial.attr.colorError),
-                onError = getMaterialColor(context, RMaterial.attr.colorOnError),
-                errorContainer = getMaterialColor(context, RMaterial.attr.colorErrorContainer),
-                onErrorContainer = getMaterialColor(context, RMaterial.attr.colorOnErrorContainer),
-                outline = getMaterialColor(context, RMaterial.attr.colorOutline),
-                outlineVariant = getMaterialColor(context, RMaterial.attr.colorOutlineVariant),
-                scrim = getMaterialColor(context, RMaterial.attr.scrimBackground),
-                surfaceBright = getMaterialColor(context, RMaterial.attr.colorSurfaceBright),
-                surfaceContainer = getMaterialColor(context, RMaterial.attr.colorSurfaceContainer),
-                surfaceContainerHigh = getMaterialColor(context, RMaterial.attr.colorSurfaceContainerHigh),
-                surfaceContainerHighest = getMaterialColor(context, RMaterial.attr.colorSurfaceContainerHighest),
-                surfaceContainerLow = getMaterialColor(context, RMaterial.attr.colorSurfaceContainerLow),
-                surfaceContainerLowest = getMaterialColor(context, RMaterial.attr.colorSurfaceContainerLowest),
-                surfaceDim = getMaterialColor(context, RMaterial.attr.colorSurfaceDim),
-            )
-        },
+        colorScheme = ColorScheme(
+            primary = primary,
+            onPrimary = getMaterialColor(RMaterial.attr.colorOnPrimary),
+            primaryContainer = getMaterialColor(RMaterial.attr.colorPrimaryContainer),
+            onPrimaryContainer = getMaterialColor(RMaterial.attr.colorOnPrimaryContainer),
+            inversePrimary = getMaterialColor(RMaterial.attr.colorPrimaryInverse),
+            secondary = getMaterialColor(RMaterial.attr.colorSecondary),
+            onSecondary = getMaterialColor(RMaterial.attr.colorOnSecondary),
+            secondaryContainer = getMaterialColor(RMaterial.attr.colorSecondaryContainer),
+            onSecondaryContainer = getMaterialColor(RMaterial.attr.colorOnSecondaryContainer),
+            tertiary = getMaterialColor(RMaterial.attr.colorTertiary),
+            onTertiary = getMaterialColor(RMaterial.attr.colorOnTertiary),
+            tertiaryContainer = getMaterialColor(RMaterial.attr.colorTertiaryContainer),
+            onTertiaryContainer = getMaterialColor(RMaterial.attr.colorOnTertiaryContainer),
+            background = getMaterialColor(RMaterial.attr.background),
+            onBackground = getMaterialColor(RMaterial.attr.colorOnBackground),
+            surface = getMaterialColor(RMaterial.attr.colorSurface),
+            onSurface = getMaterialColor(RMaterial.attr.colorOnSurface),
+            surfaceVariant = getMaterialColor(RMaterial.attr.colorSurfaceVariant),
+            onSurfaceVariant = getMaterialColor(RMaterial.attr.colorOnSurfaceVariant),
+            // surfaceTint doesn't exist in xml theming, in jetpack compose it automatically gets defaulted to `primary` when you
+            // try to override a theme using darkColorScheme or lightColorScheme
+            surfaceTint = primary,
+            inverseSurface = getMaterialColor(RMaterial.attr.colorSurfaceInverse),
+            inverseOnSurface = getMaterialColor(RMaterial.attr.colorOnSurfaceInverse),
+            error = getMaterialColor(RMaterial.attr.colorError),
+            onError = getMaterialColor(RMaterial.attr.colorOnError),
+            errorContainer = getMaterialColor(RMaterial.attr.colorErrorContainer),
+            onErrorContainer = getMaterialColor(RMaterial.attr.colorOnErrorContainer),
+            outline = getMaterialColor(RMaterial.attr.colorOutline),
+            outlineVariant = getMaterialColor(RMaterial.attr.colorOutlineVariant),
+            scrim = getMaterialColor(RMaterial.attr.scrimBackground),
+            surfaceBright = getMaterialColor(RMaterial.attr.colorSurfaceBright),
+            surfaceContainer = getMaterialColor(RMaterial.attr.colorSurfaceContainer),
+            surfaceContainerHigh = getMaterialColor(RMaterial.attr.colorSurfaceContainerHigh),
+            surfaceContainerHighest = getMaterialColor(RMaterial.attr.colorSurfaceContainerHighest),
+            surfaceContainerLow = getMaterialColor(RMaterial.attr.colorSurfaceContainerLow),
+            surfaceContainerLowest = getMaterialColor(RMaterial.attr.colorSurfaceContainerLowest),
+            surfaceDim = getMaterialColor(RMaterial.attr.colorSurfaceDim),
+        ),
         content = content,
     )
 }
 
-private fun getMaterialColor(context: Context, @AttrRes colorId: Int) = Color(MaterialColors.getColor(context, colorId, 0))
+private fun Context.getMaterialColor(@AttrRes colorId: Int) = Color(MaterialColors.getColor(this, colorId, 0))
