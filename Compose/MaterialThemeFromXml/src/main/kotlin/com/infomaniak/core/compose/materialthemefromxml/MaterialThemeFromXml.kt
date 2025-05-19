@@ -28,8 +28,8 @@ import com.google.android.material.color.MaterialColors
 import com.google.android.material.R as RMaterial
 
 /**
- * Automatically defines the jetpack compose MaterialTheme based on the values defined as an XML theme in the context where
- * this is called.
+ * Automatically defines the Jetpack Compose MaterialTheme based on the
+ * values defined as an XML theme in the context where this is called.
  */
 @Composable
 fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalContext.current) {
@@ -56,8 +56,8 @@ fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalCont
             onSurface = getMaterialColor(RMaterial.attr.colorOnSurface),
             surfaceVariant = getMaterialColor(RMaterial.attr.colorSurfaceVariant),
             onSurfaceVariant = getMaterialColor(RMaterial.attr.colorOnSurfaceVariant),
-            // surfaceTint doesn't exist in xml theming, in jetpack compose it automatically gets defaulted to `primary` when you
-            // try to override a theme using darkColorScheme or lightColorScheme
+            // `surfaceTint` doesn't exist in XML theming, in Jetpack Compose it automatically gets defaulted
+            // to `primary` when you try to override a theme using darkColorScheme or lightColorScheme
             surfaceTint = primary,
             inverseSurface = getMaterialColor(RMaterial.attr.colorSurfaceInverse),
             inverseOnSurface = getMaterialColor(RMaterial.attr.colorOnSurfaceInverse),
