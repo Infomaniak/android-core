@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores.reviewmanagers
+package com.infomaniak.core.inappreview.reviewmanagers
 
-import androidx.fragment.app.FragmentActivity
-import com.infomaniak.inappreview.BaseInAppReviewManager
+import androidx.activity.ComponentActivity
+import com.infomaniak.core.inappreview.BaseInAppReviewManager
 
 class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppReviewManager(activity)
