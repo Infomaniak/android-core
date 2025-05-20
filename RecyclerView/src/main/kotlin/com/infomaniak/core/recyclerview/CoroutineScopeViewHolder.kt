@@ -41,7 +41,8 @@ abstract class CoroutineScopeViewHolder<V : View>(
 ) : BindAwareViewHolder<V>(view) {
 
     private val currentBindScopeDelegate = ResettableLazy {
-        val parentScope = parentScope ?: (bindingAdapter as? LifecycleOwner)?.lifecycleScope
+        val parentScope = parentScope
+            ?: (bindingAdapter as? LifecycleOwner)?.lifecycleScope
             ?: error("Provide a parentScope in the constructor, or make the Adapter implement LifecycleOwner")
         parentScope + Job(parent = parentScope.coroutineContext.job)
     }
