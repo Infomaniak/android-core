@@ -171,9 +171,11 @@ class BugTrackerActivity : AppCompatActivity() {
         val description = descriptionTextInput.text.toString()
         val priorityLabel = "Priorité: " + priorityField.text.toString()
         val priorityValue = (resources.getStringArray(R.array.bugTrackerPriorityArray).indexOf(priorityLabel) + 1).toString()
+
         val extraProject = navigationArgs.projectName
         val extraRoute = "undefined"
-        val userAgent = "InfomaniakBugTracker/1"
+        val extraUserAgent = "InfomaniakBugTracker/1"
+
         val extraUserId = navigationArgs.user.id.toString()
         val extraOrganizationId = navigationArgs.user.preferences.organizationPreference.currentOrganizationId.toString()
         val extraUserMail = navigationArgs.user.email
@@ -184,24 +186,29 @@ class BugTrackerActivity : AppCompatActivity() {
         val device = Build.DEVICE
         val appVersion = navigationArgs.appBuildNumber
 
+        val fullDescription = description + "\n" +
+                "\n---\n" +
+                "\n**App name:** $extraProject" +
+                "\n**App version:** $appVersion" + "\n" +
+                "\n**User display name:** $extraUserDisplayName" +
+                "\n**User mail:** $extraUserMail" +
+                "\n**User ID:** $extraUserId" +
+                "\n**User organization ID:** $extraOrganizationId" + "\n" +
+                "\n**Device brand:** $brand" +
+                "\n**Device:** $device" +
+                "\n**Device OS version:** $osVersion" + "\n" +
+                "\n---\n"
+
         val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("bucket_identifier", bucketIdentifier)
             .addFormDataPart("subject", subject)
-            .addFormDataPart("description", description)
+            .addFormDataPart("description", fullDescription)
             .addFormDataPart("priority[label]", priorityLabel)
             .addFormDataPart("priority[value]", priorityValue)
             .addFormDataPart("extra[project]", extraProject)
             .addFormDataPart("extra[route]", extraRoute)
-            .addFormDataPart("extra[userAgent]", userAgent)
-            .addFormDataPart("extra[userId]", extraUserId)
-            .addFormDataPart("extra[groupId]", extraOrganizationId)
-            .addFormDataPart("extra[userMail]", extraUserMail)
-            .addFormDataPart("extra[userDisplayName]", extraUserDisplayName)
-            .addFormDataPart("extra[brand]", brand)
-            .addFormDataPart("extra[osVersion]", osVersion)
-            .addFormDataPart("extra[device]", device)
-            .addFormDataPart("extra[appVersion]", appVersion)
+            .addFormDataPart("extra[userAgent]", extraUserAgent)
             .addFormDataPart("type", type.apiValue)
 
         bugTrackerViewModel.sendBugReport(formBuilder)
