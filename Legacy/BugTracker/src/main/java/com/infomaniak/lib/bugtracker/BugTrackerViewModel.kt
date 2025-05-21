@@ -63,6 +63,6 @@ class BugTrackerViewModel : ViewModel() {
     }
 
     private companion object {
-        const val REPORT_URL = "https://welcome.infomaniak.com/api/components/report"
+        const val REPORT_URL = "https://welcome.infomaniak.com/api/web-components/1/report"
     }
 }
