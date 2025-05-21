@@ -176,8 +176,10 @@
                 android:insetBottom="0dp"
                 android:minHeight="40dp"
                 android:text="@string/bugTrackerAddFiles"
+                android:textColor="@color/title"
                 app:cornerRadius="0dp"
-                app:icon="@android:drawable/stat_sys_upload_done" />
+                app:icon="@android:drawable/stat_sys_upload_done"
+                app:iconTint="@color/title" />
 
             <TextView
                 android:layout_width="wrap_content"
