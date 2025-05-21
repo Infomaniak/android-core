@@ -17,7 +17,8 @@
  */
 package com.infomaniak.core.myksuite.ui.theme
 
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 // Palette
@@ -34,14 +35,13 @@ private const val onMailButton = 0xFF3F0018
 private const val mail = 0xFFF2357A
 private const val drive = 0xFF5C89F7
 
-internal fun getDarkColorScheme(primaryColor: Color, onPrimaryColor: Color) = darkColorScheme(
-    primary = primaryColor,
-    onPrimary = onPrimaryColor,
-    onSurfaceVariant = Color(rabbit), // Used for bottom sheet drag handle
-    surfaceContainerLow = Color(bat), // Used for bottom sheet backgrounds
-    surfaceContainerHighest = Color(bat), // Used for Card backgrounds
-    outlineVariant = Color(elephant), // Used for divider's color
-)
+internal val overriddenDarkColorScheme
+    @Composable get() = MaterialTheme.colorScheme.copy(
+        onSurfaceVariant = Color(rabbit), // Used for bottom sheet drag handle
+        surfaceContainerLow = Color(bat), // Used for bottom sheet backgrounds
+        surfaceContainerHighest = Color(bat), // Used for Card backgrounds
+        outlineVariant = Color(elephant), // Used for divider's color
+    )
 
 internal val MyKSuiteDarkColors = MyKSuiteColors(
     primaryTextColor = Color(rabbit),

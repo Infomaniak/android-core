@@ -17,7 +17,8 @@
  */
 package com.infomaniak.core.myksuite.ui.theme
 
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 // TODO: Extract colors to a CoreUi module
@@ -41,14 +42,13 @@ private const val onMailButton = 0xFFFEF8F7
 private const val mail = 0xFFF2357A
 private const val drive = 0xFF5C89F7
 
-internal fun getLightColorScheme(primaryColor: Color, onPrimaryColor: Color) = lightColorScheme(
-    primary = primaryColor,
-    onPrimary = onPrimaryColor,
-    onSurfaceVariant = Color(mouse), // Used for bottom sheet drag handle
-    surfaceContainerLow = Color(white), // Used for bottom sheet backgrounds
-    surfaceContainerHighest = Color(sky), // Used for Card backgrounds
-    outlineVariant = Color(mouse), // Used for divider's color
-)
+internal val overriddenLightColorScheme
+    @Composable get() = MaterialTheme.colorScheme.copy(
+        onSurfaceVariant = Color(mouse), // Used for bottom sheet drag handle
+        surfaceContainerLow = Color(white), // Used for bottom sheet backgrounds
+        surfaceContainerHighest = Color(sky), // Used for Card backgrounds
+        outlineVariant = Color(mouse), // Used for divider's color
+    )
 
 internal val MyKSuiteLightColors = MyKSuiteColors(
     primaryTextColor = Color(orca),
