@@ -18,9 +18,11 @@
 <resources>
     <string name="anErrorHasOccurred">An error has occurred</string>
     <string name="buttonCancel">Cancel</string>
+    <string name="buttonClose">Close</string>
     <string name="buttonNext">Next</string>
     <string name="buttonNo">No</string>
     <string name="buttonRetry">Retry</string>
+    <string name="buttonSave">Save</string>
     <string name="buttonYes">Yes</string>
     <string name="errorDownload">Download error</string>
     <string name="errorDownloadInsufficientSpace">Cannot download : Insufficient space</string>
