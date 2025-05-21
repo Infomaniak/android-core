@@ -24,9 +24,8 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import com.google.android.material.color.MaterialColors
-import com.google.android.material.R as RMaterial
+import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
 
 internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = staticCompositionLocalOf { MyKSuiteColors() }
 
@@ -35,12 +34,9 @@ internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = s
  */
 @Composable
 internal fun MyKSuiteXMLTheme(content: @Composable () -> Unit) {
-    val context = LocalContext.current
-    MyKSuiteTheme(
-        primaryColor = getMaterialColor(context, RMaterial.attr.colorPrimary),
-        onPrimaryColor = getMaterialColor(context, RMaterial.attr.colorOnPrimary),
-        content = content,
-    )
+    MaterialThemeFromXml {
+        MyKSuiteTheme(content = content)
+    }
 }
 
 /**
@@ -48,8 +44,6 @@ internal fun MyKSuiteXMLTheme(content: @Composable () -> Unit) {
  */
 @Composable
 internal fun MyKSuiteTheme(
-    primaryColor: Color = MaterialTheme.colorScheme.primary,
-    onPrimaryColor: Color = MaterialTheme.colorScheme.onPrimary,
     content: @Composable () -> Unit,
 ) {
     val isDarkTheme = isSystemInDarkTheme()
@@ -60,11 +54,7 @@ internal fun MyKSuiteTheme(
         LocalMyKSuiteColors provides customColors,
     ) {
         MaterialTheme(
-            colorScheme = if (isDarkTheme) {
-                getDarkColorScheme(primaryColor, onPrimaryColor)
-            } else {
-                getLightColorScheme(primaryColor, onPrimaryColor)
-            },
+            colorScheme = if (isDarkTheme) overriddenDarkColorScheme else overriddenLightColorScheme,
             content = content,
         )
     }
