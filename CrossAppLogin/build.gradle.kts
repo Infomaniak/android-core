@@ -41,6 +41,7 @@ dependencies {
     api(core.androidx.lifecycle.service)
     api(core.kotlinx.serialization.protobuf)
 
+    implementation(project(":Core"))
     implementation(core.splitties.mainthread)
 
     testImplementation(core.junit)
