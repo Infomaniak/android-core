@@ -16,7 +16,7 @@ junit = "4.13" # TODO: Don't update this because it breaks tests
 junitAndroidx = "1.2.1"
 kotest = "5.9.1"
 kotlinxCoroutines = "1.10.2"
-kotlinxSerializationJson = "1.8.1"
+kotlinxSerialization = "1.8.1"
 ktor = "3.1.3" # TODO: Don't bump to 3.2.0, it's broken. Directly bump to the next one. Link: https://youtrack.jetbrains.com/issue/KTOR-8583
 lifecycleRuntimeKtx = "2.8.7" # Doesn't build when bumped to 2.9.0 (Waiting SDK 35)
 material = "1.12.0"
@@ -56,7 +56,8 @@ integrity = { module = "com.google.android.play:integrity", version.ref = "integ
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinxSerialization" }
 ktor-client-content-negociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor" }
