@@ -233,7 +233,6 @@ object ApiController {
         if (apiResponse is ApiResponse<*> && apiResponse.result == ERROR) {
             @Suppress("DEPRECATION")
             apiResponse.translatedError = InternalTranslatedErrorCode.UnknownError.translateRes
-            apiResponse.error = InternalTranslatedErrorCode.UnknownError.toApiError()
         }
 
         return apiResponse
