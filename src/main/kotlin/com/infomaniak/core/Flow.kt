@@ -20,6 +20,7 @@
 package com.infomaniak.core
 
 import android.os.SystemClock
+import kotlinx.coroutines.CloseableCoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -54,3 +55,28 @@ fun <T> Flow<T>.rateLimit(minInterval: Duration): Flow<T> = channelFlow {
         lastEmitElapsedNanos = SystemClock.elapsedRealtimeNanos()
     }
 }.buffer(Channel.RENDEZVOUS)
+
+/**
+ * Similar to [flowOn], but will lazily create the Dispatcher returned by
+ * [createDispatcher], and will close it once the flow is cancelled or completes.
+ *
+ * Example usage:
+ * ```
+ * val someDataFlow: Flow<Something> = flow {
+ *     val flow = getSomeDatabaseInstance()
+ *         .someQuery()
+ *         .toFlow()
+ *         .map { it?.toSomethingElse() }
+ *     emitAll(flow)
+ * }.flowOnLazyClosable {
+ *     newSingleThreadContext("someData")
+ * }
+ * ```
+ */
+fun <T> Flow<T>.flowOnLazyClosable(
+    createDispatcher: () -> CloseableCoroutineDispatcher
+) : Flow<T> = flow {
+    createDispatcher().use { dispatcher ->
+        emitAll(flowOn(dispatcher))
+    }
+}
