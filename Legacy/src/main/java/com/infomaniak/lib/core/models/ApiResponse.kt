@@ -17,10 +17,12 @@
  */
 package com.infomaniak.lib.core.models
 
+import androidx.annotation.StringRes
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.RawValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 open class ApiResponse<T>(
@@ -39,6 +41,8 @@ open class ApiResponse<T>(
                 "InfomaniakCore.apiErrorCodes. Use translateError() instead",
         ReplaceWith("translateError()", "com.infomaniak.lib.core.utils.ApiErrorCode.Companion.translateError"),
     )
+    @StringRes
+    @Transient
     var translatedError: Int = 0,
     @SerialName("items_per_page")
     @SerializedName("items_per_page")
