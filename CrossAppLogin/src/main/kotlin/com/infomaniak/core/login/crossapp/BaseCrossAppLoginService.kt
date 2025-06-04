@@ -28,6 +28,7 @@ import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateCheckerImpl
 import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
+import com.infomaniak.core.login.crossapp.internal.localAccountsFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -39,8 +40,7 @@ import kotlinx.serialization.protobuf.ProtoBuf
 
 abstract class BaseCrossAppLoginService : LifecycleService() {
 
-    @ExperimentalSerializationApi
-    protected abstract val accountsFlow: Flow<List<ExternalAccount>>
+    protected abstract val selectedUserIdFlow: Flow<Int>
 
     private val incomingMessagesChannel = Channel<DisposableMessage>(capacity = Channel.UNLIMITED)
     private val messagesHandler = ChannelMessageHandler(incomingMessagesChannel)
@@ -66,7 +66,7 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
     private suspend fun handleIncomingMessages() = Dispatchers.Default {
         val ourUid = Process.myUid()
         val protobuf = ProtoBuf
-        val accountsDataFlow: SharedFlow<ByteArray> = accountsFlow.map {
+        val accountsDataFlow: SharedFlow<ByteArray> = localAccountsFlow(selectedUserIdFlow).map {
             protobuf.encodeToByteArray(it)
         }.shareIn(this, SharingStarted.Eagerly, replay = 1)
         incomingMessagesChannel.consumeAsFlow().onEach { disposableMessage ->
