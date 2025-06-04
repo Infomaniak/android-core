@@ -26,7 +26,13 @@ internal class AppSigningCertificates(
     builderAction: MutableMap<String, Set<LazyAppSigningCertificate>>.() -> Unit
 ) {
 
+    val packageNames: Set<String>
+
     private val certificatesMapForPackages: Map<String, Set<LazyAppSigningCertificate>> = buildMap(builderAction)
+
+    init {
+        packageNames = certificatesMapForPackages.keys
+    }
 
     suspend fun matches(targetPackageName: String, signingCertificate: SigningCertificate): Boolean {
         val acceptedCertificates = certificatesMapForPackages[targetPackageName] ?: return false
