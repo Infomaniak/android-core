@@ -70,6 +70,9 @@ dependencies {
     api "androidx.appcompat:appcompat:$appcompatVersion"
     api "androidx.appcompat:appcompat-resources:$appcompatVersion"
 
+    def splittiesVersion = "3.0.0"
+    implementation "com.louiscad.splitties:splitties-appctx:$splittiesVersion"
+
     def roomVersion = '2.7.1'
     api "androidx.room:room-ktx:$roomVersion"
     api "androidx.room:room-runtime:$roomVersion"

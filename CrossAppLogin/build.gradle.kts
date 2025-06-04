@@ -42,6 +42,7 @@ dependencies {
     api(core.kotlinx.serialization.protobuf)
 
     implementation(project(":Core"))
+    implementation(project(":Core:Legacy"))
     implementation(core.splitties.mainthread)
 
     testImplementation(core.junit)
