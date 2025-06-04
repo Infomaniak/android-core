@@ -23,13 +23,8 @@ import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.os.Build.VERSION.SDK_INT
 import com.infomaniak.core.DynamicLazyMap
+import com.infomaniak.core.completableScope
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.update
-import splitties.coroutines.launchRacer
-import splitties.coroutines.race
-import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
 
@@ -51,22 +46,15 @@ internal class AppCertificateCheckerImpl(
     private suspend fun checkIfUidShouldBeAllowed(uid: Int): Boolean {
         val packages = Dispatchers.IO { packageManager.getPackagesForUid(uid) } ?: return false
 
-        val finishedCheckers = MutableStateFlow(0)
-        return race {
+        return completableScope { completable ->
             packages.forEach { packageToCheck ->
-                launchRacer {
+                launch {
                     val allowed = checkIfPackageMatchesAnyCertificate(packageToCheck)
-                    if (!allowed) {
-                        finishedCheckers.update { it + 1 }
-                        awaitCancellation()
-                    }
+                    if (allowed) completable.complete(true)
                     true
                 }
             }
-            launchRacer {
-                finishedCheckers.first { it == packages.size }
-                false
-            }
+            false // Will make it only if there is no match after all child async coroutines complete.
         }
     }
 
@@ -89,21 +77,16 @@ internal class AppCertificateCheckerImpl(
         }
         if (signatures.isEmpty()) return false
 
-        val matchedCompletable: CompletableJob = Job()
-        return raceOf({
-            matchedCompletable.join()
-            true
-        },  {
+        return completableScope { completable ->
             signatures.forEach {
-                async {
+                launch {
                     val matches = signingCertificates.matches(targetPackageName = targetPackageName, signingCertificate = it)
                     if (matches) {
-                        matchedCompletable.complete()
-                        awaitCancellation()
+                        completable.complete(true)
                     }
                 }
             }
-            false // Will not be accepted if there's a match since we'd awaitCancellation for one of the child coroutines.
-        })
+            false // Will make it only if there is no match after all child coroutines complete.
+        }
     }
 }
