@@ -21,6 +21,20 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
+/**
+ * ## Important message to editors
+ *
+ * For all existing Unless the given field never made it to a public release (which includes betas!):
+ * - **NEVER** change the type of an existing field.
+ * - **NEVER** change the value in the `@ProtoNumber` of an existing field.
+ * - **NEVER** remove a field that was present before.
+ * - **NEVER** reuse a protobuf number. Those shall be unique and stable, essentially forever.
+ * - **Safe changes:**
+ *    1. Renaming any existing field.
+ *    2. Adding new fields with explicit `@ProtoNumber` using a new, never used number.
+ *    3. Deprecating any field (without touching its `@ProtoNumber`).
+ *    4. Rename this data class.
+ */
 @ExperimentalSerializationApi
 @Serializable
 data class ExternalAccount(
