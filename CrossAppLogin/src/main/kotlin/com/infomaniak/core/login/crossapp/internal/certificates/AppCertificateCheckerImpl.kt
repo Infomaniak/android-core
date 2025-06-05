@@ -60,20 +60,19 @@ internal class AppCertificateCheckerImpl(
 
     private suspend fun checkIfPackageMatchesAnyCertificate(targetPackageName: String): Boolean {
         val signatures: List<Signature> = if (SDK_INT >= 28) {
-            val pkgInfo = Dispatchers.IO {
+            val signingInfo = Dispatchers.IO {
                 packageManager.getPackageInfo(targetPackageName, PackageManager.GET_SIGNING_CERTIFICATES)
-            }
-            val signingInfo = pkgInfo?.signingInfo
+            }?.signingInfo
+
             when {
                 signingInfo == null -> emptyList()
                 signingInfo.hasMultipleSigners() -> signingInfo.apkContentsSigners.asList()
-                else -> signingInfo.signingCertificateHistory.asList()
+                else -> signingInfo.signingCertificateHistory?.asList() ?: emptyList()
             }
         } else @Suppress("Deprecation") {
-            val pkgInfo = Dispatchers.IO {
+            Dispatchers.IO {
                 packageManager.getPackageInfo(targetPackageName, PackageManager.GET_SIGNATURES)
-            }
-            pkgInfo?.signatures?.asList() ?: emptyList()
+            }?.signatures?.asList() ?: emptyList()
         }
         if (signatures.isEmpty()) return false
 
@@ -81,9 +80,7 @@ internal class AppCertificateCheckerImpl(
             signatures.forEach {
                 launch {
                     val matches = signingCertificates.matches(targetPackageName = targetPackageName, signingCertificate = it)
-                    if (matches) {
-                        completable.complete(true)
-                    }
+                    if (matches) completable.complete(true)
                 }
             }
             false // Will make it only if there is no match after all child coroutines complete.
