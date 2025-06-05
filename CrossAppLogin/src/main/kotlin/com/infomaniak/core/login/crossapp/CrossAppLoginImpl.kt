@@ -68,10 +68,16 @@ internal class CrossAppLoginImpl : CrossAppLogin {
             if (isTrustedApp) awaitCancellation()
             emptyList() // Return early if the app isn't trusted, or not installed.
         }, {
-            TODO("Connect to the given app ASAP")
+            // Start connecting to the app immediately, during the signing certificate check.
+            val externalAccounts = retrieveAccountsFromUncheckedApp(packageName)
             // Check we can trust the result, or drop it.
             val isTrustedApp = isTrustedDeferred.await() == true
-            if (isTrustedApp) TODO("The result we got") else emptyList()
+            if (isTrustedApp) externalAccounts else emptyList()
         })
+    }
+
+    @ExperimentalSerializationApi
+    private suspend fun retrieveAccountsFromUncheckedApp(packageName: String): List<ExternalAccount> {
+        TODO("Connect to the given app")
     }
 }
