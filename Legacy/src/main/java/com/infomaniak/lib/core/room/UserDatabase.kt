@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.infomaniak.lib.core.room
 
 import android.content.Context
@@ -26,6 +28,7 @@ import com.infomaniak.lib.core.models.user.Email
 import com.infomaniak.lib.core.models.user.Phone
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.models.user.preferences.security.AuthDevices
+import splitties.init.appCtx
 
 @Database(
     entities = [User::class],
@@ -45,28 +48,24 @@ import com.infomaniak.lib.core.models.user.preferences.security.AuthDevices
     exportSchema = true
 )
 @TypeConverters(UserConverter::class)
-abstract class UserDatabase : RoomDatabase() {
+abstract class UserDatabase internal constructor(): RoomDatabase() {
 
     abstract fun userDao(): UserDao
 
     companion object {
-        @Volatile
-        private var INSTANCE: UserDatabase? = null
 
-        fun getDatabase(context: Context): UserDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    UserDatabase::class.java,
-                    "user_database"
-                ).apply {
-                    enableMultiInstanceInvalidation()
-                    fallbackToDestructiveMigration()
-                }.build()
-                INSTANCE = instance
-                instance
-            }
-        }
+        inline operator fun invoke(): UserDatabase = instance
+
+        fun getDatabase(context: Context): UserDatabase = instance
+
+        @PublishedApi
+        internal val instance = Room.databaseBuilder<UserDatabase>(
+            appCtx,
+            "user_database"
+        ).apply {
+            enableMultiInstanceInvalidation()
+            fallbackToDestructiveMigration()
+        }.build()
     }
 }
 
