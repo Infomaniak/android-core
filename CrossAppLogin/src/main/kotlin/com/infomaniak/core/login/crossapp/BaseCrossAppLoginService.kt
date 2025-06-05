@@ -61,10 +61,10 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
 
     private suspend fun handleIncomingMessages() = Dispatchers.Default {
         val ourUid = Process.myUid()
-        val protobuf = ProtoBuf
-        val accountsDataFlow: SharedFlow<ByteArray> = localAccountsFlow(selectedUserIdFlow).map {
-            protobuf.encodeToByteArray(it)
-        }.shareIn(this, SharingStarted.Eagerly, replay = 1)
+        val accountsDataFlow: SharedFlow<ByteArray> = localAccountsFlow(selectedUserIdFlow)
+            .map { ProtoBuf.Default.encodeToByteArray(it) }
+            .shareIn(this, SharingStarted.Eagerly, replay = 1)
+
         incomingMessagesChannel.consumeAsFlow().onEach { disposableMessage ->
             disposableMessage.use { msg ->
                 check(msg.sendingUid != ourUid) // We are not supposed to talk to ourselves.
