@@ -39,11 +39,10 @@ suspend fun <R> completableScope(
     ) -> R
 ): R {
     val deferred = CompletableDeferred<R>()
-    return raceOf({
-        deferred.await()
-    }, {
-        block(Completable(deferred))
-    })
+    return raceOf(
+        { deferred.await() },
+        { block(Completable(deferred)) },
+    )
 }
 
 @JvmInline
