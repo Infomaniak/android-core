@@ -22,18 +22,17 @@ package com.infomaniak.core.login.crossapp
 import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.login.crossapp.internal.certificates.AppSigningCertificates
 import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
+import splitties.init.appCtx
 
 internal class CrossAppLoginImpl : CrossAppLogin {
 
     private val appSigningCertificates: AppSigningCertificates = infomaniakAppsCertificates
+    private val ourPackageName = appCtx.packageName
+    private val packageManager = appCtx.packageManager
 
     private val validatedApps = DynamicLazyMap<String, Deferred<Boolean?>>(
         cacheManager = { packageName, isValidatedDeferred ->
@@ -49,8 +48,9 @@ internal class CrossAppLoginImpl : CrossAppLogin {
     @ExperimentalSerializationApi
     override suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount> {
         val lists: List<List<ExternalAccount>> = coroutineScope {
-            appSigningCertificates.packageNames.map { packageName ->
-                async { retrieveAccountsFromApp(packageName) }
+            appSigningCertificates.packageNames.mapNotNull { packageName ->
+                if (packageName == ourPackageName) null
+                else async { retrieveAccountsFromApp(packageName) }
             }.awaitAll()
         }
         return lists.asSequence().flatten().groupBy { it.email }.map { (_, externalAccounts) ->
