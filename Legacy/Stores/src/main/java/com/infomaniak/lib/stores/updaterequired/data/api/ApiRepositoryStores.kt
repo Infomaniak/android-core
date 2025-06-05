@@ -25,7 +25,7 @@ import okhttp3.OkHttpClient
 
 object ApiRepositoryStores {
 
-    fun getAppVersion(appName: String, okHttpClient: OkHttpClient): ApiResponse<AppVersion> {
+    suspend fun getAppVersion(appName: String, okHttpClient: OkHttpClient): ApiResponse<AppVersion> {
         return ApiController.callApi(ApiRoutesStores.appVersion(appName), ApiMethod.GET, okHttpClient = okHttpClient)
     }
 }

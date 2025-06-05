@@ -23,7 +23,7 @@ import okhttp3.OkHttpClient
 
 abstract class ApiRepositoryCore {
 
-    fun getUserProfile(
+    suspend fun getUserProfile(
         okHttpClient: OkHttpClient,
         withEmails: Boolean = false,
         withPhones: Boolean = false,
