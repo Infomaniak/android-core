@@ -28,9 +28,7 @@ import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.stores.updaterequired.UpdateRequiredActivity
 import com.infomaniak.lib.stores.updaterequired.data.api.ApiRepositoryStores
 import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal interface StoresUtils {
 
@@ -43,14 +41,12 @@ internal interface StoresUtils {
         appVersion: String,
         versionCode: Int,
         @StyleRes themeRes: Int,
-    ) = lifecycleScope.launch(Dispatchers.IO) {
+    ) = lifecycleScope.launch {
         val apiResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClientNoTokenInterceptor)
 
         if (apiResponse.data?.mustRequireUpdate(appVersion) == true) {
-            withContext(Dispatchers.Main) {
-                UpdateRequiredActivity.startUpdateRequiredActivity(this@checkUpdateIsRequired, appId, versionCode, themeRes)
-                finish()
-            }
+            UpdateRequiredActivity.startUpdateRequiredActivity(this@checkUpdateIsRequired, appId, versionCode, themeRes)
+            finish()
         }
     }
     //endregion
