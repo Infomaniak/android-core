@@ -50,10 +50,6 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
         signingCertificates = infomaniakAppsCertificates
     )
 
-    internal object MsgWhat {
-        const val GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS = 0
-    }
-
     init {
         lifecycleScope.launch { handleIncomingMessages() }
     }
@@ -73,7 +69,7 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
             disposableMessage.use { msg ->
                 check(msg.sendingUid != ourUid) // We are not supposed to talk to ourselves.
                 if (certificateChecker.isUidAllowed(msg.sendingUid)) when (msg.what) {
-                    MsgWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
+                    IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
                         val accountsData = accountsDataFlow.first()
                         val reply = Message.obtain().also { newMsg ->
                             newMsg.obj = accountsData
@@ -90,5 +86,9 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
         }.onCompletion {
             messagesHandler.removeCallbacksAndMessages(null)
         }.collect()
+    }
+
+    internal object IpcMessageWhat {
+        const val GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS = 0
     }
 }
