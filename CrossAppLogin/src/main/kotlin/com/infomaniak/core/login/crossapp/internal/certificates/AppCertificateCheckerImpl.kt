@@ -39,7 +39,7 @@ internal class AppCertificateCheckerImpl(
     )
 
     override suspend fun isUidAllowed(uid: Int): Boolean {
-        if (uid == -1) return false
+        if (uid == -1) return false // -1 means the message is invalid, see android.os.Message.sendingUid Javadoc.
         return allowedUids.useElement(key = uid) { it.await() }
     }
 
