@@ -71,16 +71,10 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
                 if (certificateChecker.isUidAllowed(msg.sendingUid).not()) return@use
                 when (msg.what) {
                     IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
-                        val accountsData = accountsDataFlow.first()
-                        val reply = Message.obtain().also { newMsg ->
-                            newMsg.obj = accountsData
-                            newMsg.isAsynchronous = true
-                        }
-                        try {
-                            msg.replyTo.send(reply)
-                        } catch (_: DeadObjectException) {
-                            // The client app died before we could respond, we can safely ignore it.
-                        }
+                        sendSignedInAccountsToApp(
+                            accountsDataFlow = accountsDataFlow,
+                            trustedClientMessenger = msg.replyTo
+                        )
                     }
                 }
             }
@@ -88,6 +82,23 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
             messagesHandler.removeCallbacksAndMessages(null)
         }.collect()
     }
+
+    private suspend fun sendSignedInAccountsToApp(
+        accountsDataFlow: SharedFlow<ByteArray>,
+        trustedClientMessenger: Messenger
+    ) {
+        val accountsData = accountsDataFlow.first()
+        val reply = Message.obtain().also { newMsg ->
+            newMsg.obj = accountsData
+            newMsg.isAsynchronous = true
+        }
+        try {
+            trustedClientMessenger.send(reply)
+        } catch (_: DeadObjectException) {
+            // The client app died before we could respond, we can safely ignore it.
+        }
+    }
+
 
     internal object IpcMessageWhat {
         const val GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS = 0
