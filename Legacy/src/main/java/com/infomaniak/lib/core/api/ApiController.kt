@@ -113,7 +113,7 @@ object ApiController {
             .post(formBuilder.build())
             .build()
 
-        val apiToken = HttpClient.okHttpClientNoTokenInterceptor.newCall(request).execute().use {
+        val apiToken = HttpClient.okHttpClientNoTokenInterceptor.newCall(request).await().use {
             val bodyResponse = it.body?.string()
 
             when {
