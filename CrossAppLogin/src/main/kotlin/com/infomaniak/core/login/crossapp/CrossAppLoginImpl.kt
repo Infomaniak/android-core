@@ -55,6 +55,7 @@ internal class CrossAppLoginImpl : CrossAppLogin {
         }
         return lists.asSequence().flatten().groupBy { it.email }.map { (_, externalAccounts) ->
             externalAccounts.firstOrNull { it.isCurrentlySelectedInAnApp } ?: externalAccounts.first()
+            //TODO: Fuse tokens
         }
     }
 
