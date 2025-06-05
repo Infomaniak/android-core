@@ -27,8 +27,8 @@ import splitties.experimental.ExperimentalSplittiesApi
 
 /**
  * This function will end if either:
- * a. the [Completable] passed to the [block] has its [Completable.complete] function called.
- * b. the passed [block] and all the coroutines launched in its scope are complete.
+ * 1. the [Completable] passed to the [block] has its [Completable.complete] function called.
+ * 2. the passed [block] and all the coroutines launched in its scope are complete.
  *
  * In the case `a` (call to [Completable.complete]), [block] will be cancelled, along with
  * all its child coroutines.
