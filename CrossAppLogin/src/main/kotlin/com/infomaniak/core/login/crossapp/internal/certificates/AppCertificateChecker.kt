@@ -17,7 +17,7 @@
 
 package com.infomaniak.core.login.crossapp.internal.certificates
 
-internal interface AppCertificateChecker {
+internal sealed interface AppCertificateChecker {
 
     suspend fun isUidAllowed(uid: Int): Boolean
 }
