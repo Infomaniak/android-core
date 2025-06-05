@@ -29,10 +29,7 @@ import com.infomaniak.lib.core.models.ApiResponse
 import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
-import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
-import com.infomaniak.lib.core.utils.ErrorCodeTranslated
-import com.infomaniak.lib.core.utils.isNetworkException
-import com.infomaniak.lib.core.utils.isSerializationException
+import com.infomaniak.lib.core.utils.*
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.Sentry
 import io.sentry.SentryLevel
@@ -73,7 +70,7 @@ object ApiController {
         gson = gsonBuilder.create()
     }
 
-    inline fun <reified T> callApi(
+    suspend inline fun <reified T> callApi(
         url: String,
         method: ApiMethod,
         body: Any? = null,
@@ -158,7 +155,7 @@ object ApiController {
 
     class RefreshTokenException : Exception()
 
-    inline fun <reified T> executeRequest(
+    suspend inline fun <reified T> executeRequest(
         url: String,
         method: ApiMethod,
         requestBody: RequestBody,
@@ -182,7 +179,7 @@ object ApiController {
                 }
                 .build()
 
-            okHttpClient.newCall(request).execute().use { response ->
+            okHttpClient.newCall(request).await().use { response ->
                 bodyResponse = response.body?.string() ?: ""
                 return when {
                     response.code >= 500 -> {
