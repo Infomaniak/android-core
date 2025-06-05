@@ -17,7 +17,6 @@
  */
 package com.infomaniak.lib.core.room
 
-import android.content.Context
 import androidx.room.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -26,6 +25,7 @@ import com.infomaniak.lib.core.models.user.Email
 import com.infomaniak.lib.core.models.user.Phone
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.models.user.preferences.security.AuthDevices
+import splitties.init.appCtx
 
 @Database(
     entities = [User::class],
@@ -53,15 +53,15 @@ abstract class UserDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: UserDatabase? = null
 
-        fun getDatabase(context: Context): UserDatabase {
+        fun getDatabase(): UserDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    UserDatabase::class.java,
-                    "user_database"
+                    context = appCtx,
+                    klass = UserDatabase::class.java,
+                    name = "user_database"
                 ).apply {
                     enableMultiInstanceInvalidation()
-                    fallbackToDestructiveMigration()
+                    fallbackToDestructiveMigration(true)
                 }.build()
                 INSTANCE = instance
                 instance
