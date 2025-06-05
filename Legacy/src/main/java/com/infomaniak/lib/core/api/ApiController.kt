@@ -33,6 +33,7 @@ import com.infomaniak.lib.core.utils.*
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.Sentry
 import io.sentry.SentryLevel
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -196,6 +197,8 @@ object ApiController {
                     else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse)
                 }
             }
+        } catch (exception: CancellationException) {
+            throw exception
         } catch (refreshTokenException: RefreshTokenException) {
             refreshTokenException.printStackTrace()
             return createErrorResponse(InternalTranslatedErrorCode.UnknownError, buildErrorResult = buildErrorResult)
