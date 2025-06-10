@@ -51,34 +51,7 @@ suspend fun <R> Context.withBoundService(
     flags: Int = Context.BIND_AUTO_CREATE,
     block: suspend (serviceBinder: IBinder) -> R
 ): R {
-    val binderChannel = Channel<IBinder>(capacity = Channel.CONFLATED)
-    val onDisconnectChannel = Channel<OnServiceDisconnectionBehavior<R>>(capacity = Channel.CONFLATED)
-    val bindingIssueChannel = Channel<ServiceBindingIssue>(capacity = Channel.CONFLATED)
-
-    val connection = object : ServiceConnection {
-
-        @RequiresApi(28)
-        override fun onNullBinding(name: ComponentName) {
-            bindingIssueChannel.trySend(ServiceBindingIssue.NullBinding)
-        }
-
-        @RequiresApi(26)
-        override fun onBindingDied(name: ComponentName) {
-            bindingIssueChannel.trySend(ServiceBindingIssue.BindingDied)
-        }
-
-        override fun onServiceConnected(name: ComponentName, service: IBinder?) {
-            when (service) {
-                null -> bindingIssueChannel.trySend(ServiceBindingIssue.NullBinding)
-                else -> binderChannel.trySend(service)
-            }
-        }
-
-        override fun onServiceDisconnected(name: ComponentName) {
-            val onDisconnectedBehavior = onDisconnected()
-            onDisconnectChannel.trySend(onDisconnectedBehavior)
-        }
-    }
+    val connection = ChannelServiceConnection(onDisconnected)
     bindLoop@ while (true) {
         try {
             val serviceBindingStarted = withContext(NonCancellable + Dispatchers.IO) {
@@ -94,14 +67,14 @@ suspend fun <R> Context.withBoundService(
             var isWaitingForReconnect = false
             reconnectLoop@ while (true) {
                 val bindingOrElse: Xor<IBinder, TimeoutOrIssue<R>> = raceOf({
-                    Xor.First(binderChannel.receive())
+                    Xor.First(connection.awaitConnect())
                 }, {
                     // Sometimes, onServiceConnected is never called.
                     // This happens often when the app has just been updated, so we use a timeout.
                     val timeoutBehavior = timeoutConnection(isWaitingForReconnect)
                     Xor.Second(Xor.First(timeoutBehavior))
                 }, {
-                    val bindingIssue = bindingIssueChannel.receive()
+                    val bindingIssue = connection.awaitBindingIssue()
                     val bindingIssueBehavior = onBindingIssue(bindingIssue)
                     Xor.Second(Xor.Second(bindingIssueBehavior))
                 })
@@ -122,14 +95,12 @@ suspend fun <R> Context.withBoundService(
                 val result: Xor<R, ServiceBindingIssue?> = raceOf({
                     Xor.First(block(binding))
                 }, {
-                    val onDisconnectBehavior = onDisconnectChannel.receive()
-                    when (onDisconnectBehavior) {
+                    when (val onDisconnectBehavior = connection.awaitDisconnect()) {
                         is OnServiceDisconnectionBehavior.AwaitRebind<R> -> raceOf({
                             val result = onDisconnectBehavior.awaitUnbind()
                             Xor.First(result)
                         }, {
-                            val newConnectionBinder = binderChannel.receive()
-                            binderChannel.send(newConnectionBinder) // Resend it so the block can get it back.
+                            connection.awaitReconnect()
                             Xor.Second(null)
                         })
                         is OnServiceDisconnectionBehavior.UnbindImmediately<R> -> {
@@ -157,6 +128,49 @@ suspend fun <R> Context.withBoundService(
                 unbindService(connection) // Try to see if it's idempotent. //TODO: Remove this once we know.
             }
         }
+    }
+}
+
+private class ChannelServiceConnection<R>(
+    private val onDisconnected: () -> OnServiceDisconnectionBehavior<R>
+) : ServiceConnection {
+
+    private val bindingIssueChannel = Channel<ServiceBindingIssue>(capacity = Channel.CONFLATED)
+    private val binderChannel = Channel<IBinder>(capacity = Channel.CONFLATED)
+    private val onDisconnectChannel = Channel<OnServiceDisconnectionBehavior<R>>(capacity = Channel.CONFLATED)
+
+    suspend fun awaitBindingIssue(): ServiceBindingIssue = bindingIssueChannel.receive()
+
+    suspend fun awaitConnect(): IBinder = binderChannel.receive()
+
+    suspend fun awaitReconnect() {
+        val newConnectionBinder = binderChannel.receive()
+        binderChannel.send(newConnectionBinder) // Resend it so it can be received again in awaitBind()
+    }
+
+    suspend fun awaitDisconnect(): OnServiceDisconnectionBehavior<R> = onDisconnectChannel.receive()
+
+
+    @RequiresApi(28)
+    override fun onNullBinding(name: ComponentName) {
+        bindingIssueChannel.trySend(ServiceBindingIssue.NullBinding)
+    }
+
+    @RequiresApi(26)
+    override fun onBindingDied(name: ComponentName) {
+        bindingIssueChannel.trySend(ServiceBindingIssue.BindingDied)
+    }
+
+    override fun onServiceConnected(name: ComponentName, service: IBinder?) {
+        when (service) {
+            null -> bindingIssueChannel.trySend(ServiceBindingIssue.NullBinding)
+            else -> binderChannel.trySend(service)
+        }
+    }
+
+    override fun onServiceDisconnected(name: ComponentName) {
+        val onDisconnectedBehavior = onDisconnected()
+        onDisconnectChannel.trySend(onDisconnectedBehavior)
     }
 }
 
