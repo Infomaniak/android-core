@@ -45,7 +45,7 @@ object DownloadManagerUtils {
             setDescription(context.getAppName())
             setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, formattedName)
             HttpUtils.getHeaders(contentType = null).toMap().forEach { addRequestHeader(it.key, it.value) }
-            userBearerToken?.let { addRequestHeader("Authorization", "Bearer  $it") }
+            userBearerToken?.let { addRequestHeader("Authorization", "Bearer $it") }
             setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
             val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
