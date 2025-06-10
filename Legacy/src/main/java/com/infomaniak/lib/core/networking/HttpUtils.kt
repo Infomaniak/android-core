@@ -25,6 +25,14 @@ import java.net.URLEncoder
 
 object HttpUtils {
 
+    /**
+     * Generates a [Headers] object with common HTTP headers.
+     *
+     * **Note:** This function does not handle authorization tokens; they are managed by
+     * [com.infomaniak.lib.core.auth.TokenInterceptor]. If that interceptor isn't used,
+     * add another one for token handling.
+     */
+    @ManualAuthorizationRequired
     fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers = with(InfomaniakCore) {
         return Headers.Builder().apply {
             add("Accept-Language", getAcceptedLanguageHeaderValue())
@@ -32,7 +40,6 @@ object HttpUtils {
             add("App-Version", "Android $appVersionName")
             add("User-Agent", getUserAgent)
             if (HttpClientConfig.cacheDir == null) add("Cache-Control", "no-cache")
-            bearerToken?.let { add("Authorization", "Bearer $it") }
             contentType?.let {
                 add("Accept-type", it)
                 add("Content-type", it)

@@ -25,6 +25,7 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.networking.HttpUtils
+import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
 import kotlinx.coroutines.*
 
 object DownloadManagerUtils {
@@ -37,6 +38,7 @@ object DownloadManagerUtils {
             if (SDK_INT == 29) it.replace(Regex("\\.{2,}"), ".") else it
         }
 
+        @OptIn(ManualAuthorizationRequired::class)
         DownloadManager.Request(Uri.parse(url)).apply {
             setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             setTitle(formattedName)

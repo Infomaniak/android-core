@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
+import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
 import com.infomaniak.lib.core.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,6 +49,7 @@ class BugTrackerViewModel : ViewModel() {
     private fun apiSendBugReport(multipartBody: MultipartBody): Boolean {
         var isSuccessful = false
         runCatching {
+            @OptIn(ManualAuthorizationRequired::class)
             val request = Request.Builder()
                 .url(REPORT_URL)
                 .headers(HttpUtils.getHeaders())

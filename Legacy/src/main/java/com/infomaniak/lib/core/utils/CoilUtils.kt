@@ -27,6 +27,7 @@ import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.networking.HttpClientConfig
 import com.infomaniak.lib.core.networking.HttpUtils
+import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -65,6 +66,7 @@ object CoilUtils {
 
                     tokenInterceptorListener?.let {
                         addInterceptor(Interceptor { chain ->
+                            @OptIn(ManualAuthorizationRequired::class)
                             chain.request().newBuilder()
                                 .headers(HttpUtils.getHeaders())
                                 .build()
