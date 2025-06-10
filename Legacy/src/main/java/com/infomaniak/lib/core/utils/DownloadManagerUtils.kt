@@ -25,24 +25,27 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.networking.HttpUtils
+import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
 import kotlinx.coroutines.*
 
 object DownloadManagerUtils {
 
     val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]")
 
-    fun scheduleDownload(context: Context, url: String, name: String) {
+    fun scheduleDownload(context: Context, url: String, name: String, userBearerToken: String?) {
         val formattedName = name.replace(regexInvalidSystemChar, "_").replace("%", "_").let {
             // fix IllegalArgumentException only on Android 10 if multi dot
             if (SDK_INT == 29) it.replace(Regex("\\.{2,}"), ".") else it
         }
 
+        @OptIn(ManualAuthorizationRequired::class)
         DownloadManager.Request(Uri.parse(url)).apply {
             setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             setTitle(formattedName)
             setDescription(context.getAppName())
             setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, formattedName)
             HttpUtils.getHeaders(contentType = null).toMap().forEach { addRequestHeader(it.key, it.value) }
+            userBearerToken?.let { addRequestHeader("Authorization", "Bearer  $it") }
             setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
             val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager

@@ -21,7 +21,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
+import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
 import com.infomaniak.lib.core.utils.SingleLiveEvent
+import com.infomaniak.lib.core.utils.await
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -45,17 +48,19 @@ class BugTrackerViewModel : ViewModel() {
         bugReportResult.postValue(apiSendBugReport(formBuilder.build()))
     }
 
-    private fun apiSendBugReport(multipartBody: MultipartBody): Boolean {
+    private suspend fun apiSendBugReport(multipartBody: MultipartBody): Boolean {
         var isSuccessful = false
         runCatching {
+            @OptIn(ManualAuthorizationRequired::class)
             val request = Request.Builder()
                 .url(REPORT_URL)
                 .headers(HttpUtils.getHeaders())
                 .post(multipartBody)
                 .build()
 
-            isSuccessful = HttpClient.okHttpClientLongTimeout.newBuilder().build().newCall(request).execute().isSuccessful
+            isSuccessful = HttpClient.okHttpClientLongTimeout.newBuilder().build().newCall(request).await().isSuccessful
         }.onFailure { exception ->
+            if (exception is CancellationException) throw exception
             exception.printStackTrace()
         }
 

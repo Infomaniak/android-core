@@ -29,6 +29,7 @@ import com.infomaniak.lib.core.models.ApiResponse
 import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
+import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
 import com.infomaniak.lib.core.utils.*
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.Sentry
@@ -166,6 +167,7 @@ object ApiController {
     ): T {
         var bodyResponse = ""
         try {
+            @OptIn(ManualAuthorizationRequired::class)
             val request = Request.Builder()
                 .url(url)
                 .headers(HttpUtils.getHeaders())
