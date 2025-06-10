@@ -25,6 +25,6 @@
     <string name="buttonSave">Save</string>
     <string name="buttonYes">Yes</string>
     <string name="errorDownload">Download error</string>
-    <string name="errorDownloadInsufficientSpace">Cannot download : Insufficient space</string>
+    <string name="errorDownloadInsufficientSpace">Cannot download: Insufficient space</string>
     <string name="reviewAlertTitle">Do you like %s?</string>
 </resources>
