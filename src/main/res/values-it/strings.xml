@@ -17,6 +17,8 @@
   -->
 <resources>
     <string name="anErrorHasOccurred">Si è verificato un errore</string>
+    <string name="applicationSourceCode">Vedi il codice sorgente</string>
+    <string name="authorizeTracking">Autorizzare il tracciamento</string>
     <string name="buttonCancel">Annulla</string>
     <string name="buttonClose">Chiudere</string>
     <string name="buttonNext">Avanti</string>
@@ -28,7 +30,6 @@
     <string name="errorDownloadInsufficientSpace">Impossibile scaricare: spazio insufficiente</string>
     <string name="reviewAlertTitle">Ti piace %s?</string>
     <string name="trackingAuthorizeTracking">Autorizza il tracciamento</string>
-    <string name="trackingDataManagementSourceCode">Vedi il codice sorgente</string>
     <string name="trackingManagementDescription">È possibile personalizzare i dati di utilizzo e operativi che Infomaniak recupera per correggere i bug e migliorare l’applicazione. Entrambi gli strumenti sono ospitati e gestiti esclusivamente da noi.\n\nInfomaniak rispetta la vostra privacy: il codice sorgente di questa applicazione può essere verificato, le informazioni raccolte sono anonime e i vostri dati personali rimangono strettamente confidenziali e non vengono mai condivisi con terze parti.</string>
     <string name="trackingManagementTitle">Gestione dei dati</string>
     <string name="trackingMatomoDescription">Matomo è uno strumento di analisi ospitato e gestito esclusivamente da Infomaniak per capire come viene utilizzata l’applicazione.\n\nStudiando questi dati, il nostro team è in grado di migliorare continuamente l’interfaccia dell’applicazione.</string>
