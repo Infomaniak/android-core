@@ -20,9 +20,9 @@ package com.infomaniak.lib.core.utils
 import android.app.DownloadManager
 import android.content.Context
 import android.database.Cursor
-import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
+import androidx.core.net.toUri
 import com.infomaniak.lib.core.R
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
@@ -39,7 +39,7 @@ object DownloadManagerUtils {
         }
 
         @OptIn(ManualAuthorizationRequired::class)
-        DownloadManager.Request(Uri.parse(url)).apply {
+        DownloadManager.Request(url.toUri()).apply {
             setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             setTitle(formattedName)
             setDescription(context.getAppName())
