@@ -24,11 +24,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.os.RemoteException
 import androidx.annotation.RequiresApi
 import com.infomaniak.core.Xor
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.invoke
 import kotlinx.coroutines.withContext
 import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
@@ -94,6 +97,9 @@ suspend fun <R> Context.withBoundService(
                 val result: Xor<R, ServiceBindingIssue?> = raceOf({
                     Xor.First(block(binding))
                 }, {
+                    Dispatchers.IO { binding.awaitProcessDeath() }
+                    Xor.Second(ServiceBindingIssue.BindingDied)
+                }, {
                     when (val onDisconnectBehavior = connection.awaitDisconnect()) {
                         is OnServiceDisconnectionBehavior.AwaitRebind<R> -> raceOf({
                             val result = onDisconnectBehavior.awaitUnbind()
@@ -127,6 +133,19 @@ suspend fun <R> Context.withBoundService(
                 unbindService(connection) // Try to see if it's idempotent. //TODO: Remove this once we know.
             }
         }
+    }
+}
+
+private suspend fun IBinder.awaitProcessDeath() {
+    val bindingDiedCompletable = Job()
+    val deathRecipient = IBinder.DeathRecipient { bindingDiedCompletable.complete() }
+    try {
+        linkToDeath(deathRecipient, 0)
+        bindingDiedCompletable.join()
+    }  catch (_: RemoteException) {
+        // Already died
+    } finally {
+        unlinkToDeath(deathRecipient, 0)
     }
 }
 
