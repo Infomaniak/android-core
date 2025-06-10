@@ -19,11 +19,27 @@
 
 package com.infomaniak.core.login.crossapp
 
+import android.content.Context
+import android.content.Intent
+import android.os.Message
+import android.os.Messenger
+import android.os.RemoteException
 import com.infomaniak.core.DynamicLazyMap
+import com.infomaniak.core.android.service.OnBindingIssueBehavior
+import com.infomaniak.core.android.service.OnServiceDisconnectionBehavior
+import com.infomaniak.core.android.service.ServiceConnectionTimeoutBehavior
+import com.infomaniak.core.android.service.withBoundService
+import com.infomaniak.core.cancellable
+import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
+import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppSigningCertificates
 import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
+import com.infomaniak.lib.core.utils.SentryLog
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.protobuf.ProtoBuf
 import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
@@ -78,6 +94,54 @@ internal class CrossAppLoginImpl : CrossAppLogin {
 
     @ExperimentalSerializationApi
     private suspend fun retrieveAccountsFromUncheckedApp(packageName: String): List<ExternalAccount> {
-        TODO("Connect to the given app")
+        val intent = Intent().also {
+            it.`package` = packageName
+            it.action = "com.infomaniak.crossapp.login"
+        }
+        //TODO: Add a timeout for the entire operation.
+        return runCatching {
+            retrieveAccountsFromUncheckedService(intent)
+        }.cancellable().getOrElse { t ->
+            if (t is RemoteException) { //TODO: Can this really happen here? They are probably caught inside.
+                SentryLog.i(TAG, "The app ($packageName) we tried to retrieve accounts from crashed", t)
+            } else {
+                SentryLog.e(TAG, "Couldn't retrieve accounts in app $packageName", t)
+            }
+            emptyList()
+        }
+    }
+
+    @ExperimentalSerializationApi
+    private suspend fun retrieveAccountsFromUncheckedService(service: Intent): List<ExternalAccount> {
+        val bytesOrNull = appCtx.withBoundService<ByteArray?>(
+            service = service,
+            timeoutConnection = { isWaitingForReconnect -> ServiceConnectionTimeoutBehavior.GiveUp(null) },
+            onDisconnected = { OnServiceDisconnectionBehavior.UnbindImmediately(null) },
+            onBindingIssue = { OnBindingIssueBehavior.GiveUp(null) },
+            flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
+            block = { binder ->
+                val messenger = Messenger(binder)
+                val replies = Channel<DisposableMessage>(capacity = 1)
+                val replyHandler = ChannelMessageHandler(replies)
+                val replyTo = Messenger(replyHandler)
+                try {
+                    val request = Message.obtain().also {
+                        it.what = BaseCrossAppLoginService.IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS
+                        it.replyTo = replyTo
+                    }
+                    messenger.send(request)
+                    replies.receive().use { response ->
+                        response.obj as ByteArray
+                    }
+                } catch (_: RemoteException) {
+                    null
+                }
+            },
+        )
+        return bytesOrNull?.let { bytes -> ProtoBuf.decodeFromByteArray<List<ExternalAccount>>(bytes) } ?: emptyList()
+    }
+
+    private companion object {
+        const val TAG = "CrossAppLoginImpl"
     }
 }
