@@ -75,8 +75,7 @@ suspend fun <R> Context.withBoundService(
                     Xor.Second(Xor.First(timeoutBehavior))
                 }, {
                     val bindingIssue = connection.awaitBindingIssue()
-                    val bindingIssueBehavior = onBindingIssue(bindingIssue)
-                    Xor.Second(Xor.Second(bindingIssueBehavior))
+                    Xor.Second(Xor.Second(bindingIssue))
                 })
 
                 val binding = when (bindingOrElse) {
@@ -86,8 +85,8 @@ suspend fun <R> Context.withBoundService(
                             is ServiceConnectionTimeoutBehavior.GiveUp<R> -> return issue.value.returnValue
                             ServiceConnectionTimeoutBehavior.UnbindAndRetry -> continue@bindLoop
                         }
-                        is Xor.Second<OnBindingIssueBehavior<R>> -> when (issue.value) {
-                            is OnBindingIssueBehavior.GiveUp<R> -> return issue.value.returnValue
+                        is Xor.Second<ServiceBindingIssue> -> when (val bindingIssueBehavior = onBindingIssue(issue.value)) {
+                            is OnBindingIssueBehavior.GiveUp<R> -> return bindingIssueBehavior.returnValue
                             OnBindingIssueBehavior.Retry -> continue@bindLoop
                         }
                     }
@@ -174,7 +173,7 @@ private class ChannelServiceConnection<R>(
     }
 }
 
-private typealias TimeoutOrIssue<R> = Xor<ServiceConnectionTimeoutBehavior<R>, OnBindingIssueBehavior<R>>
+private typealias TimeoutOrIssue<R> = Xor<ServiceConnectionTimeoutBehavior<R>, ServiceBindingIssue>
 
 sealed interface OnServiceDisconnectionBehavior<R> {
     data class AwaitRebind<R>(internal val awaitUnbind: suspend () -> R) : OnServiceDisconnectionBehavior<R>
