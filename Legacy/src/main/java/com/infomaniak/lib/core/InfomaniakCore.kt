@@ -30,7 +30,6 @@ object InfomaniakCore {
     var appVersionCode: Int = -1
     lateinit var appVersionName: String
     lateinit var clientId: String
-    var bearerToken: String? = null
     var credentialManager: CredentialManager? = null
     var customHeaders: MutableMap<String, String>? = null
     var apiErrorCodes: List<ApiErrorCode>? = null
