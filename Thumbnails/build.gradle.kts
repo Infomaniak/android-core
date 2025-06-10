@@ -31,7 +31,7 @@ android {
         jvmTarget = javaVersion.toString()
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
+        kotlinCompilerExtensionVersion = core.versions.kotlinCompilerExtension.get()
     }
 }
 
