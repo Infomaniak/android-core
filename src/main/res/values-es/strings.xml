@@ -27,4 +27,12 @@
     <string name="errorDownload">Error al descargar</string>
     <string name="errorDownloadInsufficientSpace">No se puede descargar: espacio insuficiente</string>
     <string name="reviewAlertTitle">¿Te gusta %s?</string>
+    <string name="trackingAuthorizeTracking">Autorizar el seguimiento</string>
+    <string name="trackingDataManagementSourceCode">Ver código fuente</string>
+    <string name="trackingManagementDescription">Puede personalizar los datos de uso y funcionamiento que Infomaniak recupera para corregir errores y mejorar la aplicación. Ambas herramientas están alojadas y gestionadas exclusivamente por nosotros.\n\nInfomaniak respeta su privacidad: el código fuente de esta aplicación puede verificarse, la información recopilada es anónima y sus datos personales permanecen estrictamente confidenciales y nunca se comparten con terceros.</string>
+    <string name="trackingManagementTitle">Gestión de datos</string>
+    <string name="trackingMatomoDescription">Matomo es una herramienta de análisis alojada y gestionada exclusivamente por Infomaniak para comprender cómo se utiliza la aplicación.\n\nEl estudio de estos datos permite a nuestro equipo mejorar continuamente la interfaz de la aplicación.</string>
+    <string name="trackingMatomoTitle">Matomo</string>
+    <string name="trackingSentryDescription">Sentry es una herramienta alojada y gestionada en exclusiva por Infomaniak para supervisar la estabilidad de la aplicación en tiempo real e informar automáticamente de cualquier error técnico a nuestros desarrolladores.\n\nEstos datos permiten a nuestro equipo corregir y optimizar rápidamente la aplicación, lo que se traduce en una mejor experiencia de usuario para usted.</string>
+    <string name="trackingSentryTitle">Sentry</string>
 </resources>
