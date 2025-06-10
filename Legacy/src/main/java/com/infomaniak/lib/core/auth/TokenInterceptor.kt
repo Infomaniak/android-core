@@ -17,11 +17,18 @@
  */
 package com.infomaniak.lib.core.auth
 
+import com.infomaniak.lib.core.api.ApiController.json
+import com.infomaniak.lib.core.api.ApiController.toApiError
+import com.infomaniak.lib.core.api.InternalTranslatedErrorCode
 import com.infomaniak.lib.core.auth.TokenAuthenticator.Companion.changeAccessToken
+import com.infomaniak.lib.core.models.ApiResponse
+import com.infomaniak.lib.core.models.ApiResponseStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
+import okhttp3.Protocol
 import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 
 class TokenInterceptor(
     private val tokenInterceptorListener: TokenInterceptorListener
@@ -37,8 +44,22 @@ class TokenInterceptor(
             if (apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")) {
                 request = changeAccessToken(request, apiToken)
             }
-        }
+        } ?: return userLoggedOutResponse(chain)
 
         return chain.proceed(request)
+    }
+
+    private fun userLoggedOutResponse(chain: Interceptor.Chain): Response {
+        val errorBody = ApiResponse<Unit>(
+            result = ApiResponseStatus.ERROR,
+            error = InternalTranslatedErrorCode.UserLoggedOut.toApiError()
+        )
+        return Response.Builder()
+            .code(401)
+            .request(chain.request())
+            .protocol(Protocol.HTTP_2)
+            .message("User is logged out")
+            .body(json.encodeToString(errorBody).toResponseBody())
+            .build()
     }
 }
