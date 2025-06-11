@@ -33,34 +33,61 @@ internal class AppCertificateCheckerImpl(
 ) : AppCertificateChecker {
 
     private val packageManager = appCtx.packageManager
-    private val allowedUids = DynamicLazyMap<Int, Deferred<Boolean>>(
-        cacheManager = { _, _ -> awaitCancellation() },
+
+    private val validatedApps = DynamicLazyMap<String, Deferred<Boolean?>>(
+        cacheManager = { packageName, isValidatedDeferred ->
+            val isValidated = isValidatedDeferred.await()
+            if (isValidated != null) {
+                awaitCancellation()
+            } // null means the app isn't installed. We don't want to cache the value in that case.
+        },
+    ) { packageName ->
+        async { checkIfPackageMatchesAnyCertificate(packageName) }
+    }
+
+    private val allowedUids = DynamicLazyMap<Int, Deferred<Boolean?>>(
+        cacheManager = { uid, isAllowedDeferred ->
+            val isAllowed = isAllowedDeferred.await()
+            if (isAllowed != null) {
+                awaitCancellation()
+            } // null means the app went away while checking the uid. We don't want to cache the value in that case.
+        },
         createElement = { uid -> async { checkIfUidShouldBeAllowed(uid) } }
     )
 
     override suspend fun isUidAllowed(uid: Int): Boolean {
         if (uid == -1) return false // -1 means the message is invalid, see android.os.Message.sendingUid Javadoc.
-        return allowedUids.useElement(key = uid) { it.await() }
+        return allowedUids.useElement(key = uid) { it.await() ?: false }
     }
 
-    private suspend fun checkIfUidShouldBeAllowed(uid: Int): Boolean {
+    override suspend fun isPackageNameAllowed(packageName: String): Boolean? {
+        validatedApps.useElement(packageName) { return it.await() }
+    }
+
+    private suspend fun checkIfUidShouldBeAllowed(uid: Int): Boolean? {
         val packages = Dispatchers.IO { packageManager.getPackagesForUid(uid) } ?: return false
 
         return completableScope { completable ->
-            packages.forEach { packageToCheck ->
-                launch {
-                    val allowed = checkIfPackageMatchesAnyCertificate(packageToCheck)
-                    if (allowed) completable.complete(true)
+            val unknown: Boolean = packages.map { packageToCheck ->
+                async {
+                    val allowed = isPackageNameAllowed(packageToCheck)
+                    if (allowed == true) completable.complete(true) // Fast path
+                    allowed
                 }
-            }
-            false // Will make it only if there is no match after all child async coroutines complete.
+            }.awaitAll().any { it == null }
+            // Will make it there only if there is no match after all child async coroutines complete.
+            if (unknown) null else false
         }
     }
 
-    private suspend fun checkIfPackageMatchesAnyCertificate(targetPackageName: String): Boolean {
+    private suspend fun checkIfPackageMatchesAnyCertificate(targetPackageName: String): Boolean? {
         val signatures: List<Signature> = if (SDK_INT >= 28) {
             val signingInfo = Dispatchers.IO {
-                packageManager.getPackageInfo(targetPackageName, PackageManager.GET_SIGNING_CERTIFICATES)
+                try {
+                    packageManager.getPackageInfo(targetPackageName, PackageManager.GET_SIGNING_CERTIFICATES)
+                } catch (_: PackageManager.NameNotFoundException) {
+                    null
+                }
             }?.signingInfo
 
             when {
@@ -70,10 +97,14 @@ internal class AppCertificateCheckerImpl(
             }
         } else @Suppress("Deprecation") {
             Dispatchers.IO {
-                packageManager.getPackageInfo(targetPackageName, PackageManager.GET_SIGNATURES)
+                try {
+                    packageManager.getPackageInfo(targetPackageName, PackageManager.GET_SIGNATURES)
+                } catch (_: PackageManager.NameNotFoundException) {
+                    null
+                }
             }?.signatures?.asList() ?: emptyList()
         }
-        if (signatures.isEmpty()) return false
+        if (signatures.isEmpty()) return null
 
         return completableScope { completable ->
             signatures.forEach {
