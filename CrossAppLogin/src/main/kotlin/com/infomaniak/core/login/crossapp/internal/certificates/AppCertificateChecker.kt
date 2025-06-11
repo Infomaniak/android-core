@@ -20,4 +20,6 @@ package com.infomaniak.core.login.crossapp.internal.certificates
 internal sealed interface AppCertificateChecker {
 
     suspend fun isUidAllowed(uid: Int): Boolean
+
+    suspend fun isPackageNameAllowed(packageName: String): Boolean?
 }
