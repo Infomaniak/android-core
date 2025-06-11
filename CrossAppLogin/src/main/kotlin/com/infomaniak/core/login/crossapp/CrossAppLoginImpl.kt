@@ -24,7 +24,6 @@ import android.content.Intent
 import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
-import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.android.service.OnBindingIssueBehavior
 import com.infomaniak.core.android.service.OnServiceDisconnectionBehavior
 import com.infomaniak.core.android.service.ServiceConnectionTimeoutBehavior
@@ -32,6 +31,8 @@ import com.infomaniak.core.android.service.withBoundService
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
+import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
+import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateCheckerImpl
 import com.infomaniak.core.login.crossapp.internal.certificates.AppSigningCertificates
 import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
 import com.infomaniak.lib.core.utils.SentryLog
@@ -47,19 +48,11 @@ import splitties.init.appCtx
 internal class CrossAppLoginImpl : CrossAppLogin {
 
     private val appSigningCertificates: AppSigningCertificates = infomaniakAppsCertificates
-    private val ourPackageName = appCtx.packageName
-    private val packageManager = appCtx.packageManager
 
-    private val validatedApps = DynamicLazyMap<String, Deferred<Boolean?>>(
-        cacheManager = { packageName, isValidatedDeferred ->
-            val isValidated = isValidatedDeferred.await()
-            if (isValidated != null) {
-                awaitCancellation()
-            } // null means the app isn't installed. We don't want to cache the value in that case.
-        },
-    ) { key ->
-        async { TODO("Check if installed and if matches") }
-    }
+    private val certificateChecker: AppCertificateChecker = AppCertificateCheckerImpl(
+        signingCertificates = appSigningCertificates
+    )
+    private val ourPackageName = appCtx.packageName
 
     @ExperimentalSerializationApi
     override suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount> {
@@ -76,21 +69,20 @@ internal class CrossAppLoginImpl : CrossAppLogin {
     }
 
     @ExperimentalSerializationApi
-    private suspend fun retrieveAccountsFromApp(packageName: String): List<ExternalAccount> = validatedApps.useElement(
-        key = packageName
-    ) { isTrustedDeferred ->
-        raceOf({
-            val isTrustedApp = isTrustedDeferred.await() == true
+    private suspend fun retrieveAccountsFromApp(packageName: String): List<ExternalAccount> = raceOf(
+        {
+            val isTrustedApp = certificateChecker.isPackageNameAllowed(packageName) == true
             if (isTrustedApp) awaitCancellation()
             emptyList() // Return early if the app isn't trusted, or not installed.
-        }, {
+        },
+        {
             // Start connecting to the app immediately, during the signing certificate check.
             val externalAccounts = retrieveAccountsFromUncheckedApp(packageName)
             // Check we can trust the result, or drop it.
-            val isTrustedApp = isTrustedDeferred.await() == true
+            val isTrustedApp = certificateChecker.isPackageNameAllowed(packageName) == true
             if (isTrustedApp) externalAccounts else emptyList()
-        })
-    }
+        }
+    )
 
     @ExperimentalSerializationApi
     private suspend fun retrieveAccountsFromUncheckedApp(packageName: String): List<ExternalAccount> {
