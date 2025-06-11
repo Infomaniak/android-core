@@ -186,7 +186,7 @@ object ApiController {
                 bodyResponse = response.body?.string() ?: ""
                 return when {
                     response.code >= 500 -> {
-                        Sentry.captureMessage("An API error 500 occurred", SentryLevel.ERROR) { scope ->
+                        Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
                             scope.setExtra("bodyResponse", bodyResponse)
                         }
                         createErrorResponse(
