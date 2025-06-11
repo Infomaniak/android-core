@@ -51,7 +51,6 @@ internal class AppCertificateCheckerImpl(
                 launch {
                     val allowed = checkIfPackageMatchesAnyCertificate(packageToCheck)
                     if (allowed) completable.complete(true)
-                    true
                 }
             }
             false // Will make it only if there is no match after all child async coroutines complete.
