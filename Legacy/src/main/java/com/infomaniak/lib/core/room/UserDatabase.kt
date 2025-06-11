@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.infomaniak.lib.core.room
 
 import androidx.room.*
@@ -45,28 +47,24 @@ import splitties.init.appCtx
     exportSchema = true
 )
 @TypeConverters(UserConverter::class)
-abstract class UserDatabase : RoomDatabase() {
+abstract class UserDatabase internal constructor(): RoomDatabase() {
 
     abstract fun userDao(): UserDao
 
     companion object {
-        @Volatile
-        private var INSTANCE: UserDatabase? = null
 
-        fun getDatabase(): UserDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context = appCtx,
-                    klass = UserDatabase::class.java,
-                    name = "user_database"
-                ).apply {
-                    enableMultiInstanceInvalidation()
-                    fallbackToDestructiveMigration(true)
-                }.build()
-                INSTANCE = instance
-                instance
-            }
-        }
+        inline operator fun invoke(): UserDatabase = instance
+
+        fun getDatabase(): UserDatabase = instance
+
+        @PublishedApi
+        internal val instance = Room.databaseBuilder<UserDatabase>(
+            context = appCtx,
+            name = "user_database"
+        ).apply {
+            enableMultiInstanceInvalidation()
+            fallbackToDestructiveMigration(dropAllTables = true)
+        }.build()
     }
 }
 
