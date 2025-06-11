@@ -69,6 +69,7 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
             disposableMessage.use { msg ->
                 check(msg.sendingUid != ourUid) // We are not supposed to talk to ourselves.
                 if (certificateChecker.isUidAllowed(msg.sendingUid).not()) return@use
+
                 when (msg.what) {
                     IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
                         sendSignedInAccountsToApp(
