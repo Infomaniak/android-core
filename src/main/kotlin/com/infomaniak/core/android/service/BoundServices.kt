@@ -41,7 +41,6 @@ import splitties.experimental.ExperimentalSplittiesApi
  *
  * You may want to use this in a loop.
  */
-@Throws(SecurityException::class)
 suspend fun <R> Context.withBoundService(
     service: Intent,
     timeoutConnection: suspend (isWaitingForReconnect: Boolean) -> Unit,
@@ -54,16 +53,21 @@ suspend fun <R> Context.withBoundService(
     bindLoop@ while (true) {
         try {
             // First, we try to bind the service
-            val serviceBindingStarted = withContext(NonCancellable + Dispatchers.IO) {
-                bindService(service, connection, flags)
-            }
-            if (serviceBindingStarted.not()) { // The binding attempt can fail early.
-                val bindingIssueBehavior = onBindingIssue(ServiceBindingIssue.NotFoundOrNoPermission)
-                when (bindingIssueBehavior) {
-                    is OnBindingIssue.GiveUp -> return bindingIssueBehavior.returnValue
-                    OnBindingIssue.UnbindAndRetry -> continue@bindLoop
+            val bindingIssue: ServiceBindingIssue.NotFoundOrNoPermission? = withContext(NonCancellable + Dispatchers.IO) {
+                try {
+                    val serviceBindingStarted = bindService(service, connection, flags)
+                    // The binding attempt can fail early.
+                    if (serviceBindingStarted) null else ServiceBindingIssue.NotFoundOrNoPermission(null)
+                } catch (e: SecurityException) {
+                    ServiceBindingIssue.NotFoundOrNoPermission(e)
                 }
             }
+
+            if (bindingIssue != null) when (val bindingIssueBehavior = onBindingIssue(bindingIssue)) {
+                is OnBindingIssue.GiveUp -> return bindingIssueBehavior.returnValue
+                OnBindingIssue.UnbindAndRetry -> continue@bindLoop
+            }
+
             var isWaitingForReconnect = false
             reconnectLoop@ while (true) {
                 // Then, we await for connection (or any issue)
@@ -151,9 +155,10 @@ sealed interface OnBindingIssue<R> {
     data class GiveUp<R>(internal val returnValue: R) : OnBindingIssue<R>
 }
 
-enum class ServiceBindingIssue {
-    NotFoundOrNoPermission,
-    BindingDied,
-    NullBinding,
-    Timeout,
+sealed interface ServiceBindingIssue {
+    /** Even if [e] is null, it might still be a missing permission issue that led [Context.bindService] to return false. */
+    data class NotFoundOrNoPermission(val e: SecurityException?) : ServiceBindingIssue
+    data object BindingDied : ServiceBindingIssue
+    data object NullBinding : ServiceBindingIssue
+    data object Timeout : ServiceBindingIssue
 }
