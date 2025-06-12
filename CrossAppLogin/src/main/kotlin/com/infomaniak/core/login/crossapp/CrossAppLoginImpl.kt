@@ -64,11 +64,9 @@ internal class CrossAppLoginImpl : CrossAppLogin {
                 else async { retrieveAccountsFromApp(packageName) }
             }.awaitAll()
         }
-        return lists.asSequence().flatten().groupBy { it.email }.map { (_, externalAccounts) ->
+        return lists.flatten().groupBy { it.email }.map { (_, externalAccounts) ->
             val account = externalAccounts.firstOrNull { it.isCurrentlySelectedInAnApp } ?: externalAccounts.first()
-            account.copy(
-                tokens = externalAccounts.asSequence().flatMap { it.tokens }.toSet()
-            )
+            account.copy(tokens = externalAccounts.flatMapTo(mutableSetOf()) { it.tokens })
         }
     }
 
