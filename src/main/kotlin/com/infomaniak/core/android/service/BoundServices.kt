@@ -50,7 +50,7 @@ suspend fun <R> Context.withBoundService(
     flags: Int = Context.BIND_AUTO_CREATE,
     block: suspend (serviceBinder: IBinder) -> R,
 ): R {
-    val connection = ChannelServiceConnection(onDisconnected)
+    val connection = ServiceConnection(onDisconnected)
     bindLoop@ while (true) {
         try {
             // First, we try to bind the service
