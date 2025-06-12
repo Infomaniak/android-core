@@ -133,7 +133,7 @@ private suspend fun IBinder.awaitProcessDeath() {
     try {
         linkToDeath(deathRecipient, 0)
         bindingDiedCompletable.join()
-    }  catch (_: RemoteException) {
+    } catch (_: RemoteException) {
         // Already died
     } finally {
         unlinkToDeath(deathRecipient, 0)
