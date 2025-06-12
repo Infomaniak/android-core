@@ -60,8 +60,7 @@ internal class CrossAppLoginImpl : CrossAppLogin {
     override suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount> {
         val lists: List<List<ExternalAccount>> = coroutineScope {
             appSigningCertificates.packageNames.mapNotNull { packageName ->
-                if (packageName == ourPackageName) null
-                else async { retrieveAccountsFromApp(packageName) }
+                if (packageName == ourPackageName) null else async { retrieveAccountsFromApp(packageName) }
             }.awaitAll()
         }
 
