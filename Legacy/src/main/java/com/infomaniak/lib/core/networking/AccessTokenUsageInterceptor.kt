@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.networking
 
+import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.utils.ApiTokenExt.isInfinite
 import io.sentry.Sentry
@@ -47,7 +48,9 @@ class AccessTokenUsageInterceptor(
         val request = chain.request()
         val response = chain.proceed(request)
 
-        processAccessTokenUsageAsync(request, response.code)
+        if (response.message != TokenInterceptor.USER_LOGGED_OUT_MESSAGE) {
+            processAccessTokenUsageAsync(request, response.code)
+        }
 
         return response
     }
