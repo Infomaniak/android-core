@@ -18,14 +18,14 @@
 package com.infomaniak.core.android.service
 
 import android.content.ComponentName
-import android.content.ServiceConnection
+import android.content.ServiceConnection as AndroidServiceConnection
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.channels.Channel
 
-internal class ChannelServiceConnection<R>(
+internal class ServiceConnection<R>(
     private val onDisconnected: () -> OnServiceDisconnectionBehavior<R>
-) : ServiceConnection {
+) : AndroidServiceConnection {
 
     private val bindingIssueChannel = Channel<ServiceBindingIssue>(capacity = Channel.Factory.CONFLATED)
     private val binderChannel = Channel<IBinder>(capacity = Channel.Factory.CONFLATED)
