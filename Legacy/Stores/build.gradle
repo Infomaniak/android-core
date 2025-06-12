@@ -37,7 +37,9 @@ dependencies {
     // Version 1.1.5 has some issues so we have to use the alpha version for now
     api 'androidx.datastore:datastore-preferences:1.2.0-alpha02'
 
-    implementation 'androidx.work:work-runtime-ktx:2.9.1' // Doesn't build when bumped to 2.10.0 (waiting for Api 35)
+    def workVersion = '2.9.1' // Keep the same version as the one in the apps
+    implementation "androidx.work:work-runtime-ktx:$workVersion" // Doesn't build when bumped to 2.10.0 (waiting for Api 35)
+
     implementation 'androidx.concurrent:concurrent-futures-ktx:1.2.0'
 
     def appReviewVersion = '2.0.2'
