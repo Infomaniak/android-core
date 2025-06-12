@@ -77,7 +77,7 @@ suspend fun <R> Context.withBoundService(
                     Xor.Second(Xor.Second(bindingIssue))
                 })
 
-                val binding = when (bindingOrElse) {
+                val binding: IBinder = when (bindingOrElse) {
                     is Xor.First -> bindingOrElse.value
                     is Xor.Second -> when (val issue = bindingOrElse.value) {
                         is Xor.First -> when (issue.value) {
