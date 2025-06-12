@@ -44,9 +44,9 @@ import splitties.experimental.ExperimentalSplittiesApi
 @Throws(SecurityException::class)
 suspend fun <R> Context.withBoundService(
     service: Intent,
-    timeoutConnection: suspend (isWaitingForReconnect: Boolean) -> ServiceConnectionTimeoutBehavior<R>,
+    timeoutConnection: suspend (isWaitingForReconnect: Boolean) -> Unit,
     onDisconnected: () -> OnServiceDisconnectionBehavior<R>,
-    onBindingIssue: suspend (issue: ServiceBindingIssue) -> OnBindingIssueBehavior<R>,
+    onBindingIssue: suspend (issue: ServiceBindingIssue) -> OnBindingIssue<R>,
     flags: Int = Context.BIND_AUTO_CREATE,
     block: suspend (serviceBinder: IBinder) -> R
 ): R {
@@ -59,35 +59,29 @@ suspend fun <R> Context.withBoundService(
             if (serviceBindingStarted.not()) {
                 val bindingIssueBehavior = onBindingIssue(ServiceBindingIssue.NotFoundOrNoPermission)
                 when (bindingIssueBehavior) {
-                    is OnBindingIssueBehavior.GiveUp -> return bindingIssueBehavior.returnValue
-                    OnBindingIssueBehavior.Retry -> continue@bindLoop
+                    is OnBindingIssue.GiveUp -> return bindingIssueBehavior.returnValue
+                    OnBindingIssue.UnbindAndRetry -> continue@bindLoop
                 }
             }
             var isWaitingForReconnect = false
             reconnectLoop@ while (true) {
-                val bindingOrElse: Xor<IBinder, TimeoutOrIssue<R>> = raceOf({
+                val bindingOrIssue: Xor<IBinder, ServiceBindingIssue> = raceOf({
                     Xor.First(connection.awaitConnect())
                 }, {
                     // Sometimes, onServiceConnected is never called.
                     // This happens often when the app has just been updated, so we use a timeout.
-                    val timeoutBehavior = timeoutConnection(isWaitingForReconnect)
-                    Xor.Second(Xor.First(timeoutBehavior))
+                    timeoutConnection(isWaitingForReconnect)
+                    Xor.Second(ServiceBindingIssue.Timeout)
                 }, {
                     val bindingIssue = connection.awaitBindingIssue()
-                    Xor.Second(Xor.Second(bindingIssue))
+                    Xor.Second(bindingIssue)
                 })
 
-                val binding: IBinder = when (bindingOrElse) {
-                    is Xor.First -> bindingOrElse.value
-                    is Xor.Second -> when (val issue = bindingOrElse.value) {
-                        is Xor.First -> when (issue.value) {
-                            is ServiceConnectionTimeoutBehavior.GiveUp -> return issue.value.returnValue
-                            ServiceConnectionTimeoutBehavior.UnbindAndRetry -> continue@bindLoop
-                        }
-                        is Xor.Second -> when (val bindingIssueBehavior = onBindingIssue(issue.value)) {
-                            is OnBindingIssueBehavior.GiveUp -> return bindingIssueBehavior.returnValue
-                            OnBindingIssueBehavior.Retry -> continue@bindLoop
-                        }
+                val binding: IBinder = when (bindingOrIssue) {
+                    is Xor.First -> bindingOrIssue.value
+                    is Xor.Second -> when (val bindingIssueBehavior = onBindingIssue(bindingOrIssue.value)) {
+                        is OnBindingIssue.GiveUp -> return bindingIssueBehavior.returnValue
+                        OnBindingIssue.UnbindAndRetry -> continue@bindLoop
                     }
                 }
                 val result: Xor<R, ServiceBindingIssue?> = raceOf({
@@ -117,8 +111,8 @@ suspend fun <R> Context.withBoundService(
                             continue@reconnectLoop
                         }
                         else -> when (val behavior = onBindingIssue(result.value)) {
-                            is OnBindingIssueBehavior.Retry -> continue@bindLoop
-                            is OnBindingIssueBehavior.GiveUp -> behavior.returnValue
+                            is OnBindingIssue.GiveUp -> behavior.returnValue
+                            OnBindingIssue.UnbindAndRetry -> continue@bindLoop
                         }
                     }
                 }
@@ -145,25 +139,19 @@ private suspend fun IBinder.awaitProcessDeath() {
     }
 }
 
-private typealias TimeoutOrIssue<R> = Xor<ServiceConnectionTimeoutBehavior<R>, ServiceBindingIssue>
-
 sealed interface OnServiceDisconnectionBehavior<R> {
     data class AwaitRebind<R>(internal val awaitUnbind: suspend () -> R) : OnServiceDisconnectionBehavior<R>
     data class UnbindImmediately<R>(internal val returnValue: R) : OnServiceDisconnectionBehavior<R>
 }
 
-sealed interface OnBindingIssueBehavior<R> {
-    data object Retry : OnBindingIssueBehavior<Nothing>
-    data class GiveUp<R>(internal val returnValue: R) : OnBindingIssueBehavior<R>
-}
-
-sealed interface ServiceConnectionTimeoutBehavior<R> {
-    data object UnbindAndRetry : ServiceConnectionTimeoutBehavior<Nothing>
-    data class GiveUp<R>(internal val returnValue: R) : ServiceConnectionTimeoutBehavior<R>
+sealed interface OnBindingIssue<R> {
+    data object UnbindAndRetry : OnBindingIssue<Nothing>
+    data class GiveUp<R>(internal val returnValue: R) : OnBindingIssue<R>
 }
 
 enum class ServiceBindingIssue {
     NotFoundOrNoPermission,
     BindingDied,
     NullBinding,
+    Timeout,
 }
