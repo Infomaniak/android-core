@@ -37,9 +37,8 @@ internal class AppCertificateCheckerImpl(
     private val validatedApps = DynamicLazyMap<String, Deferred<Boolean?>>(
         cacheManager = { packageName, isValidatedDeferred ->
             val isValidated = isValidatedDeferred.await()
-            if (isValidated != null) {
-                awaitCancellation()
-            } // null means the app isn't installed. We don't want to cache the value in that case.
+            // null means the app isn't installed. We don't want to cache the value in that case.
+            if (isValidated != null) awaitCancellation()
         },
     ) { packageName ->
         async { checkIfPackageMatchesAnyCertificate(packageName) }
@@ -48,9 +47,8 @@ internal class AppCertificateCheckerImpl(
     private val allowedUids = DynamicLazyMap<Int, Deferred<Boolean?>>(
         cacheManager = { uid, isAllowedDeferred ->
             val isAllowed = isAllowedDeferred.await()
-            if (isAllowed != null) {
-                awaitCancellation()
-            } // null means the app went away while checking the uid. We don't want to cache the value in that case.
+            // null means the app went away while checking the uid. We don't want to cache the value in that case.
+            if (isAllowed != null) awaitCancellation()
         },
         createElement = { uid -> async { checkIfUidShouldBeAllowed(uid) } }
     )
