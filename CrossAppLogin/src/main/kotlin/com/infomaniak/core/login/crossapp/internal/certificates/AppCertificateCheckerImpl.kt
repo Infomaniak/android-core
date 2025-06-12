@@ -19,6 +19,7 @@
 
 package com.infomaniak.core.login.crossapp.internal.certificates
 
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.os.Build.VERSION.SDK_INT
@@ -80,28 +81,16 @@ internal class AppCertificateCheckerImpl(
 
     private suspend fun checkIfPackageMatchesAnyCertificate(targetPackageName: String): Boolean? {
         val signatures: List<Signature> = if (SDK_INT >= 28) {
-            val signingInfo = Dispatchers.IO {
-                try {
-                    packageManager.getPackageInfo(targetPackageName, PackageManager.GET_SIGNING_CERTIFICATES)
-                } catch (_: PackageManager.NameNotFoundException) {
-                    null
-                }
-            }?.signingInfo
-
+            val signingInfo = getPackageInfoOrNull(targetPackageName, PackageManager.GET_SIGNING_CERTIFICATES)?.signingInfo
             when {
                 signingInfo == null -> emptyList()
                 signingInfo.hasMultipleSigners() -> signingInfo.apkContentsSigners.asList()
                 else -> signingInfo.signingCertificateHistory?.asList() ?: emptyList()
             }
         } else @Suppress("Deprecation") {
-            Dispatchers.IO {
-                try {
-                    packageManager.getPackageInfo(targetPackageName, PackageManager.GET_SIGNATURES)
-                } catch (_: PackageManager.NameNotFoundException) {
-                    null
-                }
-            }?.signatures?.asList() ?: emptyList()
+            getPackageInfoOrNull(targetPackageName, PackageManager.GET_SIGNATURES)?.signatures?.asList() ?: emptyList()
         }
+
         if (signatures.isEmpty()) return null
 
         return completableScope { completable ->
@@ -112,6 +101,14 @@ internal class AppCertificateCheckerImpl(
                 }
             }
             false // Will make it only if there is no match after all child coroutines complete.
+        }
+    }
+
+    private suspend fun getPackageInfoOrNull(targetPackageName: String, flags: Int): PackageInfo? = Dispatchers.IO {
+        try {
+            packageManager.getPackageInfo(targetPackageName, flags)
+        } catch (_: PackageManager.NameNotFoundException) {
+            null
         }
     }
 }
