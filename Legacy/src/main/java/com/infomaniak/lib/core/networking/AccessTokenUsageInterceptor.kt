@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.networking
 
+import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.utils.ApiTokenExt.isInfinite
 import io.sentry.Sentry
@@ -24,6 +25,7 @@ import io.sentry.SentryLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable
@@ -47,16 +49,20 @@ class AccessTokenUsageInterceptor(
         val request = chain.request()
         val response = chain.proceed(request)
 
-        processAccessTokenUsageAsync(request, response.code)
+        if (response.message != TokenInterceptor.USER_LOGGED_OUT_MESSAGE) {
+            processAccessTokenUsageAsync(request, response.code)
+        }
 
         return response
     }
 
     private fun processAccessTokenUsageAsync(request: Request, responseCode: Int) {
-        coroutineScope.launch {
-            // Only log api calls if we have an ApiToken
-            val apiToken = tokenInterceptorListener.getApiToken() ?: return@launch
+        // Only log api calls if we have an ApiToken. Also block the execution until we know
+        val apiToken = runBlocking {
+            tokenInterceptorListener.getApiToken()
+        } ?: return
 
+        coroutineScope.launch {
             // Only log api calls if we're not using refresh tokens
             if (!apiToken.isInfinite) return@launch
 

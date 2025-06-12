@@ -58,8 +58,12 @@ class TokenInterceptor(
             .code(401)
             .request(chain.request())
             .protocol(Protocol.HTTP_2)
-            .message("User is logged out")
+            .message(USER_LOGGED_OUT_MESSAGE)
             .body(json.encodeToString(errorBody).toResponseBody())
             .build()
+    }
+
+    companion object {
+        const val USER_LOGGED_OUT_MESSAGE = "User is logged out custom message"
     }
 }
