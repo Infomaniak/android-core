@@ -103,6 +103,7 @@ suspend fun <R> Context.withBoundService(
                         }
                     }
                 })
+
                 return when (result) {
                     is Xor.First -> result.value
                     is Xor.Second -> when (result.value) {
