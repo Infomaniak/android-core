@@ -125,9 +125,7 @@ internal class CrossAppLoginImpl : CrossAppLogin {
                         it.replyTo = replyTo
                     }
                     messenger.send(request)
-                    replies.receive().use { response ->
-                        response.obj as ByteArray
-                    }
+                    replies.receive().use { response -> response.obj as ByteArray }
                 } catch (_: RemoteException) {
                     null
                 }
