@@ -53,15 +53,7 @@ suspend fun <R> Context.withBoundService(
     bindLoop@ while (true) {
         try {
             // First, we try to bind the service
-            val bindingIssue: ServiceBindingIssue.NotFoundOrNoPermission? = withContext(NonCancellable + Dispatchers.IO) {
-                try {
-                    val serviceBindingStarted = bindService(service, connection, flags)
-                    // The binding attempt can fail early.
-                    if (serviceBindingStarted) null else ServiceBindingIssue.NotFoundOrNoPermission(null)
-                } catch (e: SecurityException) {
-                    ServiceBindingIssue.NotFoundOrNoPermission(e)
-                }
-            }
+            val bindingIssue: ServiceBindingIssue.NotFoundOrNoPermission? = attemptBindingService(service, connection, flags)
 
             if (bindingIssue != null) when (val bindingIssueBehavior = onBindingIssue(bindingIssue)) {
                 is OnBindingIssue.GiveUp -> return bindingIssueBehavior.returnValue
@@ -129,6 +121,20 @@ suspend fun <R> Context.withBoundService(
                 unbindService(connection) // Try to see if it's idempotent. //TODO: Remove this once we know.
             }
         }
+    }
+}
+
+private suspend fun <R> Context.attemptBindingService(
+    service: Intent,
+    connection: ServiceConnection<R>,
+    flags: Int
+): ServiceBindingIssue.NotFoundOrNoPermission? = withContext(NonCancellable + Dispatchers.IO) {
+    try {
+        val serviceBindingStarted = bindService(service, connection, flags)
+        // The binding attempt can fail early.
+        if (serviceBindingStarted) null else ServiceBindingIssue.NotFoundOrNoPermission(null)
+    } catch (e: SecurityException) {
+        ServiceBindingIssue.NotFoundOrNoPermission(e)
     }
 }
 
