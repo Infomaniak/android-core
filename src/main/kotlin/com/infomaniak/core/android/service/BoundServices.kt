@@ -59,7 +59,7 @@ suspend fun <R> Context.withBoundService(
             if (serviceBindingStarted.not()) {
                 val bindingIssueBehavior = onBindingIssue(ServiceBindingIssue.NotFoundOrNoPermission)
                 when (bindingIssueBehavior) {
-                    is OnBindingIssueBehavior.GiveUp<R> -> return bindingIssueBehavior.returnValue
+                    is OnBindingIssueBehavior.GiveUp -> return bindingIssueBehavior.returnValue
                     OnBindingIssueBehavior.Retry -> continue@bindLoop
                 }
             }
@@ -78,14 +78,14 @@ suspend fun <R> Context.withBoundService(
                 })
 
                 val binding = when (bindingOrElse) {
-                    is Xor.First<IBinder> -> bindingOrElse.value
-                    is Xor.Second<TimeoutOrIssue<R>> -> when (val issue = bindingOrElse.value) {
-                        is Xor.First<ServiceConnectionTimeoutBehavior<R>> -> when (issue.value) {
-                            is ServiceConnectionTimeoutBehavior.GiveUp<R> -> return issue.value.returnValue
+                    is Xor.First -> bindingOrElse.value
+                    is Xor.Second -> when (val issue = bindingOrElse.value) {
+                        is Xor.First -> when (issue.value) {
+                            is ServiceConnectionTimeoutBehavior.GiveUp -> return issue.value.returnValue
                             ServiceConnectionTimeoutBehavior.UnbindAndRetry -> continue@bindLoop
                         }
-                        is Xor.Second<ServiceBindingIssue> -> when (val bindingIssueBehavior = onBindingIssue(issue.value)) {
-                            is OnBindingIssueBehavior.GiveUp<R> -> return bindingIssueBehavior.returnValue
+                        is Xor.Second -> when (val bindingIssueBehavior = onBindingIssue(issue.value)) {
+                            is OnBindingIssueBehavior.GiveUp -> return bindingIssueBehavior.returnValue
                             OnBindingIssueBehavior.Retry -> continue@bindLoop
                         }
                     }
@@ -97,28 +97,28 @@ suspend fun <R> Context.withBoundService(
                     Xor.Second(ServiceBindingIssue.BindingDied)
                 }, {
                     when (val onDisconnectBehavior = connection.awaitDisconnect()) {
-                        is OnServiceDisconnectionBehavior.AwaitRebind<R> -> raceOf({
+                        is OnServiceDisconnectionBehavior.AwaitRebind -> raceOf({
                             val result = onDisconnectBehavior.awaitUnbind()
                             Xor.First(result)
                         }, {
                             connection.awaitReconnect()
                             Xor.Second(null)
                         })
-                        is OnServiceDisconnectionBehavior.UnbindImmediately<R> -> {
+                        is OnServiceDisconnectionBehavior.UnbindImmediately -> {
                             Xor.First(onDisconnectBehavior.returnValue)
                         }
                     }
                 })
                 return when (result) {
-                    is Xor.First<R> -> result.value
-                    is Xor.Second<ServiceBindingIssue?> -> when (result.value) {
+                    is Xor.First -> result.value
+                    is Xor.Second -> when (result.value) {
                         null -> {
                             isWaitingForReconnect = true
                             continue@reconnectLoop
                         }
                         else -> when (val behavior = onBindingIssue(result.value)) {
                             is OnBindingIssueBehavior.Retry -> continue@bindLoop
-                            is OnBindingIssueBehavior.GiveUp<R> -> behavior.returnValue
+                            is OnBindingIssueBehavior.GiveUp -> behavior.returnValue
                         }
                     }
                 }
