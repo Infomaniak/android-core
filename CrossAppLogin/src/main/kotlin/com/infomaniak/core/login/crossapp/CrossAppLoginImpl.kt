@@ -120,6 +120,7 @@ internal class CrossAppLoginImpl : CrossAppLogin {
                 val replies = Channel<DisposableMessage>(capacity = 1)
                 val replyHandler = ChannelMessageHandler(replies)
                 val replyTo = Messenger(replyHandler)
+
                 try {
                     val request = Message.obtain().also {
                         it.what = BaseCrossAppLoginService.IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS
@@ -134,6 +135,7 @@ internal class CrossAppLoginImpl : CrossAppLogin {
                 }
             },
         )
+
         return bytesOrNull?.let { bytes -> ProtoBuf.decodeFromByteArray<List<ExternalAccount>>(bytes) } ?: emptyList()
     }
 
