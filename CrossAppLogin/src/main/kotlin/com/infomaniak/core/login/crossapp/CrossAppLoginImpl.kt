@@ -24,9 +24,8 @@ import android.content.Intent
 import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
-import com.infomaniak.core.android.service.OnBindingIssueBehavior
+import com.infomaniak.core.android.service.OnBindingIssue
 import com.infomaniak.core.android.service.OnServiceDisconnectionBehavior
-import com.infomaniak.core.android.service.ServiceConnectionTimeoutBehavior
 import com.infomaniak.core.android.service.withBoundService
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
@@ -36,8 +35,11 @@ import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateCh
 import com.infomaniak.core.login.crossapp.internal.certificates.AppSigningCertificates
 import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
 import com.infomaniak.lib.core.utils.SentryLog
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -109,9 +111,9 @@ internal class CrossAppLoginImpl : CrossAppLogin {
     private suspend fun retrieveAccountsFromUncheckedService(service: Intent): List<ExternalAccount> {
         val bytesOrNull = appCtx.withBoundService<ByteArray?>(
             service = service,
-            timeoutConnection = { isWaitingForReconnect -> ServiceConnectionTimeoutBehavior.GiveUp(null) },
+            timeoutConnection = { isWaitingForReconnect -> OnBindingIssue.GiveUp(null) },
             onDisconnected = { OnServiceDisconnectionBehavior.UnbindImmediately(null) },
-            onBindingIssue = { OnBindingIssueBehavior.GiveUp(null) },
+            onBindingIssue = { OnBindingIssue.GiveUp(null) },
             flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
             block = { binder ->
                 val messenger = Messenger(binder)
