@@ -48,15 +48,16 @@ suspend fun <R> Context.withBoundService(
     onDisconnected: () -> OnServiceDisconnectionBehavior<R>,
     onBindingIssue: suspend (issue: ServiceBindingIssue) -> OnBindingIssue<R>,
     flags: Int = Context.BIND_AUTO_CREATE,
-    block: suspend (serviceBinder: IBinder) -> R
+    block: suspend (serviceBinder: IBinder) -> R,
 ): R {
     val connection = ChannelServiceConnection(onDisconnected)
     bindLoop@ while (true) {
         try {
+            // First, we try to bind the service
             val serviceBindingStarted = withContext(NonCancellable + Dispatchers.IO) {
                 bindService(service, connection, flags)
             }
-            if (serviceBindingStarted.not()) {
+            if (serviceBindingStarted.not()) { // The binding attempt can fail early.
                 val bindingIssueBehavior = onBindingIssue(ServiceBindingIssue.NotFoundOrNoPermission)
                 when (bindingIssueBehavior) {
                     is OnBindingIssue.GiveUp -> return bindingIssueBehavior.returnValue
@@ -65,18 +66,19 @@ suspend fun <R> Context.withBoundService(
             }
             var isWaitingForReconnect = false
             reconnectLoop@ while (true) {
-                val bindingOrIssue: Xor<IBinder, ServiceBindingIssue> = raceOf({
-                    Xor.First(connection.awaitConnect())
-                }, {
-                    // Sometimes, onServiceConnected is never called.
-                    // This happens often when the app has just been updated, so we use a timeout.
-                    timeoutConnection(isWaitingForReconnect)
-                    Xor.Second(ServiceBindingIssue.Timeout)
-                }, {
-                    val bindingIssue = connection.awaitBindingIssue()
-                    Xor.Second(bindingIssue)
-                })
+                // Then, we await for connection (or any issue)
+                val bindingOrIssue: Xor<IBinder, ServiceBindingIssue> = raceOf(
+                    { Xor.First(connection.awaitConnect()) },
+                    { Xor.Second(connection.awaitBindingIssue()) },
+                    {
+                        // Sometimes, onServiceConnected is never called.
+                        // This happens often when the app has just been updated, so we use a timeout.
+                        timeoutConnection(isWaitingForReconnect)
+                        Xor.Second(ServiceBindingIssue.Timeout)
+                    }
+                )
 
+                // Get the binder interface, if connected successfully, or jump out if there was any issue.
                 val binding: IBinder = when (bindingOrIssue) {
                     is Xor.First -> bindingOrIssue.value
                     is Xor.Second -> when (val bindingIssueBehavior = onBindingIssue(bindingOrIssue.value)) {
@@ -84,37 +86,36 @@ suspend fun <R> Context.withBoundService(
                         OnBindingIssue.UnbindAndRetry -> continue@bindLoop
                     }
                 }
-                val result: Xor<R, ServiceBindingIssue?> = raceOf({
-                    Xor.First(block(binding))
-                }, {
-                    Dispatchers.IO { binding.awaitProcessDeath() }
-                    Xor.Second(ServiceBindingIssue.BindingDied)
-                }, {
-                    when (val onDisconnectBehavior = connection.awaitDisconnect()) {
-                        is OnServiceDisconnectionBehavior.AwaitRebind -> raceOf({
-                            val result = onDisconnectBehavior.awaitUnbind()
-                            Xor.First(result)
-                        }, {
-                            connection.awaitReconnect()
-                            Xor.Second(null)
-                        })
-                        is OnServiceDisconnectionBehavior.UnbindImmediately -> {
-                            Xor.First(onDisconnectBehavior.returnValue)
+                // Run the block with the binder, while listening for disconnection, and binding death.
+                val result: Xor<R, ServiceBindingIssue?> = raceOf(
+                    { Xor.First(block(binding)) },
+                    {
+                        Dispatchers.IO { binding.awaitProcessDeath() }
+                        Xor.Second(ServiceBindingIssue.BindingDied)
+                    },
+                    {
+                        when (val onDisconnectBehavior = connection.awaitDisconnect()) {
+                            is OnServiceDisconnectionBehavior.UnbindImmediately -> Xor.First(onDisconnectBehavior.returnValue)
+                            is OnServiceDisconnectionBehavior.AwaitRebind -> raceOf(
+                                { Xor.First(onDisconnectBehavior.awaitUnbind()) },
+                                {
+                                    connection.awaitReconnect()
+                                    Xor.Second(null)
+                                },
+                            )
                         }
-                    }
-                })
+                    },
+                )
 
+                // Return the result, wait for reconnection, or retry.
                 return when (result) {
                     is Xor.First -> result.value
-                    is Xor.Second -> when (result.value) {
-                        null -> {
-                            isWaitingForReconnect = true
-                            continue@reconnectLoop
-                        }
-                        else -> when (val behavior = onBindingIssue(result.value)) {
-                            is OnBindingIssue.GiveUp -> behavior.returnValue
-                            OnBindingIssue.UnbindAndRetry -> continue@bindLoop
-                        }
+                    is Xor.Second -> if (result.value == null) {
+                        isWaitingForReconnect = true
+                        continue@reconnectLoop
+                    } else when (val behavior = onBindingIssue(result.value)) {
+                        is OnBindingIssue.GiveUp -> behavior.returnValue
+                        OnBindingIssue.UnbindAndRetry -> continue@bindLoop
                     }
                 }
             }
