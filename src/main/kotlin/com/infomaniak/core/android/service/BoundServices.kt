@@ -19,18 +19,14 @@
 
 package com.infomaniak.core.android.service
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.RemoteException
-import androidx.annotation.RequiresApi
 import com.infomaniak.core.Xor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.withContext
 import splitties.coroutines.raceOf
@@ -146,49 +142,6 @@ private suspend fun IBinder.awaitProcessDeath() {
         // Already died
     } finally {
         unlinkToDeath(deathRecipient, 0)
-    }
-}
-
-private class ChannelServiceConnection<R>(
-    private val onDisconnected: () -> OnServiceDisconnectionBehavior<R>
-) : ServiceConnection {
-
-    private val bindingIssueChannel = Channel<ServiceBindingIssue>(capacity = Channel.CONFLATED)
-    private val binderChannel = Channel<IBinder>(capacity = Channel.CONFLATED)
-    private val onDisconnectChannel = Channel<OnServiceDisconnectionBehavior<R>>(capacity = Channel.CONFLATED)
-
-    suspend fun awaitBindingIssue(): ServiceBindingIssue = bindingIssueChannel.receive()
-
-    suspend fun awaitConnect(): IBinder = binderChannel.receive()
-
-    suspend fun awaitReconnect() {
-        val newConnectionBinder = binderChannel.receive()
-        binderChannel.send(newConnectionBinder) // Resend it so it can be received again in awaitBind()
-    }
-
-    suspend fun awaitDisconnect(): OnServiceDisconnectionBehavior<R> = onDisconnectChannel.receive()
-
-
-    @RequiresApi(28)
-    override fun onNullBinding(name: ComponentName) {
-        bindingIssueChannel.trySend(ServiceBindingIssue.NullBinding)
-    }
-
-    @RequiresApi(26)
-    override fun onBindingDied(name: ComponentName) {
-        bindingIssueChannel.trySend(ServiceBindingIssue.BindingDied)
-    }
-
-    override fun onServiceConnected(name: ComponentName, service: IBinder?) {
-        when (service) {
-            null -> bindingIssueChannel.trySend(ServiceBindingIssue.NullBinding)
-            else -> binderChannel.trySend(service)
-        }
-    }
-
-    override fun onServiceDisconnected(name: ComponentName) {
-        val onDisconnectedBehavior = onDisconnected()
-        onDisconnectChannel.trySend(onDisconnectedBehavior)
     }
 }
 
