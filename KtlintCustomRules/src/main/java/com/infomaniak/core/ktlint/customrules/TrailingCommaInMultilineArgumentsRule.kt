@@ -22,12 +22,11 @@ import com.pinterest.ktlint.rule.engine.core.api.ElementType
 import com.pinterest.ktlint.rule.engine.core.api.Rule
 import com.pinterest.ktlint.rule.engine.core.api.RuleId
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
-import org.jetbrains.kotlin.psi.KtFunction
 
-class TrailingCommaInMultilineParametersRule :
+class TrailingCommaInMultilineArgumentsRule :
     Rule(
-        ruleId = RuleId("${CUSTOM_RULE_SET_ID}:trailing-comma-multiline-parameters"),
-        about = About(),
+        ruleId = RuleId("${CUSTOM_RULE_SET_ID}:trailing-comma-multiline-arguments"),
+        about = About()
     ) {
 
     override fun beforeVisitChildNodes(
@@ -35,19 +34,14 @@ class TrailingCommaInMultilineParametersRule :
         autoCorrect: Boolean,
         emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit,
     ) {
-        if (isValueParameterList(node)) {
+        if (node.elementType == ElementType.VALUE_ARGUMENT_LIST) {
             checkTrailingComma(
                 node,
                 autoCorrect,
                 emit,
-                ElementType.VALUE_PARAMETER,
-                "Multiline parameter list should have a trailing comma",
+                ElementType.VALUE_ARGUMENT,
+                "Multiline argument list should have a trailing comma"
             )
         }
-    }
-
-    private fun isValueParameterList(node: ASTNode): Boolean {
-        val isValueParameterList = node.elementType == ElementType.VALUE_PARAMETER_LIST
-        return isValueParameterList && (node.psi.parent is KtFunction || node.psi.parent.parent is KtFunction)
     }
 }
