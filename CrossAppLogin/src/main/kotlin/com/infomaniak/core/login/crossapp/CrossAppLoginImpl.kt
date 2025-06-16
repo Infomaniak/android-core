@@ -35,17 +35,15 @@ import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateCh
 import com.infomaniak.core.login.crossapp.internal.certificates.AppSigningCertificates
 import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
 import com.infomaniak.lib.core.utils.SentryLog
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
+import kotlin.time.Duration.Companion.seconds
 
 internal class CrossAppLoginImpl : CrossAppLogin {
 
@@ -109,7 +107,7 @@ internal class CrossAppLoginImpl : CrossAppLogin {
     private suspend fun retrieveAccountsFromUncheckedService(service: Intent): List<ExternalAccount> {
         val bytesOrNull = appCtx.withBoundService<ByteArray?>(
             service = service,
-            timeoutConnection = { isWaitingForReconnect -> OnBindingIssue.GiveUp(null) },
+            timeoutConnection = { isWaitingForReconnect -> delay(3.seconds) },
             onDisconnected = { OnServiceDisconnectionBehavior.UnbindImmediately(null) },
             onBindingIssue = { OnBindingIssue.GiveUp(null) },
             flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
