@@ -173,6 +173,10 @@ object ApiController {
 
     class RefreshTokenException : Exception()
 
+    /**
+     * `executeRequest()` & `executeRequestBlocking()` are mostly duplicated.
+     * If one is modified, the other should too.
+     */
     suspend inline fun <reified T> executeRequest(
         url: String,
         method: ApiMethod,
@@ -229,6 +233,10 @@ object ApiController {
         }
     }
 
+    /**
+     * `executeRequest()` & `executeRequestBlocking()` are mostly duplicated.
+     * If one is modified, the other should too.
+     */
     @Deprecated(
         message = "This method is blocking. As much as possible, use the suspended version: `executeRequest()`.",
         replaceWith = ReplaceWith("executeRequest")
