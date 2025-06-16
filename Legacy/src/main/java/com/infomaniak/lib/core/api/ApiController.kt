@@ -85,7 +85,7 @@ object ApiController {
     }
 
     @Deprecated(
-        message = "This method is blocking preferred used callApi which is suspended as much as possible.",
+        message = "This method is blocking. As much as possible, use the suspended version: `callApi()`.",
         replaceWith = ReplaceWith("callApi")
     )
     inline fun <reified T> callApiBlocking(
@@ -230,7 +230,7 @@ object ApiController {
     }
 
     @Deprecated(
-        message = "This method is blocking preferred used executeRequest which is suspended as much as possible.",
+        message = "This method is blocking. As much as possible, use the suspended version: `executeRequest()`.",
         replaceWith = ReplaceWith("executeRequest")
     )
     inline fun <reified T> executeRequestBlocking(
