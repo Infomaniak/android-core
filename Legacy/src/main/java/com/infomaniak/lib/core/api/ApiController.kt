@@ -84,6 +84,22 @@ object ApiController {
         return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization, buildErrorResult)
     }
 
+    @Deprecated(
+        message = "This method is blocking preferred used callApi which is suspended as much as possible.",
+        replaceWith = ReplaceWith("callApi")
+    )
+    inline fun <reified T> callApiBlocking(
+        url: String,
+        method: ApiMethod,
+        body: Any? = null,
+        okHttpClient: OkHttpClient = HttpClient.okHttpClient,
+        useKotlinxSerialization: Boolean = false,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
+    ): T {
+        val requestBody: RequestBody = generateRequestBody(body)
+        return executeRequestBlocking(url, method, requestBody, okHttpClient, useKotlinxSerialization, buildErrorResult)
+    }
+
     fun generateRequestBody(body: Any?): RequestBody {
         val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val toJson = when (body) {
@@ -167,20 +183,7 @@ object ApiController {
     ): T {
         var bodyResponse = ""
         try {
-            @OptIn(ManualAuthorizationRequired::class)
-            val request = Request.Builder()
-                .url(url)
-                .headers(HttpUtils.getHeaders())
-                .apply {
-                    when (method) {
-                        ApiMethod.GET -> get()
-                        ApiMethod.POST -> post(requestBody)
-                        ApiMethod.DELETE -> delete(requestBody)
-                        ApiMethod.PUT -> put(requestBody)
-                        ApiMethod.PATCH -> patch(requestBody)
-                    }
-                }
-                .build()
+            val request = createRequest(url, method, requestBody)
 
             okHttpClient.newCall(request).await().use { response ->
                 bodyResponse = response.body?.string() ?: ""
@@ -225,6 +228,85 @@ object ApiController {
             }
         }
     }
+
+    @Deprecated(
+        message = "This method is blocking preferred used executeRequest which is suspended as much as possible.",
+        replaceWith = ReplaceWith("executeRequest")
+    )
+    inline fun <reified T> executeRequestBlocking(
+        url: String,
+        method: ApiMethod,
+        requestBody: RequestBody,
+        okHttpClient: OkHttpClient,
+        useKotlinxSerialization: Boolean,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)?,
+    ): T {
+        var bodyResponse = ""
+        try {
+            val request = createRequest(url, method, requestBody)
+
+            okHttpClient.newCall(request).execute().use { response ->
+                bodyResponse = response.body?.string() ?: ""
+                return when {
+                    response.code >= 500 -> {
+                        Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
+                            scope.setExtra("bodyResponse", bodyResponse)
+                        }
+                        createErrorResponse(
+                            InternalTranslatedErrorCode.UnknownError,
+                            InternalErrorPayload(ServerErrorException(bodyResponse), useKotlinxSerialization, bodyResponse),
+                            buildErrorResult = buildErrorResult,
+                        )
+                    }
+                    bodyResponse.isBlank() -> createInternetErrorResponse(buildErrorResult = buildErrorResult)
+                    else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse)
+                }
+            }
+        } catch (exception: CancellationException) {
+            throw exception
+        } catch (refreshTokenException: RefreshTokenException) {
+            refreshTokenException.printStackTrace()
+            return createErrorResponse(InternalTranslatedErrorCode.UnknownError, buildErrorResult = buildErrorResult)
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+
+            return if (exception.isNetworkException()) {
+                createInternetErrorResponse(noNetwork = exception is UnknownHostException, buildErrorResult = buildErrorResult)
+            } else {
+
+                if (exception.isSerializationException()) {
+                    Sentry.captureMessage("Error while decoding API Response", SentryLevel.ERROR) { scope ->
+                        scope.setExtra("bodyResponse", bodyResponse)
+                    }
+                }
+
+                createErrorResponse(
+                    InternalTranslatedErrorCode.UnknownError,
+                    InternalErrorPayload(exception, useKotlinxSerialization, bodyResponse),
+                    buildErrorResult = buildErrorResult,
+                )
+            }
+        }
+    }
+
+    @OptIn(ManualAuthorizationRequired::class)
+    fun createRequest(
+        url: String,
+        method: ApiMethod,
+        requestBody: RequestBody
+    ): Request = Request.Builder()
+        .url(url)
+        .headers(HttpUtils.getHeaders())
+        .apply {
+            when (method) {
+                ApiMethod.GET -> get()
+                ApiMethod.POST -> post(requestBody)
+                ApiMethod.DELETE -> delete(requestBody)
+                ApiMethod.PUT -> put(requestBody)
+                ApiMethod.PATCH -> patch(requestBody)
+            }
+        }
+        .build()
 
     inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String): T {
         val apiResponse = when {
