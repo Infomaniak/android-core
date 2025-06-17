@@ -118,7 +118,6 @@ suspend fun <R> Context.withBoundService(
         } finally {
             withContext(NonCancellable + Dispatchers.IO) {
                 unbindService(connection)
-                unbindService(connection) // Try to see if it's idempotent. //TODO: Remove this once we know.
             }
         }
     }
