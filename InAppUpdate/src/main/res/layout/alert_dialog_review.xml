@@ -15,25 +15,12 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/update_required_navigation"
-    app:startDestination="@id/updateRequiredActivity">
-
-    <activity
-        android:id="@+id/updateRequiredActivity"
-        android:name="com.infomaniak.lib.inappupdate.updaterequired.UpdateRequiredActivity"
-        android:label="UpdateRequiredActivity"
-        tools:layout="@layout/activity_update_required">
-        <argument
-            android:name="appId"
-            app:argType="string" />
-        <argument
-            android:name="versionCode"
-            app:argType="integer" />
-        <argument
-            android:name="appTheme"
-            app:argType="integer" />
-    </activity>
-</navigation>
+    android:id="@+id/dialogTitle"
+    style="@style/TitleReviewDialog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/marginStandard"
+    android:paddingVertical="@dimen/marginStandardMedium"
+    tools:text="dialog title" />

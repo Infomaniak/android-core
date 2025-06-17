@@ -2,6 +2,7 @@
 activityCompose = "1.9.3" # Doesn't build when bumped to 1.10.1 (Waiting SDK 35)
 androidxCollection = "1.5.0"
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
+workRuntimeKtx = "2.9.1" # Doesn't build when bumped to 2.10.0 (waiting for Api 35)
 appcompat = "1.7.0"
 coil = "3.0.2" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 coilNetworkOkhttp = "3.0.4" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
@@ -9,6 +10,7 @@ composeBom = "2025.02.00" # TODO: Update SwissTransfer before bumping this
 coreKtx = "1.6.1"
 composeFoundation = "1.8.1"
 datastorePreferences = "1.2.0-alpha02"
+gson = "2.13.1"
 integrity = "1.4.0"
 junit = "4.13" # Don't update this because it breaks tests
 junitAndroidx = "1.2.1"
@@ -36,6 +38,7 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerView" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
@@ -46,6 +49,7 @@ compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+gson = { group = "com.google.code.gson:gson", name = "gson" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
