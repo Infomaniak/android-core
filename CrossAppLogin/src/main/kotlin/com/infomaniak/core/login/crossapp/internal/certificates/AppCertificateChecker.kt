@@ -17,9 +17,21 @@
 
 package com.infomaniak.core.login.crossapp.internal.certificates
 
-internal sealed interface AppCertificateChecker {
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
-    suspend fun isUidAllowed(uid: Int): Boolean
+internal sealed class AppCertificateChecker(
+    val signingCertificates: AppSigningCertificates
+) {
 
-    suspend fun isPackageNameAllowed(packageName: String): Boolean?
+    companion object {
+        val withInfomaniakApps: AppCertificateChecker = AppCertificateCheckerImpl(
+            signingCertificates = infomaniakAppsCertificates,
+            coroutineScope = CoroutineScope(Dispatchers.Default)
+        )
+    }
+
+    abstract suspend fun isUidAllowed(uid: Int): Boolean
+
+    abstract suspend fun isPackageNameAllowed(packageName: String): Boolean?
 }
