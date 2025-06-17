@@ -35,7 +35,11 @@ internal class ChannelMessageHandler(channel: SendChannel<DisposableMessage>) : 
 
     override fun handleMessage(msg: Message) {
         weakChannelReference.get()?.let { channel ->
-            val disposableMessage = DisposableMessage.Companion.fromCopy(msg, recycleOriginalMessage = true)
+            val disposableMessage = DisposableMessage.Companion.fromCopy(
+                originalMessage = msg,
+                recycleOriginalMessage = false // Or an IllegalStateException will be thrown,
+                // with the message "IllegalStateException: This message cannot be recycled because it is still in use."
+            )
             channel.trySend(disposableMessage)
         }
     }
