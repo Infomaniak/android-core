@@ -31,9 +31,6 @@ import com.infomaniak.core.cancellable
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
-import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateCheckerImpl
-import com.infomaniak.core.login.crossapp.internal.certificates.AppSigningCertificates
-import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
 import com.infomaniak.lib.core.utils.SentryLog
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -47,18 +44,15 @@ import kotlin.time.Duration.Companion.seconds
 
 internal class CrossAppLoginImpl : CrossAppLogin {
 
-    private val appSigningCertificates: AppSigningCertificates = infomaniakAppsCertificates
-
-    private val certificateChecker: AppCertificateChecker = AppCertificateCheckerImpl(
-        signingCertificates = appSigningCertificates
-    )
+    private val certificateChecker = AppCertificateChecker.withInfomaniakApps
     private val ourPackageName = appCtx.packageName
+    private val targetPackageNames = certificateChecker.signingCertificates.packageNames.filter { it != ourPackageName }
 
     @ExperimentalSerializationApi
     override suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount> {
         val lists: List<List<ExternalAccount>> = coroutineScope {
-            appSigningCertificates.packageNames.mapNotNull { packageName ->
-                if (packageName == ourPackageName) null else async { retrieveAccountsFromApp(packageName) }
+            targetPackageNames.map { packageName ->
+                async { retrieveAccountsFromApp(packageName) }
             }.awaitAll()
         }
 
