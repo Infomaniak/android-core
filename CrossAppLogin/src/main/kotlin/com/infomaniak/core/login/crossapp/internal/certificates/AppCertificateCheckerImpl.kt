@@ -29,9 +29,10 @@ import kotlinx.coroutines.*
 import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
 
-internal class AppCertificateCheckerImpl(
-    private val signingCertificates: AppSigningCertificates
-) : AppCertificateChecker {
+internal class AppCertificateCheckerImpl internal constructor(
+    signingCertificates: AppSigningCertificates,
+    private val coroutineScope: CoroutineScope,
+) : AppCertificateChecker(signingCertificates) {
 
     private val packageManager = appCtx.packageManager
 
@@ -41,6 +42,7 @@ internal class AppCertificateCheckerImpl(
             // null means the app isn't installed. We don't want to cache the value in that case.
             if (isValidated != null) awaitCancellation()
         },
+        coroutineScope = coroutineScope,
     ) { packageName ->
         async { checkIfPackageMatchesAnyCertificate(packageName) }
     }
@@ -51,6 +53,7 @@ internal class AppCertificateCheckerImpl(
             // null means the app went away while checking the uid. We don't want to cache the value in that case.
             if (isAllowed != null) awaitCancellation()
         },
+        coroutineScope = coroutineScope,
         createElement = { uid -> async { checkIfUidShouldBeAllowed(uid) } }
     )
 
