@@ -39,13 +39,12 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
-import splitties.init.appCtx
 import kotlin.time.Duration.Companion.seconds
 
-internal class CrossAppLoginImpl : CrossAppLogin {
+internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
 
     private val certificateChecker = AppCertificateChecker.withInfomaniakApps
-    private val ourPackageName = appCtx.packageName
+    private val ourPackageName = context.packageName
     private val targetPackageNames = certificateChecker.signingCertificates.packageNames.filter { it != ourPackageName }
 
     @ExperimentalSerializationApi
@@ -123,7 +122,7 @@ internal class CrossAppLoginImpl : CrossAppLogin {
 
     @ExperimentalSerializationApi
     private suspend fun retrieveAccountsFromUncheckedService(service: Intent): List<ExternalAccount> {
-        val bytesOrNull = appCtx.withBoundService<ByteArray?>(
+        val bytesOrNull = context.withBoundService<ByteArray?>(
             service = service,
             timeoutConnection = { isWaitingForReconnect -> delay(3.seconds) },
             onDisconnected = { OnServiceDisconnectionBehavior.UnbindImmediately(null) },

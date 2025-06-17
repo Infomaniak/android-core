@@ -17,9 +17,14 @@
 
 package com.infomaniak.core.login.crossapp
 
+import android.content.Context
 import kotlinx.serialization.ExperimentalSerializationApi
 
 sealed interface CrossAppLogin {
+
+    companion object {
+        fun forContext(context: Context): CrossAppLogin = CrossAppLoginImpl(context)
+    }
 
     @ExperimentalSerializationApi
     suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount>
