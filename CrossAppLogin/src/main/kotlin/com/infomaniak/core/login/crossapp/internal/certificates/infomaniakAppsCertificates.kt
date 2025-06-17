@@ -17,9 +17,19 @@
 
 package com.infomaniak.core.login.crossapp.internal.certificates
 
+import com.infomaniak.core.login.crossapp.BuildConfig
 import com.infomaniak.core.login.crossapp.internal.certificates.LazyAppSigningCertificate as LazyCertificate
 
 internal val infomaniakAppsCertificates = AppSigningCertificates {
+    if (BuildConfig.DEBUG) {
+        this["com.infomaniak.drive"] = setOf(
+            LazyCertificate { "9C:03:99:5E:A4:89:26:53:85:09:A3:1D:6D:54:CB:A7:0F:72:0A:DF:9A:8E:54:BE:36:57:F5:78:70:48:1E:F6" },
+        )
+        this["com.infomaniak.mail"] = setOf(
+            LazyCertificate { "9C:03:99:5E:A4:89:26:53:85:09:A3:1D:6D:54:CB:A7:0F:72:0A:DF:9A:8E:54:BE:36:57:F5:78:70:48:1E:F6" },
+        )
+        return@AppSigningCertificates
+    }
     this["com.infomaniak.drive"] = setOf(
         LazyCertificate { "72:C2:E2:2D:56:BA:86:07:C4:D5:A0:95:ED:97:7B:A5:F5:D1:C6:0A:AF:39:C3:3D:E2:33:BE:77:CB:0F:37:78" },
     )
