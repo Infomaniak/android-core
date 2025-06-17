@@ -26,8 +26,6 @@ import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
-import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateCheckerImpl
-import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
 import com.infomaniak.core.login.crossapp.internal.localAccountsFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -46,9 +44,7 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
     private val messagesHandler = ChannelMessageHandler(incomingMessagesChannel)
     private val messenger by lazy { Messenger(messagesHandler) }
 
-    private val certificateChecker: AppCertificateChecker = AppCertificateCheckerImpl(
-        signingCertificates = infomaniakAppsCertificates
-    )
+    private val certificateChecker = AppCertificateChecker.withInfomaniakApps
 
     init {
         lifecycleScope.launch { handleIncomingMessages() }
