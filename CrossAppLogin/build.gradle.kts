@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
+    kotlin("plugin.serialization")
 }
 
 val coreCompileSdk: Int by rootProject.extra
