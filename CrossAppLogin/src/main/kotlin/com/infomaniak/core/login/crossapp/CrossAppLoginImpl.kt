@@ -21,6 +21,7 @@ package com.infomaniak.core.login.crossapp
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
@@ -140,7 +141,7 @@ internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
                         it.replyTo = replyTo
                     }
                     messenger.send(request)
-                    replies.receive().use { response -> response.obj as ByteArray }
+                    replies.receive().use { response -> (response.obj as Bundle).getByteArray("") }
                 } catch (_: RemoteException) {
                     null
                 }
