@@ -36,9 +36,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 
-abstract class BaseCrossAppLoginService : LifecycleService() {
-
-    protected abstract val selectedUserIdFlow: Flow<Int>
+abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int>) : LifecycleService() {
 
     private val incomingMessagesChannel = Channel<DisposableMessage>(capacity = Channel.UNLIMITED)
     private val messagesHandler = ChannelMessageHandler(incomingMessagesChannel)
