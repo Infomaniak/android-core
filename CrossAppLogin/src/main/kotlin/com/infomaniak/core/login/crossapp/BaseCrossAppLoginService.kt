@@ -84,7 +84,7 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
     ) {
         val accountsData = accountsDataFlow.first()
         val reply = Message.obtain().also { newMsg ->
-            newMsg.obj = Bundle().also { it.putByteArray("", accountsData) }
+            newMsg.putBundleWrappedDataInObj(accountsData)
             newMsg.isAsynchronous = true
         }
         try {
