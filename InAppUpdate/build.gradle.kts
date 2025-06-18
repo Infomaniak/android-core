@@ -17,6 +17,8 @@ android {
     defaultConfig {
         minSdk = coreMinSdk
 
+        buildConfigField("String", "INFOMANIAK_API_V1", "\"https://api.infomaniak.com/1\"")
+
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -42,9 +44,10 @@ android {
         create("fdroid")
     }
 
-    // buildFeatures {
-    //     compose = true
-    // }
+    buildFeatures {
+        // compose = true
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -55,6 +58,15 @@ dependencies {
     implementation(core.appcompat)
     implementation(core.androidx.work.runtime.ktx)
     implementation(core.kotlinx.serialization.json)
+
+    implementation(core.app.update)
+    implementation(core.app.update.ktx)
+
+    implementation(core.androidx.concurrent.futures.ktx)
+
+    implementation(core.okhttp)
+    
+    implementation("com.google.code.gson:gson:2.11.0")
 
     // implementation(libs.androidx.core.ktx)
     // implementation(libs.androidx.lifecycle.runtime.ktx)

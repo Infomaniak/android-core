@@ -17,14 +17,14 @@
  */
 package com.infomaniak.core.inappupdate.updaterequired.data.api
 
-import com.infomaniak.core.BuildConfig
-import com.infomaniak.core.inappupdate.StoresUtils
+import com.infomaniak.core.inappupdate.BuildConfig
+import com.infomaniak.core.inappupdate.StoreUtils
 import com.infomaniak.core.inappupdate.updaterequired.data.models.AppVersion.Platform
 
 object ApiRoutesStores {
 
     fun appVersion(appName: String): String {
-        val store = StoresUtils.REQUIRED_UPDATE_STORE.apiValue
+        val store = StoreUtils.REQUIRED_UPDATE_STORE.apiValue
         val platform = Platform.ANDROID.apiValue
 
         val parameters = "?only=min_version,published_versions.tag&filter_versions[]=production"

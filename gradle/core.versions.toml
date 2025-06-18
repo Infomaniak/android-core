@@ -2,15 +2,16 @@
 activityCompose = "1.9.3" # Doesn't build when bumped to 1.10.1 (Waiting SDK 35)
 androidxCollection = "1.5.0"
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
-workRuntimeKtx = "2.9.1" # Doesn't build when bumped to 2.10.0 (waiting for Api 35)
+workRuntimeKtx = "2.10.1"
 appcompat = "1.7.0"
+appUpdateVersion = "2.1.0"
 coil = "3.0.2" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 coilNetworkOkhttp = "3.0.4" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 composeBom = "2025.02.00" # TODO: Update SwissTransfer before bumping this
+concurrentFuturesKtx = "1.2.0"
 coreKtx = "1.6.1"
 composeFoundation = "1.8.1"
 datastorePreferences = "1.2.0-alpha02"
-gson = "2.13.1"
 integrity = "1.4.0"
 junit = "4.13" # Don't update this because it breaks tests
 junitAndroidx = "1.2.1"
@@ -22,6 +23,7 @@ lifecycleRuntimeKtx = "2.8.7" # Waiting for SDK 35 to update to 2.9.0+
 material = "1.12.0"
 matomo = "4.1.4"
 navigation = "2.8.9" # Waiting for SDK 35 to update to 2.9.0+
+okhttp = "4.12.0"
 playReview = "2.0.2"
 recyclerView = "1.3.2" # Waiting for SDK 35 to update to 1.4.0+
 robolectric = "4.13" # Don't update this because it breaks tests
@@ -32,6 +34,7 @@ splitties = "3.0.0"
 [libraries]
 androidx-collection = { module = "androidx.collection:collection", version.ref = "androidxCollection" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-concurrent-futures-ktx = { module = "androidx.concurrent:concurrent-futures-ktx", version.ref = "concurrentFuturesKtx" }
 androidx-core = { group = "androidx.core", name = "core", version.ref = "androidxCore" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
@@ -40,6 +43,8 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerView" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
+app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -49,7 +54,6 @@ compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-gson = { group = "com.google.code.gson:gson", name = "gson" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
@@ -65,6 +69,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 matomo = { module = "com.github.matomo-org:matomo-sdk-android", version.ref = "matomo" }
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }

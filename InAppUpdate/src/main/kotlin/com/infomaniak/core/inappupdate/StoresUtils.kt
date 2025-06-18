@@ -17,15 +17,10 @@
  */
 package com.infomaniak.core.inappupdate
 
+import android.util.Log
 import androidx.annotation.StyleRes
-import androidx.core.app.ComponentActivity
-import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.inappupdate.updaterequired.data.api.ApiRepositoryStores
 import com.infomaniak.core.inappupdate.updaterequired.data.models.AppVersion
-import com.infomaniak.core.networking.HttpClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal interface StoresUtils {
 
@@ -33,19 +28,22 @@ internal interface StoresUtils {
     val REQUIRED_UPDATE_STORE: AppVersion.Store
 
     //region In-App Update
-    fun ComponentActivity.checkUpdateIsRequired(
+    suspend fun checkUpdateIsRequired(
         appId: String,
         appVersion: String,
         versionCode: Int,
         @StyleRes themeRes: Int,
-    ) = lifecycleScope.launch(Dispatchers.IO) {
-        val apiResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClientNoTokenInterceptor)
+    ) {
+        // TODO: Find a better name.
+        val response = ApiRepositoryStores.getAppVersion(appId)
 
-        if (apiResponse.data?.mustRequireUpdate(appVersion) == true) {
-            withContext(Dispatchers.Main) {
-                UpdateRequiredActivity.startUpdateRequiredActivity(this@checkUpdateIsRequired, appId, versionCode, themeRes)
-                finish()
-            }
+        if (response?.mustRequireUpdate(appVersion) == true) {
+            // TODO: Replace with a customizable screen in Compose.
+            // withContext(Dispatchers.Main) {
+            //     UpdateRequiredActivity.startUpdateRequiredActivity(this@checkUpdateIsRequired, appId, versionCode, themeRes)
+            // }
+        } else {
+            Log.e("TOTO", "checkUpdateIsRequired - Something went wrong.")
         }
     }
     //endregion

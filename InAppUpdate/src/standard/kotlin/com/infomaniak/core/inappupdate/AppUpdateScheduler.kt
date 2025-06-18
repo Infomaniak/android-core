@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores
+package com.infomaniak.core.inappupdate
 
 import android.content.Context
 import androidx.concurrent.futures.CallbackToFutureAdapter
 import androidx.work.*
 import com.google.common.util.concurrent.ListenableFuture
-import com.infomaniak.lib.core.utils.SentryLog
-import com.infomaniak.lib.stores.updatemanagers.WorkerUpdateManager
+import com.infomaniak.core.inappupdate.updatemanagers.WorkerUpdateManager
+import com.infomaniak.core.sentry.SentryLog
 import io.sentry.Sentry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,11 +35,11 @@ class AppUpdateScheduler(
     private val workManager: WorkManager = WorkManager.getInstance(appContext),
 ) : UpdateScheduler(appContext, workManager) {
 
-    private val storesSettingsRepository = StoresSettingsRepository(appContext)
+    private val storesSettingsRepository = AppUpdateSettingsRepository(appContext)
 
     override fun scheduleWorkIfNeeded() {
         CoroutineScope(Dispatchers.IO).launch {
-            if (storesSettingsRepository.getValue(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY)) {
+            if (storesSettingsRepository.getValue(AppUpdateSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY)) {
                 SentryLog.d(TAG, "Work scheduled")
 
                 val workRequest = OneTimeWorkRequestBuilder<AppUpdateWorker>()

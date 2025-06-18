@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores.updatemanagers
+package com.infomaniak.core.inappupdate.updatemanagers
 
 import android.content.Context
 
