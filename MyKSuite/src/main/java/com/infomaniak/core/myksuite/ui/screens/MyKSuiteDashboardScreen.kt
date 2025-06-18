@@ -36,6 +36,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.extensions.openUrl
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.*

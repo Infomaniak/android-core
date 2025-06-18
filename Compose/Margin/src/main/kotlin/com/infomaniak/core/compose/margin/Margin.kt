@@ -15,10 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.myksuite.ui.theme
+package com.infomaniak.core.compose.margin
 
 import androidx.compose.ui.unit.dp
 
+/**
+ * Margins are accessible through here for now until we extract them to our design system
+ */
 object Margin {
     /** 4dp */
     val Micro = 4.dp

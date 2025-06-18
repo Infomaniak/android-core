@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
+import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.TextWithIcon
 import com.infomaniak.core.myksuite.ui.theme.*
