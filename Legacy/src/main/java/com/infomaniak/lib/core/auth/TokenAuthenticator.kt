@@ -36,24 +36,27 @@ class TokenAuthenticator(
     private val userId = tokenInterceptorListener.getCurrentUserId()
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        return runBlocking(Dispatchers.IO) {
-            mutex.withLock {
-                val request = response.request
-                val authorization = request.header("Authorization")
-                val apiToken = tokenInterceptorListener.getApiToken() ?: return@runBlocking null
-                val isAlreadyRefreshed = apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")
-                val hasUserChanged = userId != tokenInterceptorListener.getCurrentUserId()
+        val hasUserChanged = userId != tokenInterceptorListener.getCurrentUserId()
+        if (hasUserChanged) return null
 
-                return@runBlocking when {
-                    hasUserChanged -> null
-                    apiToken.isInfinite -> {
-                        tokenInterceptorListener.onRefreshTokenError()
-                        null
-                    }
-                    isAlreadyRefreshed -> changeAccessToken(request, apiToken)
-                    else -> {
-                        val newToken = ApiController.refreshToken(apiToken.refreshToken!!, tokenInterceptorListener)
-                        changeAccessToken(request, newToken)
+        return runBlocking(Dispatchers.IO) {
+            val currentUserApiToken = tokenInterceptorListener.getCurrentUserApiToken() ?: return@runBlocking null
+            if (currentUserApiToken.isInfinite) {
+                tokenInterceptorListener.onRefreshTokenError()
+                null
+            } else {
+                mutex.withLock {
+                    val request = response.request
+                    val apiCallBearer = request.header("Authorization")?.replaceFirst("Bearer ", "")
+                    val isAlreadyRefreshed = currentUserApiToken.accessToken != apiCallBearer
+
+                    return@runBlocking when {
+                        isAlreadyRefreshed -> changeAccessToken(request, currentUserApiToken)
+                        else -> {
+                            val newToken =
+                                ApiController.refreshToken(currentUserApiToken.refreshToken!!, tokenInterceptorListener)
+                            changeAccessToken(request, newToken)
+                        }
                     }
                 }
             }
