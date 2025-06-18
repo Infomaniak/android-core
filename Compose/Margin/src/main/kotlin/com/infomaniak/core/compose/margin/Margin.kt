@@ -19,6 +19,9 @@ package com.infomaniak.core.compose.margin
 
 import androidx.compose.ui.unit.dp
 
+/**
+ * Margins are accessible through here for now until we extract them to our design system
+ */
 object Margin {
     /** 4dp */
     val Micro = 4.dp
