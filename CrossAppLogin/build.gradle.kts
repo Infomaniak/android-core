@@ -44,8 +44,10 @@ dependencies {
     api(core.kotlinx.serialization.protobuf)
 
     implementation(project(":Core"))
+    implementation(project(":Core:AppIntegrity"))
     implementation(project(":Core:Legacy"))
     implementation(core.splitties.mainthread)
+    implementation(core.ktor.client.core)
 
     testImplementation(core.junit)
     androidTestImplementation(core.androidx.junit)
