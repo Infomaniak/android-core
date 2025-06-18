@@ -31,9 +31,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures.*
-import com.infomaniak.core.myksuite.ui.theme.*
+import com.infomaniak.core.myksuite.ui.theme.Dimens
+import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
+import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
 internal fun ColumnScope.UpgradeFeature(
