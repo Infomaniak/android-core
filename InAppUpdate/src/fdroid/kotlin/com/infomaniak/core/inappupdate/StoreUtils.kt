@@ -20,7 +20,6 @@ package com.infomaniak.core.inappupdate
 import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion.Store
 
 object StoreUtils : StoresUtils {
-
     const val APP_UPDATE_TAG = "appUpdateFDroid"
     override val REQUIRED_UPDATE_STORE = Store.FDROID
 }

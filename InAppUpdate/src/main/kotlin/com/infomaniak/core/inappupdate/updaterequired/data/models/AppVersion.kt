@@ -22,7 +22,6 @@ import io.sentry.SentryLevel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-//@SuppressLint("UnsafeOptInUsageError") // TODO: Remove this line.
 @Serializable
 data class AppVersion(
     @SerialName("min_version")

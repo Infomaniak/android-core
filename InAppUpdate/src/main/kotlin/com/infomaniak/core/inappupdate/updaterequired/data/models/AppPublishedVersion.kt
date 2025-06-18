@@ -17,9 +17,7 @@
  */
 package com.infomaniak.core.inappupdate.updaterequired.data.models
 
-import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError") // TODO: Remove this line.
 @Serializable
 data class AppPublishedVersion(var tag: String)

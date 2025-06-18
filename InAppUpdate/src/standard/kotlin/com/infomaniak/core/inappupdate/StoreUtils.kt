@@ -15,15 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores
+package com.infomaniak.core.inappupdate
 
-import androidx.fragment.app.FragmentActivity
+import androidx.annotation.StyleRes
 import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.review.ReviewManagerFactory
-import com.infomaniak.lib.stores.updaterequired.data.models.AppVersion.Store
+import com.infomaniak.core.inappupdate.updaterequired.data.models.AppVersion.Store
 
 object StoreUtils : StoresUtils {
     const val APP_UPDATE_TAG = "inAppUpdate"
     const val DEFAULT_UPDATE_TYPE = AppUpdateType.FLEXIBLE
     override val REQUIRED_UPDATE_STORE = Store.PLAY_STORE
+
+    override suspend fun checkUpdateIsRequired(
+        appId: String,
+        appVersion: String,
+        versionCode: Int,
+        @StyleRes themeRes: Int,
+    ) {
+        super.checkUpdateIsRequired(
+            appId,
+            appVersion,
+            versionCode,
+            themeRes,
+        )
+    }
 }

@@ -15,14 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.stores.updatemanagers
+package com.infomaniak.core.inappupdate.updatemanagers
 
+import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
@@ -32,12 +33,17 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.installErrorCode
-import com.infomaniak.lib.core.utils.SentryLog
-import com.infomaniak.lib.stores.BaseInAppUpdateManager
-import com.infomaniak.lib.stores.StoreUtils
-import com.infomaniak.lib.stores.StoresSettingsRepository
+import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.APP_UPDATE_LAUNCHES_KEY
+import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.DEFAULT_APP_UPDATE_LAUNCHES
+import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY
+import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.IS_USER_WANTING_UPDATES_KEY
+import com.infomaniak.core.inappupdate.BaseInAppUpdateManager
+import com.infomaniak.core.inappupdate.StoreUtils
+import com.infomaniak.core.sentry.SentryLog
 import io.sentry.Sentry
 import io.sentry.SentryLevel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Manager encapsulating all the needed logic for Google Play's in-app update api
@@ -48,7 +54,7 @@ import io.sentry.SentryLevel
  * @param versionCode: Parameter needed for the fDroid manager, won't compile without it
  */
 class InAppUpdateManager(
-    private val activity: FragmentActivity,
+    private val activity: ComponentActivity,
     appId: String,
     versionCode: Int,
 ) : BaseInAppUpdateManager(activity) {
@@ -58,14 +64,14 @@ class InAppUpdateManager(
     private val inAppUpdateResultLauncher: ActivityResultLauncher<IntentSenderRequest> = activity.registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
-        viewModel.isUpdateBottomSheetShown = false
+        isUpdateBottomSheetShown = false
         val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
-        viewModel.set(StoresSettingsRepository.IS_USER_WANTING_UPDATES_KEY, isUserWantingUpdate)
+        set(IS_USER_WANTING_UPDATES_KEY, isUserWantingUpdate)
         onUserChoice?.invoke(isUserWantingUpdate)
     }
 
-    private val onUpdateDownloaded = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, true) }
-    private val onUpdateInstalled = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false) }
+    private val onUpdateDownloaded = { set(HAS_APP_UPDATE_DOWNLOADED_KEY, true) }
+    private val onUpdateInstalled = { set(HAS_APP_UPDATE_DOWNLOADED_KEY, false) }
 
     private var onUserChoice: ((Boolean) -> Unit)? = null
     private var onInstallStart: (() -> Unit)? = null
@@ -85,7 +91,7 @@ class InAppUpdateManager(
                 InstallStatus.FAILED -> {
                     SentryLog.d(StoreUtils.APP_UPDATE_TAG, "onInstallFailure triggered by InstallStateUpdated listener")
                     if (updateType == AppUpdateType.IMMEDIATE) {
-                        viewModel.resetUpdateSettings()
+                        resetUpdateSettings()
                         onInstallFailure?.invoke(InstallException(state.installErrorCode))
                     }
                 }
@@ -149,15 +155,14 @@ class InAppUpdateManager(
     }
 
     override fun installDownloadedUpdate() {
-        with(viewModel) {
-            set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false)
-            set(StoresSettingsRepository.APP_UPDATE_LAUNCHES_KEY, StoresSettingsRepository.DEFAULT_APP_UPDATE_LAUNCHES)
-        }
+        set(HAS_APP_UPDATE_DOWNLOADED_KEY, false)
+        set(APP_UPDATE_LAUNCHES_KEY, DEFAULT_APP_UPDATE_LAUNCHES)
+
         onInstallStart?.invoke()
         appUpdateManager.completeUpdate()
             .addOnSuccessListener { onInstallSuccess?.invoke() }
             .addOnFailureListener {
-                viewModel.resetUpdateSettings()
+                resetUpdateSettings()
                 onInstallFailure?.invoke(AppUpdateException(it.message))
             }
     }
@@ -167,7 +172,7 @@ class InAppUpdateManager(
             if (updateType == AppUpdateType.IMMEDIATE) {
                 val isUpdateStalled =
                     appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                if (isUpdateStalled || !viewModel.isUpdateBottomSheetShown) startUpdateFlow(appUpdateInfo)
+                if (isUpdateStalled || !isUpdateBottomSheetShown) startUpdateFlow(appUpdateInfo)
             }
         }.addOnFailureListener {
             Sentry.captureMessage("Impossible to require update") { scope ->
@@ -180,7 +185,9 @@ class InAppUpdateManager(
 
     private fun observeAppUpdateDownload() {
         onInAppUpdateUiChange?.let { updateUiCallback ->
-            viewModel.canInstallUpdate.observe(activity, updateUiCallback)
+            activity.lifecycleScope.launch(Dispatchers.IO) {
+                canInstallUpdate.collect(updateUiCallback)
+            }
         }
     }
 
@@ -202,7 +209,7 @@ class InAppUpdateManager(
     private fun startUpdateFlow(appUpdateInfo: AppUpdateInfo) = with(appUpdateManager) {
         runCatching {
             registerListener(installStateUpdatedListener)
-            viewModel.isUpdateBottomSheetShown = true
+            isUpdateBottomSheetShown = true
             startUpdateFlowForResult(
                 appUpdateInfo,
                 inAppUpdateResultLauncher,
