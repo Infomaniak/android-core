@@ -94,7 +94,7 @@ abstract class CredentialManager {
                     user?.let { onRefreshTokenError?.invoke(it) }
                 }
 
-                override suspend fun getApiToken(): ApiToken? {
+                override suspend fun getCurrentUserApiToken(): ApiToken? {
                     user = getUserById(userId)
                     return user?.apiToken
                 }
