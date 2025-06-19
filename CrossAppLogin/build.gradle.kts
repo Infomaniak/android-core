@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
+    kotlin("plugin.serialization")
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -18,6 +19,7 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    buildFeatures.buildConfig = true
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -42,8 +44,10 @@ dependencies {
     api(core.kotlinx.serialization.protobuf)
 
     implementation(project(":Core"))
+    implementation(project(":Core:AppIntegrity"))
     implementation(project(":Core:Legacy"))
     implementation(core.splitties.mainthread)
+    implementation(core.ktor.client.core)
 
     testImplementation(core.junit)
     androidTestImplementation(core.androidx.junit)
