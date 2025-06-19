@@ -44,8 +44,11 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
 
     private val certificateChecker = AppCertificateChecker.withInfomaniakApps
 
+    private val signedInAccountRequests = Channel<Messenger>(capacity = Channel.UNLIMITED)
+
     init {
         lifecycleScope.launch { handleIncomingMessages() }
+        lifecycleScope.launch { handleSignedInAccountsRequests() }
     }
 
     final override fun onBind(intent: Intent): IBinder? {
@@ -55,9 +58,6 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
 
     private suspend fun handleIncomingMessages() = Dispatchers.Default {
         val ourUid = Process.myUid()
-        val accountsDataFlow: SharedFlow<ByteArray> = localAccountsFlow(selectedUserIdFlow)
-            .map { ProtoBuf.Default.encodeToByteArray(it) }
-            .shareIn(this, SharingStarted.Eagerly, replay = 1)
 
         incomingMessagesChannel.consumeAsFlow().onEach { disposableMessage ->
             disposableMessage.use { msg ->
@@ -66,16 +66,25 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
 
                 when (msg.what) {
                     IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
-                        sendSignedInAccountsToApp(
-                            accountsDataFlow = accountsDataFlow,
-                            trustedClientMessenger = msg.replyTo
-                        )
+                        check(signedInAccountRequests.trySend(msg.replyTo).isSuccess)
                     }
                 }
             }
         }.onCompletion {
             messagesHandler.removeCallbacksAndMessages(null)
         }.collect()
+    }
+
+    private suspend fun handleSignedInAccountsRequests() = Dispatchers.Default {
+        val accountsDataFlow: SharedFlow<ByteArray> = localAccountsFlow(selectedUserIdFlow)
+            .map { ProtoBuf.Default.encodeToByteArray(it) }
+            .shareIn(this, SharingStarted.Eagerly, replay = 1)
+        for (trustedClient in signedInAccountRequests) {
+            sendSignedInAccountsToApp(
+                accountsDataFlow = accountsDataFlow,
+                trustedClientMessenger = trustedClient
+            )
+        }
     }
 
     private suspend fun sendSignedInAccountsToApp(
