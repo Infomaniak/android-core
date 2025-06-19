@@ -43,9 +43,11 @@ import java.io.IOException
 
 class DerivedTokenGeneratorImpl(
     coroutineScope: CoroutineScope,
+    private val tokenRetrievalUrl: String,
     private val hostAppPackageName: String,
     private val clientId: String,
     userAgent: String,
+    private val accessType: InfomaniakLogin.AccessType? = null,
 ) : DerivedTokenGenerator {
 
     private val appIntegrityManager = AppIntegrityManager(appCtx, userAgent)
@@ -70,8 +72,7 @@ class DerivedTokenGeneratorImpl(
     }
 
     private suspend fun attemptDerivingToken(token: String): Xor<ApiToken, Issue> {
-        val targetUrl = "https://login.infomaniak.com/token" //TODO: Share the URL with the code in InfomaniakLogin.kt
-        val accessType: InfomaniakLogin.AccessType? = null //TODO: Share the value with the code in InfomaniakLogin.kt
+        val targetUrl = tokenRetrievalUrl
         val attestationToken: String = when (val result = attestationTokensForUrls.useElement(targetUrl) { it.await() }) {
             is Xor.First -> result.value
             is Xor.Second -> return result
@@ -84,10 +85,7 @@ class DerivedTokenGeneratorImpl(
             it.addFormDataPart("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
             it.addFormDataPart("client_assertion", attestationToken)
             it.addFormDataPart("client_id", clientId)
-            @Suppress("KotlinConstantConditions")
-            if (accessType == null) {
-                it.addFormDataPart("duration", "infinite")
-            }
+            if (accessType == null) it.addFormDataPart("duration", "infinite")
         }.build()
 
         val okHttpClient = OkHttpClient()
