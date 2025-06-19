@@ -26,12 +26,15 @@ import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
+import com.infomaniak.core.login.crossapp.internal.deviceid.SharedDeviceIdManager
 import com.infomaniak.core.login.crossapp.internal.localAccountsFlow
+import com.infomaniak.lib.core.utils.SentryLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -45,6 +48,7 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
     private val certificateChecker = AppCertificateChecker.withInfomaniakApps
 
     private val signedInAccountRequests = Channel<Messenger>(capacity = Channel.UNLIMITED)
+    private val syncSharedDeviceIdRequests = Channel<String>(capacity = Channel.UNLIMITED)
 
     init {
         lifecycleScope.launch { handleIncomingMessages() }
@@ -64,9 +68,20 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
                 check(msg.sendingUid != ourUid) // We are not supposed to talk to ourselves.
                 if (certificateChecker.isUidAllowed(msg.sendingUid).not()) return@use
 
+                val trustedClientMessenger = msg.replyTo
                 when (msg.what) {
                     IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
-                        check(signedInAccountRequests.trySend(msg.replyTo).isSuccess)
+                        check(signedInAccountRequests.trySend(trustedClientMessenger).isSuccess)
+                    }
+                    IpcMessageWhat.GET_SHARED_DEVICE_ID -> launch {
+                        returnSharedDeviceIdOrWaitForSync(trustedClientMessenger)
+                    }
+                    IpcMessageWhat.SYNC_SHARED_DEVICE_ID -> {
+                        val sharedId: String = runCatching { msg.unwrapStringOrNull()!! }.getOrElse { t ->
+                            SentryLog.wtf(TAG, "SYNC_SHARED_DEVICE_ID message didn't contain a proper string id", t)
+                            return@use
+                        }
+                        syncSharedDeviceIdRequests.trySend(sharedId)
                     }
                 }
             }
@@ -87,24 +102,55 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
         }
     }
 
+    private suspend fun returnSharedDeviceIdOrWaitForSync(clientMessenger: Messenger) {
+        SharedDeviceIdManager.storage.readDeviceId()?.let { sharedId ->
+            sendSharedDeviceId(clientMessenger, sharedId)
+            return
+        }
+        SharedDeviceIdManager.sharedDeviceIdMutex.withLock {
+            SharedDeviceIdManager.storage.readDeviceId()?.let { sharedId ->
+                sendSharedDeviceId(clientMessenger, sharedId)
+                return
+            }
+            val sharedIdToUse = syncSharedDeviceIdRequests.receive()
+            SharedDeviceIdManager.storage.setDeviceId(sharedIdToUse)
+        }
+    }
+
+    private fun sendSharedDeviceId(destination: Messenger, id: String) {
+        destination.trySending { newMessage -> newMessage.putBundleWrappedStringInObj(id) }
+    }
+
     private suspend fun sendSignedInAccountsToApp(
         accountsDataFlow: SharedFlow<ByteArray>,
         trustedClientMessenger: Messenger
     ) {
         val accountsData = accountsDataFlow.first()
-        val reply = Message.obtain().also { newMsg ->
-            newMsg.putBundleWrappedDataInObj(accountsData)
-            newMsg.isAsynchronous = true
+        trustedClientMessenger.trySending { newMessage -> newMessage.putBundleWrappedDataInObj(accountsData) }
+    }
+
+    private inline fun Messenger.trySending(configureMessage: (Message) -> Unit): Boolean {
+        val reply = Message.obtain().also { msg ->
+            msg.isAsynchronous = true
+            configureMessage(msg)
         }
-        try {
-            trustedClientMessenger.send(reply)
+        return try {
+            send(reply)
+            true
         } catch (_: DeadObjectException) {
-            // The client app died before we could respond, we can safely ignore it.
+            // The client app died before we could respond. Usually, we can safely ignore it.
+            false
         }
     }
 
 
     internal object IpcMessageWhat {
         const val GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS = 0
+        const val GET_SHARED_DEVICE_ID = 1
+        const val SYNC_SHARED_DEVICE_ID = 2
+    }
+
+    private companion object {
+        const val TAG = "BaseCrossAppLoginService"
     }
 }

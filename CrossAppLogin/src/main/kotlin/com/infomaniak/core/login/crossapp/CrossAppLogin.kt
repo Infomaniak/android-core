@@ -33,5 +33,5 @@ sealed interface CrossAppLogin {
      * Returns an app generate identifier that is shared among our apps,
      * to group connected apps under a single device.
      */
-    suspend fun getAppGroupScopedDeviceInstanceId()
+    suspend fun getSharedDeviceInstanceId(): String
 }
