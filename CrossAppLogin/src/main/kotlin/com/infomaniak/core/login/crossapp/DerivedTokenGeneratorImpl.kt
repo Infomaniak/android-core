@@ -141,7 +141,7 @@ class DerivedTokenGeneratorImpl(
         Xor.Second(issue)
     }
 
-    //TODO: Improve error handling as some are recoverable, while some are not.
+    //TODO: Improve error handling as some are recoverable (network or backends availability related), while some are not.
     // See Play Integrity error codes: https://developer.android.com/google/play/integrity/error-codes,
     // and remediation: https://developer.android.com/google/play/integrity/remediation
     @Throws(IntegrityException::class)
