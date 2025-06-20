@@ -57,7 +57,6 @@ enum class FormatData {
 
 fun Date.format(pattern: String = FORMAT_DATE_DEFAULT): String = SimpleDateFormat(pattern, Locale.getDefault()).format(this)
 
-@RequiresApi(26)
 fun Date.formatWithLocal(formatData: FormatData, formatStyle: FormatStyle, formatStyleSecondary: FormatStyle? = null): String {
     val formatter = when (formatData) {
         FormatData.DATE -> DateTimeFormatter.ofLocalizedDate(formatStyle)

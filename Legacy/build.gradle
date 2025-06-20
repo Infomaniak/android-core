@@ -7,7 +7,7 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 rootProject.ext {
     legacyCompileSdk = 34
-    legacyMinSdk = 24
+    legacyMinSdk = 27
 }
 
 def legacyCompileSdk = rootProject.ext["legacyCompileSdk"]
