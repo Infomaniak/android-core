@@ -195,13 +195,7 @@ fun Context.startAppSettingsConfig() {
 fun Context.openAppNotificationSettings() {
     Intent().apply {
         action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
-        when {
-            SDK_INT >= 26 -> putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-            else -> {
-                putExtra("app_package", packageName)
-                putExtra("app_uid", applicationInfo.uid)
-            }
-        }
+        putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
     }.also(::startActivity)
 }
 
@@ -251,12 +245,10 @@ fun Window.lightStatusBar(enabled: Boolean) {
 // TODO: Fix deprecated
 fun Window.lightNavigationBar(enabled: Boolean) {
     // TODO Android 11
-    if (SDK_INT >= 26) {
-        if (enabled) {
-            decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-        } else {
-            decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
-        }
+    if (enabled) {
+        decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+    } else {
+        decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
     }
 }
 

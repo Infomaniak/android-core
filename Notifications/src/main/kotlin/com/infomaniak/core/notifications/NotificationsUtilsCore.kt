@@ -29,7 +29,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.infomaniak.core.extensions.hasPermissions
 
-@RequiresApi(26)
 fun buildNotificationChannel(
     channelId: String,
     name: String,
@@ -43,7 +42,6 @@ fun buildNotificationChannel(
     }
 }
 
-@RequiresApi(26)
 fun Context.createNotificationChannels(
     channelList: List<NotificationChannel>,
     groupList: List<NotificationChannelGroup>? = null,
@@ -54,7 +52,6 @@ fun Context.createNotificationChannels(
     }
 }
 
-@RequiresApi(26)
 fun Context.deleteNotificationChannels(channelList: List<String>) {
     (getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager).apply {
         channelList.forEach { deleteNotificationChannel(it) }
