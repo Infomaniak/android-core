@@ -35,4 +35,5 @@ android {
 
 dependencies {
     api(core.sentry.android)
+    api(core.sentry.okhttp)
 }
