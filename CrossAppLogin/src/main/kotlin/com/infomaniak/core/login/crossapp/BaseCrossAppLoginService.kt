@@ -64,9 +64,10 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
                 check(msg.sendingUid != ourUid) // We are not supposed to talk to ourselves.
                 if (certificateChecker.isUidAllowed(msg.sendingUid).not()) return@use
 
+                val trustedClientMessenger = msg.replyTo
                 when (msg.what) {
                     IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
-                        check(signedInAccountRequests.trySend(msg.replyTo).isSuccess)
+                        check(signedInAccountRequests.trySend(trustedClientMessenger).isSuccess)
                     }
                 }
             }
@@ -92,14 +93,20 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
         trustedClientMessenger: Messenger
     ) {
         val accountsData = accountsDataFlow.first()
-        val reply = Message.obtain().also { newMsg ->
-            newMsg.putBundleWrappedDataInObj(accountsData)
-            newMsg.isAsynchronous = true
+        trustedClientMessenger.trySending { newMessage -> newMessage.putBundleWrappedDataInObj(accountsData) }
+    }
+
+    private inline fun Messenger.trySending(configureMessage: (Message) -> Unit): Boolean {
+        val reply = Message.obtain().also { msg ->
+            msg.isAsynchronous = true
+            configureMessage(msg)
         }
-        try {
-            trustedClientMessenger.send(reply)
+        return try {
+            send(reply)
+            true
         } catch (_: DeadObjectException) {
-            // The client app died before we could respond, we can safely ignore it.
+            // The client app died before we could respond. Usually, we can safely ignore it.
+            false
         }
     }
 
