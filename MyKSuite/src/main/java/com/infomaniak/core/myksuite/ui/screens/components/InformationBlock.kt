@@ -36,7 +36,10 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.TextWithIcon
-import com.infomaniak.core.myksuite.ui.theme.*
+import com.infomaniak.core.myksuite.ui.theme.Dimens
+import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
+import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.myksuite.ui.theme.Typography
 
 @Composable
 internal fun InformationBlock(modifier: Modifier = Modifier, text: String, buttonText: String, onClick: () -> Unit) {

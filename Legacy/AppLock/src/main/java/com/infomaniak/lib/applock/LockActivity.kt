@@ -43,7 +43,11 @@ import com.infomaniak.lib.applock.databinding.ActivityLockBinding
 import com.infomaniak.lib.core.utils.getAppName
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import splitties.init.appCtx
 import kotlin.system.exitProcess

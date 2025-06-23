@@ -21,7 +21,11 @@ import android.app.DownloadManager
 import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
-import com.infomaniak.core.DownloadStatus.*
+import com.infomaniak.core.DownloadStatus.Complete
+import com.infomaniak.core.DownloadStatus.Failed
+import com.infomaniak.core.DownloadStatus.InProgress
+import com.infomaniak.core.DownloadStatus.Paused
+import com.infomaniak.core.DownloadStatus.Pending
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.Flow

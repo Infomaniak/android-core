@@ -17,7 +17,12 @@
  */
 package com.infomaniak.lib.core.room
 
-import androidx.room.*
+import androidx.room.AutoMigration
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.lib.core.models.OrganizationAccount

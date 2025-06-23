@@ -19,7 +19,14 @@ package com.infomaniak.lib.stores
 
 import android.content.Context
 import androidx.concurrent.futures.CallbackToFutureAdapter
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.ListenableWorker
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.WorkQuery
+import androidx.work.WorkerParameters
 import com.google.common.util.concurrent.ListenableFuture
 import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.stores.updatemanagers.WorkerUpdateManager

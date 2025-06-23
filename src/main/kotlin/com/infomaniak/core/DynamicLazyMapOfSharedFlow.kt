@@ -20,7 +20,12 @@ package com.infomaniak.core
 import com.infomaniak.core.DynamicLazyMap.CacheManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 
 /**
  * Helper to create a [DynamicLazyMap] of [SharedFlow]s with a [Flow] factory.
