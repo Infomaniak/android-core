@@ -33,8 +33,14 @@ import androidx.core.widget.doOnTextChanged
 import androidx.navigation.navArgs
 import com.infomaniak.lib.bugtracker.databinding.ActivityBugTrackerBinding
 import com.infomaniak.lib.core.githubTools.GitHubViewModel
-import com.infomaniak.lib.core.utils.*
+import com.infomaniak.lib.core.utils.FilePicker
 import com.infomaniak.lib.core.utils.SnackbarUtils.showSnackbar
+import com.infomaniak.lib.core.utils.getFileNameAndSize
+import com.infomaniak.lib.core.utils.hideProgressCatching
+import com.infomaniak.lib.core.utils.initProgress
+import com.infomaniak.lib.core.utils.setMargins
+import com.infomaniak.lib.core.utils.showProgressCatching
+import com.infomaniak.lib.core.utils.showToast
 import okhttp3.MultipartBody
 
 class BugTrackerActivity : AppCompatActivity() {

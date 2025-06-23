@@ -18,8 +18,15 @@
 package com.infomaniak.core
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.junit.runner.RunWith
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.random.Random

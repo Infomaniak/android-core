@@ -18,7 +18,13 @@
 package com.infomaniak.core.myksuite.ui.screens.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,7 +39,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures
-import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures.*
+import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures.DriveDropboxFeature
+import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures.DriveStorageFeature
+import com.infomaniak.core.myksuite.ui.screens.MyKSuiteUpgradeFeatures.MoreFeatures
 import com.infomaniak.core.myksuite.ui.theme.Dimens
 import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme

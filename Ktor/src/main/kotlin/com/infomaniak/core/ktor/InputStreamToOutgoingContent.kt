@@ -17,9 +17,9 @@
  */
 package com.infomaniak.core.ktor
 
-import io.ktor.http.content.*
-import io.ktor.utils.io.*
-import io.ktor.utils.io.jvm.javaio.*
+import io.ktor.http.content.OutgoingContent
+import io.ktor.utils.io.ByteWriteChannel
+import io.ktor.utils.io.jvm.javaio.toOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.invoke

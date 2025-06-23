@@ -18,7 +18,12 @@
 package com.infomaniak.lib.confetti.confetto
 
 import android.animation.ArgbEvaluator
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.SystemClock
 import java.util.Random
 import kotlin.math.abs

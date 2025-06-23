@@ -21,7 +21,9 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.view.View.MeasureSpec.*
+import android.view.View.MeasureSpec.getMode
+import android.view.View.MeasureSpec.getSize
+import android.view.View.MeasureSpec.makeMeasureSpec
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.infomaniak.lib.core.R

@@ -26,7 +26,6 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.*
 import io.ktor.utils.io.ByteReadChannel
 import kotlinx.coroutines.runBlocking
 import org.junit.Test

@@ -30,7 +30,11 @@ import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
-import com.infomaniak.lib.core.utils.*
+import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
+import com.infomaniak.lib.core.utils.ErrorCodeTranslated
+import com.infomaniak.lib.core.utils.await
+import com.infomaniak.lib.core.utils.isNetworkException
+import com.infomaniak.lib.core.utils.isSerializationException
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.Sentry
 import io.sentry.SentryLevel

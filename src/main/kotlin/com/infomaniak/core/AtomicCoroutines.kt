@@ -17,9 +17,13 @@
  */
 package com.infomaniak.core
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.SelectBuilder
 import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.withContext
 
 /**
  * Always return if a select clause from [builder] was selected,

@@ -20,7 +20,20 @@ package com.infomaniak.core.filetypes
 import android.webkit.MimeTypeMap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.infomaniak.core.filetypes.icons.*
+import com.infomaniak.core.filetypes.icons.Archive
+import com.infomaniak.core.filetypes.icons.Audio
+import com.infomaniak.core.filetypes.icons.Calendar
+import com.infomaniak.core.filetypes.icons.Code
+import com.infomaniak.core.filetypes.icons.Folder
+import com.infomaniak.core.filetypes.icons.Font
+import com.infomaniak.core.filetypes.icons.Image
+import com.infomaniak.core.filetypes.icons.Pdf
+import com.infomaniak.core.filetypes.icons.Points
+import com.infomaniak.core.filetypes.icons.Sheet
+import com.infomaniak.core.filetypes.icons.Text
+import com.infomaniak.core.filetypes.icons.Unknown
+import com.infomaniak.core.filetypes.icons.Vcard
+import com.infomaniak.core.filetypes.icons.Video
 
 private val MEDIA_COLOR_LIGHT = Color(0xFF00BCD4)
 private val MEDIA_COLOR_DARK = Color(0xFF86DEEA)

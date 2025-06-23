@@ -24,7 +24,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.BindAwareViewHolder
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.job
+import kotlinx.coroutines.plus
 
 /**
  * A [RecyclerView.ViewHolder] that has a new [currentBindScope] every time [RecyclerView.Adapter.onBindViewHolder] is called.
