@@ -124,7 +124,9 @@ internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
     private suspend fun retrieveAccountsFromUncheckedService(service: Intent): List<ExternalAccount> {
         val bytesOrNull = context.withBoundService<ByteArray?>(
             service = service,
-            timeoutConnection = { isWaitingForReconnect -> delay(3.seconds) },
+            timeoutConnection = { isWaitingForReconnect ->
+                delay(7.seconds)
+            },
             onDisconnected = { OnServiceDisconnectionBehavior.UnbindImmediately(null) },
             onBindingIssue = { OnBindingIssue.GiveUp(null) },
             flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
