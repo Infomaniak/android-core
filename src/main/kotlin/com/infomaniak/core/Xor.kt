@@ -15,13 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.myksuite.ui.network
+package com.infomaniak.core
 
-object ApiRoutes {
+/**
+ * This class is a substitute for union types (that will exist as "error types" in Kotlin 2.3+).
+ *
+ * It is similar to `Either` from Arrow, but with fewer features (because some are not needed).
+ *
+ * XOR stands for eXclusive OR.
+ */
+sealed class Xor<out FirstT, out SecondT> {
 
-    const val MANAGER_URL = "https://manager.preprod.dev.infomaniak.ch/v3/ng/home"
+    fun firstOrNull(): FirstT? = if (this is First) this.value else null
+    fun secondOrNull(): SecondT? = if (this is Second) this.value else null
 
-    private const val BASE_URL = "https://api.preprod.dev.infomaniak.ch"
+    data class First<LeftT>(val value: LeftT) : Xor<LeftT, Nothing>()
 
-    fun myKSuiteData() = "$BASE_URL/1/my_ksuite/current?with=drive,mail"
+    data class Second<RightT>(val value: RightT) : Xor<Nothing, RightT>()
 }

@@ -28,8 +28,6 @@ import android.os.Binder
 import android.os.Process
 import com.infomaniak.core.login.crossapp.internal.SingleBlobCursor
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
-import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateCheckerImpl
-import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
 import com.infomaniak.core.login.crossapp.internal.localAccountsFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,9 +48,7 @@ abstract class BaseCrossAppLoginProvider : ContentProvider() {
 
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    private val certificateChecker: AppCertificateChecker = AppCertificateCheckerImpl(
-        signingCertificates = infomaniakAppsCertificates
-    )
+    private val certificateChecker = AppCertificateChecker.withInfomaniakApps
 
     private val accountsSharedFlow = localAccountsFlow(selectedUserIdFlow).map { accounts ->
         val byteArray = ProtoBuf.encodeToByteArray(accounts)

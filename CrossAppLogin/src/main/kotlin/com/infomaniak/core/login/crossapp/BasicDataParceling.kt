@@ -15,13 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.myksuite.ui.network
+package com.infomaniak.core.login.crossapp
 
-object ApiRoutes {
+import android.os.Bundle
+import android.os.Message
 
-    const val MANAGER_URL = "https://manager.preprod.dev.infomaniak.ch/v3/ng/home"
+/**
+ * Retrieves a byte array in this message's [Message.obj], previously put with [putBundleWrappedDataInObj],
+ * possibly (likely) in another app or process connected to this one.
+ */
+internal fun Message.unwrapByteArrayOrNull(): ByteArray? {
+    return (obj as Bundle).getByteArray("")
+}
 
-    private const val BASE_URL = "https://api.preprod.dev.infomaniak.ch"
-
-    fun myKSuiteData() = "$BASE_URL/1/my_ksuite/current?with=drive,mail"
+/**
+ * Puts a byte array inside this message's [Message.obj], to be later retrieved in another app or process
+ * with [unwrapByteArrayOrNull].
+ */
+internal fun Message.putBundleWrappedDataInObj(data: ByteArray) {
+    obj = Bundle().also { it.putByteArray("", data) }
 }

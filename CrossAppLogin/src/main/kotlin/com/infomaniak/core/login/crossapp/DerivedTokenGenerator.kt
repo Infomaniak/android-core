@@ -15,13 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.myksuite.ui.network
+package com.infomaniak.core.login.crossapp
 
-object ApiRoutes {
+import com.infomaniak.core.Xor
+import com.infomaniak.core.appintegrity.exceptions.IntegrityException
+import com.infomaniak.lib.login.ApiToken
+import kotlinx.io.IOException
 
-    const val MANAGER_URL = "https://manager.preprod.dev.infomaniak.ch/v3/ng/home"
+sealed interface DerivedTokenGenerator {
 
-    private const val BASE_URL = "https://api.preprod.dev.infomaniak.ch"
+    suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
 
-    fun myKSuiteData() = "$BASE_URL/1/my_ksuite/current?with=drive,mail"
+    sealed interface Issue {
+        data class ErrorResponse(val httpStatusCode: Int): Issue
+        data class NetworkIssue(val e: IOException) : Issue
+        data class OtherIssue(val e: Throwable) : Issue
+        data class AppIntegrityCheckFailed(val details: IntegrityException) : Issue
+    }
 }
