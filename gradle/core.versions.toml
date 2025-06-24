@@ -84,6 +84,7 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 sentry-android = { module = "io.sentry:sentry-android", version.ref = "sentry" }
+sentry-android-fragment = { module = "io.sentry:sentry-android-fragment", version.ref = "sentry" }
 sentry-okhttp = { module = "io.sentry:sentry-okhttp", version.ref = "sentry" }
 splitties-appctx = { module = "com.louiscad.splitties:splitties-appctx", version.ref = "splitties" }
 splitties-bitflags = { module = "com.louiscad.splitties:splitties-bitflags", version.ref = "splitties" }
