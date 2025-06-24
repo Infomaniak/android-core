@@ -22,9 +22,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "LOGIN_ENDPOINT_URL", "\"https://login.infomaniak.com/\"")
-        buildConfigField("String", "INFOMANIAK_API", "\"https://api.infomaniak.com/2/\"")
-        buildConfigField("String", "INFOMANIAK_API_V1", "\"https://api.infomaniak.com/1\"")
+        buildConfigField("String", "LOGIN_ENDPOINT_URL", "\"https://login.preprod.dev.infomaniak.ch/\"")
+        buildConfigField("String", "INFOMANIAK_API", "\"https://api.preprod.dev.infomaniak.ch/2/\"")
+        buildConfigField("String", "INFOMANIAK_API_V1", "\"https://api.preprod.dev.infomaniak.ch/1\"")
 
     }
 
