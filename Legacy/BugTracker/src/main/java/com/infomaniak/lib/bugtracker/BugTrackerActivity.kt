@@ -25,6 +25,7 @@ import android.text.format.Formatter
 import android.webkit.MimeTypeMap
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
@@ -44,6 +45,10 @@ import com.infomaniak.lib.core.utils.showToast
 import okhttp3.MultipartBody
 
 class BugTrackerActivity : AppCompatActivity() {
+
+    private fun WindowInsetsCompat.cutout() = getInsets(WindowInsetsCompat.Type.displayCutout())
+    private fun WindowInsetsCompat.systemBars() = getInsets(WindowInsetsCompat.Type.systemBars())
+    private fun WindowInsetsCompat.safeArea() = Insets.max(systemBars(), cutout())
 
     private val binding: ActivityBugTrackerBinding by lazy { ActivityBugTrackerBinding.inflate(layoutInflater) }
     private val bugTrackerViewModel: BugTrackerViewModel by viewModels()
@@ -69,8 +74,7 @@ class BugTrackerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            with(systemBars) { view.setMargins(top = top, left = left, right = right, bottom = bottom) }
+            with(insets.safeArea()) { view.setMargins(top = top, left = left, right = right, bottom = bottom) }
             WindowInsetsCompat.CONSUMED
         }
 
