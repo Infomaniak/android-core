@@ -46,7 +46,7 @@ class DerivedTokenGeneratorImpl(
     private val tokenRetrievalUrl: String,
     private val hostAppPackageName: String,
     private val clientId: String,
-    userAgent: String,
+    private val userAgent: String,
     private val accessType: InfomaniakLogin.AccessType? = null,
 ) : DerivedTokenGenerator {
 
@@ -104,6 +104,7 @@ class DerivedTokenGeneratorImpl(
         val request = Request.Builder()
             .url(url)
             .post(body)
+            .header("User-Agent", userAgent)
             .build()
 
         val response = okHttpClient.newCall(request).await()
