@@ -55,5 +55,4 @@ object HttpClient {
         addInterceptor(TokenInterceptor(tokenInterceptorListener))
         authenticator(TokenAuthenticator(tokenInterceptorListener))
     }
-
 }
