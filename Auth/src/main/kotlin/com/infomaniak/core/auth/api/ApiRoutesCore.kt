@@ -25,5 +25,4 @@ object ApiRoutesCore {
         // TODO: Create a module for all the URLs?
         return "${INFOMANIAK_API}profile?no_avatar_default=1"
     }
-
 }
