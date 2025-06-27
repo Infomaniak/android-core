@@ -18,30 +18,33 @@
 package com.infomaniak.core.ktlint.customrules
 
 import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.COMMA
 import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
+import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
+import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.TreeElement
 import org.jetbrains.kotlin.com.intellij.psi.tree.IElementType
 import org.jetbrains.kotlin.psi.psiUtil.children
 
 object Utils {
 
     fun checkTrailingComma(
-        listNode: ASTNode,
+        node: ASTNode,
         autoCorrect: Boolean,
         emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit,
         elementType: IElementType,
         errorMessage: String,
     ) {
-        val elements = listNode.children().filter { it.elementType == elementType }.toList()
-        val leftParenthesis = listNode.findChildByType(ElementType.LPAR) ?: return
-        val rightParenthesis = listNode.findChildByType(ElementType.RPAR) ?: return
+        val elements = node.children().filter { it.elementType == elementType }.toList()
+        val leftParenthesis = node.findChildByType(ElementType.LPAR) ?: return
+        val rightParenthesis = node.findChildByType(ElementType.RPAR) ?: return
 
         if (elements.size == 1) {
             val element = elements.first()
-            val textBetweenLparAndElement = getTextBetween(leftParenthesis.treeNext, element.treePrev)
+            val textBetweenLParAndElement = getTextBetween(leftParenthesis.treeNext, element.treePrev)
             val textBetweenArgAndRElement = getTextBetween(element.treeNext, rightParenthesis.treePrev)
 
-            if (!(textBetweenLparAndElement.contains('\n') || textBetweenArgAndRElement.contains('\n'))) {
+            if (!(textBetweenLParAndElement.contains('\n') || textBetweenArgAndRElement.contains('\n'))) {
                 return
             }
         } else if (elements.isEmpty()) {
@@ -100,8 +103,9 @@ object Utils {
                 current
             }
 
-            if (nextSignificantTokenAfterLastElement?.elementType != ElementType.COMMA) {
+            if (nextSignificantTokenAfterLastElement?.elementType != COMMA) {
                 val insertOffset = lastElement.startOffset + lastElement.textLength
+
                 emit(
                     insertOffset,
                     errorMessage,
