@@ -107,6 +107,10 @@ object Utils {
                     errorMessage,
                     autoCorrect,
                 )
+
+                if (autoCorrect) {
+                    (rightParenthesis as TreeElement).rawInsertBeforeMe(LeafPsiElement(COMMA, ","))
+                }
             }
         }
     }
