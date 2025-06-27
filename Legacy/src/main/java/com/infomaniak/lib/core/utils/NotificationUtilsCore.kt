@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +53,6 @@ abstract class NotificationUtilsCore {
         notificationManager.cancel(notificationId)
     }
 
-    @RequiresApi(26)
     fun Context.createNotificationChannels(
         channelList: List<NotificationChannel>,
         groupList: List<NotificationChannelGroup>? = null
@@ -64,14 +63,12 @@ abstract class NotificationUtilsCore {
         }
     }
 
-    @RequiresApi(26)
     fun Context.deleteNotificationChannels(channelList: List<String>) {
         (getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager).apply {
             channelList.forEach { deleteNotificationChannel(it) }
         }
     }
 
-    @RequiresApi(26)
     protected fun buildNotificationChannel(
         channelId: String,
         name: String,
