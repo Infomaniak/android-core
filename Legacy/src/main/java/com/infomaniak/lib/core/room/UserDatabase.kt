@@ -17,6 +17,7 @@
  */
 package com.infomaniak.lib.core.room
 
+import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
@@ -30,7 +31,6 @@ import com.infomaniak.lib.core.models.user.Email
 import com.infomaniak.lib.core.models.user.Phone
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.models.user.preferences.security.AuthDevices
-import splitties.init.appCtx
 
 @Database(
     entities = [User::class],
@@ -58,10 +58,10 @@ abstract class UserDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: UserDatabase? = null
 
-        fun getDatabase(): UserDatabase {
+        fun getDatabase(context: Context): UserDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context = appCtx,
+                    context = context,
                     klass = UserDatabase::class.java,
                     name = "user_database"
                 ).apply {
