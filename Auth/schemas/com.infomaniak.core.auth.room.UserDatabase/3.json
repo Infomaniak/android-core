@@ -1,0 +1,332 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "0975f38e47fb62940b304fa339a72bee",
+    "entities": [
+      {
+        "tableName": "User",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `displayName` TEXT, `firstname` TEXT NOT NULL, `lastname` TEXT NOT NULL, `email` TEXT NOT NULL, `avatar` TEXT, `login` TEXT NOT NULL, `phones` TEXT, `emails` TEXT, `organizations` TEXT NOT NULL, `preferences_security_score` INTEGER DEFAULT 0, `preferences_security_hasRecoveryEmail` INTEGER DEFAULT false, `preferences_security_hasValidPhone` INTEGER DEFAULT false, `preferences_security_emailValidatedAt` INTEGER DEFAULT 0, `preferences_security_otp` INTEGER DEFAULT false, `preferences_security_sms` INTEGER DEFAULT false, `preferences_security_smsPhone` TEXT DEFAULT '', `preferences_security_yubikey` INTEGER DEFAULT false, `preferences_security_infomaniakApplication` INTEGER DEFAULT false, `preferences_security_doubleAuth` INTEGER DEFAULT false, `preferences_security_remainingRescueCode` INTEGER DEFAULT 0, `preferences_security_lastLoginAt` INTEGER DEFAULT 0, `preferences_security_dateLastChangedPassword` INTEGER DEFAULT 0, `preferences_security_doubleAuthMethod` TEXT DEFAULT '', `preferences_security_authDevices` TEXT, `preferences_organizationPreference_currentOrganizationId` INTEGER NOT NULL DEFAULT 0, `preferences_organizationPreference_lastLoginAt` INTEGER NOT NULL DEFAULT 0, `preferences_language_shortName` TEXT NOT NULL DEFAULT '', `preferences_language_locale` TEXT NOT NULL DEFAULT '', `preferences_language_shortLocale` TEXT NOT NULL DEFAULT '', `preferences_language_id` INTEGER NOT NULL DEFAULT 0, `preferences_language_name` TEXT NOT NULL DEFAULT '', `preferences_country_shortName` TEXT NOT NULL DEFAULT '', `preferences_country_isEnabled` INTEGER NOT NULL DEFAULT false, `preferences_country_id` INTEGER NOT NULL DEFAULT 0, `preferences_country_name` TEXT NOT NULL DEFAULT '', `preferences_timezone_gmt` TEXT DEFAULT '', `preferences_timezone_id` INTEGER DEFAULT 0, `preferences_timezone_name` TEXT DEFAULT '', `accessToken` TEXT NOT NULL, `refreshToken` TEXT NOT NULL, `tokenType` TEXT NOT NULL, `expiresIn` INTEGER NOT NULL, `userId` INTEGER NOT NULL, `scope` TEXT, `expiresAt` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayName",
+            "columnName": "displayName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "firstname",
+            "columnName": "firstname",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastname",
+            "columnName": "lastname",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avatar",
+            "columnName": "avatar",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "login",
+            "columnName": "login",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phones",
+            "columnName": "phones",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "emails",
+            "columnName": "emails",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "organizations",
+            "columnName": "organizations",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "preferences.security.score",
+            "columnName": "preferences_security_score",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.security.hasRecoveryEmail",
+            "columnName": "preferences_security_hasRecoveryEmail",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "preferences.security.hasValidPhone",
+            "columnName": "preferences_security_hasValidPhone",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "preferences.security.emailValidatedAt",
+            "columnName": "preferences_security_emailValidatedAt",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.security.otp",
+            "columnName": "preferences_security_otp",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "preferences.security.sms",
+            "columnName": "preferences_security_sms",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "preferences.security.smsPhone",
+            "columnName": "preferences_security_smsPhone",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "preferences.security.yubikey",
+            "columnName": "preferences_security_yubikey",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "preferences.security.infomaniakApplication",
+            "columnName": "preferences_security_infomaniakApplication",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "preferences.security.doubleAuth",
+            "columnName": "preferences_security_doubleAuth",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "preferences.security.remainingRescueCode",
+            "columnName": "preferences_security_remainingRescueCode",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.security.lastLoginAt",
+            "columnName": "preferences_security_lastLoginAt",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.security.dateLastChangedPassword",
+            "columnName": "preferences_security_dateLastChangedPassword",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.security.doubleAuthMethod",
+            "columnName": "preferences_security_doubleAuthMethod",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "preferences.security.authDevices",
+            "columnName": "preferences_security_authDevices",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "preferences.organizationPreference.currentOrganizationId",
+            "columnName": "preferences_organizationPreference_currentOrganizationId",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.organizationPreference.lastLoginAt",
+            "columnName": "preferences_organizationPreference_lastLoginAt",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.language.shortName",
+            "columnName": "preferences_language_shortName",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "preferences.language.locale",
+            "columnName": "preferences_language_locale",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "preferences.language.shortLocale",
+            "columnName": "preferences_language_shortLocale",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "preferences.language.id",
+            "columnName": "preferences_language_id",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.language.name",
+            "columnName": "preferences_language_name",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "preferences.country.shortName",
+            "columnName": "preferences_country_shortName",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "preferences.country.isEnabled",
+            "columnName": "preferences_country_isEnabled",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "preferences.country.id",
+            "columnName": "preferences_country_id",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.country.name",
+            "columnName": "preferences_country_name",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "preferences.timezone.gmt",
+            "columnName": "preferences_timezone_gmt",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "preferences.timezone.id",
+            "columnName": "preferences_timezone_id",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preferences.timezone.name",
+            "columnName": "preferences_timezone_name",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "apiToken.accessToken",
+            "columnName": "accessToken",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "apiToken.refreshToken",
+            "columnName": "refreshToken",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "apiToken.tokenType",
+            "columnName": "tokenType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "apiToken.expiresIn",
+            "columnName": "expiresIn",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "apiToken.userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "apiToken.scope",
+            "columnName": "scope",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "apiToken.expiresAt",
+            "columnName": "expiresAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0975f38e47fb62940b304fa339a72bee')"
+    ]
+  }
+}
