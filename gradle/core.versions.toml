@@ -7,7 +7,8 @@ appcompat = "1.7.0"
 coil = "3.0.2" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 coilNetworkOkhttp = "3.0.4" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 composeBom = "2025.02.00" # TODO: Update SwissTransfer before bumping this
-composeFoundation = "1.8.1"
+composeFoundation = "1.8.2"
+compose = "1.8.2"
 coreKtx = "1.6.1"
 datastorePreferences = "1.2.0-alpha02"
 gson = "2.13.1"
@@ -49,6 +50,7 @@ compose-foundation = { group = "androidx.compose.foundation", name = "foundation
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "compose" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
