@@ -33,7 +33,6 @@ import com.infomaniak.lib.login.InfomaniakLogin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitCancellation
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -54,7 +53,9 @@ class DerivedTokenGeneratorImpl(
 
     private val attestationTokensForUrls = DynamicLazyMap<String, Deferred<Xor<String, Issue>>>(
         cacheManager = { _, asyncResult ->
-            if (asyncResult.await() is Xor.First) awaitCancellation()
+            //TODO: Cache tokens again (forever only if possible) once they can be reused,
+            // by uncommenting, the line below, and possibly replacing awaitCancellation() if reuse is limited in time.
+//            if (asyncResult.await() is Xor.First) awaitCancellation()
             // Skip cache if unsuccessful.
         },
         coroutineScope = coroutineScope
