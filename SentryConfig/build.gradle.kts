@@ -33,4 +33,5 @@ dependencies {
     implementation(project(":Core:Network"))
     implementation(core.sentry.android)
     implementation(core.sentry.android.fragment)
+    testImplementation(kotlin("test"))
 }
