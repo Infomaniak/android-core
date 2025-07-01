@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.android.library")
+    alias(core.plugins.kotlin.android)
 }
 
 val coreCompileSdk: Int by rootProject.extra
