@@ -339,7 +339,7 @@ data class MyKSuiteDashboardScreenData(
 private fun Preview() {
     val dashboardScreenData = MyKSuiteDashboardScreenData(
         myKSuiteTier = MyKSuiteTier.Plus,
-        email = "Toto",
+        email = "Tata",
         avatarData = AvatarData(userInitials = "IK", iconColor = Color.Red.toArgb()),
         dailySendingLimit = "500",
         kSuiteProductsWithQuotas = listOf(
