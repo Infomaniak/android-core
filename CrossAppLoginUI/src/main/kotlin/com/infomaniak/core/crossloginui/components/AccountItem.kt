@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,47 +34,46 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.icons.Checkmark
+import com.infomaniak.core.crossloginui.theme.Dimens
 import com.infomaniak.core.crossloginui.theme.LocalCrossLoginColors
 import com.infomaniak.core.crossloginui.theme.Typography
 
-private val ITEM_MIN_HEIGHT = 56.dp
-
 @Composable
-fun CrossLoginItem(
+fun AccountItem(
     title: String,
     description: String? = null,
     icon: ImageVector? = null,
     iconUrl: String? = null,
     iconsUrls: List<String>? = null,
+    endIcon: ImageVector = Checkmark,
     isSelected: (() -> Boolean)? = null,
+    borderColor: Color? = null,
     onClick: () -> Unit,
 ) {
-    val modifier = Modifier
-        .fillMaxWidth()
-        .heightIn(min = ITEM_MIN_HEIGHT)
-
     SharpRippleButton(
-        modifier = modifier,
         isSelected = isSelected ?: { false },
+        borderColor = borderColor,
         onClick = onClick,
     ) {
-        CrossLoginItemContent(title, description, icon, iconUrl, iconsUrls, isSelected)
+        AccountItemContent(title, description, icon, iconUrl, iconsUrls, endIcon, isSelected)
     }
 }
 
 @Composable
-private fun CrossLoginItemContent(
+private fun AccountItemContent(
     title: String,
     description: String?,
     icon: ImageVector?,
     iconUrl: String?,
     iconsUrls: List<String>?,
+    endIcon: ImageVector,
     isSelected: (() -> Boolean)?,
 ) {
 
@@ -84,23 +82,25 @@ private fun CrossLoginItemContent(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Margin.Medium, vertical = Margin.Small),
-        horizontalArrangement = Arrangement.Start,
+            .padding(horizontal = Margin.Medium, vertical = Margin.Mini),
+        horizontalArrangement = Arrangement.spacedBy(0.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
         DisplayIcons(icon, iconUrl, iconsUrls)
 
+        Spacer(Modifier.width(Margin.Mini))
+
         Column(modifier = Modifier.weight(1.0f)) {
             Text(
                 text = title,
-                style = Typography.bodyRegular,
+                style = if (icon == null) Typography.bodyMedium else Typography.bodyRegular,
                 color = localColors.primaryTextColor,
             )
             description?.let {
                 Text(
                     text = it,
-                    style = Typography.bodySmallRegular,
+                    style = Typography.bodyRegular,
                     color = localColors.secondaryTextColor,
                 )
             }
@@ -108,7 +108,7 @@ private fun CrossLoginItemContent(
 
         if (isSelected?.invoke() == true) {
             Icon(
-                imageVector = Checkmark,
+                imageVector = endIcon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
             )
@@ -118,44 +118,23 @@ private fun CrossLoginItemContent(
 
 @Composable
 private fun DisplayIcons(icon: ImageVector?, iconUrl: String?, iconsUrls: List<String>?) {
-
-    val displayedIcons = when {
-        icon != null -> {
-            @Composable {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    // tint = MaterialTheme.colorScheme.primary,
-                )
-            }
+    when {
+        icon != null -> Box(Modifier.padding(all = Margin.Mini)) {
+            Icon(
+                imageVector = icon,
+                modifier = Modifier.size(Dimens.iconSize),
+                contentDescription = null,
+            )
         }
-        iconUrl != null -> {
-            @Composable {
-                AsyncImage(
-                    model = iconUrl,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null,
-                )
-            }
-        }
-        iconsUrls != null -> {
-            // @Composable { AvatarsStackView(iconsUrls) }
-            if (iconsUrls.count() == 2) {
-                @Composable { TwoAvatarsView(iconsUrls) }
-            } else {
-                @Composable { ThreeAvatarsView(iconsUrls) }
-            }
-        }
-        else -> null
-    }
-
-    displayedIcons?.let {
-        Box(Modifier.width(48.dp)) {
-            it()
-        }
-        Spacer(Modifier.width(Margin.Medium))
+        iconUrl != null -> AsyncImage(
+            model = iconUrl,
+            modifier = Modifier
+                .size(Dimens.bigIconSize)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop,
+            contentDescription = null,
+        )
+        iconsUrls != null && iconsUrls.count() == 2 -> TwoAvatarsView(urls = iconsUrls)
+        iconsUrls != null && iconsUrls.count() > 2 -> ThreeAvatarsView(urls = iconsUrls)
     }
 }
