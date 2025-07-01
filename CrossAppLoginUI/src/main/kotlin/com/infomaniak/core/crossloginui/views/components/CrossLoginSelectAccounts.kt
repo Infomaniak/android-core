@@ -22,12 +22,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
 import com.infomaniak.core.crossloginui.R
-import com.infomaniak.core.crossloginui.components.CrossLoginItem
+import com.infomaniak.core.crossloginui.components.AccountItem
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
+import com.infomaniak.core.crossloginui.icons.Chevron
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -35,28 +36,30 @@ fun CrossLoginSelectAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
     onClick: () -> Unit,
 ) {
-    MaterialThemeFromXml {
-        val selectedAccounts = accounts().filter { it.isSelected }
-        val count = selectedAccounts.count()
-        when {
-            count == 1 -> {
-                val account = selectedAccounts.first()
-                CrossLoginItem(
-                    title = account.name,
-                    description = account.email,
-                    iconUrl = account.avatarUrl,
-                    isSelected = { true },
-                    onClick = onClick,
-                )
-            }
-            count > 1 -> {
-                CrossLoginItem(
-                    title = pluralStringResource(R.plurals.selectedAccountCountLabel, count, count),
-                    iconsUrls = selectedAccounts.mapNotNull { it.avatarUrl },
-                    isSelected = { true },
-                    onClick = onClick,
-                )
-            }
+    val selectedAccounts = accounts().filter { it.isSelected }
+    val count = selectedAccounts.count()
+    when {
+        count == 1 -> {
+            val account = selectedAccounts.first()
+            AccountItem(
+                title = account.name,
+                description = account.email,
+                iconUrl = account.avatarUrl,
+                endIcon = Chevron,
+                isSelected = { true },
+                borderColor = Color.Gray, // TODO
+                onClick = onClick,
+            )
+        }
+        count > 1 -> {
+            AccountItem(
+                title = pluralStringResource(R.plurals.selectedAccountCountLabel, count, count),
+                iconsUrls = selectedAccounts.mapNotNull { it.avatarUrl },
+                endIcon = Chevron,
+                isSelected = { true },
+                borderColor = Color.Gray,
+                onClick = onClick,
+            )
         }
     }
 }
