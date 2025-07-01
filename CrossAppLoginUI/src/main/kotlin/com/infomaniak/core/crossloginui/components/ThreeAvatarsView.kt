@@ -29,41 +29,36 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.infomaniak.core.crossloginui.theme.Dimens
 import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.exposed.UserAvatar
 
-val boxWidth = 52.dp
-val boxHeight = 32.dp
-
 @Composable
 fun ThreeAvatarsView(urls: List<String>) {
-
-    val iconSize = 24.dp
-
     Box(
-        modifier = Modifier.size(boxWidth, boxHeight),
+        modifier = Modifier.size(Dimens.avatarsBoxWidth, Dimens.avatarsBoxHeight),
         contentAlignment = Alignment.CenterStart,
     ) {
 
         // Left
         Avatar(
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(Dimens.iconSize),
             avatar = urls[1],
         )
 
         // Right
         Avatar(
             modifier = Modifier
-                .size(iconSize)
-                .graphicsLayer { translationX = (boxWidth - iconSize).toPx() },
+                .size(Dimens.iconSize)
+                .graphicsLayer { translationX = (Dimens.avatarsBoxWidth - Dimens.iconSize).toPx() },
             avatar = urls[2],
         )
 
         // Center
         Avatar(
             modifier = Modifier
-                .size(boxHeight)
-                .graphicsLayer { translationX = (0.5f * (boxWidth - boxHeight)).toPx() },
+                .size(Dimens.avatarsBoxHeight)
+                .graphicsLayer { translationX = (0.5f * (Dimens.avatarsBoxWidth - Dimens.avatarsBoxHeight)).toPx() },
             avatar = urls[0],
         )
     }

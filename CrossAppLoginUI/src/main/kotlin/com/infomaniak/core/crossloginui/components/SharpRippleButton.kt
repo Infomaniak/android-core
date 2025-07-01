@@ -17,32 +17,41 @@
  */
 package com.infomaniak.core.crossloginui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.crossloginui.theme.Dimens
 
 @Composable
 fun SharpRippleButton(
-    modifier: Modifier = Modifier,
     isSelected: () -> Boolean,
+    borderColor: Color?,
     onClick: () -> Unit,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     content: @Composable RowScope.() -> Unit,
 ) {
     Button(
-        modifier = modifier.selectable(
-            selected = isSelected(),
-            onClick = onClick,
-        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(Dimens.buttonHeight)
+            .selectable(
+                selected = isSelected(),
+                onClick = onClick,
+            ),
+        border = borderColor?.let { BorderStroke(1.dp, it) },
         colors = ButtonDefaults.textButtonColors(),
-        // shape = CustomShapes.NONE,
+        shape = RoundedCornerShape(Dimens.largeCornerRadius),
         onClick = onClick,
         content = content,
-        contentPadding = contentPadding,
+        contentPadding = PaddingValues(0.dp),
     )
 }
