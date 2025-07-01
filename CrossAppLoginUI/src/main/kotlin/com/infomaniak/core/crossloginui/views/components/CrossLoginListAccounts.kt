@@ -40,7 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.R
-import com.infomaniak.core.crossloginui.components.CrossLoginItem
+import com.infomaniak.core.crossloginui.components.AccountItem
 import com.infomaniak.core.crossloginui.components.PrimaryButton
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.icons.AddUser
@@ -62,24 +62,23 @@ fun CrossLoginListAccounts(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        val paddedModifier = Modifier.padding(horizontal = Margin.Large)
         Text(
-            modifier = paddedModifier,
+            modifier = Modifier.padding(horizontal = Margin.Medium),
             text = stringResource(R.string.selectAccountPanelTitle),
             textAlign = TextAlign.Center,
-            style = Typography.h2,
+            style = Typography.bodyMedium,
             // color = localColors.primaryTextColor, // TODO
         )
         Spacer(Modifier.height(Margin.Medium))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Margin.Mini)) {
             accounts().forEach { account ->
-                CrossLoginItem(
+                AccountItem(
                     title = account.name,
                     description = account.email,
                     iconUrl = account.avatarUrl,
                     isSelected = { account.isSelected },
                     onClick = {
-                        if (account.isSelected && accounts().count { it.isSelected } <= 1) return@CrossLoginItem
+                        if (account.isSelected && accounts().count { it.isSelected } <= 1) return@AccountItem
                         onAccountClicked(account)
                     },
                 )
@@ -88,22 +87,24 @@ fun CrossLoginListAccounts(
         HorizontalDivider(
             modifier = Modifier.padding(
                 horizontal = Margin.Medium,
-                vertical = Margin.Small,
+                vertical = Margin.Micro,
             ),
         )
-        CrossLoginItem(
+        AccountItem(
             title = stringResource(R.string.buttonUseOtherAccount),
             icon = AddUser,
             onClick = { onAnotherAccountClicked() },
         )
-        Spacer(Modifier.height(Margin.Huge))
+        Spacer(Modifier.height(Margin.Large))
         PrimaryButton(
-            modifier = paddedModifier.fillMaxWidth(),
+            modifier = Modifier
+                .padding(horizontal = Margin.Medium)
+                .fillMaxWidth(),
             text = stringResource(RCore.string.buttonSave),
             shape = RoundedCornerShape(Dimens.largeCornerRadius),
             onClick = onCloseClicked,
         )
-        Spacer(Modifier.height(Margin.Large))
+        Spacer(Modifier.height(Margin.Medium))
     }
 }
 
