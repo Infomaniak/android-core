@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.crossloginui.screens.components
+package com.infomaniak.core.crossloginui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -56,7 +56,7 @@ fun ThreeAvatarsView(urls: List<String>) {
             modifier = Modifier
                 .size(iconSize)
                 .graphicsLayer { translationX = (boxWidth - iconSize).toPx() },
-            avatar = urls[0],
+            avatar = urls[2],
         )
 
         // Center
@@ -64,7 +64,7 @@ fun ThreeAvatarsView(urls: List<String>) {
             modifier = Modifier
                 .size(boxHeight)
                 .graphicsLayer { translationX = (0.5f * (boxWidth - boxHeight)).toPx() },
-            avatar = urls[2],
+            avatar = urls[0],
         )
     }
 }
