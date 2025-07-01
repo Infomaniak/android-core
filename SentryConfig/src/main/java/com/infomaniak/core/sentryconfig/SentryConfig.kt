@@ -43,8 +43,7 @@ class SentryConfig {
                  * - Application is in Debug mode
                  * - User deactivated Sentry tracking in DataManagement settings
                  * - The exception was an [ApiController.NetworkException], and we don't want to send them to Sentry
-                 * - The exception was an [ApiErrorException] with an [ErrorCode.ACCESS_DENIED] or
-                 *   [ErrorCode.NOT_AUTHORIZED] error code, and we don't want to send them to Sentry
+                 * - Others exceptions defined when the method is called
                  */
                 when {
                     shouldBeDiscarded(event, isDebug, isSentryTrackingEnabled, isErrorException) -> null
