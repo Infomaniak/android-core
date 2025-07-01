@@ -23,18 +23,19 @@ object Dimens {
 
     /** 56 dp */
     val buttonHeight = 56.dp
+
     /** 16 dp */
     val smallIconSize = 16.dp
     /** 24 dp */
     val iconSize = 24.dp
-    /** 32 dp */
-    val avatarSize = 32.dp
-    /** 8 dp */
-    val smallCornerRadius = 8.dp
+    /** 40 dp */
+    val bigIconSize = 40.dp
+
     /** 16 dp */
     val largeCornerRadius = 16.dp
-    /** 5 dp */
-    val cardElevation = 5.dp
-    /** 40 dp */
-    val textItemMinHeight = 40.dp
+
+    /** 56 dp */
+    val avatarsBoxWidth = 52.dp
+    /** 32 dp */
+    val avatarsBoxHeight = 32.dp
 }

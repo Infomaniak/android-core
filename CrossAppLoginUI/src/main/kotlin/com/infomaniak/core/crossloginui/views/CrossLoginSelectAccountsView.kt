@@ -25,6 +25,7 @@ import androidx.annotation.StyleableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.platform.AbstractComposeView
+import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.views.components.CrossLoginSelectAccounts
 
@@ -63,10 +64,12 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
 
     @Composable
     override fun Content() {
-        CrossLoginSelectAccounts(
-            accounts = { accounts },
-            onClick = { onClickListener?.invoke() },
-        )
+        MaterialThemeFromXml {
+            CrossLoginSelectAccounts(
+                accounts = { accounts },
+                onClick = { onClickListener?.invoke() },
+            )
+        }
     }
 
     @Suppress("DeprecatedCallableAddReplaceWith")

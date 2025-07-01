@@ -26,26 +26,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
+import com.infomaniak.core.crossloginui.theme.Dimens
 
 @Composable
 fun TwoAvatarsView(urls: List<String>) {
-
     Box(
-        modifier = Modifier.size(boxWidth, boxHeight),
+        modifier = Modifier.size(Dimens.avatarsBoxWidth, Dimens.avatarsBoxHeight),
         contentAlignment = Alignment.CenterStart,
     ) {
 
         // Right
         Avatar(
             modifier = Modifier
-                .size(boxHeight)
-                .graphicsLayer { translationX = (boxWidth - boxHeight).toPx() },
+                .size(Dimens.avatarsBoxHeight)
+                .graphicsLayer { translationX = (Dimens.avatarsBoxWidth - Dimens.avatarsBoxHeight).toPx() },
             avatar = urls[1],
         )
 
         // Left
         Avatar(
-            modifier = Modifier.size(boxHeight),
+            modifier = Modifier.size(Dimens.avatarsBoxHeight),
             avatar = urls[0],
         )
     }
