@@ -38,7 +38,6 @@ class SentryConfig {
         SentryAndroid.init(context) { options: SentryAndroidOptions ->
             // Register the callback as an option
             options.beforeSend = SentryOptions.BeforeSendCallback { event: SentryEvent, _: Any? ->
-                val exception = event.throwable
                 /**
                  * Reasons to discard Sentry events :
                  * - Application is in Debug mode
@@ -48,10 +47,7 @@ class SentryConfig {
                  *   [ErrorCode.NOT_AUTHORIZED] error code, and we don't want to send them to Sentry
                  */
                 when {
-                    isDebug -> null
-                    !isSentryTrackingEnabled -> null
-                    exception is ApiController.NetworkException -> null
-                    isErrorException(exception) -> null
+                    shouldBeDiscarded(event, isDebug, isSentryTrackingEnabled, isErrorException) -> null
                     else -> event
                 }
             }
@@ -69,6 +65,21 @@ class SentryConfig {
                     enableAutoFragmentLifecycleTracing = true,
                 )
             )
+        }
+    }
+
+    companion object {
+        fun shouldBeDiscarded(
+            event: SentryEvent,
+            isDebug: Boolean,
+            isSentryTrackingEnabled: Boolean,
+            isErrorException: (Throwable?) -> Boolean
+        ): Boolean {
+            val exception = event.throwable
+            return isDebug
+                    || !isSentryTrackingEnabled
+                    || exception is ApiController.NetworkException
+                    || isErrorException(exception)
         }
     }
 }
