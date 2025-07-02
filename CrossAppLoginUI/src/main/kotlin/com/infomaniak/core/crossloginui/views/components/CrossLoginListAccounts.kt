@@ -35,6 +35,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +43,7 @@ import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.R
 import com.infomaniak.core.crossloginui.components.AccountItem
 import com.infomaniak.core.crossloginui.components.PrimaryButton
+import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.icons.AddUser
 import com.infomaniak.core.crossloginui.theme.Dimens
@@ -51,6 +53,7 @@ import com.infomaniak.core.R as RCore
 @Composable
 fun CrossLoginListAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
+    colors: CrossLoginColors,
     onAccountClicked: (CrossLoginUiAccount) -> Unit,
     onAnotherAccountClicked: () -> Unit,
     onCloseClicked: () -> Unit,
@@ -67,7 +70,7 @@ fun CrossLoginListAccounts(
             text = stringResource(R.string.selectAccountPanelTitle),
             textAlign = TextAlign.Center,
             style = Typography.bodyMedium,
-            // color = localColors.primaryTextColor, // TODO
+            color = colors.titleColor,
         )
         Spacer(Modifier.height(Margin.Medium))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Margin.Mini)) {
@@ -76,6 +79,7 @@ fun CrossLoginListAccounts(
                     title = account.name,
                     description = account.email,
                     iconUrl = account.avatarUrl,
+                    colors = colors,
                     isSelected = { account.isSelected },
                     onClick = {
                         if (account.isSelected && accounts().count { it.isSelected } <= 1) return@AccountItem
@@ -93,6 +97,7 @@ fun CrossLoginListAccounts(
         AccountItem(
             title = stringResource(R.string.buttonUseOtherAccount),
             icon = AddUser,
+            colors = colors,
             onClick = { onAnotherAccountClicked() },
         )
         Spacer(Modifier.height(Margin.Large))
@@ -102,6 +107,7 @@ fun CrossLoginListAccounts(
                 .fillMaxWidth(),
             text = stringResource(RCore.string.buttonSave),
             shape = RoundedCornerShape(Dimens.largeCornerRadius),
+            colors = colors,
             onClick = onCloseClicked,
         )
         Spacer(Modifier.height(Margin.Medium))
@@ -114,6 +120,7 @@ private fun Preview() {
     Surface {
         CrossLoginListAccounts(
             accounts = { mutableStateListOf() },
+            colors = CrossLoginColors(Color.Blue, Color.Black, Color.Gray, Color.White, Color.Gray),
             onAccountClicked = {},
             onAnotherAccountClicked = {},
             onCloseClicked = {},

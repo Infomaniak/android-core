@@ -27,5 +27,5 @@
         <item quantity="other">%d accounts selected</item>
     </plurals>
     <string name="selectAccountPanelTitle">Select one or multiple accounts</string>
-    <string name="buttonUseOtherAccount">Use an other account</string>
+    <string name="buttonUseOtherAccount">Use another account</string>
 </resources>
