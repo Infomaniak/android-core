@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.crossloginui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -25,18 +24,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.theme.Dimens
-import com.infomaniak.core.useravatar.AvatarData
-import com.infomaniak.core.useravatar.exposed.UserAvatar
 
 @Composable
-fun ThreeAvatarsView(urls: List<String>, colors: CrossLoginColors) {
+internal fun ThreeAvatarsView(urls: List<String>, colors: CrossLoginColors) {
     Box(
         modifier = Modifier.size(Dimens.avatarsBoxWidth, Dimens.avatarsBoxHeight),
         contentAlignment = Alignment.CenterStart,
@@ -69,15 +65,6 @@ fun ThreeAvatarsView(urls: List<String>, colors: CrossLoginColors) {
     }
 }
 
-@Composable
-fun Avatar(modifier: Modifier = Modifier, avatar: String, colors: CrossLoginColors) {
-    UserAvatar(
-        modifier = modifier,
-        avatarData = AvatarData(uri = avatar),
-        border = BorderStroke(1.dp, color = colors.backgroundColor),
-    )
-}
-
 @Preview
 @Composable
 private fun ThreeAvatarsViewPreview() {
@@ -89,7 +76,7 @@ private fun ThreeAvatarsViewPreview() {
                     "https://picsum.photos/id/3/200/200",
                     "https://picsum.photos/id/10/200/200",
                 ),
-                colors = CrossLoginColors(Color.Gray, Color.Gray, Color.Gray, Color.Gray, Color.Gray),
+                colors = CrossLoginDefaults.colors(),
             )
         }
     }
