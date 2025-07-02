@@ -29,7 +29,7 @@ import com.infomaniak.core.crossloginui.icons.Chevron
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun CrossLoginSelectAccounts(
+internal fun CrossLoginSelectAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
     colors: CrossLoginColors,
     onClick: () -> Unit,
