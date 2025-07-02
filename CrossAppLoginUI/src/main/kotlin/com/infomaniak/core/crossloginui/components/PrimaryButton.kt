@@ -27,11 +27,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.theme.Dimens
 import com.infomaniak.core.crossloginui.theme.Typography
 
@@ -46,8 +46,8 @@ internal fun PrimaryButton(
     Button(
         modifier = modifier.height(Dimens.buttonHeight),
         colors = ButtonDefaults.buttonColors(
-            containerColor = colors.primaryColor,
-            contentColor = colors.backgroundColor,
+            containerColor = colors.primary,
+            contentColor = colors.onPrimary,
         ),
         shape = shape,
         onClick = onClick,
@@ -64,7 +64,7 @@ private fun Preview() {
             PrimaryButton(
                 text = "Lorem",
                 shape = RoundedCornerShape(Dimens.largeCornerRadius),
-                colors = CrossLoginColors(Color.Gray, Color.Red, Color.Red, Color.White, Color.Red),
+                colors = CrossLoginDefaults.colors(),
                 onClick = {},
             )
         }
