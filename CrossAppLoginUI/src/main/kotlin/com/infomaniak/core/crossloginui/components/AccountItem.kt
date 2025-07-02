@@ -28,21 +28,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.icons.Checkmark
 import com.infomaniak.core.crossloginui.theme.Dimens
-import com.infomaniak.core.crossloginui.theme.LocalCrossLoginColors
 import com.infomaniak.core.crossloginui.theme.Typography
 
 @Composable
@@ -53,16 +51,17 @@ fun AccountItem(
     iconUrl: String? = null,
     iconsUrls: List<String>? = null,
     endIcon: ImageVector = Checkmark,
+    hasBorder: Boolean = false,
+    colors: CrossLoginColors,
     isSelected: (() -> Boolean)? = null,
-    borderColor: Color? = null,
     onClick: () -> Unit,
 ) {
     SharpRippleButton(
         isSelected = isSelected ?: { false },
-        borderColor = borderColor,
+        borderColor = if (hasBorder) colors.buttonStrokeColor else null,
         onClick = onClick,
     ) {
-        AccountItemContent(title, description, icon, iconUrl, iconsUrls, endIcon, isSelected)
+        AccountItemContent(title, description, icon, iconUrl, iconsUrls, endIcon, colors, isSelected)
     }
 }
 
@@ -74,11 +73,9 @@ private fun AccountItemContent(
     iconUrl: String?,
     iconsUrls: List<String>?,
     endIcon: ImageVector,
+    colors: CrossLoginColors,
     isSelected: (() -> Boolean)?,
 ) {
-
-    val localColors = LocalCrossLoginColors.current
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,7 +84,7 @@ private fun AccountItemContent(
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
-        DisplayIcons(icon, iconUrl, iconsUrls)
+        DisplayIcons(icon, iconUrl, iconsUrls, colors)
 
         Spacer(Modifier.width(Margin.Mini))
 
@@ -95,13 +92,13 @@ private fun AccountItemContent(
             Text(
                 text = title,
                 style = if (icon == null) Typography.bodyMedium else Typography.bodyRegular,
-                color = localColors.primaryTextColor,
+                color = colors.titleColor,
             )
             description?.let {
                 Text(
                     text = it,
                     style = Typography.bodyRegular,
-                    color = localColors.secondaryTextColor,
+                    color = colors.descriptionColor,
                 )
             }
         }
@@ -110,20 +107,21 @@ private fun AccountItemContent(
             Icon(
                 imageVector = endIcon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = colors.primaryColor,
             )
         }
     }
 }
 
 @Composable
-private fun DisplayIcons(icon: ImageVector?, iconUrl: String?, iconsUrls: List<String>?) {
+private fun DisplayIcons(icon: ImageVector?, iconUrl: String?, iconsUrls: List<String>?, colors: CrossLoginColors) {
     when {
         icon != null -> Box(Modifier.padding(all = Margin.Mini)) {
             Icon(
                 imageVector = icon,
                 modifier = Modifier.size(Dimens.iconSize),
                 contentDescription = null,
+                tint = colors.primaryColor,
             )
         }
         iconUrl != null -> AsyncImage(
@@ -134,7 +132,7 @@ private fun DisplayIcons(icon: ImageVector?, iconUrl: String?, iconsUrls: List<S
             contentScale = ContentScale.Crop,
             contentDescription = null,
         )
-        iconsUrls != null && iconsUrls.count() == 2 -> TwoAvatarsView(urls = iconsUrls)
-        iconsUrls != null && iconsUrls.count() > 2 -> ThreeAvatarsView(urls = iconsUrls)
+        iconsUrls != null && iconsUrls.count() == 2 -> TwoAvatarsView(urls = iconsUrls, colors = colors)
+        iconsUrls != null && iconsUrls.count() > 2 -> ThreeAvatarsView(urls = iconsUrls, colors = colors)
     }
 }
