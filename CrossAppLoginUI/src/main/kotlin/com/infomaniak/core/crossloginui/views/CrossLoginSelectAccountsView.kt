@@ -25,11 +25,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
 import com.infomaniak.core.crossloginui.R
+import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
-import com.infomaniak.core.crossloginui.data.getCrossLoginColors
 import com.infomaniak.core.crossloginui.utils.getColorOrNull
 import com.infomaniak.core.crossloginui.views.components.CrossLoginSelectAccounts
 
@@ -43,22 +44,20 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
 
     private var onClickListener: (() -> Unit)? = null
 
-    private var primaryColor by mutableStateOf<Int?>(null)
-    @ColorInt
-    private var titleColor: Int? = null
-    @ColorInt
-    private var descriptionColor: Int? = null
-    @ColorInt
-    private var backgroundColor: Int? = null
-    @ColorInt
-    private var buttonStrokeColor: Int? = null
+    private var primaryColor by mutableStateOf<Color?>(null)
+    private var onPrimaryColor by mutableStateOf<Color?>(null) // TODO
+    private var titleColor: Color? = null
+    private var descriptionColor: Color? = null
+    private var avatarStrokeColor: Color? = null
+    private var buttonStrokeColor: Color? = null
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.CrossLoginSelectAccountsView, defStyleAttr, 0).apply {
             primaryColor = getColorOrNull(R.styleable.CrossLoginSelectAccountsView_crossLoginPrimaryColor)
+            onPrimaryColor = getColorOrNull(R.styleable.CrossLoginSelectAccountsView_crossLoginOnPrimaryColor)
             titleColor = getColorOrNull(R.styleable.CrossLoginSelectAccountsView_crossLoginTitleColor)
             descriptionColor = getColorOrNull(R.styleable.CrossLoginSelectAccountsView_crossLoginDescriptionColor)
-            backgroundColor = getColorOrNull(R.styleable.CrossLoginSelectAccountsView_crossLoginBackgroundColor)
+            avatarStrokeColor = getColorOrNull(R.styleable.CrossLoginSelectAccountsView_crossLoginAvatarStrokeColor)
             buttonStrokeColor = getColorOrNull(R.styleable.CrossLoginSelectAccountsView_crossLoginButtonStrokeColor)
             recycle()
         }
@@ -68,7 +67,14 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
     override fun Content() {
         MaterialThemeFromXml {
 
-            val colors = getCrossLoginColors(primaryColor, titleColor, descriptionColor, backgroundColor, buttonStrokeColor)
+            val colors = CrossLoginDefaults.colors(
+                primary = primaryColor,
+                onPrimary = onPrimaryColor,
+                title = titleColor,
+                description = descriptionColor,
+                avatarStroke = avatarStrokeColor,
+                buttonStroke = buttonStrokeColor,
+            )
 
             CrossLoginSelectAccounts(
                 accounts = { accounts },
@@ -79,7 +85,11 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
     }
 
     fun setPrimaryColor(@ColorInt newPrimaryColor: Int) {
-        primaryColor = newPrimaryColor
+        primaryColor = Color(newPrimaryColor)
+    }
+
+    fun setOnPrimaryColor(@ColorInt newOnPrimaryColor: Int) {
+        onPrimaryColor = Color(newOnPrimaryColor)
     }
 
     fun setAccounts(list: List<CrossLoginUiAccount>) {
