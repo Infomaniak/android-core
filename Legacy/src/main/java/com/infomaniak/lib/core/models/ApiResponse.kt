@@ -44,6 +44,12 @@ open class ApiResponse<T>(
     @SerializedName("items_per_page")
     val itemsPerPage: Int = 0,
 ) {
+    var headers: InfomaniakHeaders? = null
 
     fun isSuccess() = result == ApiResponseStatus.SUCCESS
 }
+
+// @Serializable
+// open class ApiResponseWithHeaders<H, T>(
+//     val headers: @RawValue H? = null,
+// ) : ApiResponse<T>()

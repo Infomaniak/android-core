@@ -27,6 +27,7 @@ import com.infomaniak.lib.core.auth.TokenInterceptorListener
 import com.infomaniak.lib.core.models.ApiError
 import com.infomaniak.lib.core.models.ApiResponse
 import com.infomaniak.lib.core.models.ApiResponseStatus.ERROR
+import com.infomaniak.lib.core.models.InfomaniakHeaders
 import com.infomaniak.lib.core.networking.HttpClient
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.CustomDateTypeAdapter
@@ -40,11 +41,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.reflect.Type
 import java.net.UnknownHostException
@@ -74,6 +72,18 @@ object ApiController {
     }
 
     inline fun <reified T> callApi(
+        url: String,
+        method: ApiMethod,
+        body: Any? = null,
+        okHttpClient: OkHttpClient = HttpClient.okHttpClient,
+        useKotlinxSerialization: Boolean = false,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
+    ): T {
+        val requestBody: RequestBody = generateRequestBody(body)
+        return executeRequest(url, method, requestBody, okHttpClient, useKotlinxSerialization, buildErrorResult)
+    }
+
+    inline fun <reified T, reified H> callApiWithHeaders(
         url: String,
         method: ApiMethod,
         body: Any? = null,
@@ -196,7 +206,7 @@ object ApiController {
                         )
                     }
                     bodyResponse.isBlank() -> createInternetErrorResponse(buildErrorResult = buildErrorResult)
-                    else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse)
+                    else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse, response.headers)
                 }
             }
         } catch (refreshTokenException: RefreshTokenException) {
@@ -224,7 +234,7 @@ object ApiController {
         }
     }
 
-    inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String): T {
+    inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String, headers: Headers): T {
         val apiResponse = when {
             useKotlinxSerialization -> json.decodeFromString<T>(bodyResponse)
             else -> gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
@@ -235,6 +245,8 @@ object ApiController {
             apiResponse.translatedError = InternalTranslatedErrorCode.UnknownError.translateRes
             apiResponse.error = InternalTranslatedErrorCode.UnknownError.toApiError()
         }
+
+        if (apiResponse is ApiResponse<*>) apiResponse.headers = InfomaniakHeaders(headers)
 
         return apiResponse
     }
