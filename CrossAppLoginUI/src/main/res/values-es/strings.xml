@@ -17,7 +17,6 @@
   -->
 <resources>
     <string name="buttonLogin">Inicio de sesión</string>
-    <string name="buttonCreateAccount">Crear una cuenta</string>
     <plurals name="buttonContinueWithAccounts">
         <item quantity="one">Continuar con esta cuenta</item>
         <item quantity="other">Continuar con estas cuentas</item>
