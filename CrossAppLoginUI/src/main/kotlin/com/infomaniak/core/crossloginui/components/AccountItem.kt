@@ -17,22 +17,33 @@
  */
 package com.infomaniak.core.crossloginui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalRippleConfiguration
+import androidx.compose.material3.RippleConfiguration
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -43,8 +54,9 @@ import com.infomaniak.core.crossloginui.icons.Checkmark
 import com.infomaniak.core.crossloginui.theme.Dimens
 import com.infomaniak.core.crossloginui.theme.Typography
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountItem(
+internal fun AccountItem(
     title: String,
     description: String? = null,
     icon: ImageVector? = null,
@@ -56,12 +68,24 @@ fun AccountItem(
     isSelected: (() -> Boolean)? = null,
     onClick: () -> Unit,
 ) {
-    SharpRippleButton(
-        isSelected = isSelected ?: { false },
-        borderColor = if (hasBorder) colors.buttonStrokeColor else null,
-        onClick = onClick,
+    CompositionLocalProvider(
+        LocalRippleConfiguration provides RippleConfiguration(color = colors.primary)
     ) {
-        AccountItemContent(title, description, icon, iconUrl, iconsUrls, endIcon, colors, isSelected)
+        TextButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(Dimens.buttonHeight)
+                .selectable(
+                    selected = isSelected?.invoke() == true,
+                    onClick = onClick,
+                ),
+            border = if (hasBorder) BorderStroke(1.dp, colors.buttonStroke) else null,
+            shape = if (hasBorder) RoundedCornerShape(Dimens.largeCornerRadius) else RectangleShape,
+            onClick = onClick,
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            AccountItemContent(title, description, icon, iconUrl, iconsUrls, endIcon, colors, isSelected)
+        }
     }
 }
 
@@ -92,13 +116,13 @@ private fun AccountItemContent(
             Text(
                 text = title,
                 style = if (icon == null) Typography.bodyMedium else Typography.bodyRegular,
-                color = colors.titleColor,
+                color = colors.title,
             )
             description?.let {
                 Text(
                     text = it,
                     style = Typography.bodyRegular,
-                    color = colors.descriptionColor,
+                    color = colors.description,
                 )
             }
         }
@@ -107,7 +131,7 @@ private fun AccountItemContent(
             Icon(
                 imageVector = endIcon,
                 contentDescription = null,
-                tint = colors.primaryColor,
+                tint = colors.primary,
             )
         }
     }
@@ -121,7 +145,7 @@ private fun DisplayIcons(icon: ImageVector?, iconUrl: String?, iconsUrls: List<S
                 imageVector = icon,
                 modifier = Modifier.size(Dimens.iconSize),
                 contentDescription = null,
-                tint = colors.primaryColor,
+                tint = colors.primary,
             )
         }
         iconUrl != null -> AsyncImage(
