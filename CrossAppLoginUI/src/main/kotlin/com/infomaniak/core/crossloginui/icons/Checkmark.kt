@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.StrokeCap.Companion.Round as strokeCapRound
 import androidx.compose.ui.graphics.StrokeJoin.Companion.Round as strokeJoinRound
 
-val Checkmark: ImageVector
+internal val Checkmark: ImageVector
     get() {
 
         if (_checkmark != null) return _checkmark!!

@@ -19,25 +19,28 @@
 
     <declare-styleable name="CommonAttributes">
         <attr name="crossLoginPrimaryColor" format="color" />
+        <attr name="crossLoginOnPrimaryColor" format="color" />
         <attr name="crossLoginTitleColor" format="color" />
         <attr name="crossLoginDescriptionColor" format="color" />
-        <attr name="crossLoginBackgroundColor" format="color" />
+        <attr name="crossLoginAvatarStrokeColor" format="color" />
         <attr name="crossLoginButtonStrokeColor" format="color" />
     </declare-styleable>
 
     <declare-styleable name="CrossLoginSelectAccountsView">
         <attr name="crossLoginPrimaryColor" />
+        <attr name="crossLoginOnPrimaryColor" />
         <attr name="crossLoginTitleColor" />
         <attr name="crossLoginDescriptionColor" />
-        <attr name="crossLoginBackgroundColor" />
+        <attr name="crossLoginAvatarStrokeColor" />
         <attr name="crossLoginButtonStrokeColor" />
     </declare-styleable>
 
     <declare-styleable name="CrossLoginListAccountsView">
         <attr name="crossLoginPrimaryColor" />
+        <attr name="crossLoginOnPrimaryColor" />
         <attr name="crossLoginTitleColor" />
         <attr name="crossLoginDescriptionColor" />
-        <attr name="crossLoginBackgroundColor" />
+        <attr name="crossLoginAvatarStrokeColor" />
         <attr name="crossLoginButtonStrokeColor" />
     </declare-styleable>
 

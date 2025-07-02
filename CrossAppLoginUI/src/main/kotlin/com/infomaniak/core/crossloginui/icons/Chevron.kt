@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-val Chevron: ImageVector
+internal val Chevron: ImageVector
     get() {
 
         if (_chevron != null) return _chevron!!

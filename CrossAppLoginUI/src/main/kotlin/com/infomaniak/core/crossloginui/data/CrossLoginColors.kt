@@ -21,27 +21,33 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-data class CrossLoginColors(
-    val primaryColor: Color,
-    val titleColor: Color,
-    val descriptionColor: Color,
-    val backgroundColor: Color,
-    val buttonStrokeColor: Color,
+internal data class CrossLoginColors(
+    val primary: Color, // Only needed in kMail because we are dissociated from the Material theme actual value
+    val onPrimary: Color, // Only needed in kMail because we are dissociated from the Material theme actual value
+    val title: Color,
+    val description: Color,
+    val avatarStroke: Color,
+    val buttonStroke: Color,
 )
 
-@Composable
-fun getCrossLoginColors(
-    primaryColor: Int?,
-    titleColor: Int?,
-    descriptionColor: Int?,
-    backgroundColor: Int?,
-    buttonStrokeColor: Int?,
-): CrossLoginColors {
-    return CrossLoginColors(
-        primaryColor = primaryColor?.let(::Color) ?: MaterialTheme.colorScheme.primary,
-        titleColor = titleColor?.let(::Color) ?: MaterialTheme.colorScheme.secondary,
-        descriptionColor = descriptionColor?.let(::Color) ?: MaterialTheme.colorScheme.tertiary,
-        backgroundColor = backgroundColor?.let(::Color) ?: MaterialTheme.colorScheme.onPrimary,
-        buttonStrokeColor = buttonStrokeColor?.let(::Color) ?: MaterialTheme.colorScheme.outlineVariant,
-    )
+internal object CrossLoginDefaults {
+
+    @Composable
+    fun colors(
+        primary: Color? = null,
+        onPrimary: Color? = null,
+        title: Color? = null,
+        description: Color? = null,
+        avatarStroke: Color? = null,
+        buttonStroke: Color? = null,
+    ): CrossLoginColors {
+        return CrossLoginColors(
+            primary = primary ?: MaterialTheme.colorScheme.primary,
+            onPrimary = onPrimary ?: MaterialTheme.colorScheme.onPrimary,
+            title = title ?: MaterialTheme.colorScheme.onSurface,
+            description = description ?: MaterialTheme.colorScheme.onSurfaceVariant,
+            avatarStroke = avatarStroke ?: MaterialTheme.colorScheme.background,
+            buttonStroke = buttonStroke ?: MaterialTheme.colorScheme.outlineVariant,
+        )
+    }
 }

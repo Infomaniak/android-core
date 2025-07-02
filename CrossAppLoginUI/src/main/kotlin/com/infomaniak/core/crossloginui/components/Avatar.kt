@@ -15,12 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.crossloginui.utils
+package com.infomaniak.core.crossloginui.components
 
-import android.content.res.TypedArray
-import androidx.annotation.StyleableRes
-import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.useravatar.AvatarData
+import com.infomaniak.core.useravatar.exposed.UserAvatar
 
-internal fun TypedArray.getColorOrNull(@StyleableRes index: Int): Color? {
-    return if (hasValue(index)) Color(getColor(index, -1)) else null
+@Composable
+internal fun Avatar(modifier: Modifier = Modifier, avatar: String, colors: CrossLoginColors) {
+    UserAvatar(
+        modifier = modifier,
+        avatarData = AvatarData(uri = avatar),
+        border = BorderStroke(1.dp, color = colors.avatarStroke),
+    )
 }

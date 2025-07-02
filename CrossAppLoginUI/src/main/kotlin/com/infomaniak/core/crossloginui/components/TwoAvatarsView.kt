@@ -24,14 +24,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.theme.Dimens
 
 @Composable
-fun TwoAvatarsView(urls: List<String>, colors: CrossLoginColors) {
+internal fun TwoAvatarsView(urls: List<String>, colors: CrossLoginColors) {
     Box(
         modifier = Modifier.size(Dimens.avatarsBoxWidth, Dimens.avatarsBoxHeight),
         contentAlignment = Alignment.CenterStart,
@@ -65,7 +65,7 @@ private fun TwoAvatarsViewPreview() {
                     "https://picsum.photos/id/237/200/200",
                     "https://picsum.photos/id/3/200/200",
                 ),
-                colors = CrossLoginColors(Color.Gray, Color.Gray, Color.Gray, Color.Gray, Color.Gray),
+                colors = CrossLoginDefaults.colors(),
             )
         }
     }

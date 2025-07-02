@@ -19,13 +19,11 @@ package com.infomaniak.core.crossloginui.theme
 
 import androidx.compose.ui.unit.dp
 
-object Dimens {
+internal object Dimens {
 
     /** 56 dp */
     val buttonHeight = 56.dp
 
-    /** 16 dp */
-    val smallIconSize = 16.dp
     /** 24 dp */
     val iconSize = 24.dp
     /** 40 dp */
