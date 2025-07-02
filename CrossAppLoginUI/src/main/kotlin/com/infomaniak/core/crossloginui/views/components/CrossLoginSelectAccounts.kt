@@ -18,15 +18,12 @@
 package com.infomaniak.core.crossloginui.views.components
 
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.crossloginui.R
 import com.infomaniak.core.crossloginui.components.AccountItem
+import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.icons.Chevron
 
@@ -34,6 +31,7 @@ import com.infomaniak.core.crossloginui.icons.Chevron
 @Composable
 fun CrossLoginSelectAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
+    colors: CrossLoginColors,
     onClick: () -> Unit,
 ) {
     val selectedAccounts = accounts().filter { it.isSelected }
@@ -46,8 +44,9 @@ fun CrossLoginSelectAccounts(
                 description = account.email,
                 iconUrl = account.avatarUrl,
                 endIcon = Chevron,
+                hasBorder = true,
+                colors = colors,
                 isSelected = { true },
-                borderColor = Color.Gray, // TODO
                 onClick = onClick,
             )
         }
@@ -56,21 +55,11 @@ fun CrossLoginSelectAccounts(
                 title = pluralStringResource(R.plurals.selectedAccountCountLabel, count, count),
                 iconsUrls = selectedAccounts.mapNotNull { it.avatarUrl },
                 endIcon = Chevron,
+                hasBorder = true,
+                colors = colors,
                 isSelected = { true },
-                borderColor = Color.Gray,
                 onClick = onClick,
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun Preview() {
-    Surface {
-        CrossLoginSelectAccounts(
-            accounts = { mutableStateListOf() },
-            onClick = {},
-        )
     }
 }

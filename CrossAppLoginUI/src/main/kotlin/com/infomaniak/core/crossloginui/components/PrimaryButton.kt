@@ -17,22 +17,21 @@
  */
 package com.infomaniak.core.crossloginui.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.crossloginui.theme.CrossLoginTheme
+import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.theme.Dimens
 import com.infomaniak.core.crossloginui.theme.Typography
 
@@ -41,13 +40,14 @@ internal fun PrimaryButton(
     modifier: Modifier = Modifier,
     text: String,
     shape: Shape,
+    colors: CrossLoginColors,
     onClick: () -> Unit,
 ) {
     Button(
         modifier = modifier.height(Dimens.buttonHeight),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
+            containerColor = colors.primaryColor,
+            contentColor = colors.backgroundColor,
         ),
         shape = shape,
         onClick = onClick,
@@ -56,19 +56,17 @@ internal fun PrimaryButton(
     }
 }
 
-@Preview(name = "(1) Light")
-@Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
+@Preview
 @Composable
 private fun Preview() {
-    CrossLoginTheme {
-        Surface {
-            Column(verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
-                PrimaryButton(
-                    text = "Lorem",
-                    shape = RoundedCornerShape(Dimens.largeCornerRadius),
-                    onClick = {},
-                )
-            }
+    Surface {
+        Column(verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
+            PrimaryButton(
+                text = "Lorem",
+                shape = RoundedCornerShape(Dimens.largeCornerRadius),
+                colors = CrossLoginColors(Color.Gray, Color.Red, Color.Red, Color.White, Color.Red),
+                onClick = {},
+            )
         }
     }
 }
