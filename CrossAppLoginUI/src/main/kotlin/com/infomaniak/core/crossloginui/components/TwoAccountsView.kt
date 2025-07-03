@@ -26,40 +26,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.times
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
+import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.theme.Dimens
 
 @Composable
-internal fun ThreeAvatarsView(urls: List<String>, colors: CrossLoginColors) {
+internal fun TwoAccountsView(
+    accounts: List<CrossLoginUiAccount>,
+    colors: CrossLoginColors,
+) {
     Box(
         modifier = Modifier.size(Dimens.avatarsBoxWidth, Dimens.avatarsBoxHeight),
         contentAlignment = Alignment.CenterStart,
     ) {
 
-        // Left
-        Avatar(
-            modifier = Modifier.size(Dimens.iconSize),
-            avatar = urls[1],
-            strokeColor = colors.avatarStroke,
-        )
-
         // Right
         Avatar(
             modifier = Modifier
-                .size(Dimens.iconSize)
-                .graphicsLayer { translationX = (Dimens.avatarsBoxWidth - Dimens.iconSize).toPx() },
-            avatar = urls[2],
+                .size(Dimens.avatarsBoxHeight)
+                .graphicsLayer { translationX = (Dimens.avatarsBoxWidth - Dimens.avatarsBoxHeight).toPx() },
+            avatar = accounts[1].avatarUrl!!,
             strokeColor = colors.avatarStroke,
         )
 
-        // Center
+        // Left
         Avatar(
-            modifier = Modifier
-                .size(Dimens.avatarsBoxHeight)
-                .graphicsLayer { translationX = (0.5f * (Dimens.avatarsBoxWidth - Dimens.avatarsBoxHeight)).toPx() },
-            avatar = urls[0],
+            modifier = Modifier.size(Dimens.avatarsBoxHeight),
+            avatar = accounts[0].avatarUrl!!,
             strokeColor = colors.avatarStroke,
         )
     }
@@ -67,15 +61,11 @@ internal fun ThreeAvatarsView(urls: List<String>, colors: CrossLoginColors) {
 
 @Preview
 @Composable
-private fun ThreeAvatarsViewPreview() {
+private fun TwoAvatarsViewPreview() {
     MaterialTheme {
         Surface {
-            ThreeAvatarsView(
-                urls = listOf(
-                    "https://picsum.photos/id/237/200/200",
-                    "https://picsum.photos/id/3/200/200",
-                    "https://picsum.photos/id/10/200/200",
-                ),
+            TwoAccountsView(
+                accounts = emptyList(),
                 colors = CrossLoginDefaults.colors(),
             )
         }

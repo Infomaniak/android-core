@@ -20,12 +20,9 @@ package com.infomaniak.core.crossloginui.views.components
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.res.pluralStringResource
-import com.infomaniak.core.crossloginui.R
-import com.infomaniak.core.crossloginui.components.AccountItem
+import com.infomaniak.core.crossloginui.components.SelectedAccountsButton
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
-import com.infomaniak.core.crossloginui.icons.Chevron
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -34,32 +31,9 @@ internal fun CrossLoginSelectAccounts(
     colors: CrossLoginColors,
     onClick: () -> Unit,
 ) {
-    val selectedAccounts = accounts().filter { it.isSelected }
-    val count = selectedAccounts.count()
-    when {
-        count == 1 -> {
-            val account = selectedAccounts.first()
-            AccountItem(
-                title = account.name,
-                description = account.email,
-                iconUrl = account.avatarUrl,
-                endIcon = Chevron,
-                hasBorder = true,
-                colors = colors,
-                isSelected = { true },
-                onClick = onClick,
-            )
-        }
-        count > 1 -> {
-            AccountItem(
-                title = pluralStringResource(R.plurals.selectedAccountCountLabel, count, count),
-                iconsUrls = selectedAccounts.mapNotNull { it.avatarUrl },
-                endIcon = Chevron,
-                hasBorder = true,
-                colors = colors,
-                isSelected = { true },
-                onClick = onClick,
-            )
-        }
-    }
+    SelectedAccountsButton(
+        accounts = accounts().filter { it.isSelected },
+        colors = colors,
+        onClick = onClick,
+    )
 }
