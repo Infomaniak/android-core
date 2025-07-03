@@ -26,13 +26,17 @@ import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
+import com.infomaniak.core.login.crossapp.internal.deviceid.SharedDeviceIdManager
 import com.infomaniak.core.login.crossapp.internal.localAccountsFlow
+import com.infomaniak.lib.core.utils.SentryLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 
@@ -45,6 +49,7 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
     private val certificateChecker = AppCertificateChecker.withInfomaniakApps
 
     private val signedInAccountRequests = Channel<Messenger>(capacity = Channel.UNLIMITED)
+    private val syncSharedDeviceIdRequests = Channel<String>(capacity = Channel.UNLIMITED)
 
     init {
         lifecycleScope.launch { handleIncomingMessages() }
@@ -69,6 +74,22 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
                     IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
                         check(signedInAccountRequests.trySend(trustedClientMessenger).isSuccess)
                     }
+                    IpcMessageWhat.GET_SHARED_DEVICE_ID -> {
+                        val requestData = runCatching {
+                            ProtoBuf.decodeFromByteArray<CrossAppDeviceIdRequest>(msg.unwrapByteArrayOrNull()!!)
+                        }.getOrElse { t ->
+                            SentryLog.wtf(TAG, "GET_SHARED_DEVICE_ID message didn't contain expected data", t)
+                            return@use
+                        }
+                        launch { returnSharedDeviceIdOrWaitForSync(trustedClientMessenger, requestData) }
+                    }
+                    IpcMessageWhat.SYNC_SHARED_DEVICE_ID -> {
+                        val sharedId: String = runCatching { msg.unwrapStringOrNull()!! }.getOrElse { t ->
+                            SentryLog.wtf(TAG, "SYNC_SHARED_DEVICE_ID message didn't contain a proper string id", t)
+                            return@use
+                        }
+                        syncSharedDeviceIdRequests.trySend(sharedId)
+                    }
                 }
             }
         }.onCompletion {
@@ -86,6 +107,29 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
                 trustedClientMessenger = trustedClient
             )
         }
+    }
+
+    private suspend fun returnSharedDeviceIdOrWaitForSync(
+        clientMessenger: Messenger,
+        requestData: CrossAppDeviceIdRequest,
+    ) {
+        val sharedDeviceIdManager = CrossAppLogin.forContext(this).sharedDeviceIdManager
+
+        sharedDeviceIdManager.findCrossAppDeviceId(
+            packageNamesToSkip = requestData.packageNamesAlreadyBeingChecked
+        )?.let { sharedId ->
+            sendSharedDeviceId(clientMessenger, sharedId)
+            return
+        }
+
+        val sharedIdToUse = syncSharedDeviceIdRequests.receive()
+        SharedDeviceIdManager.sharedDeviceIdMutex.withLock {
+            SharedDeviceIdManager.storage.setDeviceId(sharedIdToUse)
+        }
+    }
+
+    private fun sendSharedDeviceId(destination: Messenger, id: String?) {
+        destination.trySending { newMessage -> newMessage.putBundleWrappedStringInObj(id) }
     }
 
     private suspend fun sendSignedInAccountsToApp(
@@ -113,5 +157,12 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
 
     internal object IpcMessageWhat {
         const val GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS = 0
+        const val GET_SHARED_DEVICE_ID = 1
+        const val SYNC_SHARED_DEVICE_ID = 2
+    }
+
+    companion object {
+        const val ACTION = "com.infomaniak.crossapp.login"
+        private const val TAG = "BaseCrossAppLoginService"
     }
 }
