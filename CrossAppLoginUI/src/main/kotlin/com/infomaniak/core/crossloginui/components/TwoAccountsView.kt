@@ -24,9 +24,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.theme.Dimens
@@ -34,7 +34,7 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 @Composable
 internal fun TwoAccountsView(
     accounts: List<CrossLoginUiAccount>,
-    colors: CrossLoginColors,
+    avatarStrokeColor: Color,
 ) {
     Box(
         modifier = Modifier.size(Dimens.avatarsBoxWidth, Dimens.avatarsBoxHeight),
@@ -47,14 +47,14 @@ internal fun TwoAccountsView(
                 .size(Dimens.avatarsBoxHeight)
                 .graphicsLayer { translationX = (Dimens.avatarsBoxWidth - Dimens.avatarsBoxHeight).toPx() },
             avatar = accounts[1].avatarUrl!!,
-            strokeColor = colors.avatarStroke,
+            strokeColor = avatarStrokeColor,
         )
 
         // Left
         Avatar(
             modifier = Modifier.size(Dimens.avatarsBoxHeight),
             avatar = accounts[0].avatarUrl!!,
-            strokeColor = colors.avatarStroke,
+            strokeColor = avatarStrokeColor,
         )
     }
 }
@@ -66,7 +66,7 @@ private fun TwoAvatarsViewPreview() {
         Surface {
             TwoAccountsView(
                 accounts = emptyList(),
-                colors = CrossLoginDefaults.colors(),
+                avatarStrokeColor = CrossLoginDefaults.colors().avatarStroke,
             )
         }
     }
