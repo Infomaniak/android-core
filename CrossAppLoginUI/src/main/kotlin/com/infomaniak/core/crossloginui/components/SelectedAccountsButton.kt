@@ -29,16 +29,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalRippleConfiguration
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RippleConfiguration
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
-import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
+import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.icons.Chevron
 import com.infomaniak.core.crossloginui.theme.Dimens
 
@@ -77,6 +80,20 @@ internal fun SelectedAccountsButton(
                     tint = colors.primary,
                 )
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    MaterialTheme {
+        Surface {
+            SelectedAccountsButton(
+                colors = CrossLoginDefaults.colors(),
+                onClick = {},
+                content = {},
+            )
         }
     }
 }
