@@ -18,38 +18,50 @@
 package com.infomaniak.core.crossloginui.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
+import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.theme.Dimens
 
 @Composable
-internal fun TwoAvatarsView(urls: List<String>, colors: CrossLoginColors) {
-    Box(
-        modifier = Modifier.size(Dimens.avatarsBoxWidth, Dimens.avatarsBoxHeight),
-        contentAlignment = Alignment.CenterStart,
-    ) {
+internal fun ThreeAccountsView(
+    accounts: List<CrossLoginUiAccount>,
+    colors: CrossLoginColors,
+) {
+    Box(contentAlignment = Alignment.Center) {
 
-        // Right
-        Avatar(
-            modifier = Modifier
-                .size(Dimens.avatarsBoxHeight)
-                .graphicsLayer { translationX = (Dimens.avatarsBoxWidth - Dimens.avatarsBoxHeight).toPx() },
-            avatar = urls[1],
-            strokeColor = colors.avatarStroke,
-        )
+        Row {
+            // Left
+            Avatar(
+                modifier = Modifier.size(Dimens.iconSize),
+                avatar = accounts[1].avatarUrl!!,
+                strokeColor = colors.avatarStroke,
+            )
 
-        // Left
+            Spacer(Modifier.width(width = Dimens.avatarsBoxWidth - (Dimens.iconSize + Dimens.iconSize)))
+
+            // Right
+            Avatar(
+                modifier = Modifier.size(Dimens.iconSize),
+                avatar = accounts[2].avatarUrl!!,
+                strokeColor = colors.avatarStroke,
+            )
+        }
+
+        // Center
         Avatar(
             modifier = Modifier.size(Dimens.avatarsBoxHeight),
-            avatar = urls[0],
+            avatar = accounts[0].avatarUrl!!,
             strokeColor = colors.avatarStroke,
         )
     }
@@ -57,14 +69,11 @@ internal fun TwoAvatarsView(urls: List<String>, colors: CrossLoginColors) {
 
 @Preview
 @Composable
-private fun TwoAvatarsViewPreview() {
+private fun ThreeAvatarsViewPreview() {
     MaterialTheme {
         Surface {
-            TwoAvatarsView(
-                urls = listOf(
-                    "https://picsum.photos/id/237/200/200",
-                    "https://picsum.photos/id/3/200/200",
-                ),
+            ThreeAccountsView(
+                accounts = emptyList(),
                 colors = CrossLoginDefaults.colors(),
             )
         }
