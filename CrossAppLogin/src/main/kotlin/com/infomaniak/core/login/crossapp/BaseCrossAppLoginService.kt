@@ -14,44 +14,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 @file:OptIn(ExperimentalSerializationApi::class)
 
 package com.infomaniak.core.login.crossapp
 
 import android.content.Intent
-import android.os.*
+import android.os.DeadObjectException
+import android.os.IBinder
+import android.os.Message
+import android.os.Messenger
+import android.os.Process
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
-import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateCheckerImpl
-import com.infomaniak.core.login.crossapp.internal.certificates.infomaniakAppsCertificates
 import com.infomaniak.core.login.crossapp.internal.localAccountsFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 
-abstract class BaseCrossAppLoginService : LifecycleService() {
-
-    protected abstract val selectedUserIdFlow: Flow<Int>
+abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int>) : LifecycleService() {
 
     private val incomingMessagesChannel = Channel<DisposableMessage>(capacity = Channel.UNLIMITED)
     private val messagesHandler = ChannelMessageHandler(incomingMessagesChannel)
     private val messenger by lazy { Messenger(messagesHandler) }
 
-    private val certificateChecker: AppCertificateChecker = AppCertificateCheckerImpl(
-        signingCertificates = infomaniakAppsCertificates
-    )
+    private val certificateChecker = AppCertificateChecker.withInfomaniakApps
+
+    private val signedInAccountRequests = Channel<Messenger>(capacity = Channel.UNLIMITED)
 
     init {
         lifecycleScope.launch { handleIncomingMessages() }
+        lifecycleScope.launch { handleSignedInAccountsRequests() }
     }
 
     final override fun onBind(intent: Intent): IBinder? {
@@ -61,21 +70,16 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
 
     private suspend fun handleIncomingMessages() = Dispatchers.Default {
         val ourUid = Process.myUid()
-        val accountsDataFlow: SharedFlow<ByteArray> = localAccountsFlow(selectedUserIdFlow)
-            .map { ProtoBuf.Default.encodeToByteArray(it) }
-            .shareIn(this, SharingStarted.Eagerly, replay = 1)
 
         incomingMessagesChannel.consumeAsFlow().onEach { disposableMessage ->
             disposableMessage.use { msg ->
                 check(msg.sendingUid != ourUid) // We are not supposed to talk to ourselves.
                 if (certificateChecker.isUidAllowed(msg.sendingUid).not()) return@use
 
+                val trustedClientMessenger = msg.replyTo
                 when (msg.what) {
                     IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
-                        sendSignedInAccountsToApp(
-                            accountsDataFlow = accountsDataFlow,
-                            trustedClientMessenger = msg.replyTo
-                        )
+                        check(signedInAccountRequests.trySend(trustedClientMessenger).isSuccess)
                     }
                 }
             }
@@ -84,19 +88,37 @@ abstract class BaseCrossAppLoginService : LifecycleService() {
         }.collect()
     }
 
+    private suspend fun handleSignedInAccountsRequests() = Dispatchers.Default {
+        val accountsDataFlow: SharedFlow<ByteArray> = localAccountsFlow(selectedUserIdFlow)
+            .map { ProtoBuf.Default.encodeToByteArray(it) }
+            .shareIn(this, SharingStarted.Eagerly, replay = 1)
+        for (trustedClient in signedInAccountRequests) {
+            sendSignedInAccountsToApp(
+                accountsDataFlow = accountsDataFlow,
+                trustedClientMessenger = trustedClient
+            )
+        }
+    }
+
     private suspend fun sendSignedInAccountsToApp(
         accountsDataFlow: SharedFlow<ByteArray>,
         trustedClientMessenger: Messenger
     ) {
         val accountsData = accountsDataFlow.first()
-        val reply = Message.obtain().also { newMsg ->
-            newMsg.obj = accountsData
-            newMsg.isAsynchronous = true
+        trustedClientMessenger.trySending { newMessage -> newMessage.putBundleWrappedDataInObj(accountsData) }
+    }
+
+    private inline fun Messenger.trySending(configureMessage: (Message) -> Unit): Boolean {
+        val reply = Message.obtain().also { msg ->
+            msg.isAsynchronous = true
+            configureMessage(msg)
         }
-        try {
-            trustedClientMessenger.send(reply)
+        return try {
+            send(reply)
+            true
         } catch (_: DeadObjectException) {
-            // The client app died before we could respond, we can safely ignore it.
+            // The client app died before we could respond. Usually, we can safely ignore it.
+            false
         }
     }
 

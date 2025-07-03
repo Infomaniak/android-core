@@ -17,11 +17,21 @@
 
 package com.infomaniak.core.login.crossapp
 
+import android.content.Context
 import kotlinx.serialization.ExperimentalSerializationApi
 
 sealed interface CrossAppLogin {
 
+    companion object {
+        fun forContext(context: Context): CrossAppLogin = CrossAppLoginImpl(context)
+    }
+
     @ExperimentalSerializationApi
     suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount>
 
+    /**
+     * Returns an app generate identifier that is shared among our apps,
+     * to group connected apps under a single device.
+     */
+    suspend fun getAppGroupScopedDeviceInstanceId()
 }
