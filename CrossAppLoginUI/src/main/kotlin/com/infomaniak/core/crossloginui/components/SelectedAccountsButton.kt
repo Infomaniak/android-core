@@ -21,6 +21,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -44,9 +45,9 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SelectedAccountsButton(
-    accounts: List<CrossLoginUiAccount>,
     colors: CrossLoginColors,
     onClick: () -> Unit,
+    content: @Composable RowScope.() -> Unit,
 ) {
     CompositionLocalProvider(
         LocalRippleConfiguration provides RippleConfiguration(color = colors.primary)
@@ -68,11 +69,7 @@ internal fun SelectedAccountsButton(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
-                val count = accounts.count()
-                when {
-                    count == 1 -> SingleAccount(accounts.first(), colors)
-                    count > 1 -> MultipleAccounts(accounts, colors)
-                }
+                content()
 
                 Icon(
                     imageVector = Chevron,
