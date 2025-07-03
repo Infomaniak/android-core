@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 @file:OptIn(ExperimentalSplittiesApi::class)
 
 package com.infomaniak.core.login.crossapp.internal.certificates
@@ -25,7 +24,14 @@ import android.content.pm.Signature
 import android.os.Build.VERSION.SDK_INT
 import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.completableScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.invoke
+import kotlinx.coroutines.launch
 import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
 

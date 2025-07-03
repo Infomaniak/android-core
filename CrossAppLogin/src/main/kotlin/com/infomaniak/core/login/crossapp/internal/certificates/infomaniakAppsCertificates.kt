@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.infomaniak.core.login.crossapp.internal.certificates
 
 import com.infomaniak.core.login.crossapp.BuildConfig
@@ -36,5 +35,5 @@ internal val infomaniakAppsCertificates = AppSigningCertificates {
     this["com.infomaniak.mail"] = setOf(
         LazyCertificate { "54:CE:26:CB:66:CB:12:EE:E6:FF:51:04:C9:5A:C4:1C:F1:93:9D:B9:C1:83:13:13:AA:52:3D:41:D7:29:EC:C2" },
     )
-    //TODO: Add other Infomaniak apps that are expected to support cross-app login.
+    // TODO: Add other Infomaniak apps that are expected to support cross-app login.
 }
