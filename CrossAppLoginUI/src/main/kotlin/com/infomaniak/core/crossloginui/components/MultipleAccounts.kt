@@ -17,18 +17,25 @@
  */
 package com.infomaniak.core.crossloginui.components
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.R
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
+import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,4 +61,19 @@ internal fun RowScope.MultipleAccounts(
         style = Typography.bodyMedium,
         color = colors.title,
     )
+}
+
+@Preview
+@Composable
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
+    MaterialTheme {
+        Surface {
+            Row {
+                MultipleAccounts(
+                    accounts = accounts,
+                    colors = CrossLoginDefaults.colors(),
+                )
+            }
+        }
+    }
 }
