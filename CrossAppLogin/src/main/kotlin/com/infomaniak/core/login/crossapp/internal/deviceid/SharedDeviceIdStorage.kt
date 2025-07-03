@@ -25,7 +25,10 @@ import kotlinx.coroutines.sync.withLock
 import splitties.init.appCtx
 import java.io.FileNotFoundException
 import java.io.IOException
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@ExperimentalUuidApi
 internal object SharedDeviceIdStorage {
 
     private val dataFile = AtomicFile(appCtx.filesDir.resolve("generatedSharedDeviceId.utf8"))
@@ -36,10 +39,10 @@ internal object SharedDeviceIdStorage {
     // so we never return a stale backed-up id.
 
     @Throws(IOException::class)
-    suspend fun readDeviceId(): String? = Dispatchers.IO {
+    suspend fun readDeviceId(): Uuid? = Dispatchers.IO {
         localDataReadWriteMutex.withLock {
             try {
-                dataFile.openRead().use { stream -> stream.reader().readText() }
+                dataFile.openRead().use { stream -> Uuid.fromByteArray(stream.readBytes()) }
             } catch (_: FileNotFoundException) {
                 null
             }
@@ -47,15 +50,13 @@ internal object SharedDeviceIdStorage {
     }
 
     @Throws(IOException::class)
-    suspend fun setDeviceId(sharedDeviceId: String) {
+    suspend fun setDeviceId(sharedDeviceId: Uuid) {
         Dispatchers.IO {
             localDataReadWriteMutex.withLock {
                 //TODO: Check that we don't have it already, and report if we do?
                 dataFile.startWrite().use { outputStream ->
                     try {
-                        val writer = outputStream.writer()
-                        writer.write(sharedDeviceId)
-                        writer.flush()
+                        outputStream.write(sharedDeviceId.toByteArray())
                         dataFile.finishWrite(outputStream)
                     } catch (t: Throwable) {
                         dataFile.failWrite(outputStream)
