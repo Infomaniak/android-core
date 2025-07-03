@@ -14,13 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 @file:OptIn(ExperimentalSerializationApi::class)
 
 package com.infomaniak.core.login.crossapp
 
 import android.content.Intent
-import android.os.*
+import android.os.DeadObjectException
+import android.os.IBinder
+import android.os.Message
+import android.os.Messenger
+import android.os.Process
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
@@ -29,7 +32,16 @@ import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateCh
 import com.infomaniak.core.login.crossapp.internal.localAccountsFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi

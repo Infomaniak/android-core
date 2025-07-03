@@ -53,9 +53,9 @@ class DerivedTokenGeneratorImpl(
 
     private val attestationTokensForUrls = DynamicLazyMap<String, Deferred<Xor<String, Issue>>>(
         cacheManager = { _, asyncResult ->
-            //TODO: Cache tokens again (forever only if possible) once they can be reused,
-            // by uncommenting, the line below, and possibly replacing awaitCancellation() if reuse is limited in time.
-//            if (asyncResult.await() is Xor.First) awaitCancellation()
+            // TODO: Cache tokens again (forever only if possible) once they can be reused,
+            //  by uncommenting, the line below, and possibly replacing awaitCancellation() if reuse is limited in time.
+            // if (asyncResult.await() is Xor.First) awaitCancellation()
             // Skip cache if unsuccessful.
         },
         coroutineScope = coroutineScope
@@ -141,9 +141,9 @@ class DerivedTokenGeneratorImpl(
         Xor.Second(issue)
     }
 
-    //TODO: Improve error handling as some are recoverable (network or backends availability related), while some are not.
-    // See Play Integrity error codes: https://developer.android.com/google/play/integrity/error-codes,
-    // and remediation: https://developer.android.com/google/play/integrity/remediation
+    // TODO: Improve error handling as some are recoverable (network or backends availability related), while some are not.
+    //  See Play Integrity error codes: https://developer.android.com/google/play/integrity/error-codes,
+    //  and remediation: https://developer.android.com/google/play/integrity/remediation
     @Throws(IntegrityException::class)
     private suspend inline fun fetchNewAttestationToken(targetUrl: String): String {
         val challenge = appIntegrityManager.getChallenge()
