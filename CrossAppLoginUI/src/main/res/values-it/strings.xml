@@ -18,13 +18,13 @@
 <resources>
     <string name="buttonLogin">Accesso</string>
     <plurals name="buttonContinueWithAccounts">
-        <item quantity="one">Continuare con questo account</item>
-        <item quantity="other">Continuare con questi conti</item>
+        <item quantity="one">Continua con questo account</item>
+        <item quantity="other">Continua con questi conti</item>
     </plurals>
     <plurals name="selectedAccountCountLabel">
         <item quantity="one">%d conto selezionato</item>
         <item quantity="other">%d conti selezionati</item>
     </plurals>
-    <string name="selectAccountPanelTitle">Selezionare uno o più account</string>
-    <string name="buttonUseOtherAccount">Utilizzare un altro account</string>
+    <string name="selectAccountPanelTitle">Seleziona uno o più account</string>
+    <string name="buttonUseOtherAccount">Utilizza un altro account</string>
 </resources>
