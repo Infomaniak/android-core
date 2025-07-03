@@ -18,19 +18,26 @@
 package com.infomaniak.core.crossloginui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
+import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Dimens
 import com.infomaniak.core.crossloginui.theme.Typography
 
@@ -60,5 +67,20 @@ internal fun RowScope.SingleAccount(
             style = Typography.bodyRegular,
             color = colors.description,
         )
+    }
+}
+
+@Preview
+@Composable
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
+    MaterialTheme {
+        Surface {
+            Row {
+                SingleAccount(
+                    account = accounts.first(),
+                    colors = CrossLoginDefaults.colors(),
+                )
+            }
+        }
     }
 }
