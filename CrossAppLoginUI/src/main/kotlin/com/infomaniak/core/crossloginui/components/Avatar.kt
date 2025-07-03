@@ -20,16 +20,16 @@ package com.infomaniak.core.crossloginui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.exposed.UserAvatar
 
 @Composable
-internal fun Avatar(modifier: Modifier = Modifier, avatar: String, colors: CrossLoginColors) {
+internal fun Avatar(modifier: Modifier = Modifier, avatar: String, strokeColor: Color? = null) {
     UserAvatar(
         modifier = modifier,
         avatarData = AvatarData(uri = avatar),
-        border = BorderStroke(1.dp, color = colors.avatarStroke),
+        border = strokeColor?.let { BorderStroke(width = 1.dp, color = it) },
     )
 }
