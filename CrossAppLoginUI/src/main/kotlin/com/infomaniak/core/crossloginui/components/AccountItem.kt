@@ -45,9 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.icons.Checkmark
@@ -148,13 +146,11 @@ private fun DisplayIcons(icon: ImageVector?, iconUrl: String?, iconsUrls: List<S
                 tint = colors.primary,
             )
         }
-        iconUrl != null -> AsyncImage(
-            model = iconUrl,
+        iconUrl != null -> Avatar(
             modifier = Modifier
                 .size(Dimens.bigIconSize)
                 .clip(CircleShape),
-            contentScale = ContentScale.Crop,
-            contentDescription = null,
+            avatar = iconUrl,
         )
         iconsUrls != null && iconsUrls.count() == 2 -> TwoAvatarsView(urls = iconsUrls, colors = colors)
         iconsUrls != null && iconsUrls.count() > 2 -> ThreeAvatarsView(urls = iconsUrls, colors = colors)
