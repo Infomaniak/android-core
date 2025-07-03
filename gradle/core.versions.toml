@@ -5,7 +5,6 @@ androidLogin = "3.1.5"
 androidxCollection = "1.5.0"
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
 appUpdateVersion = "2.1.0"
-appcompat = "1.7.1"
 coil = "3.2.0"
 compose = "1.8.3"
 composeBom = "2025.06.01"
