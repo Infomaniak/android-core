@@ -18,10 +18,17 @@
 package com.infomaniak.core.crossloginui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
+import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
+import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.exposed.UserAvatar
 
@@ -32,4 +39,17 @@ internal fun Avatar(modifier: Modifier = Modifier, avatar: String, strokeColor: 
         avatarData = AvatarData(uri = avatar),
         border = strokeColor?.let { BorderStroke(width = 1.dp, color = it) },
     )
+}
+
+@Preview
+@Composable
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
+    MaterialTheme {
+        Surface {
+            Avatar(
+                avatar = accounts.first().avatarUrl!!,
+                strokeColor = CrossLoginDefaults.colors().avatarStroke,
+            )
+        }
+    }
 }

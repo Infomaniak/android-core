@@ -27,8 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
+import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Dimens
 
 @Composable
@@ -61,11 +63,11 @@ internal fun TwoAccountsView(
 
 @Preview
 @Composable
-private fun TwoAvatarsViewPreview() {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
     MaterialTheme {
         Surface {
             TwoAccountsView(
-                accounts = emptyList(),
+                accounts = accounts,
                 avatarStrokeColor = CrossLoginDefaults.colors().avatarStroke,
             )
         }
