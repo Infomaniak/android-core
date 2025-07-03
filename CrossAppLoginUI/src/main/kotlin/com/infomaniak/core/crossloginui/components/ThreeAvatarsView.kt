@@ -42,7 +42,7 @@ internal fun ThreeAvatarsView(urls: List<String>, colors: CrossLoginColors) {
         Avatar(
             modifier = Modifier.size(Dimens.iconSize),
             avatar = urls[1],
-            colors = colors,
+            strokeColor = colors.avatarStroke,
         )
 
         // Right
@@ -51,7 +51,7 @@ internal fun ThreeAvatarsView(urls: List<String>, colors: CrossLoginColors) {
                 .size(Dimens.iconSize)
                 .graphicsLayer { translationX = (Dimens.avatarsBoxWidth - Dimens.iconSize).toPx() },
             avatar = urls[2],
-            colors = colors,
+            strokeColor = colors.avatarStroke,
         )
 
         // Center
@@ -60,7 +60,7 @@ internal fun ThreeAvatarsView(urls: List<String>, colors: CrossLoginColors) {
                 .size(Dimens.avatarsBoxHeight)
                 .graphicsLayer { translationX = (0.5f * (Dimens.avatarsBoxWidth - Dimens.avatarsBoxHeight)).toPx() },
             avatar = urls[0],
-            colors = colors,
+            strokeColor = colors.avatarStroke,
         )
     }
 }

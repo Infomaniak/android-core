@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -49,6 +50,8 @@ import com.infomaniak.core.useravatar.AvatarDisplayState
 import com.infomaniak.core.useravatar.component.InitialsTextAvatar
 import com.infomaniak.core.useravatar.component.UnknownUserIcon
 
+private val minAvatarSize = 32.dp
+
 @Composable
 fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: BorderStroke? = null) {
 
@@ -56,6 +59,8 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
+            .sizeIn(minWidth = minAvatarSize, minHeight = minAvatarSize)
+            .size(minAvatarSize)
             .clip(CircleShape)
             .then(if (border == null) Modifier else Modifier.border(border = border, shape = CircleShape))
             .then(if (avatarData.backgroundColor == null) Modifier else Modifier.background(color = Color(avatarData.backgroundColor))),
