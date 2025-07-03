@@ -20,7 +20,9 @@ package com.infomaniak.core.crossloginui.views.components
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.infomaniak.core.crossloginui.components.MultipleAccounts
 import com.infomaniak.core.crossloginui.components.SelectedAccountsButton
+import com.infomaniak.core.crossloginui.components.SingleAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 
@@ -31,9 +33,17 @@ internal fun CrossLoginSelectAccounts(
     colors: CrossLoginColors,
     onClick: () -> Unit,
 ) {
+
+    val selectedAccounts = accounts().filter { it.isSelected }
+    val count = selectedAccounts.count()
+
     SelectedAccountsButton(
-        accounts = accounts().filter { it.isSelected },
         colors = colors,
         onClick = onClick,
-    )
+    ) {
+        when {
+            count == 1 -> SingleAccount(selectedAccounts.single(), colors)
+            count > 1 -> MultipleAccounts(selectedAccounts, colors)
+        }
+    }
 }
