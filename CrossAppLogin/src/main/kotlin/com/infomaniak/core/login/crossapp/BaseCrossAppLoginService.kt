@@ -51,7 +51,10 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int>) : LifecycleService() {
 
     private val incomingMessagesChannel = Channel<DisposableMessage>(capacity = Channel.UNLIMITED)
@@ -61,7 +64,7 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
     private val certificateChecker = AppCertificateChecker.withInfomaniakApps
 
     private val signedInAccountRequests = Channel<Messenger>(capacity = Channel.UNLIMITED)
-    private val syncSharedDeviceIdRequests = Channel<String>(capacity = Channel.UNLIMITED)
+    private val syncSharedDeviceIdRequests = Channel<ByteArray>(capacity = Channel.UNLIMITED)
 
     init {
         lifecycleScope.launch { handleIncomingMessages() }
@@ -96,7 +99,7 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
                         launch { returnSharedDeviceIdOrWaitForSync(trustedClientMessenger, requestData) }
                     }
                     IpcMessageWhat.SYNC_SHARED_DEVICE_ID -> {
-                        val sharedId: String = runCatching { msg.unwrapStringOrNull()!! }.getOrElse { t ->
+                        val sharedId: ByteArray = runCatching { msg.unwrapByteArrayOrNull()!! }.getOrElse { t ->
                             SentryLog.wtf(TAG, "SYNC_SHARED_DEVICE_ID message didn't contain a proper string id", t)
                             return@use
                         }
@@ -134,14 +137,14 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
             return
         }
 
-        val sharedIdToUse = syncSharedDeviceIdRequests.receive()
+        val sharedIdToUse = Uuid.fromByteArray(syncSharedDeviceIdRequests.receive())
         SharedDeviceIdManager.sharedDeviceIdMutex.withLock {
             SharedDeviceIdManager.storage.setDeviceId(sharedIdToUse)
         }
     }
 
-    private fun sendSharedDeviceId(destination: Messenger, id: String?) {
-        destination.trySending { newMessage -> newMessage.putBundleWrappedStringInObj(id) }
+    private fun sendSharedDeviceId(destination: Messenger, id: Uuid) {
+        destination.trySending { newMessage -> newMessage.putBundleWrappedDataInObj(id.toByteArray()) }
     }
 
     private suspend fun sendSignedInAccountsToApp(
