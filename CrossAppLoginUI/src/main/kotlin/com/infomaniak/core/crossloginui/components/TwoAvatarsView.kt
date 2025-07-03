@@ -43,14 +43,14 @@ internal fun TwoAvatarsView(urls: List<String>, colors: CrossLoginColors) {
                 .size(Dimens.avatarsBoxHeight)
                 .graphicsLayer { translationX = (Dimens.avatarsBoxWidth - Dimens.avatarsBoxHeight).toPx() },
             avatar = urls[1],
-            colors = colors,
+            strokeColor = colors.avatarStroke,
         )
 
         // Left
         Avatar(
             modifier = Modifier.size(Dimens.avatarsBoxHeight),
             avatar = urls[0],
-            colors = colors,
+            strokeColor = colors.avatarStroke,
         )
     }
 }
