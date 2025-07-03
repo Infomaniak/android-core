@@ -27,8 +27,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.theme.Dimens
@@ -36,7 +36,7 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 @Composable
 internal fun ThreeAccountsView(
     accounts: List<CrossLoginUiAccount>,
-    colors: CrossLoginColors,
+    avatarStrokeColor: Color,
 ) {
     Box(contentAlignment = Alignment.Center) {
 
@@ -45,7 +45,7 @@ internal fun ThreeAccountsView(
             Avatar(
                 modifier = Modifier.size(Dimens.iconSize),
                 avatar = accounts[1].avatarUrl!!,
-                strokeColor = colors.avatarStroke,
+                strokeColor = avatarStrokeColor,
             )
 
             Spacer(Modifier.width(width = Dimens.avatarsBoxWidth - (Dimens.iconSize + Dimens.iconSize)))
@@ -54,7 +54,7 @@ internal fun ThreeAccountsView(
             Avatar(
                 modifier = Modifier.size(Dimens.iconSize),
                 avatar = accounts[2].avatarUrl!!,
-                strokeColor = colors.avatarStroke,
+                strokeColor = avatarStrokeColor,
             )
         }
 
@@ -62,7 +62,7 @@ internal fun ThreeAccountsView(
         Avatar(
             modifier = Modifier.size(Dimens.avatarsBoxHeight),
             avatar = accounts[0].avatarUrl!!,
-            strokeColor = colors.avatarStroke,
+            strokeColor = avatarStrokeColor,
         )
     }
 }
@@ -74,7 +74,7 @@ private fun ThreeAvatarsViewPreview() {
         Surface {
             ThreeAccountsView(
                 accounts = emptyList(),
-                colors = CrossLoginDefaults.colors(),
+                avatarStrokeColor = CrossLoginDefaults.colors().avatarStroke,
             )
         }
     }
