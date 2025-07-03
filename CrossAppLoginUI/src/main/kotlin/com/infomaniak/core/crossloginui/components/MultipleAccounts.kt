@@ -41,9 +41,9 @@ internal fun RowScope.MultipleAccounts(
     val count = accounts.count()
 
     if (count == 2) {
-        TwoAccountsView(accounts, colors)
+        TwoAccountsView(accounts, colors.avatarStroke)
     } else {
-        ThreeAccountsView(accounts, colors)
+        ThreeAccountsView(accounts, colors.avatarStroke)
     }
 
     Spacer(Modifier.width(Margin.Mini))
