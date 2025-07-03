@@ -19,6 +19,7 @@ package com.infomaniak.core.crossloginui.views.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -50,6 +51,7 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 import com.infomaniak.core.crossloginui.theme.Typography
 import com.infomaniak.core.R as RCore
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun CrossLoginListAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
