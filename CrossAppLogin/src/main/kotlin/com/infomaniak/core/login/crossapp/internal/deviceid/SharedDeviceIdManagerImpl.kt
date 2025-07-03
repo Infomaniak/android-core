@@ -36,8 +36,7 @@ import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
 import com.infomaniak.core.login.crossapp.putBundleWrappedDataInObj
-import com.infomaniak.core.login.crossapp.putBundleWrappedStringInObj
-import com.infomaniak.core.login.crossapp.unwrapStringOrNull
+import com.infomaniak.core.login.crossapp.unwrapByteArrayOrNull
 import com.infomaniak.lib.core.utils.SentryLog
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
@@ -60,6 +59,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@ExperimentalUuidApi
 internal class SharedDeviceIdManagerImpl(
     private val context: Context,
     private val certificateChecker: AppCertificateChecker,
@@ -69,7 +69,7 @@ internal class SharedDeviceIdManagerImpl(
     private val sharedDeviceIdMutex = SharedDeviceIdManager.sharedDeviceIdMutex
     private val storage = SharedDeviceIdManager.storage
 
-    override suspend fun getCrossAppDeviceId(): String {
+    override suspend fun getCrossAppDeviceId(): Uuid {
         storage.readDeviceId()?.let { return it }
         sharedDeviceIdMutex.withLock {
             storage.readDeviceId()?.let { return it }
@@ -79,7 +79,7 @@ internal class SharedDeviceIdManagerImpl(
         }
     }
 
-    override suspend fun findCrossAppDeviceId(packageNamesToSkip: Set<String>): String? {
+    override suspend fun findCrossAppDeviceId(packageNamesToSkip: Set<String>): Uuid? {
         storage.readDeviceId()?.let { return it }
         sharedDeviceIdMutex.withLock {
             storage.readDeviceId()?.let { return it }
@@ -91,7 +91,7 @@ internal class SharedDeviceIdManagerImpl(
         }
     }
 
-    private suspend fun findDeviceId(targetPackageNames: Set<String>): String? = completableScope { completable ->
+    private suspend fun findDeviceId(targetPackageNames: Set<String>): Uuid? = completableScope { completable ->
         targetPackageNames.forEach { packageName ->
             launch {
                 if (certificateChecker.isPackageNameAllowed(packageName) != true) return@launch
@@ -102,8 +102,8 @@ internal class SharedDeviceIdManagerImpl(
         null
     }
 
-    private suspend fun retrieveAndSyncDeviceId(): String = coroutineScope {
-        val deviceIdCompletable = CompletableDeferred<String>()
+    private suspend fun retrieveAndSyncDeviceId(): Uuid = coroutineScope {
+        val deviceIdCompletable = CompletableDeferred<Uuid>()
         val allPackagesCheckedJob = Job(parent = coroutineContext.job)
         val syncJobs = targetPackageNames.map { packageName ->
             val thisPackageCheckedJob = Job(parent = allPackagesCheckedJob)
@@ -122,7 +122,7 @@ internal class SharedDeviceIdManagerImpl(
         allPackagesCheckedJob.join()
         if (deviceIdCompletable.isCompleted.not()) {
             @OptIn(ExperimentalUuidApi::class)
-            val id = Dispatchers.IO { Uuid.random().toHexDashString() }
+            val id = Dispatchers.IO { Uuid.random() }
             deviceIdCompletable.complete(id)
         }
         syncJobs.awaitAll().forEach { result ->
@@ -139,7 +139,7 @@ internal class SharedDeviceIdManagerImpl(
      * This allows retrieval from other concurrent checks if there's a need to sync it.
      */
     private suspend fun attemptGettingOrSyncingDeviceId(
-        deviceIdCompletable: CompletableDeferred<String>,
+        deviceIdCompletable: CompletableDeferred<Uuid>,
         targetPackageName: String,
         thisPackageCheckedJob: CompletableJob,
     ): Result<Unit>? {
@@ -178,7 +178,7 @@ internal class SharedDeviceIdManagerImpl(
 
     private suspend fun attemptGettingDeviceId(
         targetPackageName: String,
-    ): String? = context.withBoundService<String?>(
+    ): Uuid? = context.withBoundService<Uuid?>(
         service = Intent().also {
             it.`package` = targetPackageName
             it.action = BaseCrossAppLoginService.ACTION
@@ -194,7 +194,7 @@ internal class SharedDeviceIdManagerImpl(
 
     private suspend fun attemptGettingDeviceId(
         binder: IBinder,
-        deviceIdCompletable: CompletableDeferred<String>
+        deviceIdCompletable: CompletableDeferred<Uuid>
     ): Result<Boolean> = runCatching {
         val id = requestSharedDeviceId(binder)
         if (id != null) {
@@ -206,7 +206,7 @@ internal class SharedDeviceIdManagerImpl(
     }.cancellable()
 
     @OptIn(ExperimentalSerializationApi::class)
-    private suspend fun requestSharedDeviceId(binder: IBinder): String? {
+    private suspend fun requestSharedDeviceId(binder: IBinder): Uuid? {
         val messenger = Messenger(binder)
         val replies = Channel<DisposableMessage>(capacity = 1)
         val replyHandler = ChannelMessageHandler(replies)
@@ -219,18 +219,18 @@ internal class SharedDeviceIdManagerImpl(
                 it.putBundleWrappedDataInObj(ProtoBuf.encodeToByteArray(request))
             }
             Dispatchers.IO { messenger.send(request) }
-            replies.receive().use { response -> response.unwrapStringOrNull() }
+            replies.receive().use { response -> response.unwrapByteArrayOrNull()?.let { Uuid.fromByteArray(it) } }
         } catch (_: RemoteException) {
             null
         }
     }
 
-    private suspend fun sendSharedDeviceId(binder: IBinder, newId: String) {
+    private suspend fun sendSharedDeviceId(binder: IBinder, newId: Uuid) {
         val messenger = Messenger(binder)
         try {
             val request = Message.obtain().also {
                 it.what = BaseCrossAppLoginService.IpcMessageWhat.SYNC_SHARED_DEVICE_ID
-                it.putBundleWrappedStringInObj(newId)
+                it.putBundleWrappedDataInObj(newId.toByteArray())
             }
             Dispatchers.IO { messenger.send(request) }
         } catch (_: RemoteException) {
