@@ -32,7 +32,7 @@ internal object Dimens {
     /** 16 dp */
     val largeCornerRadius = 16.dp
 
-    /** 56 dp */
+    /** 52 dp */
     val avatarsBoxWidth = 52.dp
     /** 32 dp */
     val avatarsBoxHeight = 32.dp
