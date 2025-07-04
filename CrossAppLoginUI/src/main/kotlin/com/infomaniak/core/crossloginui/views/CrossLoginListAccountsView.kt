@@ -29,10 +29,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
 import com.infomaniak.core.crossloginui.R
+import com.infomaniak.core.crossloginui.data.CrossLoginButtonType
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.utils.getColorOrNull
+import com.infomaniak.core.crossloginui.utils.getStringOrNull
 import com.infomaniak.core.crossloginui.views.components.CrossLoginListAccounts
+import com.infomaniak.core.utils.enumValueOfOrNull
 
 class CrossLoginListAccountsView @JvmOverloads constructor(
     context: Context,
@@ -52,6 +55,7 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
     private var descriptionColor: Color?
     private var avatarStrokeColor: Color?
     private var buttonStrokeColor: Color?
+    private var buttonType: CrossLoginButtonType?
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.CrossLoginListAccountsView, defStyleAttr, 0).apply {
@@ -61,6 +65,9 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
             descriptionColor = getColorOrNull(R.styleable.CrossLoginListAccountsView_crossLoginDescriptionColor)
             avatarStrokeColor = getColorOrNull(R.styleable.CrossLoginListAccountsView_crossLoginAvatarStrokeColor)
             buttonStrokeColor = getColorOrNull(R.styleable.CrossLoginListAccountsView_crossLoginButtonStrokeColor)
+            val crossLoginButtonType = getStringOrNull(R.styleable.CrossLoginListAccountsView_crossLoginButtonType)
+            buttonType = enumValueOfOrNull<CrossLoginButtonType>(crossLoginButtonType)
+
             recycle()
         }
     }
@@ -69,18 +76,19 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
     override fun Content() {
         MaterialThemeFromXml {
 
-            val colors = CrossLoginDefaults.colors(
-                primary = primaryColor,
-                onPrimary = onPrimaryColor,
-                title = titleColor,
-                description = descriptionColor,
-                avatarStroke = avatarStrokeColor,
-                buttonStroke = buttonStrokeColor,
+            val customization = CrossLoginDefaults.customize(
+                primaryColor = primaryColor,
+                onPrimaryColor = onPrimaryColor,
+                titleColor = titleColor,
+                descriptionColor = descriptionColor,
+                avatarStrokeColor = avatarStrokeColor,
+                buttonStrokeColor = buttonStrokeColor,
+                buttonType = buttonType,
             )
 
             CrossLoginListAccounts(
                 accounts = { accounts },
-                colors = colors,
+                customization = customization,
                 onAccountClicked = { onAccountClickedListener?.invoke(it) },
                 onAnotherAccountClicked = { onAnotherAccountClickedListener?.invoke() },
                 onCloseClicked = { onCloseClicked?.invoke() },

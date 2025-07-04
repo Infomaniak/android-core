@@ -24,3 +24,7 @@ import androidx.compose.ui.graphics.Color
 internal fun TypedArray.getColorOrNull(@StyleableRes index: Int): Color? {
     return if (hasValue(index)) Color(getColor(index, -1)) else null
 }
+
+internal fun TypedArray.getStringOrNull(@StyleableRes index: Int): String? {
+    return if (hasValue(index)) getString(index) else null
+}

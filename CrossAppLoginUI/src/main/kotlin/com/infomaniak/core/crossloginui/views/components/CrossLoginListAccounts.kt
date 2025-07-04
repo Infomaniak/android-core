@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
@@ -45,11 +44,10 @@ import com.infomaniak.core.crossloginui.R
 import com.infomaniak.core.crossloginui.components.AddAccount
 import com.infomaniak.core.crossloginui.components.BottomSheetItem
 import com.infomaniak.core.crossloginui.components.PrimaryButton
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
-import com.infomaniak.core.crossloginui.theme.Dimens
 import com.infomaniak.core.crossloginui.theme.Typography
 import com.infomaniak.core.R as RCore
 
@@ -57,7 +55,7 @@ import com.infomaniak.core.R as RCore
 @Composable
 fun CrossLoginListAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
-    colors: CrossLoginColors = CrossLoginDefaults.colors(),
+    customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onAccountClicked: (CrossLoginUiAccount) -> Unit,
     onAnotherAccountClicked: () -> Unit,
     onCloseClicked: () -> Unit,
@@ -74,14 +72,14 @@ fun CrossLoginListAccounts(
             text = stringResource(R.string.selectAccountPanelTitle),
             textAlign = TextAlign.Center,
             style = Typography.bodyMedium,
-            color = colors.title,
+            color = customization.titleColor,
         )
         Spacer(Modifier.height(Margin.Medium))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Margin.Mini)) {
             accounts().forEach { account ->
                 BottomSheetItem(
                     account = account,
-                    colors = colors,
+                    customization = customization,
                     onClick = {
                         if (account.isSelected && accounts().count { it.isSelected } <= 1) return@BottomSheetItem
                         onAccountClicked(account)
@@ -96,7 +94,7 @@ fun CrossLoginListAccounts(
             ),
         )
         AddAccount(
-            colors = colors,
+            customization = customization,
             onClick = onAnotherAccountClicked,
         )
         Spacer(Modifier.height(Margin.Large))
@@ -105,8 +103,7 @@ fun CrossLoginListAccounts(
                 .padding(horizontal = Margin.Medium)
                 .fillMaxWidth(),
             text = stringResource(RCore.string.buttonSave),
-            shape = RoundedCornerShape(Dimens.largeCornerRadius),
-            colors = colors,
+            customization = customization,
             onClick = onCloseClicked,
         )
         Spacer(Modifier.height(Margin.Medium))
