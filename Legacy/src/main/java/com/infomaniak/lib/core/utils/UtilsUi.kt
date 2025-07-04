@@ -77,6 +77,13 @@ object UtilsUi {
         }
     }
 
+    @Deprecated(
+        message = "This has been extracted to Core:UserAvatar module",
+        replaceWith = ReplaceWith(
+            expression = "getBackgroundColorResBasedOnId(id, array)",
+            imports = ["com.infomaniak.core.useravatar.extensions.getBackgroundColorResBasedOnId"],
+        ),
+    )
     fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
         val arrayResource = array ?: R.array.organizationColors
         val colors = resources.getIntArray(arrayResource)

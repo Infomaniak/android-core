@@ -49,6 +49,7 @@ import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.AvatarDisplayState
 import com.infomaniak.core.useravatar.component.InitialsTextAvatar
 import com.infomaniak.core.useravatar.component.UnknownUserIcon
+import com.infomaniak.core.useravatar.extensions.getBackgroundColorResBasedOnId
 
 private val minAvatarSize = 32.dp
 
@@ -56,14 +57,15 @@ private val minAvatarSize = 32.dp
 fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: BorderStroke? = null) {
 
     var avatarDisplayState by rememberSaveable(avatarData) { mutableStateOf(computeAvatarState(avatarData)) }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .sizeIn(minWidth = minAvatarSize, minHeight = minAvatarSize)
             .size(minAvatarSize)
             .clip(CircleShape)
-            .then(if (border == null) Modifier else Modifier.border(border = border, shape = CircleShape))
-            .then(if (avatarData.backgroundColor == null) Modifier else Modifier.background(color = Color(avatarData.backgroundColor))),
+            .background(avatarData.computeBackgroundColor())
+            .then(if (border == null) Modifier else Modifier.border(border = border, shape = CircleShape)),
     ) {
         when (avatarDisplayState) {
             AvatarDisplayState.Initials -> InitialsTextAvatar(avatarData)
@@ -86,9 +88,14 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
 }
 
 private fun computeAvatarState(avatarData: AvatarData, hasLoadingFailed: Boolean = false): AvatarDisplayState = when {
-    avatarData.uri.isNotBlank() && !hasLoadingFailed -> AvatarDisplayState.Avatar
+    avatarData.uri?.isNotBlank() == true && !hasLoadingFailed -> AvatarDisplayState.Avatar
     avatarData.userInitials.isNotBlank() -> AvatarDisplayState.Initials
     else -> AvatarDisplayState.UnknownUser
+}
+
+@Composable
+private fun AvatarData.computeBackgroundColor(): Color {
+    return Color(backgroundColor ?: LocalContext.current.getBackgroundColorResBasedOnId(id.hashCode()))
 }
 
 @Preview(name = "(1) Light")
@@ -98,11 +105,11 @@ private fun Preview() {
     Surface {
         Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
             UserAvatar(
-                avatarData = AvatarData(uri = "aaa", iconColor = Color.LightGray.toArgb()),
+                avatarData = AvatarData(id = "1337", uri = "aaa", userInitials = "", iconColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Red),
             )
             UserAvatar(
-                avatarData = AvatarData(userInitials = "IK", backgroundColor = Color.LightGray.toArgb()),
+                avatarData = AvatarData(id = "42", uri = "", userInitials = "IK", backgroundColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Cyan),
             )
         }

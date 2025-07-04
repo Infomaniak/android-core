@@ -43,17 +43,19 @@ object MyKSuiteUiUtils {
     fun getDashboardData(
         context: Context,
         myKSuiteData: MyKSuiteData,
-        avatarUri: String? = null,
-        userInitials: String? = null,
-        iconColor: Int? = null,
-        userInitialsBackgroundColor: Int? = null,
+        userId: String,
+        avatarUri: String?,
+        userInitials: String,
+        iconColor: Int,
+        userInitialsBackgroundColor: Int,
     ): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,
             email = myKSuiteData.mail.email,
             avatarData = AvatarData(
-                uri = avatarUri ?: "",
-                userInitials = userInitials ?: "",
+                id = userId,
+                uri = avatarUri,
+                userInitials = userInitials,
                 iconColor = iconColor,
                 backgroundColor = userInitialsBackgroundColor,
             ),

@@ -15,17 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.useravatar
+package com.infomaniak.core.useravatar.extensions
 
-import android.os.Parcelable
-import androidx.annotation.ColorInt
-import kotlinx.parcelize.Parcelize
+import android.content.Context
+import androidx.annotation.ArrayRes
+import com.infomaniak.core.useravatar.R
 
-@Parcelize
-data class AvatarData(
-    val id: String, // Used for `backgroundColor` computation (ie. the `user.id`, or `correspondent.email`)
-    val uri: String?,
-    val userInitials: String,
-    @ColorInt val iconColor: Int? = null,
-    @ColorInt val backgroundColor: Int? = null,
-) : Parcelable
+fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
+    val arrayResource = array ?: R.array.organizationColors
+    val colors = resources.getIntArray(arrayResource)
+    val colorIndex = Math.floorMod(id, colors.count())
+    val organizationColor = colors[colorIndex]
+
+    return organizationColor
+}
