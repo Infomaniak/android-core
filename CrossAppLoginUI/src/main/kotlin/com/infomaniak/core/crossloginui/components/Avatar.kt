@@ -33,10 +33,10 @@ import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.exposed.UserAvatar
 
 @Composable
-internal fun Avatar(modifier: Modifier = Modifier, avatar: String, strokeColor: Color? = null) {
+internal fun Avatar(modifier: Modifier = Modifier, account: CrossLoginUiAccount, strokeColor: Color? = null) {
     UserAvatar(
         modifier = modifier,
-        avatarData = AvatarData(uri = avatar),
+        avatarData = AvatarData(uri = account.avatarUrl ?: "", userInitials = account.initials),
         border = strokeColor?.let { BorderStroke(width = 1.dp, color = it) },
     )
 }
@@ -47,7 +47,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     MaterialTheme {
         Surface {
             Avatar(
-                avatar = accounts.first().avatarUrl!!,
+                account = accounts.first(),
                 strokeColor = CrossLoginDefaults.customize().avatarStrokeColor,
             )
         }

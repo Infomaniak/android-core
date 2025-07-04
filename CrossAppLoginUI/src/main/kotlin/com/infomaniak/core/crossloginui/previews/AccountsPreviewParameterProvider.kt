@@ -27,30 +27,35 @@ class AccountsPreviewParameter : PreviewParameterProvider<List<CrossLoginUiAccou
 val accountsPreviewData = listOf(
     CrossLoginUiAccount(
         name = "Jane Doe",
+        initials = "JD",
         email = "jane.doe@ik.me",
         avatarUrl = "https://picsum.photos/id/237/200/200",
         isSelected = true,
     ),
     CrossLoginUiAccount(
         name = "John Doe",
+        initials = "JD",
         email = "john.doe@ik.me",
         avatarUrl = "https://picsum.photos/id/3/200/200",
         isSelected = false,
     ),
     CrossLoginUiAccount(
         name = "Gibran Cocodes",
+        initials = "GC",
         email = "gibran.cocodes@ik.me",
         avatarUrl = "https://picsum.photos/id/10/200/200",
         isSelected = true,
     ),
     CrossLoginUiAccount(
         name = "Kevin Mâchicoulis",
+        initials = "KM",
         email = "kevin.mâchicoulis@ik.me",
         avatarUrl = "https://picsum.photos/id/15/200/200",
         isSelected = true,
     ),
     CrossLoginUiAccount(
         name = "Tommy Del Sol",
+        initials = "TD",
         email = "tommy.delsol@ik.me",
         avatarUrl = "https://picsum.photos/id/20/200/200",
         isSelected = true,
