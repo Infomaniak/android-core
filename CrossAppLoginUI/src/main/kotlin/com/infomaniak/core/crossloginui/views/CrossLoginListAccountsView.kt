@@ -47,11 +47,11 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
     private var onCloseClicked: (() -> Unit)? = null
 
     private var primaryColor by mutableStateOf<Color?>(null)
-    private var onPrimaryColor by mutableStateOf<Color?>(null) // TODO
-    private var titleColor: Color? = null
-    private var descriptionColor: Color? = null
-    private var avatarStrokeColor: Color? = null
-    private var buttonStrokeColor: Color? = null
+    private var onPrimaryColor by mutableStateOf<Color?>(null)
+    private var titleColor: Color?
+    private var descriptionColor: Color?
+    private var avatarStrokeColor: Color?
+    private var buttonStrokeColor: Color?
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.CrossLoginListAccountsView, defStyleAttr, 0).apply {

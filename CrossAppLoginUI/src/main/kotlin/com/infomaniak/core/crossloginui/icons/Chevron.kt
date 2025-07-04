@@ -23,13 +23,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathFillType.Companion.EvenOdd
+import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.StrokeCap.Companion.Round as strokeCapRound
+import androidx.compose.ui.graphics.StrokeJoin.Companion.Round as strokeJoinRound
 
 internal val Chevron: ImageVector
     get() {
@@ -44,24 +46,21 @@ internal val Chevron: ImageVector
             viewportHeight = 16.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF000000)),
-                pathFillType = EvenOdd,
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF9F9F9F)),
+                strokeLineWidth = 2.0f,
+                strokeLineCap = strokeCapRound,
+                strokeLineJoin = strokeJoinRound,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
-                moveTo(1.651f, 4.643f)
-                curveTo(1.849f, 4.451f, 2.166f, 4.455f, 2.358f, 4.653f)
-                lineTo(8.0f, 10.455f)
-                lineTo(13.642f, 4.653f)
-                curveTo(13.834f, 4.455f, 14.151f, 4.451f, 14.349f, 4.643f)
-                curveTo(14.547f, 4.836f, 14.551f, 5.152f, 14.358f, 5.35f)
-                lineTo(8.641f, 11.229f)
-                curveTo(8.641f, 11.229f, 8.641f, 11.23f, 8.641f, 11.23f)
-                curveTo(8.641f, 11.23f, 8.641f, 11.23f, 8.641f, 11.23f)
-                curveTo(8.289f, 11.592f, 7.711f, 11.592f, 7.359f, 11.23f)
-                curveTo(7.359f, 11.23f, 7.359f, 11.23f, 7.359f, 11.23f)
-                curveTo(7.359f, 11.23f, 7.359f, 11.229f, 7.359f, 11.229f)
-                lineTo(1.642f, 5.35f)
-                curveTo(1.449f, 5.152f, 1.453f, 4.836f, 1.651f, 4.643f)
-                close()
+                moveTo(15.0f, 5.0f)
+                lineTo(8.33f, 11.859f)
+                curveTo(8.286f, 11.904f, 8.235f, 11.939f, 8.179f, 11.964f)
+                curveTo(8.122f, 11.988f, 8.061f, 12.0f, 8.0f, 12.0f)
+                curveTo(7.939f, 12.0f, 7.878f, 11.988f, 7.821f, 11.964f)
+                curveTo(7.765f, 11.939f, 7.714f, 11.904f, 7.67f, 11.859f)
+                lineTo(1.0f, 5.0f)
             }
         }.build()
 

@@ -27,7 +27,7 @@ internal object Dimens {
     /** 24 dp */
     val iconSize = 24.dp
     /** 40 dp */
-    val bigIconSize = 40.dp
+    val bigAvatarSize = 40.dp
 
     /** 16 dp */
     val largeCornerRadius = 16.dp
