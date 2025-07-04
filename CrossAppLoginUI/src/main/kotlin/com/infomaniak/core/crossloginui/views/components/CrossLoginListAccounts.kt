@@ -55,9 +55,9 @@ import com.infomaniak.core.R as RCore
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun CrossLoginListAccounts(
+fun CrossLoginListAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
-    colors: CrossLoginColors,
+    colors: CrossLoginColors = CrossLoginDefaults.colors(),
     onAccountClicked: (CrossLoginUiAccount) -> Unit,
     onAnotherAccountClicked: () -> Unit,
     onCloseClicked: () -> Unit,
@@ -82,7 +82,6 @@ internal fun CrossLoginListAccounts(
                 BottomSheetItem(
                     account = account,
                     colors = colors,
-                    isSelected = { account.isSelected },
                     onClick = {
                         if (account.isSelected && accounts().count { it.isSelected } <= 1) return@BottomSheetItem
                         onAccountClicked(account)
@@ -98,7 +97,7 @@ internal fun CrossLoginListAccounts(
         )
         AddAccount(
             colors = colors,
-            onClick = { onAnotherAccountClicked() },
+            onClick = onAnotherAccountClicked,
         )
         Spacer(Modifier.height(Margin.Large))
         PrimaryButton(
@@ -120,7 +119,6 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     Surface {
         CrossLoginListAccounts(
             accounts = { mutableStateListOf<CrossLoginUiAccount>().apply { addAll(accounts) } },
-            colors = CrossLoginDefaults.colors(),
             onAccountClicked = {},
             onAnotherAccountClicked = {},
             onCloseClicked = {},
