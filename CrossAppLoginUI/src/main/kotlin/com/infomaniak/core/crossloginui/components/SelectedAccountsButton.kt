@@ -42,7 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.icons.Chevron
@@ -52,19 +52,19 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SelectedAccountsButton(
-    colors: CrossLoginColors,
+    customization: CrossLoginCustomization,
     onClick: () -> Unit,
     contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     content: @Composable RowScope.() -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalRippleConfiguration provides RippleConfiguration(color = colors.primary)
+        LocalRippleConfiguration provides RippleConfiguration(color = customization.primaryColor)
     ) {
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(Dimens.buttonHeight),
-            border = BorderStroke(1.dp, colors.buttonStroke),
+            border = BorderStroke(1.dp, customization.buttonStrokeColor),
             shape = RoundedCornerShape(Dimens.largeCornerRadius),
             onClick = onClick,
             contentPadding = contentPadding,
@@ -83,7 +83,7 @@ internal fun SelectedAccountsButton(
                 Icon(
                     imageVector = Chevron,
                     contentDescription = null,
-                    tint = colors.primary,
+                    tint = customization.primaryColor,
                 )
             }
         }
@@ -96,9 +96,9 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     MaterialTheme {
         Surface {
             SelectedAccountsButton(
-                colors = CrossLoginDefaults.colors(),
+                customization = CrossLoginDefaults.customize(),
                 onClick = {},
-                content = { MultipleAccounts(accounts, CrossLoginDefaults.colors()) },
+                content = { MultipleAccounts(accounts, CrossLoginDefaults.customize()) },
             )
         }
     }

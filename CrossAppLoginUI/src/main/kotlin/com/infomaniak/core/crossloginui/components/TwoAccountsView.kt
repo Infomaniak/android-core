@@ -71,7 +71,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         Surface {
             TwoAccountsView(
                 accounts = accounts,
-                avatarStrokeColor = CrossLoginDefaults.colors().avatarStroke,
+                avatarStrokeColor = CrossLoginDefaults.customize().avatarStrokeColor,
             )
         }
     }

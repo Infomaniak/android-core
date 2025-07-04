@@ -34,7 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
@@ -45,7 +45,7 @@ import com.infomaniak.core.crossloginui.theme.Typography
 @Composable
 internal fun RowScope.SingleAccount(
     account: CrossLoginUiAccount,
-    colors: CrossLoginColors,
+    customization: CrossLoginCustomization,
 ) {
     Avatar(
         modifier = Modifier
@@ -60,12 +60,12 @@ internal fun RowScope.SingleAccount(
         Text(
             text = account.name,
             style = Typography.bodyMedium,
-            color = colors.title,
+            color = customization.titleColor,
         )
         Text(
             text = account.email,
             style = Typography.bodyRegular,
-            color = colors.description,
+            color = customization.descriptionColor,
         )
     }
 }
@@ -78,7 +78,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
             Row {
                 SingleAccount(
                     account = accounts.first(),
-                    colors = CrossLoginDefaults.colors(),
+                    customization = CrossLoginDefaults.customize(),
                 )
             }
         }

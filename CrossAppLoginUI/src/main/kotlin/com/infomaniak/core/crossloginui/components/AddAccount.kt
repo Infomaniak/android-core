@@ -42,7 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.R
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.icons.AddUser
 import com.infomaniak.core.crossloginui.theme.Dimens
@@ -51,12 +51,12 @@ import com.infomaniak.core.crossloginui.theme.Typography
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AddAccount(
-    colors: CrossLoginColors,
+    customization: CrossLoginCustomization,
     contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalRippleConfiguration provides RippleConfiguration(color = colors.primary)
+        LocalRippleConfiguration provides RippleConfiguration(color = customization.primaryColor)
     ) {
         TextButton(
             modifier = Modifier
@@ -79,14 +79,14 @@ internal fun AddAccount(
                         imageVector = AddUser,
                         modifier = Modifier.size(Dimens.iconSize),
                         contentDescription = null,
-                        tint = colors.primary,
+                        tint = customization.primaryColor,
                     )
                 }
 
                 Text(
                     text = stringResource(R.string.buttonUseOtherAccount),
                     style = Typography.bodyRegular,
-                    color = colors.title,
+                    color = customization.titleColor,
                 )
             }
         }
@@ -99,7 +99,7 @@ private fun Preview() {
     MaterialTheme {
         Surface {
             AddAccount(
-                colors = CrossLoginDefaults.colors(),
+                customization = CrossLoginDefaults.customize(),
                 onClick = {},
             )
         }
