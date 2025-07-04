@@ -49,7 +49,7 @@ internal fun RowScope.SingleAccount(
 ) {
     Avatar(
         modifier = Modifier
-            .size(Dimens.bigIconSize)
+            .size(Dimens.bigAvatarSize)
             .clip(CircleShape),
         avatar = account.avatarUrl!!,
     )

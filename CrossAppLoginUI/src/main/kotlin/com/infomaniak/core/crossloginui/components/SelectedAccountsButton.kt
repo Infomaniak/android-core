@@ -18,13 +18,14 @@
 package com.infomaniak.core.crossloginui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,11 +39,14 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
+import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.icons.Chevron
+import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Dimens
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,6 +54,7 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 internal fun SelectedAccountsButton(
     colors: CrossLoginColors,
     onClick: () -> Unit,
+    contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     content: @Composable RowScope.() -> Unit,
 ) {
     CompositionLocalProvider(
@@ -62,17 +67,18 @@ internal fun SelectedAccountsButton(
             border = BorderStroke(1.dp, colors.buttonStroke),
             shape = RoundedCornerShape(Dimens.largeCornerRadius),
             onClick = onClick,
-            contentPadding = PaddingValues(0.dp),
+            contentPadding = contentPadding,
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = Margin.Medium, vertical = Margin.Mini),
-                horizontalArrangement = Arrangement.spacedBy(0.dp),
+                    .padding(vertical = Margin.Mini),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
                 content()
+
+                Spacer(Modifier.width(Margin.Mini))
 
                 Icon(
                     imageVector = Chevron,
@@ -86,13 +92,13 @@ internal fun SelectedAccountsButton(
 
 @Preview
 @Composable
-private fun Preview() {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
     MaterialTheme {
         Surface {
             SelectedAccountsButton(
                 colors = CrossLoginDefaults.colors(),
                 onClick = {},
-                content = {},
+                content = { MultipleAccounts(accounts, CrossLoginDefaults.colors()) },
             )
         }
     }
