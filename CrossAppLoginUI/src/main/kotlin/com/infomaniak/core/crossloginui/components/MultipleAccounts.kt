@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.R
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
@@ -42,15 +42,15 @@ import com.infomaniak.core.crossloginui.theme.Typography
 @Composable
 internal fun RowScope.MultipleAccounts(
     accounts: List<CrossLoginUiAccount>,
-    colors: CrossLoginColors,
+    customization: CrossLoginCustomization,
 ) {
 
     val count = accounts.count()
 
     if (count == 2) {
-        TwoAccountsView(accounts, colors.avatarStroke)
+        TwoAccountsView(accounts, customization.avatarStrokeColor)
     } else {
-        ThreeAccountsView(accounts, colors.avatarStroke)
+        ThreeAccountsView(accounts, customization.avatarStrokeColor)
     }
 
     Spacer(Modifier.width(Margin.Mini))
@@ -59,7 +59,7 @@ internal fun RowScope.MultipleAccounts(
         modifier = Modifier.weight(1.0f),
         text = pluralStringResource(R.plurals.selectedAccountCountLabel, count, count),
         style = Typography.bodyMedium,
-        color = colors.title,
+        color = customization.titleColor,
     )
 }
 
@@ -71,7 +71,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
             Row {
                 MultipleAccounts(
                     accounts = accounts,
-                    colors = CrossLoginDefaults.colors(),
+                    customization = CrossLoginDefaults.customize(),
                 )
             }
         }
