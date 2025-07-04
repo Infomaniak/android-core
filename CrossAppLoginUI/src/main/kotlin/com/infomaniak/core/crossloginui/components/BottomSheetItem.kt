@@ -39,7 +39,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.icons.Checkmark
@@ -50,12 +50,12 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 @Composable
 internal fun BottomSheetItem(
     account: CrossLoginUiAccount,
-    colors: CrossLoginColors,
+    customization: CrossLoginCustomization,
     contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalRippleConfiguration provides RippleConfiguration(color = colors.primary)
+        LocalRippleConfiguration provides RippleConfiguration(color = customization.primaryColor)
     ) {
         TextButton(
             modifier = Modifier
@@ -72,14 +72,14 @@ internal fun BottomSheetItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
-                SingleAccount(account, colors)
+                SingleAccount(account, customization)
 
                 Spacer(Modifier.width(Margin.Mini))
 
                 if (account.isSelected) {
                     Icon(
                         imageVector = Checkmark,
-                        tint = colors.primary,
+                        tint = customization.primaryColor,
                         contentDescription = null,
                     )
                 }
@@ -95,7 +95,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         Surface {
             BottomSheetItem(
                 account = accounts.first(),
-                colors = CrossLoginDefaults.colors(),
+                customization = CrossLoginDefaults.customize(),
                 onClick = {},
             )
         }
