@@ -20,36 +20,32 @@ package com.infomaniak.core.crossloginui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.crossloginui.data.CrossLoginColors
+import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
-import com.infomaniak.core.crossloginui.theme.Dimens
 import com.infomaniak.core.crossloginui.theme.Typography
 
 @Composable
 internal fun PrimaryButton(
     modifier: Modifier = Modifier,
     text: String,
-    shape: Shape,
-    colors: CrossLoginColors,
+    customization: CrossLoginCustomization,
     onClick: () -> Unit,
 ) {
     Button(
-        modifier = modifier.height(Dimens.buttonHeight),
+        modifier = modifier.height(customization.buttonType.height),
         colors = ButtonDefaults.buttonColors(
-            containerColor = colors.primary,
-            contentColor = colors.onPrimary,
+            containerColor = customization.primaryColor,
+            contentColor = customization.onPrimaryColor,
         ),
-        shape = shape,
+        shape = customization.buttonType.shape,
         onClick = onClick,
     ) {
         Text(text = text, style = Typography.bodyMedium)
@@ -63,8 +59,7 @@ private fun Preview() {
         Column(verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
             PrimaryButton(
                 text = "Lorem",
-                shape = RoundedCornerShape(Dimens.largeCornerRadius),
-                colors = CrossLoginDefaults.colors(),
+                customization = CrossLoginDefaults.customize(),
                 onClick = {},
             )
         }

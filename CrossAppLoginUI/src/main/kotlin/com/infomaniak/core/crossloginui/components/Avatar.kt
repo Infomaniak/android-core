@@ -48,7 +48,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         Surface {
             Avatar(
                 avatar = accounts.first().avatarUrl!!,
-                strokeColor = CrossLoginDefaults.colors().avatarStroke,
+                strokeColor = CrossLoginDefaults.customize().avatarStrokeColor,
             )
         }
     }

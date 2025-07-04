@@ -24,6 +24,7 @@
         <attr name="crossLoginDescriptionColor" format="color" />
         <attr name="crossLoginAvatarStrokeColor" format="color" />
         <attr name="crossLoginButtonStrokeColor" format="color" />
+        <attr name="crossLoginButtonType" format="string" />
     </declare-styleable>
 
     <declare-styleable name="CrossLoginSelectAccountsView">
@@ -33,6 +34,7 @@
         <attr name="crossLoginDescriptionColor" />
         <attr name="crossLoginAvatarStrokeColor" />
         <attr name="crossLoginButtonStrokeColor" />
+        <attr name="crossLoginButtonType" />
     </declare-styleable>
 
     <declare-styleable name="CrossLoginListAccountsView">
@@ -42,6 +44,7 @@
         <attr name="crossLoginDescriptionColor" />
         <attr name="crossLoginAvatarStrokeColor" />
         <attr name="crossLoginButtonStrokeColor" />
+        <attr name="crossLoginButtonType" />
     </declare-styleable>
 
 </resources>
