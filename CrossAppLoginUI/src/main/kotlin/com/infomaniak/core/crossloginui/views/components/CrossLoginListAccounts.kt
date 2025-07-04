@@ -17,10 +17,8 @@
  */
 package com.infomaniak.core.crossloginui.views.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -74,30 +72,34 @@ fun CrossLoginListAccounts(
             style = Typography.bodyMedium,
             color = customization.titleColor,
         )
+
         Spacer(Modifier.height(Margin.Medium))
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(Margin.Mini)) {
-            accounts().forEach { account ->
-                BottomSheetItem(
-                    account = account,
-                    customization = customization,
-                    onClick = {
-                        if (account.isSelected && accounts().count { it.isSelected } <= 1) return@BottomSheetItem
-                        onAccountClicked(account)
-                    },
-                )
-            }
+
+        accounts().forEach { account ->
+            BottomSheetItem(
+                account = account,
+                customization = customization,
+                onClick = {
+                    if (account.isSelected && accounts().count { it.isSelected } <= 1) return@BottomSheetItem
+                    onAccountClicked(account)
+                },
+            )
         }
+
         HorizontalDivider(
             modifier = Modifier.padding(
                 horizontal = Margin.Medium,
                 vertical = Margin.Micro,
             ),
         )
+
         AddAccount(
             customization = customization,
             onClick = onAnotherAccountClicked,
         )
+
         Spacer(Modifier.height(Margin.Large))
+
         PrimaryButton(
             modifier = Modifier
                 .padding(horizontal = Margin.Medium)
@@ -106,6 +108,7 @@ fun CrossLoginListAccounts(
             customization = customization,
             onClick = onCloseClicked,
         )
+
         Spacer(Modifier.height(Margin.Medium))
     }
 }
