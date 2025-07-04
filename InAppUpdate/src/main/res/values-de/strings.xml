@@ -18,7 +18,10 @@
 <resources>
     <string name="buttonUpdate">Aktualisieren</string>
     <string name="errorNoAvailableUpdate">Kein Update verfügbar</string>
+    <string name="errorUpdateInstall">Fehler bei der Update-Installation</string>
     <string name="updateAppTitle">Aktualisierung erforderlich</string>
+    <string name="updateAvailableDescription">Für ein optimales Erlebnis empfehlen wir, die App zu aktualisieren.</string>
+    <string name="updateAvailableTitle">Aktualisierung verfügbar!</string>
     <string name="updateInstallButton">Installieren</string>
     <string name="updateRequiredDescription">Ihre Version der Anwendung wird nicht mehr unterstützt.\nInstallieren Sie die neueste Version und profitieren Sie von den neuesten Verbesserungen und Neuerungen.</string>
 </resources>
