@@ -21,12 +21,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalRippleConfiguration
@@ -42,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.R
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
@@ -55,6 +52,7 @@ import com.infomaniak.core.crossloginui.theme.Typography
 @Composable
 internal fun AddAccount(
     colors: CrossLoginColors,
+    contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -63,16 +61,16 @@ internal fun AddAccount(
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(Dimens.buttonHeight),
+                .heightIn(min = Dimens.buttonHeight),
             shape = RectangleShape,
             onClick = onClick,
-            contentPadding = PaddingValues(0.dp),
+            contentPadding = contentPadding,
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = Margin.Medium, vertical = Margin.Mini),
-                horizontalArrangement = Arrangement.spacedBy(0.dp),
+                    .padding(vertical = Margin.Mini),
+                horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
@@ -84,8 +82,6 @@ internal fun AddAccount(
                         tint = colors.primary,
                     )
                 }
-
-                Spacer(Modifier.width(Margin.Mini))
 
                 Text(
                     text = stringResource(R.string.buttonUseOtherAccount),

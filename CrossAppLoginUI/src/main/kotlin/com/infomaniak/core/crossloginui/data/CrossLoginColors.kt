@@ -21,7 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-internal data class CrossLoginColors(
+data class CrossLoginColors(
     val primary: Color, // Only needed in kMail because we are dissociated from the Material theme actual value
     val onPrimary: Color, // Only needed in kMail because we are dissociated from the Material theme actual value
     val title: Color,
