@@ -23,6 +23,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class AvatarData(
+    val id: String, // Used for `backgroundColor` computation (ie. the `user.id`, or `correspondent.email`)
     val uri: String?,
     val userInitials: String,
     @ColorInt val iconColor: Int? = null,

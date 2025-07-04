@@ -95,7 +95,7 @@ private fun computeAvatarState(avatarData: AvatarData, hasLoadingFailed: Boolean
 
 @Composable
 private fun AvatarData.computeBackgroundColor(): Color {
-    return Color(backgroundColor ?: LocalContext.current.getBackgroundColorResBasedOnId(uri.hashCode()))
+    return Color(backgroundColor ?: LocalContext.current.getBackgroundColorResBasedOnId(id.hashCode()))
 }
 
 @Preview(name = "(1) Light")
@@ -105,11 +105,11 @@ private fun Preview() {
     Surface {
         Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
             UserAvatar(
-                avatarData = AvatarData(uri = "aaa", userInitials = "", iconColor = Color.LightGray.toArgb()),
+                avatarData = AvatarData(id = "1337", uri = "aaa", userInitials = "", iconColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Red),
             )
             UserAvatar(
-                avatarData = AvatarData(uri = "", userInitials = "IK", backgroundColor = Color.LightGray.toArgb()),
+                avatarData = AvatarData(id = "42", uri = "", userInitials = "IK", backgroundColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Cyan),
             )
         }
