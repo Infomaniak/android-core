@@ -18,7 +18,10 @@
 <resources>
     <string name="buttonUpdate">Mettre à jour</string>
     <string name="errorNoAvailableUpdate">Aucune mise à jour disponible</string>
+    <string name="errorUpdateInstall">Erreur lors de l’installation de la mise à jour</string>
     <string name="updateAppTitle">Mise à jour requise</string>
+    <string name="updateAvailableDescription">Afin de profiter d’une expérience optimale, il est recommandé de mettre l’application à jour.</string>
+    <string name="updateAvailableTitle">Mise à jour disponible !</string>
     <string name="updateInstallButton">Installer</string>
     <string name="updateRequiredDescription">Votre version de l’application n’est plus supportée.\nInstallez la dernière version et profitez des dernières améliorations et nouveautés.</string>
 </resources>
