@@ -52,7 +52,7 @@ object MyKSuiteUiUtils {
             myKSuiteTier = myKSuiteData.tier,
             email = myKSuiteData.mail.email,
             avatarData = AvatarData(
-                uri = avatarUri ?: "",
+                uri = avatarUri,
                 userInitials = userInitials ?: "",
                 iconColor = iconColor,
                 backgroundColor = userInitialsBackgroundColor,

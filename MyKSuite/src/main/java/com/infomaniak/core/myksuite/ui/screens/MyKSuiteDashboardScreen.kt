@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.myksuite.ui.screens
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Parcelable
 import androidx.compose.foundation.BorderStroke
@@ -165,7 +166,7 @@ private fun TopAppBar(onClose: () -> Unit) {
 
 @Composable
 private fun SubscriptionInfoCard(
-    paddedModifier: Modifier,
+    @SuppressLint("ModifierParameter") paddedModifier: Modifier,
     dashboardScreenData: () -> MyKSuiteDashboardScreenData,
 ) {
     val context = LocalContext.current

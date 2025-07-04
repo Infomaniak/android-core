@@ -23,7 +23,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class AvatarData(
-    val uri: String,
+    val uri: String?,
     val userInitials: String,
     @ColorInt val iconColor: Int? = null,
     @ColorInt val backgroundColor: Int? = null,

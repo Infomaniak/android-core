@@ -57,7 +57,6 @@ private val minAvatarSize = 32.dp
 fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: BorderStroke? = null) {
 
     var avatarDisplayState by rememberSaveable(avatarData) { mutableStateOf(computeAvatarState(avatarData)) }
-    val avatarBackgroundColor = avatarData.computeAvatarBackgroundColor()
 
     Box(
         contentAlignment = Alignment.Center,
@@ -65,7 +64,7 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
             .sizeIn(minWidth = minAvatarSize, minHeight = minAvatarSize)
             .size(minAvatarSize)
             .clip(CircleShape)
-            .background(color = Color(avatarBackgroundColor))
+            .background(avatarData.computeBackgroundColor())
             .then(if (border == null) Modifier else Modifier.border(border = border, shape = CircleShape)),
     ) {
         when (avatarDisplayState) {
@@ -89,14 +88,14 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
 }
 
 private fun computeAvatarState(avatarData: AvatarData, hasLoadingFailed: Boolean = false): AvatarDisplayState = when {
-    avatarData.uri.isNotBlank() && !hasLoadingFailed -> AvatarDisplayState.Avatar
+    avatarData.uri?.isNotBlank() == true && !hasLoadingFailed -> AvatarDisplayState.Avatar
     avatarData.userInitials.isNotBlank() -> AvatarDisplayState.Initials
     else -> AvatarDisplayState.UnknownUser
 }
 
 @Composable
-private fun AvatarData.computeAvatarBackgroundColor(): Int {
-    return backgroundColor ?: LocalContext.current.getBackgroundColorResBasedOnId(uri.hashCode())
+private fun AvatarData.computeBackgroundColor(): Color {
+    return Color(backgroundColor ?: LocalContext.current.getBackgroundColorResBasedOnId(uri.hashCode()))
 }
 
 @Preview(name = "(1) Light")
