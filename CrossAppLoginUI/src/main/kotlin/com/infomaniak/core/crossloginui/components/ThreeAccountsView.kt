@@ -46,7 +46,7 @@ internal fun ThreeAccountsView(
             // Left
             Avatar(
                 modifier = Modifier.size(Dimens.iconSize),
-                avatar = accounts[1].avatarUrl!!,
+                account = accounts[1],
                 strokeColor = avatarStrokeColor,
             )
 
@@ -55,7 +55,7 @@ internal fun ThreeAccountsView(
             // Right
             Avatar(
                 modifier = Modifier.size(Dimens.iconSize),
-                avatar = accounts[2].avatarUrl!!,
+                account = accounts[2],
                 strokeColor = avatarStrokeColor,
             )
         }
@@ -63,7 +63,7 @@ internal fun ThreeAccountsView(
         // Center
         Avatar(
             modifier = Modifier.size(Dimens.avatarsBoxHeight),
-            avatar = accounts[0].avatarUrl!!,
+            account = accounts[0],
             strokeColor = avatarStrokeColor,
         )
     }

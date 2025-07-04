@@ -51,7 +51,7 @@ internal fun RowScope.SingleAccount(
         modifier = Modifier
             .size(Dimens.bigAvatarSize)
             .clip(CircleShape),
-        avatar = account.avatarUrl!!,
+        account = account,
     )
 
     Spacer(Modifier.width(Margin.Mini))

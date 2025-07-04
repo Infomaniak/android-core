@@ -49,7 +49,7 @@ internal fun TwoAccountsView(
             modifier = Modifier
                 .size(Dimens.avatarsBoxHeight)
                 .align(Alignment.CenterEnd),
-            avatar = accounts[1].avatarUrl!!,
+            account = accounts[1],
             strokeColor = avatarStrokeColor,
         )
 
@@ -58,7 +58,7 @@ internal fun TwoAccountsView(
             modifier = Modifier
                 .size(Dimens.avatarsBoxHeight)
                 .align(Alignment.CenterStart),
-            avatar = accounts[0].avatarUrl!!,
+            account = accounts[0],
             strokeColor = avatarStrokeColor,
         )
     }
