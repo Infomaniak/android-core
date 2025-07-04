@@ -17,13 +17,13 @@
  */
 package com.infomaniak.core.crossloginui.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalRippleConfiguration
@@ -38,7 +38,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.data.CrossLoginColors
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
@@ -52,7 +51,7 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 internal fun BottomSheetItem(
     account: CrossLoginUiAccount,
     colors: CrossLoginColors,
-    isSelected: (() -> Boolean)? = null,
+    contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -61,26 +60,23 @@ internal fun BottomSheetItem(
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(Dimens.buttonHeight)
-                .selectable(
-                    selected = isSelected?.invoke() == true,
-                    onClick = onClick,
-                ),
+                .heightIn(min = Dimens.buttonHeight),
             shape = RectangleShape,
             onClick = onClick,
-            contentPadding = PaddingValues(0.dp),
+            contentPadding = contentPadding,
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = Margin.Medium, vertical = Margin.Mini),
-                horizontalArrangement = Arrangement.spacedBy(0.dp),
+                    .padding(vertical = Margin.Mini),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
                 SingleAccount(account, colors)
 
-                if (isSelected?.invoke() == true) {
+                Spacer(Modifier.width(Margin.Mini))
+
+                if (account.isSelected) {
                     Icon(
                         imageVector = Checkmark,
                         tint = colors.primary,

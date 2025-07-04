@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
@@ -39,22 +38,26 @@ internal fun TwoAccountsView(
     avatarStrokeColor: Color,
 ) {
     Box(
-        modifier = Modifier.size(Dimens.avatarsBoxWidth, Dimens.avatarsBoxHeight),
-        contentAlignment = Alignment.CenterStart,
+        modifier = Modifier.size(
+            width = Dimens.avatarsBoxWidth,
+            height = Dimens.avatarsBoxHeight,
+        ),
     ) {
 
         // Right
         Avatar(
             modifier = Modifier
                 .size(Dimens.avatarsBoxHeight)
-                .graphicsLayer { translationX = (Dimens.avatarsBoxWidth - Dimens.avatarsBoxHeight).toPx() },
+                .align(Alignment.CenterEnd),
             avatar = accounts[1].avatarUrl!!,
             strokeColor = avatarStrokeColor,
         )
 
         // Left
         Avatar(
-            modifier = Modifier.size(Dimens.avatarsBoxHeight),
+            modifier = Modifier
+                .size(Dimens.avatarsBoxHeight)
+                .align(Alignment.CenterStart),
             avatar = accounts[0].avatarUrl!!,
             strokeColor = avatarStrokeColor,
         )
