@@ -15,19 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.inappupdate.updaterequired.ui
+package com.infomaniak.core.inappupdate.updaterequired.ui.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,39 +36,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.inappupdate.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateRequiredScreen(
+fun UpdateAvailableBottomSheet(
     illustration: Painter,
     titleTextStyle: TextStyle,
     descriptionTextStyle: TextStyle,
     installUpdateButton: @Composable() () -> Unit,
+    dismissButton: @Composable() () -> Unit,
 ) {
-    Scaffold(
-        bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .safeDrawingPadding()
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 40.dp),
-                contentAlignment = Alignment.Center,
-            ) { installUpdateButton() }
-        },
-    ) { scaffoldPadding ->
+    ModalBottomSheet(
+        onDismissRequest = { /* TODO */ },
+    ) {
         Column(
+            modifier = Modifier
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .padding(scaffoldPadding)
-                .fillMaxSize(),
         ) {
             Image(painter = illustration, contentDescription = null)
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 style = titleTextStyle,
-                text = stringResource(R.string.updateAppTitle),
+                text = stringResource(R.string.updateAvailableTitle),
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -79,8 +68,14 @@ fun UpdateRequiredScreen(
             Text(
                 style = descriptionTextStyle,
                 textAlign = TextAlign.Center,
-                text = stringResource(R.string.updateRequiredDescription)
+                text = stringResource(R.string.updateAvailableDescription)
             )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            installUpdateButton()
+
+            dismissButton()
         }
     }
 }
