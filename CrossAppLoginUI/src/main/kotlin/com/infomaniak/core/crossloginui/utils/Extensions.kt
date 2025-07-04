@@ -15,16 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.useravatar
+package com.infomaniak.core.crossloginui.utils
 
-import android.os.Parcelable
-import androidx.annotation.ColorInt
-import kotlinx.parcelize.Parcelize
+import android.content.res.TypedArray
+import androidx.annotation.StyleableRes
+import androidx.compose.ui.graphics.Color
 
-@Parcelize
-data class AvatarData(
-    val uri: String,
-    val userInitials: String,
-    @ColorInt val iconColor: Int? = null,
-    @ColorInt val backgroundColor: Int? = null,
-) : Parcelable
+internal fun TypedArray.getColorOrNull(@StyleableRes index: Int): Color? {
+    return if (hasValue(index)) Color(getColor(index, -1)) else null
+}
+
+internal fun TypedArray.getStringOrNull(@StyleableRes index: Int): String? {
+    return if (hasValue(index)) getString(index) else null
+}

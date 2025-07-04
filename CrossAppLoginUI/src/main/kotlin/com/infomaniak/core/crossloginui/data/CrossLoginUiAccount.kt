@@ -15,16 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.useravatar
+package com.infomaniak.core.crossloginui.data
 
-import android.os.Parcelable
-import androidx.annotation.ColorInt
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
-data class AvatarData(
-    val uri: String,
-    val userInitials: String,
-    @ColorInt val iconColor: Int? = null,
-    @ColorInt val backgroundColor: Int? = null,
-) : Parcelable
+data class CrossLoginUiAccount(
+    val name: String,
+    val initials: String,
+    val email: String,
+    val avatarUrl: String?,
+    val isSelected: Boolean,
+)

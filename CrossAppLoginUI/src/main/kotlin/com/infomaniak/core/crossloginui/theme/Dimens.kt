@@ -15,16 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.useravatar
+package com.infomaniak.core.crossloginui.theme
 
-import android.os.Parcelable
-import androidx.annotation.ColorInt
-import kotlinx.parcelize.Parcelize
+import androidx.compose.ui.unit.dp
 
-@Parcelize
-data class AvatarData(
-    val uri: String,
-    val userInitials: String,
-    @ColorInt val iconColor: Int? = null,
-    @ColorInt val backgroundColor: Int? = null,
-) : Parcelable
+internal object Dimens {
+
+    /** 56 dp */
+    val buttonHeight = 56.dp
+
+    /** 24 dp */
+    val iconSize = 24.dp
+    /** 40 dp */
+    val bigAvatarSize = 40.dp
+
+    /** 16 dp */
+    val largeCornerRadius = 16.dp
+
+    /** 52 dp */
+    val avatarsBoxWidth = 52.dp
+    /** 32 dp */
+    val avatarsBoxHeight = 32.dp
+}
