@@ -49,6 +49,7 @@ import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.AvatarDisplayState
 import com.infomaniak.core.useravatar.component.InitialsTextAvatar
 import com.infomaniak.core.useravatar.component.UnknownUserIcon
+import com.infomaniak.core.useravatar.extensions.getBackgroundColorResBasedOnId
 
 private val minAvatarSize = 32.dp
 
@@ -56,14 +57,16 @@ private val minAvatarSize = 32.dp
 fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: BorderStroke? = null) {
 
     var avatarDisplayState by rememberSaveable(avatarData) { mutableStateOf(computeAvatarState(avatarData)) }
+    val avatarBackgroundColor = avatarData.computeAvatarBackgroundColor()
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .sizeIn(minWidth = minAvatarSize, minHeight = minAvatarSize)
             .size(minAvatarSize)
             .clip(CircleShape)
-            .then(if (border == null) Modifier else Modifier.border(border = border, shape = CircleShape))
-            .then(if (avatarData.backgroundColor == null) Modifier else Modifier.background(color = Color(avatarData.backgroundColor))),
+            .background(color = Color(avatarBackgroundColor))
+            .then(if (border == null) Modifier else Modifier.border(border = border, shape = CircleShape)),
     ) {
         when (avatarDisplayState) {
             AvatarDisplayState.Initials -> InitialsTextAvatar(avatarData)
@@ -91,6 +94,11 @@ private fun computeAvatarState(avatarData: AvatarData, hasLoadingFailed: Boolean
     else -> AvatarDisplayState.UnknownUser
 }
 
+@Composable
+private fun AvatarData.computeAvatarBackgroundColor(): Int {
+    return backgroundColor ?: LocalContext.current.getBackgroundColorResBasedOnId(uri.hashCode())
+}
+
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
@@ -98,11 +106,11 @@ private fun Preview() {
     Surface {
         Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
             UserAvatar(
-                avatarData = AvatarData(uri = "aaa", iconColor = Color.LightGray.toArgb()),
+                avatarData = AvatarData(uri = "aaa", userInitials = "", iconColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Red),
             )
             UserAvatar(
-                avatarData = AvatarData(userInitials = "IK", backgroundColor = Color.LightGray.toArgb()),
+                avatarData = AvatarData(uri = "", userInitials = "IK", backgroundColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Cyan),
             )
         }

@@ -340,7 +340,7 @@ private fun Preview() {
     val dashboardScreenData = MyKSuiteDashboardScreenData(
         myKSuiteTier = MyKSuiteTier.Plus,
         email = "Toto",
-        avatarData = AvatarData(userInitials = "IK", iconColor = Color.Red.toArgb()),
+        avatarData = AvatarData(uri = "", userInitials = "IK", iconColor = Color.Red.toArgb()),
         dailySendingLimit = "500",
         kSuiteProductsWithQuotas = listOf(
             KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
