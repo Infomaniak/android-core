@@ -34,9 +34,9 @@ import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun CrossLoginSelectAccounts(
+fun CrossLoginSelectAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
-    colors: CrossLoginColors,
+    colors: CrossLoginColors = CrossLoginDefaults.colors(),
     onClick: () -> Unit,
 ) {
 
@@ -60,7 +60,6 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     Surface {
         CrossLoginSelectAccounts(
             accounts = { mutableStateListOf<CrossLoginUiAccount>().apply { addAll(accounts) } },
-            colors = CrossLoginDefaults.colors(),
             onClick = {},
         )
     }

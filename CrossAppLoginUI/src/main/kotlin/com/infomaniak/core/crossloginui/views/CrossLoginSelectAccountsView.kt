@@ -45,11 +45,11 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
     private var onClickListener: (() -> Unit)? = null
 
     private var primaryColor by mutableStateOf<Color?>(null)
-    private var onPrimaryColor by mutableStateOf<Color?>(null) // TODO
-    private var titleColor: Color? = null
-    private var descriptionColor: Color? = null
-    private var avatarStrokeColor: Color? = null
-    private var buttonStrokeColor: Color? = null
+    private var onPrimaryColor by mutableStateOf<Color?>(null)
+    private var titleColor: Color?
+    private var descriptionColor: Color?
+    private var avatarStrokeColor: Color?
+    private var buttonStrokeColor: Color?
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.CrossLoginSelectAccountsView, defStyleAttr, 0).apply {
@@ -102,8 +102,4 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
     fun setOnClickListener(listener: () -> Unit) {
         onClickListener = listener
     }
-
-    @Suppress("DeprecatedCallableAddReplaceWith")
-    @Deprecated("Use the other methods to set click listeners when a reaction is clicked and when the add reaction button is clicked")
-    override fun setOnClickListener(listener: OnClickListener?) = super.setOnClickListener(listener)
 }
