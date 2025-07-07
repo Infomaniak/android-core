@@ -26,6 +26,7 @@ class AccountsPreviewParameter : PreviewParameterProvider<List<CrossLoginUiAccou
 
 val accountsPreviewData = listOf(
     CrossLoginUiAccount(
+        id = 1,
         name = "Jane Doe",
         initials = "JD",
         email = "jane.doe@ik.me",
@@ -33,6 +34,7 @@ val accountsPreviewData = listOf(
         isSelected = true,
     ),
     CrossLoginUiAccount(
+        id = 2,
         name = "John Doe",
         initials = "JD",
         email = "john.doe@ik.me",
@@ -40,6 +42,7 @@ val accountsPreviewData = listOf(
         isSelected = false,
     ),
     CrossLoginUiAccount(
+        id = 3,
         name = "Gibran Cocodes",
         initials = "GC",
         email = "gibran.cocodes@ik.me",
@@ -47,6 +50,7 @@ val accountsPreviewData = listOf(
         isSelected = true,
     ),
     CrossLoginUiAccount(
+        id = 4,
         name = "Kevin Mâchicoulis",
         initials = "KM",
         email = "kevin.mâchicoulis@ik.me",
@@ -54,6 +58,7 @@ val accountsPreviewData = listOf(
         isSelected = true,
     ),
     CrossLoginUiAccount(
+        id = 5,
         name = "Tommy Del Sol",
         initials = "TD",
         email = "tommy.delsol@ik.me",
@@ -61,6 +66,7 @@ val accountsPreviewData = listOf(
         isSelected = true,
     ),
     CrossLoginUiAccount(
+        id = 6,
         name = "Gigi La Malice",
         initials = "GL",
         email = "gigi.lamalice@ik.me",
@@ -68,6 +74,7 @@ val accountsPreviewData = listOf(
         isSelected = true,
     ),
     CrossLoginUiAccount(
+        id = 7,
         name = "Morgane Doe",
         initials = "MD",
         email = "morgane.doe@ik.me",
@@ -75,6 +82,7 @@ val accountsPreviewData = listOf(
         isSelected = false,
     ),
     CrossLoginUiAccount(
+        id = 8,
         name = "Nicolas Cocodes",
         initials = "NC",
         email = "nicolas.cocodes@ik.me",
@@ -82,6 +90,7 @@ val accountsPreviewData = listOf(
         isSelected = true,
     ),
     CrossLoginUiAccount(
+        id = 9,
         name = "Kevin Deux",
         initials = "KD",
         email = "kevin.deux@ik.me",
@@ -89,6 +98,7 @@ val accountsPreviewData = listOf(
         isSelected = true,
     ),
     CrossLoginUiAccount(
+        id = 10,
         name = "Tommy Trois",
         initials = "TT",
         email = "tommy.trois@ik.me",
