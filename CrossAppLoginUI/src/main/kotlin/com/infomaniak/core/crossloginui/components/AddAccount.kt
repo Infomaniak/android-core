@@ -18,7 +18,6 @@
 package com.infomaniak.core.crossloginui.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,14 +73,14 @@ internal fun AddAccount(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
-                Box(Modifier.padding(all = Margin.Mini)) {
-                    Icon(
-                        imageVector = AddUser,
-                        modifier = Modifier.size(Dimens.iconSize),
-                        contentDescription = null,
-                        tint = customization.primaryColor,
-                    )
-                }
+                Icon(
+                    modifier = Modifier
+                        .padding(all = Margin.Mini)
+                        .size(size = Dimens.iconSize),
+                    imageVector = AddUser,
+                    tint = customization.primaryColor,
+                    contentDescription = null,
+                )
 
                 Text(
                     text = stringResource(R.string.buttonUseOtherAccount),
