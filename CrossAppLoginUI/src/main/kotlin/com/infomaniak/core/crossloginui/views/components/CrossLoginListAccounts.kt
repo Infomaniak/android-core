@@ -79,6 +79,7 @@ fun CrossLoginListAccounts(
             BottomSheetItem(
                 account = account,
                 customization = customization,
+                isSelected = { account.isSelected },
                 onClick = {
                     if (account.isSelected && accounts().count { it.isSelected } <= 1) return@BottomSheetItem
                     onAccountClicked(account)
