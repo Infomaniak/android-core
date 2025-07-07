@@ -36,7 +36,7 @@ import com.infomaniak.core.useravatar.exposed.UserAvatar
 internal fun Avatar(modifier: Modifier = Modifier, account: CrossLoginUiAccount, strokeColor: Color? = null) {
     UserAvatar(
         modifier = modifier,
-        avatarData = AvatarData(id = "account.id", uri = account.avatarUrl, userInitials = account.initials), // TODO
+        avatarData = AvatarData(id = account.id.toString(), uri = account.avatarUrl, userInitials = account.initials),
         border = strokeColor?.let { BorderStroke(width = 1.dp, color = it) },
     )
 }
