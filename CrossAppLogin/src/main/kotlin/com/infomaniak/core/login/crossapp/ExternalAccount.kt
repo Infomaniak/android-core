@@ -48,5 +48,7 @@ data class ExternalAccount(
     @ProtoNumber(5)
     val tokens: Set<String>,
     @ProtoNumber(6)
-    val initials:String,
+    val initials: String,
+    @ProtoNumber(7)
+    val id: Int,
 )
