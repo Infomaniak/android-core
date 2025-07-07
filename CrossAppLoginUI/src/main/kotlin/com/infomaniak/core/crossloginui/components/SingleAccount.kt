@@ -19,7 +19,6 @@ package com.infomaniak.core.crossloginui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,30 +43,36 @@ import com.infomaniak.core.crossloginui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun RowScope.SingleAccount(
+internal fun SingleAccount(
     account: CrossLoginUiAccount,
     customization: CrossLoginCustomization,
+    modifier: Modifier = Modifier,
 ) {
-    Avatar(
-        modifier = Modifier
-            .size(Dimens.bigAvatarSize)
-            .clip(CircleShape),
-        account = account,
-    )
-
-    Spacer(Modifier.width(Margin.Mini))
-
-    Column(modifier = Modifier.weight(1.0f)) {
-        Text(
-            text = account.name,
-            style = Typography.bodyMedium,
-            color = customization.titleColor,
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Avatar(
+            modifier = Modifier
+                .size(Dimens.bigAvatarSize)
+                .clip(CircleShape),
+            account = account,
         )
-        Text(
-            text = account.email,
-            style = Typography.bodyRegular,
-            color = customization.descriptionColor,
-        )
+
+        Spacer(Modifier.width(Margin.Mini))
+
+        Column {
+            Text(
+                text = account.name,
+                style = Typography.bodyMedium,
+                color = customization.titleColor,
+            )
+            Text(
+                text = account.email,
+                style = Typography.bodyRegular,
+                color = customization.descriptionColor,
+            )
+        }
     }
 }
 
@@ -79,6 +85,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 SingleAccount(
                     account = accounts.first(),
                     customization = CrossLoginDefaults.customize(),
+                    modifier = Modifier.weight(1.0f),
                 )
             }
         }

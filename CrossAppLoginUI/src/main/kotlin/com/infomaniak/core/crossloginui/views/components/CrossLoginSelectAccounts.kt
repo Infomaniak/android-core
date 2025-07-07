@@ -22,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.crossloginui.components.MultipleAccounts
@@ -48,8 +49,8 @@ fun CrossLoginSelectAccounts(
         onClick = onClick,
     ) {
         when {
-            count == 1 -> SingleAccount(selectedAccounts.single(), customization)
-            count > 1 -> MultipleAccounts(selectedAccounts, customization)
+            count == 1 -> SingleAccount(selectedAccounts.single(), customization, Modifier.weight(1.0f))
+            count > 1 -> MultipleAccounts(selectedAccounts, customization, Modifier.weight(1.0f))
         }
     }
 }
