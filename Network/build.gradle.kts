@@ -1,8 +1,6 @@
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
-    kotlin("plugin.parcelize")
-    kotlin("plugin.serialization")
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -43,6 +41,7 @@ android {
 
 dependencies {
     implementation(project(":Core:Sentry"))
+    implementation(project(":Core:Network:Models"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)

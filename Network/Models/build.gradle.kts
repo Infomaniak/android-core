@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
+    kotlin("plugin.parcelize")
+    kotlin("plugin.serialization")
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -8,7 +10,7 @@ val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
-    namespace = "com.infomaniak.core.sentryconfig"
+    namespace = "com.infomaniak.core.network.models"
     compileSdk = coreCompileSdk
 
     defaultConfig {
@@ -30,8 +32,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Network"))
-    implementation(core.sentry.android)
-    implementation(core.sentry.android.fragment)
-    testImplementation(kotlin("test"))
+    implementation(core.androidx.core.ktx)
+    implementation(core.gson)
+    implementation(core.kotlinx.serialization.json)
 }
