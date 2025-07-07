@@ -45,7 +45,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
 
     private val accounts = mutableStateListOf<CrossLoginUiAccount>()
 
-    private var onClickListener: (() -> Unit)? = null
+    private var onClickListener: OnClickListener? = null
 
     private var primaryColor by mutableStateOf<Color?>(null)
     private var onPrimaryColor by mutableStateOf<Color?>(null)
@@ -87,7 +87,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
             CrossLoginSelectAccounts(
                 accounts = { accounts },
                 customization = customization,
-                onClick = { onClickListener?.invoke() },
+                onClick = { onClickListener?.onClick(this) },
             )
         }
     }
@@ -107,7 +107,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
         }
     }
 
-    fun setOnClickListener(listener: () -> Unit) {
-        onClickListener = listener
+    override fun setOnClickListener(l: OnClickListener?) {
+        onClickListener = l
     }
 }
