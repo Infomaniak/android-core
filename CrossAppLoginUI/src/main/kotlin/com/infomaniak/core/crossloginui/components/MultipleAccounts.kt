@@ -53,9 +53,9 @@ internal fun MultipleAccounts(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (count == 2) {
-            TwoAccountsView(accounts, customization.avatarStrokeColor)
+            TwoAccountsView(accounts, customization.colors.avatarStrokeColor)
         } else {
-            ThreeAccountsView(accounts, customization.avatarStrokeColor)
+            ThreeAccountsView(accounts, customization.colors.avatarStrokeColor)
         }
 
         Spacer(Modifier.width(Margin.Mini))
@@ -63,7 +63,7 @@ internal fun MultipleAccounts(
         Text(
             text = pluralStringResource(R.plurals.selectedAccountCountLabel, count, count),
             style = Typography.bodyMedium,
-            color = customization.titleColor,
+            color = customization.colors.titleColor,
         )
     }
 }

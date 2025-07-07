@@ -65,12 +65,12 @@ internal fun SingleAccount(
             Text(
                 text = account.name,
                 style = Typography.bodyMedium,
-                color = customization.titleColor,
+                color = customization.colors.titleColor,
             )
             Text(
                 text = account.email,
                 style = Typography.bodyRegular,
-                color = customization.descriptionColor,
+                color = customization.colors.descriptionColor,
             )
         }
     }

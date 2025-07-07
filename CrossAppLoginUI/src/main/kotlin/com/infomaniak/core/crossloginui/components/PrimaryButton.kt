@@ -42,8 +42,8 @@ internal fun PrimaryButton(
     Button(
         modifier = modifier.height(customization.buttonType.height),
         colors = ButtonDefaults.buttonColors(
-            containerColor = customization.primaryColor,
-            contentColor = customization.onPrimaryColor,
+            containerColor = customization.colors.primaryColor,
+            contentColor = customization.colors.onPrimaryColor,
         ),
         shape = customization.buttonType.shape,
         onClick = onClick,
