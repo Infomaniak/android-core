@@ -18,6 +18,7 @@
 package com.infomaniak.core.myksuite.ui.utils
 
 import android.content.Context
+import androidx.annotation.ColorInt
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkRequest
@@ -46,8 +47,8 @@ object MyKSuiteUiUtils {
         userId: Int,
         avatarUri: String?,
         userInitials: String,
-        iconColor: Int,
-        userInitialsBackgroundColor: Int,
+        @ColorInt iconColor: Int,
+        @ColorInt userInitialsBackgroundColor: Int? = null,
     ): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,
