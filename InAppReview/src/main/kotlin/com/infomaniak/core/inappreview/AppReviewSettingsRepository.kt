@@ -73,12 +73,12 @@ class AppReviewSettingsRepository(private val context: Context) {
 
     companion object {
 
-        private const val TAG = "StoresSettingsRepository"
+        private const val TAG = "AppReviewSettingsRepository"
 
         val APP_REVIEW_THRESHOLD_KEY = intPreferencesKey("appReviewThresholdKey")
         val ALREADY_GAVE_REVIEW_KEY = booleanPreferencesKey("alreadyGaveReview")
 
-        internal const val DATA_STORE_NAME = "StoresSettingsDataStore"
+        internal const val DATA_STORE_NAME = "AppReviewSettingsDataStore"
 
         private const val DEFAULT_ALREADY_GAVE_REVIEW = false
 
