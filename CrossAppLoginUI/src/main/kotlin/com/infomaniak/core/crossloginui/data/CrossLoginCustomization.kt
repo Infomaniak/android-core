@@ -17,13 +17,10 @@
  */
 package com.infomaniak.core.crossloginui.data
 
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.infomaniak.core.compose.basics.ButtonType
 
 data class CrossLoginCustomization(
     val primaryColor: Color, // Only needed in kMail because we are dissociated from the Material theme actual value
@@ -32,16 +29,8 @@ data class CrossLoginCustomization(
     val descriptionColor: Color,
     val avatarStrokeColor: Color,
     val buttonStrokeColor: Color,
-    val buttonType: CrossLoginButtonType,
+    val buttonType: ButtonType,
 )
-
-enum class CrossLoginButtonType(
-    val height: Dp,
-    val shape: Shape,
-) {
-    Mail(height = 48.dp, shape = RoundedCornerShape(16.dp)),
-    Drive(height = 58.dp, shape = RoundedCornerShape(10.dp)),
-}
 
 internal object CrossLoginDefaults {
 
@@ -53,7 +42,7 @@ internal object CrossLoginDefaults {
         descriptionColor: Color? = null,
         avatarStrokeColor: Color? = null,
         buttonStrokeColor: Color? = null,
-        buttonType: CrossLoginButtonType? = null,
+        buttonType: ButtonType? = null,
     ): CrossLoginCustomization {
         return CrossLoginCustomization(
             primaryColor = primaryColor ?: MaterialTheme.colorScheme.primary,
@@ -62,7 +51,7 @@ internal object CrossLoginDefaults {
             descriptionColor = descriptionColor ?: MaterialTheme.colorScheme.onSurfaceVariant,
             avatarStrokeColor = avatarStrokeColor ?: MaterialTheme.colorScheme.background,
             buttonStrokeColor = buttonStrokeColor ?: MaterialTheme.colorScheme.outlineVariant,
-            buttonType = buttonType ?: CrossLoginButtonType.Mail,
+            buttonType = buttonType ?: ButtonType.Mail,
         )
     }
 }
