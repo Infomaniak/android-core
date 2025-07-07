@@ -55,7 +55,7 @@ internal fun AddAccount(
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalRippleConfiguration provides RippleConfiguration(color = customization.primaryColor)
+        LocalRippleConfiguration provides RippleConfiguration(color = customization.colors.primaryColor)
     ) {
         TextButton(
             modifier = Modifier
@@ -78,14 +78,14 @@ internal fun AddAccount(
                         .padding(all = Margin.Mini)
                         .size(size = Dimens.iconSize),
                     imageVector = AddUser,
-                    tint = customization.primaryColor,
+                    tint = customization.colors.primaryColor,
                     contentDescription = null,
                 )
 
                 Text(
                     text = stringResource(R.string.buttonUseOtherAccount),
                     style = Typography.bodyRegular,
-                    color = customization.titleColor,
+                    color = customization.colors.titleColor,
                 )
             }
         }

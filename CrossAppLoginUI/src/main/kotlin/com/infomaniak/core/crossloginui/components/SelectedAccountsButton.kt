@@ -57,13 +57,13 @@ internal fun SelectedAccountsButton(
     content: @Composable RowScope.() -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalRippleConfiguration provides RippleConfiguration(color = customization.primaryColor)
+        LocalRippleConfiguration provides RippleConfiguration(color = customization.colors.primaryColor)
     ) {
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(Dimens.buttonHeight),
-            border = BorderStroke(1.dp, customization.buttonStrokeColor),
+            border = BorderStroke(1.dp, customization.colors.buttonStrokeColor),
             shape = RoundedCornerShape(Dimens.largeCornerRadius),
             onClick = onClick,
             contentPadding = contentPadding,
@@ -81,7 +81,7 @@ internal fun SelectedAccountsButton(
                 Icon(
                     imageVector = Chevron,
                     contentDescription = null,
-                    tint = customization.primaryColor,
+                    tint = customization.colors.primaryColor,
                 )
             }
         }
