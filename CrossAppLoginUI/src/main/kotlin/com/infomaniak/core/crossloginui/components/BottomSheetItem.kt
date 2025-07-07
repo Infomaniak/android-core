@@ -59,7 +59,7 @@ internal fun BottomSheetItem(
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalRippleConfiguration provides RippleConfiguration(color = customization.primaryColor)
+        LocalRippleConfiguration provides RippleConfiguration(color = customization.colors.primaryColor)
     ) {
         TextButton(
             modifier = Modifier
@@ -84,7 +84,7 @@ internal fun BottomSheetItem(
                 if (isSelected()) {
                     Icon(
                         imageVector = Checkmark,
-                        tint = customization.primaryColor,
+                        tint = customization.colors.primaryColor,
                         contentDescription = null,
                     )
                 }
