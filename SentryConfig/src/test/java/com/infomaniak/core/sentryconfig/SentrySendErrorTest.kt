@@ -25,7 +25,7 @@ import kotlin.test.Test
 class SentrySendErrorTest {
 
     @Test
-    fun `error discarded when the debug mode is activated`(): Unit {
+    fun `error discarded when the debug mode is activated`() {
         Assert.assertTrue(
             SentryConfig.shouldBeDiscarded(
                 event = SentryEvent(),
@@ -36,7 +36,7 @@ class SentrySendErrorTest {
     }
 
     @Test
-    fun `error discarded when sentry tracking is disabled`(): Unit {
+    fun `error discarded when sentry tracking is disabled`() {
         Assert.assertTrue(
             SentryConfig.shouldBeDiscarded(
                 event = SentryEvent(),
@@ -47,7 +47,7 @@ class SentrySendErrorTest {
     }
 
     @Test
-    fun `error discarded when there is an error exception`(): Unit {
+    fun `error discarded when there is an error exception`() {
         Assert.assertTrue(
             SentryConfig.shouldBeDiscarded(
                 event = SentryEvent(),
@@ -58,7 +58,7 @@ class SentrySendErrorTest {
     }
 
     @Test
-    fun `error discarded when the sentry event exception is an api network exception`(): Unit {
+    fun `error discarded when the sentry event exception is an api network exception`() {
         val sentryEvent = SentryEvent(ApiController.NetworkException())
         Assert.assertTrue(
             SentryConfig.shouldBeDiscarded(
@@ -70,7 +70,7 @@ class SentrySendErrorTest {
     }
 
     @Test
-    fun `error sent when the tracking is enabled and all others parameters are false`(): Unit {
+    fun `error sent when the tracking is enabled and all others parameters are false`() {
         Assert.assertFalse(
             SentryConfig.shouldBeDiscarded(
                 event = SentryEvent(),

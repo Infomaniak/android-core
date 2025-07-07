@@ -27,15 +27,13 @@ import io.sentry.android.core.SentryAndroidOptions
 import io.sentry.android.fragment.FragmentLifecycleIntegration
 import io.sentry.android.fragment.FragmentLifecycleState
 
-class SentryConfig {
-    fun configureSentry(
+object SentryConfig {
+    fun Application.configureSentry(
         isDebug: Boolean,
         isSentryTrackingEnabled: Boolean,
-        context: Context,
-        application: Application,
         isErrorException: (Throwable?) -> Boolean
     ) {
-        SentryAndroid.init(context) { options: SentryAndroidOptions ->
+        SentryAndroid.init(this) { options: SentryAndroidOptions ->
             // Register the callback as an option
             options.beforeSend = SentryOptions.BeforeSendCallback { event: SentryEvent, _: Any? ->
                 /**
@@ -43,7 +41,7 @@ class SentryConfig {
                  * - Application is in Debug mode
                  * - User deactivated Sentry tracking in DataManagement settings
                  * - The exception was an [ApiController.NetworkException], and we don't want to send them to Sentry
-                 * - Others exceptions defined when the method is called
+                 * - App specific exceptions defined when the method is called
                  */
                 when {
                     shouldBeDiscarded(event, isDebug, isSentryTrackingEnabled, isErrorException) -> null
@@ -52,7 +50,7 @@ class SentryConfig {
             }
             options.addIntegration(
                 FragmentLifecycleIntegration(
-                    application = application,
+                    application = this,
                     filterFragmentLifecycleBreadcrumbs = setOf(
                         FragmentLifecycleState.CREATED,
                         FragmentLifecycleState.STARTED,
@@ -67,18 +65,16 @@ class SentryConfig {
         }
     }
 
-    companion object {
-        fun shouldBeDiscarded(
-            event: SentryEvent,
-            isDebug: Boolean,
-            isSentryTrackingEnabled: Boolean,
-            isErrorException: (Throwable?) -> Boolean
-        ): Boolean {
-            val exception = event.throwable
-            return isDebug
-                    || !isSentryTrackingEnabled
-                    || exception is ApiController.NetworkException
-                    || isErrorException(exception)
-        }
+    fun shouldBeDiscarded(
+        event: SentryEvent,
+        isDebug: Boolean,
+        isSentryTrackingEnabled: Boolean,
+        isErrorException: (Throwable?) -> Boolean
+    ): Boolean {
+        val exception = event.throwable
+        return isDebug
+                || !isSentryTrackingEnabled
+                || exception is ApiController.NetworkException
+                || isErrorException(exception)
     }
 }
