@@ -15,11 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.sentryconfig
+package com.infomaniak.core.sentry
 
 import android.app.Application
-import android.content.Context
-import com.infomaniak.core.network.api.ApiController
+import com.infomaniak.core.network.models.exceptions.NetworkException
 import io.sentry.SentryEvent
 import io.sentry.SentryOptions
 import io.sentry.android.core.SentryAndroid
@@ -74,7 +73,7 @@ object SentryConfig {
         val exception = event.throwable
         return isDebug
                 || !isSentryTrackingEnabled
-                || exception is ApiController.NetworkException
+                || exception is NetworkException
                 || isErrorException(exception)
     }
 }

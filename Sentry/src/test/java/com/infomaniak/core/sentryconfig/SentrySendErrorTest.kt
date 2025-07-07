@@ -17,10 +17,11 @@
  */
 package com.infomaniak.core.sentryconfig
 
-import com.infomaniak.core.network.api.ApiController
+import com.infomaniak.core.network.models.exceptions.NetworkException
 import io.sentry.SentryEvent
 import org.junit.Assert
 import kotlin.test.Test
+import com.infomaniak.core.sentry.SentryConfig
 
 class SentrySendErrorTest {
 
@@ -59,7 +60,7 @@ class SentrySendErrorTest {
 
     @Test
     fun `error discarded when the sentry event exception is an api network exception`() {
-        val sentryEvent = SentryEvent(ApiController.NetworkException())
+        val sentryEvent = SentryEvent(NetworkException())
         Assert.assertTrue(
             SentryConfig.shouldBeDiscarded(
                 event = sentryEvent,
