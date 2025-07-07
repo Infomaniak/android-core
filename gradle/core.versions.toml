@@ -14,6 +14,7 @@ compose = "1.8.2"
 concurrentFuturesKtx = "1.2.0"
 coreKtx = "1.6.1"
 datastorePreferences = "1.2.0-alpha02"
+foundationAndroid = "1.8.3"
 gson = "2.13.1"
 integrity = "1.4.0"
 junit = "4.13" # TODO: Don't update this because it breaks tests
@@ -36,11 +37,11 @@ splitties = "3.0.0"
 stethoOkhttp3 = "1.6.0"
 
 [libraries]
-androidx-collection = { module = "androidx.collection:collection", version.ref = "androidxCollection" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
 androidx-concurrent-futures-ktx = { module = "androidx.concurrent:concurrent-futures-ktx", version.ref = "concurrentFuturesKtx" }
 android-login = { module = "com.github.infomaniak:android-login", version.ref = "androidLogin" }
+androidx-collection = { module = "androidx.collection:collection", version.ref = "androidxCollection" }
 androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -61,6 +62,7 @@ compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "compose" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }

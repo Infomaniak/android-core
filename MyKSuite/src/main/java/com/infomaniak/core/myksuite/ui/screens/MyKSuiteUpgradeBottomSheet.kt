@@ -43,10 +43,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.infomaniak.core.compose.basics.ButtonType
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.myksuite.R
 import com.infomaniak.core.myksuite.ui.components.MyKSuitePrimaryButton
-import com.infomaniak.core.myksuite.ui.screens.components.MyKSuiteButtonType
 import com.infomaniak.core.myksuite.ui.screens.components.UpgradeFeature
 import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
@@ -136,15 +136,15 @@ private fun UpgradeFeatures(app: KSuiteApp, modifier: Modifier) {
 @Parcelize
 enum class KSuiteApp(
     internal val features: List<MyKSuiteUpgradeFeatures>,
-    internal val buttonStyle: MyKSuiteButtonType,
+    internal val buttonStyle: ButtonType,
 ) : Parcelable {
     Mail(
         features = listOf(MyKSuiteUpgradeFeatures.MailUnlimitedFeature, MyKSuiteUpgradeFeatures.MailOtherFeature),
-        buttonStyle = MyKSuiteButtonType.Mail,
+        buttonStyle = ButtonType.Mail,
     ),
     Drive(
         features = listOf(MyKSuiteUpgradeFeatures.DriveStorageFeature, MyKSuiteUpgradeFeatures.DriveDropboxFeature),
-        buttonStyle = MyKSuiteButtonType.Drive,
+        buttonStyle = ButtonType.Drive,
     ),
 }
 
