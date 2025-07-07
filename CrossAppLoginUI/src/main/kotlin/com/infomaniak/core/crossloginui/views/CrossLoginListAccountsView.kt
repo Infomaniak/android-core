@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.compose.basics.ButtonType
 import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
 import com.infomaniak.core.crossloginui.R
+import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.utils.getColorOrNull
@@ -76,14 +77,16 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
     override fun Content() {
         MaterialThemeFromXml {
 
-            val customization = CrossLoginDefaults.customize(
-                primaryColor = primaryColor,
-                onPrimaryColor = onPrimaryColor,
-                titleColor = titleColor,
-                descriptionColor = descriptionColor,
-                avatarStrokeColor = avatarStrokeColor,
-                buttonStrokeColor = buttonStrokeColor,
-                buttonType = buttonType,
+            val customization = CrossLoginCustomization(
+                colors = CrossLoginDefaults.colors(
+                    primaryColor = primaryColor,
+                    onPrimaryColor = onPrimaryColor,
+                    titleColor = titleColor,
+                    descriptionColor = descriptionColor,
+                    avatarStrokeColor = avatarStrokeColor,
+                    buttonStrokeColor = buttonStrokeColor,
+                ),
+                buttonType = CrossLoginDefaults.buttonType(buttonType),
             )
 
             CrossLoginListAccounts(

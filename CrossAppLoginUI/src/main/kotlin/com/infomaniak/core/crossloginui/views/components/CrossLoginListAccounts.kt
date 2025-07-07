@@ -66,7 +66,7 @@ fun CrossLoginListAccounts(
             text = stringResource(R.string.selectAccountPanelTitle),
             textAlign = TextAlign.Center,
             style = Typography.bodyMedium,
-            color = customization.titleColor,
+            color = customization.colors.titleColor,
         )
 
         Spacer(Modifier.height(Margin.Medium))
