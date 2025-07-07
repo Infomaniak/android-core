@@ -39,8 +39,8 @@ enum class CrossLoginButtonType(
     val height: Dp,
     val shape: Shape,
 ) {
-    Mail(height = 56.dp, shape = RoundedCornerShape(16.dp)),
-    Drive(height = 70.dp, shape = RoundedCornerShape(10.dp)),
+    Mail(height = 48.dp, shape = RoundedCornerShape(16.dp)),
+    Drive(height = 58.dp, shape = RoundedCornerShape(10.dp)),
 }
 
 internal object CrossLoginDefaults {

@@ -36,6 +36,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.compose.margin.Margin
@@ -60,7 +63,8 @@ internal fun BottomSheetItem(
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = Dimens.buttonHeight),
+                .heightIn(min = Dimens.buttonHeight)
+                .semantics { toggleableState = if (account.isSelected) ToggleableState.On else ToggleableState.Off },
             shape = RectangleShape,
             onClick = onClick,
             contentPadding = contentPadding,
@@ -72,7 +76,7 @@ internal fun BottomSheetItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
-                SingleAccount(account, customization)
+                SingleAccount(account, customization, Modifier.weight(1.0f))
 
                 Spacer(Modifier.width(Margin.Mini))
 
