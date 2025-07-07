@@ -73,7 +73,7 @@ dependencies {
 
     implementation "com.louiscad.splitties:splitties-appctx:3.0.0"
 
-    def roomVersion = '2.7.1'
+    def roomVersion = '2.7.2'
     api "androidx.room:room-ktx:$roomVersion"
     api "androidx.room:room-runtime:$roomVersion"
     ksp "androidx.room:room-compiler:$roomVersion"

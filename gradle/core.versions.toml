@@ -7,7 +7,7 @@ appcompat = "1.7.0"
 coil = "3.0.2" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 coilNetworkOkhttp = "3.0.4" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 composeBom = "2025.02.00" # TODO: Update SwissTransfer before bumping this
-composeFoundation = "1.8.1"
+composeFoundation = "1.8.3"
 coreKtx = "1.6.1"
 datastorePreferences = "1.2.0-alpha02"
 gson = "2.13.1"
@@ -17,7 +17,7 @@ junitAndroidx = "1.2.1"
 kotest = "5.9.1"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerializationJson = "1.8.1"
-ktor = "3.1.3" # TODO: Don't bump to 3.2.0, it's broken. Directly bump to the next one. Link: https://youtrack.jetbrains.com/issue/KTOR-8583
+ktor = "3.2.1"
 lifecycleRuntimeKtx = "2.8.7" # Doesn't build when bumped to 2.9.0 (Waiting SDK 35)
 material = "1.12.0"
 matomo = "4.1.4"
@@ -26,7 +26,7 @@ okhttp = "4.12.0"
 playReview = "2.0.2"
 recyclerView = "1.3.2" # Doesn't build when bumped to 1.4.0 (Waiting SDK 35)
 robolectric = "4.13" # TODO: Don't update this because it breaks tests
-room = "2.7.1"
+room = "2.7.2"
 sentry = "8.11.1" # TODO: Upgrade once SwissTransfer updates Sentry Gradle plugin past 5.5.0
 splitties = "3.0.0"
 stethoOkhttp3 = "1.6.0"
@@ -35,22 +35,22 @@ stethoOkhttp3 = "1.6.0"
 androidx-collection = { module = "androidx.collection:collection", version.ref = "androidxCollection" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 android-login = { module = "com.github.infomaniak:android-login", version.ref = "androidLogin" }
-androidx-core = { group = "androidx.core", name = "core", version.ref = "androidxCore" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
-androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
-androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleRuntimeKtx" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerView" }
+androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerView" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "composeFoundation" }
-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
-compose-ui = { group = "androidx.compose.ui", name = "ui" }
-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "composeFoundation" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-runtime = { module = "androidx.compose.runtime:runtime" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
@@ -63,9 +63,9 @@ ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = 
 ktor-client-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
 matomo = { module = "com.github.matomo-org:matomo-sdk-android", version.ref = "matomo" }
-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
 navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
@@ -87,10 +87,10 @@ splitties-systemservices = { module = "com.louiscad.splitties:splitties-systemse
 splitties-toast = { module = "com.louiscad.splitties:splitties-toast", version.ref = "splitties" }
 stetho-okhttp3 = { module = "com.facebook.stetho:stetho-okhttp3", version.ref = "stethoOkhttp3" }
 # Tests
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitAndroidx" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitAndroidx" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "coreKtx" }
 androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
+junit = { module = "junit:junit", version.ref = "junit" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
