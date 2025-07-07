@@ -54,6 +54,7 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 internal fun BottomSheetItem(
     account: CrossLoginUiAccount,
     customization: CrossLoginCustomization,
+    isSelected: () -> Boolean,
     contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     onClick: () -> Unit,
 ) {
@@ -64,7 +65,7 @@ internal fun BottomSheetItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = Dimens.buttonHeight)
-                .semantics { toggleableState = if (account.isSelected) ToggleableState.On else ToggleableState.Off },
+                .semantics { toggleableState = if (isSelected()) ToggleableState.On else ToggleableState.Off },
             shape = RectangleShape,
             onClick = onClick,
             contentPadding = contentPadding,
@@ -80,7 +81,7 @@ internal fun BottomSheetItem(
 
                 Spacer(Modifier.width(Margin.Mini))
 
-                if (account.isSelected) {
+                if (isSelected()) {
                     Icon(
                         imageVector = Checkmark,
                         tint = customization.primaryColor,
@@ -100,6 +101,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
             BottomSheetItem(
                 account = accounts.first(),
                 customization = CrossLoginDefaults.customize(),
+                isSelected = { true },
                 onClick = {},
             )
         }
