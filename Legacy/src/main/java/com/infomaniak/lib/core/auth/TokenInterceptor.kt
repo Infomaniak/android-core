@@ -38,7 +38,7 @@ class TokenInterceptor(
         var request = chain.request()
 
         runBlocking(Dispatchers.Default) {
-            tokenInterceptorListener.getCurrentUserApiToken()
+            tokenInterceptorListener.getUserApiToken()
         }?.let { apiToken ->
             val authorization = request.header("Authorization")
             if (apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")) {

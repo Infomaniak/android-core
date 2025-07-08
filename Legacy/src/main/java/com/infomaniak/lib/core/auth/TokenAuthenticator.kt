@@ -40,7 +40,7 @@ class TokenAuthenticator(
         if (hasUserChanged) return null
 
         return runBlocking(Dispatchers.IO) {
-            val userApiToken = tokenInterceptorListener.getCurrentUserApiToken() ?: return@runBlocking null
+            val userApiToken = tokenInterceptorListener.getUserApiToken() ?: return@runBlocking null
             if (userApiToken.isInfinite) {
                 tokenInterceptorListener.onRefreshTokenError()
                 null
