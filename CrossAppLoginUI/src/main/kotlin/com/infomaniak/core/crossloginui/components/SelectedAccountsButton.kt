@@ -41,9 +41,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
-import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.icons.Chevron
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Dimens
@@ -90,7 +90,7 @@ internal fun SelectedAccountsButton(
 
 @Preview
 @Composable
-private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginAccount>) {
     MaterialTheme {
         Surface {
             SelectedAccountsButton(

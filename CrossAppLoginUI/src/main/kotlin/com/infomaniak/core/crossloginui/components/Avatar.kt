@@ -26,14 +26,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
-import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.exposed.UserAvatar
 
 @Composable
-internal fun Avatar(modifier: Modifier = Modifier, account: CrossLoginUiAccount, strokeColor: Color? = null) {
+internal fun Avatar(modifier: Modifier = Modifier, account: CrossLoginAccount, strokeColor: Color? = null) {
     UserAvatar(
         modifier = modifier,
         avatarData = AvatarData(id = account.id.toString(), uri = account.url, userInitials = account.initials),
@@ -43,7 +43,7 @@ internal fun Avatar(modifier: Modifier = Modifier, account: CrossLoginUiAccount,
 
 @Preview
 @Composable
-private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginAccount>) {
     MaterialTheme {
         Surface {
             Avatar(

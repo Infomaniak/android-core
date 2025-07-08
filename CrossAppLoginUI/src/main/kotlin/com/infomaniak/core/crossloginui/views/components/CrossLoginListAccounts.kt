@@ -42,9 +42,9 @@ import com.infomaniak.core.crossloginui.R
 import com.infomaniak.core.crossloginui.components.AddAccount
 import com.infomaniak.core.crossloginui.components.BottomSheetItem
 import com.infomaniak.core.crossloginui.components.PrimaryButton
+import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
-import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Typography
 import com.infomaniak.core.R as RCore
@@ -52,7 +52,7 @@ import com.infomaniak.core.R as RCore
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CrossLoginListAccounts(
-    accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
+    accounts: () -> SnapshotStateList<CrossLoginAccount>,
     selectedIds: () -> SnapshotStateSet<Int>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onAccountClicked: (Int) -> Unit,
@@ -60,7 +60,7 @@ fun CrossLoginListAccounts(
     onSaveClicked: () -> Unit,
 ) {
 
-    fun CrossLoginUiAccount.isSelected(): Boolean = selectedIds().contains(id)
+    fun CrossLoginAccount.isSelected(): Boolean = selectedIds().contains(id)
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -118,10 +118,10 @@ fun CrossLoginListAccounts(
 
 @Preview
 @Composable
-private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginAccount>) {
     Surface {
         CrossLoginListAccounts(
-            accounts = { mutableStateListOf<CrossLoginUiAccount>().apply { addAll(accounts) } },
+            accounts = { mutableStateListOf<CrossLoginAccount>().apply { addAll(accounts) } },
             selectedIds = { mutableStateSetOf<Int>().apply { addAll(accounts.map { it.id }) } },
             onAccountClicked = {},
             onAnotherAccountClicked = {},

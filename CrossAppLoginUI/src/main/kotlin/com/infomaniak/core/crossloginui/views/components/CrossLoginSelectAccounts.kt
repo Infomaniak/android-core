@@ -30,15 +30,15 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.crossloginui.components.MultipleAccounts
 import com.infomaniak.core.crossloginui.components.SelectedAccountsButton
 import com.infomaniak.core.crossloginui.components.SingleAccount
+import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
-import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CrossLoginSelectAccounts(
-    accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
+    accounts: () -> SnapshotStateList<CrossLoginAccount>,
     selectedIds: () -> SnapshotStateSet<Int>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onClick: () -> Unit,
@@ -60,10 +60,10 @@ fun CrossLoginSelectAccounts(
 
 @Preview
 @Composable
-private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginAccount>) {
     Surface {
         CrossLoginSelectAccounts(
-            accounts = { mutableStateListOf<CrossLoginUiAccount>().apply { addAll(accounts) } },
+            accounts = { mutableStateListOf<CrossLoginAccount>().apply { addAll(accounts) } },
             selectedIds = { mutableStateSetOf<Int>().apply { addAll(accounts.map { it.id }) } },
             onClick = {},
         )
