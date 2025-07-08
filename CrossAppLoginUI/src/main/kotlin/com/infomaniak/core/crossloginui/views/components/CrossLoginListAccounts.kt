@@ -94,6 +94,7 @@ fun CrossLoginListAccounts(
                 horizontal = Margin.Medium,
                 vertical = Margin.Micro,
             ),
+            color = customization.colors.buttonStrokeColor,
         )
 
         AddAccount(
