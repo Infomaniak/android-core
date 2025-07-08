@@ -15,10 +15,10 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="buttonLogin">Se connecter</string>
     <plurals name="buttonContinueWithAccounts">
-        <item quantity="one">Continuer avec ce compte</item>
+        <item quantity="one" tools:ignore="ImpliedQuantity">Continuer avec ce compte</item>
         <item quantity="other">Continuer avec ces comptes</item>
     </plurals>
     <plurals name="selectedAccountCountLabel">
