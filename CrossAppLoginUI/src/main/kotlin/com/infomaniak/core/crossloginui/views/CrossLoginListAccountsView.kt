@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
@@ -45,10 +46,10 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
     private val accounts = mutableStateListOf<CrossLoginUiAccount>()
+    private val selectedIds = mutableStateSetOf<Int>()
 
-    private var onAccountClickedListener: ((account: CrossLoginUiAccount) -> Unit)? = null
     private var onAnotherAccountClickedListener: (() -> Unit)? = null
-    private var onCloseClicked: (() -> Unit)? = null
+    private var onSaveClicked: ((Set<Int>) -> Unit)? = null
 
     private var primaryColor by mutableStateOf<Color?>(null)
     private var onPrimaryColor by mutableStateOf<Color?>(null)
@@ -91,10 +92,13 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
 
             CrossLoginListAccounts(
                 accounts = { accounts },
+                selectedIds = { selectedIds },
                 customization = customization,
-                onAccountClicked = { onAccountClickedListener?.invoke(it) },
+                onAccountClicked = { accountId ->
+                    if (selectedIds.contains(accountId)) selectedIds.remove(accountId) else selectedIds.add(accountId)
+                },
                 onAnotherAccountClicked = { onAnotherAccountClickedListener?.invoke() },
-                onCloseClicked = { onCloseClicked?.invoke() },
+                onSaveClicked = { onSaveClicked?.invoke(selectedIds.toSet()) },
             )
         }
     }
@@ -107,22 +111,25 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
         onPrimaryColor = Color(newOnPrimaryColor)
     }
 
-    fun setAccounts(list: List<CrossLoginUiAccount>) {
+    fun setAccounts(items: List<CrossLoginUiAccount>) {
         accounts.apply {
             clear()
-            addAll(list)
+            addAll(items)
         }
     }
 
-    fun setOnAccountClickedListener(listener: (CrossLoginUiAccount) -> Unit) {
-        onAccountClickedListener = listener
+    fun setSelectedIds(items: Set<Int>) {
+        selectedIds.apply {
+            clear()
+            addAll(items)
+        }
     }
 
     fun setOnAnotherAccountClickedListener(listener: () -> Unit) {
         onAnotherAccountClickedListener = listener
     }
 
-    fun setOnCloseClickedListener(listener: () -> Unit) {
-        onCloseClicked = listener
+    fun setOnSaveClickedListener(listener: (Set<Int>) -> Unit) {
+        onSaveClicked = listener
     }
 }
