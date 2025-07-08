@@ -24,6 +24,8 @@ import com.google.gson.reflect.TypeToken
 import com.infomaniak.core.network.isNetworkException
 import com.infomaniak.core.network.isSerializationException
 import com.infomaniak.core.network.models.ApiError
+import com.infomaniak.core.network.models.ApiResponse
+import com.infomaniak.core.network.models.ApiResponseStatus
 import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.networking.ManualAuthorizationRequired
@@ -45,7 +47,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.reflect.Type
 import java.net.UnknownHostException
 import java.util.Date
-
 
 object ApiController {
 
@@ -178,7 +179,7 @@ object ApiController {
             else -> gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
         }
 
-        if (apiResponse is com.infomaniak.core.network.models.ApiResponse<*> && apiResponse.result == com.infomaniak.core.network.models.ApiResponseStatus.ERROR) {
+        if (apiResponse is ApiResponse<*> && apiResponse.result == ApiResponseStatus.ERROR) {
             @Suppress("DEPRECATION")
             apiResponse.translatedError = InternalTranslatedErrorCode.UnknownError.translateRes
         }
@@ -208,10 +209,7 @@ object ApiController {
         val translatedError = internalErrorCode.translateRes
 
         return buildErrorResult?.invoke(apiError, translatedError)
-            ?: com.infomaniak.core.network.models.ApiResponse<Any>(
-                result = com.infomaniak.core.network.models.ApiResponseStatus.ERROR,
-                error = apiError,
-                translatedError = translatedError
+            ?: ApiResponse<Any>(result = ApiResponseStatus.ERROR, error = apiError, translatedError = translatedError
             ) as T
     }
 
