@@ -28,7 +28,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -51,11 +53,15 @@ import com.infomaniak.core.R as RCore
 @Composable
 fun CrossLoginListAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
+    selectedIds: () -> SnapshotStateSet<Int>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
-    onAccountClicked: (CrossLoginUiAccount) -> Unit,
+    onAccountClicked: (Int) -> Unit,
     onAnotherAccountClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
+    onSaveClicked: () -> Unit,
 ) {
+
+    fun CrossLoginUiAccount.isSelected(): Boolean = selectedIds().contains(id)
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,10 +81,10 @@ fun CrossLoginListAccounts(
             BottomSheetItem(
                 account = account,
                 customization = customization,
-                isSelected = { account.isSelected },
+                isSelected = { account.isSelected() },
                 onClick = {
-                    if (account.isSelected && accounts().count { it.isSelected } <= 1) return@BottomSheetItem
-                    onAccountClicked(account)
+                    if (account.isSelected() && selectedIds().count() <= 1) return@BottomSheetItem
+                    onAccountClicked(account.id)
                 },
             )
         }
@@ -103,7 +109,7 @@ fun CrossLoginListAccounts(
                 .fillMaxWidth(),
             text = stringResource(RCore.string.buttonSave),
             customization = customization,
-            onClick = onCloseClicked,
+            onClick = onSaveClicked,
         )
 
         Spacer(Modifier.height(Margin.Medium))
@@ -116,9 +122,10 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     Surface {
         CrossLoginListAccounts(
             accounts = { mutableStateListOf<CrossLoginUiAccount>().apply { addAll(accounts) } },
+            selectedIds = { mutableStateSetOf<Int>().apply { addAll(accounts.map { it.id }) } },
             onAccountClicked = {},
             onAnotherAccountClicked = {},
-            onCloseClicked = {},
+            onSaveClicked = {},
         )
     }
 }
