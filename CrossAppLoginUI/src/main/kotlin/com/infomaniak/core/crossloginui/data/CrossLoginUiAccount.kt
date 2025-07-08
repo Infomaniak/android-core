@@ -22,6 +22,5 @@ data class CrossLoginUiAccount(
     val name: String,
     val initials: String,
     val email: String,
-    val avatarUrl: String?,
-    val isSelected: Boolean,
+    val url: String?,
 )
