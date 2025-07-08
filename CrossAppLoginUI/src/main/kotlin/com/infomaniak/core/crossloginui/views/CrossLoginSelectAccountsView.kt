@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
@@ -45,6 +46,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
     private val accounts = mutableStateListOf<CrossLoginUiAccount>()
+    private val selectedIds = mutableStateSetOf<Int>()
 
     private var onClickListener: OnClickListener? = null
 
@@ -89,6 +91,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
 
             CrossLoginSelectAccounts(
                 accounts = { accounts },
+                selectedIds = { selectedIds },
                 customization = customization,
                 onClick = { onClickListener?.onClick(this) },
             )
@@ -103,10 +106,17 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
         onPrimaryColor = Color(newOnPrimaryColor)
     }
 
-    fun setAccounts(list: List<CrossLoginUiAccount>) {
+    fun setAccounts(items: List<CrossLoginUiAccount>) {
         accounts.apply {
             clear()
-            addAll(list)
+            addAll(items)
+        }
+    }
+
+    fun setSelectedIds(items: Set<Int>) {
+        selectedIds.apply {
+            clear()
+            addAll(items)
         }
     }
 
