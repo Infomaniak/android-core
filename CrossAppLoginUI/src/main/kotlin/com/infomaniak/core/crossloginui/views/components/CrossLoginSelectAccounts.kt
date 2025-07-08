@@ -21,7 +21,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -37,11 +39,12 @@ import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 @Composable
 fun CrossLoginSelectAccounts(
     accounts: () -> SnapshotStateList<CrossLoginUiAccount>,
+    selectedIds: () -> SnapshotStateSet<Int>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onClick: () -> Unit,
 ) {
 
-    val selectedAccounts = accounts().filter { it.isSelected }
+    val selectedAccounts = accounts().filter { selectedIds().contains(it.id) }
     val count = selectedAccounts.count()
 
     SelectedAccountsButton(
@@ -61,6 +64,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     Surface {
         CrossLoginSelectAccounts(
             accounts = { mutableStateListOf<CrossLoginUiAccount>().apply { addAll(accounts) } },
+            selectedIds = { mutableStateSetOf<Int>().apply { addAll(accounts.map { it.id }) } },
             onClick = {},
         )
     }
