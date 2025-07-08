@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":Core:Compose:Basics"))
     implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Compose:MaterialThemeFromXml"))
+    implementation(project(":Core:CrossAppLogin"))
     implementation(project(":Core:UserAvatar"))
 
     implementation(core.androidx.core.ktx)
