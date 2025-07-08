@@ -17,11 +17,36 @@
  */
 package com.infomaniak.lib.core.auth
 
+import com.infomaniak.lib.core.room.UserDatabase
 import com.infomaniak.lib.login.ApiToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.shareIn
 
 interface TokenInterceptorListener {
     suspend fun onRefreshTokenSuccess(apiToken: ApiToken)
     suspend fun onRefreshTokenError()
     suspend fun getUserApiToken(): ApiToken?
     fun getCurrentUserId(): Int?
+
+    /**
+     * Maps a flow of user IDs to a shared flow of API tokens with caching.
+     *
+     * Uses a shared flow with `replay = 1` to cache the latest emitted API token.
+     *
+     * @param coroutineScope Scope used to share the resulting flow.
+     * @return Shared flow emitting API tokens corresponding to the user IDs.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun Flow<Int?>.mapToApiToken(coroutineScope: CoroutineScope) = this
+        .mapLatest { id -> id?.let { UserDatabase.getDatabase().userDao().findById(it)?.apiToken } }
+        .catch {
+            // Let user retry without logging him out.
+            // If we send null, the user will be logged out.
+        }
+        .shareIn(coroutineScope, SharingStarted.Lazily, replay = 1)
 }
