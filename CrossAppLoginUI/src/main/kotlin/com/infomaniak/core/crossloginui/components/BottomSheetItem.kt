@@ -42,9 +42,9 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
-import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.icons.Checkmark
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Dimens
@@ -52,7 +52,7 @@ import com.infomaniak.core.crossloginui.theme.Dimens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BottomSheetItem(
-    account: CrossLoginUiAccount,
+    account: CrossLoginAccount,
     customization: CrossLoginCustomization,
     isSelected: () -> Boolean,
     contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
@@ -95,7 +95,7 @@ internal fun BottomSheetItem(
 
 @Preview
 @Composable
-private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginUiAccount>) {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginAccount>) {
     MaterialTheme {
         Surface {
             BottomSheetItem(

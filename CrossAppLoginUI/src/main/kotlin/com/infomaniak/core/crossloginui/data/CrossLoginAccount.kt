@@ -15,9 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.infomaniak.core.crossloginui.data
 
-data class CrossLoginUiAccount(
+import kotlinx.serialization.ExperimentalSerializationApi
+
+data class CrossLoginAccount(
+    val tokens: Set<String>,
+    val isCurrentlySelectedInAnApp: Boolean,
     val id: Int,
     val name: String,
     val initials: String,
