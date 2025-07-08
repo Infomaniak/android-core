@@ -31,9 +31,9 @@ import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.compose.basics.ButtonType
 import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
 import com.infomaniak.core.crossloginui.R
+import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
-import com.infomaniak.core.crossloginui.data.CrossLoginUiAccount
 import com.infomaniak.core.crossloginui.utils.getColorOrNull
 import com.infomaniak.core.crossloginui.utils.getStringOrNull
 import com.infomaniak.core.crossloginui.views.components.CrossLoginListAccounts
@@ -45,7 +45,7 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
-    private val accounts = mutableStateListOf<CrossLoginUiAccount>()
+    private val accounts = mutableStateListOf<CrossLoginAccount>()
     private val selectedIds = mutableStateSetOf<Int>()
 
     private var onAnotherAccountClickedListener: (() -> Unit)? = null
@@ -111,7 +111,7 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
         onPrimaryColor = Color(newOnPrimaryColor)
     }
 
-    fun setAccounts(items: List<CrossLoginUiAccount>) {
+    fun setAccounts(items: List<CrossLoginAccount>) {
         accounts.apply {
             clear()
             addAll(items)
