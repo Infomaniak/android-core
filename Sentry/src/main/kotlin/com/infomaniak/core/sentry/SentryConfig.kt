@@ -25,6 +25,7 @@ import io.sentry.android.core.SentryAndroid
 import io.sentry.android.core.SentryAndroidOptions
 import io.sentry.android.fragment.FragmentLifecycleIntegration
 import io.sentry.android.fragment.FragmentLifecycleState
+import kotlin.coroutines.cancellation.CancellationException
 
 object SentryConfig {
     fun Application.configureSentry(
@@ -74,6 +75,7 @@ object SentryConfig {
         return isDebug
                 || !isSentryTrackingEnabled
                 || exception is NetworkException
+                || exception is CancellationException
                 || isErrorException(exception)
     }
 }
