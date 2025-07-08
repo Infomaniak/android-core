@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,21 +40,21 @@ class TokenAuthenticator(
         if (hasUserChanged) return null
 
         return runBlocking(Dispatchers.IO) {
-            val currentUserApiToken = tokenInterceptorListener.getCurrentUserApiToken() ?: return@runBlocking null
-            if (currentUserApiToken.isInfinite) {
+            val userApiToken = tokenInterceptorListener.getCurrentUserApiToken() ?: return@runBlocking null
+            if (userApiToken.isInfinite) {
                 tokenInterceptorListener.onRefreshTokenError()
                 null
             } else {
                 mutex.withLock {
                     val request = response.request
                     val apiCallBearer = request.header("Authorization")?.replaceFirst("Bearer ", "")
-                    val isAlreadyRefreshed = currentUserApiToken.accessToken != apiCallBearer
+                    val isAlreadyRefreshed = userApiToken.accessToken != apiCallBearer
 
                     return@runBlocking when {
-                        isAlreadyRefreshed -> changeAccessToken(request, currentUserApiToken)
+                        isAlreadyRefreshed -> changeAccessToken(request, userApiToken)
                         else -> {
                             val newToken =
-                                ApiController.refreshToken(currentUserApiToken.refreshToken!!, tokenInterceptorListener)
+                                ApiController.refreshToken(userApiToken.refreshToken!!, tokenInterceptorListener)
                             changeAccessToken(request, newToken)
                         }
                     }
