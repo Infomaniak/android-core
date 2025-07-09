@@ -46,5 +46,9 @@ data class ExternalAccount(
     @ProtoNumber(4)
     val isCurrentlySelectedInAnApp: Boolean,
     @ProtoNumber(5)
-    val tokens: Set<String>
+    val tokens: Set<String>,
+    @ProtoNumber(6)
+    val initials: String,
+    @ProtoNumber(7)
+    val id: Int,
 )

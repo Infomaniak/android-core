@@ -15,65 +15,53 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.myksuite.ui.components
+package com.infomaniak.core.crossloginui.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.core.compose.basics.ButtonType
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.myksuite.ui.theme.Dimens
-import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.myksuite.ui.theme.Typography
+import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
+import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
+import com.infomaniak.core.crossloginui.theme.Typography
 
 @Composable
-internal fun MyKSuitePrimaryButton(
+internal fun PrimaryButton(
     modifier: Modifier = Modifier,
     text: String,
-    shape: Shape,
+    customization: CrossLoginCustomization,
     onClick: () -> Unit,
 ) {
     Button(
-        modifier = modifier.height(Dimens.buttonHeight),
+        modifier = modifier.height(customization.buttonType.height),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
+            containerColor = customization.colors.primaryColor,
+            contentColor = customization.colors.onPrimaryColor,
         ),
-        shape = shape,
+        shape = customization.buttonType.shape,
         onClick = onClick,
     ) {
         Text(text = text, style = Typography.bodyMedium)
     }
 }
 
-@Preview(name = "(1) Light")
-@Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
+@Preview
 @Composable
 private fun Preview() {
-    MyKSuiteTheme {
-        Surface {
-            Column(verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
-                MyKSuitePrimaryButton(
-                    text = "Lorem",
-                    shape = ButtonType.Mail.shape,
-                    onClick = {},
-                )
-                MyKSuitePrimaryButton(
-                    text = "Close",
-                    shape = ButtonType.Drive.shape,
-                    onClick = {},
-                )
-            }
+    Surface {
+        Column(verticalArrangement = Arrangement.spacedBy(Margin.Large)) {
+            PrimaryButton(
+                text = "Lorem",
+                customization = CrossLoginDefaults.customize(),
+                onClick = {},
+            )
         }
     }
 }

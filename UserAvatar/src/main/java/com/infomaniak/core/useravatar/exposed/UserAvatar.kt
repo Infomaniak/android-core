@@ -105,10 +105,12 @@ private fun Preview() {
     Surface {
         Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
             UserAvatar(
+                modifier = Modifier.size(32.dp),
                 avatarData = AvatarData(id = "1337", uri = "aaa", userInitials = "", iconColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Red),
             )
             UserAvatar(
+                modifier = Modifier.size(24.dp),
                 avatarData = AvatarData(id = "42", uri = "", userInitials = "IK", backgroundColor = Color.LightGray.toArgb()),
                 border = BorderStroke(width = 1.dp, color = Color.Cyan),
             )
