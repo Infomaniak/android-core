@@ -20,8 +20,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "LOGIN_ENDPOINT_URL", "\"https://login.preprod.dev.infomaniak.ch/\"")
-        buildConfigField("String", "INFOMANIAK_API", "\"https://api.preprod.dev.infomaniak.ch/2/\"")
+        buildConfigField("String", "LOGIN_ENDPOINT_URL", "\"https://login.infomaniak.com/\"")
+        buildConfigField("String", "INFOMANIAK_API", "\"https://api.infomaniak.com/2/\"")
 
         ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }
