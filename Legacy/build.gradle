@@ -25,12 +25,12 @@ android {
         testOptions.unitTests.includeAndroidResources = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.preprod.dev.infomaniak.ch/v3/mobile_login"'
-        buildConfigField 'String', 'TERMINATE_ACCOUNT_URL', '"https://manager.preprod.dev.infomaniak.ch/v3/ng/profile/user/dashboard?open-terminate-account-modal"'
-        buildConfigField 'String', 'LOGIN_ENDPOINT_URL', '"https://login.preprod.dev.infomaniak.ch/"'
-        buildConfigField 'String', 'INFOMANIAK_API_V1', '"https://api.preprod.dev.infomaniak.ch/1"'
-        buildConfigField 'String', 'INFOMANIAK_API', '"https://api.preprod.dev.infomaniak.ch/2/"'
-        buildConfigField 'String', 'MATOMO_URL', '"https://analytics.preprod.dev.infomaniak.ch/matomo.php"'
+        buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.infomaniak.com/v3/mobile_login"'
+        buildConfigField 'String', 'TERMINATE_ACCOUNT_URL', '"https://manager.infomaniak.com/v3/ng/profile/user/dashboard?open-terminate-account-modal"'
+        buildConfigField 'String', 'LOGIN_ENDPOINT_URL', '"https://login.infomaniak.com/"'
+        buildConfigField 'String', 'INFOMANIAK_API_V1', '"https://api.infomaniak.com/1"'
+        buildConfigField 'String', 'INFOMANIAK_API', '"https://api.infomaniak.com/2/"'
+        buildConfigField 'String', 'MATOMO_URL', '"https://analytics.infomaniak.com/matomo.php"'
 
         ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }
