@@ -19,6 +19,7 @@ package com.infomaniak.core.login.crossapp
 import android.content.Context
 import com.infomaniak.core.login.crossapp.internal.deviceid.SharedDeviceIdManager
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlin.uuid.ExperimentalUuidApi
 
 sealed interface CrossAppLogin {
 
@@ -29,5 +30,6 @@ sealed interface CrossAppLogin {
     @ExperimentalSerializationApi
     suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount>
 
+    @ExperimentalUuidApi
     val sharedDeviceIdManager: SharedDeviceIdManager
 }
