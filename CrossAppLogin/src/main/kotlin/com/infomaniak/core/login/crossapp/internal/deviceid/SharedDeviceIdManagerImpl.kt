@@ -199,7 +199,11 @@ internal class SharedDeviceIdManagerImpl(
         onBindingIssue = { OnBindingIssue.GiveUp(null) },
         flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
         block = { binder ->
-            requestSharedDeviceId(binder)
+            runCatching {
+                // requestSharedDeviceId isn't supposed to throw, so this wrapping `runCatching` shouldn't be necessary,
+                // but if a dev mistake ever happens, and breaks the communication format, it's still best to not crash.
+                requestSharedDeviceId(binder)
+            }.cancellable().getOrNull()
         }
     )
 
