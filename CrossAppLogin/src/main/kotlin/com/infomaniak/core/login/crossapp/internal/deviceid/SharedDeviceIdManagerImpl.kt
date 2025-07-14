@@ -124,11 +124,11 @@ internal class SharedDeviceIdManagerImpl(
         // but we're doing this optimization yet since there's only a single other app that we'll be reaching when launching
         // this feature.
         allPackagesCheckedJob.complete() // Will actually complete once all child jobs created above complete.
-        allPackagesCheckedJob.join()
-        if (deviceIdCompletable.isCompleted.not()) {
+        allPackagesCheckedJob.join() // All packages were checked...
+        if (deviceIdCompletable.isCompleted.not()) { // It's now safe to check if deviceId could be retrieved.
             @OptIn(ExperimentalUuidApi::class)
             val id = Dispatchers.IO { Uuid.random() }
-            deviceIdCompletable.complete(id)
+            deviceIdCompletable.complete(id) // Send the newly generated id, so apps we're connected to can receive it.
         }
         syncJobs.awaitAll().forEach { result ->
             result?.onFailure {
@@ -160,24 +160,30 @@ internal class SharedDeviceIdManagerImpl(
                 onBindingIssue = { OnBindingIssue.GiveUp(null) },
                 flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
                 block = { binder ->
-                    val result = try {
-                        attemptGettingDeviceId(
-                            binder = binder,
-                            deviceIdCompletable = deviceIdCompletable,
-                        )
-                    } finally {
-                        thisPackageCheckedJob.complete()
-                    }
-                    result.mapCatching { hadTheId ->
-                        if (hadTheId.not()) {
-                            val id = deviceIdCompletable.await()
-                            sendSharedDeviceId(binder, id) // Sync it to the target app.
-                        }
-                    }
+                    getOrSyncDeviceId(binder, deviceIdCompletable, thisPackageCheckedJob)
                 }
             )
         } finally {
-            thisPackageCheckedJob.complete()
+            thisPackageCheckedJob.complete() // Ensure it's complete. Needed for service binding issues.
+        }
+    }
+
+    private suspend fun getOrSyncDeviceId(
+        binder: IBinder,
+        deviceIdCompletable: CompletableDeferred<Uuid>,
+        thisPackageCheckedJob: CompletableJob,
+    ): Result<Unit> = runCatching {
+        // requestSharedDeviceId isn't supposed to throw, so this wrapping `runCatching` shouldn't be necessary,
+        // but if a dev mistake ever happens, and breaks the communication format, it's still best to not crash.
+        requestSharedDeviceId(binder)
+    }.also { // This is the `runCatching` equivalent to a `finally` block for a `try` block.
+        thisPackageCheckedJob.complete()
+    }.cancellable().onSuccess { id ->
+        if (id != null) deviceIdCompletable.complete(id)
+    }.mapCatching { id ->
+        if (id == null) {
+            val id = deviceIdCompletable.await()
+            sendSharedDeviceId(binder, id) // Sync it to the target app.
         }
     }
 
@@ -196,19 +202,6 @@ internal class SharedDeviceIdManagerImpl(
             requestSharedDeviceId(binder)
         }
     )
-
-    private suspend fun attemptGettingDeviceId(
-        binder: IBinder,
-        deviceIdCompletable: CompletableDeferred<Uuid>
-    ): Result<Boolean> = runCatching {
-        val id = requestSharedDeviceId(binder)
-        if (id != null) {
-            deviceIdCompletable.complete(id)
-            true
-        } else {
-            false
-        }
-    }.cancellable()
 
     @OptIn(ExperimentalSerializationApi::class)
     private suspend fun requestSharedDeviceId(binder: IBinder): Uuid? {
