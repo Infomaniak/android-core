@@ -77,4 +77,5 @@ dependencies {
     implementation(core.compose.material3)
     implementation(core.compose.ui)
     implementation(core.compose.ui.tooling.preview)
+    implementation(core.androidx.adaptive)
 }
