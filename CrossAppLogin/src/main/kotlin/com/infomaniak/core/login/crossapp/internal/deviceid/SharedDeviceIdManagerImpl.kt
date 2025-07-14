@@ -108,11 +108,16 @@ internal class SharedDeviceIdManagerImpl(
         val syncJobs = targetPackageNames.map { packageName ->
             val thisPackageCheckedJob = Job(parent = allPackagesCheckedJob)
             async {
-                if (certificateChecker.isPackageNameAllowed(packageName) == true) attemptGettingOrSyncingDeviceId(
-                    deviceIdCompletable = deviceIdCompletable,
-                    targetPackageName = packageName,
-                    thisPackageCheckedJob = thisPackageCheckedJob
-                ) else null
+                if (certificateChecker.isPackageNameAllowed(packageName) == true) {
+                    attemptGettingOrSyncingDeviceId(
+                        deviceIdCompletable = deviceIdCompletable,
+                        targetPackageName = packageName,
+                        thisPackageCheckedJob = thisPackageCheckedJob
+                    )
+                } else {
+                    thisPackageCheckedJob.complete() // Avoid blocking its parent job if the packageName wasn't allowed.
+                    null
+                }
             }
         }
         // Technically, we could have the sync part happen concurrently, and return the value ASAP, if available,
