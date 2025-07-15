@@ -19,6 +19,7 @@ package com.infomaniak.core.login.crossapp.internal.deviceid
 
 import android.content.Context
 import com.infomaniak.core.login.crossapp.CrossAppDeviceIdRequest
+import com.infomaniak.core.login.crossapp.IpcIssuesManager
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
 import kotlinx.coroutines.sync.Mutex
 import kotlin.uuid.ExperimentalUuidApi
@@ -33,10 +34,12 @@ sealed class SharedDeviceIdManager {
 
         internal operator fun invoke(
             context: Context,
+            ipcIssuesManager: IpcIssuesManager,
             certificateChecker: AppCertificateChecker,
             targetPackageNames: Set<String>
         ): SharedDeviceIdManager = SharedDeviceIdManagerImpl(
             context,
+            ipcIssuesManager,
             certificateChecker,
             targetPackageNames
         )
