@@ -31,19 +31,21 @@ import com.infomaniak.core.cancellable
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
+import com.infomaniak.core.login.crossapp.internal.deviceid.SharedDeviceIdManager
 import com.infomaniak.lib.core.utils.SentryLog
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.invoke
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
 import kotlin.time.Duration.Companion.seconds
+import kotlin.uuid.ExperimentalUuidApi
 
 internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
 
@@ -51,9 +53,11 @@ internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
     private val ourPackageName = context.packageName
     private val targetPackageNames = certificateChecker.signingCertificates.packageNames.filter { it != ourPackageName }
 
+    private val ipcIssuesManager: IpcIssuesManager = IpcIssuesManagerImpl
+
     @ExperimentalSerializationApi
     override suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount> {
-        val lists: List<List<ExternalAccount>> = coroutineScope {
+        val lists: List<List<ExternalAccount>> = Dispatchers.Default {
             targetPackageNames.map { packageName ->
                 async { retrieveAccountsFromApp(packageName) }
             }.awaitAll()
@@ -65,7 +69,14 @@ internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
         }
     }
 
-    override suspend fun getAppGroupScopedDeviceInstanceId() {
+    @ExperimentalUuidApi
+    override val sharedDeviceIdManager: SharedDeviceIdManager = SharedDeviceIdManager(
+        context = context,
+        ipcIssuesManager = ipcIssuesManager,
+        certificateChecker = certificateChecker,
+        targetPackageNames = targetPackageNames.toSet()
+    )
+
         // TODO:
         //  1. If we already have an id, return it, otherwise, continue.
         //  2. Acquire `sharedDeviceIdLock`
@@ -87,8 +98,6 @@ internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
 
         // TODO: Handle non updated apps (ignore them).
         // TODO: Handle apps being updated, by retrying if we detect the lastUpdateTime changed, or if we find a packageInstaller update session.
-        TODO("Not yet implemented")
-    }
 
     @ExperimentalSerializationApi
     private suspend fun retrieveAccountsFromApp(packageName: String): List<ExternalAccount> = raceOf(
@@ -112,28 +121,25 @@ internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
             it.`package` = packageName
             it.action = "com.infomaniak.crossapp.login"
         }
-        // TODO: Add a timeout for the entire operation.
         return runCatching {
             retrieveAccountsFromUncheckedService(intent)
         }.cancellable().getOrElse { t ->
-            if (t is RemoteException) { // TODO: Can this really happen here? They are probably caught inside.
-                SentryLog.i(TAG, "The app ($packageName) we tried to retrieve accounts from crashed", t)
-            } else {
-                SentryLog.e(TAG, "Couldn't retrieve accounts in app $packageName", t)
-            }
+            SentryLog.e(TAG, "Couldn't retrieve accounts in app $packageName", t)
             emptyList()
         }
     }
 
     @ExperimentalSerializationApi
     private suspend fun retrieveAccountsFromUncheckedService(service: Intent): List<ExternalAccount> {
+        val targetPackageName = service.`package`!!
         val bytesOrNull = context.withBoundService<ByteArray?>(
             service = service,
-            timeoutConnection = { isWaitingForReconnect ->
-                delay(7.seconds)
-            },
+            timeoutConnection = ipcIssuesManager.timeoutConnection(targetPackageName, isUserWaiting = true),
             onDisconnected = { OnServiceDisconnectionBehavior.UnbindImmediately(null) },
-            onBindingIssue = { OnBindingIssue.GiveUp(null) },
+            onBindingIssue = {
+                ipcIssuesManager.logBindingIssue(targetPackageName, it)
+                OnBindingIssue.GiveUp(null)
+            },
             flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
             block = { binder ->
                 val messenger = Messenger(binder)
@@ -147,7 +153,17 @@ internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
                         it.replyTo = replyTo
                     }
                     messenger.send(request)
-                    replies.receive().use { response -> response.unwrapByteArrayOrNull() }
+                    raceOf(
+                        { replies.receive().use { response -> response.unwrapByteArrayOrNull() } },
+                        {
+                            ipcIssuesManager.timeoutOperation(
+                                operationName = "retrieveAccountsFromUncheckedService",
+                                targetPackageName = targetPackageName,
+                                acceptableDuration = 3.seconds,
+                            )
+                            null
+                        }
+                    )
                 } catch (_: RemoteException) {
                     null
                 }
