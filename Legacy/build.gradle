@@ -51,7 +51,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.21'
+    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21' // Keep the same version as the Kotlin one
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
     api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1'
