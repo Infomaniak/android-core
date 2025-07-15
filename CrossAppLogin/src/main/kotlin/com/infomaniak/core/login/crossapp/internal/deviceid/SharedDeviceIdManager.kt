@@ -18,13 +18,14 @@
 package com.infomaniak.core.login.crossapp.internal.deviceid
 
 import android.content.Context
+import com.infomaniak.core.login.crossapp.CrossAppDeviceIdRequest
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
 import kotlinx.coroutines.sync.Mutex
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @ExperimentalUuidApi
-sealed interface SharedDeviceIdManager {
+sealed class SharedDeviceIdManager {
 
     companion object {
         internal val sharedDeviceIdMutex = Mutex()
@@ -46,7 +47,7 @@ sealed interface SharedDeviceIdManager {
      *
      * This might involve generating said id.
      */
-    suspend fun getCrossAppDeviceId(): Uuid
+    abstract suspend fun getCrossAppDeviceId(): Uuid
 
-    suspend fun findCrossAppDeviceId(packageNamesToSkip: Set<String>): Uuid?
+    internal abstract suspend fun findCrossAppDeviceId(request: CrossAppDeviceIdRequest): Uuid?
 }
