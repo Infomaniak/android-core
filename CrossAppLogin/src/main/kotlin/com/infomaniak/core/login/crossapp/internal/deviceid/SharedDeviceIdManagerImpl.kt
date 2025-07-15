@@ -64,7 +64,7 @@ internal class SharedDeviceIdManagerImpl(
     private val context: Context,
     private val certificateChecker: AppCertificateChecker,
     private val targetPackageNames: Set<String>
-) : SharedDeviceIdManager {
+) : SharedDeviceIdManager() {
 
     private val sharedDeviceIdMutex = SharedDeviceIdManager.sharedDeviceIdMutex
     private val storage = SharedDeviceIdManager.storage
@@ -79,23 +79,31 @@ internal class SharedDeviceIdManagerImpl(
         }
     }
 
-    override suspend fun findCrossAppDeviceId(packageNamesToSkip: Set<String>): Uuid? {
+    override suspend fun findCrossAppDeviceId(request: CrossAppDeviceIdRequest): Uuid? {
         storage.readDeviceId()?.let { return it }
         sharedDeviceIdMutex.withLock {
             storage.readDeviceId()?.let { return it }
-            val id = findDeviceId(
-                targetPackageNames = targetPackageNames - packageNamesToSkip - context.packageName
-            ) ?: return null
+            val id = findCrossAppDeviceIdInApps(request) ?: return null
             storage.setDeviceId(id)
             return id
         }
     }
 
-    private suspend fun findDeviceId(targetPackageNames: Set<String>): Uuid? = completableScope { completable ->
-        targetPackageNames.forEach { packageName ->
+    private suspend fun findCrossAppDeviceIdInApps(request: CrossAppDeviceIdRequest): Uuid? = completableScope { completable ->
+        val packagesToLookup = buildSet<String> {
+            addAll(targetPackageNames)
+            remove(context.packageName)
+            removeAll(request.packageNamesAlreadyBeingChecked)
+        }
+        val packageNamesToSkip = buildSet<String> {
+            add(context.packageName)
+            addAll(request.packageNamesAlreadyBeingChecked)
+            addAll(targetPackageNames)
+        }
+        packagesToLookup.forEach { packageName ->
             launch {
                 if (certificateChecker.isPackageNameAllowed(packageName) != true) return@launch
-                val id = attemptGettingDeviceId(packageName) ?: return@launch
+                val id = attemptGettingDeviceId(packageName, packageNamesToSkip) ?: return@launch
                 completable.complete(id)
             }
         }
@@ -175,7 +183,7 @@ internal class SharedDeviceIdManagerImpl(
     ): Result<Unit> = runCatching {
         // requestSharedDeviceId isn't supposed to throw, so this wrapping `runCatching` shouldn't be necessary,
         // but if a dev mistake ever happens, and breaks the communication format, it's still best to not crash.
-        requestSharedDeviceId(binder)
+        requestSharedDeviceId(binder, packageNamesToSkip = targetPackageNames + context.packageName)
     }.also { // This is the `runCatching` equivalent to a `finally` block for a `try` block.
         thisPackageCheckedJob.complete()
     }.cancellable().onSuccess { id ->
@@ -189,6 +197,7 @@ internal class SharedDeviceIdManagerImpl(
 
     private suspend fun attemptGettingDeviceId(
         targetPackageName: String,
+        packageNamesToSkip: Set<String>,
     ): Uuid? = context.withBoundService<Uuid?>(
         service = Intent().also {
             it.`package` = targetPackageName
@@ -202,13 +211,13 @@ internal class SharedDeviceIdManagerImpl(
             runCatching {
                 // requestSharedDeviceId isn't supposed to throw, so this wrapping `runCatching` shouldn't be necessary,
                 // but if a dev mistake ever happens, and breaks the communication format, it's still best to not crash.
-                requestSharedDeviceId(binder)
+                requestSharedDeviceId(binder, packageNamesToSkip = packageNamesToSkip)
             }.cancellable().getOrNull()
         }
     )
 
     @OptIn(ExperimentalSerializationApi::class)
-    private suspend fun requestSharedDeviceId(binder: IBinder): Uuid? {
+    private suspend fun requestSharedDeviceId(binder: IBinder, packageNamesToSkip: Set<String>): Uuid? {
         val messenger = Messenger(binder)
         val replies = Channel<DisposableMessage>(capacity = 1)
         val replyHandler = ChannelMessageHandler(replies)
@@ -217,7 +226,7 @@ internal class SharedDeviceIdManagerImpl(
             val request = Message.obtain().also {
                 it.what = BaseCrossAppLoginService.IpcMessageWhat.GET_SHARED_DEVICE_ID
                 it.replyTo = replyTo
-                val request = CrossAppDeviceIdRequest(packageNamesAlreadyBeingChecked = targetPackageNames.toSet())
+                val request = CrossAppDeviceIdRequest(packageNamesAlreadyBeingChecked = packageNamesToSkip)
                 it.putBundleWrappedDataInObj(ProtoBuf.encodeToByteArray(request))
             }
             Dispatchers.IO { messenger.send(request) }
