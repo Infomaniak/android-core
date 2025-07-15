@@ -275,7 +275,7 @@ class InfomaniakLogin(
             .addFormDataPart("username", username)
             .addFormDataPart("password", password)
 
-        if (accessType != null) formBuilder.addFormDataPart("access_type", AccessType.OFFLINE.apiValue)
+        accessType?.let { formBuilder.addFormDataPart("access_type", it.apiValue) }
 
         return getToken(okHttpClient = okHttpClient, body = formBuilder.build())
     }
