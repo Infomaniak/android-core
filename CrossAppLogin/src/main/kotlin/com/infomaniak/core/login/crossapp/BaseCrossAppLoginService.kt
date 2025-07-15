@@ -130,9 +130,7 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
     ) {
         val sharedDeviceIdManager = CrossAppLogin.forContext(this).sharedDeviceIdManager
 
-        sharedDeviceIdManager.findCrossAppDeviceId(
-            packageNamesToSkip = requestData.packageNamesAlreadyBeingChecked
-        )?.let { sharedId ->
+        sharedDeviceIdManager.findCrossAppDeviceId(requestData)?.let { sharedId ->
             sendSharedDeviceId(clientMessenger, sharedId)
             return
         }
