@@ -84,6 +84,7 @@ internal class SharedDeviceIdManagerImpl(
         storage.readDeviceId()?.let { return it }
         sharedDeviceIdMutex.withLock {
             storage.readDeviceId()?.let { return it }
+            return null //TODO: Remove this line once we have 3+ apps to test through-app cross-app device id retrieval.
             val id = findCrossAppDeviceIdInApps(request) ?: return null
             storage.setDeviceId(id)
             return id
