@@ -41,12 +41,18 @@ import com.infomaniak.core.login.crossapp.unwrapByteArrayOrNull
 import com.infomaniak.lib.core.utils.SentryLog
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
@@ -62,6 +68,7 @@ import kotlin.uuid.Uuid
 @ExperimentalUuidApi
 internal class SharedDeviceIdManagerImpl(
     private val context: Context,
+    private val coroutineScope: CoroutineScope,
     private val ipcIssuesManager: IpcIssuesManager,
     private val certificateChecker: AppCertificateChecker,
     private val targetPackageNames: Set<String>
@@ -70,15 +77,13 @@ internal class SharedDeviceIdManagerImpl(
     private val sharedDeviceIdMutex = SharedDeviceIdManager.sharedDeviceIdMutex
     private val storage = SharedDeviceIdManager.storage
 
-    override suspend fun getCrossAppDeviceId(): Uuid {
-        storage.readDeviceId()?.let { return it }
-        sharedDeviceIdMutex.withLock {
-            storage.readDeviceId()?.let { return it }
-            val id = retrieveAndSyncDeviceId()
-            storage.setDeviceId(id)
-            return id
-        }
-    }
+    override val crossAppDeviceIdFlow: SharedFlow<Uuid> = storage.writtenIdFlow.onStart {
+        emit(getCrossAppDeviceId())
+    }.distinctUntilChanged().shareIn(
+        scope = coroutineScope,
+        started = SharingStarted.Lazily,
+        replay = 1
+    )
 
     override suspend fun findCrossAppDeviceId(request: CrossAppDeviceIdRequest): Uuid? {
         storage.readDeviceId()?.let { return it }
@@ -86,6 +91,16 @@ internal class SharedDeviceIdManagerImpl(
             storage.readDeviceId()?.let { return it }
             return null //TODO: Remove this line once we have 3+ apps to test through-app cross-app device id retrieval.
             val id = findCrossAppDeviceIdInApps(request) ?: return null
+            storage.setDeviceId(id)
+            return id
+        }
+    }
+
+    private suspend fun getCrossAppDeviceId(): Uuid {
+        storage.readDeviceId()?.let { return it }
+        sharedDeviceIdMutex.withLock {
+            storage.readDeviceId()?.let { return it }
+            val id = retrieveAndSyncDeviceId()
             storage.setDeviceId(id)
             return id
         }

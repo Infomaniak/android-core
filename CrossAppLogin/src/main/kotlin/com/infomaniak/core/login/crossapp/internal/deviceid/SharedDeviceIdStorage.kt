@@ -21,6 +21,9 @@ import android.provider.Settings
 import android.provider.Settings.Secure.ANDROID_ID
 import androidx.core.util.AtomicFile
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -40,12 +43,18 @@ import kotlin.uuid.Uuid
 @ExperimentalUuidApi
 internal object SharedDeviceIdStorage {
 
+    internal val writtenIdFlow: SharedFlow<Uuid>
+
     private val dataFile = AtomicFile(appCtx.filesDir.resolve("generatedSharedDeviceId"))
 
     private val localDataReadWriteMutex = Mutex()
 
+    private val _writtenIdFlow = MutableSharedFlow<Uuid>(replay = 1).also {
+        writtenIdFlow = it.asSharedFlow()
+    }
+
     @Throws(IOException::class)
-    suspend fun readDeviceId(): Uuid? = Dispatchers.IO {
+    internal suspend fun readDeviceId(): Uuid? = Dispatchers.IO {
         localDataReadWriteMutex.withLock {
             try {
                 dataFile.openRead().use { stream ->
@@ -61,7 +70,7 @@ internal object SharedDeviceIdStorage {
     }
 
     @Throws(IOException::class)
-    suspend fun setDeviceId(sharedDeviceId: Uuid) {
+    internal suspend fun setDeviceId(sharedDeviceId: Uuid) {
         Dispatchers.IO {
             localDataReadWriteMutex.withLock {
                 dataFile.startWrite().use { outputStream ->
@@ -78,6 +87,7 @@ internal object SharedDeviceIdStorage {
                         throw t
                     }
                 }
+                _writtenIdFlow.tryEmit(sharedDeviceId)
             }
         }
     }
