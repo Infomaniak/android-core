@@ -33,6 +33,7 @@ import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
 import com.infomaniak.core.login.crossapp.internal.deviceid.SharedDeviceIdManager
 import com.infomaniak.lib.core.utils.SentryLog
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -47,7 +48,10 @@ import splitties.experimental.ExperimentalSplittiesApi
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 
-internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
+internal class CrossAppLoginImpl(
+    private val context: Context,
+    private val coroutineScope: CoroutineScope
+) : CrossAppLogin {
 
     private val certificateChecker = AppCertificateChecker.withInfomaniakApps
     private val ourPackageName = context.packageName
@@ -72,6 +76,7 @@ internal class CrossAppLoginImpl(private val context: Context) : CrossAppLogin {
     @ExperimentalUuidApi
     override val sharedDeviceIdManager: SharedDeviceIdManager = SharedDeviceIdManager(
         context = context,
+        coroutineScope = coroutineScope,
         ipcIssuesManager = ipcIssuesManager,
         certificateChecker = certificateChecker,
         targetPackageNames = targetPackageNames.toSet()

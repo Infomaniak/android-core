@@ -21,6 +21,8 @@ import android.content.Context
 import com.infomaniak.core.login.crossapp.CrossAppDeviceIdRequest
 import com.infomaniak.core.login.crossapp.IpcIssuesManager
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -34,11 +36,13 @@ sealed class SharedDeviceIdManager {
 
         internal operator fun invoke(
             context: Context,
+            coroutineScope: CoroutineScope,
             ipcIssuesManager: IpcIssuesManager,
             certificateChecker: AppCertificateChecker,
             targetPackageNames: Set<String>
         ): SharedDeviceIdManager = SharedDeviceIdManagerImpl(
             context,
+            coroutineScope,
             ipcIssuesManager,
             certificateChecker,
             targetPackageNames
@@ -46,11 +50,13 @@ sealed class SharedDeviceIdManager {
     }
 
     /**
-     * Returns an id for this device, that is shared across all our apps.
+     * Gives an id for this device, that is shared across all our apps.
      *
      * This might involve generating said id.
+     *
+     * If the id is ever updated, it will be emitted in this shared flow.
      */
-    abstract suspend fun getCrossAppDeviceId(): Uuid
+    abstract val crossAppDeviceIdFlow: SharedFlow<Uuid>
 
     internal abstract suspend fun findCrossAppDeviceId(request: CrossAppDeviceIdRequest): Uuid?
 }
