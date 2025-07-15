@@ -26,7 +26,7 @@ import okhttp3.Request
 class FdroidApiTools {
 
     suspend fun getLastRelease(packages: String): Int = withContext(Dispatchers.IO) {
-        val request = Request.Builder().url("${API_FROID_URL}${packages}").get().build()
+        val request = Request.Builder().url("${API_FDROID_URL}${packages}").get().build()
         var versionCode = 0
         runCatching {
             val response = HttpClient.okHttpClient.newBuilder().build().newCall(request).execute()
@@ -41,7 +41,7 @@ class FdroidApiTools {
         versionCode
     }
 
-    private companion object {
-        const val API_FROID_URL = "https://f-droid.org/api/v1/packages/"
+    companion object {
+        private const val API_FDROID_URL = "https://f-droid.org/api/v1/packages/"
     }
 }
