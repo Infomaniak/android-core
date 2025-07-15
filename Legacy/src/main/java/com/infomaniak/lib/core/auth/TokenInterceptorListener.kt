@@ -48,5 +48,5 @@ interface TokenInterceptorListener {
             // Let user retry without logging him out.
             // If we send null, the user will be logged out.
         }
-        .shareIn(coroutineScope, SharingStarted.Lazily, replay = 1)
+        .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 }
