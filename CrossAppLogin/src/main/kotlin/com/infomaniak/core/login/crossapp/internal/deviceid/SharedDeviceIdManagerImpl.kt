@@ -32,6 +32,7 @@ import com.infomaniak.core.cancellable
 import com.infomaniak.core.completableScope
 import com.infomaniak.core.login.crossapp.BaseCrossAppLoginService
 import com.infomaniak.core.login.crossapp.CrossAppDeviceIdRequest
+import com.infomaniak.core.login.crossapp.IpcIssuesManager
 import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
@@ -46,7 +47,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
@@ -54,14 +54,15 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
+import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
-import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @ExperimentalUuidApi
 internal class SharedDeviceIdManagerImpl(
     private val context: Context,
+    private val ipcIssuesManager: IpcIssuesManager,
     private val certificateChecker: AppCertificateChecker,
     private val targetPackageNames: Set<String>
 ) : SharedDeviceIdManager() {
@@ -163,12 +164,20 @@ internal class SharedDeviceIdManagerImpl(
             }
             return context.withBoundService<Result<Unit>?>(
                 service = intent,
-                timeoutConnection = { isWaitingForReconnect -> delay(10.seconds) },
+                timeoutConnection = ipcIssuesManager.timeoutConnection(targetPackageName),
                 onDisconnected = { OnServiceDisconnectionBehavior.UnbindImmediately(null) },
-                onBindingIssue = { OnBindingIssue.GiveUp(null) },
+                onBindingIssue = {
+                    ipcIssuesManager.logBindingIssue(targetPackageName, it)
+                    OnBindingIssue.GiveUp(null)
+                },
                 flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
                 block = { binder ->
-                    getOrSyncDeviceId(binder, deviceIdCompletable, thisPackageCheckedJob)
+                    raceOf({
+                        getOrSyncDeviceId(binder, deviceIdCompletable, thisPackageCheckedJob)
+                    }, {
+                        ipcIssuesManager.timeoutOperation(operationName = "getOrSyncDeviceId", targetPackageName)
+                        null
+                    })
                 }
             )
         } finally {
@@ -203,15 +212,24 @@ internal class SharedDeviceIdManagerImpl(
             it.`package` = targetPackageName
             it.action = BaseCrossAppLoginService.ACTION
         },
-        timeoutConnection = { isWaitingForReconnect -> delay(10.seconds) },
+        timeoutConnection = ipcIssuesManager.timeoutConnection(targetPackageName),
         onDisconnected = { OnServiceDisconnectionBehavior.UnbindImmediately(null) },
-        onBindingIssue = { OnBindingIssue.GiveUp(null) },
+        onBindingIssue = {
+            ipcIssuesManager.logBindingIssue(targetPackageName, it)
+            OnBindingIssue.GiveUp(null)
+        },
         flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
         block = { binder ->
             runCatching {
                 // requestSharedDeviceId isn't supposed to throw, so this wrapping `runCatching` shouldn't be necessary,
                 // but if a dev mistake ever happens, and breaks the communication format, it's still best to not crash.
-                requestSharedDeviceId(binder, packageNamesToSkip = packageNamesToSkip)
+                raceOf(
+                    { requestSharedDeviceId(binder, packageNamesToSkip = packageNamesToSkip) },
+                    {
+                        ipcIssuesManager.timeoutOperation(operationName = "requestSharedDeviceId", targetPackageName)
+                        null
+                    }
+                )
             }.cancellable().getOrNull()
         }
     )
