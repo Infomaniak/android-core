@@ -40,8 +40,8 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.inappupdate.R
 
 @Composable
@@ -57,8 +57,8 @@ fun UpdateRequiredScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .safeDrawingPadding()
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 40.dp),
+                    .padding(horizontal = Margin.Large)
+                    .padding(bottom = Margin.Giant),
                 contentAlignment = Alignment.Center,
             ) { installUpdateButton() }
         },
@@ -76,14 +76,14 @@ fun UpdateRequiredScreen(
                 ) {
                     Image(painter = illustration, contentDescription = null)
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(Margin.Huge))
 
                     Text(
                         style = titleTextStyle,
                         text = stringResource(R.string.updateAppTitle),
                     )
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(Margin.Huge))
 
                     Text(
                         style = descriptionTextStyle,
@@ -114,7 +114,7 @@ fun UpdateRequiredScreen(
                             text = stringResource(R.string.updateAppTitle),
                         )
 
-                        Spacer(modifier = Modifier.height(32.dp))
+                        Spacer(modifier = Modifier.height(Margin.Huge))
 
                         Text(
                             style = descriptionTextStyle,

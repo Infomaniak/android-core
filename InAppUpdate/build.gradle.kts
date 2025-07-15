@@ -52,6 +52,7 @@ android {
 
 dependencies {
     implementation(project(":Core"))
+    implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Network"))
     implementation(project(":Core:Sentry"))
 
