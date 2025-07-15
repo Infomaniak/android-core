@@ -3,7 +3,7 @@ activityCompose = "1.9.3" # Doesn't build when bumped to 1.10.1 (Waiting SDK 35)
 androidLogin = "3.1.5"
 androidxCollection = "1.5.0"
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
-appcompat = "1.7.0"
+appcompat = "1.7.1"
 coil = "3.0.2" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 coilNetworkOkhttp = "3.0.4" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
 composeBom = "2025.06.01"
@@ -16,7 +16,7 @@ junitAndroidx = "1.2.1"
 kotest = "5.9.1"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerializationJson = "1.8.1"
-ktor = "3.2.1"
+ktor = "3.2.2"
 lifecycleRuntimeKtx = "2.8.7" # Doesn't build when bumped to 2.9.0 (Waiting SDK 35)
 material = "1.12.0"
 matomo = "4.1.4"
@@ -65,7 +65,6 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 material = { module = "com.google.android.material:material", version.ref = "material" }
 matomo = { module = "com.github.matomo-org:matomo-sdk-android", version.ref = "matomo" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
-navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
