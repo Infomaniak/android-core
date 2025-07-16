@@ -20,6 +20,7 @@ package com.infomaniak.core.login.crossapp.internal.deviceid
 import android.provider.Settings
 import android.provider.Settings.Secure.ANDROID_ID
 import androidx.core.util.AtomicFile
+import com.infomaniak.core.extensions.write
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -73,19 +74,13 @@ internal object SharedDeviceIdStorage {
     internal suspend fun setDeviceId(sharedDeviceId: Uuid) {
         Dispatchers.IO {
             localDataReadWriteMutex.withLock {
-                dataFile.startWrite().use { outputStream ->
-                    try {
-                        val data = SharedDeviceId(
-                            androidId = getAndroidId(),
-                            uuid = sharedDeviceId.toByteArray()
-                        ).let { ProtoBuf.encodeToByteArray(it) }
+                dataFile.write { outputStream ->
+                    val data = SharedDeviceId(
+                        androidId = getAndroidId(),
+                        uuid = sharedDeviceId.toByteArray()
+                    ).let { ProtoBuf.encodeToByteArray(it) }
 
-                        outputStream.write(data)
-                        dataFile.finishWrite(outputStream)
-                    } catch (t: Throwable) {
-                        dataFile.failWrite(outputStream)
-                        throw t
-                    }
+                    outputStream.write(data)
                 }
                 _writtenIdFlow.tryEmit(sharedDeviceId)
             }
