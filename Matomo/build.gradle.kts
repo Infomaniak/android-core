@@ -17,7 +17,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField("String", "MATOMO_URL", "\"https://analytics.preprod.dev.infomaniak.ch/matomo.php\"")
+        buildConfigField("String", "MATOMO_URL", "\"https://analytics.infomaniak.com/matomo.php\"")
     }
 
     buildTypes {
