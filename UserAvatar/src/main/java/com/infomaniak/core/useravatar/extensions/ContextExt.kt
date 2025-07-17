@@ -19,8 +19,10 @@ package com.infomaniak.core.useravatar.extensions
 
 import android.content.Context
 import androidx.annotation.ArrayRes
+import androidx.annotation.ColorInt
 import com.infomaniak.core.useravatar.R
 
+@ColorInt
 fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
     val arrayResource = array ?: R.array.organizationColors
     val colors = resources.getIntArray(arrayResource)

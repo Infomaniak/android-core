@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,9 +71,13 @@ object UtilsUi {
     }
 
     fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
+        return getBackgroundColorGradientDrawable(getBackgroundColorResBasedOnId(id, array))
+    }
+
+    fun getBackgroundColorGradientDrawable(backgroundColorRes: Int): GradientDrawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.OVAL
-            setColor(getBackgroundColorResBasedOnId(id, array))
+            setColor(backgroundColorRes)
         }
     }
 
