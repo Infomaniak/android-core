@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2024 Infomaniak Network SA
+ * Copyright (C) 2023-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +18,13 @@
 package com.infomaniak.lib.core.utils
 
 import android.content.Context
-import coil.ImageLoader
-import coil.decode.Decoder
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
+import coil3.ImageLoader
+import coil3.decode.Decoder
+import coil3.disk.DiskCache
+import coil3.disk.directory
+import coil3.memory.MemoryCache
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.request.crossfade
 import com.infomaniak.lib.core.auth.TokenAuthenticator
 import com.infomaniak.lib.core.auth.TokenInterceptor
 import com.infomaniak.lib.core.auth.TokenInterceptorListener
@@ -58,34 +61,34 @@ object CoilUtils {
             .crossfade(true)
             .components {
                 customFactories.forEach(::add)
-            }
-            .okHttpClient {
-                OkHttpClient.Builder().apply {
-
-                    HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
-
-                    tokenInterceptorListener?.let {
-                        addInterceptor(Interceptor { chain ->
-                            @OptIn(ManualAuthorizationRequired::class)
-                            chain.request().newBuilder()
-                                .headers(HttpUtils.getHeaders())
-                                .build()
-                                .let(chain::proceed)
-                        })
-
-                        addInterceptor(TokenInterceptor(it))
-                        authenticator(TokenAuthenticator(it))
-                    }
-
-                    HttpClientConfig.addCommonInterceptors(this) // Needs to be added last
-                }.build()
+                add(OkHttpNetworkFetcherFactory(callFactory = { coilHttpClient(tokenInterceptorListener) }))
             }
             .memoryCache {
-                MemoryCache.Builder(context).build()
+                MemoryCache.Builder().maxSizePercent(context).build()
             }
             .diskCache {
                 DiskCache.Builder().directory(context.cacheDir.resolve(COIL_CACHE_DIR)).build()
             }
             .build()
     }
+
+    private fun coilHttpClient(tokenInterceptorListener: TokenInterceptorListener?): OkHttpClient =
+        OkHttpClient.Builder().apply {
+            HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
+
+            tokenInterceptorListener?.let {
+                this.addInterceptor(Interceptor { chain ->
+                    @OptIn(ManualAuthorizationRequired::class)
+                    chain.request().newBuilder()
+                        .headers(HttpUtils.getHeaders())
+                        .build()
+                        .let(chain::proceed)
+                })
+
+                this.addInterceptor(TokenInterceptor(it))
+                this.authenticator(TokenAuthenticator(it))
+            }
+
+            HttpClientConfig.addCommonInterceptors(this) // Needs to be added last
+        }.build()
 }
