@@ -26,6 +26,6 @@ object ApiRoutesCore {
     }
 
     fun sendDeviceInfo(): String {
-        return "${INFOMANIAK_API}devices"
+        return "https://api.staging-access-token-devices.dev.infomaniak.ch/1/devices"
     }
 }
