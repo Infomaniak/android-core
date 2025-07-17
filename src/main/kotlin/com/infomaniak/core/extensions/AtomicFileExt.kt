@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.core.api
+package com.infomaniak.core.extensions
 
-import com.infomaniak.lib.core.BuildConfig.INFOMANIAK_API
+import androidx.core.util.AtomicFile
+import java.io.OutputStream
 
-object ApiRoutesCore {
-
-    fun getUserProfile(): String {
-        return "${INFOMANIAK_API}profile?no_avatar_default=1"
-    }
-
-    fun sendDeviceInfo(): String {
-        return "https://api.staging-access-token-devices.dev.infomaniak.ch/1/devices"
+inline fun <R> AtomicFile.write(block: (OutputStream) -> R): R {
+    startWrite().use { outputStream ->
+        try {
+            val result = block(outputStream)
+            finishWrite(outputStream)
+            return result
+        } catch (t: Throwable) {
+            failWrite(outputStream)
+            throw t
+        }
     }
 }

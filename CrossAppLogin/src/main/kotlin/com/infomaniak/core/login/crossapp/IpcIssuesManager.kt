@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.core.api
+package com.infomaniak.core.login.crossapp
 
-import com.infomaniak.lib.core.BuildConfig.INFOMANIAK_API
+import com.infomaniak.core.android.service.ServiceBindingIssue
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
-object ApiRoutesCore {
+interface IpcIssuesManager {
 
-    fun getUserProfile(): String {
-        return "${INFOMANIAK_API}profile?no_avatar_default=1"
-    }
+    fun timeoutConnection(
+        targetPackageName: String,
+        isUserWaiting: Boolean = false
+    ): suspend (isWaitingForReconnect: Boolean) -> Unit
 
-    fun sendDeviceInfo(): String {
-        return "https://api.staging-access-token-devices.dev.infomaniak.ch/1/devices"
-    }
+    suspend fun timeoutOperation(
+        operationName: String,
+        targetPackageName: String,
+        acceptableDuration: Duration = 30.seconds,
+    )
+
+    fun logBindingIssue(targetPackageName: String, issue: ServiceBindingIssue)
 }

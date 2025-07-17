@@ -42,12 +42,16 @@ dependencies {
     api(core.androidx.lifecycle.runtime.ktx)
     api(core.androidx.lifecycle.service)
     api(core.kotlinx.serialization.protobuf)
+    api(core.androidx.work.runtime.ktx)
 
     implementation(project(":Core"))
     implementation(project(":Core:AppIntegrity"))
     implementation(project(":Core:Legacy"))
     implementation(core.splitties.mainthread)
     implementation(core.ktor.client.core)
+    implementation(core.ktor.client.okhttp)
+    implementation(core.ktor.client.json)
+    implementation(core.ktor.client.content.negociation)
 
     testImplementation(core.junit)
     androidTestImplementation(core.androidx.junit)
