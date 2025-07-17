@@ -20,15 +20,14 @@ package com.infomaniak.core.login.crossapp
 import com.infomaniak.core.Xor
 import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.lib.login.ApiToken
-import kotlinx.io.IOException
 
 sealed interface DerivedTokenGenerator {
 
     suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
 
     sealed interface Issue {
-        data class ErrorResponse(val httpStatusCode: Int): Issue
-        data class NetworkIssue(val e: IOException) : Issue
+        data class ErrorResponse(val httpStatusCode: Int) : Issue
+        data class NetworkIssue(val e: Exception) : Issue
         data class OtherIssue(val e: Throwable) : Issue
         data class AppIntegrityCheckFailed(val details: IntegrityException) : Issue
     }
