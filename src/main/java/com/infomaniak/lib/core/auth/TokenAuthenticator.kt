@@ -42,7 +42,7 @@ class TokenAuthenticator(
                 if (apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")) {
                     return@runBlocking changeAccessToken(request, apiToken)
                 } else {
-                    apiToken = ApiController.refreshToken(apiToken.refreshToken, tokenInterceptorListener)
+                    apiToken = ApiController.refreshToken(apiToken.refreshToken!!, tokenInterceptorListener)
                     return@runBlocking changeAccessToken(request, apiToken)
                 }
             }
