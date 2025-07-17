@@ -15,14 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.myksuite.ui.screens.components
+package com.infomaniak.core.compose.basics
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.myksuite.ui.theme.Dimens
 
-internal enum class MyKSuiteButtonType(val shape: Shape) {
-    Mail(shape = RoundedCornerShape(Dimens.largeCornerRadius)),
-    Drive(shape = RoundedCornerShape(10.dp)),
+enum class ButtonType(
+    val height: Dp,
+    val shape: Shape,
+) {
+    Mail(height = 48.dp, shape = RoundedCornerShape(16.dp)),
+    Drive(height = 58.dp, shape = RoundedCornerShape(10.dp)),
 }

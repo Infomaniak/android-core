@@ -15,20 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.login.crossapp
+package com.infomaniak.core.crossloginui.theme
 
-import com.infomaniak.core.Xor
-import com.infomaniak.core.appintegrity.exceptions.IntegrityException
-import com.infomaniak.lib.login.ApiToken
+import androidx.compose.ui.unit.dp
 
-sealed interface DerivedTokenGenerator {
+internal object Dimens {
 
-    suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
+    /** 56 dp */
+    val buttonHeight = 56.dp
 
-    sealed interface Issue {
-        data class ErrorResponse(val httpStatusCode: Int) : Issue
-        data class NetworkIssue(val e: Exception) : Issue
-        data class OtherIssue(val e: Throwable) : Issue
-        data class AppIntegrityCheckFailed(val details: IntegrityException) : Issue
-    }
+    /** 24 dp */
+    val iconSize = 24.dp
+    /** 40 dp */
+    val bigAvatarSize = 40.dp
+
+    /** 16 dp */
+    val largeCornerRadius = 16.dp
+
+    /** 52 dp */
+    val avatarsBoxWidth = 52.dp
+    /** 32 dp */
+    val avatarsBoxHeight = 32.dp
 }

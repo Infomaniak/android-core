@@ -37,6 +37,8 @@ internal fun localAccountsFlow(currentUserIdFlow: Flow<Int>): Flow<List<External
                 avatarUrl = user.avatar,
                 isCurrentlySelectedInAnApp = user.id == currentUserId,
                 tokens = setOf(user.apiToken.accessToken),
+                initials = user.getInitials(),
+                id = user.id,
             )
         }
     }

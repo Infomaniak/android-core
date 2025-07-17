@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,20 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.login.crossapp
+@file:OptIn(ExperimentalSerializationApi::class)
 
-import com.infomaniak.core.Xor
-import com.infomaniak.core.appintegrity.exceptions.IntegrityException
-import com.infomaniak.lib.login.ApiToken
+package com.infomaniak.core.crossloginui.data
 
-sealed interface DerivedTokenGenerator {
+import com.infomaniak.core.login.crossapp.ExternalAccount
+import kotlinx.serialization.ExperimentalSerializationApi
 
-    suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
-
-    sealed interface Issue {
-        data class ErrorResponse(val httpStatusCode: Int) : Issue
-        data class NetworkIssue(val e: Exception) : Issue
-        data class OtherIssue(val e: Throwable) : Issue
-        data class AppIntegrityCheckFailed(val details: IntegrityException) : Issue
-    }
+fun ExternalAccount.toCrossLoginAccount(): CrossLoginAccount {
+    return CrossLoginAccount(
+        tokens = tokens,
+        isCurrentlySelectedInAnApp = isCurrentlySelectedInAnApp,
+        id = id,
+        name = fullName,
+        initials = initials,
+        email = email,
+        url = avatarUrl,
+    )
 }
+
+fun List<ExternalAccount>.toCrossLoginAccounts(): List<CrossLoginAccount> = map { it.toCrossLoginAccount() }

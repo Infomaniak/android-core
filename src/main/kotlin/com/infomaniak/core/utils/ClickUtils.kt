@@ -15,20 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.login.crossapp
+package com.infomaniak.core.utils
 
-import com.infomaniak.core.Xor
-import com.infomaniak.core.appintegrity.exceptions.IntegrityException
-import com.infomaniak.lib.login.ApiToken
+import android.view.View
+import androidx.core.view.isVisible
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
-sealed interface DerivedTokenGenerator {
-
-    suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
-
-    sealed interface Issue {
-        data class ErrorResponse(val httpStatusCode: Int) : Issue
-        data class NetworkIssue(val e: Exception) : Issue
-        data class OtherIssue(val e: Throwable) : Issue
-        data class AppIntegrityCheckFailed(val details: IntegrityException) : Issue
+suspend fun View.awaitOneClick(
+    disableAfterClick: Boolean = true,
+    hideAfterClick: Boolean = false,
+) = try {
+    if (disableAfterClick) isEnabled = true
+    if (hideAfterClick) isVisible = true
+    suspendCancellableCoroutine<Unit> { continuation ->
+        setOnClickListener {
+            setOnClickListener(null)
+            continuation.resume(Unit)
+        }
     }
+} finally {
+    setOnClickListener(null)
+    if (disableAfterClick) isEnabled = false
+    if (hideAfterClick) isVisible = false
 }

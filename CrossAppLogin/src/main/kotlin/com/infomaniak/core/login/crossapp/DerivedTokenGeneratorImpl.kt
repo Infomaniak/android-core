@@ -24,6 +24,7 @@ import com.infomaniak.core.Xor
 import com.infomaniak.core.appintegrity.AppIntegrityManager
 import com.infomaniak.core.appintegrity.AppIntegrityManager.Companion.APP_INTEGRITY_MANAGER_TAG
 import com.infomaniak.core.appintegrity.exceptions.IntegrityException
+import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.login.crossapp.DerivedTokenGenerator.Issue
 import com.infomaniak.lib.core.utils.SentryLog
@@ -124,7 +125,7 @@ class DerivedTokenGeneratorImpl(
         }
     }.cancellable().getOrElse {
         val issue: Issue = when (it) {
-            is IOException -> Issue.NetworkIssue(it)
+            is IOException, is NetworkException -> Issue.NetworkIssue(it)
             else -> Issue.OtherIssue(it)
         }
         Xor.Second(issue)
@@ -135,7 +136,7 @@ class DerivedTokenGeneratorImpl(
     }.cancellable().getOrElse {
         val issue: Issue = when (it) {
             is IntegrityException -> Issue.AppIntegrityCheckFailed(it)
-            is IOException -> Issue.NetworkIssue(it)
+            is IOException, is NetworkException -> Issue.NetworkIssue(it)
             else -> Issue.OtherIssue(it)
         }
         Xor.Second(issue)

@@ -15,20 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.login.crossapp
+package com.infomaniak.core.crossloginui.utils
 
-import com.infomaniak.core.Xor
-import com.infomaniak.core.appintegrity.exceptions.IntegrityException
-import com.infomaniak.lib.login.ApiToken
+import android.content.res.TypedArray
+import androidx.annotation.StyleableRes
+import androidx.compose.ui.graphics.Color
 
-sealed interface DerivedTokenGenerator {
+internal fun TypedArray.getColorOrNull(@StyleableRes index: Int): Color? {
+    return if (hasValue(index)) Color(getColor(index, -1)) else null
+}
 
-    suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
-
-    sealed interface Issue {
-        data class ErrorResponse(val httpStatusCode: Int) : Issue
-        data class NetworkIssue(val e: Exception) : Issue
-        data class OtherIssue(val e: Throwable) : Issue
-        data class AppIntegrityCheckFailed(val details: IntegrityException) : Issue
-    }
+internal fun TypedArray.getStringOrNull(@StyleableRes index: Int): String? {
+    return if (hasValue(index)) getString(index) else null
 }

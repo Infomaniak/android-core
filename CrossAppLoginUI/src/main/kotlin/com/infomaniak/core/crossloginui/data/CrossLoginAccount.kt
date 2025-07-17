@@ -15,20 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.login.crossapp
+@file:OptIn(ExperimentalSerializationApi::class)
 
-import com.infomaniak.core.Xor
-import com.infomaniak.core.appintegrity.exceptions.IntegrityException
-import com.infomaniak.lib.login.ApiToken
+package com.infomaniak.core.crossloginui.data
 
-sealed interface DerivedTokenGenerator {
+import kotlinx.serialization.ExperimentalSerializationApi
 
-    suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
-
-    sealed interface Issue {
-        data class ErrorResponse(val httpStatusCode: Int) : Issue
-        data class NetworkIssue(val e: Exception) : Issue
-        data class OtherIssue(val e: Throwable) : Issue
-        data class AppIntegrityCheckFailed(val details: IntegrityException) : Issue
-    }
-}
+data class CrossLoginAccount(
+    val tokens: Set<String>,
+    val isCurrentlySelectedInAnApp: Boolean,
+    val id: Int,
+    val name: String,
+    val initials: String,
+    val email: String,
+    val url: String?,
+)
