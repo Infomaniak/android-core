@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2025-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.core.api
+package com.infomaniak.core.login.crossapp.internal.deviceinfo
 
-import com.infomaniak.lib.core.BuildConfig.INFOMANIAK_API
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-object ApiRoutesCore {
-
-    fun getUserProfile(): String {
-        return "${INFOMANIAK_API}profile?no_avatar_default=1"
-    }
-
-    fun sendDeviceInfo(): String {
-        return "${INFOMANIAK_API}devices"
+@Serializable
+internal data class DeviceInfo(
+    val brand: String,
+    val model: String,
+    val platform: String,
+    val type: Type,
+    @SerialName("uid")
+    val uuidV4: String,
+) {
+    @Serializable
+    enum class Type {
+        @SerialName("phone") Phone,
+        @SerialName("tablet") Tablet,
+        @SerialName("computer") Computer,
     }
 }
