@@ -41,6 +41,7 @@ interface TokenInterceptorListener {
      * @param coroutineScope Scope used to share the resulting flow.
      * @return Shared flow emitting API tokens corresponding to the user IDs.
      */
+    // Keep this method's implementation in sync with the one inside of legacy
     @OptIn(ExperimentalCoroutinesApi::class)
     fun Flow<Int?>.mapToApiToken(coroutineScope: CoroutineScope) = this
         .mapLatest { id -> id?.let { UserDatabase.getDatabase().userDao().findById(it)?.apiToken } }
