@@ -68,11 +68,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import coil3.ImageLoader
-import coil3.load
-import coil3.request.error
-import coil3.request.fallback
-import coil3.request.placeholder
+import coil.ImageLoader
+import coil.load
 import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
 import com.github.razir.progressbutton.TextChangeAnimatorParams
 import com.github.razir.progressbutton.attachTextChangeAnimator
