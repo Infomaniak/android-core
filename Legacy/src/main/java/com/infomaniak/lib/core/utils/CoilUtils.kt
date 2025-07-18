@@ -32,23 +32,29 @@ import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 
+@Deprecated("Use the object exposed through the Core:Coil module")
 object CoilUtils {
 
     private const val COIL_CACHE_DIR = "coil_cache"
 
     private var simpleImageLoader: ImageLoader? = null
 
+    @Deprecated("Use the method exposed through the Core:Coil module")
     fun simpleImageLoader(context: Context): ImageLoader {
         return simpleImageLoader ?: synchronized(this) {
             simpleImageLoader?.let { return it }
+            @Suppress("DEPRECATION")
             newImageLoader(context).also {
                 simpleImageLoader = it
             }
         }
     }
 
+    @Suppress("DEPRECATION")
+    @Deprecated("Use the property exposed through the Core:Coil module")
     inline val Context.simpleImageLoader: ImageLoader get() = simpleImageLoader(this)
 
+    @Deprecated("Use the method exposed through the Core:Coil module")
     fun newImageLoader(
         context: Context,
         tokenInterceptorListener: TokenInterceptorListener? = null,

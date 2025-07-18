@@ -15,11 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.inappupdate
+plugins {
+    id("com.android.library")
+    alias(core.plugins.kotlin.android)
+}
 
-import com.infomaniak.core.inappupdate.updaterequired.data.models.AppVersion.Store
+val coreCompileSdk: Int by rootProject.extra
+val coreMinSdk: Int by rootProject.extra
+val javaVersion: JavaVersion by rootProject.extra
 
-object StoreUtils : StoresUtils {
-    const val APP_UPDATE_TAG = "appUpdateFDroid"
-    override val REQUIRED_UPDATE_STORE = Store.FDROID
+android {
+    namespace = "com.infomaniak.core.coil"
+    compileSdk = coreCompileSdk
+
+    defaultConfig {
+        minSdk = coreMinSdk
+    }
+
+    compileOptions {
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = javaVersion.toString()
+    }
+}
+
+dependencies {
+    implementation(project(":Core:Auth"))
+    implementation(project(":Core:Network"))
+
+    api(core.coil)
+    api(core.coil.network.okhttp)
 }

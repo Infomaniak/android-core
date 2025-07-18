@@ -17,8 +17,8 @@
  */
 package com.infomaniak.core.inappupdate
 
-import com.infomaniak.core.inappupdate.network.api.ApiController
-import com.infomaniak.core.inappupdate.auth.networking.HttpClient
+import com.infomaniak.core.network.api.ApiController
+import com.infomaniak.core.network.networking.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
