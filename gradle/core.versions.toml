@@ -7,8 +7,7 @@ androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
 appcompat = "1.7.1"
 appUpdateVersion = "2.1.0"
 workRuntimeKtx = "2.10.1"
-coil = "3.0.2" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
-coilNetworkOkhttp = "3.0.4" # Doesn't build when bumped to 3.1.0 (Waiting SDK 35)
+coil = "3.2.0"
 composeBom = "2025.06.01"
 concurrentFuturesKtx = "1.2.0"
 coreKtx = "1.6.1"
@@ -51,7 +50,8 @@ appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat"
 app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
 app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
-coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+coil-video = { module = "io.coil-kt.coil3:coil-video", version.ref = "coil" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 compose-foundation = { module = "androidx.compose.foundation:foundation" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
