@@ -19,8 +19,9 @@ package com.infomaniak.core.inappupdate.updatemanagers
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
+import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionCode
-import com.infomaniak.lib.core.fdroidTools.FdroidApiTools
+import com.infomaniak.core.inappupdate.FdroidApiTools
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.inappupdate.BaseInAppUpdateManager
 import com.infomaniak.core.inappupdate.StoreUtils
