@@ -289,7 +289,8 @@ object ApiController {
         val translatedError = internalErrorCode.translateRes
 
         return buildErrorResult?.invoke(apiError, translatedError)
-            ?: ApiResponse<Any>(result = ApiResponseStatus.ERROR, error = apiError, translatedError = translatedError) as T
+            ?: ApiResponse<Any>(result = ApiResponseStatus.ERROR, error = apiError, translatedError = translatedError
+            ) as T
     }
 
     class NetworkException : Exception()
