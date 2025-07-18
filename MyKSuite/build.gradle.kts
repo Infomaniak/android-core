@@ -64,8 +64,6 @@ dependencies {
     ksp(core.room.compiler)
 
     // Compose
-    implementation(core.coil.compose)
-    implementation(core.coil.network.okhttp)
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)
     debugImplementation(core.compose.ui.tooling)
