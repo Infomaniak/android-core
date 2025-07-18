@@ -331,6 +331,7 @@ fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Coil module")
 fun ImageView.loadAvatar(
     user: User,
     imageLoader: ImageLoader = context.simpleImageLoader,
@@ -347,6 +348,7 @@ fun ImageView.loadAvatar(
     loadAvatar(backgroundColor, avatarUrl, initials, imageLoader, initialsColor)
 }
 
+@Deprecated("Use the method exposed through the Core:Coil module")
 fun ImageView.loadAvatar(
     backgroundColor: GradientDrawable,
     avatarUrl: String?,

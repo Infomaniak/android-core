@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2024 Infomaniak Network SA
+ * Copyright (C) 2022-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,6 +70,7 @@ object UtilsUi {
         fragment.sharedElementReturnTransition = returnContainerTransform
     }
 
+    @Deprecated("Use the method exposed through the Core:Coil module")
     fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.OVAL
@@ -93,6 +94,7 @@ object UtilsUi {
         return organizationColor
     }
 
+    @Deprecated("Use the method exposed through the Core:Coil module")
     fun Context.generateInitialsAvatarDrawable(
         size: Int = 350,
         initials: String,

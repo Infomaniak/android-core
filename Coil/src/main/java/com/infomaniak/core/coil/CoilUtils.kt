@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.core.utils
+package com.infomaniak.core.coil
 
 import android.content.Context
 import coil3.ImageLoader
@@ -25,39 +25,33 @@ import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
-import com.infomaniak.lib.core.auth.TokenAuthenticator
-import com.infomaniak.lib.core.auth.TokenInterceptor
-import com.infomaniak.lib.core.auth.TokenInterceptorListener
-import com.infomaniak.lib.core.networking.HttpClientConfig
-import com.infomaniak.lib.core.networking.HttpUtils
-import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
+import com.infomaniak.core.auth.TokenAuthenticator
+import com.infomaniak.core.auth.TokenInterceptor
+import com.infomaniak.core.auth.TokenInterceptorListener
+import com.infomaniak.core.network.networking.HttpClientConfig
+import com.infomaniak.core.network.networking.HttpUtils
+import com.infomaniak.core.network.networking.ManualAuthorizationRequired
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 
-@Deprecated("Use the object exposed through the Core:Coil module")
 object CoilUtils {
 
     private const val COIL_CACHE_DIR = "coil_cache"
 
     private var simpleImageLoader: ImageLoader? = null
 
-    @Deprecated("Use the method exposed through the Core:Coil module")
     fun simpleImageLoader(context: Context): ImageLoader {
         return simpleImageLoader ?: synchronized(this) {
             simpleImageLoader?.let { return it }
-            @Suppress("DEPRECATION")
             newImageLoader(context).also {
                 simpleImageLoader = it
             }
         }
     }
 
-    @Suppress("DEPRECATION")
-    @Deprecated("Use the property exposed through the Core:Coil module")
     inline val Context.simpleImageLoader: ImageLoader get() = simpleImageLoader(this)
 
-    @Deprecated("Use the method exposed through the Core:Coil module")
     fun newImageLoader(
         context: Context,
         tokenInterceptorListener: TokenInterceptorListener? = null,
