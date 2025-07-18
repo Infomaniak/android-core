@@ -34,7 +34,7 @@ import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.coil.CoilUtils.simpleImageLoader
+import com.infomaniak.core.coil.CoilXmlUtils.simpleImageLoader
 
 fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
     return GradientDrawable().apply {
