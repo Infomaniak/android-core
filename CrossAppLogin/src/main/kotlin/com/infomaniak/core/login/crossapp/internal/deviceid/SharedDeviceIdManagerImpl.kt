@@ -187,12 +187,13 @@ internal class SharedDeviceIdManagerImpl(
                 },
                 flags = Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT,
                 block = { binder ->
-                    raceOf({
-                        getOrSyncDeviceId(binder, deviceIdCompletable, thisPackageCheckedJob)
-                    }, {
-                        ipcIssuesManager.timeoutOperation(operationName = "getOrSyncDeviceId", targetPackageName)
-                        null
-                    })
+                    raceOf(
+                        { getOrSyncDeviceId(binder, deviceIdCompletable, thisPackageCheckedJob) },
+                        {
+                            ipcIssuesManager.timeoutOperation(operationName = "getOrSyncDeviceId", targetPackageName)
+                            null
+                        }
+                    )
                 }
             )
         } finally {
