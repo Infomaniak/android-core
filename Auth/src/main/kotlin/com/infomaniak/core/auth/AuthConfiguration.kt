@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.auth
 
-import com.infomaniak.core.network.utils.ErrorCodeTranslated
 import com.infomaniak.lib.login.InfomaniakLogin.AccessType
 
 /**
@@ -29,9 +28,6 @@ object AuthConfiguration {
     var appVersionCode: Int = -1
     lateinit var appVersionName: String
     lateinit var clientId: String
-    var credentialManager: CredentialManager? = null
-    var customHeaders: MutableMap<String, String>? = null
-    var apiErrorCodes: List<ErrorCodeTranslated>? = null
     var accessType: AccessType? = AccessType.OFFLINE
 
     fun init(

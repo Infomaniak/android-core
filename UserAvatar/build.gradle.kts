@@ -35,6 +35,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":Core:Coil"))
 
     implementation(core.androidx.core.ktx)
 

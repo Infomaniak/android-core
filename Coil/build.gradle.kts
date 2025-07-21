@@ -15,17 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.useravatar.extensions
+plugins {
+    id("com.android.library")
+    alias(core.plugins.kotlin.android)
+}
 
-import android.content.Context
-import androidx.annotation.ArrayRes
-import com.infomaniak.core.useravatar.R
+val coreCompileSdk: Int by rootProject.extra
+val coreMinSdk: Int by rootProject.extra
+val javaVersion: JavaVersion by rootProject.extra
 
-fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
-    val arrayResource = array ?: R.array.organizationColors
-    val colors = resources.getIntArray(arrayResource)
-    val colorIndex = Math.floorMod(id, colors.count())
-    val organizationColor = colors[colorIndex]
+android {
+    namespace = "com.infomaniak.core.coil"
+    compileSdk = coreCompileSdk
 
-    return organizationColor
+    defaultConfig {
+        minSdk = coreMinSdk
+    }
+
+    compileOptions {
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = javaVersion.toString()
+    }
+}
+
+dependencies {
+    implementation(project(":Core:Auth"))
+    implementation(project(":Core:Network"))
+
+    api(core.coil)
+    api(core.coil.network.okhttp)
 }
