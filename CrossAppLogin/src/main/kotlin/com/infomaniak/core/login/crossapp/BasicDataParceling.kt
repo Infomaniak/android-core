@@ -35,19 +35,3 @@ internal fun Message.unwrapByteArrayOrNull(): ByteArray? {
 internal fun Message.putBundleWrappedDataInObj(data: ByteArray) {
     obj = Bundle().also { it.putByteArray("", data) }
 }
-
-/**
- * Retrieves a string in this message's [Message.obj], previously put with [putBundleWrappedStringInObj],
- * possibly (likely) in another app or process connected to this one.
- */
-internal fun Message.unwrapStringOrNull(): String? {
-    return (obj as Bundle?)?.getString("")
-}
-
-/**
- * Puts a string inside this message's [Message.obj], to be later retrieved in another app or process
- * with [unwrapStringOrNull].
- */
-internal fun Message.putBundleWrappedStringInObj(string: String?) {
-    obj = Bundle().also { it.putString("", string) }
-}
