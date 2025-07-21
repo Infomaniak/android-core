@@ -23,7 +23,7 @@ import kotlinx.serialization.protobuf.ProtoNumber
 /**
  * ## Important message to editors
  *
- * For all existing Unless the given field never made it to a public release (which includes betas!):
+ * For all existing fields, unless the given field never made it to a public release (which includes betas!):
  * - **NEVER** change the type of an existing field.
  * - **NEVER** change the value in the `@ProtoNumber` of an existing field.
  * - **NEVER** remove a field that was present before.
