@@ -142,7 +142,7 @@ internal class CrossAppLoginImpl(
                             ipcIssuesManager.timeoutOperation(
                                 operationName = "retrieveAccountsFromUncheckedService",
                                 targetPackageName = targetPackageName,
-                                acceptableDuration = 3.seconds,
+                                acceptableDuration = 10.seconds, // This long in case I/O gets very slow on low-end devices.
                             )
                             null
                         }
