@@ -35,7 +35,7 @@ import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 
-object CoilXmlUtils {
+object ImageLoaderProvider {
 
     private const val COIL_CACHE_DIR = "coil_cache"
 
