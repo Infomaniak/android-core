@@ -107,9 +107,8 @@ internal class SharedDeviceIdManagerImpl(
     }
 
     private suspend fun findCrossAppDeviceIdInApps(request: CrossAppDeviceIdRequest): Uuid? = completableScope { completable ->
-        val packagesToLookup = buildSet<String> {
+        val packagesToLookup = buildSet {
             addAll(targetPackageNames)
-            remove(context.packageName)
             removeAll(request.packageNamesAlreadyBeingChecked)
         }
         val packageNamesToSkip = buildSet<String> {
