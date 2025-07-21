@@ -31,9 +31,9 @@ interface ErrorCodeTranslated {
 data class ApiErrorCode(override val code: String, @StringRes override val translateRes: Int) : ErrorCodeTranslated {
     companion object {
         @StringRes
-        fun <T> com.infomaniak.core.network.models.ApiResponse<T>.translateError(): Int = formatError().translateRes
+        fun <T> ApiResponse<T>.translateError(): Int = formatError().translateRes
 
-        fun <T> com.infomaniak.core.network.models.ApiResponse<T>.formatError(): ErrorCodeTranslated {
+        fun <T> ApiResponse<T>.formatError(): ErrorCodeTranslated {
             val errorCode = error?.code
             return if (errorCode == null) {
                 InternalTranslatedErrorCode.UnknownError

@@ -22,6 +22,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.RawValue
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 open class ApiResponse<T>(

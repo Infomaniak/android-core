@@ -40,8 +40,8 @@ android {
 }
 
 dependencies {
+    api(project(":Core:Network:Models"))
     implementation(project(":Core:Sentry"))
-    implementation(project(":Core:Network:Models"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)
