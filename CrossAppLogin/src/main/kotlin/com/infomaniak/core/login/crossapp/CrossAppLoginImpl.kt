@@ -39,6 +39,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.invoke
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
@@ -47,11 +48,12 @@ import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 internal class CrossAppLoginImpl(
     private val context: Context,
     private val coroutineScope: CoroutineScope
-) : CrossAppLogin {
+) : CrossAppLogin() {
 
     private val certificateChecker = AppCertificateChecker.withInfomaniakApps
     private val ourPackageName = context.packageName
@@ -72,6 +74,9 @@ internal class CrossAppLoginImpl(
             account.copy(tokens = externalAccounts.flatMapTo(mutableSetOf()) { it.tokens })
         }
     }
+
+    @ExperimentalUuidApi
+    override val sharedDeviceIdFlow: SharedFlow<Uuid> get() = sharedDeviceIdManager.crossAppDeviceIdFlow
 
     @ExperimentalUuidApi
     override val sharedDeviceIdManager: SharedDeviceIdManager = SharedDeviceIdManager(
