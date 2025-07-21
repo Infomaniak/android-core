@@ -44,6 +44,7 @@ android {
 
 dependencies {
     implementation(project(":Core:Auth"))
+    implementation(project(":Core:Avatar"))
     implementation(project(":Core:Network"))
 
     api(core.coil)

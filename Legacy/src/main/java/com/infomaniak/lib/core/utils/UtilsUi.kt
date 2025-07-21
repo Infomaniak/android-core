@@ -70,7 +70,7 @@ object UtilsUi {
         fragment.sharedElementReturnTransition = returnContainerTransform
     }
 
-    @Deprecated("Use the method exposed through the Core:Coil module")
+    @Deprecated("Use the method exposed through the Core:Avatar module")
     fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.OVAL
@@ -79,7 +79,7 @@ object UtilsUi {
     }
 
     @Deprecated(
-        message = "This has been extracted to Core:Coil module",
+        message = "This has been extracted to Core:Avatar module",
         replaceWith = ReplaceWith(
             expression = "getBackgroundColorResBasedOnId(id, array)",
             imports = ["com.infomaniak.core.coil.getBackgroundColorResBasedOnId"],
@@ -94,7 +94,7 @@ object UtilsUi {
         return organizationColor
     }
 
-    @Deprecated("Use the method exposed through the Core:Coil module")
+    @Deprecated("Use the method exposed through the Core:Avatar module")
     fun Context.generateInitialsAvatarDrawable(
         size: Int = 350,
         initials: String,
