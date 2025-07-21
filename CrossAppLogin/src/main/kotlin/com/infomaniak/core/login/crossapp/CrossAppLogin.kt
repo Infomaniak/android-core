@@ -19,10 +19,12 @@ package com.infomaniak.core.login.crossapp
 import android.content.Context
 import com.infomaniak.core.login.crossapp.internal.deviceid.SharedDeviceIdManager
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-sealed interface CrossAppLogin {
+sealed class CrossAppLogin {
 
     companion object {
         fun forContext(
@@ -32,8 +34,19 @@ sealed interface CrossAppLogin {
     }
 
     @ExperimentalSerializationApi
-    suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount>
+    abstract suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount>
+
+    /**
+     * Gives an id for this device, that is shared across all our apps.
+     *
+     * This might involve generating said id.
+     *
+     * If the id is ever updated, it will be emitted in this shared flow.
+     */
+    @ExperimentalUuidApi
+    @PublishedApi
+    internal abstract val sharedDeviceIdFlow: SharedFlow<Uuid>
 
     @ExperimentalUuidApi
-    val sharedDeviceIdManager: SharedDeviceIdManager
+    internal abstract val sharedDeviceIdManager: SharedDeviceIdManager
 }
