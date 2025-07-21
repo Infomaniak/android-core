@@ -147,7 +147,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
         }
         if (response.status.isSuccess()) {
             deviceInfoUpdateManager.updateLastSyncedKey(crossAppDeviceId, targetUser.id.toLong())
-                SentryLog.i(TAG, "attemptUpdatingDeviceInfoIfNeeded succeeded")
+            SentryLog.i(TAG, "attemptUpdatingDeviceInfoIfNeeded succeeded")
             Outcome.Done
         } else {
             val httpStatusCode = response.status.value
