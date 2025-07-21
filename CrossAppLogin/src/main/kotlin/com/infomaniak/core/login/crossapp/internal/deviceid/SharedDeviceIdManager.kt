@@ -28,13 +28,13 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @ExperimentalUuidApi
-sealed class SharedDeviceIdManager {
+internal sealed class SharedDeviceIdManager {
 
     companion object {
-        internal val sharedDeviceIdMutex = Mutex()
-        internal val storage: SharedDeviceIdStorage = SharedDeviceIdStorage
+        val sharedDeviceIdMutex = Mutex()
+        val storage: SharedDeviceIdStorage = SharedDeviceIdStorage
 
-        internal operator fun invoke(
+        operator fun invoke(
             context: Context,
             coroutineScope: CoroutineScope,
             ipcIssuesManager: IpcIssuesManager,
@@ -58,5 +58,5 @@ sealed class SharedDeviceIdManager {
      */
     abstract val crossAppDeviceIdFlow: SharedFlow<Uuid>
 
-    internal abstract suspend fun findCrossAppDeviceId(request: CrossAppDeviceIdRequest): Uuid?
+    abstract suspend fun findCrossAppDeviceId(request: CrossAppDeviceIdRequest): Uuid?
 }
