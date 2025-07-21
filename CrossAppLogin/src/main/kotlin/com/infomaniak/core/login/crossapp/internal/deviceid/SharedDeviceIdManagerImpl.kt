@@ -215,8 +215,8 @@ internal class SharedDeviceIdManagerImpl(
         if (id != null) deviceIdCompletable.complete(id)
     }.mapCatching { id ->
         if (id == null) {
-            val id = deviceIdCompletable.await()
-            sendSharedDeviceId(binder, id) // Sync it to the target app.
+            val newId = deviceIdCompletable.await()
+            sendSharedDeviceId(binder, newId) // Sync it to the target app.
         }
     }
 
