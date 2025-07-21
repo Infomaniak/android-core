@@ -44,7 +44,7 @@ object SentryConfig {
                  * - App specific exceptions defined when the method is called
                  */
                 when {
-                    shouldBeDiscarded(event, isDebug, isSentryTrackingEnabled, isErrorException) -> null
+                    shouldBeDiscarded(event, isDebug, isSentryTrackingEnabled, isFilteredException) -> null
                     else -> event
                 }
             }
@@ -69,13 +69,13 @@ object SentryConfig {
         event: SentryEvent,
         isDebug: Boolean,
         isSentryTrackingEnabled: Boolean,
-        isErrorException: (Throwable?) -> Boolean
+        isFilteredException: (Throwable?) -> Boolean
     ): Boolean {
         val exception = event.throwable
         return isDebug
                 || !isSentryTrackingEnabled
                 || exception is NetworkException
                 || exception is CancellationException
-                || isErrorException(exception)
+                || isFilteredException(exception)
     }
 }

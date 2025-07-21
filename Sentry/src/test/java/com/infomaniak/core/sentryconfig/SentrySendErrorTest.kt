@@ -32,7 +32,7 @@ class SentrySendErrorTest {
                 event = SentryEvent(),
                 isDebug = true,
                 isSentryTrackingEnabled = true,
-                isErrorException = { _ -> false })
+                isFilteredException = { _ -> false })
         )
     }
 
@@ -43,7 +43,7 @@ class SentrySendErrorTest {
                 event = SentryEvent(),
                 isDebug = false,
                 isSentryTrackingEnabled = false,
-                isErrorException = { _ -> false })
+                isFilteredException = { _ -> false })
         )
     }
 
@@ -54,7 +54,7 @@ class SentrySendErrorTest {
                 event = SentryEvent(),
                 isDebug = false,
                 isSentryTrackingEnabled = true,
-                isErrorException = { _ -> true })
+                isFilteredException = { _ -> true })
         )
     }
 
@@ -66,7 +66,7 @@ class SentrySendErrorTest {
                 event = sentryEvent,
                 isDebug = false,
                 isSentryTrackingEnabled = true,
-                isErrorException = { _ -> false })
+                isFilteredException = { _ -> false })
         )
     }
 
@@ -77,7 +77,7 @@ class SentrySendErrorTest {
                 event = SentryEvent(),
                 isDebug = false,
                 isSentryTrackingEnabled = true,
-                isErrorException = { _ -> false })
+                isFilteredException = { _ -> false })
         )
     }
 }
