@@ -43,14 +43,14 @@ fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): 
     }
 }
 
-// TODO: Find where to define this correctly
-private fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
-    // val arrayResource = array ?: R.array.organizationColors
-    // val colors = resources.getIntArray(arrayResource)
-    // val colorIndex = Math.floorMod(id, colors.count())
-    // val organizationColor = colors[colorIndex]
+// TODO: Move this to generic avatar module when it's created
+fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
+    val arrayResource = array ?: R.array.organizationColors
+    val colors = resources.getIntArray(arrayResource)
+    val colorIndex = Math.floorMod(id, colors.count())
+    val organizationColor = colors[colorIndex]
 
-    return 0
+    return organizationColor
 }
 
 fun ImageView.loadAvatar(

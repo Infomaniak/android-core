@@ -79,10 +79,10 @@ object UtilsUi {
     }
 
     @Deprecated(
-        message = "This has been extracted to Core:UserAvatar module",
+        message = "This has been extracted to Core:Coil module",
         replaceWith = ReplaceWith(
             expression = "getBackgroundColorResBasedOnId(id, array)",
-            imports = ["com.infomaniak.core.useravatar.extensions.getBackgroundColorResBasedOnId"],
+            imports = ["com.infomaniak.core.coil.getBackgroundColorResBasedOnId"],
         ),
     )
     fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
