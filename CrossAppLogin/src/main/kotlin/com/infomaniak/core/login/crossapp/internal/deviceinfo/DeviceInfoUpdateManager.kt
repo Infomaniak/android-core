@@ -95,7 +95,7 @@ class DeviceInfoUpdateManager private constructor() {
         val workManager = WorkManager.getInstance(appCtx)
         workManager.cancelAllWork().await()
         workManager.pruneWork().await()
-        crossAppLogin.sharedDeviceIdManager.crossAppDeviceIdFlow.collectLatest { currentCrossAppDeviceId ->
+        crossAppLogin.sharedDeviceIdFlow.collectLatest { currentCrossAppDeviceId ->
             val userIdsFlow = UserDatabase().userDao().allUsers.map { users -> users.map { it.id } }.distinctUntilChanged()
             userIdsFlow.collect { userIds ->
                 val everythingUpToDate = userIds.allConcurrent { userId -> isUpToDate(currentCrossAppDeviceId, userId.toLong()) }
