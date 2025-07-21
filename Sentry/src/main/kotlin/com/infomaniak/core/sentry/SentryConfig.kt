@@ -31,7 +31,7 @@ object SentryConfig {
     fun Application.configureSentry(
         isDebug: Boolean,
         isSentryTrackingEnabled: Boolean,
-        isErrorException: (Throwable?) -> Boolean
+        isFilteredException: (Throwable?) -> Boolean = { false }
     ) {
         SentryAndroid.init(this) { options: SentryAndroidOptions ->
             // Register the callback as an option
@@ -40,7 +40,7 @@ object SentryConfig {
                  * Reasons to discard Sentry events :
                  * - Application is in Debug mode
                  * - User deactivated Sentry tracking in DataManagement settings
-                 * - The exception was an [ApiController.NetworkException], and we don't want to send them to Sentry
+                 * - The exception was an [NetworkException] or an [CancellationException], and we don't want to send them to Sentry
                  * - App specific exceptions defined when the method is called
                  */
                 when {
