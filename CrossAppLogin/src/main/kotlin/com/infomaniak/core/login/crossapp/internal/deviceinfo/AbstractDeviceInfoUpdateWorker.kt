@@ -72,7 +72,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
             val workRequest = OneTimeWorkRequestBuilder<T>()
-                    .setBackoffCriteria(BackoffPolicy.LINEAR, 10L, TimeUnit.MINUTES)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, backoffDelay = 10L, timeUnit = TimeUnit.MINUTES)
                     .setConstraints(constraints)
                     .build()
             workManager.enqueueUniqueWork(
