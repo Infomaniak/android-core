@@ -32,16 +32,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossloginui.R
-import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Typography
+import com.infomaniak.core.login.crossapp.ExternalAccount
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MultipleAccounts(
-    accounts: List<CrossLoginAccount>,
+    accounts: List<ExternalAccount>,
     customization: CrossLoginCustomization,
     modifier: Modifier = Modifier,
 ) {
@@ -70,7 +70,7 @@ internal fun MultipleAccounts(
 
 @Preview
 @Composable
-private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginAccount>) {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>) {
     MaterialTheme {
         Surface {
             Row {
