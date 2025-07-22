@@ -37,9 +37,13 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.coil.ImageLoaderProvider.simpleImageLoader
 
 fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
+    return getBackgroundColorGradientDrawable(getBackgroundColorResBasedOnId(id, array))
+}
+
+fun getBackgroundColorGradientDrawable(backgroundColorRes: Int): GradientDrawable {
     return GradientDrawable().apply {
         shape = GradientDrawable.OVAL
-        setColor(getBackgroundColorResBasedOnId(id, array))
+        setColor(backgroundColorRes)
     }
 }
 
