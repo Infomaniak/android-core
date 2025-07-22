@@ -31,12 +31,12 @@ import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.compose.basics.ButtonType
 import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
 import com.infomaniak.core.crossloginui.R
-import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.utils.getColorOrNull
 import com.infomaniak.core.crossloginui.utils.getStringOrNull
 import com.infomaniak.core.crossloginui.views.components.CrossLoginSelectAccounts
+import com.infomaniak.core.login.crossapp.ExternalAccount
 import com.infomaniak.core.utils.enumValueOfOrNull
 
 class CrossLoginSelectAccountsView @JvmOverloads constructor(
@@ -45,7 +45,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
-    private val accounts = mutableStateListOf<CrossLoginAccount>()
+    private val accounts = mutableStateListOf<ExternalAccount>()
     private val selectedIds = mutableStateSetOf<Int>()
 
     private var onClickListener: OnClickListener? = null
@@ -106,7 +106,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
         onPrimaryColor = Color(newOnPrimaryColor)
     }
 
-    fun setAccounts(items: List<CrossLoginAccount>) {
+    fun setAccounts(items: List<ExternalAccount>) {
         accounts.apply {
             clear()
             addAll(items)
