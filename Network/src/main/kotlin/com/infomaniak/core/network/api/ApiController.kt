@@ -26,6 +26,8 @@ import com.infomaniak.core.network.isSerializationException
 import com.infomaniak.core.network.models.ApiError
 import com.infomaniak.core.network.models.ApiResponse
 import com.infomaniak.core.network.models.ApiResponseStatus
+import com.infomaniak.core.network.models.exceptions.NetworkException
+import com.infomaniak.core.network.models.exceptions.ServerErrorException
 import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.networking.ManualAuthorizationRequired
@@ -211,9 +213,6 @@ object ApiController {
         return buildErrorResult?.invoke(apiError, translatedError)
             ?: ApiResponse<Any>(result = ApiResponseStatus.ERROR, error = apiError, translatedError = translatedError) as T
     }
-
-    class NetworkException : Exception()
-    class ServerErrorException(bodyResponse: String) : Exception(bodyResponse)
 
     enum class ApiMethod {
         GET, PUT, POST, DELETE, PATCH
