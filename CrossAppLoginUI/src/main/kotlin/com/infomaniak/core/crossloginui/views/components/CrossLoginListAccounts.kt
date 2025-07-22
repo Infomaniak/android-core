@@ -42,17 +42,17 @@ import com.infomaniak.core.crossloginui.R
 import com.infomaniak.core.crossloginui.components.AddAccount
 import com.infomaniak.core.crossloginui.components.BottomSheetItem
 import com.infomaniak.core.crossloginui.components.PrimaryButton
-import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginCustomization
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Typography
+import com.infomaniak.core.login.crossapp.ExternalAccount
 import com.infomaniak.core.R as RCore
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CrossLoginListAccounts(
-    accounts: () -> SnapshotStateList<CrossLoginAccount>,
+    accounts: () -> SnapshotStateList<ExternalAccount>,
     selectedIds: () -> SnapshotStateSet<Int>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onAccountClicked: (Int) -> Unit,
@@ -60,7 +60,7 @@ fun CrossLoginListAccounts(
     onSaveClicked: () -> Unit,
 ) {
 
-    fun CrossLoginAccount.isSelected(): Boolean = selectedIds().contains(id)
+    fun ExternalAccount.isSelected(): Boolean = selectedIds().contains(id)
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -119,10 +119,10 @@ fun CrossLoginListAccounts(
 
 @Preview
 @Composable
-private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginAccount>) {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>) {
     Surface {
         CrossLoginListAccounts(
-            accounts = { mutableStateListOf<CrossLoginAccount>().apply { addAll(accounts) } },
+            accounts = { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } },
             selectedIds = { mutableStateSetOf<Int>().apply { addAll(accounts.map { it.id }) } },
             onAccountClicked = {},
             onAnotherAccountClicked = {},
