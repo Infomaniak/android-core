@@ -30,14 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.infomaniak.core.crossloginui.data.CrossLoginAccount
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossloginui.theme.Dimens
+import com.infomaniak.core.login.crossapp.ExternalAccount
 
 @Composable
 internal fun ThreeAccountsView(
-    accounts: List<CrossLoginAccount>,
+    accounts: List<ExternalAccount>,
     avatarStrokeColor: Color,
 ) {
     Box(contentAlignment = Alignment.Center) {
@@ -71,7 +71,7 @@ internal fun ThreeAccountsView(
 
 @Preview
 @Composable
-private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<CrossLoginAccount>) {
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>) {
     MaterialTheme {
         Surface {
             ThreeAccountsView(
