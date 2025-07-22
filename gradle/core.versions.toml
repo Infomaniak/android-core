@@ -19,6 +19,7 @@ junitAndroidx = "1.3.0"
 kotest = "5.9.1"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerialization = "1.8.1" # Doesn't build when bumped to 1.9.0 (Waiting Kotlin 2.2.0)
+ktlint="1.7.1"
 ktor = "3.2.3"
 lifecycleRuntimeKtx = "2.8.7" # Doesn't build when bumped to 2.9.0 (Waiting SDK 35)
 material = "1.12.0"
@@ -69,6 +70,10 @@ integrity = { module = "com.google.android.play:integrity", version.ref = "integ
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+ktlint-cliRuleset = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint"}
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+ktlint-cliRuleset = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint"}
+ktlint-ruleEngineCore = { module = "com.pinterest.ktlint:ktlint-rule-engine-core", version.ref = "ktlint"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinxSerialization" }
 ktor-client-content-negociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
