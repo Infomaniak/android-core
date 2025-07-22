@@ -34,7 +34,7 @@ import kotlinx.serialization.protobuf.ProtoNumber
  *    3. Deprecating any field (without touching its `@ProtoNumber`).
  *    4. Rename this data class.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class ExternalAccount(
     @ProtoNumber(1)
