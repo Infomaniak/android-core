@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    compileOnly("com.pinterest.ktlint:ktlint-cli-ruleset-core:1.6.0")
-    compileOnly("com.pinterest.ktlint:ktlint-rule-engine-core:1.6.0")
+    compileOnly(core.ktlint.cliRuleset)
+    compileOnly(core.ktlint.ruleEngineCore)
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(core.androidx.junit)
 }
