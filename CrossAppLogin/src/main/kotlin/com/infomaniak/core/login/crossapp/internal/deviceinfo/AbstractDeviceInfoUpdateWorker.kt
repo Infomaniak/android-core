@@ -34,6 +34,7 @@ import com.infomaniak.core.autoCancelScope
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.login.crossapp.CrossAppLogin
 import com.infomaniak.core.login.crossapp.internal.deviceinfo.DeviceInfo.Type
+import com.infomaniak.core.login.crossapp.internal.extensions.toHexDashStringKotlin2
 import com.infomaniak.lib.core.api.ApiRoutesCore
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.networking.HttpUtils
@@ -192,7 +193,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
                 hasTabletSizedScreen -> Type.Tablet
                 else -> Type.Phone
             },
-            uuidV4 = currentCrossAppDeviceId.toHexDashString()
+            uuidV4 = currentCrossAppDeviceId.toHexDashStringKotlin2(),
         )
     }
 }
