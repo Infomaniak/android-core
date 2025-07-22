@@ -17,6 +17,8 @@
  */
 package com.infomaniak.core.avatar.components
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.SingletonImageLoader
@@ -38,12 +41,18 @@ import com.infomaniak.core.avatar.AvatarType
 import com.infomaniak.core.avatar.R
 
 @Composable
-fun Avatar(avatarType: AvatarType, modifier: Modifier = Modifier) {
+fun Avatar(
+    avatarType: AvatarType,
+    modifier: Modifier = Modifier,
+    border: BorderStroke? = null,
+    shape: Shape = CircleShape,
+) {
     Box(
         modifier
             .size(32.dp)
-            .clip(CircleShape),
-        contentAlignment = Alignment.Center
+            .clip(shape)
+            .then(if (border != null) Modifier.border(border, shape) else Modifier),
+        contentAlignment = Alignment.Center,
     ) {
         when (avatarType) {
             is AvatarType.WithInitials.Initials -> InitialsAvatar(avatarType)
@@ -61,7 +70,7 @@ private fun AvatarPreview() {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Avatar(
                     AvatarType.WithInitials.Initials("IK", AvatarColors(Color(0xFF3CB572), Color.White)),
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(32.dp),
                 )
                 Avatar(
                     AvatarType.WithInitials.Url(
@@ -70,11 +79,11 @@ private fun AvatarPreview() {
                         initials = "IK",
                         colors = AvatarColors(Color(0xFF3CB572), Color.White),
                     ),
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(48.dp),
                 )
                 Avatar(
                     AvatarType.DrawableResource(R.drawable.ic_exemple_drawable_res),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
         }
