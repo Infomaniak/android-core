@@ -28,7 +28,7 @@ suspend fun View.awaitOneClick(
 ) = try {
     if (disableAfterClick) isEnabled = true
     if (hideAfterClick) isVisible = true
-    suspendCancellableCoroutine<Unit> { continuation ->
+    suspendCancellableCoroutine { continuation ->
         setOnClickListener {
             setOnClickListener(null)
             continuation.resume(Unit)
