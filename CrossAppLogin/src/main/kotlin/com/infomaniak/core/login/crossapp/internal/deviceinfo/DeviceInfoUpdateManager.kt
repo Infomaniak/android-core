@@ -92,9 +92,6 @@ class DeviceInfoUpdateManager private constructor() {
 
     suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> scheduleWorkerOnDeviceInfoUpdate(): Nothing = Dispatchers.Default {
         val crossAppLogin = CrossAppLogin.Companion.forContext(context = appCtx, coroutineScope = this)
-        val workManager = WorkManager.getInstance(appCtx)
-        workManager.cancelAllWork().await()
-        workManager.pruneWork().await()
         crossAppLogin.sharedDeviceIdFlow.collectLatest { currentCrossAppDeviceId ->
             val userIdsFlow = UserDatabase().userDao().allUsers.map { users -> users.map { it.id } }.distinctUntilChanged()
             userIdsFlow.collect { userIds ->
