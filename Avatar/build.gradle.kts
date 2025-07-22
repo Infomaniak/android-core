@@ -31,11 +31,8 @@ android {
 }
 
 dependencies {
-    // implementation(core.androidx.core.ktx)
-
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)
-    // implementation(core.compose.material3)
     implementation(core.compose.ui)
     debugImplementation(core.compose.ui.tooling)
     implementation(core.compose.ui.tooling.preview)
