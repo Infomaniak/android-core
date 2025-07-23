@@ -34,8 +34,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.avatar.AvatarColors
-import com.infomaniak.core.avatar.AvatarType
+import com.infomaniak.core.avatar.models.AvatarColors
+import com.infomaniak.core.avatar.models.AvatarType
 
 @Composable
 internal fun InitialsAvatar(avatarType: AvatarType.WithInitials) {

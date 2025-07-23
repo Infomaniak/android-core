@@ -36,9 +36,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.SingletonImageLoader
 import coil3.compose.LocalPlatformContext
-import com.infomaniak.core.avatar.AvatarColors
-import com.infomaniak.core.avatar.AvatarType
 import com.infomaniak.core.avatar.R
+import com.infomaniak.core.avatar.models.AvatarColors
+import com.infomaniak.core.avatar.models.AvatarType
 
 @Composable
 fun Avatar(

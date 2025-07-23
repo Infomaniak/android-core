@@ -37,8 +37,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.infomaniak.core.avatar.AvatarColors
-import com.infomaniak.core.avatar.AvatarType
+import com.infomaniak.core.avatar.models.AvatarColors
+import com.infomaniak.core.avatar.models.AvatarType
 
 @Composable
 internal fun UrlAvatar(avatarType: AvatarType.WithInitials.Url) {

@@ -29,8 +29,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.avatar.AvatarType
 import com.infomaniak.core.avatar.R
+import com.infomaniak.core.avatar.models.AvatarType
 
 @Composable
 internal fun DrawableResourceAvatar(avatarType: AvatarType.DrawableResource) {
