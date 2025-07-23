@@ -33,6 +33,7 @@ import androidx.work.await
 import com.infomaniak.core.autoCancelScope
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.login.crossapp.CrossAppLogin
+import com.infomaniak.core.login.crossapp.internal.deviceinfo.DeviceInfo.Type
 import com.infomaniak.lib.core.api.ApiRoutesCore
 import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.networking.HttpUtils
@@ -62,19 +63,20 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 abstract class AbstractDeviceInfoUpdateWorker(
     appContext: Context,
-    params: WorkerParameters
+    params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
+
         suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> schedule() {
             val workManager = WorkManager.getInstance(appCtx)
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
             val workRequest = OneTimeWorkRequestBuilder<T>()
-                    .setBackoffCriteria(BackoffPolicy.LINEAR, backoffDelay = 10L, timeUnit = TimeUnit.MINUTES)
-                    .setConstraints(constraints)
-                    .build()
+                .setBackoffCriteria(BackoffPolicy.LINEAR, backoffDelay = 10L, timeUnit = TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
             workManager.enqueueUniqueWork(
                 "device-info-update",
                 ExistingWorkPolicy.APPEND_OR_REPLACE,
@@ -121,7 +123,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
         deviceInfoUpdateManager: DeviceInfoUpdateManager,
         targetUser: User,
         deviceInfo: DeviceInfo,
-        crossAppDeviceId: Uuid
+        crossAppDeviceId: Uuid,
     ): Outcome = runCatching {
         if (deviceInfoUpdateManager.isUpToDate(crossAppDeviceId, targetUser.id.toLong())) {
             return Outcome.Done
@@ -185,10 +187,10 @@ abstract class AbstractDeviceInfoUpdateWorker(
             model = Build.MODEL,
             platform = "android",
             type = when {
-                isComputer -> DeviceInfo.Type.Computer
-                isFoldable -> DeviceInfo.Type.Phone
-                hasTabletSizedScreen -> DeviceInfo.Type.Tablet
-                else -> DeviceInfo.Type.Phone
+                isComputer -> Type.Computer
+                isFoldable -> Type.Phone
+                hasTabletSizedScreen -> Type.Tablet
+                else -> Type.Phone
             },
             uuidV4 = currentCrossAppDeviceId.toHexDashString()
         )
