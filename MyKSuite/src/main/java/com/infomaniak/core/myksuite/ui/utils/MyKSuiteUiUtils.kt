@@ -23,12 +23,12 @@ import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkRequest
 import com.infomaniak.core.FormatterFileSize.formatShortFileSize
+import com.infomaniak.core.myksuite.ui.data.AvatarData
 import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
 import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog
-import com.infomaniak.core.useravatar.AvatarData
 
 object MyKSuiteUiUtils {
 
@@ -48,7 +48,7 @@ object MyKSuiteUiUtils {
         avatarUri: String?,
         userInitials: String,
         @ColorInt iconColor: Int,
-        @ColorInt userInitialsBackgroundColor: Int? = null,
+        @ColorInt userInitialsBackgroundColor: Int,
     ): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,
@@ -57,7 +57,7 @@ object MyKSuiteUiUtils {
                 id = userId.toString(),
                 uri = avatarUri,
                 userInitials = userInitials,
-                iconColor = iconColor,
+                initialsColor = iconColor,
                 backgroundColor = userInitialsBackgroundColor,
             ),
             dailySendingLimit = myKSuiteData.mail.dailyLimitSent.toString(),
