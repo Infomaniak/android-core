@@ -18,6 +18,7 @@
 package com.infomaniak.core.avatar.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -53,6 +54,7 @@ internal fun UrlAvatar(avatarType: AvatarType.WithInitials.Url) {
             .build()
 
         AsyncImage(
+            modifier = Modifier.fillMaxSize(),
             model = imageRequest,
             imageLoader = avatarType.imageLoader,
             contentDescription = null,
