@@ -15,11 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.infomaniak.core
 
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.coroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onEach
 
 fun Lifecycle.isResumedFlow() = currentStateFlow.map {
     it.isAtLeast(Lifecycle.State.RESUMED)
@@ -28,3 +39,27 @@ fun Lifecycle.isResumedFlow() = currentStateFlow.map {
 fun Lifecycle.isStartedFlow() = currentStateFlow.map {
     it.isAtLeast(Lifecycle.State.STARTED)
 }.distinctUntilChanged()
+
+fun <T> Flow<T>.observe(
+    lifecycleOwner: LifecycleOwner,
+    state: Lifecycle.State = Lifecycle.State.STARTED,
+    action: suspend (T) -> Unit
+): Job = onEach(action).launchInOnLifecycle(lifecycleOwner, state)
+
+fun <T> Flow<T>.launchInOnLifecycle(
+    lifecycleOwner: LifecycleOwner,
+    state: Lifecycle.State = Lifecycle.State.STARTED,
+): Job {
+    return launchInOnLifecycle(lifecycleOwner.lifecycle, state)
+}
+
+fun <T> Flow<T>.launchInOnLifecycle(
+    lifecycle: Lifecycle,
+    state: Lifecycle.State = Lifecycle.State.STARTED,
+): Job {
+    return lifecycle.currentStateFlow.mapLatest {
+        it.isAtLeast(state)
+    }.distinctUntilChanged().mapLatest { shouldBeHot ->
+        if (shouldBeHot) this@launchInOnLifecycle.collect()
+    }.launchIn(lifecycle.coroutineScope)
+}
