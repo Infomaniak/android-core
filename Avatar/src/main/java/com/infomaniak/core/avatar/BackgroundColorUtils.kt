@@ -19,7 +19,9 @@ package com.infomaniak.core.avatar
 
 import android.content.Context
 import androidx.annotation.ArrayRes
+import androidx.annotation.ColorInt
 
+@ColorInt
 fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
     val arrayResource = array ?: R.array.organizationColors
     val colors = resources.getIntArray(arrayResource)
