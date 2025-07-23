@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.avatar
+package com.infomaniak.core.avatar.models
 
-import coil3.ImageLoader
+import androidx.compose.ui.graphics.Color
 
-data class AvatarUrlData(val url: String, val imageLoader: ImageLoader)
+data class AvatarColors(val containerColor: Color, val contentColor: Color)

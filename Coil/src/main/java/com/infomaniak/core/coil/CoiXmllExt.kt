@@ -34,6 +34,7 @@ import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 import com.infomaniak.core.coil.ImageLoaderProvider.simpleImageLoader
 
 fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
@@ -45,16 +46,6 @@ fun getBackgroundColorGradientDrawable(backgroundColorRes: Int): GradientDrawabl
         shape = GradientDrawable.OVAL
         setColor(backgroundColorRes)
     }
-}
-
-// TODO: Move this to generic avatar module when it's created
-fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
-    val arrayResource = array ?: R.array.organizationColors
-    val colors = resources.getIntArray(arrayResource)
-    val colorIndex = Math.floorMod(id, colors.count())
-    val organizationColor = colors[colorIndex]
-
-    return organizationColor
 }
 
 fun ImageView.loadAvatar(
