@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateSetOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
@@ -52,15 +53,15 @@ import com.infomaniak.core.R as RCore
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CrossLoginListAccounts(
-    accounts: () -> SnapshotStateList<ExternalAccount>,
-    selectedIds: () -> SnapshotStateSet<Int>,
+    accounts: SnapshotStateList<ExternalAccount>,
+    skippedIds: SnapshotStateSet<Int>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onAccountClicked: (Int) -> Unit,
     onAnotherAccountClicked: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
 
-    fun ExternalAccount.isSelected(): Boolean = selectedIds().contains(id)
+    fun ExternalAccount.isSelected(): Boolean = id !in skippedIds
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -77,13 +78,14 @@ fun CrossLoginListAccounts(
 
         Spacer(Modifier.height(Margin.Medium))
 
-        accounts().forEach { account ->
+        accounts.forEach { account ->
             BottomSheetItem(
                 account = account,
                 customization = customization,
                 isSelected = { account.isSelected() },
                 onClick = {
-                    if (account.isSelected() && selectedIds().count() <= 1) return@BottomSheetItem
+                    val selectedCount = accounts.size - skippedIds.size
+                    if (account.isSelected() && selectedCount <= 1) return@BottomSheetItem
                     onAccountClicked(account.id)
                 },
             )
@@ -122,8 +124,8 @@ fun CrossLoginListAccounts(
 private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>) {
     Surface {
         CrossLoginListAccounts(
-            accounts = { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } },
-            selectedIds = { mutableStateSetOf<Int>().apply { addAll(accounts.map { it.id }) } },
+            accounts = remember { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } },
+            skippedIds = remember { mutableStateSetOf<Int>().apply { add(accounts.first().id) } },
             onAccountClicked = {},
             onAnotherAccountClicked = {},
             onSaveClicked = {},
