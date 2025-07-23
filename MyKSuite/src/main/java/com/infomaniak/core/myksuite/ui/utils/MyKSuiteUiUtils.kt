@@ -23,6 +23,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkRequest
 import com.infomaniak.core.FormatterFileSize.formatShortFileSize
+import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 import com.infomaniak.core.myksuite.ui.data.AvatarData
 import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
@@ -41,6 +42,10 @@ object MyKSuiteUiUtils {
             .also(::navigate)
     }
 
+    /**
+     * To compute the correct [userInitialsBackgroundColor] for a user, use the [getBackgroundColorResBasedOnId] method
+     * with the appropriate list of colors.
+     */
     fun getDashboardData(
         context: Context,
         myKSuiteData: MyKSuiteData,
