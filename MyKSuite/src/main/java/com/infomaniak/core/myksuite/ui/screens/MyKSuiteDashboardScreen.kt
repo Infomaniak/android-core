@@ -65,6 +65,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.avatar.components.Avatar
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.extensions.openUrl
 import com.infomaniak.core.myksuite.R
@@ -73,6 +74,7 @@ import com.infomaniak.core.myksuite.ui.components.MyKSuitePrimaryButton
 import com.infomaniak.core.myksuite.ui.components.MyKSuiteTier
 import com.infomaniak.core.myksuite.ui.components.WeightOneSpacer
 import com.infomaniak.core.myksuite.ui.components.myKSuiteGradient
+import com.infomaniak.core.myksuite.ui.data.AvatarData
 import com.infomaniak.core.myksuite.ui.network.ApiRoutes
 import com.infomaniak.core.myksuite.ui.screens.components.ExpandableActionItem
 import com.infomaniak.core.myksuite.ui.screens.components.InformationBlock
@@ -85,8 +87,6 @@ import com.infomaniak.core.myksuite.ui.theme.Dimens
 import com.infomaniak.core.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.myksuite.ui.theme.Typography
-import com.infomaniak.core.useravatar.AvatarData
-import com.infomaniak.core.useravatar.exposed.UserAvatar
 import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
 import com.infomaniak.core.utils.format
 import kotlinx.parcelize.Parcelize
@@ -184,9 +184,9 @@ private fun SubscriptionInfoCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
         ) {
-            UserAvatar(
+            Avatar(
                 modifier = Modifier.size(Dimens.avatarSize),
-                avatarData = dashboardScreenData().avatarData,
+                avatarType = dashboardScreenData().avatarData.toAvatarType(),
                 border = myKSuiteGradient(),
             )
             Text(
@@ -341,7 +341,13 @@ private fun Preview() {
     val dashboardScreenData = MyKSuiteDashboardScreenData(
         myKSuiteTier = MyKSuiteTier.Plus,
         email = "Toto",
-        avatarData = AvatarData(id = "DOUZE", uri = "", userInitials = "IK", iconColor = Color.Red.toArgb()),
+        avatarData = AvatarData(
+            id = "DOUZE",
+            uri = "",
+            userInitials = "IK",
+            initialsColor = Color.White.toArgb(),
+            backgroundColor = Color.DarkGray.toArgb(),
+        ),
         dailySendingLimit = "500",
         kSuiteProductsWithQuotas = listOf(
             KSuiteProductsWithQuotas.Mail(usedSize = "0.2 Go", maxSize = "20 Go", progress = 0.01f),
