@@ -46,10 +46,10 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
     private val accounts = mutableStateListOf<ExternalAccount>()
-    private val selectedIds = mutableStateSetOf<Int>()
+    private val skippedIds = mutableStateSetOf<Int>()
 
     private var onAnotherAccountClickedListener: (() -> Unit)? = null
-    private var onSaveClicked: ((Set<Int>) -> Unit)? = null
+    private var onSaveClicked: SaveListener? = null
 
     private var primaryColor by mutableStateOf<Color?>(null)
     private var onPrimaryColor by mutableStateOf<Color?>(null)
@@ -91,14 +91,14 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
             )
 
             CrossLoginListAccounts(
-                accounts = { accounts },
-                selectedIds = { selectedIds },
+                accounts = accounts,
+                skippedIds = skippedIds,
                 customization = customization,
                 onAccountClicked = { accountId ->
-                    if (selectedIds.contains(accountId)) selectedIds.remove(accountId) else selectedIds.add(accountId)
+                    if (accountId in skippedIds) skippedIds -= accountId else skippedIds += accountId
                 },
                 onAnotherAccountClicked = { onAnotherAccountClickedListener?.invoke() },
-                onSaveClicked = { onSaveClicked?.invoke(selectedIds.toSet()) },
+                onSaveClicked = { onSaveClicked?.onSaveClicked(skippedAccountIds = skippedIds.toSet()) },
             )
         }
     }
@@ -118,8 +118,8 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
         }
     }
 
-    fun setSelectedIds(items: Set<Int>) {
-        selectedIds.apply {
+    fun setSkippedIds(items: Set<Int>) {
+        skippedIds.apply {
             clear()
             addAll(items)
         }
@@ -129,7 +129,11 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
         onAnotherAccountClickedListener = listener
     }
 
-    fun setOnSaveClickedListener(listener: (Set<Int>) -> Unit) {
+    fun setOnSaveClickedListener(listener: SaveListener) {
         onSaveClicked = listener
+    }
+
+    fun interface SaveListener {
+        fun onSaveClicked(skippedAccountIds: Set<Int>)
     }
 }
