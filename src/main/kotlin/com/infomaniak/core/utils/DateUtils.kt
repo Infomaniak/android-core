@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.utils
 
-import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

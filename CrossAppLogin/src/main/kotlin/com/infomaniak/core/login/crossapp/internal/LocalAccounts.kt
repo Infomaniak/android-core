@@ -25,11 +25,11 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalSerializationApi
-internal fun localAccountsFlow(currentUserIdFlow: Flow<Int>): Flow<List<ExternalAccount>> {
+internal fun localAccountsFlow(currentUserIdFlow: Flow<Int?>): Flow<List<ExternalAccount>> {
     return combine(
         UserDatabase().userDao().allUsers,
-        currentUserIdFlow
-    ) { allUsers: List<User>, currentUserId: Int ->
+        currentUserIdFlow,
+    ) { allUsers: List<User>, currentUserId: Int? ->
         if (allUsers.none { it.isStaff }) emptyList() else allUsers.map { user ->
             //TODO[CrossAppLogin]: Drop the isStaff condition after successful testing.
             ExternalAccount(
