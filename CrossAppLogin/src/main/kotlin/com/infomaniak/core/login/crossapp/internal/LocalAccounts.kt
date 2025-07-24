@@ -33,13 +33,13 @@ internal fun localAccountsFlow(currentUserIdFlow: Flow<Int?>): Flow<List<Externa
         if (allUsers.none { it.isStaff }) emptyList() else allUsers.map { user ->
             //TODO[CrossAppLogin]: Drop the isStaff condition after successful testing.
             ExternalAccount(
+                id = user.id.toLong(),
                 fullName = user.displayName ?: user.run { "$firstname $lastname" },
+                initials = user.getInitials(),
                 email = user.email,
                 avatarUrl = user.avatar,
                 isCurrentlySelectedInAnApp = user.id == currentUserId,
                 tokens = setOf(user.apiToken.accessToken),
-                initials = user.getInitials(),
-                id = user.id,
             )
         }
     }

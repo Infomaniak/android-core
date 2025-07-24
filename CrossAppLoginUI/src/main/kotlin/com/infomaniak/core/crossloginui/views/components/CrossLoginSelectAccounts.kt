@@ -40,7 +40,7 @@ import com.infomaniak.core.login.crossapp.ExternalAccount
 @Composable
 fun CrossLoginSelectAccounts(
     accounts: SnapshotStateList<ExternalAccount>,
-    skippedIds: SnapshotStateSet<Int>,
+    skippedIds: SnapshotStateSet<Long>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onClick: () -> Unit,
 ) {
@@ -65,7 +65,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     Surface {
         CrossLoginSelectAccounts(
             accounts = remember { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } },
-            skippedIds = remember { mutableStateSetOf<Int>().apply { add(accounts.last().id) } },
+            skippedIds = remember { mutableStateSetOf<Long>().apply { add(accounts.last().id) } },
             onClick = {},
         )
     }
