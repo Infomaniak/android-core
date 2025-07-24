@@ -38,17 +38,17 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 data class ExternalAccount(
     @ProtoNumber(1)
-    val fullName: String,
+    val id: Long,
     @ProtoNumber(2)
-    val email: String,
+    val fullName: String,
     @ProtoNumber(3)
-    val avatarUrl: String? = null,
-    @ProtoNumber(4)
-    val isCurrentlySelectedInAnApp: Boolean,
-    @ProtoNumber(5)
-    val tokens: Set<String>,
-    @ProtoNumber(6)
     val initials: String,
+    @ProtoNumber(4)
+    val email: String,
+    @ProtoNumber(5)
+    val avatarUrl: String? = null,
+    @ProtoNumber(6)
+    val isCurrentlySelectedInAnApp: Boolean,
     @ProtoNumber(7)
-    val id: Int,
+    val tokens: Set<String>,
 )
