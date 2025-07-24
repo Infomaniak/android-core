@@ -17,11 +17,10 @@
  */
 package com.infomaniak.core.inappupdate
 
-import com.google.android.play.core.install.model.AppUpdateType
-import com.infomaniak.core.inappupdate.updaterequired.data.models.AppVersion.Store
+import com.infomaniak.core.inappupdate.updaterequired.data.models.AppVersion
 
-object StoreUtils : StoresUtils {
-    const val APP_UPDATE_TAG = "inAppUpdate"
-    const val DEFAULT_UPDATE_TYPE = AppUpdateType.FLEXIBLE
-    override val REQUIRED_UPDATE_STORE = Store.PLAY_STORE
+internal interface UpdatesUtils {
+
+    @Suppress("PropertyName")
+    val REQUIRED_UPDATE_STORE: AppVersion.Store
 }

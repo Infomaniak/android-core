@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.inappupdate
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -31,7 +32,9 @@ import com.infomaniak.core.inappupdate.updaterequired.data.api.ApiRepositoryStor
 import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionName
 import com.infomaniak.core.network.networking.HttpClient
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -44,6 +47,8 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     private val storesSettingsRepository = AppUpdateSettingsRepository(activity)
 
     var isUpdateBottomSheetShown = false
+
+    val shouldDisplayBottomSheet: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     val canInstallUpdate = storesSettingsRepository
         .flowOf(HAS_APP_UPDATE_DOWNLOADED_KEY).distinctUntilChanged()
@@ -60,32 +65,52 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     open fun requireUpdate(onFailure: ((Exception) -> Unit)? = null) = activity.goToPlayStore()
 
     open fun init(
-        mustRequireImmediateUpdate: Boolean = false,
         onUserChoice: ((Boolean) -> Unit)? = null,
         onInstallStart: (() -> Unit)? = null,
         onInstallFailure: ((Exception) -> Unit)? = null,
         onInstallSuccess: (() -> Unit)? = null,
         onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
         onFDroidResult: ((Boolean) -> Unit)? = null,
-    ) = init(mustRequireImmediateUpdate, onInAppUpdateUiChange, onFDroidResult)
+    ) = init(
+        onInAppUpdateUiChange,
+        onFDroidResult,
+    )
 
     protected fun init(
-        mustRequireImmediateUpdate: Boolean = false,
         onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
         onFDroidResult: ((Boolean) -> Unit)? = null,
     ) {
         this.onInAppUpdateUiChange = onInAppUpdateUiChange
         this.onFDroidResult = onFDroidResult
 
-        if (!mustRequireImmediateUpdate) activity.lifecycle.addObserver(observer = this)
+        activity.lifecycle.addObserver(observer = this)
     }
 
     protected abstract fun checkUpdateIsAvailable()
 
+    fun openBottomSheet() = {
+        Log.e("TOTO", "openBottomSheet")
+        updateBottomSheet(true)
+    }
+
+    fun closeBottomSheet() = updateBottomSheet(false)
+
+    // TODO: Use something else than state?
+    fun updateBottomSheet(state: Boolean) = {
+        CoroutineScope(Dispatchers.Default).launch {
+            shouldDisplayBottomSheet.emit(state)
+        }
+    }
+
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
-        if (!isUpdateBottomSheetShown) shouldCheckUpdate(::checkUpdateIsAvailable)
+        Log.e("TOTO", "onStart - On passe par là")
+
+        if (!isUpdateBottomSheetShown) shouldCheckUpdate({
+            Log.e("TOTO", "onStart - CALLBACK")
+            checkUpdateIsAvailable()
+        })
         decrementAppUpdateLaunches()
     }
 
@@ -98,6 +123,9 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
 
     fun decrementAppUpdateLaunches() = activity.lifecycleScope.launch(Dispatchers.IO) {
         val appUpdateLaunches = storesSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY)
+
+        Log.e("TOTO", "decrementAppUpdateLaunches - appUpdateLaunches: ${appUpdateLaunches}")
+
         set(APP_UPDATE_LAUNCHES_KEY, appUpdateLaunches - 1)
     }
 

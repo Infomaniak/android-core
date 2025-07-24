@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.inappupdate.updatemanagers
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -38,7 +39,7 @@ import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.DEF
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.IS_USER_WANTING_UPDATES_KEY
 import com.infomaniak.core.inappupdate.BaseInAppUpdateManager
-import com.infomaniak.core.inappupdate.StoreUtils
+import com.infomaniak.core.inappupdate.UpdateUtils
 import com.infomaniak.core.sentry.SentryLog
 import io.sentry.Sentry
 import io.sentry.SentryLevel
@@ -74,25 +75,27 @@ class InAppUpdateManager(
     private var onInstallFailure: ((Exception) -> Unit)? = null
     private var onInstallSuccess: (() -> Unit)? = null
 
-    private var updateType: Int = StoreUtils.DEFAULT_UPDATE_TYPE
+    // TODO: Should we keep this?
+    private var updateType: Int = UpdateUtils.DEFAULT_UPDATE_TYPE
 
     // Create a listener to track request state updates.
     private val installStateUpdatedListener by lazy {
         InstallStateUpdatedListener { state ->
+            // TODO: What if we want both flexible and immediate updates?
             when (state.installStatus()) {
                 InstallStatus.DOWNLOADED -> {
-                    SentryLog.d(StoreUtils.APP_UPDATE_TAG, "OnUpdateDownloaded triggered by InstallStateUpdated listener")
+                    SentryLog.d(UpdateUtils.APP_UPDATE_TAG, "OnUpdateDownloaded triggered by InstallStateUpdated listener")
                     if (updateType == AppUpdateType.FLEXIBLE) onUpdateDownloaded()
                 }
                 InstallStatus.FAILED -> {
-                    SentryLog.d(StoreUtils.APP_UPDATE_TAG, "onInstallFailure triggered by InstallStateUpdated listener")
+                    SentryLog.d(UpdateUtils.APP_UPDATE_TAG, "onInstallFailure triggered by InstallStateUpdated listener")
                     if (updateType == AppUpdateType.IMMEDIATE) {
                         resetUpdateSettings()
                         onInstallFailure?.invoke(InstallException(state.installErrorCode))
                     }
                 }
                 InstallStatus.INSTALLED -> {
-                    SentryLog.d(StoreUtils.APP_UPDATE_TAG, "OnUpdateInstalled triggered by InstallStateUpdated listener")
+                    SentryLog.d(UpdateUtils.APP_UPDATE_TAG, "OnUpdateInstalled triggered by InstallStateUpdated listener")
                     if (updateType == AppUpdateType.FLEXIBLE) onUpdateInstalled()
                     unregisterAppUpdateListener()
                 }
@@ -102,7 +105,7 @@ class InAppUpdateManager(
     }
 
     override fun init(
-        mustRequireImmediateUpdate: Boolean,
+        // mustRequireImmediateUpdate: Boolean,
         onUserChoice: ((Boolean) -> Unit)?,
         onInstallStart: (() -> Unit)?,
         onInstallFailure: ((Exception) -> Unit)?,
@@ -110,7 +113,8 @@ class InAppUpdateManager(
         onInAppUpdateUiChange: ((Boolean) -> Unit)?,
         onFDroidResult: ((Boolean) -> Unit)?,
     ) {
-        this.updateType = if (mustRequireImmediateUpdate) AppUpdateType.IMMEDIATE else AppUpdateType.FLEXIBLE
+        // TODO:
+        // this.updateType = if (mustRequireImmediateUpdate) AppUpdateType.IMMEDIATE else AppUpdateType.FLEXIBLE
         this.onUserChoice = onUserChoice
         this.onInstallStart = onInstallStart
         this.onInstallFailure = {
@@ -119,7 +123,10 @@ class InAppUpdateManager(
         }
         this.onInstallSuccess = onInstallSuccess
 
-        super.init(mustRequireImmediateUpdate, onInAppUpdateUiChange, onFDroidResult)
+        super.init(
+            onInAppUpdateUiChange,
+            onFDroidResult,
+        )
     }
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -138,15 +145,19 @@ class InAppUpdateManager(
     }
 
     override fun checkUpdateIsAvailable() {
-        SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on GPlay")
+        SentryLog.d(UpdateUtils.APP_UPDATE_TAG, "Checking for update on GPlay")
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
-            SentryLog.d(StoreUtils.APP_UPDATE_TAG, "checking success")
+            SentryLog.d(UpdateUtils.APP_UPDATE_TAG, "checking success")
+            // TODO:
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                 && appUpdateInfo.isUpdateTypeAllowed(updateType)
             ) {
-                SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Update available on GPlay")
+                Log.e("TOTO", "checkUpdateIsAvailable - Update available on Gplay")
+                SentryLog.d(UpdateUtils.APP_UPDATE_TAG, "Update available on GPlay")
                 startUpdateFlow(appUpdateInfo)
             }
+        }.addOnFailureListener {
+            Log.e("TOTO", "checkUpdateIsAvailable - it.message: ${it.message}")
         }
     }
 
@@ -165,6 +176,7 @@ class InAppUpdateManager(
 
     override fun requireUpdate(onFailure: ((Exception) -> Unit)?) {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            // TODO:
             if (updateType == AppUpdateType.IMMEDIATE) {
                 val isUpdateStalled =
                     appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
@@ -191,7 +203,7 @@ class InAppUpdateManager(
         registerListener(installStateUpdatedListener)
         appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
-                SentryLog.d(StoreUtils.APP_UPDATE_TAG, "CheckStalledUpdate downloaded")
+                SentryLog.d(UpdateUtils.APP_UPDATE_TAG, "CheckStalledUpdate downloaded")
                 // If the update is downloaded but not installed, notify the user to complete the update.
                 onUpdateDownloaded.invoke()
             }

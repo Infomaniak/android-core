@@ -28,6 +28,8 @@ import com.infomaniak.core.inappupdate.StoreUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 class InAppUpdateManager(
     private val activity: ComponentActivity,
@@ -38,7 +40,11 @@ class InAppUpdateManager(
         activity.lifecycleScope.launch(Dispatchers.IO) {
             val lastVersionCode = FdroidApiTools().getLastRelease(appId)
 
-            withContext(Dispatchers.Main) { onFDroidResult?.invoke(appVersionCode < lastVersionCode) }
+            shouldDisplayUpdateRequiredScreen.collect { isUpdateRequiredScreenBeingDisplayed ->
+                withContext(Dispatchers.Main) {
+                    onFDroidResult?.invoke((appVersionCode < lastVersionCode) && !isUpdateRequiredScreenBeingDisplayed)
+                }
+            }
         }
     }
 }

@@ -73,7 +73,7 @@ class AppUpdateSettingsRepository(private val context: Context) {
 
         private const val TAG = "AppUpdateSettingsRepository"
 
-        const val DEFAULT_APP_UPDATE_LAUNCHES = 20
+        const val DEFAULT_APP_UPDATE_LAUNCHES = 2
 
         val IS_USER_WANTING_UPDATES_KEY = booleanPreferencesKey("isUserWantingUpdatesKey")
         val HAS_APP_UPDATE_DOWNLOADED_KEY = booleanPreferencesKey("hasAppUpdateDownloadedKey")
