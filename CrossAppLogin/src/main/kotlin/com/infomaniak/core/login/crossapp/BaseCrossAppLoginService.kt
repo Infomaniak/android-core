@@ -55,7 +55,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int>) : LifecycleService() {
+abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int?>) : LifecycleService() {
 
     private val incomingMessagesChannel = Channel<DisposableMessage>(capacity = Channel.UNLIMITED)
     private val messagesHandler = ChannelMessageHandler(incomingMessagesChannel)

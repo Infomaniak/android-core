@@ -19,8 +19,6 @@ package com.infomaniak.core.login.crossapp.internal.deviceinfo
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.core.util.AtomicFile
-import androidx.work.WorkManager
-import androidx.work.await
 import com.infomaniak.core.allConcurrent
 import com.infomaniak.core.extensions.write
 import com.infomaniak.core.login.crossapp.CrossAppLogin
@@ -90,18 +88,19 @@ class DeviceInfoUpdateManager private constructor() {
         }
     }
 
-    suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> scheduleWorkerOnDeviceInfoUpdate(): Nothing = Dispatchers.Default {
-        val crossAppLogin = CrossAppLogin.Companion.forContext(context = appCtx, coroutineScope = this)
-        crossAppLogin.sharedDeviceIdFlow.collectLatest { currentCrossAppDeviceId ->
-            val userIdsFlow = UserDatabase().userDao().allUsers.map { users -> users.map { it.id } }.distinctUntilChanged()
-            userIdsFlow.collect { userIds ->
-                val everythingUpToDate = userIds.allConcurrent { userId -> isUpToDate(currentCrossAppDeviceId, userId.toLong()) }
-                if (everythingUpToDate) return@collect
-                AbstractDeviceInfoUpdateWorker.schedule<T>()
+    suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> scheduleWorkerOnDeviceInfoUpdate(): Nothing =
+        Dispatchers.Default {
+            val crossAppLogin = CrossAppLogin.Companion.forContext(context = appCtx, coroutineScope = this)
+            crossAppLogin.sharedDeviceIdFlow.collectLatest { currentCrossAppDeviceId ->
+                val userIdsFlow = UserDatabase().userDao().allUsers.map { users -> users.map { it.id } }.distinctUntilChanged()
+                userIdsFlow.collect { userIds ->
+                    val isEverythingUpToDate = userIds.allConcurrent { isUpToDate(currentCrossAppDeviceId, it.toLong()) }
+                    if (isEverythingUpToDate) return@collect
+                    AbstractDeviceInfoUpdateWorker.schedule<T>()
+                }
             }
+            awaitCancellation()
         }
-        awaitCancellation()
-    }
 
     private fun lastSyncKeyFileForUser(userId: Long): AtomicFile = AtomicFile(lastSyncedKeyDir.resolve("$userId"))
 }
