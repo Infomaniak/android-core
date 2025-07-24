@@ -72,7 +72,7 @@ internal class CrossAppLoginImpl(
         return lists.flatten().groupBy { it.email }.map { (_, externalAccounts) ->
             val account = externalAccounts.firstOrNull { it.isCurrentlySelectedInAnApp } ?: externalAccounts.first()
             account.copy(tokens = externalAccounts.flatMapTo(mutableSetOf()) { it.tokens })
-        }
+        }.sortedBy { it.isCurrentlySelectedInAnApp } // false comes before true, so selected accounts will be last in the list.
     }
 
     @ExperimentalUuidApi
