@@ -46,7 +46,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
     private val accounts = mutableStateListOf<ExternalAccount>()
-    private val skippedIds = mutableStateSetOf<Int>()
+    private val skippedIds = mutableStateSetOf<Long>()
 
     private var onClickListener: OnClickListener? = null
 
@@ -113,7 +113,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
         }
     }
 
-    fun setSkippedIds(items: Set<Int>) {
+    fun setSkippedIds(items: Set<Long>) {
         skippedIds.apply {
             clear()
             addAll(items)

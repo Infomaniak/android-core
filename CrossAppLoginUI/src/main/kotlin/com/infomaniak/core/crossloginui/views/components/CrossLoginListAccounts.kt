@@ -54,9 +54,9 @@ import com.infomaniak.core.R as RCore
 @Composable
 fun CrossLoginListAccounts(
     accounts: SnapshotStateList<ExternalAccount>,
-    skippedIds: SnapshotStateSet<Int>,
+    skippedIds: SnapshotStateSet<Long>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
-    onAccountClicked: (Int) -> Unit,
+    onAccountClicked: (Long) -> Unit,
     onAnotherAccountClicked: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
@@ -125,7 +125,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     Surface {
         CrossLoginListAccounts(
             accounts = remember { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } },
-            skippedIds = remember { mutableStateSetOf<Int>().apply { add(accounts.first().id) } },
+            skippedIds = remember { mutableStateSetOf<Long>().apply { add(accounts.first().id) } },
             onAccountClicked = {},
             onAnotherAccountClicked = {},
             onSaveClicked = {},
