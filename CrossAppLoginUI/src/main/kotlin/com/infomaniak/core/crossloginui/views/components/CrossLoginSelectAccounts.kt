@@ -22,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateSetOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Modifier
@@ -38,13 +39,13 @@ import com.infomaniak.core.login.crossapp.ExternalAccount
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CrossLoginSelectAccounts(
-    accounts: () -> SnapshotStateList<ExternalAccount>,
-    skippedIds: () -> SnapshotStateSet<Int>,
+    accounts: SnapshotStateList<ExternalAccount>,
+    skippedIds: SnapshotStateSet<Int>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onClick: () -> Unit,
 ) {
 
-    val selectedAccounts = accounts().filter { it.id !in skippedIds() }
+    val selectedAccounts = accounts.filter { it.id !in skippedIds }
     val count = selectedAccounts.count()
 
     SelectedAccountsButton(
@@ -63,8 +64,8 @@ fun CrossLoginSelectAccounts(
 private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>) {
     Surface {
         CrossLoginSelectAccounts(
-            accounts = { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } },
-            skippedIds = { mutableStateSetOf<Int>().apply { add(accounts.last().id) } },
+            accounts = remember { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } },
+            skippedIds = remember { mutableStateSetOf<Int>().apply { add(accounts.last().id) } },
             onClick = {},
         )
     }
