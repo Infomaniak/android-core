@@ -33,6 +33,11 @@ sealed class CrossAppLogin {
         ): CrossAppLogin = CrossAppLoginImpl(context, coroutineScope)
     }
 
+    /**
+     * Returns a merge of accounts found in other known apps.
+     *
+     * Must return selected accounts **last** (account(s) currently selected in other apps).
+     */
     @ExperimentalSerializationApi
     abstract suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount>
 
