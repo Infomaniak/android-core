@@ -25,4 +25,8 @@ object ApiRoutesCore {
         return "${INFOMANIAK_API}profile?no_avatar_default=1"
     }
 
+    fun sendDeviceInfo(): String {
+        //TODO[CrossAppLogin]: Revert to use the INFOMANIAK_API constant, as above.
+        return "https://api.staging-access-token-devices.dev.infomaniak.ch/1/devices"
+    }
 }

@@ -18,7 +18,11 @@
 package com.infomaniak.core.auth.room
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import com.infomaniak.core.auth.models.user.User
 
 @Dao

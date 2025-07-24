@@ -15,14 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.myksuite.ui.screens.components
+package com.infomaniak.core.login.crossapp
 
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.dp
-import com.infomaniak.core.myksuite.ui.theme.Dimens
+import android.os.Bundle
+import android.os.Message
 
-internal enum class MyKSuiteButtonType(val shape: Shape) {
-    Mail(shape = RoundedCornerShape(Dimens.largeCornerRadius)),
-    Drive(shape = RoundedCornerShape(10.dp)),
+/**
+ * Retrieves a byte array in this message's [Message.obj], previously put with [putBundleWrappedDataInObj],
+ * possibly (likely) in another app or process connected to this one.
+ */
+internal fun Message.unwrapByteArrayOrNull(): ByteArray? {
+    return (obj as Bundle).getByteArray("")
+}
+
+/**
+ * Puts a byte array inside this message's [Message.obj], to be later retrieved in another app or process
+ * with [unwrapByteArrayOrNull].
+ */
+internal fun Message.putBundleWrappedDataInObj(data: ByteArray) {
+    obj = Bundle().also { it.putByteArray("", data) }
 }

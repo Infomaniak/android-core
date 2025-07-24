@@ -23,7 +23,6 @@ import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkRequest
 import com.infomaniak.core.FormatterFileSize.formatShortFileSize
-import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 import com.infomaniak.core.myksuite.ui.data.AvatarData
 import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp

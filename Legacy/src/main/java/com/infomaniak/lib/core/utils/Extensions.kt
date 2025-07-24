@@ -148,6 +148,12 @@ fun MaterialButton.hideProgressCatching(@StringRes text: Int) {
     runCatching { hideProgress(text) }
 }
 
+fun MaterialButton.hideProgressCatching(text: String) {
+    isClickable = true
+    // hideProgress stores references to views which crashes when the view is freed
+    runCatching { hideProgress(text) }
+}
+
 /**
  * Set a pagination in a RecyclerView, only if a LinearLayoutManager has been attached
  * @param whenLoadMoreIsPossible A callback which will be called each time it is necessary to load more items

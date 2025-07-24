@@ -1,5 +1,5 @@
 /*
- * Infomaniak SwissTransfer - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 package com.infomaniak.core
 
 import android.os.SystemClock
+import kotlinx.coroutines.CloseableCoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -27,7 +28,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.transformLatest
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.nanoseconds
@@ -54,3 +58,28 @@ fun <T> Flow<T>.rateLimit(minInterval: Duration): Flow<T> = channelFlow {
         lastEmitElapsedNanos = SystemClock.elapsedRealtimeNanos()
     }
 }.buffer(Channel.RENDEZVOUS)
+
+/**
+ * Similar to [flowOn], but will lazily create the Dispatcher returned by
+ * [createDispatcher], and will close it once the flow is cancelled or completes.
+ *
+ * Example usage:
+ * ```
+ * val someDataFlow: Flow<Something> = flow {
+ *     val flow = getSomeDatabaseInstance()
+ *         .someQuery()
+ *         .toFlow()
+ *         .map { it?.toSomethingElse() }
+ *     emitAll(flow)
+ * }.flowOnLazyClosable {
+ *     newSingleThreadContext("someData")
+ * }
+ * ```
+ */
+fun <T> Flow<T>.flowOnLazyClosable(
+    createDispatcher: () -> CloseableCoroutineDispatcher
+): Flow<T> = flow {
+    createDispatcher().use { dispatcher ->
+        emitAll(flowOn(dispatcher))
+    }
+}
