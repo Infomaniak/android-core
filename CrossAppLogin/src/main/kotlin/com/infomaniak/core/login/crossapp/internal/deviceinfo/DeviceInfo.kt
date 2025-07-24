@@ -31,8 +31,11 @@ internal data class DeviceInfo(
 ) {
     @Serializable
     enum class Type {
-        @SerialName("phone") Phone,
-        @SerialName("tablet") Tablet,
-        @SerialName("computer") Computer,
+        @SerialName("phone")
+        Phone,
+        @SerialName("tablet")
+        Tablet,
+        @SerialName("computer")
+        Computer,
     }
 }

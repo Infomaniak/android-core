@@ -1,5 +1,5 @@
 /*
- * Infomaniak SwissTransfer - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -78,7 +78,7 @@ fun <T> Flow<T>.rateLimit(minInterval: Duration): Flow<T> = channelFlow {
  */
 fun <T> Flow<T>.flowOnLazyClosable(
     createDispatcher: () -> CloseableCoroutineDispatcher
-) : Flow<T> = flow {
+): Flow<T> = flow {
     createDispatcher().use { dispatcher ->
         emitAll(flowOn(dispatcher))
     }

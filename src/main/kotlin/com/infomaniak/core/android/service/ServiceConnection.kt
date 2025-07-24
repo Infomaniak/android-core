@@ -18,10 +18,10 @@
 package com.infomaniak.core.android.service
 
 import android.content.ComponentName
-import android.content.ServiceConnection as AndroidServiceConnection
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.channels.Channel
+import android.content.ServiceConnection as AndroidServiceConnection
 
 internal class ServiceConnection<R>(
     private val onDisconnected: () -> OnServiceDisconnectionBehavior<R>
