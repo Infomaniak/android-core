@@ -20,6 +20,7 @@ package com.infomaniak.lib.core
 import com.infomaniak.lib.core.auth.CredentialManager
 import com.infomaniak.lib.core.utils.ErrorCodeTranslated
 import com.infomaniak.lib.login.InfomaniakLogin.AccessType
+import java.net.URLEncoder
 
 /**
  * InfomaniakCore : Allow to instantiate the library with some parameters
@@ -31,19 +32,28 @@ object InfomaniakCore {
     lateinit var appVersionName: String
     lateinit var clientId: String
     var credentialManager: CredentialManager? = null
-    var customHeaders: MutableMap<String, String>? = null
+    var customHeaders: MutableSet<CustomHeader> = mutableSetOf()
     var apiErrorCodes: List<ErrorCodeTranslated>? = null
     var accessType: AccessType? = AccessType.OFFLINE
 
-    fun init(
-        appId: String,
-        appVersionCode: Int,
-        appVersionName: String,
-        clientId: String,
-    ) {
+    fun init(appId: String, appVersionCode: Int, appVersionName: String, clientId: String) {
         this.appId = appId
         this.appVersionCode = appVersionCode
         this.appVersionName = appVersionName
         this.clientId = clientId
     }
+}
+
+/**
+ *  CustomHeader : Represents a custom HTTP header allows defining how the header value should be handled.
+ */
+sealed interface CustomHeader {
+    val headerKey: String
+    val headerValue: String
+
+    data class AutoEncodeHeaderToUTF8(override val headerKey: String, private val rawValue: String) : CustomHeader {
+        override val headerValue: String = URLEncoder.encode(rawValue, "UTF-8")
+    }
+
+    data class RawHeader(override val headerKey: String, override val headerValue: String) : CustomHeader
 }

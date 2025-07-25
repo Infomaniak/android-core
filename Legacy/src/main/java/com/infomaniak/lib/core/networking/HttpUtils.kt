@@ -21,7 +21,6 @@ import android.os.Build
 import com.infomaniak.lib.core.InfomaniakCore
 import com.infomaniak.lib.core.utils.Utils.getPreferredLocaleList
 import okhttp3.Headers
-import java.net.URLEncoder
 
 object HttpUtils {
 
@@ -44,7 +43,7 @@ object HttpUtils {
                 add("Accept-type", it)
                 add("Content-type", it)
             }
-            customHeaders?.forEach { customHeader -> add(customHeader.key, URLEncoder.encode(customHeader.value, "UTF-8")) }
+            customHeaders.forEach { customHeader -> add(customHeader.headerKey, customHeader.headerValue) }
         }.run {
             build()
         }
