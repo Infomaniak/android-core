@@ -18,6 +18,7 @@
 
 package com.infomaniak.core.network
 
+import com.infomaniak.core.network.models.CustomHeader
 import com.infomaniak.core.network.utils.ErrorCodeTranslated
 
 /**
@@ -28,7 +29,7 @@ object NetworkConfiguration {
     lateinit var appId: String
     var appVersionCode: Int = -1
     lateinit var appVersionName: String
-    var customHeaders: MutableMap<String, String>? = null
+    var customHeaders: MutableSet<CustomHeader> = mutableSetOf()
     var apiErrorCodes: List<ErrorCodeTranslated>? = null
 
     fun init(

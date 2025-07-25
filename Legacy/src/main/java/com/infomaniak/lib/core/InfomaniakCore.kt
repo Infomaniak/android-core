@@ -35,12 +35,7 @@ object InfomaniakCore {
     var apiErrorCodes: List<ErrorCodeTranslated>? = null
     var accessType: AccessType? = AccessType.OFFLINE
 
-    fun init(
-        appId: String,
-        appVersionCode: Int,
-        appVersionName: String,
-        clientId: String,
-    ) {
+    fun init(appId: String, appVersionCode: Int, appVersionName: String, clientId: String) {
         this.appId = appId
         this.appVersionCode = appVersionCode
         this.appVersionName = appVersionName
