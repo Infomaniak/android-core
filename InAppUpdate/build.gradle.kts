@@ -58,7 +58,7 @@ dependencies {
 
     implementation(core.androidx.datastore.preferences)
     implementation(core.appcompat)
-    implementation(core.androidx.work.runtime.ktx)
+    implementation(core.androidx.work.runtime)
     implementation(core.kotlinx.serialization.json)
 
     implementation(core.app.update)
