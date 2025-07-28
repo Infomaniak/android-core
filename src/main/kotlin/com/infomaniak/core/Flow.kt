@@ -66,11 +66,12 @@ fun <T> Flow<T>.rateLimit(minInterval: Duration): Flow<T> = channelFlow {
  * Example usage:
  * ```
  * val someDataFlow: Flow<Something> = flow {
- *     val flow = getSomeDatabaseInstance()
- *         .someQuery()
- *         .toFlow()
- *         .map { it?.toSomethingElse() }
- *     emitAll(flow)
+ *     getSomeDatabaseInstance().use { db ->
+ *         val flow = db.someQuery()
+ *             .toFlow()
+ *             .map { it?.toSomethingElse() }
+ *         emitAll(flow)
+ *     }
  * }.flowOnLazyClosable {
  *     newSingleThreadContext("someData")
  * }
