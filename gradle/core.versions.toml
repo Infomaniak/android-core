@@ -6,7 +6,7 @@ androidxCollection = "1.5.0"
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
 appcompat = "1.7.1"
 appUpdateVersion = "2.1.0"
-workRuntimeKtx = "2.10.1"
+workManager = "2.10.1"
 coil = "3.2.0"
 composeBom = "2025.06.01"
 concurrentFuturesKtx = "1.2.0"
@@ -45,7 +45,7 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerView" }
-androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workManager" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
 app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
