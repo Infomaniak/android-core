@@ -18,6 +18,7 @@
 package com.infomaniak.lib.core.api
 
 import com.infomaniak.lib.core.BuildConfig.INFOMANIAK_API
+import com.infomaniak.lib.core.BuildConfig.INFOMANIAK_API_V1
 
 object ApiRoutesCore {
 
@@ -26,7 +27,6 @@ object ApiRoutesCore {
     }
 
     fun sendDeviceInfo(): String {
-        //TODO[CrossAppLogin]: Revert to use the INFOMANIAK_API constant, as above.
-        return "https://api.staging-access-token-devices.dev.infomaniak.ch/1/devices"
+        return "${INFOMANIAK_API_V1}/devices"
     }
 }
