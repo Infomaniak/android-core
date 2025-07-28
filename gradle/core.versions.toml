@@ -46,6 +46,7 @@ androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", 
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerView" }
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workManager" }
+androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "workManager" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
 app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
