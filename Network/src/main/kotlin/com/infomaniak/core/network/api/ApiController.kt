@@ -26,6 +26,7 @@ import com.infomaniak.core.network.isSerializationException
 import com.infomaniak.core.network.models.ApiError
 import com.infomaniak.core.network.models.ApiResponse
 import com.infomaniak.core.network.models.ApiResponseStatus
+import com.infomaniak.core.network.models.InfomaniakHeaders
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import com.infomaniak.core.network.models.exceptions.ServerErrorException
 import com.infomaniak.core.network.networking.HttpClient
@@ -41,6 +42,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -126,7 +128,7 @@ object ApiController {
                         )
                     }
                     bodyResponse.isBlank() -> createInternetErrorResponse(buildErrorResult = buildErrorResult)
-                    else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse)
+                    else -> createApiResponse<T>(useKotlinxSerialization, bodyResponse, headers = response.headers)
                 }
             }
         } catch (exception: CancellationException) {
@@ -148,8 +150,8 @@ object ApiController {
                 }
 
                 createErrorResponse(
-                    InternalTranslatedErrorCode.UnknownError,
-                    InternalErrorPayload(exception, useKotlinxSerialization, bodyResponse),
+                    internalErrorCode = InternalTranslatedErrorCode.UnknownError,
+                    payload = InternalErrorPayload(exception, useKotlinxSerialization, bodyResponse),
                     buildErrorResult = buildErrorResult,
                 )
             }
@@ -175,7 +177,7 @@ object ApiController {
         }
         .build()
 
-    inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String): T {
+    inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String, headers: Headers): T {
         val apiResponse = when {
             useKotlinxSerialization -> json.decodeFromString<T>(bodyResponse)
             else -> gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
@@ -185,6 +187,7 @@ object ApiController {
             @Suppress("DEPRECATION")
             apiResponse.translatedError = InternalTranslatedErrorCode.UnknownError.translateRes
         }
+        if (apiResponse is ApiResponse<*>) apiResponse.headers = InfomaniakHeaders(headers)
 
         return apiResponse
     }
