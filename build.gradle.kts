@@ -53,6 +53,7 @@ dependencies {
     implementation(core.splitties.mainhandler)
     implementation(core.splitties.mainthread)
     implementation(core.androidx.core)
+    implementation(core.androidx.core.ktx)
     implementation(core.androidx.lifecycle.runtime.ktx)
 
     testImplementation(kotlin("test"))
