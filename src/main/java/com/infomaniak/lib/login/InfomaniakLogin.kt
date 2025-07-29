@@ -35,7 +35,7 @@ class InfomaniakLogin(
     private val clientID: String,
     private val appUID: String,
     private val accessType: AccessType? = AccessType.OFFLINE,
-    sentryCallback: ((url: String, method: String?, statusCode: Int?) -> Unit)? = null
+    sentryCallback: ((message: String) -> Unit)? = null
 ) {
 
     private var tabClient: CustomTabsClient? = null
@@ -411,6 +411,6 @@ class InfomaniakLogin(
         const val SSL_ERROR_CODE = "ssl_error_code"
         const val HTTP_ERROR_CODE = "http_error_code"
 
-        internal var sentryCallback: ((url: String, method: String?, statusCode: Int?) -> Unit)? = null
+        internal var sentryCallback: ((message: String) -> Unit)? = null
     }
 }

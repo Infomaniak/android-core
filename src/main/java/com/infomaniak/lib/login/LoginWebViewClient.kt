@@ -74,7 +74,7 @@ open class LoginWebViewClient(
     }
 
     override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
-        InfomaniakLogin.sentryCallback?.invoke(request?.url.toString(), request?.method, errorResponse?.statusCode)
+        InfomaniakLogin.sentryCallback?.invoke("${request?.url.toString()} ${request?.method} ${errorResponse?.statusCode}")
         if (request?.method == "GET") errorResult(HTTP_ERROR_CODE, errorResponse?.statusCode)
     }
 
