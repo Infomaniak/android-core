@@ -31,6 +31,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,6 +47,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
+import com.infomaniak.core.coil.ImageLoaderProvider
 import com.infomaniak.core.useravatar.AvatarData
 import com.infomaniak.core.useravatar.AvatarDisplayState
 import com.infomaniak.core.useravatar.component.InitialsTextAvatar
@@ -71,7 +73,9 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
             AvatarDisplayState.Initials -> InitialsTextAvatar(avatarData)
             AvatarDisplayState.UnknownUser -> UnknownUserIcon(avatarData.iconColor)
             AvatarDisplayState.Avatar -> {
-                val imageRequest = ImageRequest.Builder(LocalContext.current)
+                val context = LocalContext.current
+                val unauthenticatedImageLoader = remember(context) { ImageLoaderProvider.newImageLoader(context) }
+                val imageRequest = ImageRequest.Builder(context )
                     .data(avatarData.uri)
                     .crossfade(true)
                     .build()
@@ -79,6 +83,7 @@ fun UserAvatar(modifier: Modifier = Modifier, avatarData: AvatarData, border: Bo
                 AsyncImage(
                     model = imageRequest,
                     contentDescription = null,
+                    imageLoader = unauthenticatedImageLoader,
                     contentScale = ContentScale.Crop,
                     onError = { avatarDisplayState = computeAvatarState(avatarData, hasLoadingFailed = true) },
                 )
