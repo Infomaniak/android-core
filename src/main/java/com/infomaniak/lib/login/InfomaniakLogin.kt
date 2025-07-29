@@ -405,5 +405,7 @@ class InfomaniakLogin(
 
         const val SSL_ERROR_CODE = "ssl_error_code"
         const val HTTP_ERROR_CODE = "http_error_code"
+
+        var sentryCallback: ((url: String, method: String?, statusCode: Int?) -> Unit)? = null
     }
 }

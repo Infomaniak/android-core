@@ -103,7 +103,6 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
             return true
         }
 
-
         override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
             errorResult(error.description.toString())
         }
@@ -121,6 +120,5 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
             setResult(RESULT_CANCELED)
             finish()
         }
-
     }
 }

@@ -74,7 +74,8 @@ open class LoginWebViewClient(
     }
 
     override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
-        if (request?.method == "GET") errorResult(HTTP_ERROR_CODE)
+        InfomaniakLogin.sentryCallback?.invoke(request?.url.toString(), request?.method, errorResponse?.statusCode)
+        if (request?.method == "GET") errorResult(HTTP_ERROR_CODE, errorResponse?.statusCode)
     }
 
     private fun isValidUrl(inputUrl: String?): Boolean {
@@ -108,13 +109,13 @@ open class LoginWebViewClient(
         finish()
     }
 
-    protected fun errorResult(errorCode: String) = with(activity) {
+    protected fun errorResult(errorCode: String, statusCode: Int? = null) = with(activity) {
         val intent = Intent().apply {
             putExtra(ERROR_CODE_TAG, errorCode)
             putExtra(ERROR_TRANSLATED_TAG, translateError(errorCode))
         }
         setResult(AppCompatActivity.RESULT_OK, intent)
-        finish()
+        if ((statusCode in 400 .. 499).not()) finish()
     }
 
     private fun translateError(errorCode: String): String = with(activity) {
