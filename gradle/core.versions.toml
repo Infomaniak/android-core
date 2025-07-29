@@ -19,6 +19,7 @@ junitAndroidx = "1.2.1"
 kotest = "5.9.1"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerializationJson = "1.8.1"
+ktlint="1.7.1"
 ktor = "3.2.2"
 lifecycleRuntimeKtx = "2.8.7" # Doesn't build when bumped to 2.9.0 (Waiting SDK 35)
 material = "1.12.0"
@@ -68,6 +69,8 @@ kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref =
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+ktlint-cliRuleset = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint"}
+ktlint-ruleEngineCore = { module = "com.pinterest.ktlint:ktlint-rule-engine-core", version.ref = "ktlint"}
 ktor-client-content-negociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor" }
