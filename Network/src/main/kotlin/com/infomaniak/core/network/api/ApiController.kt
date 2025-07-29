@@ -26,7 +26,7 @@ import com.infomaniak.core.network.isSerializationException
 import com.infomaniak.core.network.models.ApiError
 import com.infomaniak.core.network.models.ApiResponse
 import com.infomaniak.core.network.models.ApiResponseStatus
-import com.infomaniak.core.network.models.InfomaniakHeaders
+import com.infomaniak.core.network.models.ResponseHeaders
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import com.infomaniak.core.network.models.exceptions.ServerErrorException
 import com.infomaniak.core.network.networking.HttpClient
@@ -187,7 +187,7 @@ object ApiController {
             @Suppress("DEPRECATION")
             apiResponse.translatedError = InternalTranslatedErrorCode.UnknownError.translateRes
         }
-        if (apiResponse is ApiResponse<*>) apiResponse.headers = InfomaniakHeaders(headers)
+        if (apiResponse is ApiResponse<*>) apiResponse.headers = ResponseHeaders(headers)
 
         return apiResponse
     }

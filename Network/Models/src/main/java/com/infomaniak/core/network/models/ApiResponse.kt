@@ -49,7 +49,7 @@ open class ApiResponse<T>(
     val itemsPerPage: Int = 0,
 ) {
     @Transient
-    var headers: InfomaniakHeaders? = null
+    var headers: ResponseHeaders? = null
 
     fun isSuccess() = result == ApiResponseStatus.SUCCESS
 }
