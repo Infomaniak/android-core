@@ -32,6 +32,7 @@ import com.infomaniak.core.login.crossapp.internal.ChannelMessageHandler
 import com.infomaniak.core.login.crossapp.internal.DisposableMessage
 import com.infomaniak.core.login.crossapp.internal.certificates.AppCertificateChecker
 import com.infomaniak.core.login.crossapp.internal.deviceid.SharedDeviceIdManager
+import com.infomaniak.lib.core.room.UserDatabase
 import com.infomaniak.lib.core.utils.SentryLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.invoke
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
@@ -69,10 +71,16 @@ internal class CrossAppLoginImpl(
             }.awaitAll()
         }
 
-        return lists.flatten().groupBy { it.email }.map { (_, externalAccounts) ->
-            val account = externalAccounts.firstOrNull { it.isCurrentlySelectedInAnApp } ?: externalAccounts.first()
-            account.copy(tokens = externalAccounts.flatMapTo(mutableSetOf()) { it.tokens })
-        }.sortedBy { it.isCurrentlySelectedInAnApp } // false comes before true, so selected accounts will be last in the list.
+        val alreadyConnectedEmails = UserDatabase().userDao().allUsers.first().map { it.email }
+
+        return lists.flatten()
+            .filter { it.email !in alreadyConnectedEmails }
+            .groupBy { it.email }
+            .map { (_, externalAccounts) ->
+                val account = externalAccounts.firstOrNull { it.isCurrentlySelectedInAnApp } ?: externalAccounts.first()
+                account.copy(tokens = externalAccounts.flatMapTo(mutableSetOf()) { it.tokens })
+            }
+            .sortedBy { it.isCurrentlySelectedInAnApp } // false comes before true, so selected accounts will be last in the list.
     }
 
     @ExperimentalUuidApi
