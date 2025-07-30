@@ -52,7 +52,7 @@ internal fun SingleAccount(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Avatar(
+        CrossLoginAvatar(
             modifier = Modifier
                 .size(Dimens.bigAvatarSize)
                 .clip(CircleShape),

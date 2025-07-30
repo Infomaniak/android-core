@@ -44,7 +44,7 @@ internal fun ThreeAccountsView(
 
         Row {
             // Left
-            Avatar(
+            CrossLoginAvatar(
                 modifier = Modifier.size(Dimens.iconSize),
                 account = accounts[1],
                 strokeColor = avatarStrokeColor,
@@ -53,7 +53,7 @@ internal fun ThreeAccountsView(
             Spacer(Modifier.width(width = Dimens.avatarsBoxWidth - (Dimens.iconSize + Dimens.iconSize)))
 
             // Right
-            Avatar(
+            CrossLoginAvatar(
                 modifier = Modifier.size(Dimens.iconSize),
                 account = accounts[2],
                 strokeColor = avatarStrokeColor,
@@ -61,7 +61,7 @@ internal fun ThreeAccountsView(
         }
 
         // Center
-        Avatar(
+        CrossLoginAvatar(
             modifier = Modifier.size(Dimens.avatarsBoxHeight),
             account = accounts[0],
             strokeColor = avatarStrokeColor,
