@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Auth"))
+    api(project(":Core:Auth"))
     implementation(project(":Core:Avatar"))
     implementation(project(":Core:Network"))
 
