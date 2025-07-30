@@ -48,6 +48,8 @@ open class ApiResponse<T>(
     @SerializedName("items_per_page")
     val itemsPerPage: Int = 0,
 ) {
+    @Transient
+    var headers: ResponseHeaders? = null
 
     fun isSuccess() = result == ApiResponseStatus.SUCCESS
 }
