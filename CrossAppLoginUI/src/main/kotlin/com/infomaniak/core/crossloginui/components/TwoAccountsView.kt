@@ -45,7 +45,7 @@ internal fun TwoAccountsView(
     ) {
 
         // Right
-        Avatar(
+        CrossLoginAvatar(
             modifier = Modifier
                 .size(Dimens.avatarsBoxHeight)
                 .align(Alignment.CenterEnd),
@@ -54,7 +54,7 @@ internal fun TwoAccountsView(
         )
 
         // Left
-        Avatar(
+        CrossLoginAvatar(
             modifier = Modifier
                 .size(Dimens.avatarsBoxHeight)
                 .align(Alignment.CenterStart),
