@@ -1,7 +1,7 @@
 [versions]
 activityCompose = "1.9.3" # Doesn't build when bumped to 1.10.1 (Waiting SDK 35)
 adaptive = "1.0.0"
-androidLogin = "3.1.5"
+androidLogin = "3.1.6"
 androidxCollection = "1.5.0"
 androidxCore = "1.13.1" # Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
 appUpdateVersion = "2.1.0"
