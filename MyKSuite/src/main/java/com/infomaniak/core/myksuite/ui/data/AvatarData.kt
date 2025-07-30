@@ -20,12 +20,13 @@ package com.infomaniak.core.myksuite.ui.data
 import android.os.Parcelable
 import androidx.annotation.ColorInt
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import coil3.SingletonImageLoader
-import coil3.compose.LocalPlatformContext
+import androidx.compose.ui.platform.LocalContext
 import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.avatar.models.AvatarUrlData
+import com.infomaniak.core.coil.ImageLoaderProvider
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -38,8 +39,11 @@ data class AvatarData(
 ) : Parcelable {
     @Composable
     fun toAvatarType(): AvatarType {
+        val context = LocalContext.current
+        val unauthenticatedImageLoader = remember(context) { ImageLoaderProvider.newImageLoader(context) }
+
         return AvatarType.getUrlOrInitials(
-            avatarUrlData = uri?.let { AvatarUrlData(it, SingletonImageLoader.get(LocalPlatformContext.current)) },
+            avatarUrlData = uri?.let { AvatarUrlData(it, unauthenticatedImageLoader) },
             initials = userInitials,
             colors = AvatarColors(
                 containerColor = Color(backgroundColor),

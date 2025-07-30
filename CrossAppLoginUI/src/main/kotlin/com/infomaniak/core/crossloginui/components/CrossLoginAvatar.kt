@@ -22,19 +22,19 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import coil3.SingletonImageLoader
-import coil3.compose.LocalPlatformContext
 import com.infomaniak.core.avatar.components.Avatar
 import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.avatar.models.AvatarUrlData
+import com.infomaniak.core.coil.ImageLoaderProvider
 import com.infomaniak.core.crossloginui.data.CrossLoginDefaults
 import com.infomaniak.core.crossloginui.previews.AccountsPreviewParameter
 import com.infomaniak.core.login.crossapp.ExternalAccount
@@ -42,9 +42,11 @@ import com.infomaniak.core.login.crossapp.ExternalAccount
 @Composable
 internal fun CrossLoginAvatar(modifier: Modifier = Modifier, account: ExternalAccount, strokeColor: Color? = null) {
     val context = LocalContext.current
+    val unauthenticatedImageLoader = remember(context) { ImageLoaderProvider.newImageLoader(context) }
+
     Avatar(
         avatarType = AvatarType.getUrlOrInitials(
-            account.avatarUrl?.let { AvatarUrlData(it, SingletonImageLoader.get(LocalPlatformContext.current)) },
+            account.avatarUrl?.let { AvatarUrlData(it, unauthenticatedImageLoader) },
             initials = account.initials,
             colors = AvatarColors(
                 // TODO: Adapt colors correctly for each app
