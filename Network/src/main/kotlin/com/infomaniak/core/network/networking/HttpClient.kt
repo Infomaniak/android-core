@@ -23,6 +23,13 @@ import java.util.concurrent.TimeUnit
 
 object HttpClient {
 
+    val okHttpClientNoTokenInterceptor: OkHttpClient by lazy {
+        OkHttpClient.Builder().apply {
+            addCache()
+            addCommonInterceptors()
+        }.build()
+    }
+
     val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder().apply {
             addCache()
