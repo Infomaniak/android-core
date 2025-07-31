@@ -28,12 +28,7 @@ class ResponseHeaders(headers: Headers) {
 
     private val _lastModified: String? by headersBacking.header("last-modified")
     // TODO: Use [Instant] from kotlin when Kotlin version is bump to 2.1.0
-    val lastModified: Instant by lazy { getLastModified() }
-
-    private fun getLastModified(): Instant {
-        val zonedDateTime = ZonedDateTime.parse(_lastModified, DateTimeFormatter.RFC_1123_DATE_TIME)
-        return zonedDateTime.toInstant()
-    }
+    val lastModified: Instant by lazy { ZonedDateTime.parse(_lastModified, DateTimeFormatter.RFC_1123_DATE_TIME).toInstant() }
 }
 
 private class HeadersBacking(val remoteHeaders: Headers) {
