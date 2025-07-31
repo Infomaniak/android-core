@@ -27,6 +27,7 @@ class ResponseHeaders(headers: Headers) {
     private val headersBacking = HeadersBacking(headers)
 
     private val _lastModified: String? by headersBacking.header("last-modified")
+    // TODO: Use [Instant] from kotlin when Kotlin version is bump to 2.1.0
     val lastModified: Instant by lazy { getLastModified() }
 
     private fun getLastModified(): Instant {
