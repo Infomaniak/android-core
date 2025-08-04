@@ -30,8 +30,7 @@ internal fun localAccountsFlow(currentUserIdFlow: Flow<Int?>): Flow<List<Externa
         UserDatabase().userDao().allUsers,
         currentUserIdFlow,
     ) { allUsers: List<User>, currentUserId: Int? ->
-        if (allUsers.none { it.isStaff }) emptyList() else allUsers.map { user ->
-            //TODO[CrossAppLogin]: Drop the isStaff condition after successful testing.
+        allUsers.map { user ->
             ExternalAccount(
                 id = user.id.toLong(),
                 fullName = user.displayName ?: user.run { "$firstname $lastname" },
