@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2024-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ import java.util.UUID
  * - the standard request ([requestIntegrityVerdictToken]) that need a warm-up first ([warmUpTokenProvider])
  * - the classic request ([requestClassicIntegrityVerdictToken]) that need additional API checks
  */
-class AppIntegrityManager(private val appContext: Context, userAgent: String) {
+class AppIntegrityManager(private val appContext: Context, userAgent: String) : AbstractAppIntegrityManager() {
 
     private var appIntegrityTokenProvider: StandardIntegrityTokenProvider? = null
     private val classicIntegrityTokenProvider by lazy { IntegrityManagerFactory.create(appContext) }
@@ -54,7 +54,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) {
      * This function is needed in case of standard verdict request by [requestIntegrityVerdictToken].
      * It must be called once at the initialisation because it can take a long time (up to several minutes)
      */
-    fun warmUpTokenProvider(appCloudNumber: Long, onFailure: () -> Unit) {
+    override fun warmUpTokenProvider(appCloudNumber: Long, onFailure: () -> Unit) {
         val integrityManager = IntegrityManagerFactory.createStandard(appContext)
         integrityManager.prepareIntegrityToken(
             PrepareIntegrityTokenRequest.builder().setCloudProjectNumber(appCloudNumber).build()
@@ -68,7 +68,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) {
      * Standard verdict request for Integrity token
      * It should protect automatically from replay attack, but for now this protection seemed to not be working
      */
-    fun requestIntegrityVerdictToken(
+    override fun requestIntegrityVerdictToken(
         requestHash: String,
         onSuccess: (String) -> Unit,
         onFailure: () -> Unit,
@@ -91,7 +91,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) {
      *
      * ###### Can throw Integrity exceptions.
      */
-    suspend fun requestClassicIntegrityVerdictToken(challenge: String): String {
+    override suspend fun requestClassicIntegrityVerdictToken(challenge: String): String {
         val nonce = Base64.encodeToString(challenge.toByteArray(), Base64.DEFAULT)
         val token: CompletableDeferred<String> = CompletableDeferred()
 
@@ -115,7 +115,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) {
         }
     }
 
-    suspend fun getChallenge(): String {
+    override suspend fun getChallenge(): String {
         generateChallengeId()
         val apiResponse = appIntegrityRepository.getChallenge(challengeId)
         SentryLog.d(
@@ -125,7 +125,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) {
         return apiResponse.data ?: error("Get challenge cannot contain null data")
     }
 
-    suspend fun getApiIntegrityVerdict(
+    override suspend fun getApiIntegrityVerdict(
         integrityToken: String,
         packageName: String,
         targetUrl: String,
@@ -150,7 +150,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) {
     /**
      *  Only used to test App Integrity in Apps before their real backend implementation
      */
-    suspend fun callDemoRoute(mobileToken: String) {
+    override suspend fun callDemoRoute(mobileToken: String) {
         runCatching {
             val apiResponse = appIntegrityRepository.demo(mobileToken)
             val logMessage = if (apiResponse.isSuccess()) {
