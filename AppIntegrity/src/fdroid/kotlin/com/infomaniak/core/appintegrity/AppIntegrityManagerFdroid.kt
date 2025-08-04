@@ -52,6 +52,7 @@ class AppIntegrityManager(
     ) = throw IntegrityException(Exception("Unsupported for this app build"))
 
     companion object {
+        const val APP_INTEGRITY_MANAGER_TAG = "App integrity manager"
         const val ATTESTATION_TOKEN_HEADER = "Ik-mobile-token"
     }
 }
