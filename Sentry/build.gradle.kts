@@ -34,6 +34,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":Core:Network:Models"))
+
     api(core.sentry.android)
     api(core.sentry.okhttp)
+    implementation(core.sentry.android.fragment)
+
+    testImplementation(kotlin("test"))
 }

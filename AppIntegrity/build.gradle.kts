@@ -31,6 +31,14 @@ android {
         }
     }
 
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("standard") {
+            isDefault = true
+        }
+        create("fdroid")
+    }
+
     buildFeatures {
         buildConfig = true
     }
@@ -50,7 +58,7 @@ dependencies {
     implementation(project(":Core:Sentry"))
     implementation(project(":Core"))
 
-    implementation(core.integrity)
+    "standardImplementation"(core.integrity)
     implementation(core.ktor.client.core)
     implementation(core.ktor.client.content.negociation)
     implementation(core.ktor.client.json)

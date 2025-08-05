@@ -49,14 +49,19 @@ android {
 dependencies {
 
     implementation(project(":Core"))
+    implementation(project(":Core:Avatar"))
+    implementation(project(":Core:Coil"))
+    implementation(project(":Core:Compose:Basics"))
     implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Compose:MaterialThemeFromXml"))
-    implementation(project(":Core:UserAvatar"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)
     implementation(core.navigation.fragment.ktx)
     implementation(core.kotlinx.serialization.json)
+
+    implementation(core.coil)
+    implementation(core.coil.compose)
 
     // Room
     implementation(core.room.runtime)
@@ -64,8 +69,6 @@ dependencies {
     ksp(core.room.compiler)
 
     // Compose
-    implementation(core.coil.compose)
-    implementation(core.coil.network.okhttp)
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)
     debugImplementation(core.compose.ui.tooling)

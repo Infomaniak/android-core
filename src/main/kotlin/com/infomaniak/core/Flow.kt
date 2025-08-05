@@ -1,5 +1,5 @@
 /*
- * Infomaniak SwissTransfer - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,10 @@
 
 package com.infomaniak.core
 
+import android.os.Process
 import android.os.SystemClock
+import kotlinx.coroutines.CloseableCoroutineDispatcher
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -27,7 +30,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.transformLatest
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.nanoseconds
@@ -54,3 +60,60 @@ fun <T> Flow<T>.rateLimit(minInterval: Duration): Flow<T> = channelFlow {
         lastEmitElapsedNanos = SystemClock.elapsedRealtimeNanos()
     }
 }.buffer(Channel.RENDEZVOUS)
+
+/**
+ * Every time the resulting flow is collected, it will create a new internal [android.os.HandlerThread],
+ * and when the flow is cancelled or completes, this thread will be quit (with [android.os.HandlerThread.quitSafely]).
+ *
+ * This is helpful when you need a given flow to be activated on a single, looper thread.
+ *
+ * Example usage:
+ * ```
+ * val someDataFlow: Flow<Something> = flow {
+ *     getSomeDatabaseInstance().use { db ->
+ *         val flow = db.someQuery()
+ *             .toFlow()
+ *             .map { it?.toSomethingElse() }
+ *         emitAll(flow)
+ *     }
+ * }.flowOnNewHandlerThread(name = "someData")
+ * ```
+ *
+ * Note that if [name] is left to `null`, the system will generate a default thread name.
+ *
+ * Also note that the JVM and ART allow multiple threads to have the same name.
+ * (Just keep it in mind if there's a need to analyze which thread is doing what.)
+ */
+fun <T> Flow<T>.flowOnNewHandlerThread(
+    name: String? = null,
+    priority: Int = Process.THREAD_PRIORITY_DEFAULT
+): Flow<T> = flowOnLazyClosable {
+    @OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
+    HandlerThreadDispatcher(name = name, priority = priority)
+}
+
+/**
+ * Similar to [flowOn], but will lazily create the Dispatcher returned by
+ * [createDispatcher], and will close it once the flow is cancelled or completes.
+ *
+ * Example usage:
+ * ```
+ * val someDataFlow: Flow<Something> = flow {
+ *     getSomeDatabaseInstance().use { db ->
+ *         val flow = db.someQuery()
+ *             .toFlow()
+ *             .map { it?.toSomethingElse() }
+ *         emitAll(flow)
+ *     }
+ * }.flowOnLazyClosable {
+ *     newSingleThreadContext("someData")
+ * }
+ * ```
+ */
+fun <T> Flow<T>.flowOnLazyClosable(
+    createDispatcher: () -> CloseableCoroutineDispatcher
+): Flow<T> = flow {
+    createDispatcher().use { dispatcher ->
+        emitAll(flowOn(dispatcher))
+    }
+}

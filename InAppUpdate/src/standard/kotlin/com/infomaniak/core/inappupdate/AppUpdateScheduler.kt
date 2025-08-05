@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,14 @@ package com.infomaniak.core.inappupdate
 
 import android.content.Context
 import androidx.concurrent.futures.CallbackToFutureAdapter
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.ListenableWorker
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.WorkQuery
+import androidx.work.WorkerParameters
 import com.google.common.util.concurrent.ListenableFuture
 import com.infomaniak.core.inappupdate.updatemanagers.WorkerUpdateManager
 import com.infomaniak.core.sentry.SentryLog

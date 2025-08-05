@@ -51,7 +51,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.21'
+    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21' // Keep the same version as the Kotlin one
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
     api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1'
@@ -71,9 +71,10 @@ dependencies {
     api "androidx.appcompat:appcompat:$appcompatVersion"
     api "androidx.appcompat:appcompat-resources:$appcompatVersion"
 
-    implementation "com.louiscad.splitties:splitties-appctx:3.0.0"
+    def splittiesVersion = "3.0.0"
+    implementation "com.louiscad.splitties:splitties-appctx:$splittiesVersion"
 
-    def roomVersion = '2.7.1'
+    def roomVersion = '2.7.2'
     api "androidx.room:room-ktx:$roomVersion"
     api "androidx.room:room-runtime:$roomVersion"
     ksp "androidx.room:room-compiler:$roomVersion"
@@ -83,7 +84,7 @@ dependencies {
 
     api "io.coil-kt:coil:2.7.0"
 
-    api 'com.github.infomaniak:android-login:3.1.5'
+    api 'com.github.infomaniak:android-login:3.1.6'
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.squareup.okhttp3:okhttp:4.12.0'
 

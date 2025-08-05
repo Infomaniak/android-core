@@ -18,16 +18,17 @@
 package com.infomaniak.core.myksuite.ui.utils
 
 import android.content.Context
+import androidx.annotation.ColorInt
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkRequest
 import com.infomaniak.core.FormatterFileSize.formatShortFileSize
+import com.infomaniak.core.myksuite.ui.data.AvatarData
 import com.infomaniak.core.myksuite.ui.data.MyKSuiteData
 import com.infomaniak.core.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.myksuite.ui.screens.MyKSuiteDashboardScreenData
 import com.infomaniak.core.myksuite.ui.screens.components.KSuiteProductsWithQuotas
 import com.infomaniak.core.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog
-import com.infomaniak.core.useravatar.AvatarData
 
 object MyKSuiteUiUtils {
 
@@ -40,21 +41,27 @@ object MyKSuiteUiUtils {
             .also(::navigate)
     }
 
+    /**
+     * To compute the correct [userInitialsBackgroundColor] for a user, use the [getBackgroundColorResBasedOnId] method
+     * with the appropriate list of colors.
+     */
     fun getDashboardData(
         context: Context,
         myKSuiteData: MyKSuiteData,
-        avatarUri: String? = null,
-        userInitials: String? = null,
-        iconColor: Int? = null,
-        userInitialsBackgroundColor: Int? = null,
+        userId: Int,
+        avatarUri: String?,
+        userInitials: String,
+        @ColorInt iconColor: Int,
+        @ColorInt userInitialsBackgroundColor: Int,
     ): MyKSuiteDashboardScreenData {
         return MyKSuiteDashboardScreenData(
             myKSuiteTier = myKSuiteData.tier,
             email = myKSuiteData.mail.email,
             avatarData = AvatarData(
-                uri = avatarUri ?: "",
-                userInitials = userInitials ?: "",
-                iconColor = iconColor,
+                id = userId.toString(),
+                uri = avatarUri,
+                userInitials = userInitials,
+                initialsColor = iconColor,
                 backgroundColor = userInitialsBackgroundColor,
             ),
             dailySendingLimit = myKSuiteData.mail.dailyLimitSent.toString(),

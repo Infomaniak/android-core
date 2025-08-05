@@ -52,12 +52,13 @@ android {
 
 dependencies {
     implementation(project(":Core"))
+    implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Network"))
     implementation(project(":Core:Sentry"))
 
     implementation(core.androidx.datastore.preferences)
     implementation(core.appcompat)
-    implementation(core.androidx.work.runtime.ktx)
+    implementation(core.androidx.work.runtime)
     implementation(core.kotlinx.serialization.json)
 
     implementation(core.app.update)
@@ -69,12 +70,11 @@ dependencies {
     implementation(core.gson)
 
     // Compose
-    implementation(core.coil.compose)
-    implementation(core.coil.network.okhttp)
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)
     debugImplementation(core.compose.ui.tooling)
     implementation(core.compose.material3)
     implementation(core.compose.ui)
     implementation(core.compose.ui.tooling.preview)
+    implementation(core.androidx.adaptive)
 }

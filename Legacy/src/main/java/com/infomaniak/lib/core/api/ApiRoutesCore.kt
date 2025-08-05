@@ -18,6 +18,7 @@
 package com.infomaniak.lib.core.api
 
 import com.infomaniak.lib.core.BuildConfig.INFOMANIAK_API
+import com.infomaniak.lib.core.BuildConfig.INFOMANIAK_API_V1
 
 object ApiRoutesCore {
 
@@ -25,4 +26,7 @@ object ApiRoutesCore {
         return "${INFOMANIAK_API}profile?no_avatar_default=1"
     }
 
+    fun sendDeviceInfo(): String {
+        return "${INFOMANIAK_API_V1}/devices"
+    }
 }

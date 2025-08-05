@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.inappupdate.updatemanagers
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -139,7 +138,6 @@ class InAppUpdateManager(
     }
 
     override fun checkUpdateIsAvailable() {
-        Log.e("TOTO", "checkUpdateIsAvailable")
         SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on GPlay")
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             SentryLog.d(StoreUtils.APP_UPDATE_TAG, "checking success")

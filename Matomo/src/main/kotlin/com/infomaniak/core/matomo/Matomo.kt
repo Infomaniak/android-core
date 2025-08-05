@@ -35,21 +35,23 @@ interface Matomo {
         return TrackerBuilder(BuildConfig.MATOMO_URL, siteId, "AndroidTracker").build(Matomo.getInstance(appCtx)).also {
             // Put a tracker on app installs to have statistics on the number of times the app is installed or updated
             TrackHelper.track().download().identifier(DownloadTracker.Extra.ApkChecksum(appCtx)).with(it)
+
         }
     }
 
     fun addTrackingCallbackForDebugLog() {
-        if (BuildConfig.DEBUG) {
-            tracker.addTrackingCallback { trackMe ->
-                trackMe.also {
-                    it.toMap().forEach { entry ->
-                        when (entry.key) {
-                            "action_name" -> Log.d("TrackerScreen", entry.value)
-                            "e_c" -> Log.d("TrackerEvent", "Category : ${entry.value}")
-                            "e_n" -> Log.d("TrackerEvent", "Name     : ${entry.value}")
-                            "e_a" -> Log.d("TrackerEvent", "Action   : ${entry.value}")
-                            "e_v" -> Log.d("TrackerEvent", "Value    : ${entry.value}")
-                        }
+
+        if (!BuildConfig.DEBUG) return
+
+        tracker.addTrackingCallback { trackMe ->
+            trackMe.also {
+                it.toMap().forEach { entry ->
+                    when (entry.key) {
+                        "action_name" -> Log.d("TrackerScreen", entry.value)
+                        "e_c" -> Log.d("TrackerEvent", "Category : ${entry.value}")
+                        "e_n" -> Log.d("TrackerEvent", "Name     : ${entry.value}")
+                        "e_a" -> Log.d("TrackerEvent", "Action   : ${entry.value}")
+                        "e_v" -> Log.d("TrackerEvent", "Value    : ${entry.value}")
                     }
                 }
             }
@@ -77,10 +79,6 @@ interface Matomo {
             .name(name)
             .let { if (value != null) it.value(value) else it }
             .with(tracker)
-    }
-
-    fun trackAccountEvent(name: String, action: TrackerAction = TrackerAction.CLICK, value: Float? = null) {
-        trackEvent("account", name, action, value)
     }
     //endregion
 

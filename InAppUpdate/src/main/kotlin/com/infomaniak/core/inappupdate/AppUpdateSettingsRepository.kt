@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ class AppUpdateSettingsRepository(private val context: Context) {
         val HAS_APP_UPDATE_DOWNLOADED_KEY = booleanPreferencesKey("hasAppUpdateDownloadedKey")
         val APP_UPDATE_LAUNCHES_KEY = intPreferencesKey("appUpdateLaunchesKey")
 
-        internal const val DATA_STORE_NAME = "StoresSettingsDataStore"
+        internal const val DATA_STORE_NAME = "AppUpdateSettingsDataStore"
 
         private const val DEFAULT_IS_USER_WANTING_UPDATES = false
         private const val DEFAULT_HAS_APP_UPDATE_DOWNLOADED = false

@@ -148,6 +148,12 @@ fun MaterialButton.hideProgressCatching(@StringRes text: Int) {
     runCatching { hideProgress(text) }
 }
 
+fun MaterialButton.hideProgressCatching(text: String) {
+    isClickable = true
+    // hideProgress stores references to views which crashes when the view is freed
+    runCatching { hideProgress(text) }
+}
+
 /**
  * Set a pagination in a RecyclerView, only if a LinearLayoutManager has been attached
  * @param whenLoadMoreIsPossible A callback which will be called each time it is necessary to load more items
@@ -328,6 +334,7 @@ fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Coil module")
 fun ImageView.loadAvatar(
     user: User,
     imageLoader: ImageLoader = context.simpleImageLoader,
@@ -344,6 +351,7 @@ fun ImageView.loadAvatar(
     loadAvatar(backgroundColor, avatarUrl, initials, imageLoader, initialsColor)
 }
 
+@Deprecated("Use the method exposed through the Core:Coil module")
 fun ImageView.loadAvatar(
     backgroundColor: GradientDrawable,
     avatarUrl: String?,
