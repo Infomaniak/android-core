@@ -36,5 +36,5 @@ class ApiError(
     var contextJson: JsonObject? = null,
     val errors: Array<ApiError>? = null,
     @Contextual
-    val exception: Exception? = null
+    val exception: Exception? = null,
 )
