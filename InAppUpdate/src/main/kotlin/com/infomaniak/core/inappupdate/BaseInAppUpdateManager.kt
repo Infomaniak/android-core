@@ -32,8 +32,10 @@ import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionName
 import com.infomaniak.core.network.networking.HttpClient
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) : DefaultLifecycleObserver {
@@ -52,7 +54,11 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
         val apiResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClient)
 
         emit(apiResponse.data?.mustRequireUpdate(appVersionName) == true)
-    }
+    }.stateIn(
+        scope = activity.lifecycleScope,
+        started = SharingStarted.Eagerly,
+        initialValue = false,
+    )
 
     open fun installDownloadedUpdate() = Unit
 
