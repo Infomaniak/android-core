@@ -48,7 +48,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     val canInstallUpdate = storesSettingsRepository
         .flowOf(HAS_APP_UPDATE_DOWNLOADED_KEY).distinctUntilChanged()
 
-    val shouldDisplayUpdateRequiredScreen = flow {
+    val isUpdateRequired = flow {
         val apiResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClient)
 
         emit(apiResponse.data?.mustRequireUpdate(appVersionName) == true)
