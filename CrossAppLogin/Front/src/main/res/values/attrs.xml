@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+
+    <declare-styleable name="CommonAttributes">
+        <attr name="crossLoginPrimaryColor" format="color" />
+        <attr name="crossLoginOnPrimaryColor" format="color" />
+        <attr name="crossLoginTitleColor" format="color" />
+        <attr name="crossLoginDescriptionColor" format="color" />
+        <attr name="crossLoginAvatarStrokeColor" format="color" />
+        <attr name="crossLoginButtonStrokeColor" format="color" />
+        <attr name="crossLoginButtonType" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="CrossLoginSelectAccountsView">
+        <attr name="crossLoginPrimaryColor" />
+        <attr name="crossLoginOnPrimaryColor" />
+        <attr name="crossLoginTitleColor" />
+        <attr name="crossLoginDescriptionColor" />
+        <attr name="crossLoginAvatarStrokeColor" />
+        <attr name="crossLoginButtonStrokeColor" />
+        <attr name="crossLoginButtonType" />
+    </declare-styleable>
+
+    <declare-styleable name="CrossLoginListAccountsView">
+        <attr name="crossLoginPrimaryColor" />
+        <attr name="crossLoginOnPrimaryColor" />
+        <attr name="crossLoginTitleColor" />
+        <attr name="crossLoginDescriptionColor" />
+        <attr name="crossLoginAvatarStrokeColor" />
+        <attr name="crossLoginButtonStrokeColor" />
+        <attr name="crossLoginButtonType" />
+    </declare-styleable>
+
+</resources>
