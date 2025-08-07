@@ -20,6 +20,7 @@ package com.infomaniak.core.inappupdate.updaterequired.ui.composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.dp
+import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.inappupdate.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,26 +62,31 @@ fun UpdateAvailableBottomSheet(
         ) {
             Image(painter = illustration, contentDescription = null)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Margin.Medium))
 
             Text(
                 style = titleTextStyle,
                 text = stringResource(R.string.updateAvailableTitle),
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(Margin.Huge))
 
             Text(
                 style = descriptionTextStyle,
                 textAlign = TextAlign.Center,
-                text = stringResource(R.string.updateAvailableDescription)
+                text = stringResource(R.string.updateAvailableDescription),
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(Margin.Huge))
 
-            installUpdateButton()
+            FlowColumn(
+                maxItemsInEachColumn = 2,
+                horizontalArrangement = Arrangement.spacedBy(Margin.Large),
+            ) {
+                installUpdateButton()
 
-            dismissButton()
+                dismissButton()
+            }
         }
     }
 }
