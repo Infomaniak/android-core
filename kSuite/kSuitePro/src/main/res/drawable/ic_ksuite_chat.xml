@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M21.75,18.752H11.25L5.25,23.252V18.752H2.25C1.852,18.752 1.471,18.594 1.189,18.313C0.908,18.032 0.75,17.65 0.75,17.252V2.252C0.75,1.855 0.908,1.473 1.189,1.192C1.471,0.91 1.852,0.752 2.25,0.752H21.75C22.148,0.752 22.529,0.91 22.811,1.192C23.092,1.473 23.25,1.855 23.25,2.252V17.252C23.25,17.65 23.092,18.032 22.811,18.313C22.529,18.594 22.148,18.752 21.75,18.752Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M5.25,7.502H18.75"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M5.25,12.002H15.75"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>
