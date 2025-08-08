@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="25">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M2.25,4.202V11.816C2.25,14.223 2.979,16.573 4.342,18.557C5.704,20.541 7.636,22.065 9.882,22.929L10.923,23.329C11.616,23.596 12.384,23.596 13.077,23.329L14.118,22.929C16.364,22.065 18.296,20.541 19.658,18.557C21.021,16.573 21.75,14.223 21.75,11.816V4.202C21.752,3.916 21.671,3.635 21.517,3.393C21.363,3.152 21.143,2.96 20.882,2.84C18.082,1.618 15.055,1.001 12,1.029C8.945,1.001 5.918,1.618 3.118,2.84C2.858,2.96 2.637,3.152 2.483,3.393C2.329,3.635 2.248,3.916 2.25,4.202Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#9F9F9F"
+        android:fillType="evenOdd"
+        android:pathData="M10.63,7.353C10.982,7.034 11.474,6.844 12,6.844C12.526,6.844 13.018,7.034 13.37,7.353C13.719,7.67 13.899,8.083 13.899,8.496V9.452H10.101V8.496C10.101,8.083 10.281,7.67 10.63,7.353ZM16.216,15.8C17,15.8 17,15.801 17,15.801L16.216,15.8ZM17,15.804L17,15.801V10.931C17,10.603 16.906,10.308 16.729,10.066C16.557,9.832 16.34,9.692 16.157,9.609C15.976,9.527 15.805,9.49 15.687,9.472C15.626,9.463 15.573,9.458 15.533,9.455C15.513,9.454 15.496,9.453 15.482,9.453L15.467,9.452V8.496C15.467,7.617 15.082,6.791 14.425,6.195C13.77,5.601 12.897,5.278 12,5.278C11.103,5.278 10.23,5.601 9.576,6.195C8.918,6.791 8.533,7.617 8.533,8.496V9.452C8.225,9.455 7.943,9.528 7.701,9.674C7.456,9.823 7.295,10.02 7.193,10.205C7.093,10.386 7.047,10.559 7.025,10.681C7.013,10.743 7.007,10.797 7.004,10.839C7.002,10.86 7.001,10.879 7.001,10.894L7,10.915L7,10.923L7,10.927L7,10.929V10.931V15.8C7,16.127 7.094,16.423 7.272,16.665C7.443,16.899 7.66,17.038 7.843,17.121C8.024,17.204 8.195,17.241 8.313,17.259C8.374,17.268 8.427,17.273 8.467,17.275C8.487,17.277 8.504,17.277 8.518,17.278L8.537,17.278L8.544,17.278L8.548,17.278L8.549,17.278L8.551,17.278H15.45C15.764,17.278 16.052,17.206 16.299,17.056C16.544,16.908 16.705,16.71 16.807,16.525C16.907,16.344 16.953,16.172 16.975,16.05C16.987,15.987 16.993,15.933 16.996,15.891C16.998,15.87 16.999,15.852 16.999,15.837L17,15.816L17,15.807L17,15.804ZM12.75,12.674C12.75,12.26 12.414,11.924 12,11.924C11.586,11.924 11.25,12.26 11.25,12.674V14.174C11.25,14.588 11.586,14.924 12,14.924C12.414,14.924 12.75,14.588 12.75,14.174V12.674Z" />
+</vector>
