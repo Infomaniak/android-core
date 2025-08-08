@@ -33,7 +33,7 @@ import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Typography
+import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
 import com.infomaniak.core.utils.format
 import java.util.Date

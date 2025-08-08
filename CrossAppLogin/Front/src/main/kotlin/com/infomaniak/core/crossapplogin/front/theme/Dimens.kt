@@ -21,16 +21,8 @@ import androidx.compose.ui.unit.dp
 
 internal object Dimens {
 
-    /** 56 dp */
-    val buttonHeight = 56.dp
-
-    /** 24 dp */
-    val iconSize = 24.dp
     /** 40 dp */
     val bigAvatarSize = 40.dp
-
-    /** 16 dp */
-    val largeCornerRadius = 16.dp
 
     /** 52 dp */
     val avatarsBoxWidth = 52.dp

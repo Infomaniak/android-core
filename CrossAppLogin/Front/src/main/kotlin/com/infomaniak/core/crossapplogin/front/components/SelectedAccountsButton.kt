@@ -40,13 +40,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.Chevron
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
-import com.infomaniak.core.crossapplogin.front.theme.Dimens
-import com.infomaniak.core.crossapplogin.back.ExternalAccount
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

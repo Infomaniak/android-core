@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.R
@@ -47,7 +48,6 @@ import com.infomaniak.core.crossapplogin.front.components.PrimaryButton
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
-import com.infomaniak.core.crossapplogin.front.theme.Typography
 import com.infomaniak.core.R as RCore
 
 @OptIn(ExperimentalLayoutApi::class)

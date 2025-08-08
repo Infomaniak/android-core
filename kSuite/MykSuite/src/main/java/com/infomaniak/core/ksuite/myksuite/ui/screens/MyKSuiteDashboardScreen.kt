@@ -66,6 +66,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.avatar.components.Avatar
+import com.infomaniak.core.compose.basics.Dimens
+import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.extensions.openUrl
 import com.infomaniak.core.ksuite.myksuite.R
@@ -83,14 +85,13 @@ import com.infomaniak.core.ksuite.myksuite.ui.screens.components.LimitedFunction
 import com.infomaniak.core.ksuite.myksuite.ui.screens.components.MyKSuiteTextItem
 import com.infomaniak.core.ksuite.myksuite.ui.screens.components.ProductsStorageQuotas
 import com.infomaniak.core.ksuite.myksuite.ui.screens.components.UpgradeFeature
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Typography
 import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
 import com.infomaniak.core.utils.format
 import kotlinx.parcelize.Parcelize
 import java.util.Date
+import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens as KSuiteDimens
 
 @Composable
 fun MyKSuiteDashboardScreen(dashboardScreenData: () -> MyKSuiteDashboardScreenData, onClose: () -> Unit = {}) {
@@ -222,7 +223,7 @@ private fun SubscriptionInfoCard(
         } else {
             dashboardScreenData().trialExpiryDate?.let { expiryDate ->
                 MyKSuiteTextItem(
-                    modifier = paddedModifier.heightIn(min = Dimens.textItemMinHeight),
+                    modifier = paddedModifier.heightIn(min = KSuiteDimens.textItemMinHeight),
                     title = stringResource(R.string.myKSuiteDashboardTrialPeriod),
                     value = stringResource(R.string.myKSuiteDashboardUntil, expiryDate.format(FORMAT_DATE_SIMPLE)),
                 )

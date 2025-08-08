@@ -38,7 +38,7 @@ import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.components.MyKSuiteTier
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Typography
+import com.infomaniak.core.compose.basics.Typography
 import kotlinx.parcelize.Parcelize
 
 @Composable

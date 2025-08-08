@@ -31,10 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.compose.basics.ButtonType
+import com.infomaniak.core.compose.basics.Dimens
+import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Typography
 
 @Composable
 internal fun MyKSuitePrimaryButton(

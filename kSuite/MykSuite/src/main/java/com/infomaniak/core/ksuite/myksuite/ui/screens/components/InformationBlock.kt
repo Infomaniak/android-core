@@ -33,13 +33,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
+import com.infomaniak.core.compose.basics.Dimens
+import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.components.TextWithIcon
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Typography
 
 @Composable
 internal fun InformationBlock(modifier: Modifier = Modifier, text: String, buttonText: String, onClick: () -> Unit) {
