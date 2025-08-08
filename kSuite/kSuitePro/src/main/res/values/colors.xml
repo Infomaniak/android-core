@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+
+    <!-- Grey tones from UI/UX -->
+    <color name="black">#000000</color>
+    <color name="bat">#1A1A1A</color>
+    <color name="orca">#333333</color>
+    <color name="elephant">#666666</color>
+    <color name="shark">#9F9F9F</color>
+    <color name="mouse">#E0E0E0</color>
+    <color name="rabbit">#F1F1F1</color>
+    <color name="polar_bear">#F5F5F5</color>
+    <color name="swan">#FAFAFA</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="kSuiteBackground">#222633</color>
+
+    <color name="kSuitePrimaryText">@color/orca</color>
+    <color name="kSuiteSecondaryText">@color/elephant</color>
+    <color name="kSuiteButtonBackground">@color/rabbit</color>
+
+</resources>
