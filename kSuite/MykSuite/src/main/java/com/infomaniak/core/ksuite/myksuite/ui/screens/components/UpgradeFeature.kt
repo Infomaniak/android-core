@@ -37,15 +37,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import com.infomaniak.core.compose.basics.Dimens
+import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.ksuite.myksuite.ui.screens.MyKSuiteUpgradeFeatures
 import com.infomaniak.core.ksuite.myksuite.ui.screens.MyKSuiteUpgradeFeatures.DriveDropboxFeature
 import com.infomaniak.core.ksuite.myksuite.ui.screens.MyKSuiteUpgradeFeatures.DriveStorageFeature
 import com.infomaniak.core.ksuite.myksuite.ui.screens.MyKSuiteUpgradeFeatures.MoreFeatures
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Typography
 
 @Composable
 internal fun ColumnScope.UpgradeFeature(

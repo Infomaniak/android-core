@@ -35,7 +35,7 @@ import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Typography
+import com.infomaniak.core.compose.basics.Typography
 
 @Composable
 internal fun LimitedFunctionalities(modifier: Modifier, dailySendingLimit: () -> String) {

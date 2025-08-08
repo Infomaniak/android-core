@@ -43,12 +43,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.infomaniak.core.compose.basics.Dimens
+import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.ksuite.myksuite.R
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.ksuite.myksuite.ui.theme.Typography
+import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens as KSuiteDimens
 
 @Composable
 internal fun ExpandableActionItem(
@@ -64,7 +65,7 @@ internal fun ExpandableActionItem(
     Column {
         Row(
             modifier = Modifier
-                .heightIn(min = Dimens.textItemMinHeight)
+                .heightIn(min = KSuiteDimens.textItemMinHeight)
                 .fillMaxWidth()
                 .then(  // TODO add onClickLabel for accessibility
                     if (expandedView == null) Modifier else Modifier.clickable { isExpanded = !isExpanded }

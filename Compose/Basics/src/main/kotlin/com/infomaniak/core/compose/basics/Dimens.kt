@@ -15,33 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.compose.margin
+package com.infomaniak.core.compose.basics
 
 import androidx.compose.ui.unit.dp
 
-/**
- * Margins are accessible through here for now until we extract them to our design system
- */
-object Margin {
+object Dimens {
 
-    /** 4dp */
-    val Micro = 4.dp
+    /** 16 dp */
+    val smallIconSize = 16.dp
+    /** 24 dp */
+    val iconSize = 24.dp
 
-    /** 8dp */
-    val Mini = 8.dp
+    /** 32 dp */
+    val avatarSize = 32.dp
 
-    /** 12dp */
-    val Small = 12.dp
+    /** 8 dp */
+    val smallCornerRadius = 8.dp
+    /** 16 dp */
+    val largeCornerRadius = 16.dp
 
-    /** 16dp */
-    val Medium = 16.dp
+    /** 56 dp */
+    val buttonHeight = 56.dp
 
-    /** 24dp */
-    val Large = 24.dp
-
-    /** 32dp */
-    val Huge = 32.dp
-
-    /** 48dp */
-    val Giant = 48.dp
+    /** 5 dp */
+    val cardElevation = 5.dp
 }
