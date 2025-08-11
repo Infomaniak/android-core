@@ -66,24 +66,24 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     open fun requireUpdate(onFailure: ((Exception) -> Unit)? = null) = activity.goToPlayStore()
 
     open fun init(
-        mustRequireImmediateUpdate: Boolean = false,
+        isUpdateRequired: Boolean = false,
         onUserChoice: ((Boolean) -> Unit)? = null,
         onInstallStart: (() -> Unit)? = null,
         onInstallFailure: ((Exception) -> Unit)? = null,
         onInstallSuccess: (() -> Unit)? = null,
         onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
         onFDroidResult: ((Boolean) -> Unit)? = null,
-    ) = init(mustRequireImmediateUpdate, onInAppUpdateUiChange, onFDroidResult)
+    ) = init(isUpdateRequired, onInAppUpdateUiChange, onFDroidResult)
 
     protected fun init(
-        mustRequireImmediateUpdate: Boolean = false,
+        isUpdateRequired: Boolean = false,
         onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
         onFDroidResult: ((Boolean) -> Unit)? = null,
     ) {
         this.onInAppUpdateUiChange = onInAppUpdateUiChange
         this.onFDroidResult = onFDroidResult
 
-        if (!mustRequireImmediateUpdate) activity.lifecycle.addObserver(observer = this)
+        if (!isUpdateRequired) activity.lifecycle.addObserver(observer = this)
     }
 
     protected abstract fun checkUpdateIsAvailable()

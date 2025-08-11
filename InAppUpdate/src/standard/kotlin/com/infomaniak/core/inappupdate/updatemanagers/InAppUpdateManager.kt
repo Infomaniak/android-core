@@ -102,7 +102,7 @@ class InAppUpdateManager(
     }
 
     override fun init(
-        mustRequireImmediateUpdate: Boolean,
+        isUpdateRequired: Boolean,
         onUserChoice: ((Boolean) -> Unit)?,
         onInstallStart: (() -> Unit)?,
         onInstallFailure: ((Exception) -> Unit)?,
@@ -110,7 +110,7 @@ class InAppUpdateManager(
         onInAppUpdateUiChange: ((Boolean) -> Unit)?,
         onFDroidResult: ((Boolean) -> Unit)?,
     ) {
-        this.updateType = if (mustRequireImmediateUpdate) AppUpdateType.IMMEDIATE else AppUpdateType.FLEXIBLE
+        this.updateType = if (isUpdateRequired) AppUpdateType.IMMEDIATE else AppUpdateType.FLEXIBLE
         this.onUserChoice = onUserChoice
         this.onInstallStart = onInstallStart
         this.onInstallFailure = {
@@ -119,7 +119,7 @@ class InAppUpdateManager(
         }
         this.onInstallSuccess = onInstallSuccess
 
-        super.init(mustRequireImmediateUpdate, onInAppUpdateUiChange, onFDroidResult)
+        super.init(isUpdateRequired, onInAppUpdateUiChange, onFDroidResult)
     }
 
     override fun onCreate(owner: LifecycleOwner) {
