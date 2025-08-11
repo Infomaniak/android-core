@@ -75,7 +75,6 @@ import com.infomaniak.core.ksuite.myksuite.ui.components.MyKSuiteChip
 import com.infomaniak.core.ksuite.myksuite.ui.components.MyKSuitePrimaryButton
 import com.infomaniak.core.ksuite.myksuite.ui.components.MyKSuiteTier
 import com.infomaniak.core.ksuite.myksuite.ui.components.WeightOneSpacer
-import com.infomaniak.core.ksuite.myksuite.ui.components.myKSuiteGradient
 import com.infomaniak.core.ksuite.myksuite.ui.data.AvatarData
 import com.infomaniak.core.ksuite.myksuite.ui.network.ApiRoutes
 import com.infomaniak.core.ksuite.myksuite.ui.screens.components.ExpandableActionItem
@@ -87,6 +86,7 @@ import com.infomaniak.core.ksuite.myksuite.ui.screens.components.ProductsStorage
 import com.infomaniak.core.ksuite.myksuite.ui.screens.components.UpgradeFeature
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
+import com.infomaniak.core.ksuite.ui.components.kSuiteGradient
 import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
 import com.infomaniak.core.utils.format
 import kotlinx.parcelize.Parcelize
@@ -188,7 +188,7 @@ private fun SubscriptionInfoCard(
             Avatar(
                 modifier = Modifier.size(Dimens.avatarSize),
                 avatarType = dashboardScreenData().avatarData.toAvatarType(),
-                border = myKSuiteGradient(),
+                border = kSuiteGradient(),
             )
             Text(
                 modifier = Modifier.weight(1.0f),
@@ -256,7 +256,7 @@ private fun MyKSuitePlusPromotionCard(modifier: Modifier = Modifier, onButtonCli
         modifier = modifier,
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Dimens.cardElevation),
-        border = myKSuiteGradient(),
+        border = kSuiteGradient(),
     ) {
         Box(Modifier.padding(Margin.Medium)) {
             Column(verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {

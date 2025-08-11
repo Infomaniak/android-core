@@ -22,36 +22,21 @@ import android.util.AttributeSet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
-import com.infomaniak.core.ksuite.ksuitepro.data.ProOffer
-import com.infomaniak.core.ksuite.ksuitepro.views.components.ProOfferContent
+import com.infomaniak.core.ksuite.ksuitepro.views.components.GetCardContent
 
-class ProOfferView @JvmOverloads constructor(
+class GetCardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
-    private var offer = ProOffer.Standard
-    private var isAdmin = false
     private var onClick: (() -> Unit)? = null
 
     @Composable
     override fun Content() {
         MaterialThemeFromXml {
-            ProOfferContent(
-                offer = offer,
-                isAdmin = isAdmin,
-                onClick = { onClick?.invoke() },
-            )
+            GetCardContent(onClick = { onClick?.invoke() })
         }
-    }
-
-    fun setOffer(offer: ProOffer) {
-        this.offer = offer
-    }
-
-    fun setIsAdmin(isAdmin: Boolean) {
-        this.isAdmin = isAdmin
     }
 
     fun setOnClick(listener: () -> Unit) {
