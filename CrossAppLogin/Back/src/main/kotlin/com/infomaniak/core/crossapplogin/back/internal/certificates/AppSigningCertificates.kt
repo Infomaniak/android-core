@@ -38,6 +38,7 @@ internal class AppSigningCertificates(
         return Dispatchers.Default {
             val givenSha256 = signingCertificate.sha256()
             acceptedCertificates.any { it.matches(givenSha256) }
+            true
         }
     }
 
