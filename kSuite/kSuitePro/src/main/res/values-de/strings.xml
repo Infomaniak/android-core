@@ -28,6 +28,8 @@
     <string name="kSuiteEnterpriseOfferDescription">Eine sichere Umgebung zur Zusammenarbeit für Ihre Teams, selbst für die anspruchsvollsten.</string>
     <string name="kSuiteEnterpriseOfferTitle">Sichern, zentralisieren, beherrschen mit dem Enterprise-Angebot</string>
     <string name="kSuiteEnterpriseStorageLabel">6 TB pro Nutzer des Cloud-Speichers kDrive und kChat</string>
+    <string name="kSuiteGetProDescription">Grenzenloses Erstellen und Zusammenarbeiten</string>
+    <string name="kSuiteGetProTitle">KSuite erhalten</string>
     <string name="kSuiteMoreLabel">Und noch viel mehr!</string>
     <string name="kSuiteStandardEuriaLabel">Euria: Transkription von Videos, Erstellung von Bildern usw.</string>
     <string name="kSuiteStandardKChatLabel">kChat: Unbegrenzter Nachrichtenverlauf, mehr Kanäle, etc.</string>
@@ -35,6 +37,7 @@
     <string name="kSuiteStandardOfferDescription">Geben Sie Ihrem Team die wichtigsten Werkzeuge an die Hand, um im Alltag effektiv zusammenzuarbeiten.</string>
     <string name="kSuiteStandardOfferTitle">Schalten Sie mit dem Standardangebot einen Gang höher</string>
     <string name="kSuiteStandardStorageLabel">50 GB pro Nutzer des Cloud-Speichers kDrive und kChat</string>
+    <string name="kSuiteUpgradeButton">ENTWICKELN</string>
     <string name="kSuiteUpgradeDetails">Um Ihr Angebot weiterzuentwickeln, nutzen Sie das Webinterface.</string>
     <string name="kSuiteUpgradeDetailsContactAdmin">Wenden Sie sich an Ihren Administrator, um Ihr Angebot weiterzuentwickeln.</string>
 </resources>

@@ -22,39 +22,18 @@ import android.util.AttributeSet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
-import com.infomaniak.core.ksuite.ksuitepro.data.ProOffer
-import com.infomaniak.core.ksuite.ksuitepro.views.components.ProOfferContent
+import com.infomaniak.core.ksuite.ksuitepro.views.components.EvolveChipContent
 
-class ProOfferView @JvmOverloads constructor(
+class EvolveChipView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
-    private var offer = ProOffer.Standard
-    private var isAdmin = false
-    private var onClick: (() -> Unit)? = null
-
     @Composable
     override fun Content() {
         MaterialThemeFromXml {
-            ProOfferContent(
-                offer = offer,
-                isAdmin = isAdmin,
-                onClick = { onClick?.invoke() },
-            )
+            EvolveChipContent()
         }
-    }
-
-    fun setOffer(offer: ProOffer) {
-        this.offer = offer
-    }
-
-    fun setIsAdmin(isAdmin: Boolean) {
-        this.isAdmin = isAdmin
-    }
-
-    fun setOnClick(listener: () -> Unit) {
-        onClick = listener
     }
 }
