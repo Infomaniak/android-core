@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
+    alias(core.plugins.compose.compiler)
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -38,8 +39,18 @@ android {
     kotlinOptions {
         jvmTarget = javaVersion.toString()
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
-
+    // Compose
+    implementation(platform(core.compose.bom))
+    implementation(core.compose.runtime)
+    debugImplementation(core.compose.ui.tooling)
+    implementation(core.compose.material3)
+    implementation(core.compose.ui)
+    implementation(core.compose.ui.tooling.preview)
 }

@@ -18,8 +18,6 @@
 package com.infomaniak.core.ksuite.ksuitepro.views.components
 
 import android.content.res.Configuration
-import android.content.res.Resources
-import androidx.annotation.ColorRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,7 +37,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -54,6 +51,7 @@ import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.ksuite.ksuitepro.R
 import com.infomaniak.core.ksuite.ksuitepro.data.ProFeature
 import com.infomaniak.core.ksuite.ksuitepro.data.ProOffer
+import com.infomaniak.core.ksuite.ksuitepro.utils.KSuiteProUiUtils.color
 import com.infomaniak.core.R as RCore
 
 @Composable
@@ -210,8 +208,6 @@ private fun computeFeatures(offer: ProOffer): List<ProFeature> {
         )
     }
 }
-
-private fun Resources.color(@ColorRes id: Int): Color = Color(getColor(id, null))
 
 @Preview(name = "(1) Light")
 @Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
