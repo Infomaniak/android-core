@@ -20,5 +20,6 @@
     <color name="kSuitePrimaryText">@color/swan</color>
     <color name="kSuiteSecondaryText">@color/shark</color>
     <color name="kSuiteButtonBackground">@color/orca</color>
+    <color name="kSuiteEvolveBackground">@color/orca</color>
 
 </resources>
