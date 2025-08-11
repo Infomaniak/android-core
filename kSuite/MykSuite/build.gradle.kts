@@ -32,6 +32,14 @@ android {
         }
     }
 
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("standard") {
+            isDefault = true
+        }
+        create("fdroid")
+    }
+
     compileOptions {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
@@ -54,6 +62,7 @@ dependencies {
     implementation(project(":Core:Compose:Basics"))
     implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Compose:MaterialThemeFromXml"))
+    implementation(project(":Core:kSuite"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)

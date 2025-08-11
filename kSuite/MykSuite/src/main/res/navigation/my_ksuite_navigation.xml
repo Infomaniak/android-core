@@ -22,17 +22,17 @@
 
     <fragment
         android:id="@+id/myKSuiteDashboardFragment"
-        android:name="com.infomaniak.core.ksuite.myksuite.ui.views.MyKSuiteDashboardFragment"
+        android:name="com.infomaniak.core.ksuite.myksuite.views.MyKSuiteDashboardFragment"
         android:label="MyKSuiteDashboardFragment">
 
         <argument
             android:name="dashboardData"
-            app:argType="com.infomaniak.core.ksuite.myksuite.ui.screens.MyKSuiteDashboardScreenData" />
+            app:argType="com.infomaniak.core.ksuite.myksuite.screens.MyKSuiteDashboardScreenData" />
     </fragment>
 
     <dialog
         android:id="@+id/myKSuiteUpgradeBottomSheet"
-        android:name="com.infomaniak.core.ksuite.myksuite.ui.views.MyKSuiteUpgradeBottomSheetDialog"
+        android:name="com.infomaniak.core.ksuite.myksuite.views.MyKSuiteUpgradeBottomSheetDialog"
         android:label="MyKSuiteUpgradeBottomSheet">
 
         <deepLink app:uri="android-app://com.infomaniak.core.ksuite.myksuite/myKSuiteUpgradeBottomSheet/{kSuiteApp}" />
