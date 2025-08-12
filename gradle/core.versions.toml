@@ -176,6 +176,7 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+ktlint-cliRuleset = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint"}
 ktlint-ruleEngineCore = { module = "com.pinterest.ktlint:ktlint-rule-engine-core", version.ref = "ktlint"}
 ktlint-cliRuleset = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint"}
 ktlint-cliRuleset = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint"}
