@@ -99,7 +99,6 @@ abstract class AbstractDeviceInfoUpdateWorker(
         private const val TAG = "AbstractDeviceInfoUpdateWorker"
     }
 
-
     protected abstract suspend fun getConnectedHttpClient(userId: Int): OkHttpClient
 
     override suspend fun doWork(): Result = autoCancelScope {
