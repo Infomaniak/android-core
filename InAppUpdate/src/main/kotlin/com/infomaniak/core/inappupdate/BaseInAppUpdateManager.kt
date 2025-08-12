@@ -32,8 +32,10 @@ import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionName
 import com.infomaniak.core.network.networking.HttpClient
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) : DefaultLifecycleObserver {
@@ -48,11 +50,15 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     val canInstallUpdate = storesSettingsRepository
         .flowOf(HAS_APP_UPDATE_DOWNLOADED_KEY).distinctUntilChanged()
 
-    val shouldDisplayUpdateRequiredScreen = flow {
+    val isUpdateRequired = flow {
         val apiResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClient)
 
         emit(apiResponse.data?.mustRequireUpdate(appVersionName) == true)
-    }
+    }.stateIn(
+        scope = activity.lifecycleScope,
+        started = SharingStarted.Eagerly,
+        initialValue = false,
+    )
 
     open fun installDownloadedUpdate() = Unit
 
@@ -60,24 +66,24 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     open fun requireUpdate(onFailure: ((Exception) -> Unit)? = null) = activity.goToPlayStore()
 
     open fun init(
-        mustRequireImmediateUpdate: Boolean = false,
+        isUpdateRequired: Boolean = false,
         onUserChoice: ((Boolean) -> Unit)? = null,
         onInstallStart: (() -> Unit)? = null,
         onInstallFailure: ((Exception) -> Unit)? = null,
         onInstallSuccess: (() -> Unit)? = null,
         onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
         onFDroidResult: ((Boolean) -> Unit)? = null,
-    ) = init(mustRequireImmediateUpdate, onInAppUpdateUiChange, onFDroidResult)
+    ) = init(isUpdateRequired, onInAppUpdateUiChange, onFDroidResult)
 
     protected fun init(
-        mustRequireImmediateUpdate: Boolean = false,
+        isUpdateRequired: Boolean = false,
         onInAppUpdateUiChange: ((Boolean) -> Unit)? = null,
         onFDroidResult: ((Boolean) -> Unit)? = null,
     ) {
         this.onInAppUpdateUiChange = onInAppUpdateUiChange
         this.onFDroidResult = onFDroidResult
 
-        if (!mustRequireImmediateUpdate) activity.lifecycle.addObserver(observer = this)
+        if (!isUpdateRequired) activity.lifecycle.addObserver(observer = this)
     }
 
     protected abstract fun checkUpdateIsAvailable()
