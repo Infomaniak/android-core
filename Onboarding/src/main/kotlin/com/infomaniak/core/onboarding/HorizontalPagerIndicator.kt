@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +43,7 @@ import kotlin.math.abs
 fun HorizontalPagerIndicator(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    indicatorStyle: IndicatorStyle,
+    indicatorStyle: IndicatorStyle = HorizontalPagerIndicatorDefaults.style(),
 ) {
     Row(modifier, horizontalArrangement = Arrangement.Center) {
         repeat(pagerState.pageCount) { index ->
@@ -123,6 +124,23 @@ data class IndicatorStyle(
     val activeWidth: Dp,
     val indicatorSpacing: Dp,
 )
+
+object HorizontalPagerIndicatorDefaults {
+    @Composable
+    fun style(
+        inactiveColor: Color = MaterialTheme.colorScheme.outlineVariant,
+        activeColor: Color = MaterialTheme.colorScheme.primary,
+        inactiveSize: Dp = 8.dp,
+        activeWidth: Dp = 16.dp,
+        indicatorSpacing: Dp = 8.dp,
+    ): IndicatorStyle = IndicatorStyle(
+        inactiveColor = inactiveColor,
+        activeColor = activeColor,
+        inactiveSize = inactiveSize,
+        activeWidth = activeWidth,
+        indicatorSpacing = indicatorSpacing,
+    )
+}
 
 @Preview
 @Composable

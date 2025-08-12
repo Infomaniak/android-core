@@ -54,7 +54,7 @@ fun OnboardingScaffold(
     pagerState: PagerState,
     onboardingPages: List<OnboardingPage>,
     bottomContent: @Composable (PaddingValues) -> Unit,
-    indicatorStyle: IndicatorStyle,
+    indicatorStyle: IndicatorStyle = HorizontalPagerIndicatorDefaults.style(),
 ) {
     Scaffold { paddingValues ->
         Column {
