@@ -45,5 +45,7 @@ dependencies {
     implementation(core.compose.runtime)
     implementation(core.compose.ui.tooling.preview)
 
+    implementation(core.lottie)
+
     debugImplementation(core.compose.ui.tooling)
 }
