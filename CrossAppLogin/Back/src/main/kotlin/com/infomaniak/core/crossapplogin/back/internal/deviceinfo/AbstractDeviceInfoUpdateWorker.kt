@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.infomaniak.core.crossapplogin.back.internal.deviceinfo
 
 import android.content.Context
@@ -30,13 +32,13 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.await
+import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.autoCancelScope
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfo.Type
 import com.infomaniak.core.crossapplogin.back.internal.extensions.toHexDashStringKotlin2
 import com.infomaniak.lib.core.api.ApiRoutesCore
-import com.infomaniak.lib.core.models.user.User
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.networking.ManualAuthorizationRequired
 import com.infomaniak.lib.core.room.UserDatabase
@@ -51,13 +53,22 @@ import io.ktor.http.contentType
 import io.ktor.http.headers
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
 import okhttp3.OkHttpClient
 import splitties.init.appCtx
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -88,12 +99,13 @@ abstract class AbstractDeviceInfoUpdateWorker(
         private const val TAG = "AbstractDeviceInfoUpdateWorker"
     }
 
+
     protected abstract suspend fun getConnectedHttpClient(userId: Int): OkHttpClient
 
     override suspend fun doWork(): Result = autoCancelScope {
 
-        val currentUsers = UserDatabase().userDao().allUsers.first()
-        if (currentUsers.isEmpty()) return@autoCancelScope Result.success()
+        val currentUsersFlow = UserDatabase().userDao().allUsers.stateIn(this)
+        if (currentUsersFlow.value.isEmpty()) return@autoCancelScope Result.success()
 
         val deviceInfoUpdateManager = DeviceInfoUpdateManager.sharedInstance
         val sharedDeviceIdManager = CrossAppLogin.Companion.forContext(
@@ -104,16 +116,33 @@ abstract class AbstractDeviceInfoUpdateWorker(
         val currentCrossAppDeviceId = sharedDeviceIdManager.crossAppDeviceIdFlow.first()
 
         val deviceInfo = currentDeviceInfo(currentCrossAppDeviceId)
-        val outcomes = currentUsers.map { user ->
-            async {
-                attemptUpdatingDeviceInfoIfNeeded(
-                    deviceInfoUpdateManager = deviceInfoUpdateManager,
-                    targetUser = user,
-                    deviceInfo = deviceInfo,
-                    crossAppDeviceId = currentCrossAppDeviceId
-                )
+
+        val deviceInfoUpdatersForUserId = DynamicLazyMap<Long, Deferred<Outcome>>(
+            cacheManager = { userId, deferred ->
+                if (deferred.isCompleted && deferred.getCompleted() == Outcome.Done) awaitCancellation()
+                delay(10.milliseconds) // Don't drop too soon, so mapLatest triggering doesn't lead to dropping the work.
+            },
+            coroutineScope = this,
+            createElement = { userId ->
+                async {
+                    attemptUpdatingDeviceInfoIfNeeded(
+                        deviceInfoUpdateManager = deviceInfoUpdateManager,
+                        targetUserId = userId,
+                        deviceInfo = deviceInfo,
+                        crossAppDeviceId = currentCrossAppDeviceId
+                    )
+                }
             }
-        }.awaitAll()
+        )
+
+        val outcomes = currentUsersFlow
+            .map { users -> users.mapTo(mutableSetOf()) { it.id.toLong() } }
+            .distinctUntilChanged()
+            .mapLatest { userIds ->
+                deviceInfoUpdatersForUserId.useElements(userIds) {
+                    it.values.awaitAll()
+                }
+            }.first()
         when {
             outcomes.any { it == Outcome.ShouldRetry } -> Result.retry()
             else -> Result.success()
@@ -122,14 +151,14 @@ abstract class AbstractDeviceInfoUpdateWorker(
 
     private suspend fun attemptUpdatingDeviceInfoIfNeeded(
         deviceInfoUpdateManager: DeviceInfoUpdateManager,
-        targetUser: User,
+        targetUserId: Long,
         deviceInfo: DeviceInfo,
         crossAppDeviceId: Uuid,
     ): Outcome = runCatching {
-        if (deviceInfoUpdateManager.isUpToDate(crossAppDeviceId, targetUser.id.toLong())) {
+        if (deviceInfoUpdateManager.isUpToDate(crossAppDeviceId, targetUserId)) {
             return Outcome.Done
         }
-        val okHttpClient = getConnectedHttpClient(userId = targetUser.id)
+        val okHttpClient = getConnectedHttpClient(userId = targetUserId.toInt())
         val httpClient = HttpClient(OkHttp) {
             engine { preconfigured = okHttpClient }
             install(ContentNegotiation) {
@@ -137,7 +166,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
             }
         }
 
-        SentryLog.i(TAG, "Will attempt updating device info for user id ${targetUser.id}")
+        SentryLog.i(TAG, "Will attempt updating device info for user id $targetUserId")
 
         val url = ApiRoutesCore.sendDeviceInfo()
         val response = httpClient.post(url) {
@@ -149,18 +178,25 @@ abstract class AbstractDeviceInfoUpdateWorker(
             setBody(deviceInfo)
         }
         if (response.status.isSuccess()) {
-            deviceInfoUpdateManager.updateLastSyncedKey(crossAppDeviceId, targetUser.id.toLong())
+            deviceInfoUpdateManager.updateLastSyncedKey(crossAppDeviceId, targetUserId)
             SentryLog.i(TAG, "attemptUpdatingDeviceInfoIfNeeded succeeded")
             Outcome.Done
         } else {
             val httpStatusCode = response.status.value
             val errorMessage = "attemptUpdatingDeviceInfoIfNeeded led to http $httpStatusCode"
-            if (httpStatusCode in 500..599) {
-                SentryLog.i(TAG, errorMessage)
-                Outcome.ShouldRetry
-            } else {
-                SentryLog.wtf(TAG, errorMessage)
-                Outcome.Done
+            when (httpStatusCode) {
+                in 500..599 -> {
+                    SentryLog.i(TAG, errorMessage)
+                    Outcome.ShouldRetry
+                }
+                401 -> {
+                    SentryLog.w(TAG, errorMessage)
+                    Outcome.Done
+                }
+                else -> {
+                    SentryLog.wtf(TAG, errorMessage)
+                    Outcome.Done
+                }
             }
         }
     }.cancellable().getOrElse {
