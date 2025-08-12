@@ -42,7 +42,6 @@ internal class ServiceConnection<R>(
 
     suspend fun awaitDisconnect(): OnServiceDisconnectionBehavior<R> = onDisconnectChannel.receive()
 
-
     @RequiresApi(28)
     override fun onNullBinding(name: ComponentName) {
         bindingIssueChannel.trySend(ServiceBindingIssue.NullBinding)

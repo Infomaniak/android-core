@@ -167,7 +167,6 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
         }
     }
 
-
     internal object IpcMessageWhat {
         const val GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS = 0
         const val GET_SHARED_DEVICE_ID = 1
