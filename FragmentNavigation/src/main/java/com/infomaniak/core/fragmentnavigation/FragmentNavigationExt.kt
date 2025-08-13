@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.fragmentnavigation
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
@@ -30,6 +31,10 @@ import androidx.navigation.fragment.findNavController
 
 fun Fragment.isAtInitialDestination(substituteClassName: String? = null): Boolean {
     return findNavController().isAtInitialDestination(allowedInitialClassName = substituteClassName ?: javaClass.name)
+}
+
+private fun Activity.isAtInitialDestination(navController: NavController, substituteClassName: String? = null): Boolean {
+    return navController.isAtInitialDestination(allowedInitialClassName = substituteClassName ?: javaClass.name)
 }
 
 fun NavController.isAtInitialDestination(allowedInitialClassName: String): Boolean {
@@ -57,4 +62,17 @@ fun Fragment.safelyNavigate(
     substituteClassName: String? = null,
 ) {
     if (isAtInitialDestination(substituteClassName)) findNavController().navigate(resId, args, navOptions, navigatorExtras)
+}
+
+fun Activity.safelyNavigate(
+    navController: NavController,
+    @IdRes resId: Int,
+    args: Bundle? = null,
+    navOptions: NavOptions? = null,
+    navigatorExtras: Navigator.Extras? = null,
+    substituteClassName: String? = null,
+) {
+    if (isAtInitialDestination(navController, substituteClassName)) {
+        navController.navigate(resId, args, navOptions, navigatorExtras)
+    }
 }
