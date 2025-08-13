@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BasicButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     shape: Shape = ButtonDefaults.shape,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
@@ -116,8 +116,8 @@ private fun ButtonColors.applyEnabledColorsToDisabled(): ButtonColors {
 
 @Composable
 private fun KeepButtonSize(targetSizeContent: @Composable () -> Unit, content: @Composable () -> Unit) {
-    Box(contentAlignment = Alignment.Companion.Center) {
-        Row(modifier = Modifier.Companion.alpha(0.0f)) {
+    Box(contentAlignment = Alignment.Center) {
+        Row(modifier = Modifier.alpha(0.0f)) {
             targetSizeContent()
         }
         content()
@@ -126,7 +126,7 @@ private fun KeepButtonSize(targetSizeContent: @Composable () -> Unit, content: @
 
 @Composable
 private fun getProgressModifier(): Modifier {
-    val progressModifier = Modifier.Companion
+    val progressModifier = Modifier
         .fillMaxHeight(0.8f)
         .aspectRatio(1f)
     return progressModifier
@@ -152,18 +152,18 @@ private fun Preview() {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     BasicButton(
-                        modifier = Modifier.Companion.height(40.dp),
+                        modifier = Modifier.height(40.dp),
                         onClick = {},
                         content = { Text("Click me!") },
                     )
                     BasicButton(
-                        modifier = Modifier.Companion.height(40.dp),
+                        modifier = Modifier.height(40.dp),
                         onClick = {},
                         content = { Text("Click me!") },
                         enabled = { false },
                     )
                     BasicButton(
-                        modifier = Modifier.Companion.height(40.dp),
+                        modifier = Modifier.height(40.dp),
                         onClick = {},
                         progress = { 0.8f },
                         content = { Text("Click me!") },
