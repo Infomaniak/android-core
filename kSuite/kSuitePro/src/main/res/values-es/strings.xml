@@ -37,7 +37,7 @@
     <string name="kSuiteStandardOfferDescription">Proporcione a su equipo las herramientas esenciales para colaborar eficazmente a diario.</string>
     <string name="kSuiteStandardOfferTitle">Aumenta la velocidad con la oferta estándar</string>
     <string name="kSuiteStandardStorageLabel">50 GB por usuario de almacenamiento en la nube kDrive y kChat</string>
-    <string name="kSuiteUpgradeButton">EVOLVE</string>
+    <string name="kSuiteUpgradeButton">MEJORAR</string>
     <string name="kSuiteUpgradeDetails">Para actualizar su oferta, utilice la interfaz web.</string>
     <string name="kSuiteUpgradeDetailsContactAdmin">Póngase en contacto con su administrador para actualizar su oferta.</string>
 </resources>
