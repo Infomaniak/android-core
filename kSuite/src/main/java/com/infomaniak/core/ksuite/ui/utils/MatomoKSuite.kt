@@ -15,13 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.ksuite.myksuite.ui.utils
+package com.infomaniak.core.ksuite.ui.utils
 
-object MatomoMyKSuite {
+object MatomoKSuite {
 
+    //region Categories
     const val CATEGORY_MY_KSUITE = "myKSuite"
-    const val CATEGORY_MY_KSUITE_UPGRADE_BOTTOMSHEET = "myKSuiteUpgradeBottomSheet"
+    const val CATEGORY_MY_KSUITE_UPGRADE_BOTTOM_SHEET = "myKSuiteUpgradeBottomSheet"
+    const val CATEGORY_KSUITE_PRO = "kSuitePro"
+    const val CATEGORY_KSUITE_PRO_BOTTOM_SHEET = "kSuiteProUpgradeBottomSheet"
+    //endregion
 
+    //region Names
     const val OPEN_DASHBOARD_NAME = "openDashboard"
     const val NOT_ENOUGH_STORAGE_UPGRADE_NAME = "notEnoughStorageUpgrade"
+    //endregion
 }
