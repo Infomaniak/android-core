@@ -60,7 +60,7 @@ fun BasicButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier.Companion,
     shape: Shape = ButtonDefaults.shape,
-    colors: BasicButtonColors = BasicButtonDefaults.colors(),
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     border: BorderStroke? = null,
     enabled: () -> Boolean = { true },
@@ -72,10 +72,8 @@ fun BasicButton(
     val isProgressing by remember(progress) { derivedStateOf { showIndeterminateProgress() || progress != null } }
     val isEnabled = enabled() && isProgressing.not()
 
-    val buttonColors = colors.buttonColors().let { colors ->
-        if (isProgressing) colors.applyEnabledColorsToDisabled() else colors
-    }
-    val progressColors = colors.loaderColors()
+    val buttonColors = if (isProgressing) colors.applyEnabledColorsToDisabled() else colors
+    val progressColors = LoaderColors.fromButtonColors(colors)
 
     Button(
         onClick = onClick,
@@ -134,50 +132,16 @@ private fun getProgressModifier(): Modifier {
     return progressModifier
 }
 
-object BasicButtonDefaults {
-    @Composable
-    fun colors(
-        containerColor: Color = Color.Companion.Unspecified,
-        contentColor: Color = Color.Companion.Unspecified,
-        disabledContainerColor: Color = Color.Companion.Unspecified,
-        disabledContentColor: Color = Color.Companion.Unspecified,
-    ): BasicButtonColors = BasicButtonColors(
-        containerColor = containerColor,
-        contentColor = contentColor,
-        disabledContainerColor = disabledContainerColor,
-        disabledContentColor = disabledContentColor,
-    )
-}
+private data class LoaderColors(val progressColor: Color, val trackColor: Color) {
+    companion object {
+        private const val TRACK_COLOR_ALPHA = 0.3f
 
-data class BasicButtonColors(
-    private val containerColor: Color,
-    private val contentColor: Color,
-    private val disabledContainerColor: Color,
-    private val disabledContentColor: Color,
-) {
-    @Composable
-    fun buttonColors(): ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = containerColor,
-        contentColor = contentColor,
-        disabledContainerColor = disabledContainerColor,
-        disabledContentColor = disabledContentColor,
-    )
-
-    @Composable
-    fun loaderColors(): LoaderColors {
-        val contentColor = buttonColors().contentColor
-        return LoaderColors(
-            progressColor = contentColor,
-            trackColor = contentColor.copy(alpha = TRACK_COLOR_ALPHA),
+        fun fromButtonColors(colors: ButtonColors): LoaderColors = LoaderColors(
+            progressColor = colors.contentColor,
+            trackColor = colors.contentColor.copy(alpha = TRACK_COLOR_ALPHA),
         )
     }
-
-    companion object {
-        const val TRACK_COLOR_ALPHA = 0.3f
-    }
 }
-
-data class LoaderColors(val progressColor: Color, val trackColor: Color)
 
 @Preview(name = "Light")
 @Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
