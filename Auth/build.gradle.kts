@@ -59,11 +59,12 @@ dependencies {
     implementation(core.splitties.appctx)
     implementation(core.okhttp)
     implementation(core.stetho.okhttp3)
-    implementation(core.android.login)
+    api(core.android.login)
+    api(core.gson)
 
     // Room
     implementation(core.room.ktx)
-    implementation(core.room.runtime)
+    api(core.room.runtime)
     ksp(core.room.compiler)
     //
 }
