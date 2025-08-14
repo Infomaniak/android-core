@@ -10,6 +10,8 @@ val coreCompileSdk: Int by rootProject.extra
 val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
+ksp { arg("room.schemaLocation", "$projectDir/schemas") }
+
 android {
     namespace = "com.infomaniak.core.auth"
     compileSdk = coreCompileSdk
@@ -24,7 +26,6 @@ android {
         buildConfigField("String", "INFOMANIAK_API", "\"https://api.infomaniak.com/2/\"")
         buildConfigField("String", "INFOMANIAK_API_V1", "\"https://api.infomaniak.com/1\"")
 
-        ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }
 
     buildTypes {
