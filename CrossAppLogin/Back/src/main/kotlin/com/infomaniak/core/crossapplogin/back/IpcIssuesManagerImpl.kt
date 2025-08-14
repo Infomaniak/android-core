@@ -18,7 +18,7 @@
 package com.infomaniak.core.crossapplogin.back
 
 import com.infomaniak.core.android.service.ServiceBindingIssue
-import com.infomaniak.lib.core.utils.SentryLog
+import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds

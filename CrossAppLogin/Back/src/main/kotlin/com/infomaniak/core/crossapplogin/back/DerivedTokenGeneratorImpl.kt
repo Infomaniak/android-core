@@ -27,8 +27,8 @@ import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
-import com.infomaniak.lib.core.utils.SentryLog
-import com.infomaniak.lib.core.utils.await
+import com.infomaniak.core.network.utils.await
+import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
 import kotlinx.coroutines.CoroutineScope

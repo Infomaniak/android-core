@@ -17,9 +17,9 @@
  */
 package com.infomaniak.core.crossapplogin.back.internal
 
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
-import com.infomaniak.lib.core.models.user.User
-import com.infomaniak.lib.core.room.UserDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.serialization.ExperimentalSerializationApi
