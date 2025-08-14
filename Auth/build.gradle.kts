@@ -22,6 +22,7 @@ android {
 
         buildConfigField("String", "LOGIN_ENDPOINT_URL", "\"https://login.infomaniak.com/\"")
         buildConfigField("String", "INFOMANIAK_API", "\"https://api.infomaniak.com/2/\"")
+        buildConfigField("String", "INFOMANIAK_API_V1", "\"https://api.infomaniak.com/1\"")
 
         ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }

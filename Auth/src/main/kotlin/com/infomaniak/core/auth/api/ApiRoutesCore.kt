@@ -18,11 +18,16 @@
 package com.infomaniak.core.auth.api
 
 import com.infomaniak.core.auth.BuildConfig.INFOMANIAK_API
+import com.infomaniak.core.auth.BuildConfig.INFOMANIAK_API_V1
 
 object ApiRoutesCore {
 
     fun getUserProfile(): String {
         // TODO: Create a module for all the URLs?
         return "${INFOMANIAK_API}profile?no_avatar_default=1"
+    }
+
+    fun sendDeviceInfo(): String {
+        return "${INFOMANIAK_API_V1}/devices"
     }
 }
