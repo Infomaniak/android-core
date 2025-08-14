@@ -23,16 +23,17 @@ import androidx.lifecycle.liveData
 import com.infomaniak.lib.core.api.ApiController
 import com.infomaniak.lib.core.networking.HttpClient
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.invoke
 import okhttp3.Request
 
 class GitHubViewModel : ViewModel() {
 
-    fun getLastRelease(repo: String): LiveData<GitHubRelease?> = liveData(Dispatchers.IO) {
+    fun getLastRelease(repo: String): LiveData<GitHubRelease?> = liveData(Dispatchers.Default) {
         val request = Request.Builder().url("${API_GITHUB_URL}${repo}/releases").get().build()
         var lastRelease: GitHubRelease? = null
         runCatching {
             val response = HttpClient.okHttpClientNoTokenInterceptor.newBuilder().build().newCall(request).execute()
-            val bodyResponse = response.body?.string() ?: ""
+            val bodyResponse = Dispatchers.IO { response.body?.string() } ?: ""
             if (response.isSuccessful && bodyResponse.isNotBlank()) {
                 val releases = ApiController.json.decodeFromString<List<GitHubRelease>>(bodyResponse)
                 lastRelease = releases.find { !it.draft && !it.prerelease }

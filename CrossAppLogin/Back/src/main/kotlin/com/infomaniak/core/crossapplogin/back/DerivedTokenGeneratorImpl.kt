@@ -33,7 +33,9 @@ import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.invoke
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -110,7 +112,7 @@ class DerivedTokenGeneratorImpl(
             .build()
 
         val response = okHttpClient.newCall(request).await()
-        val bodyResponse = response.body?.string()
+        val bodyResponse = Dispatchers.IO { response.body?.string() }
 
         return if (response.isSuccessful) {
             val jsonResult = JsonParser.parseString(bodyResponse)
