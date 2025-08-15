@@ -22,7 +22,7 @@ import android.util.AttributeSet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
-import com.infomaniak.core.ksuite.ksuitepro.data.ProOffer
+import com.infomaniak.core.ksuite.data.KSuite
 import com.infomaniak.core.ksuite.ksuitepro.views.components.ProOfferContent
 
 class ProOfferView @JvmOverloads constructor(
@@ -31,7 +31,7 @@ class ProOfferView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
-    private var offer = ProOffer.Standard
+    private var kSuite = KSuite.ProStandard
     private var isAdmin = false
     private var onClick: (() -> Unit)? = null
 
@@ -39,15 +39,15 @@ class ProOfferView @JvmOverloads constructor(
     override fun Content() {
         MaterialThemeFromXml {
             ProOfferContent(
-                offer = offer,
+                kSuite = kSuite,
                 isAdmin = isAdmin,
                 onClick = { onClick?.invoke() },
             )
         }
     }
 
-    fun setOffer(offer: ProOffer) {
-        this.offer = offer
+    fun setKSuite(kSuite: KSuite) {
+        this.kSuite = kSuite
     }
 
     fun setIsAdmin(isAdmin: Boolean) {
