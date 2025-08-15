@@ -23,5 +23,7 @@ enum class KSuite {
     ProFree,
     ProStandard,
     ProBusiness, // Unused in kMail, all Pro paid tiers got the same functionalities in kMail, so [ProStandard] is enough
-    ProEnterprise, // Unused in kMail, all Pro paid tiers got the same functionalities in kMail, so [ProStandard] is enough
+    ProEnterprise; // Unused in kMail, all Pro paid tiers got the same functionalities in kMail, so [ProStandard] is enough
+
+    fun isProUpgradable(): Boolean = this == ProFree || this == ProStandard || this == ProBusiness
 }
