@@ -1,5 +1,5 @@
 /*
- * Infomaniak Core - Android
+ * Infomaniak SwissTransfer - Android
  * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,15 +17,10 @@
  */
 package com.infomaniak.core.compose.basics
 
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
-enum class ButtonType(
-    override val height: Dp,
-    override val shape: Shape,
-) : ButtonStyle {
-    Mail(height = 48.dp, shape = RoundedCornerShape(16.dp)),
-    Drive(height = 58.dp, shape = RoundedCornerShape(10.dp)),
+interface ButtonStyle {
+    val height: Dp
+    val shape: Shape
 }

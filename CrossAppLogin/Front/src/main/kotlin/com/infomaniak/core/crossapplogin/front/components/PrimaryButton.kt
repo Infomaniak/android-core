@@ -40,12 +40,12 @@ internal fun PrimaryButton(
     onClick: () -> Unit,
 ) {
     Button(
-        modifier = modifier.height(customization.buttonType.height),
+        modifier = modifier.height(customization.buttonStyle.height),
         colors = ButtonDefaults.buttonColors(
             containerColor = customization.colors.primaryColor,
             contentColor = customization.colors.onPrimaryColor,
         ),
-        shape = customization.buttonType.shape,
+        shape = customization.buttonStyle.shape,
         onClick = onClick,
     ) {
         Text(text = text, style = Typography.bodyMedium)
