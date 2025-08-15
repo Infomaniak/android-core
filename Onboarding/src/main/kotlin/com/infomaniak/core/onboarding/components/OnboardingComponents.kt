@@ -19,6 +19,8 @@ package com.infomaniak.core.onboarding.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -83,7 +85,9 @@ object OnboardingComponents {
         modifier: Modifier = Modifier,
     ) {
         Column(
-            modifier = modifier,
+            modifier = modifier
+                .padding(horizontal = 24.dp)
+                .widthIn(max = 300.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
