@@ -71,8 +71,9 @@ abstract class CrossAppLoginViewModel(applicationId: String, clientId: String) :
         awaitCancellation() // Should never be reached. Unfortunately, `repeatOnLifecycle` doesn't return `Nothing`.
     }
 
-    suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {
+    suspend fun attemptLogin(): LoginResult {
         val tokenGenerator = derivedTokenGenerator
+        val selectedAccounts = selectedAccounts.value
 
         if (selectedAccounts.isEmpty()) return LoginResult(emptyList(), emptyList())
 
