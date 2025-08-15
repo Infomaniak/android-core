@@ -333,7 +333,7 @@ class InfomaniakLogin(
                 .build()
 
             val response = okHttpClient.newCall(request).await()
-            val bodyResponse = response.body?.string()
+            val bodyResponse = Dispatchers.IO { response.body?.string() }
 
             if (response.isSuccessful && bodyResponse != null) {
                 val apiResponse = json.decodeFromString<ApiResponse>(bodyResponse)
