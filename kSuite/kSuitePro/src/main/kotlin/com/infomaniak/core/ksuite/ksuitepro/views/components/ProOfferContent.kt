@@ -39,7 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -48,23 +48,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.ksuite.data.KSuite
 import com.infomaniak.core.ksuite.ksuitepro.R
 import com.infomaniak.core.ksuite.ksuitepro.data.ProFeature
-import com.infomaniak.core.ksuite.ksuitepro.data.ProOffer
 import com.infomaniak.core.ksuite.ksuitepro.utils.KSuiteProUiUtils.color
 import com.infomaniak.core.R as RCore
 
 @Composable
 fun ProOfferContent(
-    offer: ProOffer,
+    kSuite: KSuite,
     isAdmin: Boolean,
     onClick: () -> Unit,
 ) {
 
-    val resources = LocalContext.current.resources
-    val title = computeTitle(offer)
-    val description = computeDescription(offer)
-    val features = computeFeatures(offer)
+    val resources = LocalResources.current
+    val title = computeTitle(kSuite)
+    val description = computeDescription(kSuite)
+    val features = computeFeatures(kSuite)
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -146,7 +146,7 @@ private fun ColumnScope.ProFeature(
     modifier: Modifier = Modifier,
     feature: ProFeature,
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     Row(
         modifier = modifier.align(Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
@@ -167,40 +167,40 @@ private fun ColumnScope.ProFeature(
 }
 
 @Composable
-private fun computeTitle(offer: ProOffer): String {
-    val resId = when (offer) {
-        ProOffer.Standard -> R.string.kSuiteStandardOfferTitle
-        ProOffer.Business -> R.string.kSuiteBusinessOfferTitle
-        ProOffer.Enterprise -> R.string.kSuiteEnterpriseOfferTitle
+private fun computeTitle(kSuite: KSuite): String {
+    val resId = when (kSuite) {
+        KSuite.ProFree -> R.string.kSuiteStandardOfferTitle
+        KSuite.ProStandard -> R.string.kSuiteBusinessOfferTitle
+        else -> R.string.kSuiteEnterpriseOfferTitle
     }
     return stringResource(resId)
 }
 
 @Composable
-private fun computeDescription(offer: ProOffer): String {
-    val resId = when (offer) {
-        ProOffer.Standard -> R.string.kSuiteStandardOfferDescription
-        ProOffer.Business -> R.string.kSuiteBusinessOfferDescription
-        ProOffer.Enterprise -> R.string.kSuiteEnterpriseOfferDescription
+private fun computeDescription(kSuite: KSuite): String {
+    val resId = when (kSuite) {
+        KSuite.ProFree -> R.string.kSuiteStandardOfferDescription
+        KSuite.ProStandard -> R.string.kSuiteBusinessOfferDescription
+        else -> R.string.kSuiteEnterpriseOfferDescription
     }
     return stringResource(resId)
 }
 
-private fun computeFeatures(offer: ProOffer): List<ProFeature> {
-    return when (offer) {
-        ProOffer.Standard -> listOf(
+private fun computeFeatures(kSuite: KSuite): List<ProFeature> {
+    return when (kSuite) {
+        KSuite.ProFree -> listOf(
             ProFeature.StandardStorage,
             ProFeature.StandardChat,
             ProFeature.StandardMail,
             ProFeature.StandardEuria,
         )
-        ProOffer.Business -> listOf(
+        KSuite.ProStandard -> listOf(
             ProFeature.BusinessStorage,
             ProFeature.BusinessChat,
             ProFeature.BusinessDrive,
             ProFeature.BusinessSecurity,
         )
-        ProOffer.Enterprise -> listOf(
+        else -> listOf(
             ProFeature.EnterpriseStorage,
             ProFeature.EnterpriseChat,
             ProFeature.EnterpriseFunctionality,
@@ -215,7 +215,7 @@ private fun computeFeatures(offer: ProOffer): List<ProFeature> {
 private fun Preview() {
     Surface {
         ProOfferContent(
-            offer = ProOffer.Standard,
+            kSuite = KSuite.ProFree,
             isAdmin = false,
             onClick = {},
         )

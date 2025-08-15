@@ -15,10 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.ksuite.ksuitepro.data
+package com.infomaniak.core.ksuite.data
 
-enum class ProOffer {
-    Standard,
-    Business,
-    Enterprise,
+enum class KSuite {
+    PersoFree,
+    PersoPlus,
+    ProFree,
+    ProStandard,
+    ProBusiness, // Unused in kMail, all Pro paid tiers got the same functionalities in kMail, so [ProStandard] is enough
+    ProEnterprise; // Unused in kMail, all Pro paid tiers got the same functionalities in kMail, so [ProStandard] is enough
+
+    fun isProUpgradable(): Boolean = this == ProFree || this == ProStandard || this == ProBusiness
 }
