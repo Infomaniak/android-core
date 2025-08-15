@@ -86,7 +86,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
                     avatarStrokeColor = avatarStrokeColor,
                     buttonStrokeColor = buttonStrokeColor,
                 ),
-                buttonType = CrossLoginDefaults.buttonType(buttonType),
+                buttonStyle = CrossLoginDefaults.buttonType(buttonType),
             )
 
             CrossLoginSelectAccounts(

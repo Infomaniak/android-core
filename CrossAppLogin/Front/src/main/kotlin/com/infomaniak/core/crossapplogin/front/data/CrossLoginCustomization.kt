@@ -20,11 +20,12 @@ package com.infomaniak.core.crossapplogin.front.data
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.infomaniak.core.compose.basics.ButtonStyle
 import com.infomaniak.core.compose.basics.ButtonType
 
 data class CrossLoginCustomization(
     val colors: CrossLoginColors,
-    val buttonType: ButtonType,
+    val buttonStyle: ButtonStyle,
 )
 
 data class CrossLoginColors(
@@ -36,13 +37,13 @@ data class CrossLoginColors(
     val buttonStrokeColor: Color,
 )
 
-internal object CrossLoginDefaults {
+object CrossLoginDefaults {
 
     @Composable
     fun customize(
-    ): CrossLoginCustomization {
-        return CrossLoginCustomization(colors(), buttonType())
-    }
+        colors: CrossLoginColors = colors(),
+        buttonStyle: ButtonStyle = buttonType(),
+    ): CrossLoginCustomization = CrossLoginCustomization(colors, buttonStyle)
 
     @Composable
     fun colors(
@@ -52,20 +53,18 @@ internal object CrossLoginDefaults {
         descriptionColor: Color? = null,
         avatarStrokeColor: Color? = null,
         buttonStrokeColor: Color? = null,
-    ): CrossLoginColors {
-        return CrossLoginColors(
-            primaryColor = primaryColor ?: MaterialTheme.colorScheme.primary,
-            onPrimaryColor = onPrimaryColor ?: MaterialTheme.colorScheme.onPrimary,
-            titleColor = titleColor ?: MaterialTheme.colorScheme.onSurface,
-            descriptionColor = descriptionColor ?: MaterialTheme.colorScheme.onSurfaceVariant,
-            avatarStrokeColor = avatarStrokeColor ?: MaterialTheme.colorScheme.background,
-            buttonStrokeColor = buttonStrokeColor ?: MaterialTheme.colorScheme.outlineVariant,
-        )
-    }
+    ): CrossLoginColors = CrossLoginColors(
+        primaryColor = primaryColor ?: MaterialTheme.colorScheme.primary,
+        onPrimaryColor = onPrimaryColor ?: MaterialTheme.colorScheme.onPrimary,
+        titleColor = titleColor ?: MaterialTheme.colorScheme.onSurface,
+        descriptionColor = descriptionColor ?: MaterialTheme.colorScheme.onSurfaceVariant,
+        avatarStrokeColor = avatarStrokeColor ?: MaterialTheme.colorScheme.background,
+        buttonStrokeColor = buttonStrokeColor ?: MaterialTheme.colorScheme.outlineVariant,
+    )
 
     fun buttonType(
-        buttonType: ButtonType? = null,
-    ): ButtonType {
+        buttonType: ButtonStyle? = null,
+    ): ButtonStyle {
         return buttonType ?: ButtonType.Mail
     }
 }
