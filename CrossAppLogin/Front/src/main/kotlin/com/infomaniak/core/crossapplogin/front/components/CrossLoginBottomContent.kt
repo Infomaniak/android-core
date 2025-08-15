@@ -42,13 +42,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -62,6 +61,7 @@ import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
 import com.infomaniak.core.onboarding.components.OnboardingComponents
+import com.infomaniak.core.crossapplogin.front.R as RCross
 
 private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
 private val FAB_SIZE = 64.dp
@@ -71,9 +71,9 @@ private val FAB_SIZE = 64.dp
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun OnboardingComponents.CrossLoginBottomContent(
-    modifier: Modifier = Modifier.Companion,
-    accounts: SnapshotStateList<ExternalAccount>,
-    skippedIds: SnapshotStateSet<Long>,
+    modifier: Modifier = Modifier,
+    accounts: () -> List<ExternalAccount>,
+    skippedIds: () -> Set<Long>,
     titleColor: Color, // TODO: Extract once we have a design system and shared color tokens
     descriptionColor: Color, // TODO: Extract once we have a design system and shared color tokens
     isLastPage: () -> Boolean,
@@ -89,7 +89,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     primaryButtonHeight: Dp = CrossLoginBottomContentDefaults.primaryButtonHeight,
 ) {
     Box(
-        contentAlignment = Alignment.Companion.Center,
+        contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth()
             .height(140.dp),
@@ -99,11 +99,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
                 isLastPage()
             ) { isLastPage ->
                 Column(
-                    modifier = Modifier.Companion.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.SpaceEvenly,
-                    horizontalAlignment = Alignment.Companion.CenterHorizontally,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    if (isLastPage && accounts.isNotEmpty()) {
+                    if (isLastPage && accounts().isNotEmpty()) {
                         CrossLoginSelectAccounts(
                             accounts = accounts,
                             skippedIds = skippedIds,
@@ -120,7 +120,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
                     if (isLastPage) {
                         ButtonExpanded(
-                            text = if (accounts.isEmpty()) "Login" else "Continue with this account",
+                            text = if (accounts().isEmpty()) {
+                                stringResource(RCross.string.buttonLogin)
+                            } else {
+                                pluralStringResource(RCross.plurals.buttonContinueWithAccounts, accounts().size - skippedIds().size)
+                            },
                             shape = primaryButtonShape,
                             modifier = Modifier.Companion
                                 .sharedElement(
@@ -128,22 +132,22 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                     animatedVisibilityScope = this@AnimatedContent
                                 )
                                 .height(primaryButtonHeight),
-                            onClick = if (accounts.isEmpty()) onLogin else onContinueWithSelectedAccounts,
+                            onClick = if (accounts().isEmpty()) onLogin else onContinueWithSelectedAccounts,
                         )
                     } else {
                         ButtonNext(
                             onClick = onGoToNextPage,
                             shape = nextButtonShape,
-                            modifier = Modifier.Companion.sharedElement(
+                            modifier = Modifier.sharedElement(
                                 rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
                                 animatedVisibilityScope = this@AnimatedContent
                             )
                         )
                     }
 
-                    if (isLastPage && accounts.isEmpty()) {
+                    if (isLastPage && accounts().isEmpty()) {
                         Button(
-                            modifier = Modifier.Companion.height(56.dp),
+                            modifier = Modifier.height(56.dp),
                             onClick = onCreateAccount,
                             colors = ButtonDefaults.textButtonColors()
                         ) { Text("Create an account") }
@@ -169,7 +173,7 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
         shape = shape,
         contentPadding = PaddingValues(),
     ) {
-        Box(contentAlignment = Alignment.Companion.Center) {
+        Box(contentAlignment = Alignment.Center) {
             Icon(
                 imageVector = ArrowRight,
                 contentDescription = stringResource(R.string.buttonNext),
@@ -199,11 +203,11 @@ private fun ButtonExpanded(text: String, shape: Shape, modifier: Modifier = Modi
         shape = shape,
         contentPadding = PaddingValues(),
     ) {
-        Box(contentAlignment = Alignment.Companion.Center) {
+        Box(contentAlignment = Alignment.Center) {
             Text(
                 text = text,
                 style = Typography.bodyMedium,
-                modifier = Modifier.Companion.graphicsLayer { alpha = textVisibility }
+                modifier = Modifier.graphicsLayer { alpha = textVisibility }
             )
         }
     }

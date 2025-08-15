@@ -90,8 +90,8 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
             )
 
             CrossLoginSelectAccounts(
-                accounts = accounts,
-                skippedIds = skippedIds,
+                accounts = { accounts },
+                skippedIds = { skippedIds },
                 customization = customization,
                 onClick = { onClickListener?.onClick(this) },
             )
