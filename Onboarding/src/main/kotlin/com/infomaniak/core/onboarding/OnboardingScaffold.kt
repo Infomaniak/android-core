@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.onboarding
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,9 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.ImageVector.Builder
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -116,6 +113,10 @@ private fun OnboardingPageContent(page: OnboardingPage, contentPadding: PaddingV
     }
 }
 
+/**
+ * This is the way to specify a list of different pages for the [OnboardingScaffold]. Simple situations can be implemented using
+ * [com.infomaniak.core.onboarding.components.OnboardingComponents]'s already provided methods.
+ */
 data class OnboardingPage(
     val background: @Composable () -> Unit,
     val illustration: @Composable () -> Unit,
