@@ -21,8 +21,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import okhttp3.internal.closeQuietly
 import java.io.IOException
-import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /**
@@ -37,7 +37,9 @@ internal suspend fun Call.await() = suspendCancellableCoroutine { continuation -
         }
 
         override fun onResponse(call: Call, response: Response) {
-            continuation.resume(response)
+            continuation.resume(response) { _, response, _ ->
+                response.closeQuietly()
+            }
         }
     })
 
