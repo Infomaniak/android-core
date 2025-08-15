@@ -62,6 +62,9 @@ dependencies {
     implementation(core.ktor.client.json)
     implementation(core.ktor.client.content.negociation)
 
+    implementation(core.androidx.lifecycle.viewmodel.ktx)
+    implementation(core.activity.compose) // To access ComponentActivity
+
     testImplementation(core.junit)
     androidTestImplementation(core.androidx.junit)
 }
