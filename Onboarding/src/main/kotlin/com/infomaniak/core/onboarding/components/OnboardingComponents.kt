@@ -17,8 +17,10 @@
  */
 package com.infomaniak.core.onboarding.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
@@ -26,6 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,6 +43,20 @@ import com.airbnb.lottie.compose.rememberLottieComposition
  * correct styling used across different apps.
  */
 object OnboardingComponents {
+    /**
+     * Easy to reuse way of displaying the background behind HorizontalPager's every page. This should be enough for all
+     * situations as all backgrounds should consist of simple vector images.
+     */
+    @Composable
+    fun DefaultBackground(background: ImageVector, modifier: Modifier = Modifier) {
+        Image(
+            imageVector = background,
+            contentDescription = null,
+            modifier = modifier.fillMaxSize(),
+            contentScale = ContentScale.FillBounds,
+        )
+    }
+
     /**
      * Easy to reuse way of displaying a simple Lottie animation. When on the same screen, the animation will play once and then stop
      * forever and not loop. The animation will restart from zero when leaving the page and coming back to it.
