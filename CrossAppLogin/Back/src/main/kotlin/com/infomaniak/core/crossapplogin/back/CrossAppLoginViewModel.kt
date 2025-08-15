@@ -27,8 +27,8 @@ import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.Xor
 import com.infomaniak.core.auth.BuildConfig
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
-import com.infomaniak.lib.core.networking.HttpUtils
-import com.infomaniak.lib.core.utils.SentryLog
+import com.infomaniak.core.network.networking.HttpUtils
+import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
