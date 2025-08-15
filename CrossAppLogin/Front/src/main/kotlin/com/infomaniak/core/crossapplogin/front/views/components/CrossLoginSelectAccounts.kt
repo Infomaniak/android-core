@@ -39,13 +39,13 @@ import com.infomaniak.core.crossapplogin.back.ExternalAccount
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CrossLoginSelectAccounts(
-    accounts: SnapshotStateList<ExternalAccount>,
-    skippedIds: SnapshotStateSet<Long>,
+    accounts: () -> List<ExternalAccount>,
+    skippedIds: () -> Set<Long>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onClick: () -> Unit,
 ) {
 
-    val selectedAccounts = accounts.filter { it.id !in skippedIds }
+    val selectedAccounts = accounts().filter { it.id !in skippedIds() }
     val count = selectedAccounts.count()
 
     SelectedAccountsButton(
@@ -63,9 +63,12 @@ fun CrossLoginSelectAccounts(
 @Composable
 private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>) {
     Surface {
+        val accounts = remember { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } }
+        val skippedIds = remember { mutableStateSetOf<Long>().apply { add(accounts.last().id) } }
+
         CrossLoginSelectAccounts(
-            accounts = remember { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } },
-            skippedIds = remember { mutableStateSetOf<Long>().apply { add(accounts.last().id) } },
+            accounts = { accounts },
+            skippedIds = { skippedIds },
             onClick = {},
         )
     }

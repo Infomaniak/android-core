@@ -91,8 +91,8 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
             )
 
             CrossLoginListAccounts(
-                accounts = accounts,
-                skippedIds = skippedIds,
+                accounts = { accounts },
+                skippedIds = { skippedIds },
                 customization = customization,
                 onAccountClicked = { accountId ->
                     if (accountId in skippedIds) skippedIds -= accountId else skippedIds += accountId

@@ -53,15 +53,15 @@ import com.infomaniak.core.R as RCore
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CrossLoginListAccounts(
-    accounts: SnapshotStateList<ExternalAccount>,
-    skippedIds: SnapshotStateSet<Long>,
+    accounts: () -> List<ExternalAccount>,
+    skippedIds: () -> Set<Long>,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onAccountClicked: (Long) -> Unit,
     onAnotherAccountClicked: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
 
-    fun ExternalAccount.isSelected(): Boolean = id !in skippedIds
+    fun ExternalAccount.isSelected(): Boolean = id !in skippedIds()
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -78,13 +78,13 @@ fun CrossLoginListAccounts(
 
         Spacer(Modifier.height(Margin.Medium))
 
-        accounts.forEach { account ->
+        accounts().forEach { account ->
             BottomSheetItem(
                 account = account,
                 customization = customization,
                 isSelected = { account.isSelected() },
                 onClick = {
-                    val selectedCount = accounts.size - skippedIds.size
+                    val selectedCount = accounts().size - skippedIds().size
                     if (account.isSelected() && selectedCount <= 1) return@BottomSheetItem
                     onAccountClicked(account.id)
                 },
@@ -123,9 +123,12 @@ fun CrossLoginListAccounts(
 @Composable
 private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>) {
     Surface {
+        val accounts = remember { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } }
+        val skippedIds = remember { mutableStateSetOf<Long>().apply { add(accounts.first().id) } }
+
         CrossLoginListAccounts(
-            accounts = remember { mutableStateListOf<ExternalAccount>().apply { addAll(accounts) } },
-            skippedIds = remember { mutableStateSetOf<Long>().apply { add(accounts.first().id) } },
+            accounts = { accounts },
+            skippedIds = { skippedIds },
             onAccountClicked = {},
             onAnotherAccountClicked = {},
             onSaveClicked = {},
