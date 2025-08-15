@@ -48,6 +48,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.onboarding.components.OnboardingComponents.DefaultBackground
 
 @Composable
 fun OnboardingScaffold(
@@ -98,12 +99,7 @@ private fun OnboardingPageContent(page: OnboardingPage, contentPadding: PaddingV
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Image(
-            imageVector = page.background,
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds,
-        )
+        page.background()
         Column(
             modifier = Modifier
                 .fillMaxHeight()
@@ -121,7 +117,7 @@ private fun OnboardingPageContent(page: OnboardingPage, contentPadding: PaddingV
 }
 
 data class OnboardingPage(
-    val background: ImageVector,
+    val background: @Composable () -> Unit,
     val illustration: @Composable () -> Unit,
     val text: @Composable () -> Unit,
 )
@@ -138,7 +134,7 @@ private fun Preview() {
     ).build()
 
     val onboardingPage = OnboardingPage(
-        background = imageVector,
+        background = { DefaultBackground(imageVector) },
         illustration = {
             Box(
                 modifier = Modifier
