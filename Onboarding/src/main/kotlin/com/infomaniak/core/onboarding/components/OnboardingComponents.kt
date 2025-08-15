@@ -69,7 +69,7 @@ object OnboardingComponents {
 
         // We have to specify the isPlaying parameter in order to play the animation only when the page is selected.
         // Otherwise, the ViewPager can load the page and start the animation before it's visible.
-        LottieAnimation(composition, restartOnPlay = true, isPlaying = isCurrentPageVisible())
+        LottieAnimation(composition, restartOnPlay = true, isPlaying = isCurrentPageVisible(), modifier = modifier)
     }
 
     /**
