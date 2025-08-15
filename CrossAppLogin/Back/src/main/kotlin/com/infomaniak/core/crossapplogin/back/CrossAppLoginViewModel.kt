@@ -74,10 +74,10 @@ abstract class CrossAppLoginViewModel(applicationId: String, clientId: String) :
     suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {
         val tokenGenerator = derivedTokenGenerator
 
-        if (selectedAccounts.isEmpty()) return LoginResult.NoSelectedAccount
+        if (selectedAccounts.isEmpty()) return LoginResult(emptyList(), emptyList())
 
         val tokens = mutableListOf<ApiToken>()
-        val errorIds = mutableListOf<Int>()
+        val errorMessageIds = mutableListOf<Int>()
 
         selectedAccounts.forEach { account ->
             when (val result = tokenGenerator.attemptDerivingOneOfTheseTokens(account.tokens)) {
@@ -86,16 +86,12 @@ abstract class CrossAppLoginViewModel(applicationId: String, clientId: String) :
                     tokens.add(result.value)
                 }
                 is Xor.Second -> {
-                    errorIds.add(getTokenDerivationIssueErrorMessage(account, issue = result.value))
+                    errorMessageIds.add(getTokenDerivationIssueErrorMessage(account, issue = result.value))
                 }
             }
         }
 
-        return when {
-            tokens.isEmpty() -> LoginResult.Failure(errorIds)
-            errorIds.isEmpty() -> LoginResult.Success(tokens)
-            else -> LoginResult.Partial(tokens, errorIds)
-        }
+        return LoginResult(tokens, errorMessageIds)
     }
 
     @StringRes
@@ -128,12 +124,7 @@ abstract class CrossAppLoginViewModel(applicationId: String, clientId: String) :
         return errorId
     }
 
-    sealed interface LoginResult {
-        data object NoSelectedAccount : LoginResult
-        data class Success(val tokens: List<ApiToken>) : LoginResult
-        data class Partial(val tokens: List<ApiToken>, val errorMessageIds: List<Int>) : LoginResult
-        data class Failure(val errorMessageIds: List<Int>) : LoginResult
-    }
+    data class LoginResult(val tokens: List<ApiToken>, val errorMessageIds: List<Int>)
 
     companion object {
         private val TAG = CrossAppLoginViewModel::class.java.simpleName
