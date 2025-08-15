@@ -14,10 +14,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsServiceConnection
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import com.infomaniak.lib.login.ext.await
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.invoke
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -49,7 +51,14 @@ class InfomaniakLogin(
             }
     }
 
-    private val gson: Gson by lazy { Gson() }
+    private val json: Json by lazy {
+        Json {
+            ignoreUnknownKeys = true
+            coerceInputValues = true
+            isLenient = true
+            useAlternativeNames = false
+        }
+    }
 
     init {
         Companion.sentryCallback = sentryCallback
@@ -293,11 +302,10 @@ class InfomaniakLogin(
                 .build()
 
             val response = okHttpClient.newCall(request).await()
-            val bodyResponse = response.body?.string()
+            val bodyResponse = Dispatchers.IO { response.body?.string() }
 
-            if (response.isSuccessful) {
-                val jsonResult = JsonParser.parseString(bodyResponse)
-                val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
+            if (response.isSuccessful && bodyResponse != null) {
+                val apiToken = json.decodeFromString<ApiToken>(bodyResponse)
 
                 // Set the token expiration date (with margin-delay)
                 apiToken.expiresAt = System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
@@ -327,10 +335,8 @@ class InfomaniakLogin(
             val response = okHttpClient.newCall(request).await()
             val bodyResponse = response.body?.string()
 
-            if (response.isSuccessful) {
-                val jsonResult = JsonParser.parseString(bodyResponse)
-
-                val apiResponse = gson.fromJson(jsonResult, ApiResponse::class.java)
+            if (response.isSuccessful && bodyResponse != null) {
+                val apiResponse = json.decodeFromString<ApiResponse>(bodyResponse)
                 if (apiResponse.result == "error") ErrorStatus.UNKNOWN else null
             } else {
                 handleErrorResponse(response.code, bodyResponse)
@@ -360,6 +366,7 @@ class InfomaniakLogin(
         }
     }
 
+    @Serializable
     private data class ApiResponse(
         val result: String,
         val error: String? = null,
