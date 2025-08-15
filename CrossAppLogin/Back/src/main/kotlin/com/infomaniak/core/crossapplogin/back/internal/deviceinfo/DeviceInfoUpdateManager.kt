@@ -20,9 +20,9 @@ package com.infomaniak.core.crossapplogin.back.internal.deviceinfo
 import android.os.Build.VERSION.SDK_INT
 import androidx.core.util.AtomicFile
 import com.infomaniak.core.allConcurrent
-import com.infomaniak.core.extensions.write
+import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin
-import com.infomaniak.lib.core.room.UserDatabase
+import com.infomaniak.core.extensions.write
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.collectLatest

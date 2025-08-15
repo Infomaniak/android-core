@@ -38,7 +38,7 @@ import com.infomaniak.core.crossapplogin.back.internal.DisposableMessage
 import com.infomaniak.core.crossapplogin.back.internal.certificates.AppCertificateChecker
 import com.infomaniak.core.crossapplogin.back.putBundleWrappedDataInObj
 import com.infomaniak.core.crossapplogin.back.unwrapByteArrayOrNull
-import com.infomaniak.lib.core.utils.SentryLog
+import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.CoroutineScope

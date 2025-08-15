@@ -27,13 +27,13 @@ import android.os.RemoteException
 import com.infomaniak.core.android.service.OnBindingIssue
 import com.infomaniak.core.android.service.OnServiceDisconnectionBehavior
 import com.infomaniak.core.android.service.withBoundService
+import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.crossapplogin.back.internal.ChannelMessageHandler
 import com.infomaniak.core.crossapplogin.back.internal.DisposableMessage
 import com.infomaniak.core.crossapplogin.back.internal.certificates.AppCertificateChecker
 import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdManager
-import com.infomaniak.lib.core.room.UserDatabase
-import com.infomaniak.lib.core.utils.SentryLog
+import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

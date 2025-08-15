@@ -53,7 +53,9 @@ dependencies {
 
     implementation(project(":Core"))
     implementation(project(":Core:AppIntegrity"))
-    implementation(project(":Core:Legacy"))
+    implementation(project(":Core:Auth"))
+    implementation(project(":Core:Network"))
+    implementation(project(":Core:Sentry"))
     implementation(core.splitties.mainthread)
     implementation(core.ktor.client.core)
     implementation(core.ktor.client.okhttp)

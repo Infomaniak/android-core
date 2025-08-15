@@ -24,11 +24,15 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.infomaniak.core.auth.models.user.User
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): LiveData<List<User>>
+
+    @get:Query("SELECT * FROM user")
+    val allUsers: Flow<List<User>>
 
     @Query("SELECT * FROM user")
     fun getAllSync(): List<User>

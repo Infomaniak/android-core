@@ -10,6 +10,8 @@ val coreCompileSdk: Int by rootProject.extra
 val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
+ksp { arg("room.schemaLocation", "$projectDir/schemas") }
+
 android {
     namespace = "com.infomaniak.core.auth"
     compileSdk = coreCompileSdk
@@ -22,8 +24,8 @@ android {
 
         buildConfigField("String", "LOGIN_ENDPOINT_URL", "\"https://login.infomaniak.com/\"")
         buildConfigField("String", "INFOMANIAK_API", "\"https://api.infomaniak.com/2/\"")
+        buildConfigField("String", "INFOMANIAK_API_V1", "\"https://api.infomaniak.com/1\"")
 
-        ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }
 
     buildTypes {
@@ -57,11 +59,12 @@ dependencies {
     implementation(core.splitties.appctx)
     implementation(core.okhttp)
     implementation(core.stetho.okhttp3)
-    implementation(core.android.login)
+    api(core.android.login)
+    api(core.gson)
 
     // Room
     implementation(core.room.ktx)
-    implementation(core.room.runtime)
+    api(core.room.runtime)
     ksp(core.room.compiler)
     //
 }
