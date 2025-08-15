@@ -20,15 +20,16 @@ package com.infomaniak.core.crossapplogin.back
 import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.Xor
 import com.infomaniak.core.auth.BuildConfig
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.lib.core.networking.HttpUtils
 import com.infomaniak.lib.core.utils.SentryLog
 import com.infomaniak.lib.login.ApiToken
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +41,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
 
-class CrossAppLoginCommon(viewModelScope: CoroutineScope, applicationId: String, clientId: String) {
+abstract class CrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
     private val _availableAccounts = MutableStateFlow(emptyList<ExternalAccount>())
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
@@ -135,6 +136,6 @@ class CrossAppLoginCommon(viewModelScope: CoroutineScope, applicationId: String,
     }
 
     companion object {
-        private val TAG = CrossAppLoginCommon::class.java.simpleName
+        private val TAG = CrossAppLoginViewModel::class.java.simpleName
     }
 }
