@@ -40,6 +40,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
+import com.infomaniak.core.R as RCore
+import com.infomaniak.core.network.R as RCoreNetwork
 
 abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
     private val _availableAccounts = MutableStateFlow(emptyList<ExternalAccount>())
@@ -100,19 +102,19 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         val messageResId = when (issue) {
             is Issue.AppIntegrityCheckFailed -> {
                 shouldReport = false
-                com.infomaniak.core.R.string.anErrorHasOccurred
+                RCore.string.anErrorHasOccurred
             }
             is Issue.ErrorResponse -> {
                 shouldReport = issue.httpStatusCode !in 500..599
-                com.infomaniak.core.R.string.anErrorHasOccurred
+                RCore.string.anErrorHasOccurred
             }
             is Issue.NetworkIssue -> {
                 shouldReport = false
-                com.infomaniak.core.network.R.string.connectionError
+                RCoreNetwork.string.connectionError
             }
             is Issue.OtherIssue -> {
                 shouldReport = true
-                com.infomaniak.core.R.string.anErrorHasOccurred
+                RCore.string.anErrorHasOccurred
             }
         }
         val errorMessage = "Failed to derive token for account ${account.id}, with reason: $issue"
