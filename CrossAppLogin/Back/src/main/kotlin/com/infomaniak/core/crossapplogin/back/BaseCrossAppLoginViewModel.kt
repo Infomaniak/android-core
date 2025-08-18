@@ -97,7 +97,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     @StringRes
     private fun getTokenDerivationIssueErrorMessage(account: ExternalAccount, issue: Issue): Int {
         val shouldReport: Boolean
-        val errorId = when (issue) {
+        val messageResId = when (issue) {
             is Issue.AppIntegrityCheckFailed -> {
                 shouldReport = false
                 com.infomaniak.core.R.string.anErrorHasOccurred
@@ -121,7 +121,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             false -> SentryLog.i(TAG, errorMessage)
         }
 
-        return errorId
+        return messageResId
     }
 
     data class LoginResult(val tokens: List<ApiToken>, val errorMessageIds: List<Int>)
