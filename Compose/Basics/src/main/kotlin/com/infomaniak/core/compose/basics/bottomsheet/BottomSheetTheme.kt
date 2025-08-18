@@ -33,17 +33,28 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 
 class BottomSheetTheme internal constructor(
-    val containerColor: Color = Color.Unspecified,
-    val contentColor: Color = Color.Unspecified,
-    val shape: Shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-    val dragHandleColor: Color = Color.Gray,
-    val dragHandleSize: DpSize = DpSize(42.dp, 4.dp),
-    val dragHandleShape: Shape = CircleShape,
-    val titleTextStyle: TextStyle = TextStyle.Default,
-    val titleColor: Color = Color.Unspecified,
+    val containerColor: Color,
+    val contentColor: Color,
+    val shape: Shape,
+    val dragHandleColor: Color,
+    val dragHandleSize: DpSize,
+    val dragHandleShape: Shape,
+    val titleTextStyle: TextStyle,
+    val titleColor: Color,
 )
 
-val LocalBottomSheetTheme = staticCompositionLocalOf { BottomSheetTheme() }
+val LocalBottomSheetTheme = staticCompositionLocalOf {
+    BottomSheetTheme(
+        containerColor = Color.Unspecified,
+        contentColor = Color.Unspecified,
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        dragHandleColor = Color.Gray,
+        dragHandleSize = DpSize(42.dp, 4.dp),
+        dragHandleShape = CircleShape,
+        titleTextStyle = TextStyle.Default,
+        titleColor = Color.Unspecified,
+    )
+}
 
 object BottomSheetThemeDefaults {
     @OptIn(ExperimentalMaterial3Api::class)
