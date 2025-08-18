@@ -23,26 +23,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.components.MultipleAccounts
 import com.infomaniak.core.crossapplogin.front.components.SelectedAccountsButton
 import com.infomaniak.core.crossapplogin.front.components.SingleAccount
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
-import com.infomaniak.core.crossapplogin.back.ExternalAccount
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CrossLoginSelectAccounts(
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
-    customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
 ) {
 
     val selectedAccounts = accounts().filter { it.id !in skippedIds() }
@@ -51,6 +50,7 @@ fun CrossLoginSelectAccounts(
     SelectedAccountsButton(
         customization = customization,
         onClick = onClick,
+        modifier = modifier,
     ) {
         when {
             count == 1 -> SingleAccount(selectedAccounts.single(), customization, Modifier.weight(1.0f))

@@ -53,6 +53,7 @@ import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 internal fun SelectedAccountsButton(
     customization: CrossLoginCustomization,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -60,7 +61,7 @@ internal fun SelectedAccountsButton(
         LocalRippleConfiguration provides RippleConfiguration(color = customization.colors.primaryColor)
     ) {
         TextButton(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(Dimens.buttonHeight),
             border = BorderStroke(1.dp, customization.colors.buttonStrokeColor),

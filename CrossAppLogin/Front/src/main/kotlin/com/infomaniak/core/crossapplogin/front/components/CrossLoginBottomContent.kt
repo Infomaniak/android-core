@@ -35,6 +35,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,6 +51,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.R
@@ -59,6 +63,7 @@ import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
+import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
 import com.infomaniak.core.onboarding.components.OnboardingComponents
 import com.infomaniak.core.crossapplogin.front.R as RCross
@@ -92,14 +97,16 @@ fun OnboardingComponents.CrossLoginBottomContent(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth()
-            .height(140.dp),
+            .height(150.dp),
     ) {
         SharedTransitionLayout {
             AnimatedContent(
                 isLastPage()
             ) { isLastPage ->
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = Margin.Medium),
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -107,14 +114,14 @@ fun OnboardingComponents.CrossLoginBottomContent(
                         CrossLoginSelectAccounts(
                             accounts = accounts,
                             skippedIds = skippedIds,
-                            onClick = onOpenAccountsBottomSheet,
                             customization = CrossLoginDefaults.customize(
                                 colors = CrossLoginDefaults.colors(titleColor = titleColor, descriptionColor = descriptionColor),
                                 buttonStyle = object : ButtonStyle {
                                     override val height: Dp = primaryButtonHeight
                                     override val shape: Shape = primaryButtonShape
                                 }
-                            )
+                            ),
+                            onClick = onOpenAccountsBottomSheet,
                         )
                     }
 
@@ -123,10 +130,13 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             text = if (accounts().isEmpty()) {
                                 stringResource(RCross.string.buttonLogin)
                             } else {
-                                pluralStringResource(RCross.plurals.buttonContinueWithAccounts, accounts().size - skippedIds().size)
+                                pluralStringResource(
+                                    RCross.plurals.buttonContinueWithAccounts,
+                                    accounts().size - skippedIds().size
+                                )
                             },
                             shape = primaryButtonShape,
-                            modifier = Modifier.Companion
+                            modifier = Modifier
                                 .sharedElement(
                                     rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
                                     animatedVisibilityScope = this@AnimatedContent
@@ -160,14 +170,13 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = Modifier.Companion) {
+private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = Modifier) {
     val buttonWidth = FAB_SIZE
     val buttonHeight = FAB_SIZE
 
     BasicButton(
         modifier = modifier
             .height(buttonHeight)
-            .padding(horizontal = Margin.Medium)
             .width(buttonWidth),
         onClick = onClick,
         shape = shape,
@@ -184,7 +193,7 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun ButtonExpanded(text: String, shape: Shape, modifier: Modifier = Modifier.Companion, onClick: () -> Unit) {
+private fun ButtonExpanded(text: String, shape: Shape, modifier: Modifier = Modifier, onClick: () -> Unit) {
     var visibility by rememberSaveable { mutableFloatStateOf(0f) }
 
     val textVisibility by animateFloatAsState(
@@ -196,9 +205,7 @@ private fun ButtonExpanded(text: String, shape: Shape, modifier: Modifier = Modi
     LaunchedEffect(Unit) { visibility = 1f }
 
     BasicButton(
-        modifier = modifier
-            .padding(horizontal = Margin.Medium)
-            .width(400.dp),
+        modifier = modifier.width(400.dp),
         onClick = onClick,
         shape = shape,
         contentPadding = PaddingValues(),
@@ -216,4 +223,25 @@ private fun ButtonExpanded(text: String, shape: Shape, modifier: Modifier = Modi
 object CrossLoginBottomContentDefaults {
     val buttonShape = RoundedCornerShape(16.dp)
     val primaryButtonHeight = 56.dp
+}
+
+@Preview
+@Composable
+private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>) {
+    MaterialTheme {
+        Surface {
+            OnboardingComponents.CrossLoginBottomContent(
+                accounts = { accounts },
+                skippedIds = { emptySet() },
+                titleColor = Color.Black,
+                descriptionColor = Color.Gray,
+                isLastPage = { true },
+                onGoToNextPage = {},
+                onLogin = {},
+                onContinueWithSelectedAccounts = {},
+                onOpenAccountsBottomSheet = {},
+                onCreateAccount = {},
+            )
+        }
+    }
 }
