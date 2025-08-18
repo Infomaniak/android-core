@@ -76,8 +76,6 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {
         val tokenGenerator = derivedTokenGenerator
 
-        if (selectedAccounts.isEmpty()) return LoginResult(emptyList(), emptyList())
-
         val tokens = mutableListOf<ApiToken>()
         val errorMessageIds = mutableListOf<Int>()
 
