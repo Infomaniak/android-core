@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
 
-abstract class CrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
+abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
     private val _availableAccounts = MutableStateFlow(emptyList<ExternalAccount>())
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
@@ -127,6 +127,6 @@ abstract class CrossAppLoginViewModel(applicationId: String, clientId: String) :
     data class LoginResult(val tokens: List<ApiToken>, val errorMessageIds: List<Int>)
 
     companion object {
-        private val TAG = CrossAppLoginViewModel::class.java.simpleName
+        private val TAG = BaseCrossAppLoginViewModel::class.java.simpleName
     }
 }
