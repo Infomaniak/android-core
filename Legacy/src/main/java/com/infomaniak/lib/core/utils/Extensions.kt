@@ -151,7 +151,9 @@ fun MaterialButton.hideProgressCatching(@StringRes text: Int) {
 fun MaterialButton.hideProgressCatching(text: String) {
     isClickable = true
     // hideProgress stores references to views which crashes when the view is freed
-    runCatching { hideProgress(text) }
+    runCatching { hideProgress(text) }.onFailure { throwable ->
+        SentryLog.w("hideProgress", "An error has occurred when hideProgress", throwable)
+    }
 }
 
 /**
