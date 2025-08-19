@@ -20,6 +20,7 @@ kotest = "5.9.1"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerialization = "1.8.1" # Doesn't build when bumped to 1.9.0 (Waiting Kotlin 2.2.0)
 ktor = "3.2.3"
+ktlintPlugin = "13.0.0"
 lifecycleRuntimeKtx = "2.8.7" # Doesn't build when bumped to 2.9.0 (Waiting SDK 35)
 material = "1.12.0"
 matomo = "4.3.4"
@@ -111,4 +112,4 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose" }
 kotlin-android = { id = "org.jetbrains.kotlin.android" }
 ksp = { id = "com.google.devtools.ksp" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint"}
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin"}

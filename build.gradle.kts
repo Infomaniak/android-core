@@ -3,7 +3,7 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
-    alias(core.plugins.ktlint) version "13.0.0"
+    alias(core.plugins.ktlint)
 }
 
 ktlint {
