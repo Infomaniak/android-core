@@ -45,8 +45,8 @@ class BottomSheetTheme internal constructor(
 
 val LocalBottomSheetTheme = staticCompositionLocalOf {
     BottomSheetTheme(
-        containerColor = Color.Unspecified,
-        contentColor = Color.Unspecified,
+        containerColor = Color.White,
+        contentColor = Color.Black,
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         dragHandleColor = Color.Gray,
         dragHandleSize = DpSize(42.dp, 4.dp),
