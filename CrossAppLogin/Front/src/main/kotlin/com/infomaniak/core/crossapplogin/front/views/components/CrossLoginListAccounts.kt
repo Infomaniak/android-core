@@ -55,10 +55,10 @@ import com.infomaniak.core.R as RCore
 fun CrossLoginListAccounts(
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
-    customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
     onAccountClicked: (Long) -> Unit,
     onAnotherAccountClicked: () -> Unit,
     onSaveClicked: () -> Unit,
+    customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
 ) {
 
     fun ExternalAccount.isSelected(): Boolean = id !in skippedIds()

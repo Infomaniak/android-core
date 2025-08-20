@@ -34,14 +34,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateSetOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -59,13 +66,17 @@ import com.infomaniak.core.R
 import com.infomaniak.core.compose.basicbutton.BasicButton
 import com.infomaniak.core.compose.basics.ButtonStyle
 import com.infomaniak.core.compose.basics.Typography
+import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
+import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
+import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginListAccounts
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
 import com.infomaniak.core.onboarding.components.OnboardingComponents
+import kotlinx.coroutines.launch
 import com.infomaniak.core.crossapplogin.front.R as RCross
 
 private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
@@ -73,7 +84,7 @@ private val FAB_SIZE = 64.dp
 
 // TODO: Kdoc
 @Suppress("UnusedReceiverParameter")
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingComponents.CrossLoginBottomContent(
     modifier: Modifier = Modifier,
@@ -85,14 +96,18 @@ fun OnboardingComponents.CrossLoginBottomContent(
     onGoToNextPage: () -> Unit,
     onLogin: () -> Unit,
     onContinueWithSelectedAccounts: () -> Unit,
-    // Bottom sheet is not shared through the CrossLoginBottomContent because each app has its own style of bottom sheet defined
-    // at the app's level
-    onOpenAccountsBottomSheet: () -> Unit,
     onCreateAccount: () -> Unit,
+    onAnotherAccountClicked: () -> Unit,
+    onSaveSkippedAccounts: (Set<Long>) -> Unit,
     nextButtonShape: Shape = CrossLoginBottomContentDefaults.buttonShape,
     primaryButtonShape: Shape = CrossLoginBottomContentDefaults.buttonShape,
     primaryButtonHeight: Dp = CrossLoginBottomContentDefaults.primaryButtonHeight,
+    accountsBottomSheetCustomization: CrossLoginCustomization = CrossLoginDefaults.customize(),
 ) {
+    var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
+    val localSkipped by remember { derivedStateOf { mutableStateSetOf(*skippedIds().toTypedArray()) } }
+    val scope = rememberCoroutineScope()
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -121,7 +136,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                     override val shape: Shape = primaryButtonShape
                                 }
                             ),
-                            onClick = onOpenAccountsBottomSheet,
+                            onClick = { showAccountsBottomSheet = true },
                         )
                     }
 
@@ -164,6 +179,25 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     }
                 }
             }
+        }
+    }
+
+    if (showAccountsBottomSheet) {
+        val sheetState = rememberModalBottomSheetState()
+        ThemedBottomSheetScaffold(sheetState = sheetState, onDismissRequest = { showAccountsBottomSheet = false }) {
+            CrossLoginListAccounts(
+                accounts = accounts,
+                skippedIds = { localSkipped },
+                onAccountClicked = { accountId: Long ->
+                    if (accountId in localSkipped) localSkipped -= accountId else localSkipped += accountId
+                },
+                onAnotherAccountClicked = onAnotherAccountClicked,
+                onSaveClicked = {
+                    onSaveSkippedAccounts(localSkipped)
+                    scope.launch { sheetState.hide() }.invokeOnCompletion { showAccountsBottomSheet = false }
+                },
+                customization = accountsBottomSheetCustomization,
+            )
         }
     }
 }
@@ -239,8 +273,9 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 onGoToNextPage = {},
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
-                onOpenAccountsBottomSheet = {},
                 onCreateAccount = {},
+                onAnotherAccountClicked = {},
+                onSaveSkippedAccounts = {},
             )
         }
     }
