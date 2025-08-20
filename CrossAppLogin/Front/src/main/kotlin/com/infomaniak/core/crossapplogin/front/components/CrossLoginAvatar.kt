@@ -35,9 +35,9 @@ import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.avatar.models.AvatarUrlData
 import com.infomaniak.core.coil.ImageLoaderProvider
+import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
-import com.infomaniak.core.crossapplogin.back.ExternalAccount
 
 @Composable
 internal fun CrossLoginAvatar(modifier: Modifier = Modifier, account: ExternalAccount, strokeColor: Color? = null) {

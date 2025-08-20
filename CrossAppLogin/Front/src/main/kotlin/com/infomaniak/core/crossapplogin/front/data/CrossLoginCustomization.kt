@@ -58,7 +58,7 @@ object CrossLoginDefaults {
         onPrimaryColor = onPrimaryColor ?: MaterialTheme.colorScheme.onPrimary,
         titleColor = titleColor ?: MaterialTheme.colorScheme.onSurface,
         descriptionColor = descriptionColor ?: MaterialTheme.colorScheme.onSurfaceVariant,
-        avatarStrokeColor = avatarStrokeColor ?: MaterialTheme.colorScheme.background,
+        avatarStrokeColor = avatarStrokeColor ?: MaterialTheme.colorScheme.surface,
         buttonStrokeColor = buttonStrokeColor ?: MaterialTheme.colorScheme.outlineVariant,
     )
 
