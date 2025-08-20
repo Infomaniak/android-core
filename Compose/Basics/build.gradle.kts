@@ -39,7 +39,9 @@ android {
 
 dependencies {
     implementation(project(":Core"))
+    implementation(project(":Core:Compose:Margin"))
     implementation(platform(core.compose.bom))
+    implementation(core.compose.material3)
     implementation(core.compose.runtime)
     implementation(core.compose.ui.tooling)
     implementation(core.foundation.android)
