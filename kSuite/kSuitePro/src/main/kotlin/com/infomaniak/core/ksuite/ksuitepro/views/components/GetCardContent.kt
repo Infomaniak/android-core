@@ -19,14 +19,14 @@ package com.infomaniak.core.ksuite.ksuitepro.views.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -56,9 +56,11 @@ fun GetCardContent(
     val resources = LocalResources.current
 
     Card(
-        modifier = Modifier.height(76.dp),
+        modifier = Modifier
+            .height(76.dp)
+            .fillMaxWidth(),
         border = kSuiteGradient(),
-        colors = CardDefaults.cardColors(containerColor = resources.color(R.color.kSuiteBackground)),
+        colors = CardDefaults.cardColors(containerColor = resources.color(R.color.kSuiteProBackground)),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         onClick = onClick,
     ) {
@@ -67,36 +69,37 @@ fun GetCardContent(
                 .padding(horizontal = Margin.Medium)
                 .fillMaxHeight(),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Margin.Medium),
         ) {
             Column(
+                modifier = Modifier.weight(1.0f),
                 horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(Margin.Micro)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Margin.Micro),
                 ) {
                     Text(
                         text = stringResource(R.string.kSuiteGetProTitle),
                         style = Typography.bodyMedium,
                         color = resources.color(R.color.swan),
                     )
-                    Spacer(Modifier.width(Margin.Micro))
                     Image(
                         modifier = Modifier.size(width = Dimens.avatarSize, height = Dimens.smallIconSize),
                         painter = painterResource(R.drawable.ic_ksuite_pro),
                         contentDescription = null,
                     )
                 }
-                Spacer(Modifier.height(Margin.Micro))
                 Text(
                     text = stringResource(R.string.kSuiteGetProDescription),
                     style = Typography.bodySmallRegular,
                     color = resources.color(R.color.mouse),
                 )
             }
-            Spacer(Modifier.width(Margin.Medium))
             Image(
-                colorFilter = ColorFilter.tint(resources.color(R.color.swan)),
                 modifier = Modifier.size(Dimens.smallIconSize),
+                colorFilter = ColorFilter.tint(resources.color(R.color.swan)),
                 painter = painterResource(R.drawable.ic_ksuite_chevron),
                 contentDescription = null,
             )
