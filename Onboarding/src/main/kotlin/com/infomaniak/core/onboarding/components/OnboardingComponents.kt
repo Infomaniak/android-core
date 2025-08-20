@@ -41,6 +41,9 @@ import com.airbnb.lottie.compose.rememberLottieComposition
  * A few helper components for when you need to create an onboarding with simple specs. Using these components inside of
  * [com.infomaniak.core.onboarding.OnboardingScaffold] makes it faster to create an onboarding and helps you ensure you have the
  * correct styling used across different apps.
+ *
+ * When using the cross app login module, there's also a CrossLoginBottomContent component to easily define the bottom content of
+ * [com.infomaniak.core.onboarding.OnboardingScaffold].
  */
 object OnboardingComponents {
     /**
