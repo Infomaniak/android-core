@@ -174,10 +174,10 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
                     if (isLastPage && accounts().isEmpty()) {
                         Button(
-                            modifier = Modifier.height(56.dp),
+                            modifier = Modifier.height(48.dp),
                             onClick = onCreateAccount,
-                            colors = ButtonDefaults.textButtonColors()
-                        ) { Text(stringResource(RCross.string.buttonCreateAccount)) }
+                            colors = ButtonDefaults.textButtonColors(),
+                        ) { Text(stringResource(RCross.string.buttonCreateAccount), style = Typography.bodyMedium) }
                     }
                 }
             }
@@ -274,7 +274,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     MaterialTheme {
         Surface {
             OnboardingComponents.CrossLoginBottomContent(
-                accounts = { accounts },
+                accounts = { emptyList() },
                 skippedIds = { emptySet() },
                 titleColor = Color.Black,
                 descriptionColor = Color.Gray,

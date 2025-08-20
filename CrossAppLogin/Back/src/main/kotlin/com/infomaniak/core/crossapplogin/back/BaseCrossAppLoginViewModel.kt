@@ -95,11 +95,6 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         return LoginResult(tokens, errorMessageIds)
     }
 
-    fun computeSelectedAccounts(
-        accounts: List<ExternalAccount>,
-        skippedIds: Set<Long>
-    ): List<ExternalAccount> = accounts.filter { it.id !in skippedIds }
-
     @StringRes
     private fun getTokenDerivationIssueErrorMessage(account: ExternalAccount, issue: Issue): Int {
         val shouldReport: Boolean
@@ -134,5 +129,10 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     companion object {
         private val TAG = BaseCrossAppLoginViewModel::class.java.simpleName
+
+        fun computeSelectedAccounts(
+            accounts: List<ExternalAccount>,
+            skippedIds: Set<Long>
+        ): List<ExternalAccount> = accounts.filter { it.id !in skippedIds }
     }
 }
