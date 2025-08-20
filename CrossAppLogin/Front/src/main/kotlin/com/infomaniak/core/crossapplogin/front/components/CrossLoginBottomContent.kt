@@ -81,7 +81,34 @@ import com.infomaniak.core.crossapplogin.front.R as RCross
 private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
 private val FAB_SIZE = 64.dp
 
-// TODO: Kdoc
+/**
+ * Easy to reuse way of displaying the bottom content of an [com.infomaniak.core.onboarding.OnboardingScaffold] when using the
+ * cross app login.
+ *
+ * @param accounts The list of all available accounts that can be chosen from and used for login.
+ * @param skippedIds The list of ids of accounts that are not currently selected by the user.
+ * @param titleColor The primary color to use for the [CrossLoginSelectAccounts].
+ * @param descriptionColor The secondary lighter color to use for the [CrossLoginSelectAccounts].
+ * @param isLastPage Whether the horizontal pager has reched the last page or not so that this component can swap between the
+ * arrow button to go the next view pager page or the column of login buttons.
+ * @param onGoToNextPageRequest When the arrow button is clicked which should make the horizontal pager go to the next page.
+ * @param onLogin When the user has no accounts for cross app login and clicks on the button to log in a new user.
+ * @param onContinueWithSelectedAccounts When the user has accounts for cross app login and clicks on the button to log them.
+ * @param onCreateAccount When the user has no accounts for cross app login and clicks on the button to create a new account.
+ * @param onUseAnotherAccountClicked When the user has accounts for cross app login but wants to connect a different account.
+ * @param onSaveSkippedAccounts When the user has confirmed his selection of accounts to user for cross app login. The updated
+ * skipped accounts need to be saved at the view model level so that when login only selected accounts are taken into accounts.
+ * @param modifier Modifier for the component.
+ * @param isLoginButtonLoading Whether the buttons to login are loading or not. This includes both the standard login button when
+ * there's no accounts for cross app login and the confirmation button when there are accounts for cross app login. The button
+ * needs to start loading so it cannot be clicked multiple times while the api calls are being sent when the user has slow internet.
+ * @param isSignUpButtonLoading Whether the button to create a new account is loading or not. Same as [isLoginButtonLoading].
+ * @param nextButtonShape To specify a different shape for the big button with an arrow that lets you go to the next page.
+ * @param primaryButtonShape To specify a specific shape for the big primary textual buttons to match each app's unique style.
+ * @param primaryButtonHeight To specify a specific height for the big primary textual buttons to match each app's unique style.
+ * @param accountsBottomSheetCustomization Use it to style differently the content of the bottom sheet that lets the user select
+ * what accounts to use for cross app login.
+ */
 @Suppress("UnusedReceiverParameter")
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -91,7 +118,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     titleColor: Color, // TODO: Extract once we have a design system and shared color tokens
     descriptionColor: Color, // TODO: Extract once we have a design system and shared color tokens
     isLastPage: () -> Boolean,
-    onGoToNextPage: () -> Unit,
+    onGoToNextPageRequest: () -> Unit,
     onLogin: () -> Unit,
     onContinueWithSelectedAccounts: () -> Unit,
     onCreateAccount: () -> Unit,
@@ -163,7 +190,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                         )
                     } else {
                         ButtonNext(
-                            onClick = onGoToNextPage,
+                            onClick = onGoToNextPageRequest,
                             shape = nextButtonShape,
                             modifier = Modifier.sharedElement(
                                 rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
@@ -280,7 +307,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 titleColor = Color.Black,
                 descriptionColor = Color.Gray,
                 isLastPage = { true },
-                onGoToNextPage = {},
+                onGoToNextPageRequest = {},
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
                 onCreateAccount = {},
