@@ -48,9 +48,10 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
 
+    // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
     val selectedAccounts: StateFlow<List<ExternalAccount>> =
         combine(availableAccounts, skippedAccountIds) { allExternalAccounts, idsToSkip ->
-            allExternalAccounts.filter { it.id !in idsToSkip }
+            computeSelectedAccounts(allExternalAccounts, idsToSkip)
         }.stateIn(viewModelScope, started = SharingStarted.Eagerly, initialValue = emptyList())
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
@@ -93,6 +94,11 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
         return LoginResult(tokens, errorMessageIds)
     }
+
+    fun computeSelectedAccounts(
+        accounts: List<ExternalAccount>,
+        skippedIds: Set<Long>
+    ): List<ExternalAccount> = accounts.filter { it.id !in skippedIds }
 
     @StringRes
     private fun getTokenDerivationIssueErrorMessage(account: ExternalAccount, issue: Issue): Int {
