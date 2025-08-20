@@ -87,7 +87,6 @@ private val FAB_SIZE = 64.dp
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingComponents.CrossLoginBottomContent(
-    modifier: Modifier = Modifier,
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
     titleColor: Color, // TODO: Extract once we have a design system and shared color tokens
@@ -99,6 +98,8 @@ fun OnboardingComponents.CrossLoginBottomContent(
     onCreateAccount: () -> Unit,
     onAnotherAccountClicked: () -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
+    modifier: Modifier = Modifier,
+    isLoginButtonLoading: () -> Boolean = { false },
     nextButtonShape: Shape = CrossLoginBottomContentDefaults.buttonShape,
     primaryButtonShape: Shape = CrossLoginBottomContentDefaults.buttonShape,
     primaryButtonHeight: Dp = CrossLoginBottomContentDefaults.primaryButtonHeight,
@@ -151,6 +152,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                 )
                             },
                             shape = primaryButtonShape,
+                            isLoginButtonLoading = isLoginButtonLoading,
                             modifier = Modifier
                                 .sharedElement(
                                     rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
@@ -227,7 +229,13 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun ButtonExpanded(text: String, shape: Shape, modifier: Modifier = Modifier, onClick: () -> Unit) {
+private fun ButtonExpanded(
+    text: String,
+    shape: Shape,
+    isLoginButtonLoading: () -> Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
     var visibility by rememberSaveable { mutableFloatStateOf(0f) }
 
     val textVisibility by animateFloatAsState(
@@ -243,6 +251,7 @@ private fun ButtonExpanded(text: String, shape: Shape, modifier: Modifier = Modi
         onClick = onClick,
         shape = shape,
         contentPadding = PaddingValues(),
+        showIndeterminateProgress = isLoginButtonLoading,
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
