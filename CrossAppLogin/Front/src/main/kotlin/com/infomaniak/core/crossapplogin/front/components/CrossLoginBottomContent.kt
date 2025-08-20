@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -100,6 +99,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
     modifier: Modifier = Modifier,
     isLoginButtonLoading: () -> Boolean = { false },
+    isSignUpButtonLoading: () -> Boolean = { false },
     nextButtonShape: Shape = CrossLoginBottomContentDefaults.buttonShape,
     primaryButtonShape: Shape = CrossLoginBottomContentDefaults.buttonShape,
     primaryButtonHeight: Dp = CrossLoginBottomContentDefaults.primaryButtonHeight,
@@ -173,10 +173,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     }
 
                     if (isLastPage && accounts().isEmpty()) {
-                        Button(
+                        BasicButton(
                             modifier = Modifier.height(48.dp),
                             onClick = onCreateAccount,
                             colors = ButtonDefaults.textButtonColors(),
+                            showIndeterminateProgress = isSignUpButtonLoading,
                         ) { Text(stringResource(RCross.string.buttonCreateAccount), style = Typography.bodyMedium) }
                     }
                 }
