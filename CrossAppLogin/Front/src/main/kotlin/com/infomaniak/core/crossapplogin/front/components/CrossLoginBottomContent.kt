@@ -95,7 +95,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     onLogin: () -> Unit,
     onContinueWithSelectedAccounts: () -> Unit,
     onCreateAccount: () -> Unit,
-    onAnotherAccountClicked: () -> Unit,
+    onUseAnotherAccountClicked: () -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
     modifier: Modifier = Modifier,
     isLoginButtonLoading: () -> Boolean = { false },
@@ -194,7 +194,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                 onAccountClicked = { accountId: Long ->
                     if (accountId in localSkipped) localSkipped -= accountId else localSkipped += accountId
                 },
-                onAnotherAccountClicked = onAnotherAccountClicked,
+                onAnotherAccountClicked = onUseAnotherAccountClicked,
                 onSaveClicked = {
                     onSaveSkippedAccounts(localSkipped)
                     scope.launch { sheetState.hide() }.invokeOnCompletion { showAccountsBottomSheet = false }
@@ -275,7 +275,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     MaterialTheme {
         Surface {
             OnboardingComponents.CrossLoginBottomContent(
-                accounts = { emptyList() },
+                accounts = { accounts },
                 skippedIds = { emptySet() },
                 titleColor = Color.Black,
                 descriptionColor = Color.Gray,
@@ -284,7 +284,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
                 onCreateAccount = {},
-                onAnotherAccountClicked = {},
+                onUseAnotherAccountClicked = {},
                 onSaveSkippedAccounts = {},
                 isLoginButtonLoading = { true }
             )
