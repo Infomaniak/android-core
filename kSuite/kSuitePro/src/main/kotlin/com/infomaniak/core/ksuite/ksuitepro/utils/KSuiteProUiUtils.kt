@@ -23,5 +23,5 @@ import androidx.compose.ui.graphics.Color
 
 object KSuiteProUiUtils {
 
-    internal fun Resources.color(@ColorRes id: Int): Color = Color(getColor(id, null))
+    fun Resources.color(@ColorRes id: Int): Color = Color(getColor(id, null))
 }
