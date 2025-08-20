@@ -177,7 +177,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             modifier = Modifier.height(56.dp),
                             onClick = onCreateAccount,
                             colors = ButtonDefaults.textButtonColors()
-                        ) { Text("Create an account") }
+                        ) { Text(stringResource(RCross.string.buttonCreateAccount)) }
                     }
                 }
             }
@@ -285,6 +285,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 onCreateAccount = {},
                 onAnotherAccountClicked = {},
                 onSaveSkippedAccounts = {},
+                isLoginButtonLoading = { true }
             )
         }
     }
