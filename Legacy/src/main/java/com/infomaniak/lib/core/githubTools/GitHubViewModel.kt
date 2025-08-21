@@ -52,7 +52,7 @@ class GitHubViewModel : ViewModel() {
     }
 }
 
-
+// Copied from the main Core module this doesn't depend on
 @Suppress("RedundantSuspendModifier")
 private suspend inline fun <T> Result<T>.cancellable(): Result<T> = onFailure {
     if (it is CancellationException) throw it
