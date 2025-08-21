@@ -87,12 +87,12 @@ class CrossLoginListAccountsView @JvmOverloads constructor(
                     avatarStrokeColor = avatarStrokeColor,
                     buttonStrokeColor = buttonStrokeColor,
                 ),
-                buttonType = CrossLoginDefaults.buttonType(buttonType),
+                buttonStyle = CrossLoginDefaults.buttonType(buttonType),
             )
 
             CrossLoginListAccounts(
-                accounts = accounts,
-                skippedIds = skippedIds,
+                accounts = { accounts },
+                skippedIds = { skippedIds },
                 customization = customization,
                 onAccountClicked = { accountId ->
                     if (accountId in skippedIds) skippedIds -= accountId else skippedIds += accountId

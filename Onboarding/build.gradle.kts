@@ -38,12 +38,16 @@ android {
 }
 
 dependencies {
+    implementation(project(":Core:Compose:Margin"))
+
     implementation(platform(core.compose.bom))
     implementation(core.androidx.core.ktx)
     implementation(core.compose.foundation)
     implementation(core.compose.material3)
     implementation(core.compose.runtime)
     implementation(core.compose.ui.tooling.preview)
+
+    implementation(core.lottie)
 
     debugImplementation(core.compose.ui.tooling)
 }

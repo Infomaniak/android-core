@@ -16,15 +16,16 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
-    <string name="buttonLogin">Anmeldung</string>
     <plurals name="buttonContinueWithAccounts">
         <item quantity="one">Weiter mit diesem Konto</item>
         <item quantity="other">Weiter mit diesen Konten</item>
     </plurals>
+    <string name="buttonCreateAccount">Ein Konto erstellen</string>
+    <string name="buttonLogin">Anmeldung</string>
+    <string name="buttonUseOtherAccount">Ein anderes Konto verwenden</string>
+    <string name="selectAccountPanelTitle">Wählen Sie ein oder mehrere Konten</string>
     <plurals name="selectedAccountCountLabel">
         <item quantity="one">%d Konto ausgewählt</item>
         <item quantity="other">%d Konten ausgewählt</item>
     </plurals>
-    <string name="selectAccountPanelTitle">Wählen Sie ein oder mehrere Konten</string>
-    <string name="buttonUseOtherAccount">Ein anderes Konto verwenden</string>
 </resources>

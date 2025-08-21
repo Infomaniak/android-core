@@ -22,10 +22,15 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+interface ButtonStyle {
+    val height: Dp
+    val shape: Shape
+}
+
 enum class ButtonType(
-    val height: Dp,
-    val shape: Shape,
-) {
+    override val height: Dp,
+    override val shape: Shape,
+) : ButtonStyle {
     Mail(height = 48.dp, shape = RoundedCornerShape(16.dp)),
     Drive(height = 58.dp, shape = RoundedCornerShape(10.dp)),
 }

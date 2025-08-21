@@ -22,6 +22,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -47,11 +48,16 @@ fun Avatar(
     border: BorderStroke? = null,
     shape: Shape = CircleShape,
 ) {
+    // Adding padding like this is needed as a hack for when a BorderStroke is provided. When applying a BorderStroke with a
+    // shape on a Box and also clipping that Box with the same shape, the outer edge has a thin outline where the avatar appears
+    // outside the border. This looks  like the expected behavior: https://stackoverflow.com/questions/75964726
+    // This solution pads the avatar content very slightly so its outer edge stops midway through the border stroke.
     Box(
-        modifier
+        modifier = modifier
             .size(32.dp)
+            .then(if (border != null) Modifier.border(border, shape) else Modifier)
             .clip(shape)
-            .then(if (border != null) Modifier.border(border, shape) else Modifier),
+            .padding(if (border == null) 0.dp else border.width / 2),
         contentAlignment = Alignment.Center,
     ) {
         when (avatarType) {
@@ -84,6 +90,11 @@ private fun AvatarPreview() {
                 Avatar(
                     AvatarType.DrawableResource(R.drawable.ic_exemple_drawable_res),
                     modifier = Modifier.size(24.dp),
+                )
+                Avatar(
+                    AvatarType.DrawableResource(R.drawable.ic_exemple_drawable_res),
+                    modifier = Modifier.size(24.dp),
+                    border = BorderStroke(1.dp, Color.LightGray)
                 )
             }
         }

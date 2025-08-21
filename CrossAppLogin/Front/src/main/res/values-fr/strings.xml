@@ -16,15 +16,16 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="buttonLogin">Se connecter</string>
     <plurals name="buttonContinueWithAccounts">
-        <item quantity="one" tools:ignore="ImpliedQuantity">Continuer avec ce compte</item>
+        <item quantity="one">Continuer avec ce compte</item>
         <item quantity="other">Continuer avec ces comptes</item>
     </plurals>
+    <string name="buttonCreateAccount">Créer un compte</string>
+    <string name="buttonLogin">Se connecter</string>
+    <string name="buttonUseOtherAccount">Utiliser un autre compte</string>
+    <string name="selectAccountPanelTitle">Sélectionner un ou plusieurs comptes</string>
     <plurals name="selectedAccountCountLabel">
         <item quantity="one">%d compte sélectionné</item>
         <item quantity="other">%d comptes sélectionnés</item>
     </plurals>
-    <string name="selectAccountPanelTitle">Sélectionner un ou plusieurs comptes</string>
-    <string name="buttonUseOtherAccount">Utiliser un autre compte</string>
 </resources>

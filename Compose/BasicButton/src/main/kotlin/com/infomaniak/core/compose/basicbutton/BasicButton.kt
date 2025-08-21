@@ -27,6 +27,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -127,6 +130,7 @@ private fun KeepButtonSize(targetSizeContent: @Composable () -> Unit, content: @
 @Composable
 private fun getProgressModifier(): Modifier {
     val progressModifier = Modifier
+        .heightIn(max = 32.dp)
         .fillMaxHeight(0.8f)
         .aspectRatio(1f)
     return progressModifier
@@ -149,26 +153,31 @@ private data class LoaderColors(val progressColor: Color, val trackColor: Color)
 private fun Preview() {
     MaterialTheme {
         Surface {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    BasicButton(
-                        modifier = Modifier.height(40.dp),
-                        onClick = {},
-                        content = { Text("Click me!") },
-                    )
-                    BasicButton(
-                        modifier = Modifier.height(40.dp),
-                        onClick = {},
-                        content = { Text("Click me!") },
-                        enabled = { false },
-                    )
-                    BasicButton(
-                        modifier = Modifier.height(40.dp),
-                        onClick = {},
-                        progress = { 0.8f },
-                        content = { Text("Click me!") },
-                    )
-                }
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(8.dp)) {
+                BasicButton(
+                    modifier = Modifier.height(40.dp),
+                    onClick = {},
+                    content = { Text("Click me!") },
+                )
+                BasicButton(
+                    modifier = Modifier.height(40.dp),
+                    onClick = {},
+                    content = { Text("Click me!") },
+                    enabled = { false },
+                )
+                BasicButton(
+                    modifier = Modifier.height(40.dp),
+                    onClick = {},
+                    progress = { 0.8f },
+                    content = { Text("Click me!") },
+                )
+                BasicButton(
+                    modifier = Modifier.height(64.dp),
+                    onClick = {},
+                    progress = { 0.8f },
+                    content = { Text("Click me!") },
+                    shape = RoundedCornerShape(10.dp)
+                )
             }
         }
     }

@@ -86,12 +86,12 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
                     avatarStrokeColor = avatarStrokeColor,
                     buttonStrokeColor = buttonStrokeColor,
                 ),
-                buttonType = CrossLoginDefaults.buttonType(buttonType),
+                buttonStyle = CrossLoginDefaults.buttonType(buttonType),
             )
 
             CrossLoginSelectAccounts(
-                accounts = accounts,
-                skippedIds = skippedIds,
+                accounts = { accounts },
+                skippedIds = { skippedIds },
                 customization = customization,
                 onClick = { onClickListener?.onClick(this) },
             )
