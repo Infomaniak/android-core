@@ -115,8 +115,8 @@ private val FAB_SIZE = 64.dp
 fun OnboardingComponents.CrossLoginBottomContent(
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
-    titleColor: Color, // TODO: Extract once we have a design system and shared color tokens
-    descriptionColor: Color, // TODO: Extract once we have a design system and shared color tokens
+    titleColor: Color,
+    descriptionColor: Color,
     isLastPage: () -> Boolean,
     onGoToNextPageRequest: () -> Unit,
     onLogin: () -> Unit,

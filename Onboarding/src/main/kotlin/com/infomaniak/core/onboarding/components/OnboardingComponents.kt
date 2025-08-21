@@ -96,8 +96,8 @@ object OnboardingComponents {
     fun DefaultTitleAndDescription(
         title: String,
         description: String,
-        titleStyle: TextStyle, // TODO: Default to correct value when we have a design system
-        descriptionStyle: TextStyle, // TODO: Default to correct value when we have a design system
+        titleStyle: TextStyle,
+        descriptionStyle: TextStyle,
         modifier: Modifier = Modifier,
     ) {
         Column(
