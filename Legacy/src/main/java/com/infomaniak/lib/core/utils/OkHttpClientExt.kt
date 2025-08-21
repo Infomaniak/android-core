@@ -17,6 +17,8 @@
  */
 package com.infomaniak.lib.core.utils
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.invoke
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
@@ -47,3 +49,5 @@ suspend fun Call.await() = suspendCancellableCoroutine { continuation ->
         runCatching { this@await.cancel() }
     }
 }
+
+suspend fun Response.bodyAsStringOrNull(): String? = Dispatchers.IO { body?.string() }

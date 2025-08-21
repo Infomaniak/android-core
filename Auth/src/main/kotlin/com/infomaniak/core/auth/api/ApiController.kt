@@ -25,6 +25,7 @@ import com.infomaniak.core.network.api.ApiController.RefreshTokenException
 import com.infomaniak.core.network.api.ApiController.gson
 import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.network.utils.await
+import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.lib.login.ApiToken
 import okhttp3.MultipartBody
 import okhttp3.Request
@@ -51,7 +52,7 @@ object ApiController {
             .build()
 
         val apiToken = HttpClient.okHttpClient.newCall(request).await().use {
-            val bodyResponse = it.body?.string()
+            val bodyResponse = it.bodyAsStringOrNull()
 
             when {
                 it.isSuccessful -> {

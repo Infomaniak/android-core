@@ -22,22 +22,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.infomaniak.lib.core.api.ApiController
 import com.infomaniak.lib.core.networking.HttpClient
+import com.infomaniak.lib.core.utils.await
+import com.infomaniak.lib.core.utils.bodyAsStringOrNull
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import okhttp3.Request
 
 class GitHubViewModel : ViewModel() {
 
-    fun getLastRelease(repo: String): LiveData<GitHubRelease?> = liveData(Dispatchers.IO) {
+    fun getLastRelease(repo: String): LiveData<GitHubRelease?> = liveData(Dispatchers.Default) {
         val request = Request.Builder().url("${API_GITHUB_URL}${repo}/releases").get().build()
         var lastRelease: GitHubRelease? = null
         runCatching {
-            val response = HttpClient.okHttpClientNoTokenInterceptor.newBuilder().build().newCall(request).execute()
-            val bodyResponse = response.body?.string() ?: ""
+            val response = HttpClient.okHttpClientNoTokenInterceptor.newBuilder().build().newCall(request).await()
+            val bodyResponse = response.bodyAsStringOrNull() ?: ""
             if (response.isSuccessful && bodyResponse.isNotBlank()) {
                 val releases = ApiController.json.decodeFromString<List<GitHubRelease>>(bodyResponse)
                 lastRelease = releases.find { !it.draft && !it.prerelease }
             }
-        }.onFailure { exception ->
+        }.cancellable().onFailure { exception ->
             exception.printStackTrace()
         }
 
@@ -47,4 +50,10 @@ class GitHubViewModel : ViewModel() {
     private companion object {
         const val API_GITHUB_URL = "https://api.github.com/repos/Infomaniak/"
     }
+}
+
+// Copied from the main Core module this doesn't depend on
+@Suppress("RedundantSuspendModifier")
+private suspend inline fun <T> Result<T>.cancellable(): Result<T> = onFailure {
+    if (it is CancellationException) throw it
 }

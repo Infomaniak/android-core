@@ -28,6 +28,7 @@ import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.network.utils.await
+import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
@@ -110,7 +111,7 @@ class DerivedTokenGeneratorImpl(
             .build()
 
         val response = okHttpClient.newCall(request).await()
-        val bodyResponse = response.body?.string()
+        val bodyResponse = response.bodyAsStringOrNull()
 
         return if (response.isSuccessful) {
             val jsonResult = JsonParser.parseString(bodyResponse)

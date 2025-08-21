@@ -19,6 +19,7 @@ package com.infomaniak.lib.core.fdroidTools
 
 import com.infomaniak.lib.core.api.ApiController
 import com.infomaniak.lib.core.networking.HttpClient
+import com.infomaniak.lib.core.utils.bodyAsStringOrNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
@@ -30,7 +31,7 @@ class FdroidApiTools {
         var versionCode = 0
         runCatching {
             val response = HttpClient.okHttpClientNoTokenInterceptor.newBuilder().build().newCall(request).execute()
-            val bodyResponse = response.body?.string() ?: ""
+            val bodyResponse = response.bodyAsStringOrNull() ?: ""
             if (response.isSuccessful && bodyResponse.isNotBlank()) {
                 versionCode = ApiController.json.decodeFromString<FdroidRelease>(bodyResponse).suggestedVersionCode
             }
