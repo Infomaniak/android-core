@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.infomaniak.core.compose.margin.Margin
 
 /**
  * A few helper components for when you need to create an onboarding with simple specs. Using these components inside of
@@ -107,9 +108,9 @@ object OnboardingComponents {
     ) {
         Column(
             modifier = modifier
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = Margin.Large)
                 .widthIn(max = 300.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(Margin.Medium),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(textAlign = TextAlign.Center, text = title, style = titleStyle)

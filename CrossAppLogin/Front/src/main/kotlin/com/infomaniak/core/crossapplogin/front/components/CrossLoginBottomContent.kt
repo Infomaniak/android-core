@@ -96,7 +96,7 @@ private val FAB_SIZE = 64.dp
  * @param onContinueWithSelectedAccounts When the user has accounts for cross app login and clicks on the button to log them.
  * @param onCreateAccount When the user has no accounts for cross app login and clicks on the button to create a new account.
  * @param onUseAnotherAccountClicked When the user has accounts for cross app login but wants to connect a different account.
- * @param onSaveSkippedAccounts When the user has confirmed his selection of accounts to user for cross app login. The updated
+ * @param onSaveSkippedAccounts When the user has confirmed his selection of accounts to use for cross app login. The updated
  * skipped accounts need to be saved at the view model level so that when login only selected accounts are taken into accounts.
  * @param modifier Modifier for the component.
  * @param isLoginButtonLoading Whether the buttons to login are loading or not. This includes both the standard login button when
@@ -175,7 +175,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             } else {
                                 pluralStringResource(
                                     RCross.plurals.buttonContinueWithAccounts,
-                                    accounts().size - skippedIds().size
+                                    accounts().size - skippedIds().size,
                                 )
                             },
                             shape = primaryButtonShape,
@@ -183,7 +183,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             modifier = Modifier
                                 .sharedElement(
                                     rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
-                                    animatedVisibilityScope = this@AnimatedContent
+                                    animatedVisibilityScope = this@AnimatedContent,
                                 )
                                 .height(primaryButtonHeight),
                             onClick = if (accounts().isEmpty()) onLogin else onContinueWithSelectedAccounts,
@@ -194,7 +194,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             shape = nextButtonShape,
                             modifier = Modifier.sharedElement(
                                 rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
-                                animatedVisibilityScope = this@AnimatedContent
+                                animatedVisibilityScope = this@AnimatedContent,
                             )
                         )
                     }
@@ -218,7 +218,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
             CrossLoginListAccounts(
                 accounts = accounts,
                 skippedIds = { localSkipped },
-                onAccountClicked = { accountId: Long ->
+                onAccountClicked = { accountId ->
                     if (accountId in localSkipped) localSkipped -= accountId else localSkipped += accountId
                 },
                 onAnotherAccountClicked = onUseAnotherAccountClicked,

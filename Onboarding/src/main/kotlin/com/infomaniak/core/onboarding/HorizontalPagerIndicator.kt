@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import com.infomaniak.core.compose.margin.Margin
 import kotlin.math.abs
 
 @Composable
@@ -130,9 +131,9 @@ object HorizontalPagerIndicatorDefaults {
     fun style(
         inactiveColor: Color = MaterialTheme.colorScheme.outlineVariant,
         activeColor: Color = MaterialTheme.colorScheme.primary,
-        inactiveSize: Dp = 8.dp,
-        activeWidth: Dp = 16.dp,
-        indicatorSpacing: Dp = 8.dp,
+        inactiveSize: Dp = Margin.Mini,
+        activeWidth: Dp = Margin.Medium,
+        indicatorSpacing: Dp = Margin.Mini,
     ): IndicatorStyle = IndicatorStyle(
         inactiveColor = inactiveColor,
         activeColor = activeColor,
