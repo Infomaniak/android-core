@@ -35,11 +35,10 @@ import com.infomaniak.core.network.networking.ManualAuthorizationRequired
 import com.infomaniak.core.network.utils.CustomDateTypeAdapter
 import com.infomaniak.core.network.utils.ErrorCodeTranslated
 import com.infomaniak.core.network.utils.await
+import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import io.sentry.Sentry
 import io.sentry.SentryLevel
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.invoke
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -117,7 +116,7 @@ object ApiController {
             val request = createRequest(url, method, requestBody)
 
             okHttpClient.newCall(request).await().use { response ->
-                bodyResponse = Dispatchers.IO { response.body?.string() } ?: ""
+                bodyResponse = response.bodyAsStringOrNull() ?: ""
                 return when {
                     response.code >= 500 -> {
                         Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->

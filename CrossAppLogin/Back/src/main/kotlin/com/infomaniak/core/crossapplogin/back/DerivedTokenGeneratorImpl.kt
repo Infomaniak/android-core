@@ -28,14 +28,13 @@ import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.network.utils.await
+import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.invoke
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -112,7 +111,7 @@ class DerivedTokenGeneratorImpl(
             .build()
 
         val response = okHttpClient.newCall(request).await()
-        val bodyResponse = Dispatchers.IO { response.body?.string() }
+        val bodyResponse = response.bodyAsStringOrNull()
 
         return if (response.isSuccessful) {
             val jsonResult = JsonParser.parseString(bodyResponse)
