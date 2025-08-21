@@ -22,6 +22,11 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+interface ButtonStyle {
+    val height: Dp
+    val shape: Shape
+}
+
 enum class ButtonType(
     override val height: Dp,
     override val shape: Shape,
