@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/onboarding/HorizontalPagerIndicator.kt">
+        <error line="42" column="5" source="standard:function-naming" />
+        <error line="129" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/onboarding/OnboardingScaffold.kt">
+        <error line="53" column="5" source="standard:function-naming" />
+        <error line="96" column="13" source="standard:function-naming" />
+        <error line="132" column="13" source="standard:function-naming" />
+    </file>
+</baseline>
