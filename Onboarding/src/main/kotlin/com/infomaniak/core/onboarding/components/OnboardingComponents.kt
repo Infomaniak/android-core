@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.onboarding.components
 
+import androidx.annotation.RawRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -65,7 +66,7 @@ object OnboardingComponents {
      * Easy to reuse way of displaying a simple Lottie animation. When on the same screen, the animation will play once and then stop
      * forever and not loop. The animation will restart from zero when leaving the page and coming back to it.
      *
-     * @param lottieCompositionSpec the lottie animation to display.
+     * @param lottieRawRes the lottie animation to display.
      * @param isCurrentPageVisible whether or not the current page is presented to the user. This makes it so the animation only
      * starts playing when the page is presented to the user and not while it's loaded but outside of the screen. This also makes so
      * the animation can start again when the user goes back to a previously seen page.
@@ -78,16 +79,9 @@ object OnboardingComponents {
      * )
      * ```
      */
-    // This uses a generic <T : LottieCompositionSpec> instead of an instance of LottieCompositionSpec as argument because the
-    // animation breaks on SwissTransfer when swiping between illustrations when providing the parent class instead of a specific
-    // child class. This makes no sense.
     @Composable
-    fun <T : LottieCompositionSpec> DefaultLottieIllustration(
-        lottieCompositionSpec: T,
-        isCurrentPageVisible: () -> Boolean,
-        modifier: Modifier = Modifier,
-    ) {
-        val composition by rememberLottieComposition(lottieCompositionSpec)
+    fun DefaultLottieIllustration(@RawRes lottieRawRes: Int, isCurrentPageVisible: () -> Boolean, modifier: Modifier = Modifier) {
+        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottieRawRes))
 
         // We have to specify the isPlaying parameter in order to play the animation only when the page is selected.
         // Otherwise, the ViewPager can load the page and start the animation before it's visible.
