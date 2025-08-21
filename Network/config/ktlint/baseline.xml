@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/network/Extensions.kt">
+        <error line="26" column="1" source="standard:indent" />
+        <error line="27" column="1" source="standard:indent" />
+        <error line="28" column="1" source="standard:indent" />
+        <error line="29" column="1" source="standard:indent" />
+        <error line="32" column="51" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/network/NetworkAvailability.kt">
+        <error line="100" column="98" source="standard:function-expression-body" />
+        <error line="104" column="57" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/network/api/ApiController.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="195" column="57" source="standard:function-expression-body" />
+        <error line="221" column="14" source="standard:enum-wrapping" />
+        <error line="221" column="19" source="standard:enum-wrapping" />
+        <error line="221" column="25" source="standard:enum-wrapping" />
+        <error line="221" column="33" source="standard:enum-wrapping" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/network/api/InternalTranslatedErrorCode.kt">
+        <error line="25" column="5" source="standard:class-signature" />
+        <error line="26" column="5" source="standard:class-signature" />
+        <error line="26" column="47" source="standard:class-signature" />
+        <error line="27" column="5" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/network/networking/HttpClient.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/network/networking/HttpClientConfig.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/network/networking/HttpUtils.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/network/networking/ManualAuthorizationRequired.kt">
+        <error line="26" column="45" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/network/utils/CustomDateTypeAdapter.kt">
+        <error line="42" column="54" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/network/utils/OkHttpClientExt.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+</baseline>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/compose/basicbutton/BasicButton.kt">
+        <error line="59" column="5" source="standard:function-naming" />
+        <error line="113" column="71" source="standard:function-expression-body" />
+        <error line="118" column="13" source="standard:function-naming" />
+        <error line="149" column="13" source="standard:function-naming" />
+    </file>
+</baseline>
