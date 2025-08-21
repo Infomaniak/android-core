@@ -40,7 +40,7 @@ class GitHubViewModel : ViewModel() {
                 val releases = ApiController.json.decodeFromString<List<GitHubRelease>>(bodyResponse)
                 lastRelease = releases.find { !it.draft && !it.prerelease }
             }
-        }.onFailure { exception ->
+        }.cancellable().onFailure { exception ->
             exception.printStackTrace()
         }
 
@@ -50,4 +50,10 @@ class GitHubViewModel : ViewModel() {
     private companion object {
         const val API_GITHUB_URL = "https://api.github.com/repos/Infomaniak/"
     }
+}
+
+
+@Suppress("RedundantSuspendModifier")
+private suspend inline fun <T> Result<T>.cancellable(): Result<T> = onFailure {
+    if (it is CancellationException) throw it
 }
