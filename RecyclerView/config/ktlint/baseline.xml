@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/recyclerview/CoroutineScopeViewHolder.kt">
+        <error line="44" column="5" source="standard:class-signature" />
+        <error line="45" column="5" source="standard:class-signature" />
+        <error line="45" column="53" source="standard:class-signature" />
+        <error line="46" column="5" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/recyclerview/ResettableLazy.kt">
+        <error line="30" column="10" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/recyclerview/hack/BindAwareViewHolder.kt">
+        <error line="33" column="5" source="standard:class-signature" />
+        <error line="33" column="26" source="standard:class-signature" />
+    </file>
+</baseline>
