@@ -22,6 +22,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.infomaniak.lib.core.api.ApiController
 import com.infomaniak.lib.core.networking.HttpClient
+import com.infomaniak.lib.core.utils.await
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
 import okhttp3.Request
@@ -32,7 +34,7 @@ class GitHubViewModel : ViewModel() {
         val request = Request.Builder().url("${API_GITHUB_URL}${repo}/releases").get().build()
         var lastRelease: GitHubRelease? = null
         runCatching {
-            val response = HttpClient.okHttpClientNoTokenInterceptor.newBuilder().build().newCall(request).execute()
+            val response = HttpClient.okHttpClientNoTokenInterceptor.newBuilder().build().newCall(request).await()
             val bodyResponse = Dispatchers.IO { response.body?.string() } ?: ""
             if (response.isSuccessful && bodyResponse.isNotBlank()) {
                 val releases = ApiController.json.decodeFromString<List<GitHubRelease>>(bodyResponse)
