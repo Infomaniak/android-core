@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025-2025 Infomaniak Network SA
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,14 +93,11 @@ fun BasicButton(
     // Holds whether we should really display indeterminate progress by taking the progress delay into account
     var effectiveShowIndeterminate by remember { mutableStateOf(showIndeterminateProgress()) }
 
-    LaunchedEffect(showIndeterminateProgress()) {
-        if (showIndeterminateProgress()) {
-            delay(indeterminateProgressDelay)
-            effectiveShowIndeterminate = true
-        } else {
-            effectiveShowIndeterminate = false
-        }
-    }
+    UpdatedEffectiveShowIndeterminate(
+        showIndeterminateProgress = showIndeterminateProgress,
+        indeterminateProgressDelay = indeterminateProgressDelay,
+        setEffectiveShowIndeterminate = { effectiveShowIndeterminate = it },
+    )
 
     Button(
         onClick = {
@@ -137,6 +134,22 @@ fun BasicButton(
                 }
             }
             else -> content()
+        }
+    }
+}
+
+@Composable
+private fun UpdatedEffectiveShowIndeterminate(
+    showIndeterminateProgress: () -> Boolean,
+    indeterminateProgressDelay: Duration,
+    setEffectiveShowIndeterminate: (Boolean) -> Unit,
+) {
+    LaunchedEffect(showIndeterminateProgress()) {
+        if (showIndeterminateProgress()) {
+            delay(indeterminateProgressDelay)
+            setEffectiveShowIndeterminate(true)
+        } else {
+            setEffectiveShowIndeterminate(false)
         }
     }
 }
@@ -234,7 +247,7 @@ private fun PreviewLoading() {
                 onClick = { isLoading = !isLoading },
                 content = { Text("Click me!") },
                 showIndeterminateProgress = { isLoading },
-                indeterminateProgressDelay = 600.milliseconds,
+                indeterminateProgressDelay = BasicButtonDelay.Delayed,
             )
         }
     }
