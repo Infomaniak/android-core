@@ -1,6 +1,6 @@
 /*
- * Infomaniak SwissTransfer - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Infomaniak Core - Android
+ * Copyright (C) 2025-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,9 +39,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -49,6 +52,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Most basic and customizable button component we can share across multiple apps.
@@ -57,6 +64,10 @@ import androidx.compose.ui.unit.dp
  * [showIndeterminateProgress] and [progress].
  *
  * Specifying a progress has the priority over specifying showIndeterminateProgress.
+ *
+ * @param indeterminateProgressDelay How much delay there needs to be before the button changes to the indeterminate progress
+ * aspect when its states becomes indeterminate. This is used when code might depend on a slow action (like an API call) and we
+ * want to avoid showing the loader if the action ends up being short
  */
 @Composable
 fun BasicButton(
@@ -68,6 +79,7 @@ fun BasicButton(
     border: BorderStroke? = null,
     enabled: () -> Boolean = { true },
     showIndeterminateProgress: () -> Boolean = { false },
+    indeterminateProgressDelay: Duration = BasicButtonDelay.Instantaneous,
     progress: (() -> Float)? = null,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable () -> Unit,
@@ -78,8 +90,24 @@ fun BasicButton(
     val buttonColors = if (isProgressing) colors.applyEnabledColorsToDisabled() else colors
     val progressColors = LoaderColors.fromButtonColors(colors)
 
+    // Holds whether we should really display indeterminate progress by taking the progress delay into account
+    var effectiveShowIndeterminate by remember { mutableStateOf(showIndeterminateProgress()) }
+
+    LaunchedEffect(showIndeterminateProgress()) {
+        if (showIndeterminateProgress()) {
+            delay(indeterminateProgressDelay)
+            effectiveShowIndeterminate = true
+        } else {
+            effectiveShowIndeterminate = false
+        }
+    }
+
     Button(
-        onClick = onClick,
+        onClick = {
+            // If delay is provided, we need to avoid letting the user click during the delay when it's not yet in
+            // the effectiveShowIndeterminate state
+            if (showIndeterminateProgress().not()) onClick()
+        },
         modifier = modifier,
         enabled = isEnabled,
         shape = shape,
@@ -99,7 +127,7 @@ fun BasicButton(
                     )
                 }
             }
-            showIndeterminateProgress() -> {
+            effectiveShowIndeterminate -> {
                 KeepButtonSize(content) {
                     CircularProgressIndicator(
                         modifier = getProgressModifier(),
@@ -179,6 +207,35 @@ private fun Preview() {
                     shape = RoundedCornerShape(10.dp)
                 )
             }
+        }
+    }
+}
+
+object BasicButtonDelay {
+    val Instantaneous = 0.seconds
+    val Delayed = 600.milliseconds
+}
+
+@Preview
+@Composable
+private fun PreviewLoading() {
+    var isLoading by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isLoading) {
+        if (isLoading) {
+            delay(2.seconds)
+            isLoading = false
+        }
+    }
+    MaterialTheme {
+        Surface {
+            BasicButton(
+                modifier = Modifier.height(40.dp),
+                onClick = { isLoading = !isLoading },
+                content = { Text("Click me!") },
+                showIndeterminateProgress = { isLoading },
+                indeterminateProgressDelay = 600.milliseconds,
+            )
         }
     }
 }
