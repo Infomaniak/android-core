@@ -31,6 +31,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -85,13 +87,12 @@ private val FAB_SIZE = 64.dp
  * Easy to reuse way of displaying the bottom content of an [com.infomaniak.core.onboarding.OnboardingScaffold] when using the
  * cross app login.
  *
+ * @param pagerState The pager state of the [com.infomaniak.core.onboarding.OnboardingScaffold]. Used to automatically detect if
+ * we're at the last page and to navigate between page shen the arrow button is clicked.
  * @param accounts The list of all available accounts that can be chosen from and used for login.
  * @param skippedIds The list of ids of accounts that are not currently selected by the user.
  * @param titleColor The primary color to use for the [CrossLoginSelectAccounts].
  * @param descriptionColor The secondary lighter color to use for the [CrossLoginSelectAccounts].
- * @param isLastPage Whether the horizontal pager has reched the last page or not so that this component can swap between the
- * arrow button to go the next view pager page or the column of login buttons.
- * @param onGoToNextPageRequest When the arrow button is clicked which should make the horizontal pager go to the next page.
  * @param onLogin When the user has no accounts for cross app login and clicks on the button to log in a new user.
  * @param onContinueWithSelectedAccounts When the user has accounts for cross app login and clicks on the button to log them.
  * @param onCreateAccount When the user has no accounts for cross app login and clicks on the button to create a new account.
@@ -113,12 +114,11 @@ private val FAB_SIZE = 64.dp
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingComponents.CrossLoginBottomContent(
+    pagerState: PagerState,
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
     titleColor: Color,
     descriptionColor: Color,
-    isLastPage: () -> Boolean,
-    onGoToNextPageRequest: () -> Unit,
     onLogin: () -> Unit,
     onContinueWithSelectedAccounts: () -> Unit,
     onCreateAccount: () -> Unit,
@@ -133,7 +133,9 @@ fun OnboardingComponents.CrossLoginBottomContent(
     accountsBottomSheetCustomization: CrossLoginCustomization = CrossLoginDefaults.customize(),
 ) {
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
+    val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
     val localSkipped by remember { derivedStateOf { mutableStateSetOf(*skippedIds().toTypedArray()) } }
+
     val scope = rememberCoroutineScope()
 
     Box(
@@ -143,9 +145,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
             .height(150.dp),
     ) {
         SharedTransitionLayout {
-            AnimatedContent(
-                isLastPage()
-            ) { isLastPage ->
+            AnimatedContent(isLastPage) { isLastPage ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -190,7 +190,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                         )
                     } else {
                         ButtonNext(
-                            onClick = onGoToNextPageRequest,
+                            onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
                             shape = nextButtonShape,
                             modifier = Modifier.sharedElement(
                                 rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
@@ -302,12 +302,11 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
     MaterialTheme {
         Surface {
             OnboardingComponents.CrossLoginBottomContent(
+                pagerState = rememberPagerState { 1 },
                 accounts = { accounts },
                 skippedIds = { emptySet() },
                 titleColor = Color.Black,
                 descriptionColor = Color.Gray,
-                isLastPage = { true },
-                onGoToNextPageRequest = {},
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
                 onCreateAccount = {},
