@@ -84,12 +84,58 @@ fun BasicButton(
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable () -> Unit,
 ) {
-    val isProgressing by remember(progress) { derivedStateOf { showIndeterminateProgress() || progress != null } }
-    val isEnabled = enabled() && isProgressing.not()
+    var uiState by remember { mutableStateOf(computeUiState(progress, showIndeterminateProgress, true)) }
 
-    val buttonColors = if (isProgressing) colors.applyEnabledColorsToDisabled() else colors
+    UpdateUiState(showIndeterminateProgress, indeterminateProgressDelay, progress, onUpdateUiState = { uiState = it })
+
+    val isLoading by remember { derivedStateOf { uiState is UiState.Loading } }
+    val isEnabled = enabled() && isLoading.not()
+
+    val buttonColors = if (isLoading) colors.applyEnabledColorsToDisabled() else colors
     val progressColors = LoaderColors.fromButtonColors(colors)
 
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = isEnabled,
+        shape = shape,
+        colors = buttonColors,
+        elevation = elevation,
+        border = border,
+        contentPadding = contentPadding,
+    ) {
+        when (val state = uiState) {
+            is UiState.Loading.Determinate -> {
+                KeepButtonSize(content) {
+                    CircularProgressIndicator(
+                        modifier = getProgressModifier(),
+                        color = progressColors.progressColor,
+                        trackColor = progressColors.trackColor,
+                        progress = state.progress,
+                    )
+                }
+            }
+            UiState.Loading.Indeterminate -> {
+                KeepButtonSize(content) {
+                    CircularProgressIndicator(
+                        modifier = getProgressModifier(),
+                        color = progressColors.progressColor,
+                        trackColor = progressColors.trackColor,
+                    )
+                }
+            }
+            UiState.Default, UiState.Loading.Delayed -> content()
+        }
+    }
+}
+
+@Composable
+private fun UpdateUiState(
+    showIndeterminateProgress: () -> Boolean,
+    indeterminateProgressDelay: Duration,
+    progress: (() -> Float)?,
+    onUpdateUiState: (UiState) -> Unit,
+) {
     // Holds whether we should really display indeterminate progress by taking the progress delay into account
     var effectiveShowIndeterminate by remember { mutableStateOf(showIndeterminateProgress()) }
 
@@ -99,42 +145,10 @@ fun BasicButton(
         setEffectiveShowIndeterminate = { effectiveShowIndeterminate = it },
     )
 
-    Button(
-        onClick = {
-            // If delay is provided, we need to avoid letting the user click during the delay when it's not yet in
-            // the effectiveShowIndeterminate state
-            if (showIndeterminateProgress().not()) onClick()
-        },
-        modifier = modifier,
-        enabled = isEnabled,
-        shape = shape,
-        colors = buttonColors,
-        elevation = elevation,
-        border = border,
-        contentPadding = contentPadding,
-    ) {
-        when {
-            progress != null -> {
-                KeepButtonSize(content) {
-                    CircularProgressIndicator(
-                        modifier = getProgressModifier(),
-                        color = progressColors.progressColor,
-                        trackColor = progressColors.trackColor,
-                        progress = progress,
-                    )
-                }
-            }
-            effectiveShowIndeterminate -> {
-                KeepButtonSize(content) {
-                    CircularProgressIndicator(
-                        modifier = getProgressModifier(),
-                        color = progressColors.progressColor,
-                        trackColor = progressColors.trackColor,
-                    )
-                }
-            }
-            else -> content()
-        }
+    val uiState = computeUiState(progress, showIndeterminateProgress, effectiveShowIndeterminate)
+
+    LaunchedEffect(uiState) {
+        onUpdateUiState(uiState)
     }
 }
 
@@ -152,6 +166,17 @@ private fun UpdatedEffectiveShowIndeterminate(
             setEffectiveShowIndeterminate(false)
         }
     }
+}
+
+private fun computeUiState(
+    progress: (() -> Float)?,
+    showIndeterminateProgress: () -> Boolean,
+    effectiveShowIndeterminate: Boolean
+): UiState = when {
+    progress != null -> UiState.Loading.Determinate(progress)
+    showIndeterminateProgress() && effectiveShowIndeterminate -> UiState.Loading.Indeterminate
+    showIndeterminateProgress() && effectiveShowIndeterminate.not() -> UiState.Loading.Delayed
+    else -> UiState.Default
 }
 
 private fun ButtonColors.applyEnabledColorsToDisabled(): ButtonColors {
@@ -227,6 +252,16 @@ private fun Preview() {
 object BasicButtonDelay {
     val Instantaneous = 0.seconds
     val Delayed = 600.milliseconds
+}
+
+private sealed interface UiState {
+    sealed interface Loading : UiState {
+        data class Determinate(val progress: () -> Float) : Loading
+        data object Indeterminate : Loading
+        data object Delayed : Loading
+    }
+
+    data object Default : UiState
 }
 
 @Preview
