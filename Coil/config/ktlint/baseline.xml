@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/java/com/infomaniak/core/coil/CoiXmllExt.kt">
+        <error line="40" column="98" source="standard:function-expression-body" />
+        <error line="44" column="83" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/coil/ImageLoaderProvider.kt">
+        <error line="59" column="20" source="standard:function-expression-body" />
+        <error line="80" column="37" source="standard:wrapping" />
+        <error line="86" column="17" source="standard:wrapping" />
+    </file>
+</baseline>
