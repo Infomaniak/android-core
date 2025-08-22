@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.onboarding
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,6 +48,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.onboarding.components.OnboardingComponents.DefaultBackground
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScaffold(
@@ -54,6 +58,10 @@ fun OnboardingScaffold(
     bottomContent: @Composable (PaddingValues) -> Unit,
     indicatorStyle: IndicatorStyle = HorizontalPagerIndicatorDefaults.style(),
 ) {
+    val scope = rememberCoroutineScope()
+
+    GoBackOnePageOnBack(pagerState, scope)
+
     Scaffold { paddingValues ->
         Column {
             val startPadding = paddingValues.calculateStartPadding(LocalLayoutDirection.current)
@@ -86,6 +94,15 @@ fun OnboardingScaffold(
                     end = endPadding,
                 )
             )
+        }
+    }
+}
+
+@Composable
+private fun GoBackOnePageOnBack(pagerState: PagerState, scope: CoroutineScope) {
+    BackHandler(pagerState.currentPage > 0) {
+        scope.launch {
+            pagerState.animateScrollToPage(pagerState.currentPage - 1)
         }
     }
 }
