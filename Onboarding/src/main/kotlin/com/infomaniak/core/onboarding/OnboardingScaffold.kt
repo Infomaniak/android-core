@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.onboarding.components.OnboardingComponents.DefaultBackground
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -59,11 +60,7 @@ fun OnboardingScaffold(
 ) {
     val scope = rememberCoroutineScope()
 
-    BackHandler(pagerState.currentPage > 0) {
-        scope.launch {
-            pagerState.animateScrollToPage(pagerState.currentPage - 1)
-        }
-    }
+    GoBackOnePageOnBack(pagerState, scope)
 
     Scaffold { paddingValues ->
         Column {
@@ -97,6 +94,15 @@ fun OnboardingScaffold(
                     end = endPadding,
                 )
             )
+        }
+    }
+}
+
+@Composable
+private fun GoBackOnePageOnBack(pagerState: PagerState, scope: CoroutineScope) {
+    BackHandler(pagerState.currentPage > 0) {
+        scope.launch {
+            pagerState.animateScrollToPage(pagerState.currentPage - 1)
         }
     }
 }
