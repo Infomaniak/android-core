@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.R
 import com.infomaniak.core.compose.basicbutton.BasicButton
+import com.infomaniak.core.compose.basicbutton.BasicButtonDelay
 import com.infomaniak.core.compose.basics.ButtonStyle
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
@@ -205,6 +206,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             onClick = onCreateAccount,
                             colors = ButtonDefaults.textButtonColors(),
                             showIndeterminateProgress = isSignUpButtonLoading,
+                            indeterminateProgressDelay = BasicButtonDelay.Delayed,
                         ) { Text(stringResource(RCross.string.buttonCreateAccount), style = Typography.bodyMedium) }
                     }
                 }
@@ -280,6 +282,7 @@ private fun ButtonExpanded(
         shape = shape,
         contentPadding = PaddingValues(),
         showIndeterminateProgress = isLoginButtonLoading,
+        indeterminateProgressDelay = BasicButtonDelay.Delayed,
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
