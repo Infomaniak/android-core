@@ -63,17 +63,21 @@ internal fun UrlAvatar(avatarType: AvatarType.WithInitials.Url) {
         }
     }
 
-    AsyncImage(
-        modifier = Modifier.fillMaxSize(),
-        model = ImageRequest.Builder(LocalContext.current)
+    if (state !is AsyncImagePainter.State.Error) {
+        val imageRequest = ImageRequest.Builder(LocalContext.current)
             .data(avatarType.url)
             .crossfade(true)
-            .build(),
-        imageLoader = avatarType.imageLoader,
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        onState = { state = it },
-    )
+            .build()
+
+        AsyncImage(
+            modifier = Modifier.fillMaxSize(),
+            model = imageRequest,
+            imageLoader = avatarType.imageLoader,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            onState = { state = it },
+        )
+    }
 }
 
 @Preview
