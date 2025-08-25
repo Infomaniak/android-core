@@ -136,7 +136,7 @@ private fun produceUiState(
     showIndeterminateProgress: () -> Boolean,
     indeterminateProgressDelay: Duration
 ): State<UiState> = produceState(
-    initialValue = computeUiState(progress, showIndeterminateProgress, effectiveShowIndeterminate = { true }),
+    initialValue = computeUiState(progress, showIndeterminateProgress, effectiveShowIndeterminate = true),
     key1 = showIndeterminateProgress(),
     key2 = indeterminateProgressDelay,
     key3 = progress,
@@ -148,17 +148,17 @@ private fun produceUiState(
         false
     }
 
-    value = computeUiState(progress, showIndeterminateProgress, { effectiveShowIndeterminate })
+    value = computeUiState(progress, showIndeterminateProgress, effectiveShowIndeterminate)
 }
 
 private fun computeUiState(
     progress: (() -> Float)?,
     showIndeterminateProgress: () -> Boolean,
-    effectiveShowIndeterminate: () -> Boolean,
+    effectiveShowIndeterminate: Boolean,
 ): UiState = when {
     progress != null -> UiState.Loading.Determinate(progress)
-    showIndeterminateProgress() && effectiveShowIndeterminate() -> UiState.Loading.Indeterminate
-    showIndeterminateProgress() && effectiveShowIndeterminate().not() -> UiState.Loading.Delayed
+    showIndeterminateProgress() && effectiveShowIndeterminate -> UiState.Loading.Indeterminate
+    showIndeterminateProgress() && effectiveShowIndeterminate.not() -> UiState.Loading.Delayed
     else -> UiState.Default
 }
 
