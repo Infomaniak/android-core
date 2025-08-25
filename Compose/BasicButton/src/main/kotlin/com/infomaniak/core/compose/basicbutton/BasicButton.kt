@@ -84,7 +84,7 @@ fun BasicButton(
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable () -> Unit,
 ) {
-    var uiState by remember { mutableStateOf(computeUiState(progress, showIndeterminateProgress, true)) }
+    var uiState by remember { mutableStateOf(computeUiState(progress, showIndeterminateProgress, { true })) }
 
     UpdateUiState(showIndeterminateProgress, indeterminateProgressDelay, progress, onUpdateUiState = { uiState = it })
 
@@ -145,7 +145,7 @@ private fun UpdateUiState(
         setEffectiveShowIndeterminate = { effectiveShowIndeterminate = it },
     )
 
-    val uiState = computeUiState(progress, showIndeterminateProgress, effectiveShowIndeterminate)
+    val uiState = computeUiState(progress, showIndeterminateProgress, { effectiveShowIndeterminate })
 
     LaunchedEffect(uiState) {
         onUpdateUiState(uiState)
@@ -171,11 +171,11 @@ private fun UpdatedEffectiveShowIndeterminate(
 private fun computeUiState(
     progress: (() -> Float)?,
     showIndeterminateProgress: () -> Boolean,
-    effectiveShowIndeterminate: Boolean
+    effectiveShowIndeterminate: () -> Boolean,
 ): UiState = when {
     progress != null -> UiState.Loading.Determinate(progress)
-    showIndeterminateProgress() && effectiveShowIndeterminate -> UiState.Loading.Indeterminate
-    showIndeterminateProgress() && effectiveShowIndeterminate.not() -> UiState.Loading.Delayed
+    showIndeterminateProgress() && effectiveShowIndeterminate() -> UiState.Loading.Indeterminate
+    showIndeterminateProgress() && effectiveShowIndeterminate().not() -> UiState.Loading.Delayed
     else -> UiState.Default
 }
 
