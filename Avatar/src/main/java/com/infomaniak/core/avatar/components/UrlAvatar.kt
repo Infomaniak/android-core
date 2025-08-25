@@ -18,6 +18,7 @@
 package com.infomaniak.core.avatar.components
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -66,7 +67,7 @@ internal fun UrlAvatar(avatarType: AvatarType.WithInitials.Url) {
         )
     }
 
-    Crossfade(state) { localState ->
+    Crossfade(state, animationSpec = spring()) { localState ->
         when (localState) {
             is AsyncImagePainter.State.Error,
             is AsyncImagePainter.State.Loading -> InitialsAvatar(avatarType)
