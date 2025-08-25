@@ -40,9 +40,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -137,12 +139,9 @@ private fun UpdateUiState(
     onUpdateUiState: (UiState) -> Unit,
 ) {
     // Holds whether we should really display indeterminate progress by taking the progress delay into account
-    var effectiveShowIndeterminate by remember { mutableStateOf(showIndeterminateProgress()) }
-
-    UpdatedEffectiveShowIndeterminate(
-        showIndeterminateProgress = showIndeterminateProgress,
-        indeterminateProgressDelay = indeterminateProgressDelay,
-        setEffectiveShowIndeterminate = { effectiveShowIndeterminate = it },
+    val effectiveShowIndeterminate by produceEffectiveShowIndeterminateState(
+        showIndeterminateProgress,
+        indeterminateProgressDelay,
     )
 
     val uiState = computeUiState(progress, showIndeterminateProgress, { effectiveShowIndeterminate })
@@ -153,18 +152,18 @@ private fun UpdateUiState(
 }
 
 @Composable
-private fun UpdatedEffectiveShowIndeterminate(
+private fun produceEffectiveShowIndeterminateState(
     showIndeterminateProgress: () -> Boolean,
     indeterminateProgressDelay: Duration,
-    setEffectiveShowIndeterminate: (Boolean) -> Unit,
+): State<Boolean> = produceState(
+    initialValue = showIndeterminateProgress(),
+    key1 = showIndeterminateProgress(),
 ) {
-    LaunchedEffect(showIndeterminateProgress()) {
-        if (showIndeterminateProgress()) {
-            delay(indeterminateProgressDelay)
-            setEffectiveShowIndeterminate(true)
-        } else {
-            setEffectiveShowIndeterminate(false)
-        }
+    if (showIndeterminateProgress()) {
+        delay(indeterminateProgressDelay)
+        value = true
+    } else {
+        value = false
     }
 }
 
