@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="48dp"
+    android:height="26dp"
+    android:viewportWidth="48"
+    android:viewportHeight="26">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M4.876,0.831L42.876,0.831A4,4 0,0 1,46.876 4.831L46.876,20.831A4,4 0,0 1,42.876 24.831L4.876,24.831A4,4 0,0 1,0.876 20.831L0.876,4.831A4,4 0,0 1,4.876 0.831z"
+        android:strokeWidth="1">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:endX="46.876"
+                android:endY="12.831"
+                android:startX="0.876"
+                android:startY="12.831"
+                android:type="linear">
+                <item
+                    android:color="#FF1DDDFD"
+                    android:offset="0" />
+                <item
+                    android:color="#FF337CFF"
+                    android:offset="0.25" />
+                <item
+                    android:color="#FFA055FC"
+                    android:offset="0.5" />
+                <item
+                    android:color="#FFF34BBB"
+                    android:offset="0.755" />
+                <item
+                    android:color="#FFFD8C3D"
+                    android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:fillColor="#333333"
+        android:pathData="M13.075,8.131C14.863,8.131 16.903,8.383 16.903,11.011C16.903,13.231 15.127,13.771 13.123,13.771H11.815V16.831H10.099V8.131H13.075ZM11.815,9.475V12.439H13.231C14.299,12.439 15.139,12.175 15.139,11.023C15.139,9.595 14.047,9.475 13.111,9.475H11.815ZM23.303,13.423H21.479V16.831H19.763V8.131H22.619C25.487,8.131 26.579,8.947 26.579,10.771C26.579,11.767 26.087,12.607 25.007,13.063L26.939,16.831H25.031L23.303,13.423ZM21.479,9.475V12.091H22.895C24.227,12.091 24.815,11.635 24.815,10.783C24.815,9.775 23.975,9.475 22.811,9.475H21.479ZM33.738,16.987C31.146,16.987 29.478,15.175 29.478,12.475C29.478,9.775 31.146,7.975 33.738,7.975C36.33,7.975 37.998,9.775 37.998,12.475C37.998,15.175 36.33,16.987 33.738,16.987ZM33.738,15.619C35.094,15.619 36.222,14.515 36.222,12.475C36.222,10.435 35.094,9.343 33.738,9.343C32.382,9.343 31.254,10.435 31.254,12.475C31.254,14.515 32.382,15.619 33.738,15.619Z" />
+</vector>
