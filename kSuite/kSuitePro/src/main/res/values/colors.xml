@@ -34,5 +34,6 @@
     <color name="kSuitePrimaryText">@color/orca</color>
     <color name="kSuiteSecondaryText">@color/elephant</color>
     <color name="kSuiteButtonBackground">@color/rabbit</color>
+    <color name="kSuiteEvolveBackground">@color/white</color>
 
 </resources>
