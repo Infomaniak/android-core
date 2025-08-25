@@ -17,7 +17,7 @@
   -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <plurals name="buttonContinueWithAccounts">
-        <item quantity="one">Continuer avec ce compte</item>
+        <item quantity="one" tools:ignore="ImpliedQuantity">Continuer avec ce compte</item>
         <item quantity="other">Continuer avec ces comptes</item>
     </plurals>
     <string name="buttonCreateAccount">Créer un compte</string>
