@@ -43,6 +43,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -86,9 +87,7 @@ fun BasicButton(
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable () -> Unit,
 ) {
-    var uiState by remember { mutableStateOf(computeUiState(progress, showIndeterminateProgress, { true })) }
-
-    UpdateUiState(showIndeterminateProgress, indeterminateProgressDelay, progress, onUpdateUiState = { uiState = it })
+    val uiState by produceUiState(progress, showIndeterminateProgress, indeterminateProgressDelay)
 
     val isLoading by remember { derivedStateOf { uiState is UiState.Loading } }
     val isEnabled = enabled() && isLoading.not()
@@ -132,39 +131,24 @@ fun BasicButton(
 }
 
 @Composable
-private fun UpdateUiState(
-    showIndeterminateProgress: () -> Boolean,
-    indeterminateProgressDelay: Duration,
+private fun produceUiState(
     progress: (() -> Float)?,
-    onUpdateUiState: (UiState) -> Unit,
-) {
-    // Holds whether we should really display indeterminate progress by taking the progress delay into account
-    val effectiveShowIndeterminate by produceEffectiveShowIndeterminateState(
-        showIndeterminateProgress,
-        indeterminateProgressDelay,
-    )
-
-    val uiState = computeUiState(progress, showIndeterminateProgress, { effectiveShowIndeterminate })
-
-    LaunchedEffect(uiState) {
-        onUpdateUiState(uiState)
-    }
-}
-
-@Composable
-private fun produceEffectiveShowIndeterminateState(
     showIndeterminateProgress: () -> Boolean,
-    indeterminateProgressDelay: Duration,
-): State<Boolean> = produceState(
-    initialValue = showIndeterminateProgress(),
+    indeterminateProgressDelay: Duration
+): State<UiState> = produceState(
+    initialValue = computeUiState(progress, showIndeterminateProgress, effectiveShowIndeterminate = { true }),
     key1 = showIndeterminateProgress(),
+    key2 = indeterminateProgressDelay,
+    key3 = progress,
 ) {
-    if (showIndeterminateProgress()) {
+    val effectiveShowIndeterminate = if (showIndeterminateProgress()) {
         delay(indeterminateProgressDelay)
-        value = true
+        true
     } else {
-        value = false
+        false
     }
+
+    value = computeUiState(progress, showIndeterminateProgress, { effectiveShowIndeterminate })
 }
 
 private fun computeUiState(
@@ -265,7 +249,7 @@ private sealed interface UiState {
 
 @Preview
 @Composable
-private fun PreviewLoading() {
+private fun PreviewIndeterminateLoading() {
     var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(isLoading) {
@@ -281,6 +265,37 @@ private fun PreviewLoading() {
                 onClick = { isLoading = !isLoading },
                 content = { Text("Click me!") },
                 showIndeterminateProgress = { isLoading },
+                indeterminateProgressDelay = BasicButtonDelay.Delayed,
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewDeterminateLoading() {
+    var isLoading by remember { mutableStateOf(false) }
+    var progress by remember { mutableFloatStateOf(0f) }
+
+    val steps = 20
+
+    LaunchedEffect(isLoading) {
+        if (isLoading) {
+            repeat(steps) {
+                delay(1.seconds.inWholeMilliseconds / steps)
+                progress += 1f / steps
+            }
+            progress = 0f
+            isLoading = false
+        }
+    }
+    MaterialTheme {
+        Surface {
+            BasicButton(
+                modifier = Modifier.height(40.dp),
+                onClick = { isLoading = !isLoading },
+                content = { Text("Click me!") },
+                progress = if (isLoading) fun() = progress else null,
                 indeterminateProgressDelay = BasicButtonDelay.Delayed,
             )
         }
