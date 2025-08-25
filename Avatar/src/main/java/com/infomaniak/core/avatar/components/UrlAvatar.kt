@@ -40,7 +40,6 @@ import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
 
@@ -51,22 +50,10 @@ internal fun UrlAvatar(avatarType: AvatarType.WithInitials.Url) {
     if (LocalInspectionMode.current) InitialsAvatar(avatarType)
 
     var state by remember { mutableStateOf<AsyncImagePainter.State>(AsyncImagePainter.State.Empty) }
-    Crossfade(state) { localState ->
-        when (localState) {
-            is AsyncImagePainter.State.Error,
-            is AsyncImagePainter.State.Loading -> InitialsAvatar(avatarType)
-            // Don't show anything on empty state because when everything is loaded, the first frame will always have the Empty
-            // state which would otherwise display the initials for a single frame when the image has already been loaded anyway.
-            // I.e. makes it easier on the eye when connection speed is high.
-            AsyncImagePainter.State.Empty,
-            is AsyncImagePainter.State.Success -> Unit
-        }
-    }
 
     if (state !is AsyncImagePainter.State.Error) {
         val imageRequest = ImageRequest.Builder(LocalContext.current)
             .data(avatarType.url)
-            .crossfade(true)
             .build()
 
         AsyncImage(
@@ -77,6 +64,18 @@ internal fun UrlAvatar(avatarType: AvatarType.WithInitials.Url) {
             contentScale = ContentScale.Crop,
             onState = { state = it },
         )
+    }
+
+    Crossfade(state) { localState ->
+        when (localState) {
+            is AsyncImagePainter.State.Error,
+            is AsyncImagePainter.State.Loading -> InitialsAvatar(avatarType)
+            // Don't show anything on empty state because when everything is loaded, the first frame will always have the Empty
+            // state which would otherwise display the initials for a single frame when the image has already been loaded anyway.
+            // I.e. makes it easier on the eye when connection speed is high.
+            AsyncImagePainter.State.Empty,
+            is AsyncImagePainter.State.Success -> Unit
+        }
     }
 }
 
