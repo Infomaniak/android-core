@@ -18,15 +18,16 @@
 package com.infomaniak.core.avatar.components
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -35,31 +36,21 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.SingletonImageLoader
+import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
-import coil3.compose.rememberAsyncImagePainter
-import coil3.compose.rememberConstraintsSizeResolver
 import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
 
 @Composable
 internal fun UrlAvatar(avatarType: AvatarType.WithInitials.Url) {
-    val sizeResolver = rememberConstraintsSizeResolver()
-    val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(avatarType.url)
-            .size(sizeResolver)
-            .build(),
-        imageLoader = avatarType.imageLoader,
-        contentScale = ContentScale.Crop,
-    )
-
     // Show avatars in preview mode because we can't resolve api calls. The coil3 state will always be in the Empty state which
     // displays nothing otherwise. Can be removed if we support custom LocalAsyncImagePreviewHandler in preview mode for images.
     if (LocalInspectionMode.current) InitialsAvatar(avatarType)
 
-    val state by painter.state.collectAsState()
+    var state by remember { mutableStateOf<AsyncImagePainter.State>(AsyncImagePainter.State.Empty) }
     Crossfade(state) { localState ->
         when (localState) {
             is AsyncImagePainter.State.Error,
@@ -72,12 +63,16 @@ internal fun UrlAvatar(avatarType: AvatarType.WithInitials.Url) {
         }
     }
 
-    Image(
-        modifier = Modifier
-            .fillMaxSize()
-            .then(sizeResolver),
-        painter = painter,
+    AsyncImage(
+        modifier = Modifier.fillMaxSize(),
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(avatarType.url)
+            .crossfade(true)
+            .build(),
+        imageLoader = avatarType.imageLoader,
         contentDescription = null,
+        contentScale = ContentScale.Crop,
+        onState = { state = it },
     )
 }
 
