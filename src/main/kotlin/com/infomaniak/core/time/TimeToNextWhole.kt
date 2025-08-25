@@ -1,0 +1,34 @@
+/*
+ * Infomaniak Core - Android
+ * Copyright (C) 2025 Infomaniak Network SA
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.infomaniak.core.time
+
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+
+fun Duration.timeOffFromWholeDay(): Duration = this - this.inWholeDays.days
+fun Duration.timeOffFromWholeHour(): Duration = this - this.inWholeHours.hours
+fun Duration.timeOffFromWholeMinute(): Duration = this - this.inWholeMinutes.minutes
+fun Duration.timeOffFromWholeSecond(): Duration = this - this.inWholeSeconds.seconds
+
+fun Duration.timeToNextDay(): Duration = 1.days - timeOffFromWholeDay()
+fun Duration.timeToNextHour(): Duration = 1.hours - timeOffFromWholeHour()
+fun Duration.timeToNextMinute(): Duration = 1.minutes - timeOffFromWholeMinute()
+fun Duration.timeToNextSecond(): Duration = 1.seconds - timeOffFromWholeSecond()
