@@ -40,7 +40,7 @@
     <string name="myKSuiteDashboardFreeTrialButton">Start your free trial</string>
     <string name="myKSuiteDashboardFreeTrialDescription">Get more functionality and storage with my kSuite+</string>
     <string name="myKSuiteDashboardDataUnlimited">Unlimited</string>
-    <string name="myKSuiteUpgradeUnlimitedMailLabel">Unlimited e-mail storage and sending</string>
+    <string name="myKSuiteUpgradeUnlimitedMailLabel">Unlimited email storage and sending</string>
     <string name="myKSuiteUpgradeRedirectLabel">Redirections, customised reminders…</string>
     <string name="myKSuiteUpgradeDriveLabel">1 TB for your photos, documents and files</string>
     <string name="myKSuiteUpgradePdfEditionLabel">PDF edition</string>
