@@ -1,0 +1,89 @@
+name: Validate translations
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-strings:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v5.0.0
+
+      - name: Clone Ink repository
+        uses: actions/checkout@v5.0.0
+        with:
+          repository: infomaniak/ink_utils
+          ref: main
+          submodules: true
+          path: ink_utils
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: '3.11'
+
+      - name: Create venv and install requirements
+        run: |
+          cd ink_utils
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create Ink config YAML
+        run: |
+          PR_PATH=$(pwd)
+          cat <<EOF > ink_utils/settings.yml
+          cross_app_login:
+            global:
+              project_root: "${PR_PATH}/CrossAppLogin/Front"
+          auth:
+            global:
+              project_root: "${PR_PATH}/Auth"
+          in_app_update:
+            global:
+              project_root: "${PR_PATH}/InAppUpdate"
+          network:
+            global:
+              project_root: "${PR_PATH}/Network"
+          ksuite:
+            global:
+              project_root: "${PR_PATH}/kSuite/MykSuite"
+          EOF
+
+      # App specific steps
+      - name: Run Ink validation for cross app login module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project cross_app_login
+          python ink_utils/main.py loco --check --verbose
+
+      - name: Run Ink validation for auth module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project auth
+          python ink_utils/main.py loco --check --verbose
+
+      - name: Run Ink validation for in app update module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project in_app_update
+          python ink_utils/main.py loco --check --verbose
+
+      - name: Run Ink validation for network module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project network
+          python ink_utils/main.py loco --check --verbose
+
+      - name: Run Ink validation for ksuite module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project ksuite
+          python ink_utils/main.py loco --check --verbose
