@@ -1,5 +1,5 @@
 /*
- * Infomaniak SwissTransfer - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,7 +39,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieClipSpec
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.infomaniak.core.compose.margin.Margin
 
@@ -86,6 +92,48 @@ object OnboardingComponents {
         // We have to specify the isPlaying parameter in order to play the animation only when the page is selected.
         // Otherwise, the ViewPager can load the page and start the animation before it's visible.
         LottieAnimation(composition, restartOnPlay = true, isPlaying = isCurrentPageVisible(), modifier = modifier)
+    }
+
+    @Composable
+    fun RepeatableLottieIllustration(
+        @RawRes lottieRawRes: Int,
+        isCurrentPageVisible: () -> Boolean,
+        firstFrame: Int,
+        lastFrame: Int,
+        modifier: Modifier = Modifier
+    ) {
+        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottieRawRes))
+
+        // We have to specify the isPlaying parameter in order to play the animation only when the page is selected.
+        // Otherwise, the ViewPager can load the page and start the animation before it's visible.
+        val firstRunAnimationProgress by animateLottieCompositionAsState(composition, isPlaying = isCurrentPageVisible())
+        val repeatedAnimationProgress by animateLottieCompositionAsState(
+            composition = composition,
+            isPlaying = isCurrentPageVisible(),
+            clipSpec = LottieClipSpec.Frame(min = firstFrame, max = lastFrame),
+        )
+
+        var playbackMode: PlaybackMode by rememberSaveable { mutableStateOf(PlaybackMode.FirstRun) }
+
+        LaunchedEffect(firstRunAnimationProgress) {
+            if (firstRunAnimationProgress < 1f) return@LaunchedEffect
+            playbackMode = PlaybackMode.Repeating
+        }
+
+        LottieAnimation(
+            composition = composition,
+            progress = {
+                when (playbackMode) {
+                    PlaybackMode.FirstRun -> firstRunAnimationProgress
+                    PlaybackMode.Repeating -> repeatedAnimationProgress
+                }
+            },
+            modifier = modifier,
+        )
+    }
+
+    private enum class PlaybackMode {
+        FirstRun, Repeating
     }
 
     /**
