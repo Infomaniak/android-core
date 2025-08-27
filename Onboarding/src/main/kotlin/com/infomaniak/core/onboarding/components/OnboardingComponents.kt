@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.onboarding.components
 
+import android.util.Log
 import androidx.annotation.RawRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -38,9 +38,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.infomaniak.core.compose.margin.Margin
@@ -103,33 +105,58 @@ object OnboardingComponents {
         modifier: Modifier = Modifier
     ) {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottieRawRes))
+        var playbackMode: PlaybackMode by rememberSaveable(isCurrentPageVisible()) { mutableStateOf(PlaybackMode.FirstRun) }
 
         // We have to specify the isPlaying parameter in order to play the animation only when the page is selected.
         // Otherwise, the ViewPager can load the page and start the animation before it's visible.
         val firstRunAnimationProgress by animateLottieCompositionAsState(composition, isPlaying = isCurrentPageVisible())
+        val loopingClipSpec = LottieClipSpec.Frame(min = firstFrame, max = lastFrame)
         val repeatedAnimationProgress by animateLottieCompositionAsState(
             composition = composition,
-            isPlaying = isCurrentPageVisible(),
-            clipSpec = LottieClipSpec.Frame(min = firstFrame, max = lastFrame),
+            isPlaying = isCurrentPageVisible() && playbackMode == PlaybackMode.Repeating,
+            clipSpec = loopingClipSpec,
+            iterations = LottieConstants.IterateForever,
         )
-
-        var playbackMode: PlaybackMode by rememberSaveable { mutableStateOf(PlaybackMode.FirstRun) }
-
-        LaunchedEffect(firstRunAnimationProgress) {
-            if (firstRunAnimationProgress < 1f) return@LaunchedEffect
-            playbackMode = PlaybackMode.Repeating
-        }
+        Log.e("gibran", "RepeatableLottieIllustration - firstRunAnimationProgress: ${firstRunAnimationProgress}")
+        Log.e("gibran", "RepeatableLottieIllustration - repeatedAnimationProgress: ${repeatedAnimationProgress}")
+        if (firstRunAnimationProgress == 1f) playbackMode = PlaybackMode.Repeating
+        Log.e("gibran", "RepeatableLottieIllustration - playbackMode: ${playbackMode}")
 
         LottieAnimation(
             composition = composition,
             progress = {
                 when (playbackMode) {
                     PlaybackMode.FirstRun -> firstRunAnimationProgress
-                    PlaybackMode.Repeating -> repeatedAnimationProgress
+                    PlaybackMode.Repeating -> repeatedAnimationProgress //.getFixedValue(composition, loopingClipSpec)
                 }
             },
             modifier = modifier,
         )
+    }
+
+    /**
+     * Returns the value of the LottieAnimationState but fixes the issue where it starts at 0 for a few frames.
+     *
+     * When starting the repeated animation progress, the first received value for a few frames is 0, which causes a visual
+     * glitch. To avoid this issue, we can return the min progress instead of 0 during the first bugged frames.
+     */
+    private fun Float.getFixedValue(composition: LottieComposition?, clipSpec: LottieClipSpec.Frame): Float {
+        return if (composition == null) {
+            0f
+        } else {
+            takeIf { it != 0f } ?: clipSpec.getMinProgress(composition)
+        }
+    }
+
+    /**
+     * This methods comes from [LottieClipSpec.Frame] but is internal, so I reimplemented it here
+     */
+    fun LottieClipSpec.Frame.getMinProgress(composition: LottieComposition): Float {
+        val minFrame = min
+        return when (minFrame) {
+            null -> 0f
+            else -> (minFrame / composition.endFrame).coerceIn(0f, 1f)
+        }
     }
 
     private enum class PlaybackMode {
