@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
@@ -61,12 +62,13 @@ object OnboardingComponents {
      * situations as all backgrounds should consist of simple vector images.
      */
     @Composable
-    fun DefaultBackground(background: ImageVector, modifier: Modifier = Modifier) {
+    fun DefaultBackground(background: ImageVector, modifier: Modifier = Modifier, colorFilter: ColorFilter? = null) {
         Image(
             imageVector = background,
             contentDescription = null,
             modifier = modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds,
+            colorFilter = colorFilter,
         )
     }
 
