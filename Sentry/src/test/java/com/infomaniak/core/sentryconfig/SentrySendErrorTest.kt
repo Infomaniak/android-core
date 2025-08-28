@@ -18,10 +18,10 @@
 package com.infomaniak.core.sentryconfig
 
 import com.infomaniak.core.network.models.exceptions.NetworkException
+import com.infomaniak.core.sentry.SentryConfig
 import io.sentry.SentryEvent
 import org.junit.Assert
 import kotlin.test.Test
-import com.infomaniak.core.sentry.SentryConfig
 
 class SentrySendErrorTest {
 

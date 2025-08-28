@@ -36,11 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.compose.basics.Typography
 
 /** This component allows to put an icon on any line of the text, thanks to the [iconLine] parameter
  *  This code comes from [here](https://stackoverflow.com/questions/70708056/how-to-centrally-align-icon-to-first-line-of-a-text-component-in-compose/71312465#71312465)
