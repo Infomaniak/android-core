@@ -20,35 +20,55 @@
 
 package com.infomaniak.core.twofactorauth.front
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.compose.basicbutton.BasicButton
 import com.infomaniak.core.compose.basics.CallableState
 import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
-import com.infomaniak.core.compose.basics.rememberCallableState
+import com.infomaniak.core.twofactorauth.front.components.Button
+import com.infomaniak.core.twofactorauth.front.components.CardPart
+import com.infomaniak.core.twofactorauth.front.components.SecurityTheme
 import com.infomaniak.core.twofactorauth.front.components.TwoFactorAuthAvatar
-import kotlinx.serialization.SerialName
+import com.infomaniak.core.twofactorauth.front.components.rememberVirtualBorderState
+import com.infomaniak.core.twofactorauth.front.components.virtualBorderBottomLeftCorner
+import com.infomaniak.core.twofactorauth.front.components.virtualBorderHost
+import com.infomaniak.core.twofactorauth.front.components.virtualBorderTopLeftCorner
+import com.infomaniak.core.twofactorauth.front.elements.ShieldK
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.launch
 import splitties.experimental.ExperimentalSplittiesApi
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -60,27 +80,52 @@ fun ConfirmLoginBottomSheetContent(
     attemptTimeMark: TimeMark,
     connectionAttemptInfo: ConnectionAttemptInfo,
     confirmRequest: CallableState<Boolean>,
-) = Column(
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp)
-) {
-    Spacer(Modifier.height(16.dp))
-    BrandedPrompt()
-    Spacer(Modifier.height(16.dp))
-    ConnexionAttemptCard(
-        attemptTimeMark, connectionAttemptInfo
-    )
-    Spacer(Modifier.weight(1f))
-    ConfirmOrRejectRow(confirmRequest)
-    Spacer(Modifier.height(16.dp))
+) = Surface(Modifier.fillMaxSize()) {
+    Box(Modifier, contentAlignment = Alignment.Center) {
+
+        val virtualBorderState = rememberVirtualBorderState()
+        val scrollState = rememberScrollState()
+        Column(
+            modifier = Modifier
+                .widthIn(max = 480.dp)
+                .fillMaxHeight()
+                .verticalScroll(scrollState)
+                .padding(16.dp)
+                .virtualBorderHost(virtualBorderState),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Spacer(Modifier.weight(1f))
+            BrandedPrompt()
+            Spacer(Modifier.heightIn(min = 16.dp).weight(1f))
+            CardPart(Modifier.virtualBorderTopLeftCorner(virtualBorderState), topCorners = true) {
+                Column(
+                    Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    AccountInfoContent(connectionAttemptInfo.targetAccount)
+                    HorizontalDivider()
+                    InfoElement("Quand") { TimeAgoText(attemptTimeMark) }
+                    InfoElement("Appareil") {
+                        Text(connectionAttemptInfo.deviceOrBrowserName)
+                        //TODO: Add device type
+                    }
+                    InfoElement("Lieu") { Text(connectionAttemptInfo.location) }
+                }
+            }
+            CardPart(Modifier.weight(1f).fillMaxWidth())
+            CardPart(Modifier.virtualBorderBottomLeftCorner(virtualBorderState), bottomCorners = true) {
+                ConfirmOrRejectRow(confirmRequest, Modifier.padding(16.dp))
+            }
+        }
+    }
 }
 
 @Composable
-fun ConfirmOrRejectRow(
+private fun ConfirmOrRejectRow(
     confirmRequest: CallableState<Boolean>,
+    modifier: Modifier = Modifier,
 ) = Column(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally
 ) {
     Text(
@@ -89,49 +134,41 @@ fun ConfirmOrRejectRow(
         textAlign = TextAlign.Center
     )
     Spacer(Modifier.height(16.dp))
-    Row(
+    FlowRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally),
     ) {
-        BasicButton(
-            modifier = Modifier.fillMaxWidth(.5f),
+        Button(
+            modifier = Modifier.weight(1f),
             onClick = { confirmRequest(false) },
+            colors = ButtonDefaults.filledTonalButtonColors(),
             enabled = { confirmRequest.isAwaitingCall },
-        ) { Text("Refuser") }
-        BasicButton(
-            modifier = Modifier.fillMaxWidth(1f),
+        ) { Text("Refuser", overflow = TextOverflow.Ellipsis, maxLines = 1) }
+        Button(
+            modifier = Modifier.weight(1f),
             onClick = { confirmRequest(true) },
             enabled = { confirmRequest.isAwaitingCall },
-        ) { Text("Confirmer") }
+        ) { Text("Confirmer", overflow = TextOverflow.Ellipsis, maxLines = 1) }
     }
 }
 
 @Composable
-fun BrandedPrompt() {
-    Column(Modifier.fillMaxWidth().padding(horizontal = 32.dp * 1 / LocalDensity.current.fontScale)) {
+private fun BrandedPrompt() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Max)
+            .padding(horizontal = 32.dp * 1 / LocalDensity.current.fontScale),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         //TODO: Full text logo
-        //TODO: Illustration icon
+        ShieldK()
         Text(
             text = "Êtes-vous en train d'essayer de vous connecter ?",
             style = Typography.h1,
             textAlign = TextAlign.Center
         )
-    }
-}
-
-@Composable
-fun ConnexionAttemptCard(
-    attemptTimeMark: TimeMark,
-    connectionAttemptInfo: ConnectionAttemptInfo,
-) = ElevatedCard(Modifier.fillMaxWidth()) {
-    Column(Modifier
-        .fillMaxWidth()
-        .padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        AccountInfoContent(connectionAttemptInfo.targetAccount)
-        HorizontalDivider()
-        Line("Date et heure") { TimeAgoText(attemptTimeMark) }
-        Line("Appareil") { Text(connectionAttemptInfo.deviceOrBrowserName) }
-        Line("Lieu") { Text("Suisse") }
     }
 }
 
@@ -160,58 +197,41 @@ private fun AccountInfoContent(account: ConnectionAttemptInfo.TargetAccount) = R
 }
 
 @Composable
-private fun Line(label: String, content: @Composable RowScope.() -> Unit) {
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+private fun InfoElement(label: String, content: @Composable () -> Unit) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(label, style = Typography.labelRegular)
-        Spacer(Modifier.weight(1f))
-        ProvideTextStyle(Typography.bodySmallMedium) {
+        ProvideTextStyle(Typography.bodyMedium) {
             content()
         }
     }
 }
 
-data class ConnectionAttemptInfo(
-    val targetAccount: TargetAccount,
-    val deviceOrBrowserName: String,
-    val deviceType: DeviceType,
-    val location: String,
-) {
-    data class TargetAccount(
-        val avatarUrl: String?,
-        val fullName: String,
-        val initials: String,
-        val email: String,
-        val id: Long,
-    )
-
-    enum class DeviceType {
-        @SerialName("phone")
-        Phone,
-        @SerialName("tablet")
-        Tablet,
-        @SerialName("computer")
-        Computer,
-    }
-}
-
 @Preview(fontScale = 1f)
+@Preview(device = "id:Nexus One")
+@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
+@Preview(device = "spec:width=673dp,height=841dp")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Preview(fontScale = 1.6f)
 @Composable
-private fun ConfirmLoginBottomSheetContentPreview() {
+private fun ConfirmLoginBottomSheetContent3Preview() = SecurityTheme {
+    val scope = rememberCoroutineScope()
+    val confirmRequest = remember {
+        CallableState<Boolean>().also { scope.launch(start = CoroutineStart.UNDISPATCHED) { it.awaitOneCall() } }
+    }
     ConfirmLoginBottomSheetContent(
         attemptTimeMark = TimeSource.Monotonic.markNow() + 5.seconds - 1.minutes,
         connectionAttemptInfo = ConnectionAttemptInfo(
             targetAccount = ConnectionAttemptInfo.TargetAccount(
                 avatarUrl = "https://picsum.photos/id/140/200/200",
-                fullName = "John Doe",
-                initials = "JD",
-                email = "john.doe@ik.me",
+                fullName = "Ellen Ripley",
+                initials = "ER",
+                email = "ellen.ripley@domaine.ch",
                 id = 2,
             ),
             deviceOrBrowserName = "Google Pixel Tablet",
             deviceType = ConnectionAttemptInfo.DeviceType.Tablet,
-            location = "Suisse",
+            location = "Genève, Suisse",
         ),
-        confirmRequest = rememberCallableState()
+        confirmRequest = confirmRequest
     )
 }
