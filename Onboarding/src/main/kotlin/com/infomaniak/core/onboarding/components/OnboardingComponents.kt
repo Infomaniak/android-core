@@ -45,6 +45,7 @@ import com.airbnb.lottie.compose.LottieClipSpec
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieAnimatable
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.infomaniak.core.compose.margin.Margin
 
@@ -109,13 +110,24 @@ object OnboardingComponents {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottieRawRes))
         var playbackMode: PlaybackMode by rememberSaveable(isCurrentPageVisible()) { mutableStateOf(PlaybackMode.FirstRun) }
 
+        val firstRunProgress = rememberLottieAnimatable()
+        firstRunProgress.animate(
+            composition,
+            // TODO
+        )
+
+
+        // TODO: Maybe set isPlaying to true, so code already loads what is needed and so there is no offtime when switching
+        //  between animation progresses. We will just need to access the controller (only available for DotLottie maybe?) of the
+        //  second animation to set its frame back to the first frame of the loop when switching animation and entering the loop.
+        //  Otherwise, go with a LottieAnimatable and manually reset it to zero.
         // We have to specify the isPlaying parameter in order to play the animation only when the page is selected.
         // Otherwise, the ViewPager can load the page and start the animation before it's visible.
         val firstRunAnimationProgress by animateLottieCompositionAsState(composition, isPlaying = isCurrentPageVisible())
         val loopingClipSpec = LottieClipSpec.Frame(min = firstFrame, max = lastFrame)
         val repeatedAnimationProgress by animateLottieCompositionAsState(
             composition = composition,
-            isPlaying = isCurrentPageVisible() && playbackMode == PlaybackMode.Repeating,
+            isPlaying = true,
             clipSpec = loopingClipSpec,
             iterations = LottieConstants.IterateForever,
         )
