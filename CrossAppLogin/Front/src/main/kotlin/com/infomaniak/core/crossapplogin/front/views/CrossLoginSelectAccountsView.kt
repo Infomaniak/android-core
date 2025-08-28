@@ -30,13 +30,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
 import com.infomaniak.core.compose.basics.ButtonType
 import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
+import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.R
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.utils.getColorOrNull
 import com.infomaniak.core.crossapplogin.front.utils.getStringOrNull
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
-import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.utils.enumValueOfOrNull
 
 class CrossLoginSelectAccountsView @JvmOverloads constructor(

@@ -52,7 +52,7 @@ import splitties.init.appCtx
     exportSchema = true
 )
 @TypeConverters(UserConverter::class)
-abstract class UserDatabase internal constructor(): RoomDatabase() {
+abstract class UserDatabase internal constructor() : RoomDatabase() {
 
     abstract fun userDao(): UserDao
 
