@@ -18,22 +18,19 @@
 <resources>
 
     <!-- Grey tones from UI/UX -->
-    <color name="black">#000000</color>
     <color name="bat">#1A1A1A</color>
     <color name="orca">#333333</color>
     <color name="elephant">#666666</color>
     <color name="shark">#9F9F9F</color>
     <color name="mouse">#E0E0E0</color>
     <color name="rabbit">#F1F1F1</color>
-    <color name="polar_bear">#F5F5F5</color>
     <color name="swan">#FAFAFA</color>
-    <color name="white">#FFFFFF</color>
 
     <color name="kSuiteProBackground">#222633</color>
 
+    <color name="kSuiteContentBackground">@android:color/white</color>
     <color name="kSuitePrimaryText">@color/orca</color>
     <color name="kSuiteSecondaryText">@color/elephant</color>
     <color name="kSuiteButtonBackground">@color/rabbit</color>
-    <color name="kSuiteEvolveBackground">@color/white</color>
 
 </resources>

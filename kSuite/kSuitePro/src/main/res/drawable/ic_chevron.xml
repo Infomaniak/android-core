@@ -16,15 +16,12 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
+    android:width="16dp"
+    android:height="16dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
     <path
-        android:fillColor="#00000000"
-        android:pathData="M22.818,5.698C23.144,5.98 23.25,6.363 23.25,6.761V20.087C23.243,20.496 23.066,20.89 22.752,21.196C22.438,21.501 22.007,21.699 21.538,21.752L2.461,21.752C1.992,21.699 1.561,21.501 1.247,21.196C0.933,20.89 0.756,20.496 0.75,20.087V3.755C0.75,3.357 0.932,2.974 1.258,2.693C1.584,2.411 2.026,2.252 2.486,2.252H7.696C8.157,2.252 8.599,2.411 8.925,2.693C9.25,2.974 9.433,3.357 9.433,3.755V5.258H21.59C22.051,5.258 22.493,5.417 22.818,5.698Z"
-        android:strokeWidth="1.5"
-        android:strokeColor="#9F9F9F"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
+        android:fillColor="@color/swan"
+        android:fillType="evenOdd"
+        android:pathData="M3.55,0.273C3.86,-0.068 4.387,-0.093 4.727,0.217L12.239,7.045C12.24,7.045 12.24,7.045 12.24,7.046C12.24,7.046 12.24,7.046 12.24,7.046C12.369,7.163 12.476,7.307 12.552,7.471C12.627,7.636 12.667,7.816 12.667,8C12.667,8.184 12.627,8.364 12.552,8.529C12.476,8.693 12.369,8.837 12.24,8.954C12.24,8.954 12.24,8.955 12.239,8.955L4.727,15.783C4.387,16.093 3.86,16.068 3.55,15.727C3.24,15.387 3.266,14.86 3.606,14.55L10.812,8L3.606,1.45C3.266,1.14 3.24,0.613 3.55,0.273Z" />
 </vector>
