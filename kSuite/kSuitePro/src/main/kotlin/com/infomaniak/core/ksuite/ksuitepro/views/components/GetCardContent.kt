@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +46,6 @@ import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.ksuite.ksuitepro.R
-import com.infomaniak.core.ksuite.ksuitepro.utils.KSuiteProUiUtils.color
 import com.infomaniak.core.ksuite.ui.components.kSuiteGradient
 
 @Composable
@@ -60,7 +60,7 @@ fun GetCardContent(
             .height(76.dp)
             .fillMaxWidth(),
         border = kSuiteGradient(),
-        colors = CardDefaults.cardColors(containerColor = resources.color(R.color.kSuiteProBackground)),
+        colors = CardDefaults.cardColors(containerColor = colorResource(R.color.kSuiteProBackground)),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         onClick = onClick,
     ) {
@@ -83,7 +83,7 @@ fun GetCardContent(
                     Text(
                         text = stringResource(R.string.kSuiteGetProTitle),
                         style = Typography.bodyMedium,
-                        color = resources.color(R.color.swan),
+                        color = colorResource(R.color.swan),
                     )
                     Image(
                         modifier = Modifier.size(width = Dimens.avatarSize, height = Dimens.smallIconSize),
@@ -94,12 +94,12 @@ fun GetCardContent(
                 Text(
                     text = stringResource(R.string.kSuiteGetProDescription),
                     style = Typography.bodySmallRegular,
-                    color = resources.color(R.color.mouse),
+                    color = colorResource(R.color.mouse),
                 )
             }
             Image(
                 modifier = Modifier.size(Dimens.smallIconSize),
-                colorFilter = ColorFilter.tint(resources.color(R.color.swan)),
+                colorFilter = ColorFilter.tint(colorResource(R.color.swan)),
                 painter = painterResource(R.drawable.ic_ksuite_chevron),
                 contentDescription = null,
             )
