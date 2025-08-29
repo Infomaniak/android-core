@@ -35,8 +35,6 @@ object Dimens {
     val smallCornerRadius = 8.dp
     /** 16 dp */
     val largeCornerRadius = 16.dp
-    /** 30 dp */
-    val hugeCornerRadius = 30.dp
 
     /** 56 dp */
     val buttonHeight = 56.dp

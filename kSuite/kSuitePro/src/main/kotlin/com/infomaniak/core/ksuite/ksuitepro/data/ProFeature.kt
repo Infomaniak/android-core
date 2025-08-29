@@ -25,66 +25,66 @@ internal enum class ProFeature(@StringRes val title: Int, @DrawableRes val icon:
 
     StandardStorage(
         title = R.string.kSuiteStandardStorageLabel,
-        icon = R.drawable.ic_ksuite_storage,
+        icon = R.drawable.ic_cloud_disk,
     ),
 
     BusinessStorage(
         title = R.string.kSuiteBusinessStorageLabel,
-        icon = R.drawable.ic_ksuite_storage,
+        icon = R.drawable.ic_cloud_disk,
     ),
 
     EnterpriseStorage(
         title = R.string.kSuiteEnterpriseStorageLabel,
-        icon = R.drawable.ic_ksuite_storage,
+        icon = R.drawable.ic_cloud_disk,
     ),
 
     StandardChat(
         title = R.string.kSuiteStandardKChatLabel,
-        icon = R.drawable.ic_ksuite_chat,
+        icon = R.drawable.ic_speech_bubble,
     ),
 
     BusinessChat(
         title = R.string.kSuiteBusinessKChatLabel,
-        icon = R.drawable.ic_ksuite_chat,
+        icon = R.drawable.ic_speech_bubble,
     ),
 
     EnterpriseChat(
         title = R.string.kSuiteEnterpriseKChatLabel,
-        icon = R.drawable.ic_ksuite_chat,
+        icon = R.drawable.ic_speech_bubble,
     ),
 
     StandardMail(
         title = R.string.kSuiteStandardMailLabel,
-        icon = R.drawable.ic_ksuite_mail,
+        icon = R.drawable.ic_mail,
     ),
 
     BusinessDrive(
         title = R.string.kSuiteBusinessKDriveLabel,
-        icon = R.drawable.ic_ksuite_drive,
+        icon = R.drawable.ic_folder,
     ),
 
     EnterpriseFunctionality(
         title = R.string.kSuiteEnterpriseFunctionalityLabel,
-        icon = R.drawable.ic_ksuite_functionality,
+        icon = R.drawable.ic_stairs_arrow,
     ),
 
     StandardEuria(
         title = R.string.kSuiteStandardEuriaLabel,
-        icon = R.drawable.ic_ksuite_euria,
+        icon = R.drawable.ic_euria,
     ),
 
     BusinessSecurity(
         title = R.string.kSuiteBusinessSecurityLabel,
-        icon = R.drawable.ic_ksuite_security,
+        icon = R.drawable.ic_lock,
     ),
 
     EnterpriseMicrosoft(
         title = R.string.kSuiteEnterpriseMicrosoftLabel,
-        icon = R.drawable.ic_ksuite_microsoft,
+        icon = R.drawable.ic_microsoft,
     ),
 
     More(
         title = R.string.kSuiteMoreLabel,
-        icon = R.drawable.ic_ksuite_more,
+        icon = R.drawable.ic_plus_circle,
     ),
 }
