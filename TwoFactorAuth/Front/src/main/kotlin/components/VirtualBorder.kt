@@ -17,59 +17,160 @@
  */
 package com.infomaniak.core.twofactorauth.front.components
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
+enum class CardKind {
+    Outlined,
+    Elevated,
+    Normal,
+}
+
 @Composable
-fun rememberVirtualBorderState(): VirtualBorderState = remember { VirtualBorderStateImpl() }
+fun rememberVirtualCardState(kind: CardKind): VirtualCardState = rememberVirtualCardState(
+    shape = when (kind) {
+        CardKind.Outlined -> CardDefaults.outlinedShape
+        CardKind.Normal -> CardDefaults.shape
+        CardKind.Elevated -> CardDefaults.elevatedShape
+    },
+    colors = when (kind) {
+        CardKind.Outlined -> CardDefaults.outlinedCardColors()
+        CardKind.Elevated -> CardDefaults.elevatedCardColors()
+        CardKind.Normal -> CardDefaults.cardColors()
+    },
+    elevation = when (kind) {
+        CardKind.Outlined -> CardDefaults.outlinedCardElevation()
+        CardKind.Elevated -> CardDefaults.elevatedCardElevation()
+        CardKind.Normal -> CardDefaults.cardElevation()
+    },
+    border = when (kind) {
+        CardKind.Outlined -> CardDefaults.outlinedCardBorder()
+        else -> null
+    }
+)
+
+@Composable
+fun rememberVirtualCardState(
+    shape: Shape = CardDefaults.shape,
+    colors: CardColors = CardDefaults.outlinedCardColors(),
+    elevation: CardElevation = CardDefaults.outlinedCardElevation(),
+    border: BorderStroke?
+): VirtualCardState {
+    val colorsState = rememberUpdatedState(colors)
+    val elevationState = rememberUpdatedState(elevation)
+    val borderState = rememberUpdatedState(border)
+    return remember(shape) {
+        VirtualCardStateImpl(shape, colorsState, elevationState, borderState)
+    }
+}
 
 /**
  * # WARNING: Make sure you put this after any padding to get the desired placement.
  */
-fun Modifier.virtualBorderHost(borderState: VirtualBorderState): Modifier = drawWithCache {
-    val brush: Brush = SolidColor(Color.Gray)
-    val radius = CornerRadius(x = 16.dp.toPx())
-    val drawStyle = Stroke(width = 1.dp.toPx())
+fun Modifier.virtualCardHost(borderState: VirtualCardState): Modifier = drawWithCache {
+    when (borderState) {
+        is VirtualCardStateImpl -> Unit
+    }
+    val border = borderState.borderState.value ?: return@drawWithCache onDrawBehind {}
+
+    val drawStyle = Stroke(width = border.width.toPx())
+    val outline = borderState.shape.createOutline(
+        size = borderState.size.offsetSize(borderState.topLeft),
+        layoutDirection = layoutDirection,
+        density = this
+    )
     onDrawWithContent {
         drawContent()
-        drawRoundRect(
-            brush = brush,
-            cornerRadius = radius,
-            style = drawStyle,
-            topLeft = borderState.topLeft,
-            size = borderState.size.offsetSize(borderState.topLeft)
-        )
+        translate(left = borderState.topLeft.x, top = borderState.topLeft.y) {
+            drawOutline(
+                outline = outline,
+                brush = border.brush,
+                style = drawStyle
+            )
+        }
     }
 }
 
-fun Modifier.virtualBorderTopLeftCorner(borderState: VirtualBorderState): Modifier = onPlaced {
-    borderState as VirtualBorderStateImpl
+enum class CardElementPosition {
+    First,
+    Middle,
+    Last,
+}
+
+@Composable
+fun CardElement(
+    virtualCardState: VirtualCardState,
+    modifier: Modifier = Modifier,
+    elementPosition: CardElementPosition = CardElementPosition.Middle,
+    content: @Composable ColumnScope.() -> Unit = {}
+) {
+    val shape = when (elementPosition) {
+        CardElementPosition.First -> virtualCardState.firstElementShape
+        CardElementPosition.Middle -> virtualCardState.middleElementsShape
+        CardElementPosition.Last -> virtualCardState.lastElementShape
+    }
+    Card(
+        modifier = when (elementPosition) {
+            CardElementPosition.First -> modifier.virtualBorderTopLeftCorner(virtualCardState)
+            CardElementPosition.Middle -> modifier
+            CardElementPosition.Last -> modifier.virtualBorderBottomLeftCorner(virtualCardState)
+        },
+        shape = shape,
+        colors = virtualCardState.colors,
+        elevation = virtualCardState.elevation,
+        content = content
+    )
+}
+
+fun Modifier.virtualBorderTopLeftCorner(borderState: VirtualCardState): Modifier = onPlaced {
+    when (borderState) {
+        is VirtualCardStateImpl -> Unit
+    }
     borderState.topLeft = it.positionInParent()
 }
 
-fun Modifier.virtualBorderBottomLeftCorner(borderState: VirtualBorderState): Modifier = onPlaced {
-    borderState as VirtualBorderStateImpl
+fun Modifier.virtualBorderBottomLeftCorner(borderState: VirtualCardState): Modifier = onPlaced {
+    when (borderState) {
+        is VirtualCardStateImpl -> Unit
+    }
     borderState.size = it.positionInParent() + it.size
 }
 
-sealed interface VirtualBorderState {
+sealed interface VirtualCardState {
+    val firstElementShape: Shape
+    val lastElementShape: Shape
+    val middleElementsShape: Shape
+    
+    val colors: CardColors
+    val elevation: CardElevation
+
     val topLeft: Offset
     val size: Size
 }
@@ -87,7 +188,27 @@ private fun Size.offsetSize(offset: Offset): Size =
     Size(this.width - offset.x, this.height - offset.y)
 
 @Stable
-private class VirtualBorderStateImpl : VirtualBorderState {
+private class VirtualCardStateImpl(
+    val shape: Shape,
+    colorsState: State<CardColors>,
+    elevationState: State<CardElevation>,
+    val borderState: State<BorderStroke?>,
+) : VirtualCardState {
+
+    override val firstElementShape: Shape = (shape as? CornerBasedShape)?.removeCorners(
+        keepTopCorners = true,
+        keepBottomCorners = false
+    ) ?: shape
+
+    override val lastElementShape = (shape as? CornerBasedShape)?.removeCorners(
+        keepTopCorners = false,
+        keepBottomCorners = true
+    ) ?: shape
+
+    override val middleElementsShape = RectangleShape
+
+    override val colors: CardColors by colorsState
+    override val elevation: CardElevation by elevationState
     private var topLeftValue by mutableLongStateOf(0L)
     private var sizeValue by mutableLongStateOf(0L)
 
@@ -103,3 +224,15 @@ private class VirtualBorderStateImpl : VirtualBorderState {
             sizeValue = value.packedValue
         }
 }
+
+private fun CornerBasedShape.removeCorners(
+    keepTopCorners: Boolean,
+    keepBottomCorners: Boolean
+): CornerBasedShape = copy(
+    topStart = if (keepTopCorners) topStart else zeroCorner,
+    topEnd = if (keepTopCorners) topEnd else zeroCorner,
+    bottomStart = if (keepBottomCorners) bottomStart else zeroCorner,
+    bottomEnd = if (keepBottomCorners) bottomEnd else zeroCorner,
+)
+
+private val zeroCorner = CornerSize(0.dp)
