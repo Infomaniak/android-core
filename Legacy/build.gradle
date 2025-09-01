@@ -51,54 +51,49 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21' // Keep the same version as the Kotlin one
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
-    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1'
+    api core.kotlin.stdlib.jdk8
+    api core.kotlinx.coroutines.android
+    api core.kotlinx.coroutines.test
+    api core.kotlinx.serialization.json
 
-    def navigationVersion = '2.8.9' // Doesn't build when bumped to 2.9.0 (Waiting SDK 35)
-    api "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    api "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    api core.navigation.fragment.ktx
+    api core.navigation.ui.ktx
 
-    api 'androidx.constraintlayout:constraintlayout:2.2.1'
-    api 'androidx.coordinatorlayout:coordinatorlayout:1.3.0'
-    api 'androidx.core:core-ktx:1.13.1' // Doesn't build when bumped to 1.15.0 (Waiting SDK 35)
-    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7' // Doesn't build when bumped to 2.9.0 (Waiting SDK 35)
-    api 'androidx.recyclerview:recyclerview:1.3.2' // Doesn't build when bumped to 1.4.0 (Waiting SDK 35)
-    api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    api core.constraintlayout
+    api core.coordinatorlayout
+    api core.androidx.core.ktx
+    api core.androidx.lifecycle.livedata.ktx
+    api core.androidx.recyclerview
+    api core.swiperefreshlayout
 
-    def appcompatVersion = '1.7.1'
-    api "androidx.appcompat:appcompat:$appcompatVersion"
-    api "androidx.appcompat:appcompat-resources:$appcompatVersion"
+    api core.appcompat
+    api core.appcompat.resources
 
-    def splittiesVersion = "3.0.0"
-    implementation "com.louiscad.splitties:splitties-appctx:$splittiesVersion"
+    implementation core.splitties.appctx
 
-    def roomVersion = '2.7.2'
-    api "androidx.room:room-ktx:$roomVersion"
-    api "androidx.room:room-runtime:$roomVersion"
-    ksp "androidx.room:room-compiler:$roomVersion"
+    api core.room.ktx
+    api core.room.runtime
+    ksp core.room.compiler
 
-    api 'com.google.android.material:material:1.12.0'
-    api 'com.google.code.gson:gson:2.13.1'
+    api core.material
+    api core.gson
 
-    api "io.coil-kt:coil:2.7.0"
+    api core.coil.two
 
-    api 'com.github.infomaniak:android-login:3.1.6'
-    api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
-    api 'com.squareup.okhttp3:okhttp:4.12.0'
+    api core.android.login
+    api core.stetho.okhttp3
+    api core.okhttp
 
-    def sentryVersion = '8.11.1' // TODO: Upgrade once SwissTransfer updates Sentry Gradle plugin past 5.5.0
-    api "io.sentry:sentry-android:$sentryVersion"
-    implementation "io.sentry:sentry-okhttp:$sentryVersion"
+    api core.sentry.android
+    api core.sentry.okhttp
 
-    implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
+    implementation core.progress.button
 
-    api 'com.github.matomo-org:matomo-sdk-android:4.1.4'
+    api core.matomo
 
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'androidx.test.ext:junit:1.2.1'
-    testImplementation 'androidx.test:core-ktx:1.6.1'
-    testImplementation 'androidx.test:core:1.6.1'
-    testImplementation 'org.robolectric:robolectric:4.13' // TODO: Don't update this because it breaks tests
+    testImplementation core.junit
+    testImplementation core.androidx.junit
+    testImplementation core.androidx.test.core
+    testImplementation core.androidx.test.core.ktx
+    testImplementation core.robolectric
 }

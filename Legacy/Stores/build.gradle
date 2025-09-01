@@ -34,19 +34,15 @@ android {
 dependencies {
     implementation project(':Core:Legacy')
 
-    // Version 1.1.5 has some issues so we have to use the alpha version for now
-    api 'androidx.datastore:datastore-preferences:1.2.0-alpha02'
+    api core.androidx.datastore.preferences
 
-    def workVersion = '2.9.1' // Keep the same version as the one in the apps
-    implementation "androidx.work:work-runtime-ktx:$workVersion" // Doesn't build when bumped to 2.10.0 (waiting for Api 35)
+    implementation core.androidx.work.runtime.ktx
 
-    implementation 'androidx.concurrent:concurrent-futures-ktx:1.2.0'
+    implementation core.androidx.concurrent.futures.ktx
 
-    def appReviewVersion = '2.0.2'
-    standardImplementation "com.google.android.play:review:$appReviewVersion"
-    standardImplementation "com.google.android.play:review-ktx:$appReviewVersion"
+    standardImplementation core.play.review
+    standardImplementation core.play.review.ktx
 
-    def appUpdateVersion = "2.1.0"
-    standardImplementation "com.google.android.play:app-update:$appUpdateVersion"
-    standardImplementation "com.google.android.play:app-update-ktx:$appUpdateVersion"
+    standardImplementation core.app.update
+    standardImplementation core.app.update.ktx
 }
