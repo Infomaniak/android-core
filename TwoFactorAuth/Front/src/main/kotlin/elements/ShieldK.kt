@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 
 @Preview
 @Composable
-fun ShieldK() = Box(
-    modifier = Modifier
+fun ShieldK(modifier: Modifier = Modifier) = Box(
+    modifier = modifier
         .size(48.dp)
         .background(MaterialTheme.colorScheme.primary, CircleShape),
     contentAlignment = Alignment.Center
