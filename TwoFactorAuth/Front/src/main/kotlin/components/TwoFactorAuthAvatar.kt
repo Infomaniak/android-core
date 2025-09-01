@@ -34,7 +34,7 @@ import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.avatar.models.AvatarUrlData
 import com.infomaniak.core.coil.ImageLoaderProvider
-import com.infomaniak.core.twofactorauth.front.ConnectionAttemptInfo
+import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
 
 @Composable
 internal fun TwoFactorAuthAvatar(
