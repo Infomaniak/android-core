@@ -17,13 +17,28 @@
  */
 package com.infomaniak.core.ksuite.data
 
-enum class KSuite {
-    PersoFree,
-    PersoPlus,
-    ProFree,
-    ProStandard,
-    ProBusiness, // Unused in kMail, all Pro paid tiers got the same functionalities in kMail, so [ProStandard] is enough
-    ProEnterprise; // Unused in kMail, all Pro paid tiers got the same functionalities in kMail, so [ProStandard] is enough
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-    fun isProUpgradable(): Boolean = this == ProFree || this == ProStandard || this == ProBusiness
+sealed interface KSuite : Parcelable {
+
+    sealed interface Perso : KSuite {
+        @Parcelize
+        data object Free : Perso
+        @Parcelize
+        data object Plus : Perso
+    }
+
+    sealed interface Pro : KSuite {
+        @Parcelize
+        data object Free : Pro
+        @Parcelize
+        data object Standard : Pro
+        @Parcelize // Unused in kMail, all Pro paid tiers got the same functionalities in kMail, so [Pro.Standard] is enough
+        data object Business : Pro
+        @Parcelize // Unused in kMail, all Pro paid tiers got the same functionalities in kMail, so [Pro.Standard] is enough
+        data object Enterprise : Pro
+    }
+
+    fun isProUpgradable(): Boolean = this is Pro && this != Pro.Enterprise
 }

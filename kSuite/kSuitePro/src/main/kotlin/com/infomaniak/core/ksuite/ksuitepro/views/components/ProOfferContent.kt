@@ -165,8 +165,8 @@ private fun ColumnScope.ProFeature(
 @Composable
 private fun computeTitle(kSuite: KSuite): String {
     val resId = when (kSuite) {
-        KSuite.ProFree -> R.string.kSuiteStandardOfferTitle
-        KSuite.ProStandard -> R.string.kSuiteBusinessOfferTitle
+        KSuite.Pro.Free -> R.string.kSuiteStandardOfferTitle
+        KSuite.Pro.Standard -> R.string.kSuiteBusinessOfferTitle
         else -> R.string.kSuiteEnterpriseOfferTitle
     }
     return stringResource(resId)
@@ -175,21 +175,21 @@ private fun computeTitle(kSuite: KSuite): String {
 @Composable
 private fun computeDescription(kSuite: KSuite): String {
     val resId = when (kSuite) {
-        KSuite.ProFree -> R.string.kSuiteStandardOfferDescription
-        KSuite.ProStandard -> R.string.kSuiteBusinessOfferDescription
+        KSuite.Pro.Free -> R.string.kSuiteStandardOfferDescription
+        KSuite.Pro.Standard -> R.string.kSuiteBusinessOfferDescription
         else -> R.string.kSuiteEnterpriseOfferDescription
     }
     return stringResource(resId)
 }
 
 private fun computeFeatures(kSuite: KSuite): List<ProFeature> = when (kSuite) {
-    KSuite.ProFree -> listOf(
+    KSuite.Pro.Free -> listOf(
         ProFeature.StandardStorage,
         ProFeature.StandardChat,
         ProFeature.StandardMail,
         ProFeature.StandardEuria,
     )
-    KSuite.ProStandard -> listOf(
+    KSuite.Pro.Standard -> listOf(
         ProFeature.BusinessStorage,
         ProFeature.BusinessChat,
         ProFeature.BusinessDrive,
@@ -209,7 +209,7 @@ private fun computeFeatures(kSuite: KSuite): List<ProFeature> = when (kSuite) {
 private fun Preview() {
     Surface {
         ProOfferContent(
-            kSuite = KSuite.ProFree,
+            kSuite = KSuite.Pro.Free,
             isAdmin = false,
             onClick = {},
         )
