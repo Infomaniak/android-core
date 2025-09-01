@@ -28,8 +28,8 @@ android {
 dependencies {
     implementation project(':Core:Legacy')
 
-    implementation 'androidx.biometric:biometric-ktx:1.2.0-alpha05'
-    implementation("com.louiscad.splitties:splitties-appctx:3.0.0")
-    implementation("com.louiscad.splitties:splitties-mainhandler:3.0.0")
-    implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
+    implementation core.biometric.ktx
+    implementation core.splitties.appctx
+    implementation core.splitties.mainhandler
+    implementation core.splitties.systemservices
 }

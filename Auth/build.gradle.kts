@@ -66,5 +66,4 @@ dependencies {
     implementation(core.room.ktx)
     api(core.room.runtime)
     ksp(core.room.compiler)
-    //
 }

@@ -48,7 +48,7 @@ dependencies {
     implementation(core.compose.runtime)
     implementation(core.compose.ui.tooling.preview)
 
-    implementation(core.lottie)
+    implementation(core.lottie.compose)
 
     debugImplementation(core.compose.ui.tooling)
 }
