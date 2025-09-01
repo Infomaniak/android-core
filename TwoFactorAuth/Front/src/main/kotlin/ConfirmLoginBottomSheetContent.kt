@@ -21,18 +21,17 @@
 package com.infomaniak.core.twofactorauth.front
 
 import android.content.res.Configuration
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -58,15 +57,17 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.basics.CallableState
 import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
+import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
 import com.infomaniak.core.twofactorauth.front.components.Button
-import com.infomaniak.core.twofactorauth.front.components.CardPart
+import com.infomaniak.core.twofactorauth.front.components.CardElement
+import com.infomaniak.core.twofactorauth.front.components.CardElementPosition
+import com.infomaniak.core.twofactorauth.front.components.CardKind
 import com.infomaniak.core.twofactorauth.front.components.SecurityTheme
 import com.infomaniak.core.twofactorauth.front.components.TwoFactorAuthAvatar
-import com.infomaniak.core.twofactorauth.front.components.rememberVirtualBorderState
-import com.infomaniak.core.twofactorauth.front.components.virtualBorderBottomLeftCorner
-import com.infomaniak.core.twofactorauth.front.components.virtualBorderHost
-import com.infomaniak.core.twofactorauth.front.components.virtualBorderTopLeftCorner
+import com.infomaniak.core.twofactorauth.front.components.rememberVirtualCardState
+import com.infomaniak.core.twofactorauth.front.components.virtualCardHost
 import com.infomaniak.core.twofactorauth.front.elements.ShieldK
+import com.infomaniak.core.twofactorauth.front.elements.lightSourceBehind
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import splitties.experimental.ExperimentalSplittiesApi
@@ -83,21 +84,33 @@ fun ConfirmLoginBottomSheetContent(
 ) = Surface(Modifier.fillMaxSize()) {
     Box(Modifier, contentAlignment = Alignment.Center) {
 
-        val virtualBorderState = rememberVirtualBorderState()
+        val virtualCardState = rememberVirtualCardState(kind = if (isSystemInDarkTheme()) CardKind.Outlined else CardKind.Normal)
         val scrollState = rememberScrollState()
+        val maxWidth = 480.dp
+        val cardOuterPadding = 16.dp
         Column(
             modifier = Modifier
-                .widthIn(max = 480.dp)
+                .widthIn(max = maxWidth)
                 .fillMaxHeight()
                 .verticalScroll(scrollState)
-                .padding(16.dp)
-                .virtualBorderHost(virtualBorderState),
+                .padding(cardOuterPadding)
+                .virtualCardHost(virtualCardState),
             verticalArrangement = Arrangement.Bottom
         ) {
             Spacer(Modifier.weight(1f))
+
             BrandedPrompt()
-            Spacer(Modifier.heightIn(min = 16.dp).weight(1f))
-            CardPart(Modifier.virtualBorderTopLeftCorner(virtualBorderState), topCorners = true) {
+
+            Spacer(Modifier.weight(1f))
+            //TODO[issue-blocked]: Replace line below with heightIn above once this is fixed:
+            // https://issuetracker.google.com/issues/294046936
+            Spacer(Modifier.height(16.dp))
+
+            CardElement(
+                virtualCardState,
+                Modifier.lightSourceBehind(maxWidth, cardOuterPadding),
+                elementPosition = CardElementPosition.First
+            ) {
                 Column(
                     Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -112,8 +125,8 @@ fun ConfirmLoginBottomSheetContent(
                     InfoElement("Lieu") { Text(connectionAttemptInfo.location) }
                 }
             }
-            CardPart(Modifier.weight(1f).fillMaxWidth())
-            CardPart(Modifier.virtualBorderBottomLeftCorner(virtualBorderState), bottomCorners = true) {
+            CardElement(virtualCardState, Modifier.weight(1f).fillMaxWidth())
+            CardElement(virtualCardState, elementPosition = CardElementPosition.Last) {
                 ConfirmOrRejectRow(confirmRequest, Modifier.padding(16.dp))
             }
         }
@@ -157,7 +170,6 @@ private fun BrandedPrompt() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(IntrinsicSize.Max)
             .padding(horizontal = 32.dp * 1 / LocalDensity.current.fontScale),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -213,7 +225,7 @@ private fun InfoElement(label: String, content: @Composable () -> Unit) {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Preview(fontScale = 1.6f)
 @Composable
-private fun ConfirmLoginBottomSheetContent3Preview() = SecurityTheme {
+private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
     val scope = rememberCoroutineScope()
     val confirmRequest = remember {
         CallableState<Boolean>().also { scope.launch(start = CoroutineStart.UNDISPATCHED) { it.awaitOneCall() } }
