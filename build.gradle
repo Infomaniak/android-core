@@ -80,7 +80,7 @@ dependencies {
     api 'com.facebook.stetho:stetho-okhttp3:1.6.0'
     api 'com.squareup.okhttp3:okhttp:4.12.0'
 
-    def sentryVersion = '8.19.1'
+    def sentryVersion = '8.20.0'
     api "io.sentry:sentry-android:$sentryVersion"
     implementation "io.sentry:sentry-okhttp:$sentryVersion"
 
