@@ -42,7 +42,7 @@ import okhttp3.RequestBody
 import splitties.init.appCtx
 import java.io.IOException
 
-class DerivedTokenGeneratorImpl(
+internal class DerivedTokenGeneratorImpl(
     coroutineScope: CoroutineScope,
     private val tokenRetrievalUrl: String,
     private val hostAppPackageName: String,

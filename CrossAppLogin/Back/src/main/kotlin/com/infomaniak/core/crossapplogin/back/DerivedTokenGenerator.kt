@@ -22,7 +22,7 @@ import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.lib.login.ApiToken
 import okhttp3.Response
 
-sealed interface DerivedTokenGenerator {
+internal sealed interface DerivedTokenGenerator {
 
     suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
 
