@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 
 object Dimens {
 
+    /** 12 dp */
+    val labelIconSize = 12.dp
     /** 16 dp */
     val smallIconSize = 16.dp
     /** 24 dp */

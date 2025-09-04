@@ -41,7 +41,27 @@ class BottomSheetTheme internal constructor(
     val dragHandleShape: Shape,
     val titleTextStyle: TextStyle,
     val titleColor: Color,
-)
+) {
+    fun copy(
+        containerColor: Color = this.containerColor,
+        contentColor: Color = this.contentColor,
+        shape: Shape = this.shape,
+        dragHandleColor: Color = this.dragHandleColor,
+        dragHandleSize: DpSize = this.dragHandleSize,
+        dragHandleShape: Shape = this.dragHandleShape,
+        titleTextStyle: TextStyle = this.titleTextStyle,
+        titleColor: Color = this.titleColor,
+    ): BottomSheetTheme = BottomSheetTheme(
+        containerColor = containerColor,
+        contentColor = contentColor,
+        shape = shape,
+        dragHandleColor = dragHandleColor,
+        dragHandleSize = dragHandleSize,
+        dragHandleShape = dragHandleShape,
+        titleTextStyle = titleTextStyle,
+        titleColor = titleColor,
+    )
+}
 
 val LocalBottomSheetTheme = staticCompositionLocalOf {
     BottomSheetTheme(
@@ -76,7 +96,7 @@ object BottomSheetThemeDefaults {
         dragHandleSize = dragHandleSize,
         dragHandleShape = dragHandleShape,
         titleTextStyle = titleTextStyle,
-        titleColor = titleColor
+        titleColor = titleColor,
     )
 }
 

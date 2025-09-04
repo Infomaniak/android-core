@@ -19,9 +19,7 @@ package com.infomaniak.core.compose.basics.bottomsheet
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.core.compose.margin.Margin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,7 +70,6 @@ fun ThemedBottomSheetScaffold(
                 )
             }
             content()
-            Spacer(modifier = Modifier.height(Margin.Medium))
         },
     )
 }
@@ -94,6 +90,5 @@ private fun Preview() {
                 }
             }
         }
-
     }
 }

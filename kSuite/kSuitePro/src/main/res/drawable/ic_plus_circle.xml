@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="25"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M1.188,12.001C1.188,14.984 2.373,17.846 4.483,19.956C6.593,22.066 9.454,23.251 12.438,23.251C15.421,23.251 18.283,22.066 20.393,19.956C22.503,17.846 23.688,14.984 23.688,12.001C23.688,9.017 22.503,6.156 20.393,4.046C18.283,1.936 15.421,0.751 12.438,0.751C9.454,0.751 6.593,1.936 4.483,4.046C2.373,6.156 1.188,9.017 1.188,12.001Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#9F9F9F"
+        android:fillType="evenOdd"
+        android:pathData="M12.438,6.002C12.852,6.002 13.188,6.338 13.188,6.752V11.252H17.688C18.102,11.252 18.438,11.588 18.438,12.002C18.438,12.416 18.102,12.752 17.688,12.752H13.188V17.252C13.188,17.666 12.852,18.002 12.438,18.002C12.024,18.002 11.688,17.666 11.688,17.252V12.752H7.188C6.774,12.752 6.438,12.416 6.438,12.002C6.438,11.588 6.774,11.252 7.188,11.252H11.688V6.752C11.688,6.338 12.024,6.002 12.438,6.002Z" />
+</vector>
