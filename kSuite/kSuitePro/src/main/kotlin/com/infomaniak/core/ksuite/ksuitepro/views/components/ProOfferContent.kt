@@ -18,6 +18,7 @@
 package com.infomaniak.core.ksuite.ksuitepro.views.components
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +46,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
@@ -155,7 +161,7 @@ private fun ColumnScope.ProFeature(
         )
         Text(
             modifier = Modifier,
-            text = stringResource(feature.title),
+            text = computeBoldString(completeStringRes = feature.title, boldSubstringRes = feature.bold),
             style = Typography.bodyRegular,
             color = colorResource(R.color.kSuiteSecondaryText),
         )
@@ -180,6 +186,30 @@ private fun computeDescription(kSuite: KSuite): String {
         else -> R.string.kSuiteEnterpriseOfferDescription
     }
     return stringResource(resId)
+}
+
+@Composable
+private fun computeBoldString(
+    @StringRes completeStringRes: Int,
+    @StringRes boldSubstringRes: Int?,
+): AnnotatedString {
+
+    val completeString = stringResource(completeStringRes)
+    val range = boldSubstringRes?.let { stringResource(it) }?.toRegex()?.find(completeString)?.range
+
+    return buildAnnotatedString {
+        if (range == null) {
+            append(completeString)
+        } else {
+            completeString.forEachIndexed { index, char ->
+                if (index in range) {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append(char) }
+                } else {
+                    append(char)
+                }
+            }
+        }
+    }
 }
 
 private fun computeFeatures(kSuite: KSuite): List<ProFeature> = when (kSuite) {
