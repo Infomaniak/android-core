@@ -52,6 +52,7 @@ android {
 
 dependencies {
     api(core.kotlinx.coroutines.core)
+    api(core.androidx.lifecycle.viewmodel.ktx)
 
     implementation(project(":Core"))
     implementation(project(":Core:Auth"))
