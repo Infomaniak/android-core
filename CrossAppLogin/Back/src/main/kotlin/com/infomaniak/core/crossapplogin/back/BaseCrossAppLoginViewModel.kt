@@ -18,7 +18,6 @@
 package com.infomaniak.core.crossapplogin.back
 
 import androidx.activity.ComponentActivity
-import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +27,7 @@ import com.infomaniak.core.Xor
 import com.infomaniak.core.auth.BuildConfig
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.network.networking.HttpUtils
+import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
@@ -95,8 +95,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         return LoginResult(tokens, errorMessageIds)
     }
 
-    @StringRes
-    private fun getTokenDerivationIssueErrorMessage(account: ExternalAccount, issue: Issue): Int {
+    // @StringRes // Doesn't work with a suspend function because they technically return java.lang.Object
+    private suspend fun getTokenDerivationIssueErrorMessage(account: ExternalAccount, issue: Issue): Int {
         val shouldReport: Boolean
         val messageResId = when (issue) {
             is Issue.AppIntegrityCheckFailed -> {
@@ -104,7 +104,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                 RCore.string.anErrorHasOccurred
             }
             is Issue.ErrorResponse -> {
-                shouldReport = issue.httpStatusCode !in 500..599
+                shouldReport = issue.response.code !in 500..599
                 RCore.string.anErrorHasOccurred
             }
             is Issue.NetworkIssue -> {
@@ -116,7 +116,12 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                 RCore.string.anErrorHasOccurred
             }
         }
-        val errorMessage = "Failed to derive token for account ${account.id}, with reason: $issue"
+
+        val details = when (issue) {
+            is Issue.ErrorResponse -> runCatching { issue.response.bodyAsStringOrNull() ?: "" }.getOrDefault("")
+            else -> ""
+        }
+        val errorMessage = "Failed to derive token for account ${account.id}, with reason: $issue | Details: [$details]"
         when (shouldReport) {
             true -> SentryLog.e(TAG, errorMessage)
             false -> SentryLog.i(TAG, errorMessage)

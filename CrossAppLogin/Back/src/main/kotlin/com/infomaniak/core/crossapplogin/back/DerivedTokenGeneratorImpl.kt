@@ -42,7 +42,7 @@ import okhttp3.RequestBody
 import splitties.init.appCtx
 import java.io.IOException
 
-class DerivedTokenGeneratorImpl(
+internal class DerivedTokenGeneratorImpl(
     coroutineScope: CoroutineScope,
     private val tokenRetrievalUrl: String,
     private val hostAppPackageName: String,
@@ -118,11 +118,11 @@ class DerivedTokenGeneratorImpl(
             val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
 
             // Set the token expiration date (with margin-delay)
-            apiToken.expiresAt = System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1000)
+            apiToken.expiresAt = System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1_000)
 
             Xor.First(apiToken)
         } else {
-            Xor.Second(Issue.ErrorResponse(response.code))
+            Xor.Second(Issue.ErrorResponse(response))
         }
     }.cancellable().getOrElse {
         val issue: Issue = when (it) {
