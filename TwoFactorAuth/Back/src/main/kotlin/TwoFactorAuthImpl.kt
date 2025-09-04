@@ -125,6 +125,7 @@ class TwoFactorAuthImpl(connectedHttpClient: OkHttpClient) : TwoFactorAuth {
         SentryLog.i(TAG, "Trying to $actionVerb the challenge ($challengeUid)")
         val response = operation()
         when {
+            //TODO: Handle expired. Will it be http 410 Gone?
             response.status.isSuccess() -> {
                 SentryLog.i(TAG, "Attempt to $actionVerb the challenge succeeded! ($challengeUid)")
                 Outcome.Success
