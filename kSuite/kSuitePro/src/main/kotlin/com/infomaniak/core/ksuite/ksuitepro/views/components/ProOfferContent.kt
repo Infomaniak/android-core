@@ -184,33 +184,58 @@ private fun computeDescription(kSuite: KSuite): String {
 
 private fun computeFeatures(kSuite: KSuite): List<ProFeature> = when (kSuite) {
     KSuite.Pro.Free -> listOf(
-        ProFeature.StandardStorage,
-        ProFeature.StandardChat,
-        ProFeature.StandardMail,
-        ProFeature.StandardEuria,
+        ProFeature.StorageStandard,
+        ProFeature.ChatStandard,
+        ProFeature.Mail,
+        ProFeature.Euria,
     )
     KSuite.Pro.Standard -> listOf(
-        ProFeature.BusinessStorage,
-        ProFeature.BusinessChat,
-        ProFeature.BusinessDrive,
-        ProFeature.BusinessSecurity,
+        ProFeature.StorageBusiness,
+        ProFeature.ChatBusiness,
+        ProFeature.DriveBusiness,
+        ProFeature.Security,
+        ProFeature.Microsoft,
     )
     else -> listOf(
-        ProFeature.EnterpriseStorage,
-        ProFeature.EnterpriseChat,
-        ProFeature.EnterpriseFunctionality,
-        ProFeature.EnterpriseMicrosoft,
+        ProFeature.StorageEnterprise,
+        ProFeature.ChatEnterprise,
+        ProFeature.DriveEnterprise,
+        ProFeature.Functionalities,
     )
 }
 
-@Preview(name = "(1) Light")
-@Preview(name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
+@Preview(locale = "fr", name = "(1) Light")
+@Preview(locale = "fr", name = "(2) Dark", uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
-private fun Preview() {
+private fun PreviewFree() {
     Surface {
         ProOfferContent(
             kSuite = KSuite.Pro.Free,
             isAdmin = false,
+            onClick = {},
+        )
+    }
+}
+
+@Preview(locale = "fr")
+@Composable
+private fun PreviewStandard() {
+    Surface {
+        ProOfferContent(
+            kSuite = KSuite.Pro.Standard,
+            isAdmin = true,
+            onClick = {},
+        )
+    }
+}
+
+@Preview(locale = "fr")
+@Composable
+private fun PreviewBusiness() {
+    Surface {
+        ProOfferContent(
+            kSuite = KSuite.Pro.Business,
+            isAdmin = true,
             onClick = {},
         )
     }

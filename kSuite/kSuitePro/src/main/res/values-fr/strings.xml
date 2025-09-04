@@ -24,7 +24,8 @@
     <string name="kSuiteBusinessStorageLabel">3 To par utilisateur de stockage cloud kDrive et kChat</string>
     <string name="kSuiteEnterpriseFunctionalityLabel">Fonctionnalités avancées : Support Premium, Custom Brand, etc.</string>
     <string name="kSuiteEnterpriseKChatLabel">kChat : 200 utilisateurs externes, jusqu’à 1000 canaux publics/privés</string>
-    <string name="kSuiteEnterpriseMicrosoftLabel">Intégration Microsoft Office Online</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive : 5000 liens de partage publics, jusqu’à 1000 boites de dépôt</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Intégration Microsoft Office Online</string>
     <string name="kSuiteEnterpriseOfferDescription">Un environnement de collaboration sécurisé pour vos équipes, même les plus exigeantes.</string>
     <string name="kSuiteEnterpriseOfferTitle">Sécurisez, centralisez, maîtrisez avec l’offre Enterprise</string>
     <string name="kSuiteEnterpriseStorageLabel">6 To par utilisateur de stockage cloud kDrive et kChat</string>
