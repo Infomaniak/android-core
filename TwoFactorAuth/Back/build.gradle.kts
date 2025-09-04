@@ -48,13 +48,10 @@ android {
     kotlinOptions {
         jvmTarget = javaVersion.toString()
     }
-
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
+    api(core.kotlinx.coroutines.core)
 
     implementation(project(":Core"))
     implementation(project(":Core:Auth"))
@@ -63,4 +60,8 @@ dependencies {
 
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)
+    implementation(core.ktor.client.json)
+    implementation(core.ktor.client.content.negociation)
+    implementation(core.ktor.client.core)
+    implementation(core.ktor.client.okhttp)
 }
