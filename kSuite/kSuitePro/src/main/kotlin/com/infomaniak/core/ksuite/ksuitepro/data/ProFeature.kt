@@ -21,75 +21,89 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.infomaniak.core.ksuite.ksuitepro.R
 
-internal enum class ProFeature(@StringRes val title: Int, @DrawableRes val icon: Int) {
+internal enum class ProFeature(@StringRes val title: Int, @StringRes val bold: Int?, @DrawableRes val icon: Int) {
 
     DriveBusiness(
         title = R.string.kSuiteBusinessKDriveLabel,
+        bold = R.string.kSuiteKDriveLabelBold,
         icon = R.drawable.ic_folder,
     ),
 
     DriveEnterprise(
         title = R.string.kSuiteEnterpriseKDriveLabel,
+        bold = R.string.kSuiteKDriveLabelBold,
         icon = R.drawable.ic_folder,
     ),
 
     Euria(
         title = R.string.kSuiteStandardEuriaLabel,
+        bold = R.string.kSuiteStandardEuriaLabelBold,
         icon = R.drawable.ic_euria,
     ),
 
     Functionalities(
         title = R.string.kSuiteEnterpriseFunctionalityLabel,
+        bold = R.string.kSuiteEnterpriseFunctionalityLabelBold,
         icon = R.drawable.ic_stairs_arrow,
     ),
 
     Mail(
         title = R.string.kSuiteStandardMailLabel,
+        bold = R.string.kSuiteStandardMailLabelBold,
         icon = R.drawable.ic_mail,
     ),
 
     Microsoft(
         title = R.string.kSuiteBusinessMicrosoftLabel,
+        bold = R.string.kSuiteBusinessMicrosoftLabelBold,
         icon = R.drawable.ic_microsoft,
-    ),
-
-    More(
-        title = R.string.kSuiteMoreLabel,
-        icon = R.drawable.ic_plus_circle,
     ),
 
     Security(
         title = R.string.kSuiteBusinessSecurityLabel,
+        bold = R.string.kSuiteBusinessSecurityLabelBold,
         icon = R.drawable.ic_lock,
     ),
 
     StorageStandard(
         title = R.string.kSuiteStandardStorageLabel,
+        bold = R.string.kSuiteStandardStorageLabelBold,
         icon = R.drawable.ic_cloud_disk,
     ),
 
     StorageBusiness(
         title = R.string.kSuiteBusinessStorageLabel,
+        bold = R.string.kSuiteBusinessStorageLabelBold,
         icon = R.drawable.ic_cloud_disk,
     ),
 
     StorageEnterprise(
         title = R.string.kSuiteEnterpriseStorageLabel,
+        bold = R.string.kSuiteEnterpriseStorageLabelBold,
         icon = R.drawable.ic_cloud_disk,
     ),
 
     ChatStandard(
         title = R.string.kSuiteStandardKChatLabel,
+        bold = R.string.kSuiteKChatLabelBold,
         icon = R.drawable.ic_speech_bubble,
     ),
 
     ChatBusiness(
         title = R.string.kSuiteBusinessKChatLabel,
+        bold = R.string.kSuiteKChatLabelBold,
         icon = R.drawable.ic_speech_bubble,
     ),
 
     ChatEnterprise(
         title = R.string.kSuiteEnterpriseKChatLabel,
+        bold = R.string.kSuiteKChatLabelBold,
         icon = R.drawable.ic_speech_bubble,
+    ),
+
+    More(
+        title = R.string.kSuiteMoreLabel,
+        bold = null,
+        icon = R.drawable.ic_plus_circle,
     ),
 }
