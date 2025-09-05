@@ -90,7 +90,7 @@ fun BasicButton(
     val uiState by produceUiState(progress, showIndeterminateProgress, indeterminateProgressDelay)
 
     val isLoading by remember { derivedStateOf { uiState is UiState.Loading } }
-    val isEnabled = enabled() && isLoading.not()
+    val isEnabled = enabled() && showIndeterminateProgress().not() && progress == null
 
     val buttonColors = if (isLoading) colors.applyEnabledColorsToDisabled() else colors
     val progressColors = LoaderColors.fromButtonColors(colors)
