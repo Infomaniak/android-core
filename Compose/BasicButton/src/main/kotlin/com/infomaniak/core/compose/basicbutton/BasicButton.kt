@@ -90,6 +90,10 @@ fun BasicButton(
     val uiState by produceUiState(progress, showIndeterminateProgress, indeterminateProgressDelay)
 
     val isLoading by remember { derivedStateOf { uiState is UiState.Loading } }
+    // Previously, we just used `isLoading.not()`, but `produceState` uses a remember, so even when the value of `initialValue` changes,
+    // the remember remembers the previous value, meaning that the value of `isEnabled` is not up to date.
+    // To fix this problem, we had to duplicate some logic here to ensure that `isEnabled` is always up to date without
+    // waiting for the `indeterminateProgressDelay` timeout.
     val isEnabled = enabled() && showIndeterminateProgress().not() && progress == null
 
     val buttonColors = if (isLoading) colors.applyEnabledColorsToDisabled() else colors
