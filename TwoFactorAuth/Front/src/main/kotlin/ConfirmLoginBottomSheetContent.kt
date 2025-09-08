@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalSplittiesApi::class)
+@file:OptIn(ExperimentalSplittiesApi::class, ExperimentalUuidApi::class)
 
 package com.infomaniak.core.twofactorauth.front
 
@@ -58,6 +58,7 @@ import com.infomaniak.core.compose.basics.CallableState
 import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
+import com.infomaniak.core.twofactorauth.back.RemoteChallenge
 import com.infomaniak.core.twofactorauth.front.components.Button
 import com.infomaniak.core.twofactorauth.front.components.CardElement
 import com.infomaniak.core.twofactorauth.front.components.CardElementPosition
@@ -75,6 +76,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
+import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ConfirmLoginBottomSheetContent(
@@ -241,7 +243,7 @@ private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
                 id = 2,
             ),
             deviceOrBrowserName = "Google Pixel Tablet",
-            deviceType = ConnectionAttemptInfo.DeviceType.Tablet,
+            deviceType = RemoteChallenge.Device.Type.Tablet,
             location = "Genève, Suisse",
         ),
         confirmRequest = confirmRequest
