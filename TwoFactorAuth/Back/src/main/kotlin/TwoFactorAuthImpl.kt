@@ -48,9 +48,10 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @ExperimentalUuidApi
-class TwoFactorAuthImpl(connectedHttpClient: OkHttpClient) : TwoFactorAuth {
-
-    //TODO: Handle multiple accounts in parallel (but only one request to show to the user at a time)
+internal class TwoFactorAuthImpl(
+    connectedHttpClient: OkHttpClient,
+    override val userId: Int,
+) : TwoFactorAuth {
 
     private val httpClient = HttpClient(OkHttp) {
         engine { preconfigured = connectedHttpClient }
