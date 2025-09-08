@@ -29,7 +29,7 @@
     <string name="kSuiteEnterpriseFunctionalityLabel">Caratteristiche avanzate: supporto premium, marchio personalizzato, ecc.</string>
     <string name="kSuiteEnterpriseFunctionalityLabelBold">Caratteristiche avanzate</string>
     <string name="kSuiteEnterpriseKChatLabel">kChat: 200 utenti esterni, fino a 1000 canali pubblici/privati</string>
-    <string name="kSuiteEnterpriseKDriveLabel">kDrive: 5.000 link di condivisione pubblici, fino a 1.000 dropbox</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: conservazione delle versioni dei file per 365 giorni</string>
     <string name="kSuiteEnterpriseOfferDescription">Un ambiente di collaborazione sicuro per i vostri team, anche i più esigenti.</string>
     <string name="kSuiteEnterpriseOfferTitle">Sicurezza, centralizzazione e controllo con l’offerta Enterprise</string>
     <string name="kSuiteEnterpriseStorageLabel">6 TB per utente di cloud storage kDrive e kChat</string>
