@@ -23,27 +23,43 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.infomaniak.core.compose.basics.WithLatestNotNull
 import com.infomaniak.core.compose.basics.rememberCallableState
-import com.infomaniak.core.twofactorauth.back.TwoFactorAuth
-import com.infomaniak.core.twofactorauth.back.TwoFactorAuthImpl
-import com.infomaniak.core.twofactorauth.back.TwoFactorAuthViewModel
+import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfirmLoginAutoManagedBottomSheet() {
+fun ConfirmLoginAutoManagedBottomSheet(
+    twoFactorAuthViewModel: AbstractTwoFactorAuthViewModel
+) {
+    val challenge by twoFactorAuthViewModel.challengeToResolve.collectAsState()
+    ConfirmLoginAutoManagedBottomSheet(challenge)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ConfirmLoginAutoManagedBottomSheet(
+    challenge: AbstractTwoFactorAuthViewModel.Challenge?
+) {
     val confirmRequest = rememberCallableState<Boolean>()
     val sheetState = rememberModalBottomSheetState()
-    val twoFactorAuth: TwoFactorAuthViewModel = TODO()
-    ModalBottomSheet(
-        onDismissRequest = {},
-        sheetState = sheetState,
-    ) {
-        ConfirmLoginBottomSheetContent(
-            attemptTimeMark = TODO(),
-            connectionAttemptInfo = TODO(),
-            confirmRequest = confirmRequest
-        )
+    LaunchedEffect(challenge) {
+        if (challenge != null) sheetState.expand() else sheetState.hide()
+    }
+    challenge?.WithLatestNotNull { challenge ->
+        ModalBottomSheet(
+            onDismissRequest = { challenge.action?.invoke(null) },
+            sheetState = sheetState,
+        ) {
+            ConfirmLoginBottomSheetContent(
+                attemptTimeMark = challenge.attemptTimeMark,
+                connectionAttemptInfo = challenge.data,
+                confirmRequest = confirmRequest
+            )
+        }
     }
 }
