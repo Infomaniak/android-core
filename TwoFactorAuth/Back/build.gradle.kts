@@ -60,6 +60,7 @@ dependencies {
     implementation(project(":Core:Sentry"))
 
     implementation(core.androidx.core.ktx)
+    implementation(core.androidx.lifecycle.process)
     implementation(core.kotlinx.serialization.json)
     implementation(core.ktor.client.json)
     implementation(core.ktor.client.content.negociation)
