@@ -24,6 +24,8 @@ import kotlin.uuid.Uuid
 @ExperimentalUuidApi
 interface TwoFactorAuth {
 
+    val userId: Int
+
     /**
      * Retrieves the latest login challenge, if any.
      *

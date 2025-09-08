@@ -15,16 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.twofactorauth.back
+package com.infomaniak.core.compose.basics
 
-import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
-class TwoFactorAuthViewModel : ViewModel() {
-
-    //TODO: Every time the app is brought to foreground (leaving to door open to implement limits later on),
-    // we want to check if any connected user has a pending challenge to confirm login.
-    //
-    //TODO: For each of these challenges, we want to keep the state of whether it was locally dismissed or not,
-    // to not show it a second time as the user navigates through screen where the confirm login bottom sheet,
-    // can pop up.
+/**
+ * Gives access to the latest non null value of the receiver.
+ *
+ * Helpful to keep showing populated UI during exit animations.
+ */
+@Composable
+fun <T> T?.WithLatestNotNull(content: @Composable (T) -> Unit) {
+    // The implementation is similar to rememberUpdatedState.
+    val value by remember { mutableStateOf(this) }.also {
+        if (this != null) it.value = this
+    }
+    value?.let {
+        content(it)
+    }
 }
