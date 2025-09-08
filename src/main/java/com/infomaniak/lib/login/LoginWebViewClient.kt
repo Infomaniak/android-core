@@ -22,9 +22,15 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
-import android.webkit.*
+import android.webkit.SslErrorHandler
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.CODE_TAG
@@ -37,7 +43,6 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CON
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import androidx.core.net.toUri
 
 private val INFOMANIAK_REGEX = Regex(".*\\.infomaniak\\.(com|ch)")
 
@@ -74,7 +79,9 @@ open class LoginWebViewClient(
     }
 
     override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
-        InfomaniakLogin.sentryCallback?.invoke("${request?.url.toString()} ${request?.method} ${errorResponse?.statusCode}")
+        if (errorResponse?.statusCode !in 500..599) {
+            InfomaniakLogin.sentryCallback?.invoke("${request?.url.toString()} ${request?.method} ${errorResponse?.statusCode}")
+        }
         if (request?.method == "GET") errorResult(HTTP_ERROR_CODE, errorResponse?.statusCode)
     }
 
@@ -115,7 +122,7 @@ open class LoginWebViewClient(
             putExtra(ERROR_TRANSLATED_TAG, translateError(errorCode))
         }
         setResult(AppCompatActivity.RESULT_OK, intent)
-        if ((statusCode in 400 .. 499).not()) finish()
+        if ((statusCode in 400..499).not()) finish()
     }
 
     private fun translateError(errorCode: String): String = with(activity) {
