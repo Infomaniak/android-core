@@ -21,38 +21,61 @@ package com.infomaniak.core.twofactorauth.front
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.basics.WithLatestNotNull
 import com.infomaniak.core.compose.basics.rememberCallableState
 import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel
+import com.infomaniak.core.twofactorauth.front.components.SecurityTheme
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmLoginAutoManagedBottomSheet(
     twoFactorAuthViewModel: AbstractTwoFactorAuthViewModel
-) {
+) = SecurityTheme {
     val challenge by twoFactorAuthViewModel.challengeToResolve.collectAsState()
     ConfirmLoginAutoManagedBottomSheet(challenge)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfirmLoginAutoManagedBottomSheet(
-    challenge: AbstractTwoFactorAuthViewModel.Challenge?
-) {
+private fun ConfirmLoginAutoManagedBottomSheet(challenge: AbstractTwoFactorAuthViewModel.Challenge?) {
+
+    val sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showTheSheet by remember { mutableStateOf(false) }
+
     val confirmRequest = rememberCallableState<Boolean>()
-    val sheetState = rememberModalBottomSheetState()
-    LaunchedEffect(challenge) {
-        if (challenge != null) sheetState.expand() else sheetState.hide()
+
+    val challengeAction = challenge?.action
+    LaunchedEffect(challengeAction) {
+        val action = challengeAction ?: return@LaunchedEffect
+        action(confirmRequest.awaitOneCall())
     }
-    challenge?.WithLatestNotNull { challenge ->
+    LaunchedEffect(challenge) {
+        when (challenge) {
+            null -> {
+                sheetState.hideCatching()
+                if (sheetState.isVisible.not()) showTheSheet = false
+            }
+            else -> showTheSheet = true
+        }
+    }
+
+    if (showTheSheet) challenge?.WithLatestNotNull { challenge ->
         ModalBottomSheet(
             onDismissRequest = { challenge.action?.invoke(null) },
+            tonalElevation = 1.dp,
             sheetState = sheetState,
         ) {
             ConfirmLoginBottomSheetContent(
@@ -62,4 +85,13 @@ fun ConfirmLoginAutoManagedBottomSheet(
             )
         }
     }
+}
+
+@ExperimentalMaterial3Api
+private suspend fun SheetState.hideCatching(): Boolean = try {
+    hide()
+    true
+} catch (_: CancellationException) { // Thrown when the user swipes the sheet during hiding.
+    currentCoroutineContext().ensureActive()
+    false
 }
