@@ -107,7 +107,9 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
     }.distinctUntilChanged()
 
     private val allUsersTwoFactorAuth: Flow<List<TwoFactorAuth>> = userIds.mapLatest { userIds ->
-        userIds.map { id -> TwoFactorAuthImpl(getConnectedHttpClient(id), id) }
+        userIds.map { id -> TwoFactorAuthTestImpl(id) }
+        //TODO: Replace line above with commented line below before public release.
+//        userIds.map { id -> TwoFactorAuthImpl(getConnectedHttpClient(id), id) }
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
     private suspend fun attemptGettingAllCurrentChallenges(): Map<TwoFactorAuth, RemoteChallenge> = buildMap {
