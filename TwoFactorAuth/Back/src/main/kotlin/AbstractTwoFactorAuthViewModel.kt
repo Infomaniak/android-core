@@ -81,15 +81,11 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
     }
 
     val challengeToResolve: StateFlow<Challenge?> = firstUnactionedChallenge.transform { unactionedChallenge ->
-        val (twoFactorAuth, remoteChallenge) = unactionedChallenge ?: run {
-            emit(null) // Signal that there is no challenge.
-            return@transform
-        }
+        emit(null) // Start with no challenge.
+        val (twoFactorAuth, remoteChallenge) = unactionedChallenge ?: return@transform
+        val user = UserDatabase().userDao().findById(twoFactorAuth.userId)
+            ?: return@transform // User was removed in the meantime (unlikely, but possible).
         val action = CompletableDeferred<Boolean?>()
-        val user = UserDatabase().userDao().findById(twoFactorAuth.userId) ?: run {
-            emit(null) // User was removed in the meantime (unlikely, but possible).
-            return@transform
-        }
         val uiChallenge = Challenge(
             data = remoteChallenge.toConnectionAttemptInfo(user),
             attemptTimeMark = utcTimestampToTimeMark(utcOffsetMillis = remoteChallenge.createdAt * 1000L),
