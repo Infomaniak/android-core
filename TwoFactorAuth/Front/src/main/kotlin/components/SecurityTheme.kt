@@ -46,7 +46,7 @@ fun SecurityTheme(
             secondaryContainer = Color(0xFF_D5D9F5),
             onSecondaryContainer = Color(0xFF_121B53),
             surface = Color(0xFF_F4F6FD),
-            surfaceContainerLow = Color.White,
+            surfaceContainerLow = Color(0xFF_F4F6FD),
             surfaceContainer = Color.White,
             surfaceContainerHighest = Color.White,
         )
