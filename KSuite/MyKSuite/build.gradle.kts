@@ -62,7 +62,7 @@ dependencies {
     implementation(project(":Core:Compose:Basics"))
     implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Compose:MaterialThemeFromXml"))
-    implementation(project(":Core:KSuiteTemp"))
+    implementation(project(":Core:KSuite"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)
