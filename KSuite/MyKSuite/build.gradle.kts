@@ -2,27 +2,33 @@ plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
+    alias(core.plugins.ksp)
     kotlin("plugin.parcelize")
     kotlin("plugin.serialization")
     id("androidx.navigation.safeargs.kotlin")
 }
 
 val coreCompileSdk: Int by rootProject.extra
-val coreMinSdk: Int by rootProject.extra
+val legacyMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
 
-    namespace = "com.infomaniak.core.ksuite.ksuitepro"
+    namespace = "com.infomaniak.core.ksuite.myksuite"
     compileSdk = coreCompileSdk
 
     defaultConfig {
-        minSdk = coreMinSdk
+        minSdk = legacyMinSdk
+
+        consumerProguardFiles("consumer-rules.pro")
+
+        ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -51,22 +57,29 @@ android {
 dependencies {
 
     implementation(project(":Core"))
+    implementation(project(":Core:Avatar"))
+    implementation(project(":Core:Coil"))
     implementation(project(":Core:Compose:Basics"))
     implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Compose:MaterialThemeFromXml"))
-    implementation(project(":Core:kSuite"))
+    implementation(project(":Core:KSuite"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)
     implementation(core.navigation.fragment.ktx)
     implementation(core.kotlinx.serialization.json)
 
-    // Compose
+    implementation(core.coil)
     implementation(core.coil.compose)
-    implementation(core.coil.network.okhttp)
+
+    // Room
+    implementation(core.room.runtime)
+    implementation(core.room.ktx)
+    ksp(core.room.compiler)
+
+    // Compose
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)
-    implementation(core.compose.ui.android)
     debugImplementation(core.compose.ui.tooling)
     implementation(core.compose.material3)
     implementation(core.compose.ui)
