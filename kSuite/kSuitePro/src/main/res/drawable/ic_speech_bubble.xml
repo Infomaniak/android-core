@@ -16,28 +16,25 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="16dp"
-    android:height="16dp"
-    android:viewportWidth="16"
-    android:viewportHeight="16">
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
     <path
-        android:fillColor="#9F9F9F"
-        android:pathData="M8,4.25C8.198,4.25 8.391,4.309 8.556,4.419C8.72,4.528 8.848,4.685 8.924,4.867C9,5.05 9.019,5.251 8.981,5.445C8.942,5.639 8.847,5.817 8.707,5.957C8.567,6.097 8.389,6.192 8.195,6.231C8.001,6.269 7.8,6.25 7.617,6.174C7.435,6.098 7.278,5.97 7.169,5.806C7.059,5.641 7,5.448 7,5.25C7,4.985 7.105,4.73 7.293,4.543C7.48,4.355 7.735,4.25 8,4.25Z" />
-    <path
-        android:pathData="M8.125,10.749V8.125C8.125,8.025 8.085,7.93 8.015,7.86C7.945,7.79 7.849,7.75 7.75,7.75H7"
-        android:strokeWidth="1.34958"
+        android:pathData="M21.75,18.752H11.25L5.25,23.252V18.752H2.25C1.852,18.752 1.471,18.594 1.189,18.313C0.908,18.032 0.75,17.65 0.75,17.252V2.252C0.75,1.855 0.908,1.473 1.189,1.192C1.471,0.91 1.852,0.752 2.25,0.752H21.75C22.148,0.752 22.529,0.91 22.811,1.192C23.092,1.473 23.25,1.855 23.25,2.252V17.252C23.25,17.65 23.092,18.032 22.811,18.313C22.529,18.594 22.148,18.752 21.75,18.752Z"
+        android:strokeWidth="1.5"
         android:strokeColor="#9F9F9F"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
-        android:pathData="M7,10.75H9.249"
-        android:strokeWidth="1.34958"
+        android:pathData="M5.25,7.502H18.75"
+        android:strokeWidth="1.5"
         android:strokeColor="#9F9F9F"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
-        android:pathData="M15,8C15,11.866 11.866,15 8,15C4.134,15 1,11.866 1,8C1,4.134 4.134,1 8,1C11.866,1 15,4.134 15,8Z"
-        android:strokeWidth="2"
+        android:pathData="M5.25,12.002H15.75"
+        android:strokeWidth="1.5"
         android:strokeColor="#9F9F9F"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />

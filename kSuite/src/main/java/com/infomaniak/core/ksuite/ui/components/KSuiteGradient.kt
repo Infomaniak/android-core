@@ -15,13 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.ksuite.myksuite.ui.utils
+package com.infomaniak.core.ksuite.ui.components
 
-object MatomoMyKSuite {
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
-    const val CATEGORY_MY_KSUITE = "myKSuite"
-    const val CATEGORY_MY_KSUITE_UPGRADE_BOTTOMSHEET = "myKSuiteUpgradeBottomSheet"
-
-    const val OPEN_DASHBOARD_NAME = "openDashboard"
-    const val NOT_ENOUGH_STORAGE_UPGRADE_NAME = "notEnoughStorageUpgrade"
-}
+fun kSuiteGradient() = BorderStroke(
+    width = 1.dp,
+    brush = Brush.linearGradient(
+        0.0f to Color(0xFF1DDDFD),
+        0.3f to Color(0xFF337CFF),
+        0.5f to Color(0xFFA055FC),
+        0.7f to Color(0xFFF34BBB),
+        1.0f to Color(0xFFFD8C3D),
+        start = Offset.Zero,
+        end = Offset(Float.POSITIVE_INFINITY, 0.0f),
+    ),
+)

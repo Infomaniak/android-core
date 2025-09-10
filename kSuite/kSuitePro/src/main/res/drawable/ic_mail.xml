@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M1.221,4.941C0.919,5.223 0.75,5.604 0.75,6.002V18.002C0.75,18.4 0.919,18.781 1.221,19.063C1.522,19.344 1.931,19.502 2.357,19.502H21.643C22.069,19.502 22.478,19.344 22.779,19.063C23.081,18.781 23.25,18.4 23.25,18.002V6.002C23.25,5.604 23.081,5.223 22.779,4.941M1.221,4.941C1.522,4.66 1.931,4.502 2.357,4.502H21.643C22.069,4.502 22.478,4.66 22.779,4.941M1.221,4.941L9.839,11.316C10.458,11.761 11.218,12.002 12,12.002C12.782,12.002 13.542,11.761 14.161,11.316L22.779,4.941"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

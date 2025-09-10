@@ -15,30 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.compose.basics
+package com.infomaniak.core.ksuite.ui.utils
 
-import androidx.compose.ui.unit.dp
+object MatomoKSuite {
 
-object Dimens {
+    //region Categories
+    const val CATEGORY_MY_KSUITE = "myKSuite"
+    const val CATEGORY_MY_KSUITE_UPGRADE_BOTTOM_SHEET = "myKSuiteUpgradeBottomSheet"
+    const val CATEGORY_KSUITE_PRO = "kSuitePro"
+    const val CATEGORY_KSUITE_PRO_BOTTOM_SHEET = "kSuiteProUpgradeBottomSheet"
+    //endregion
 
-    /** 12 dp */
-    val labelIconSize = 12.dp
-    /** 16 dp */
-    val smallIconSize = 16.dp
-    /** 24 dp */
-    val iconSize = 24.dp
-
-    /** 32 dp */
-    val avatarSize = 32.dp
-
-    /** 8 dp */
-    val smallCornerRadius = 8.dp
-    /** 16 dp */
-    val largeCornerRadius = 16.dp
-
-    /** 56 dp */
-    val buttonHeight = 56.dp
-
-    /** 5 dp */
-    val cardElevation = 5.dp
+    //region Names
+    const val OPEN_DASHBOARD_NAME = "openDashboard"
+    const val NOT_ENOUGH_STORAGE_UPGRADE_NAME = "notEnoughStorageUpgrade"
+    //endregion
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="kSuiteBusinessKChatLabel">kChat: canales compartidos, integración ilimitada con otras aplicaciones</string>
+    <string name="kSuiteBusinessKDriveLabel">kDrive: búsqueda de contenidos, historial de versiones ampliado</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Integración de Microsoft Office Online</string>
+    <string name="kSuiteBusinessMicrosoftLabelBold">Microsoft Office Online</string>
+    <string name="kSuiteBusinessOfferDescription">Optimice sus intercambios y estructure la colaboración en toda su organización.</string>
+    <string name="kSuiteBusinessOfferTitle">Gane impacto y control con la oferta empresarial</string>
+    <string name="kSuiteBusinessSecurityLabel">Seguridad: inicio de sesión SSO, copia de seguridad de PC, etc.</string>
+    <string name="kSuiteBusinessSecurityLabelBold">Seguridad</string>
+    <string name="kSuiteBusinessStorageLabel">3 TB por usuario de almacenamiento en la nube kDrive y kChat</string>
+    <string name="kSuiteBusinessStorageLabelBold">3 TB</string>
+    <string name="kSuiteEnterpriseFunctionalityLabel">Funciones avanzadas: asistencia Premium, marca personalizada, etc.</string>
+    <string name="kSuiteEnterpriseFunctionalityLabelBold">Funciones avanzadas</string>
+    <string name="kSuiteEnterpriseKChatLabel">kChat: 200 usuarios externos, hasta 1000 canales públicos/privados</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: 365 días de conservación de versiones de archivos</string>
+    <string name="kSuiteEnterpriseOfferDescription">Un entorno de colaboración seguro para sus equipos, incluso los más exigentes.</string>
+    <string name="kSuiteEnterpriseOfferTitle">Seguridad, centralización y control con la oferta Enterprise</string>
+    <string name="kSuiteEnterpriseStorageLabel">6 TB por usuario de almacenamiento en la nube kDrive y kChat</string>
+    <string name="kSuiteEnterpriseStorageLabelBold">6 TB</string>
+    <string name="kSuiteGetProDescription">Cree y colabore sin límites</string>
+    <string name="kSuiteGetProTitle">Obtener kSuite</string>
+    <string name="kSuiteKChatLabelBold">kChat</string>
+    <string name="kSuiteKDriveLabelBold">kDrive</string>
+    <string name="kSuiteMoreLabel">Y mucho, mucho más</string>
+    <string name="kSuiteStandardEuriaLabel">Euria: transcripción de vídeos, creación de imágenes, etc.</string>
+    <string name="kSuiteStandardEuriaLabelBold">Euria</string>
+    <string name="kSuiteStandardKChatLabel">kChat: historial de mensajes ilimitado, más canales, etc.</string>
+    <string name="kSuiteStandardMailLabel">Correo: almacenamiento ilimitado de correo, entrega programada, etc.</string>
+    <string name="kSuiteStandardMailLabelBold">Correo</string>
+    <string name="kSuiteStandardOfferDescription">Proporcione a su equipo las herramientas esenciales para colaborar eficazmente a diario.</string>
+    <string name="kSuiteStandardOfferTitle">Aumenta la velocidad con la oferta estándar</string>
+    <string name="kSuiteStandardStorageLabel">50 GB por usuario de almacenamiento en la nube kDrive y kChat</string>
+    <string name="kSuiteStandardStorageLabelBold">50 GB</string>
+    <string name="kSuiteUpgradeButton">MEJORAR</string>
+    <string name="kSuiteUpgradeDetails">Para actualizar su oferta, utilice la interfaz web.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Póngase en contacto con su administrador para actualizar su oferta.</string>
+</resources>

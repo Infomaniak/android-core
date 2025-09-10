@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="kSuiteBusinessKChatLabel">kChat: shared channels, unlimited integration with other applications</string>
+    <string name="kSuiteBusinessKDriveLabel">kDrive: content search, extended version history</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Microsoft Office Online integration</string>
+    <string name="kSuiteBusinessMicrosoftLabelBold">Microsoft Office Online</string>
+    <string name="kSuiteBusinessOfferDescription">Optimize your exchanges and structure collaboration throughout your organization.</string>
+    <string name="kSuiteBusinessOfferTitle">Gain impact and control with the business offer</string>
+    <string name="kSuiteBusinessSecurityLabel">Security: SSO login, PC backup, etc.</string>
+    <string name="kSuiteBusinessSecurityLabelBold">Security</string>
+    <string name="kSuiteBusinessStorageLabel">3 TB per kDrive and kChat cloud storage user</string>
+    <string name="kSuiteBusinessStorageLabelBold">3 TB</string>
+    <string name="kSuiteEnterpriseFunctionalityLabel">Advanced features: Premium Support, Custom Brand, etc.</string>
+    <string name="kSuiteEnterpriseFunctionalityLabelBold">Advanced features</string>
+    <string name="kSuiteEnterpriseKChatLabel">kChat: 200 external users, up to 1000 public/private channels</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: 365-day file version retention</string>
+    <string name="kSuiteEnterpriseOfferDescription">A secure collaboration environment for even the most demanding teams.</string>
+    <string name="kSuiteEnterpriseOfferTitle">Secure, centralize, control with the Enterprise offer</string>
+    <string name="kSuiteEnterpriseStorageLabel">6 TB per kDrive and kChat cloud storage user</string>
+    <string name="kSuiteEnterpriseStorageLabelBold">6 TB</string>
+    <string name="kSuiteGetProDescription">Create and collaborate without limits</string>
+    <string name="kSuiteGetProTitle">Get kSuite</string>
+    <string name="kSuiteKChatLabelBold">kChat</string>
+    <string name="kSuiteKDriveLabelBold">kDrive</string>
+    <string name="kSuiteMoreLabel">And much, much more!</string>
+    <string name="kSuiteStandardEuriaLabel">Euria: video transcription, image creation, etc.</string>
+    <string name="kSuiteStandardEuriaLabelBold">Euria</string>
+    <string name="kSuiteStandardKChatLabel">kChat: unlimited message history, more channels, etc.</string>
+    <string name="kSuiteStandardMailLabel">Mail: unlimited mail storage, scheduled mailings, etc.</string>
+    <string name="kSuiteStandardMailLabelBold">Mail</string>
+    <string name="kSuiteStandardOfferDescription">Give your team the essential tools to collaborate effectively on a daily basis.</string>
+    <string name="kSuiteStandardOfferTitle">Step up a gear with the standard offer</string>
+    <string name="kSuiteStandardStorageLabel">50 GB per kDrive and kChat cloud storage user</string>
+    <string name="kSuiteStandardStorageLabelBold">50 GB</string>
+    <string name="kSuiteUpgradeButton">EVOLVE</string>
+    <string name="kSuiteUpgradeDetails">To upgrade your offer, use the web interface.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Contact your administrator to upgrade your offer.</string>
+</resources>

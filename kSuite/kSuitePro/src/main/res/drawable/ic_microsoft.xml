@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="25dp"
+    android:height="25dp"
+    android:viewportWidth="25"
+    android:viewportHeight="25">
+    <path
+        android:fillColor="#666666"
+        android:pathData="M10.424,15.838C9.085,15.027 8.249,13.549 8.249,11.979V4.51C8.249,3.728 8.437,2.979 8.782,2.317L4.381,4.981C3.037,5.792 2.201,7.27 2.201,8.84V15.632C2.201,16.395 2.403,17.139 2.758,17.792C3.089,18.33 3.56,18.781 4.141,19.107C5.355,19.789 6.785,19.76 7.971,19.035L11.821,16.683L10.424,15.838ZM21.325,13.266L17.273,10.842V11.941C17.273,13.501 16.448,14.979 15.118,15.79L8.475,19.856C7.745,20.302 6.944,20.538 6.137,20.557L10.424,23.153C11.144,23.59 11.955,23.806 12.761,23.806C13.568,23.806 14.379,23.59 15.099,23.153L19.457,20.514L21.147,19.491C21.277,19.414 21.401,19.328 21.521,19.232C21.56,19.208 21.598,19.179 21.632,19.155C21.944,18.901 22.222,18.613 22.453,18.296C22.462,18.281 22.472,18.267 22.481,18.253C22.851,17.681 23.057,17.01 23.053,16.304C23.048,15.046 22.405,13.909 21.325,13.266ZM21.142,4.981L16.549,2.202L15.099,1.323C14.897,1.198 14.686,1.098 14.47,1.011C14.235,0.91 13.99,0.834 13.745,0.786C12.862,0.603 11.941,0.747 11.125,1.213C9.925,1.899 9.209,3.128 9.209,4.51V9.118L10.553,8.326C11.917,7.525 13.606,7.53 14.965,8.341L21.819,12.44C22.438,12.814 22.947,13.309 23.317,13.889L23.321,8.84C23.321,7.27 22.486,5.792 21.142,4.981Z" />
+</vector>
