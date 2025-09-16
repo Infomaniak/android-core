@@ -20,7 +20,6 @@ package com.infomaniak.core.crossapplogin.back
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.Xor
@@ -32,6 +31,7 @@ import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -63,10 +63,10 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     )
 
     @OptIn(ExperimentalSerializationApi::class)
-    suspend fun activateUpdates(hostActivity: ComponentActivity): Nothing {
+    suspend fun activateUpdates(hostActivity: ComponentActivity): Nothing = coroutineScope {
         val crossAppLogin = CrossAppLogin.forContext(
             context = hostActivity,
-            coroutineScope = hostActivity.lifecycleScope + Dispatchers.Default
+            coroutineScope = this + Dispatchers.Default
         )
         hostActivity.repeatOnLifecycle(Lifecycle.State.STARTED) {
             _availableAccounts.emit(crossAppLogin.retrieveAccountsFromOtherApps())
