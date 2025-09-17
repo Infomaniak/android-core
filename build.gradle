@@ -1,7 +1,10 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
-apply plugin: 'kotlin-parcelize'
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    id 'kotlin-parcelize'
+    id 'maven-publish'
+}
 
 group = 'com.github.Infomaniak'
 
@@ -32,12 +35,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility rootProject.ext.java_version
-        targetCompatibility rootProject.ext.java_version
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = rootProject.ext.java_version
+        jvmTarget = rootProject.ext.javaVersion
     }
 
     buildFeatures { viewBinding true }
@@ -46,16 +49,17 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1'
+    implementation libs.kotlin.stdlib.jdk8
+    implementation libs.kotlinx.coroutines.android
 
-    implementation 'androidx.browser:browser:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation libs.browser
+    implementation libs.appcompat
 
-    implementation 'com.google.code.gson:gson:2.12.1'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation libs.gson
+    implementation libs.kotlinx.serialization.json
+    implementation libs.material
 
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation libs.okhttp
 }
 
 afterEvaluate {
