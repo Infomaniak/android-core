@@ -51,7 +51,6 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    api core.kotlin.stdlib.jdk8
     api core.kotlinx.coroutines.android
     api core.kotlinx.coroutines.test
     api core.kotlinx.serialization.json
