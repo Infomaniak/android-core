@@ -55,6 +55,9 @@ jobs:
           ksuite:
             global:
               project_root: "${PR_PATH}/KSuite/MyKSuite"
+          ksuite_pro:
+            global:
+              project_root: "${PR_PATH}/KSuite/KSuitePro"
           EOF
 
       # App specific steps
@@ -86,4 +89,10 @@ jobs:
         run: |
           source ink_utils/venv/bin/activate
           python ink_utils/main.py project ksuite
+          python ink_utils/main.py loco --check --verbose
+
+      - name: Run Ink validation for ksuite pro module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project ksuite_pro
           python ink_utils/main.py loco --check --verbose
