@@ -54,7 +54,7 @@ jobs:
               project_root: "${PR_PATH}/Network"
           ksuite:
             global:
-              project_root: "${PR_PATH}/kSuite/MykSuite"
+              project_root: "${PR_PATH}/KSuite/MyKSuite"
           EOF
 
       # App specific steps
