@@ -15,33 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.compose.basics
+@file:OptIn(ExperimentalUuidApi::class)
 
-import androidx.compose.ui.unit.dp
+package com.infomaniak.core.twofactorauth.back
 
-object Dimens {
+import kotlin.uuid.ExperimentalUuidApi
 
-    /** 12 dp */
-    val labelIconSize = 12.dp
-    /** 16 dp */
-    val smallIconSize = 16.dp
-    /** 24 dp */
-    val iconSize = 24.dp
-
-    /** 32 dp */
-    val avatarSize = 32.dp
-
-    /** 40 dp */
-    val bigAvatarSize = 40.dp
-
-    /** 8 dp */
-    val smallCornerRadius = 8.dp
-    /** 16 dp */
-    val largeCornerRadius = 16.dp
-
-    /** 56 dp */
-    val buttonHeight = 56.dp
-
-    /** 5 dp */
-    val cardElevation = 5.dp
+data class ConnectionAttemptInfo(
+    val targetAccount: TargetAccount,
+    val deviceOrBrowserName: String,
+    val deviceType: RemoteChallenge.Device.Type?,
+    val location: String,
+) {
+    data class TargetAccount(
+        val avatarUrl: String?,
+        val fullName: String,
+        val initials: String,
+        val email: String,
+        val id: Long,
+    )
 }
