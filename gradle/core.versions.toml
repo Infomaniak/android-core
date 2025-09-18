@@ -20,7 +20,6 @@ integrity = "1.4.0"
 junit = "4.13" # Don't update this because it breaks tests
 junitAndroidx = "1.3.0"
 kotest = "5.9.1" # Doesn't build when bumped to 6.x.x (Waiting Kotlin 2.2.0)
-kotlin = "2.0.21" # Keep the same version as the one in App
 kotlinxCoroutines = "1.10.2"
 kotlinxSerialization = "1.8.1" # Doesn't build when bumped to 1.9.0 (Waiting Kotlin 2.2.0)
 ktlintPlugin = "13.1.0"
@@ -87,7 +86,6 @@ foundation-android = { module = "androidx.compose.foundation:foundation-android"
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
-kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
