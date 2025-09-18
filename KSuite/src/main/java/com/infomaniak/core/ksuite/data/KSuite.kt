@@ -41,5 +41,5 @@ sealed interface KSuite : Parcelable {
     }
 
     fun isFreeTier(): Boolean = this is Perso.Free || this is Pro.Free
-    fun isProUpgradable(): Boolean = this is Pro && this != Pro.Enterprise
+    fun isProUpgradable(): Boolean = this is Pro && this !is Pro.Enterprise
 }
