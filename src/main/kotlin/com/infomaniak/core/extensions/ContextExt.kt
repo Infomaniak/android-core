@@ -24,7 +24,9 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.provider.Settings
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 
 tailrec fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
@@ -39,13 +41,21 @@ fun Context.hasPermissions(permissions: Array<String>): Boolean {
 }
 
 fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
 }
 
 fun Context.goToPlayStore(appPackageName: String = packageName) {
     try {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+        startActivity(Intent(Intent.ACTION_VIEW, "market://details?id=$appPackageName".toUri()))
     } catch (_: ActivityNotFoundException) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+        startActivity(Intent(Intent.ACTION_VIEW, "https://play.google.com/store/apps/details?id=$appPackageName".toUri()))
+    }
+}
+
+fun Context.isDontKeepActivitiesEnabled(): Boolean {
+    return runCatching {
+        Settings.Global.getInt(contentResolver, Settings.Global.ALWAYS_FINISH_ACTIVITIES, 0) != 0
+    }.getOrElse {
+        false
     }
 }
