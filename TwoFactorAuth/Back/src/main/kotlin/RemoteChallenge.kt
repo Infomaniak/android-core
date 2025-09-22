@@ -17,12 +17,14 @@
  */
 package com.infomaniak.core.twofactorauth.back
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.json.Json
 
 /**
  * # WARNING
@@ -36,13 +38,17 @@ import kotlinx.serialization.json.Json
  * @property expiresAt UTC timestamp (seconds offset) of when the challenge expires.
  */
 @ExperimentalUuidApi
+@OptIn(ExperimentalSerializationApi::class)
+@JsonIgnoreUnknownKeys
 @Serializable
 data class RemoteChallenge(
-    val uid: Uuid,
+    val uuid: Uuid,
     val device: Device,
     val type: Type? = null,
-    val location: Location,
+    val location: String,
+    @SerialName("created_at")
     val createdAt: Long,
+    @SerialName("expires_at")
     val expiresAt: Long,
 ) {
     @Serializable
@@ -62,11 +68,4 @@ data class RemoteChallenge(
             Computer,
         }
     }
-
-    @Serializable
-    data class Location(
-        val name: String,
-        @SerialName("ip")
-        val ipAddress: String,
-    )
 }
