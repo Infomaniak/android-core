@@ -37,16 +37,13 @@ class TwoFactorAuthTestImpl(
     override suspend fun tryGettingLatestChallenge(): RemoteChallenge? {
         delay(2.seconds)
         return RemoteChallenge(
-            uid = Uuid.random(),
+            uuid = Uuid.random(),
             device = RemoteChallenge.Device(
                 name = "Pixel 9 Pro Fold",
                 type = RemoteChallenge.Device.Type.Phone
             ),
             type = RemoteChallenge.Type.Approval,
-            location = RemoteChallenge.Location(
-                name = "Geneva, Switzerland",
-                "127.0.0.1"
-            ),
+            location = "Geneva, Switzerland",
             createdAt = (System.currentTimeMillis() / 1000L) - 58L,
             expiresAt = (System.currentTimeMillis() / 1000L) + 300L
         )

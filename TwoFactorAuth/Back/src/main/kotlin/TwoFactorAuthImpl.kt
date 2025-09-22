@@ -33,7 +33,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
-import io.ktor.client.request.post
+import io.ktor.client.request.patch
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
@@ -69,7 +69,7 @@ internal class TwoFactorAuthImpl(
             retryOnExceptionIf { request, cause -> cause !is SerializationException }
         }
         defaultRequest {
-            url(LOGIN_ENDPOINT_URL + "2fa/push/challenges/")
+            url(LOGIN_ENDPOINT_URL + "api/2fa/push/")
             userAgent(HttpUtils.getUserAgent)
             headers {
                 @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
@@ -86,7 +86,7 @@ internal class TwoFactorAuthImpl(
      * Might retry several times before returning.
      */
     override suspend fun tryGettingLatestChallenge(): RemoteChallenge? = runCatching {
-        val response = httpClient.get("")
+        val response = httpClient.get("challenges")
         val challenge: RemoteChallenge? = when {
             response.status.isSuccess() -> response.body<ApiResponse<RemoteChallenge>>().data
             else -> {
@@ -111,12 +111,12 @@ internal class TwoFactorAuthImpl(
     override suspend fun approveChallenge(challengeUid: Uuid): Outcome = respondToChallenge(
         actionVerb = "approve",
         challengeUid = challengeUid,
-    ) { httpClient.post(challengeUid.toHexDashString()) }
+    ) { httpClient.patch("challenges/" + challengeUid.toHexDashString()) }
 
     override suspend fun rejectChallenge(challengeUid: Uuid): Outcome = respondToChallenge(
         actionVerb = "reject",
         challengeUid = challengeUid,
-    ) { httpClient.delete(challengeUid.toHexDashString()) }
+    ) { httpClient.delete("challenges/" + challengeUid.toHexDashString()) }
 
     private suspend inline fun respondToChallenge(
         actionVerb: String,
