@@ -96,8 +96,8 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         emit(uiChallenge.copy(action = null))
         actionedChallengesFlow.update { it + remoteChallenge }
         when (confirmOrReject) {
-            true -> twoFactorAuth.approveChallenge(remoteChallenge.uid)
-            false -> twoFactorAuth.rejectChallenge(remoteChallenge.uid)
+            true -> twoFactorAuth.approveChallenge(remoteChallenge.uuid)
+            false -> twoFactorAuth.rejectChallenge(remoteChallenge.uuid)
             null -> Unit
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, initialValue = null)
@@ -131,7 +131,7 @@ private fun RemoteChallenge.toConnectionAttemptInfo(user: User): ConnectionAttem
     ),
     deviceOrBrowserName = device.name,
     deviceType = device.type,
-    location = location.name
+    location = location
 )
 
 private fun utcTimestampToTimeMark(utcOffsetMillis: Long): TimeMark {
