@@ -1,5 +1,5 @@
 [versions]
-activityCompose = "1.10.1"
+activityCompose = "1.10.1" # Doesn't build when bumped to 1.11.0 (Waiting SDK 36)
 adaptive = "1.1.0"
 androidLogin = "3.1.6"
 androidxCollection = "1.5.0"
@@ -36,7 +36,7 @@ progressButton = "2.1.0"
 recyclerView = "1.3.2" # Doesn't build when bumped to 1.4.0 (Waiting SDK 35)
 robolectric = "4.13" # Don't update this because it breaks tests
 room = "2.7.2"
-sentry = "8.11.1" # Upgrade once SwissTransfer updates Sentry Gradle plugin past 5.5.0
+sentry = "8.21.1"
 splitties = "3.0.0"
 stethoOkhttp3 = "1.6.0"
 swipeRefreshLayout = "1.1.0"
