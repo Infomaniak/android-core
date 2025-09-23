@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalSplittiesApi::class)
+
 package com.infomaniak.core.crossapplogin.back.internal.deviceinfo
 
 import android.os.Build.VERSION.SDK_INT
@@ -29,6 +31,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.invoke
+import splitties.coroutines.suspendBlockingLazy
+import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -46,12 +50,18 @@ class DeviceInfoUpdateManager private constructor() {
 
     private val lastSyncedKeyDir = appCtx.filesDir.resolve("lastSyncedDeviceInfoKeys")
 
-    private val currentAppVersion by lazy {
+    data class AppVersions(
+        val versionName: String?,
+        val versionCode: Long,
+    )
+
+    val currentAppAppVersions = suspendBlockingLazy(Dispatchers.IO) {
         appCtx.packageManager.getPackageInfo(appCtx.packageName, 0).let {
-            when {
+            val versionCode = when {
                 SDK_INT >= 28 -> it.longVersionCode
                 else -> @Suppress("Deprecation") it.versionCode.toLong()
             }
+            AppVersions(versionName = it.versionName, versionCode = versionCode)
         }
     }
 
@@ -68,6 +78,7 @@ class DeviceInfoUpdateManager private constructor() {
                 )
                 lastSyncedAppVersion = stream.readLong()
             }
+            val currentAppVersion = currentAppAppVersions().versionCode
             currentAppVersion == lastSyncedAppVersion && lastSyncedUuid == crossAppDeviceId
         } catch (_: FileNotFoundException) {
             false
@@ -77,6 +88,7 @@ class DeviceInfoUpdateManager private constructor() {
     @Throws(IOException::class)
     suspend fun updateLastSyncedKey(crossAppDeviceId: Uuid, userId: Long) = Dispatchers.IO {
         val lastSyncedKeyFile = lastSyncKeyFileForUser(userId)
+        val currentAppVersion = currentAppAppVersions().versionCode
         lastSyncedKeyFile.write { outputStream ->
             DataOutputStream(outputStream).use {
                 crossAppDeviceId.toLongs { mostSignificantBits: Long, leastSignificantBits: Long ->

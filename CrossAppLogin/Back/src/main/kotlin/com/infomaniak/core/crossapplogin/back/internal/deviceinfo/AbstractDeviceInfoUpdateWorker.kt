@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalSplittiesApi::class)
 
 package com.infomaniak.core.crossapplogin.back.internal.deviceinfo
 
@@ -64,6 +64,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import okhttp3.OkHttpClient
+import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -113,7 +114,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
 
         val currentCrossAppDeviceId = sharedDeviceIdManager.crossAppDeviceIdFlow.first()
 
-        val deviceInfo = currentDeviceInfo(currentCrossAppDeviceId)
+        val deviceInfo = currentDeviceInfo(currentCrossAppDeviceId, deviceInfoUpdateManager.currentAppAppVersions())
 
         val deviceInfoUpdatersForUserId = DynamicLazyMap<Long, Deferred<Outcome>>(
             cacheManager = { userId, deferred ->
@@ -209,7 +210,10 @@ abstract class AbstractDeviceInfoUpdateWorker(
     }
 
     @ExperimentalUuidApi
-    private fun currentDeviceInfo(currentCrossAppDeviceId: Uuid): DeviceInfo {
+    private fun currentDeviceInfo(
+        currentCrossAppDeviceId: Uuid,
+        appAppVersions: DeviceInfoUpdateManager.AppVersions,
+    ): DeviceInfo {
         val hasTabletSizedScreen = appCtx.resources.configuration.smallestScreenWidthDp >= 600
         val packageManager = appCtx.packageManager
         val isFoldable = when {
@@ -228,6 +232,11 @@ abstract class AbstractDeviceInfoUpdateWorker(
                 else -> Type.Phone
             },
             uuidV4 = currentCrossAppDeviceId.toHexDashString(),
+            capabilities = listOf(
+                "2fa:push_challenge:approval",
+            ),
+            version = appAppVersions.versionName,
+            versionCode = appAppVersions.versionCode,
         )
     }
 }
