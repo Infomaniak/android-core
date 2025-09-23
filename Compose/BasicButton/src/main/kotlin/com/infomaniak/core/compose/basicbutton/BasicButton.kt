@@ -90,11 +90,7 @@ fun BasicButton(
     val uiState by produceUiState(progress, showIndeterminateProgress, indeterminateProgressDelay)
 
     val isLoading by remember { derivedStateOf { uiState is UiState.Loading } }
-    // Previously, we just used `isLoading.not()`, but `produceState` uses a remember, so even when the value of `initialValue` changes,
-    // the remember remembers the previous value, meaning that the value of `isEnabled` is not up to date.
-    // To fix this problem, we had to duplicate some logic here to ensure that `isEnabled` is always up to date without
-    // waiting for the `indeterminateProgressDelay` timeout.
-    val isEnabled = enabled() && showIndeterminateProgress().not() && progress == null
+    val isEnabled = enabled() && isLoading.not()
 
     val buttonColors = if (isLoading) colors.applyEnabledColorsToDisabled() else colors
     val progressColors = LoaderColors.fromButtonColors(colors)
@@ -140,29 +136,28 @@ private fun produceUiState(
     showIndeterminateProgress: () -> Boolean,
     indeterminateProgressDelay: Duration
 ): State<UiState> = produceState(
-    initialValue = computeUiState(progress, showIndeterminateProgress, effectiveShowIndeterminate = true),
+    initialValue = remember { computeUiState(progress, showIndeterminateProgress) },
     key1 = showIndeterminateProgress(),
     key2 = indeterminateProgressDelay,
     key3 = progress,
 ) {
     val effectiveShowIndeterminate = if (showIndeterminateProgress()) {
+        value = UiState.Loading.Delayed
         delay(indeterminateProgressDelay)
         true
     } else {
         false
     }
 
-    value = computeUiState(progress, showIndeterminateProgress, effectiveShowIndeterminate)
+    value = computeUiState(progress, showIndeterminateProgress)
 }
 
 private fun computeUiState(
     progress: (() -> Float)?,
     showIndeterminateProgress: () -> Boolean,
-    effectiveShowIndeterminate: Boolean,
 ): UiState = when {
     progress != null -> UiState.Loading.Determinate(progress)
-    showIndeterminateProgress() && effectiveShowIndeterminate -> UiState.Loading.Indeterminate
-    showIndeterminateProgress() && effectiveShowIndeterminate.not() -> UiState.Loading.Delayed
+    showIndeterminateProgress() -> UiState.Loading.Indeterminate
     else -> UiState.Default
 }
 
