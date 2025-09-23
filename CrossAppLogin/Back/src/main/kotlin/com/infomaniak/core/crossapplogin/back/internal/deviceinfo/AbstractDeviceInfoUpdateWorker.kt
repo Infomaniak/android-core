@@ -44,13 +44,16 @@ import com.infomaniak.core.network.networking.ManualAuthorizationRequired
 import com.infomaniak.core.sentry.SentryLog
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.headers
 import io.ktor.http.isSuccess
+import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,6 +66,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.serialization.SerializationException
 import okhttp3.OkHttpClient
 import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
@@ -163,16 +167,23 @@ abstract class AbstractDeviceInfoUpdateWorker(
             install(ContentNegotiation) {
                 json()
             }
+            install(HttpRequestRetry) {
+                maxRetries = 3
+                retryOnExceptionIf { request, cause -> cause !is SerializationException }
+            }
+            defaultRequest {
+                userAgent(HttpUtils.getUserAgent)
+                headers {
+                    @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
+                    HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
+                }
+            }
         }
 
         SentryLog.i(TAG, "Will attempt updating device info for user id $targetUserId")
 
         val url = ApiRoutesCore.sendDeviceInfo()
         val response = httpClient.post(url) {
-            headers {
-                @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
-                HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
-            }
             contentType(ContentType.Application.Json)
             setBody(deviceInfo)
         }
