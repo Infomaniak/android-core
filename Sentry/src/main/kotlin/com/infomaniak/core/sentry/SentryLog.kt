@@ -19,6 +19,7 @@ package com.infomaniak.core.sentry
 
 import android.util.Log
 import io.sentry.Breadcrumb
+import io.sentry.ScopeCallback
 import io.sentry.Sentry
 import io.sentry.SentryEvent
 import io.sentry.SentryLevel
@@ -64,25 +65,25 @@ object SentryLog {
         SentryLevel.WARNING.addBreadcrumb(formattedMessage, throwable)
     }
 
-    fun e(tag: String, msg: String, throwable: Throwable? = null) {
+    fun e(tag: String, msg: String, throwable: Throwable? = null, scopeCallback: ScopeCallback? = null) {
         val formattedMessage = formatLogMessage(tag, msg)
         Log.e(TAG, formattedMessage, throwable)
         SentryLevel.ERROR.apply {
             addBreadcrumb(formattedMessage, throwable)
-            captureEvent(tag, msg, throwable)
+            captureEvent(tag, msg, throwable, scopeCallback)
         }
     }
 
-    fun wtf(tag: String, msg: String, throwable: Throwable? = null) {
+    fun wtf(tag: String, msg: String, throwable: Throwable? = null, scopeCallback: ScopeCallback? = null) {
         val formattedMessage = formatLogMessage(tag, msg)
         Log.wtf(TAG, formattedMessage, throwable)
         SentryLevel.FATAL.apply {
             addBreadcrumb(formattedMessage, throwable)
-            captureEvent(tag, msg, throwable)
+            captureEvent(tag, msg, throwable, scopeCallback)
         }
     }
 
-    private fun SentryLevel.captureEvent(tag: String, msg: String, throwable: Throwable?) {
+    private fun SentryLevel.captureEvent(tag: String, msg: String, throwable: Throwable?, scopeCallback: ScopeCallback?) {
         val sentryEvent = SentryEvent().apply {
             setTag("SentryLogTag", tag)
             level = this@captureEvent
@@ -90,8 +91,7 @@ object SentryLog {
             message = Message().apply { this.message = msg }
             throwable?.let(::setThrowable)
         }
-
-        Sentry.captureEvent(sentryEvent)
+        if (scopeCallback == null) Sentry.captureEvent(sentryEvent) else Sentry.captureEvent(sentryEvent, scopeCallback)
     }
 
     private fun SentryLevel.addBreadcrumb(msg: String, throwable: Throwable?) {
