@@ -51,7 +51,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
     val selectedAccounts: StateFlow<List<ExternalAccount>> =
         combine(availableAccounts, skippedAccountIds) { allExternalAccounts, idsToSkip ->
-            computeSelectedAccounts(allExternalAccounts, idsToSkip)
+            allExternalAccounts.filterSelectedAccounts(idsToSkip)
         }.stateIn(viewModelScope, started = SharingStarted.Eagerly, initialValue = emptyList())
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
@@ -135,9 +135,11 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     companion object {
         private val TAG = BaseCrossAppLoginViewModel::class.java.simpleName
 
-        fun computeSelectedAccounts(
-            accounts: List<ExternalAccount>,
+        fun List<ExternalAccount>.filterSelectedAccounts(
             skippedIds: Set<Long>
-        ): List<ExternalAccount> = accounts.filter { it.id !in skippedIds }
+        ): List<ExternalAccount> {
+            if (isEmpty()) return this
+            return filter { it.id !in skippedIds }
+        }
     }
 }
