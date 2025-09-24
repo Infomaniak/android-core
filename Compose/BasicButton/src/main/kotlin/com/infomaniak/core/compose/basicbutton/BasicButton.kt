@@ -55,6 +55,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.compose.margin.Margin
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -109,7 +110,7 @@ fun BasicButton(
             is UiState.Loading.Determinate -> {
                 KeepButtonSize(content) {
                     CircularProgressIndicator(
-                        modifier = getProgressModifier(),
+                        modifier = Modifier.getProgressModifier(),
                         color = progressColors.progressColor,
                         trackColor = progressColors.trackColor,
                         progress = state.progress,
@@ -119,7 +120,7 @@ fun BasicButton(
             UiState.Loading.Indeterminate -> {
                 KeepButtonSize(content) {
                     CircularProgressIndicator(
-                        modifier = getProgressModifier(),
+                        modifier = Modifier.getProgressModifier(),
                         color = progressColors.progressColor,
                         trackColor = progressColors.trackColor,
                     )
@@ -176,13 +177,10 @@ private fun KeepButtonSize(targetSizeContent: @Composable () -> Unit, content: @
 }
 
 @Composable
-private fun getProgressModifier(): Modifier {
-    val progressModifier = Modifier
-        .heightIn(max = 32.dp)
-        .fillMaxHeight(0.8f)
-        .aspectRatio(1f)
-    return progressModifier
-}
+private fun Modifier.getProgressModifier(): Modifier = this
+    .heightIn(max = Margin.Huge)
+    .fillMaxHeight(0.8f)
+    .aspectRatio(1.0f)
 
 private data class LoaderColors(val progressColor: Color, val trackColor: Color) {
     companion object {
@@ -201,7 +199,7 @@ private data class LoaderColors(val progressColor: Color, val trackColor: Color)
 private fun Preview() {
     MaterialTheme {
         Surface {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(Margin.Mini), modifier = Modifier.padding(Margin.Mini)) {
                 BasicButton(
                     modifier = Modifier.height(40.dp),
                     onClick = {},
