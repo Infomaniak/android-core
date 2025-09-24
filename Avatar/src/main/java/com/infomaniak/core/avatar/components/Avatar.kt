@@ -40,6 +40,7 @@ import coil3.compose.LocalPlatformContext
 import com.infomaniak.core.avatar.R
 import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
+import com.infomaniak.core.compose.margin.Margin
 
 @Composable
 fun Avatar(
@@ -73,13 +74,16 @@ fun Avatar(
 private fun AvatarPreview() {
     MaterialTheme {
         Surface {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
                 Avatar(
-                    AvatarType.WithInitials.Initials("IK", AvatarColors(Color(0xFF3CB572), Color.White)),
+                    avatarType = AvatarType.WithInitials.Initials(
+                        initials = "IK",
+                        colors = AvatarColors(Color(0xFF3CB572), Color.White),
+                    ),
                     modifier = Modifier.size(32.dp),
                 )
                 Avatar(
-                    AvatarType.WithInitials.Url(
+                    avatarType = AvatarType.WithInitials.Url(
                         url = "",
                         imageLoader = SingletonImageLoader.get(LocalPlatformContext.current),
                         initials = "IK",
@@ -88,13 +92,13 @@ private fun AvatarPreview() {
                     modifier = Modifier.size(48.dp),
                 )
                 Avatar(
-                    AvatarType.DrawableResource(R.drawable.ic_exemple_drawable_res),
+                    avatarType = AvatarType.DrawableResource(R.drawable.ic_exemple_drawable_res),
                     modifier = Modifier.size(24.dp),
                 )
                 Avatar(
-                    AvatarType.DrawableResource(R.drawable.ic_exemple_drawable_res),
+                    avatarType = AvatarType.DrawableResource(R.drawable.ic_exemple_drawable_res),
                     modifier = Modifier.size(24.dp),
-                    border = BorderStroke(1.dp, Color.LightGray)
+                    border = BorderStroke(1.dp, Color.LightGray),
                 )
             }
         }
