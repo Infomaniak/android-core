@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="buttonApprove">Aprobar</string>
+    <string name="buttonDeny">Denegar</string>
+    <string name="buttonModifyPassword">Cambiar contraseña</string>
+    <string name="twoFactorAuthConfirmationDescription">Al confirmar esta conexión, autorizas a este dispositivo a acceder a tu cuenta Infomaniak.</string>
+    <string name="twoFactorAuthConnectionAlreadyValidatedTitle">Esta conexión ya ha sido validada desde otro dispositivo</string>
+    <string name="twoFactorAuthConnectionExpiredTitle">Esta solicitud de conexión ha expirado</string>
+    <string name="twoFactorAuthConnectionRefusedDescription">Ha rechazado un intento de conexión. Para asegurar su cuenta, cambie su contraseña. Si usted es el origen de este intento, intente conectarse de nuevo.</string>
+    <string name="twoFactorAuthConnectionRefusedTitle">Conexión rechazada</string>
+    <string name="twoFactorAuthConnectionValidationDescription">¿No has iniciado esta validación? Comprueba la actividad de tus últimos dispositivos utilizados.</string>
+    <string name="twoFactorAuthDeviceLabel">Dispositivo</string>
+    <string name="twoFactorAuthLocationLabel">Lugar</string>
+    <string name="twoFactorAuthTryingToLogInTitle">¿Está intentando conectarse?</string>
+    <string name="twoFactorAuthWhenLabel">En</string>
+</resources>
