@@ -55,7 +55,7 @@ private fun ConfirmLoginAutoManagedBottomSheet(challenge: AbstractTwoFactorAuthV
     val sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showTheSheet by remember { mutableStateOf(false) }
 
-    val confirmRequest = rememberCallableState<Boolean>()
+    val confirmRequest = rememberCallableState<Boolean?>()
 
     val challengeAction = challenge?.action
     LaunchedEffect(challengeAction) {

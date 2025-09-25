@@ -21,6 +21,7 @@
 package com.infomaniak.core.twofactorauth.front
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,9 +39,13 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -88,7 +93,7 @@ import kotlin.uuid.ExperimentalUuidApi
 fun ConfirmLoginBottomSheetContent(
     attemptTimeMark: TimeMark,
     connectionAttemptInfo: ConnectionAttemptInfo,
-    confirmRequest: CallableState<Boolean>,
+    confirmRequest: CallableState<Boolean?>,
 ) = Surface(Modifier.fillMaxSize()) {
     Box(Modifier, contentAlignment = Alignment.Center) {
 
@@ -105,6 +110,7 @@ fun ConfirmLoginBottomSheetContent(
                 .virtualCardHost(virtualCardState),
             verticalArrangement = Arrangement.Bottom
         ) {
+            CloseButton(onClick = {})
             Spacer(Modifier.weight(1f))
 
             BrandedPrompt()
@@ -139,6 +145,19 @@ fun ConfirmLoginBottomSheetContent(
 }
 
 @Composable
+private fun CloseButton(onClick: () -> Unit) {
+    IconButton(
+        onClick = onClick,
+        Modifier.background(MaterialTheme.colorScheme.surfaceContainerHighest, CircleShape)
+    ) {
+        Icon(
+            Icons.Default.Close,
+            contentDescription = null,
+        )
+    }
+}
+
+@Composable
 private fun DeviceRow(connectionAttemptInfo: ConnectionAttemptInfo) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(connectionAttemptInfo.deviceOrBrowserName)
@@ -159,7 +178,7 @@ private fun DeviceIcon(type: RemoteChallenge.Device.Type) {
 
 @Composable
 private fun ConfirmOrRejectRow(
-    confirmRequest: CallableState<Boolean>,
+    confirmRequest: CallableState<Boolean?>,
     modifier: Modifier = Modifier,
 ) = Column(
     modifier = modifier,
@@ -251,7 +270,7 @@ private fun InfoElement(label: String, content: @Composable () -> Unit) {
 private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
     val scope = rememberCoroutineScope()
     val confirmRequest = remember {
-        CallableState<Boolean>().also { scope.launch(start = CoroutineStart.UNDISPATCHED) { it.awaitOneCall() } }
+        CallableState<Boolean?>().also { scope.launch(start = CoroutineStart.UNDISPATCHED) { it.awaitOneCall() } }
     }
     ConfirmLoginBottomSheetContent(
         attemptTimeMark = TimeSource.Monotonic.markNow() + 5.seconds - 1.minutes,

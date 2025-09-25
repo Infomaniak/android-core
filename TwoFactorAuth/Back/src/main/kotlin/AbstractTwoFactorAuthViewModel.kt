@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class, ExperimentalSplittiesApi::class)
 
 package com.infomaniak.core.twofactorauth.back
 
@@ -27,8 +27,10 @@ import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.rateLimit
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -44,6 +46,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import okhttp3.OkHttpClient
+import splitties.coroutines.repeatWhileActive
+import splitties.experimental.ExperimentalSplittiesApi
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeMark
@@ -56,7 +60,17 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         val data: ConnectionAttemptInfo,
         val attemptTimeMark: TimeMark,
         val action: ((Boolean?) -> Unit)?,
-    )
+        val dismiss: () -> Unit,
+        val state: State?
+    ) {
+        sealed interface State {
+
+            /** @property action Send true for approval, false for reject, and null for dismiss */
+            data class ApproveOrReject(val action: ((Boolean) -> Unit)) : State
+            data class NetworkIssue(val retry: () -> Unit) : State
+            data class Failure(val dismiss: () -> Unit) : State
+        }
+    }
 
     protected abstract suspend fun getConnectedHttpClient(userId: Int): OkHttpClient
 
@@ -64,7 +78,7 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         it == Lifecycle.Event.ON_START
     }.rateLimit(30.seconds)
 
-    private val actionedChallengesFlow = MutableStateFlow<List<RemoteChallenge>>(emptyList())
+    private val actionedChallengesFlow = MutableStateFlow<Set<RemoteChallenge>>(emptySet())
 
     /**
      * We don't want to bring back any challenges that have been actioned, and are being sent to the backend,
@@ -85,20 +99,34 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         val (twoFactorAuth, remoteChallenge) = unactionedChallenge ?: return@transform
         val user = UserDatabase().userDao().findById(twoFactorAuth.userId)
             ?: return@transform // User was removed in the meantime (unlikely, but possible).
-        val action = CompletableDeferred<Boolean?>()
-        val uiChallenge = Challenge(
-            data = remoteChallenge.toConnectionAttemptInfo(user),
-            attemptTimeMark = utcTimestampToTimeMark(utcOffsetMillis = remoteChallenge.createdAt * 1000L),
-            action = { action.complete(it) }
-        )
-        emit(uiChallenge)
-        val confirmOrReject = action.await()
-        emit(uiChallenge.copy(action = null))
-        actionedChallengesFlow.update { it + remoteChallenge }
-        when (confirmOrReject) {
-            true -> twoFactorAuth.approveChallenge(remoteChallenge.uuid)
-            false -> twoFactorAuth.rejectChallenge(remoteChallenge.uuid)
-            null -> Unit
+        val dismissCompletable = Job()
+        repeatWhileActive {
+            val action = CompletableDeferred<Boolean?>()
+            val uiChallenge = Challenge(
+                data = remoteChallenge.toConnectionAttemptInfo(user),
+                attemptTimeMark = utcTimestampToTimeMark(utcOffsetMillis = remoteChallenge.createdAt * 1000L),
+                action = { action.complete(it) },
+                dismiss = { dismissCompletable.complete() },
+                state = Challenge.State.ApproveOrReject(action = { action.complete(it) })
+            )
+            emit(uiChallenge)
+            val confirmOrReject = action.await()
+            emit(uiChallenge.copy(state = null))
+            actionedChallengesFlow.update { it + remoteChallenge }
+            val outcome: Outcome = when (confirmOrReject) {
+                true -> twoFactorAuth.approveChallenge(remoteChallenge.uuid)
+                false -> twoFactorAuth.rejectChallenge(remoteChallenge.uuid)
+                null -> return@transform
+            }
+            when (outcome) {
+                Outcome.Success -> return@transform
+                is Outcome.Issue -> when (outcome) {
+                    Outcome.Issue.Expired -> TODO("Let the user know")
+                    is Outcome.Issue.ErrorResponse -> TODO("")
+                    is Outcome.Issue.Network -> TODO("")
+                    is Outcome.Issue.Unknown -> TODO("")
+                }
+            }
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, initialValue = null)
 
