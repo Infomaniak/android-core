@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalSplittiesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalSplittiesApi::class, ExperimentalContracts::class)
 
 package com.infomaniak.core.crossapplogin.back.internal.deviceinfo
 
@@ -45,11 +45,16 @@ import com.infomaniak.core.sentry.SentryLog
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.accept
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.request
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.headers
 import io.ktor.http.isSuccess
@@ -72,6 +77,9 @@ import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -177,6 +185,17 @@ abstract class AbstractDeviceInfoUpdateWorker(
                     @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
                     HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
                 }
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+            }
+            HttpResponseValidator {
+                validateResponse { response ->
+                    response.validateContentType { accepted, received ->
+                        val url = response.request.url
+                        val method = response.request.method
+                        throw IllegalArgumentException("Expected Content-Type $accepted but got $received from $method on $url")
+                    }
+                }
             }
         }
 
@@ -184,7 +203,6 @@ abstract class AbstractDeviceInfoUpdateWorker(
 
         val url = ApiRoutesCore.sendDeviceInfo()
         val response = httpClient.post(url) {
-            contentType(ContentType.Application.Json)
             setBody(deviceInfo)
         }
         if (response.status.isSuccess()) {
@@ -195,7 +213,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
             val httpStatusCode = response.status.value
             val errorMessage = "attemptUpdatingDeviceInfoIfNeeded led to http $httpStatusCode"
             when (httpStatusCode) {
-                in 500..599 -> {
+                in 500..<600 -> {
                     SentryLog.i(TAG, errorMessage)
                     Outcome.ShouldRetry
                 }
@@ -250,4 +268,25 @@ abstract class AbstractDeviceInfoUpdateWorker(
             versionCode = appAppVersions.versionCode,
         )
     }
+}
+
+private inline fun HttpResponse.validateContentType(
+    onContentTypeMismatch: (accepted: String, received: String?) -> Unit
+) {
+    contract { callsInPlace(onContentTypeMismatch, InvocationKind.AT_MOST_ONCE) }
+    val acceptedContentType = request.headers[HttpHeaders.Accept]
+    val receivedContentType = headers[HttpHeaders.ContentType]
+
+    when (acceptedContentType) {
+        receivedContentType, null -> return
+    }
+
+    val expectedContentType = ContentType.parse(acceptedContentType)
+
+    if (expectedContentType == ContentType.Any) return
+
+    val actualContentType = receivedContentType?.let { ContentType.parse(it) }
+    if (actualContentType?.match(expectedContentType) ?: false) return
+
+    onContentTypeMismatch(acceptedContentType, receivedContentType)
 }
