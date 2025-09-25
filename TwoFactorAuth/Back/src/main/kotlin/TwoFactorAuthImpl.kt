@@ -57,6 +57,15 @@ internal class TwoFactorAuthImpl(
         engine { preconfigured = connectedHttpClient }
         install(ContentNegotiation) {
             val jsonConfig = Json {
+                // From DefaultJson (in ktor kotlinx.serialization):
+                encodeDefaults = true
+                isLenient = true
+                allowSpecialFloatingPointValues = true
+                allowStructuredMapKeys = true
+                prettyPrint = false
+                useArrayPolymorphism = false
+
+                // Use-case specific config:
                 coerceInputValues = true // Use default values if not recognized (used for enums).
                 ignoreUnknownKeys = true // Don't break if keys are added.
                 @OptIn(ExperimentalSerializationApi::class)
