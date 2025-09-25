@@ -30,8 +30,6 @@ internal data class DeviceInfo(
     val uuidV4: String,
     val capabilities: List<String>,
     val version: String?,
-    @SerialName("version_code")
-    val versionCode: Long,
 ) {
     @Serializable
     enum class Type {
