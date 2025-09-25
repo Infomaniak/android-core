@@ -264,8 +264,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
             capabilities = listOf(
                 "2fa:push_challenge:approval",
             ),
-            version = appAppVersions.versionName,
-            versionCode = appAppVersions.versionCode,
+            version = appAppVersions.versionName
         )
     }
 }
