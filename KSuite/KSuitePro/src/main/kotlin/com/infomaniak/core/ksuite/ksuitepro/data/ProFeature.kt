@@ -26,13 +26,13 @@ internal enum class ProFeature(@StringRes val title: Int, @StringRes val bold: I
     DriveBusiness(
         title = R.string.kSuiteBusinessKDriveLabel,
         bold = R.string.kSuiteKDriveLabelBold,
-        icon = R.drawable.ic_folder,
+        icon = R.drawable.ic_folder_outlined,
     ),
 
     DriveEnterprise(
         title = R.string.kSuiteEnterpriseKDriveLabel,
         bold = R.string.kSuiteKDriveLabelBold,
-        icon = R.drawable.ic_folder,
+        icon = R.drawable.ic_folder_outlined,
     ),
 
     Euria(
