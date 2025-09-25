@@ -25,9 +25,11 @@ import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
 import com.infomaniak.core.network.networking.HttpClient.addCustomTimeout
 import okhttp3.OkHttpClient
 
-object HttpClient {
+object HttpClient : BaseHttpClient()
 
-    private lateinit var tokenInterceptorListener: TokenInterceptorListener
+abstract class BaseHttpClient {
+
+    protected var tokenInterceptorListener: TokenInterceptorListener? = null
 
     fun init(tokenInterceptorListener: TokenInterceptorListener) {
         this.tokenInterceptorListener = tokenInterceptorListener
@@ -51,8 +53,10 @@ object HttpClient {
             }.build()
     }
 
-    private fun OkHttpClient.Builder.addTokenInterceptor() {
-        addInterceptor(TokenInterceptor(tokenInterceptorListener))
-        authenticator(TokenAuthenticator(tokenInterceptorListener))
+    protected open fun OkHttpClient.Builder.addTokenInterceptor() {
+        tokenInterceptorListener?.let { listener ->
+            addInterceptor(TokenInterceptor(listener))
+            authenticator(TokenAuthenticator(listener))
+        }
     }
 }
