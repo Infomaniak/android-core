@@ -40,6 +40,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -50,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -60,6 +62,9 @@ import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge
+import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Computer
+import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Phone
+import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Tablet
 import com.infomaniak.core.twofactorauth.front.components.Button
 import com.infomaniak.core.twofactorauth.front.components.CardElement
 import com.infomaniak.core.twofactorauth.front.components.CardElementPosition
@@ -121,10 +126,7 @@ fun ConfirmLoginBottomSheetContent(
                     AccountInfoContent(connectionAttemptInfo.targetAccount)
                     HorizontalDivider()
                     InfoElement(stringResource(R.string.twoFactorAuthWhenLabel)) { TimeAgoText(attemptTimeMark) }
-                    InfoElement(stringResource(R.string.twoFactorAuthDeviceLabel)) {
-                        Text(connectionAttemptInfo.deviceOrBrowserName)
-                        //TODO: Add device type
-                    }
+                    InfoElement(stringResource(R.string.twoFactorAuthDeviceLabel)) { DeviceRow(connectionAttemptInfo) }
                     InfoElement(stringResource(R.string.twoFactorAuthLocationLabel)) { Text(connectionAttemptInfo.location) }
                 }
             }
@@ -135,6 +137,25 @@ fun ConfirmLoginBottomSheetContent(
         }
     }
 }
+
+@Composable
+private fun DeviceRow(connectionAttemptInfo: ConnectionAttemptInfo) {
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Text(connectionAttemptInfo.deviceOrBrowserName)
+        connectionAttemptInfo.deviceType?.let { DeviceIcon(it) }
+    }
+}
+
+@Composable
+private fun DeviceIcon(type: RemoteChallenge.Device.Type) {
+    val resId = when (type) {
+        Phone -> R.drawable.mobile_24dp
+        Tablet -> R.drawable.tablet_24dp
+        Computer -> R.drawable.computer_24dp
+    }
+    Icon(painterResource(resId), contentDescription = null)
+}
+
 
 @Composable
 private fun ConfirmOrRejectRow(
@@ -243,7 +264,7 @@ private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
                 id = 2,
             ),
             deviceOrBrowserName = "Google Pixel Tablet",
-            deviceType = RemoteChallenge.Device.Type.Tablet,
+            deviceType = Tablet,
             location = "Genève, Suisse",
         ),
         confirmRequest = confirmRequest
