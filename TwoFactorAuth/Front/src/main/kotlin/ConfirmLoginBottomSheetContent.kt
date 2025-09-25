@@ -50,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -119,12 +120,12 @@ fun ConfirmLoginBottomSheetContent(
                 ) {
                     AccountInfoContent(connectionAttemptInfo.targetAccount)
                     HorizontalDivider()
-                    InfoElement("Quand") { TimeAgoText(attemptTimeMark) }
-                    InfoElement("Appareil") {
+                    InfoElement(stringResource(R.string.twoFactorAuthWhenLabel)) { TimeAgoText(attemptTimeMark) }
+                    InfoElement(stringResource(R.string.twoFactorAuthDeviceLabel)) {
                         Text(connectionAttemptInfo.deviceOrBrowserName)
                         //TODO: Add device type
                     }
-                    InfoElement("Lieu") { Text(connectionAttemptInfo.location) }
+                    InfoElement(stringResource(R.string.twoFactorAuthLocationLabel)) { Text(connectionAttemptInfo.location) }
                 }
             }
             CardElement(virtualCardState, Modifier.weight(1f).fillMaxWidth())
@@ -144,7 +145,7 @@ private fun ConfirmOrRejectRow(
     horizontalAlignment = Alignment.CenterHorizontally
 ) {
     Text(
-        text = "Confirmer cette connexion autorisera cet appareil à accéder à votre compte Infomaniak",
+        text = stringResource(R.string.twoFactorAuthConfirmationDescription),
         style = Typography.bodyRegular,
         textAlign = TextAlign.Center
     )
@@ -158,12 +159,12 @@ private fun ConfirmOrRejectRow(
             onClick = { confirmRequest(false) },
             colors = ButtonDefaults.filledTonalButtonColors(),
             enabled = { confirmRequest.isAwaitingCall },
-        ) { Text("Refuser", overflow = TextOverflow.Ellipsis, maxLines = 1) }
+        ) { Text(stringResource(R.string.buttonDeny), overflow = TextOverflow.Ellipsis, maxLines = 1) }
         Button(
             modifier = Modifier.weight(1f),
             onClick = { confirmRequest(true) },
             enabled = { confirmRequest.isAwaitingCall },
-        ) { Text("Confirmer", overflow = TextOverflow.Ellipsis, maxLines = 1) }
+        ) { Text(stringResource(R.string.buttonApprove), overflow = TextOverflow.Ellipsis, maxLines = 1) }
     }
 }
 
@@ -176,10 +177,9 @@ private fun BrandedPrompt() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        //TODO: Full text logo
         ShieldK()
         Text(
-            text = "Êtes-vous en train d'essayer de vous connecter ?",
+            text = stringResource(R.string.twoFactorAuthTryingToLogInTitle),
             style = Typography.h1,
             textAlign = TextAlign.Center
         )
@@ -225,7 +225,7 @@ private fun InfoElement(label: String, content: @Composable () -> Unit) {
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
 @Preview(device = "spec:width=673dp,height=841dp")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
-@Preview(fontScale = 1.6f)
+@Preview(fontScale = 1.6f, locale = "fr")
 @Composable
 private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
     val scope = rememberCoroutineScope()
