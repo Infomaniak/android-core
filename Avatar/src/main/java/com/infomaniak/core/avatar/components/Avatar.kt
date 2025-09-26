@@ -73,7 +73,7 @@ fun Avatar(
 private fun AvatarPreview() {
     MaterialTheme {
         Surface {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(Margin.Medium)) {
                 Avatar(
                     AvatarType.WithInitials.Initials("IK", AvatarColors(Color(0xFF3CB572), Color.White)),
                     modifier = Modifier.size(32.dp),
