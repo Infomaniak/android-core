@@ -20,7 +20,6 @@ android {
 
     defaultConfig {
         minSdk legacyMinSdk
-        targetSdk legacyCompileSdk
 
         testOptions.unitTests.includeAndroidResources = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
