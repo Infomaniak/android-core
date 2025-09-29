@@ -29,7 +29,7 @@
     <string name="errorDownloadInsufficientSpace">Cannot download: Insufficient space</string>
     <string name="reviewAlertTitle">Do you like %s?</string>
     <string name="trackingAuthorizeTracking">Authorize tracking</string>
-    <string name="trackingManagementDescription">You can customize the usage and operational data that Infomaniak retrieves to correct bugs and enhance the application. Both tools are hosted and managed exclusively by us.\n\nInfomaniak respects your privacy: the source code of this application can be verified, the information collected is anonymous and your personal information remains strictly confidential and is never shared with third parties.</string>
+    <string name="trackingManagementDescription">At Infomaniak, your data is never a bargaining chip. We only use in-house tools, hosted and controlled by ourselves, to guarantee the quality and evolution of our applications.\n\nThis technical data is confidential, stored on our own servers in Switzerland, accessible only to our development teams, and never shared with third parties. Application source code can be verified, guaranteeing total transparency.</string>
     <string name="trackingManagementTitle">Data management</string>
     <string name="trackingMatomoDescription">Matomo is an analysis tool hosted and managed exclusively by Infomaniak to understand how the application is used.\n\nBy studying this data, our team is able to continually improve the application’s interface.</string>
     <string name="trackingMatomoTitle">Matomo</string>
