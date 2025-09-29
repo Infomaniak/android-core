@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.onboarding.components.OnboardingComponents.DefaultBackground
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -81,7 +82,7 @@ fun OnboardingScaffold(
             HorizontalPagerIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = Margin.Mini)
                     .padding(PaddingValues(start = startPadding, end = endPadding)),
                 pagerState = pagerState,
                 indicatorStyle = indicatorStyle,
