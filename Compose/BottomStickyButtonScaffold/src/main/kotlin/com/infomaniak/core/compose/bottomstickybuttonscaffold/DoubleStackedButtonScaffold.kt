@@ -40,18 +40,17 @@ import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.compose.preview.PreviewAllWindows
 
 private val WIDTH_THRESHOLD = 500.dp
-private val DEFAULT_DOUBLE_BUTTON_MAX_WIDTH = 800.dp
 
 @Composable
-fun ColumnScope.DoubleButtonCombo(
+fun ColumnScope.DoubleStackedButtonScaffold(
     modifier: Modifier = Modifier,
-    doubleButtonMaxWidth: Dp = DEFAULT_DOUBLE_BUTTON_MAX_WIDTH,
+    maxPaneWidth: Dp = LocalScaffoldTheme.current.singlePaneMaxWidth,
     topButton: @Composable ((Modifier) -> Unit)? = null,
     bottomButton: @Composable ((Modifier) -> Unit)? = null
 ) {
     BoxWithConstraints(
         modifier = modifier
-            .widthIn(max = doubleButtonMaxWidth)
+            .widthIn(max = maxPaneWidth)
             .align(Alignment.CenterHorizontally),
     ) {
         when {
@@ -64,7 +63,7 @@ fun ColumnScope.DoubleButtonCombo(
                 }
             }
             else -> SingleButton(
-                maxWidth = doubleButtonMaxWidth / 2,
+                maxWidth = maxPaneWidth / 2,
                 button = topButton ?: bottomButton!!
             )
         }
@@ -128,36 +127,38 @@ private fun SingleButton(
 @Composable
 private fun DoubleButtonComboPreview() {
     MaterialTheme {
-        Column {
-            DoubleButtonCombo(
-                topButton = {
-                    BasicButton(
-                        modifier = it,
-                        onClick = {},
-                    ) {
-                        Text("Top button")
-                    }
-                },
-                bottomButton = {
-                    BasicButton(
-                        modifier = it,
-                        onClick = {},
-                    ) {
-                        Text("Bottom button")
-                    }
-                },
-            )
-            Spacer(Modifier.height(Margin.Medium))
-            DoubleButtonCombo(
-                bottomButton = {
-                    BasicButton(
-                        modifier = it,
-                        onClick = {},
-                    ) {
-                        Text("Single button")
-                    }
-                },
-            )
+        ProvideScaffoldTheme {
+            Column {
+                DoubleStackedButtonScaffold(
+                    topButton = {
+                        BasicButton(
+                            modifier = it,
+                            onClick = {},
+                        ) {
+                            Text("Top button")
+                        }
+                    },
+                    bottomButton = {
+                        BasicButton(
+                            modifier = it,
+                            onClick = {},
+                        ) {
+                            Text("Bottom button")
+                        }
+                    },
+                )
+                Spacer(Modifier.height(Margin.Medium))
+                DoubleStackedButtonScaffold(
+                    bottomButton = {
+                        BasicButton(
+                            modifier = it,
+                            onClick = {},
+                        ) {
+                            Text("Single button")
+                        }
+                    },
+                )
+            }
         }
     }
 }
