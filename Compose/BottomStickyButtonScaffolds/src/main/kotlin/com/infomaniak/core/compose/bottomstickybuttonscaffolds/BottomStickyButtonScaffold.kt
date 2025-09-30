@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.compose.bottomstickybuttonscaffold
+package com.infomaniak.core.compose.bottomstickybuttonscaffolds
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
