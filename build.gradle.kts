@@ -1,18 +1,7 @@
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
-
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
     alias(core.plugins.ktlint)
-}
-
-ktlint {
-    version.set("1.7.1")
-    android.set(true)
-    ignoreFailures.set(true)
-    reporters {
-        reporter(ReporterType.PLAIN)
-    }
 }
 
 rootProject.extra.apply {
