@@ -31,14 +31,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.preview.PreviewLargeWindow
 import com.infomaniak.core.compose.preview.PreviewLightAndDark
 
 @Composable
 fun SinglePaneScaffold(
     modifier: Modifier = Modifier,
-    maxScreenWidth: Dp = 800.dp,
+    maxScreenWidth: Dp = LocalScaffoldTheme.current.singlePaneMaxWidth,
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
@@ -66,13 +65,15 @@ fun SinglePaneScaffold(
 @Composable
 private fun Preview() {
     MaterialTheme {
-        Surface {
-            SinglePaneScaffold {
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .background(Color.Cyan)
-                )
+        ProvideScaffoldTheme {
+            Surface {
+                SinglePaneScaffold {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color.Cyan)
+                    )
+                }
             }
         }
     }

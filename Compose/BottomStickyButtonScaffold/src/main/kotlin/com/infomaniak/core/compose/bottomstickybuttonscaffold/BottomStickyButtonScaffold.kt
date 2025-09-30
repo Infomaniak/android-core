@@ -38,20 +38,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.basicbutton.BasicButton
-import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.compose.preview.PreviewLargeWindow
 import com.infomaniak.core.compose.preview.PreviewSmallWindow
-
-private val DEFAULT_SINGLE_PANE_MAX_WIDTH = 800.dp
 
 @Composable
 fun BottomStickyButtonScaffold(
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState? = null,
-    maxScreenWidth: Dp = DEFAULT_SINGLE_PANE_MAX_WIDTH,
-    buttonComboVerticalPadding: Dp = Margin.Small,
+    maxPaneWidth: Dp = LocalScaffoldTheme.current.singlePaneMaxWidth,
+    stackedButtonVerticalPadding: Dp = LocalScaffoldTheme.current.stackedButtonVerticalPadding,
     topBar: @Composable () -> Unit,
     topButton: @Composable ((Modifier) -> Unit)? = null,
     bottomButton: @Composable ((Modifier) -> Unit)? = null,
@@ -59,7 +55,7 @@ fun BottomStickyButtonScaffold(
 ) {
     SinglePaneScaffold(
         modifier = modifier,
-        maxScreenWidth = maxScreenWidth,
+        maxScreenWidth = maxPaneWidth,
         snackbarHost = { snackbarHostState?.let { SnackbarHost(hostState = it) } },
         topBar = topBar,
     ) { contentPaddings ->
@@ -70,9 +66,9 @@ fun BottomStickyButtonScaffold(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(modifier = Modifier.weight(1.0f), content = content)
-            DoubleButtonCombo(
-                modifier = Modifier.padding(vertical = buttonComboVerticalPadding),
-                doubleButtonMaxWidth = maxScreenWidth,
+            DoubleStackedButtonScaffold(
+                modifier = Modifier.padding(vertical = stackedButtonVerticalPadding),
+                maxPaneWidth = maxPaneWidth,
                 topButton = topButton,
                 bottomButton = bottomButton,
             )
@@ -86,36 +82,36 @@ fun BottomStickyButtonScaffold(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun Preview() {
     MaterialTheme {
-        Surface {
-            BottomStickyButtonScaffold(
-                maxScreenWidth = 800.dp,
-                buttonComboVerticalPadding = Margin.Small,
-                topBar = {
-                    CenterAlignedTopAppBar(
-                        colors = TopAppBarDefaults.topAppBarColors(),
-                        title = {
-                            Text(text = "Title")
+        ProvideScaffoldTheme {
+            Surface {
+                BottomStickyButtonScaffold(
+                    topBar = {
+                        CenterAlignedTopAppBar(
+                            colors = TopAppBarDefaults.topAppBarColors(),
+                            title = {
+                                Text(text = "Title")
+                            }
+                        )
+                    },
+                    topButton = { modifier ->
+                        BasicButton(modifier = modifier, onClick = {}) {
+                            Text("Top Button")
                         }
+                    },
+                    bottomButton = { modifier ->
+                        BasicButton(modifier = modifier, onClick = {}) {
+                            Text("Bottom Button")
+                        }
+                    },
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.LightGray),
+                        text = "content",
+                        textAlign = TextAlign.Center,
                     )
-                },
-                topButton = { modifier ->
-                    BasicButton(modifier = modifier, onClick = {}) {
-                        Text("Top Button")
-                    }
-                },
-                bottomButton = { modifier ->
-                    BasicButton(modifier = modifier, onClick = {}) {
-                        Text("Bottom Button")
-                    }
-                },
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.LightGray),
-                    text = "content",
-                    textAlign = TextAlign.Center,
-                )
+                }
             }
         }
     }
