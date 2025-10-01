@@ -33,6 +33,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -82,7 +83,7 @@ fun BottomStickyButtonScaffold(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun Preview() {
     MaterialTheme {
-        ProvideScaffoldTheme {
+        CompositionLocalProvider(LocalScaffoldTheme provides ScaffoldThemeDefault.theme(), {
             Surface {
                 BottomStickyButtonScaffold(
                     topBar = {
@@ -113,6 +114,6 @@ private fun Preview() {
                     )
                 }
             }
-        }
+        })
     }
 }
