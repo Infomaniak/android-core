@@ -28,11 +28,17 @@ class UrlTraceInterceptor : Interceptor {
         val request = chain.request()
         val response = chain.proceed(request)
 
-        response.header("x-request-id")?.let { requestId ->
-            val httpBreadcrumb = Breadcrumb.http(request.url.toString(), requestId, response.code)
+        response.header(HEADER_REQUEST_ID)?.let { requestId ->
+            val httpBreadcrumb = Breadcrumb.http(request.url.toString(), request.method, response.code).apply {
+                setData(HEADER_REQUEST_ID, requestId)
+            }
             Sentry.addBreadcrumb(httpBreadcrumb)
         }
 
         return response
+    }
+
+    companion object {
+        private const val HEADER_REQUEST_ID = "x-request-id"
     }
 }
