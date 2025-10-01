@@ -6,7 +6,7 @@ def legacyMinSdk = rootProject.ext["legacyMinSdk"]
 def javaVersion = rootProject.ext["javaVersion"]
 
 android {
-    namespace 'com.infomaniak.lib.confetti'
+    namespace 'com.infomaniak.core.legacy.confetti'
     compileSdk legacyCompileSdk
 
     defaultConfig {

@@ -7,7 +7,7 @@ def legacyMinSdk = rootProject.ext["legacyMinSdk"]
 def javaVersion = rootProject.ext["javaVersion"]
 
 android {
-    namespace 'com.infomaniak.lib.bugtracker'
+    namespace 'com.infomaniak.core.legacy.bugtracker'
     compileSdk legacyCompileSdk
 
     defaultConfig {

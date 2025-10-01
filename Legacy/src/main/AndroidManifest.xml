@@ -30,7 +30,7 @@
         tools:targetApi="UPSIDE_DOWN_CAKE">
 
         <activity
-            android:name="com.infomaniak.lib.core.ui.WebViewActivity"
+            android:name="com.infomaniak.core.legacy.ui.WebViewActivity"
             android:windowSoftInputMode="adjustResize" />
 
     </application>
