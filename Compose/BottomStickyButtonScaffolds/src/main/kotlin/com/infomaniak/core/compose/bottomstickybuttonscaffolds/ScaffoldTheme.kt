@@ -17,8 +17,6 @@
  */
 package com.infomaniak.core.compose.bottomstickybuttonscaffolds
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
@@ -31,14 +29,15 @@ data class ScaffoldTheme(
     val stackedButtonVerticalPadding: Dp = Dp.Unspecified
 )
 
-val ScaffoldThemeDefault = ScaffoldTheme(
-    singlePaneMaxWidth = 800.dp,
-    stackedButtonVerticalPadding = Margin.Small
-)
-
-val LocalScaffoldTheme = staticCompositionLocalOf { ScaffoldThemeDefault }
-
-@Composable
-internal fun ProvideScaffoldTheme(content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalScaffoldTheme provides ScaffoldThemeDefault, content)
+object ScaffoldThemeDefault {
+    fun theme(
+        singlePaneMaxWidth: Dp = 800.dp,
+        stackedButtonVerticalPadding: Dp = Margin.Small
+    ) = ScaffoldTheme(
+        singlePaneMaxWidth = singlePaneMaxWidth,
+        stackedButtonVerticalPadding = stackedButtonVerticalPadding
+    )
 }
+
+val LocalScaffoldTheme = staticCompositionLocalOf { ScaffoldThemeDefault.theme() }
+
