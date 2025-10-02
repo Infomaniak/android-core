@@ -60,12 +60,12 @@ class InAppUpdateManager(
     ) { result ->
         viewModel.isUpdateBottomSheetShown = false
         val isUserWantingUpdate = result.resultCode == AppCompatActivity.RESULT_OK
-        viewModel.set(StoresSettingsRepository.Companion.IS_USER_WANTING_UPDATES_KEY, isUserWantingUpdate)
+        viewModel.set(StoresSettingsRepository.IS_USER_WANTING_UPDATES_KEY, isUserWantingUpdate)
         onUserChoice?.invoke(isUserWantingUpdate)
     }
 
-    private val onUpdateDownloaded = { viewModel.set(StoresSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY, true) }
-    private val onUpdateInstalled = { viewModel.set(StoresSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY, false) }
+    private val onUpdateDownloaded = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, true) }
+    private val onUpdateInstalled = { viewModel.set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false) }
 
     private var onUserChoice: ((Boolean) -> Unit)? = null
     private var onInstallStart: (() -> Unit)? = null
@@ -151,14 +151,8 @@ class InAppUpdateManager(
     override fun installDownloadedUpdate() {
 
         with(viewModel) {
-            set(
-                key = StoresSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY,
-                value = false,
-            )
-            set(
-                key = StoresSettingsRepository.Companion.APP_UPDATE_LAUNCHES_KEY,
-                value = StoresSettingsRepository.Companion.DEFAULT_APP_UPDATE_LAUNCHES,
-            )
+            set(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false)
+            set(StoresSettingsRepository.APP_UPDATE_LAUNCHES_KEY, StoresSettingsRepository.DEFAULT_APP_UPDATE_LAUNCHES)
         }
 
         onInstallStart?.invoke()

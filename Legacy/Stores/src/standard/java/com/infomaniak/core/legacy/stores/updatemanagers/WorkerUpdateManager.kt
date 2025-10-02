@@ -32,7 +32,7 @@ internal class WorkerUpdateManager(appContext: Context) {
 
     fun installDownloadedUpdate(onInstallFailure: (Exception) -> Unit, onInstallSuccess: () -> Unit) {
         coroutineScope.launch {
-            storesSettingsRepository.setValue(StoresSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY, false)
+            storesSettingsRepository.setValue(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY, false)
         }
         appUpdateManager.completeUpdate()
             .addOnSuccessListener { onInstallSuccess() }

@@ -46,7 +46,7 @@ class AppUpdateScheduler(
 
     override fun scheduleWorkIfNeeded() {
         CoroutineScope(Dispatchers.IO).launch {
-            if (storesSettingsRepository.getValue(StoresSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY)) {
+            if (storesSettingsRepository.getValue(StoresSettingsRepository.HAS_APP_UPDATE_DOWNLOADED_KEY)) {
                 SentryLog.d(TAG, "Work scheduled")
 
                 val workRequest = OneTimeWorkRequestBuilder<AppUpdateWorker>()
