@@ -37,12 +37,13 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import com.infomaniak.core.legacy.R
+import androidx.core.net.toUri
 
 object UtilsUi {
 
     fun Context.openUrl(url: String) {
         try {
-            Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+            Intent(Intent.ACTION_VIEW, url.toUri()).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }.also(::startActivity)
         } catch (activityNotFoundException: ActivityNotFoundException) {
