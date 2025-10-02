@@ -141,7 +141,7 @@ fun CardElement(
         modifier = when (elementPosition) {
             CardElementPosition.First -> modifier.virtualBorderTopLeftCorner(virtualCardState)
             CardElementPosition.Middle -> modifier
-            CardElementPosition.Last -> modifier.virtualBorderBottomLeftCorner(virtualCardState)
+            CardElementPosition.Last -> modifier.virtualBorderBottomRightCorner(virtualCardState)
         },
         shape = shape,
         colors = virtualCardState.colors,
@@ -155,7 +155,7 @@ fun Modifier.virtualBorderTopLeftCorner(borderState: VirtualCardState): Modifier
     onPlaced { borderState.mutable.topLeft = it.positionInParent() }
 }
 
-fun Modifier.virtualBorderBottomLeftCorner(borderState: VirtualCardState): Modifier = composed {
+fun Modifier.virtualBorderBottomRightCorner(borderState: VirtualCardState): Modifier = composed {
     DisposableEffect(Unit) { onDispose { borderState.mutable.size = Size.Zero } }
     onPlaced { borderState.mutable.size = it.positionInParent() + it.size }
 }
