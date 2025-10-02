@@ -21,6 +21,8 @@
     <string name="buttonApprove">Approuver</string>
     <string name="buttonDeny">Refuser</string>
     <string name="buttonModifyPassword">Modifier le mot de passe</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Cette connexion a déjà été traitée</string>
+    <string name="twoFactorAuthCheckOriginDescription">Vous n’êtes pas à l’origine de cette action ?\\nVérifiez vos appareils actifs et déconnectez ceux que vous ne reconnaissez pas.</string>
     <string name="twoFactorAuthConfirmationDescription">Confirmer cette connexion autorisera cet appareil à accéder à votre compte Infomaniak</string>
     <string name="twoFactorAuthConnectionAlreadyValidatedTitle">Cette connexion a déjà été validée depuis un autre appareil</string>
     <string name="twoFactorAuthConnectionExpiredTitle">Cette demande de connexion a expiré</string>
@@ -28,7 +30,11 @@
     <string name="twoFactorAuthConnectionRefusedTitle">Connexion Refusée</string>
     <string name="twoFactorAuthConnectionValidationDescription">Vous n’êtes pas à l’origine de cette validation ? Consultez l’activité de vos derniers appareils utilisés.</string>
     <string name="twoFactorAuthDeviceLabel">Appareil</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Cette demande de connexion a expiré</string>
+    <string name="twoFactorAuthGenericErrorDescription">Impossible de terminer l’opération.\\nRelancez la demande.</string>
     <string name="twoFactorAuthLocationLabel">Lieu</string>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Impossible de terminer l’opération.\\nVérifiez votre connexion et réessayez.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Pas de connexion internet</string>
     <string name="twoFactorAuthTryingToLogInTitle">Êtes-vous en train d’essayer de vous connecter ?</string>
     <string name="twoFactorAuthWhenLabel">Quand</string>
 </resources>
