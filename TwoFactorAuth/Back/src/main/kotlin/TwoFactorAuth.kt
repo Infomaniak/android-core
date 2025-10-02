@@ -40,9 +40,8 @@ interface TwoFactorAuth {
     suspend fun rejectChallenge(challengeUid: Uuid): Outcome
 
     sealed interface Outcome {
-        data object Success : Outcome
+        enum class Done : Outcome { Success, Expired, AlreadyActioned, Rejected; }
         sealed interface Issue : Outcome {
-            data object Expired : Issue
             data class ErrorResponse(val httpStatusCode: Int) : Issue
             data class Network(val exception: IOException) : Issue
             data class Unknown(val exception: Throwable) : Issue

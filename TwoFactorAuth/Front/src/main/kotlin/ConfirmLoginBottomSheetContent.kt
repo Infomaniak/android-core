@@ -21,10 +21,12 @@
 package com.infomaniak.core.twofactorauth.front
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,41 +38,48 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.basics.CallableState
-import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
+import com.infomaniak.core.compose.basics.rememberCallableState
+import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge
 import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Computer
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Phone
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Tablet
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.front.components.Button
 import com.infomaniak.core.twofactorauth.front.components.CardElement
 import com.infomaniak.core.twofactorauth.front.components.CardElementPosition
 import com.infomaniak.core.twofactorauth.front.components.CardKind
 import com.infomaniak.core.twofactorauth.front.components.SecurityTheme
-import com.infomaniak.core.twofactorauth.front.components.TwoFactorAuthAvatar
+import com.infomaniak.core.twofactorauth.front.components.VirtualCardState
 import com.infomaniak.core.twofactorauth.front.components.rememberVirtualCardState
 import com.infomaniak.core.twofactorauth.front.components.virtualCardHost
 import com.infomaniak.core.twofactorauth.front.elements.ShieldK
@@ -78,18 +87,16 @@ import com.infomaniak.core.twofactorauth.front.elements.lightSourceBehind
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import splitties.experimental.ExperimentalSplittiesApi
+import java.net.UnknownHostException
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 import kotlin.uuid.ExperimentalUuidApi
+import com.infomaniak.core.R as RCore
 
 @Composable
-fun ConfirmLoginBottomSheetContent(
-    attemptTimeMark: TimeMark,
-    connectionAttemptInfo: ConnectionAttemptInfo,
-    confirmRequest: CallableState<Boolean>,
-) = Surface(Modifier.fillMaxSize()) {
+fun ConfirmLoginBottomSheetContent(challenge: Challenge) = Surface(Modifier.fillMaxSize()) {
     Box(Modifier, contentAlignment = Alignment.Center) {
 
         val virtualCardState = rememberVirtualCardState(kind = if (isSystemInDarkTheme()) CardKind.Outlined else CardKind.Normal)
@@ -103,38 +110,192 @@ fun ConfirmLoginBottomSheetContent(
                 .verticalScroll(scrollState)
                 .padding(cardOuterPadding)
                 .virtualCardHost(virtualCardState),
-            verticalArrangement = Arrangement.Bottom
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.weight(1f))
+            CloseButton(onClick = challenge.dismiss, Modifier.align(Alignment.Start))
 
-            BrandedPrompt()
-
-            Spacer(Modifier.weight(1f))
-            //TODO[issue-blocked]: Replace line below with heightIn above once this is fixed:
-            // https://issuetracker.google.com/issues/294046936
-            Spacer(Modifier.height(16.dp))
-
-            CardElement(
-                virtualCardState,
-                Modifier.lightSourceBehind(maxWidth, cardOuterPadding),
-                elementPosition = CardElementPosition.First
-            ) {
-                Column(
-                    Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    AccountInfoContent(connectionAttemptInfo.targetAccount)
-                    HorizontalDivider()
-                    InfoElement(stringResource(R.string.twoFactorAuthWhenLabel)) { TimeAgoText(attemptTimeMark) }
-                    InfoElement(stringResource(R.string.twoFactorAuthDeviceLabel)) { DeviceRow(connectionAttemptInfo) }
-                    InfoElement(stringResource(R.string.twoFactorAuthLocationLabel)) { Text(connectionAttemptInfo.location) }
+            when (val state = challenge.state) {
+                is Challenge.State.ApproveOrReject, null -> {
+                    PendingChallenge(virtualCardState, maxWidth, cardOuterPadding, challenge, state)
                 }
-            }
-            CardElement(virtualCardState, Modifier.weight(1f).fillMaxWidth())
-            CardElement(virtualCardState, elementPosition = CardElementPosition.Last) {
-                ConfirmOrRejectRow(confirmRequest, Modifier.padding(16.dp))
+                is Challenge.State.Done -> ChallengeDone(
+                    outcome = state.data,
+                    close = challenge.dismiss
+                )
+                is Challenge.State.Issue -> ChallengeResponseIssue(
+                    outcome = state.data,
+                    close = challenge.dismiss,
+                    retry = state.retry
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun ColumnScope.ChallengeDone(outcome: Outcome.Done, close: () -> Unit) {
+    val iconResId: Int
+    val titleResId: Int
+    val descResId: Int
+    when (outcome) {
+        Outcome.Done.Success -> return // Not showing any confirmation screen, should be auto-dismissed.
+        Outcome.Done.Rejected -> {
+            iconResId = R.drawable.stop_hand_crossed_48
+            titleResId = R.string.twoFactorAuthConnectionRejectedTitle
+            descResId = R.string.twoFactorAuthConnectionRejectedDescription
+        }
+        Outcome.Done.Expired -> {
+            iconResId = R.drawable.clock_48
+            titleResId = R.string.twoFactorAuthExpiredErrorTitle
+            descResId = R.string.twoFactorAuthExpiredErrorDescription
+        }
+        Outcome.Done.AlreadyActioned -> {
+            iconResId = R.drawable.device_sync_48
+            titleResId = R.string.twoFactorAuthAlreadyProcessedErrorTitle
+            descResId = R.string.twoFactorAuthCheckOriginDescription
+        }
+    }
+    ChallengeResponseResult(
+        bigIconResId = iconResId,
+        titleResId = titleResId,
+        contentText = {
+            Text(text = stringResource(descResId))
+        },
+        close = close,
+        actionButton = if (outcome == Outcome.Done.Rejected) { { EditPasswordButton() } } else null
+    )
+}
+
+@Composable
+private fun EditPasswordButton() {
+    val uriHandler = LocalUriHandler.current
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { /*uriHandler.openUri(TODO())*/ },
+    ) { Text(stringResource(R.string.buttonEditPassword), overflow = TextOverflow.Ellipsis, maxLines = 1) }
+}
+
+@Composable
+private fun ColumnScope.ChallengeResponseIssue(
+    outcome: Outcome.Issue,
+    close: () -> Unit,
+    retry: () -> Unit
+) {
+    val titleResId: Int = when (outcome) {
+        is Outcome.Issue.ErrorResponse -> RCore.string.anErrorHasOccurred
+        is Outcome.Issue.Network -> R.string.twoFactorAuthNoNetworkErrorTitle
+        is Outcome.Issue.Unknown -> RCore.string.anErrorHasOccurred
+    }
+    ChallengeResponseResult(
+        bigIconResId = when (outcome) {
+            is Outcome.Issue.ErrorResponse -> R.drawable.error_48
+            is Outcome.Issue.Network -> R.drawable.no_signal_48
+            is Outcome.Issue.Unknown -> R.drawable.error_48
+        },
+        titleResId = titleResId,
+        contentText = {
+            val textResId = when (outcome) {
+                is Outcome.Issue.ErrorResponse -> R.string.twoFactorAuthGenericErrorDescription
+                is Outcome.Issue.Network -> R.string.twoFactorAuthNoNetworkErrorDescription
+                is Outcome.Issue.Unknown -> R.string.twoFactorAuthGenericErrorDescription
+            }
+            Text(text = stringResource(textResId))
+        },
+        close = close
+    ) {
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { retry() },
+        ) { Text(stringResource(RCore.string.buttonRetry), overflow = TextOverflow.Ellipsis, maxLines = 1) }
+    }
+}
+
+@Composable
+private fun ColumnScope.ChallengeResponseResult(
+    bigIconResId: Int,
+    titleResId: Int,
+    contentText: @Composable () -> Unit,
+    close: () -> Unit,
+    actionButton: (@Composable () -> Unit)? = null
+) {
+    Spacer(Modifier.height(16.dp))
+    Image(painterResource(bigIconResId), contentDescription = null, Modifier.size(48.dp))
+    Spacer(Modifier.height(32.dp))
+    Text(
+        text = stringResource(titleResId),
+        style = Typography.h1,
+        textAlign = TextAlign.Center
+    )
+    Spacer(Modifier.height(16.dp))
+    ProvideTextStyle(LocalTextStyle.current.copy(textAlign = TextAlign.Center)) {
+        contentText()
+    }
+    Spacer(Modifier.weight(2f))
+    actionButton?.let {
+        Spacer(Modifier.height(16.dp))
+        it()
+    }
+    Spacer(Modifier.height(16.dp))
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.filledTonalButtonColors(),
+        onClick = { close() },
+    ) { Text(stringResource(RCore.string.buttonClose), overflow = TextOverflow.Ellipsis, maxLines = 1) }
+}
+
+@Composable
+private fun ColumnScope.PendingChallenge(
+    virtualCardState: VirtualCardState,
+    maxWidth: Dp,
+    cardOuterPadding: Dp,
+    challenge: Challenge,
+    state: Challenge.State.ApproveOrReject?,
+) {
+
+    Spacer(Modifier.weight(1f))
+
+    BrandedPrompt()
+
+    Spacer(Modifier.weight(1f))
+    //TODO[issue-blocked]: Replace line below with heightIn above once this is fixed:
+    // https://issuetracker.google.com/issues/294046936
+    Spacer(Modifier.height(16.dp))
+
+    CardElement(
+        virtualCardState,
+        Modifier.lightSourceBehind(maxWidth, cardOuterPadding),
+        elementPosition = CardElementPosition.First
+    ) {
+        Column(
+            Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            AccountInfoContent(challenge.data.targetAccount)
+            HorizontalDivider()
+            InfoElement(stringResource(R.string.twoFactorAuthWhenLabel)) { TimeAgoText(challenge.attemptTimeMark) }
+            InfoElement(stringResource(R.string.twoFactorAuthDeviceLabel)) { DeviceRow(challenge.data) }
+            InfoElement(stringResource(R.string.twoFactorAuthLocationLabel)) { Text(challenge.data.location) }
+        }
+    }
+    CardElement(virtualCardState, Modifier.weight(1f).fillMaxWidth())
+    val confirmRequest = rememberCallableState<Boolean>()
+    LaunchedEffect(state) { state?.action(confirmRequest.awaitOneCall()) }
+    CardElement(virtualCardState, elementPosition = CardElementPosition.Last) {
+        ConfirmOrRejectRow(confirmRequest, Modifier.padding(16.dp))
+    }
+}
+
+@Composable
+private fun CloseButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(onClick = onClick, modifier) {
+        Icon(
+            Icons.Default.Close,
+            contentDescription = stringResource(RCore.string.buttonClose),
+        )
     }
 }
 
@@ -208,30 +369,6 @@ private fun BrandedPrompt() {
 }
 
 @Composable
-private fun AccountInfoContent(account: ConnectionAttemptInfo.TargetAccount) = Row(
-    modifier = Modifier.fillMaxWidth(),
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(8.dp)
-) {
-    TwoFactorAuthAvatar(
-        modifier = Modifier
-            .size(Dimens.bigAvatarSize)
-            .clip(CircleShape),
-        account = account
-    )
-    Column(Modifier.weight(1f)) {
-        Text(
-            text = account.fullName,
-            style = Typography.bodyMedium
-        )
-        Text(
-            text = account.email,
-            style = Typography.bodyRegular
-        )
-    }
-}
-
-@Composable
 private fun InfoElement(label: String, content: @Composable () -> Unit) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(label, style = Typography.labelRegular)
@@ -242,20 +379,83 @@ private fun InfoElement(label: String, content: @Composable () -> Unit) {
 }
 
 @Preview(fontScale = 1f)
+@Preview(fontScale = 1.6f, locale = "fr")
 @Preview(device = "id:Nexus One")
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
 @Preview(device = "spec:width=673dp,height=841dp")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
-@Preview(fontScale = 1.6f, locale = "fr")
 @Composable
 private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
     val scope = rememberCoroutineScope()
     val confirmRequest = remember {
         CallableState<Boolean>().also { scope.launch(start = CoroutineStart.UNDISPATCHED) { it.awaitOneCall() } }
     }
-    ConfirmLoginBottomSheetContent(
-        attemptTimeMark = TimeSource.Monotonic.markNow() + 5.seconds - 1.minutes,
-        connectionAttemptInfo = ConnectionAttemptInfo(
+    val state = Challenge.State.ApproveOrReject(confirmRequest)
+    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+}
+
+@Preview
+@Composable
+private fun ConfirmLoginBottomSheetContentMinuteAgoPreview() = SecurityTheme {
+    val state = Challenge.State.ApproveOrReject(CallableState())
+    ConfirmLoginBottomSheetContent(challengeForPreview(state, timeAgo = 1.minutes))
+}
+
+@Preview
+@Composable
+private fun ConfirmLoginBottomSheetContentMinutesAgoPreview() = SecurityTheme {
+    val state = Challenge.State.ApproveOrReject(CallableState())
+    ConfirmLoginBottomSheetContent(challengeForPreview(state, timeAgo = 4.minutes))
+}
+
+@Preview(locale = "fr")
+@Preview
+@Preview(device = "spec:width=673dp,height=841dp")
+@Composable
+private fun ChallengeExpiredPreview() = SecurityTheme {
+    val state = Challenge.State.Done(Outcome.Done.Expired)
+    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+}
+
+@Preview(locale = "fr")
+@Preview
+@Composable
+private fun ChallengeAlreadyActionedPreview() = SecurityTheme {
+    val state = Challenge.State.Done(Outcome.Done.AlreadyActioned)
+    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+}
+
+@Preview(locale = "fr")
+@Preview
+@Composable
+private fun ChallengePromptCredentialsUpdatePreview() = SecurityTheme {
+    val state = Challenge.State.Done(Outcome.Done.Rejected)
+    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+}
+
+@Preview(locale = "fr")
+@Preview
+@Composable
+private fun ChallengeResponseIssuePreview() = SecurityTheme {
+    val state = Challenge.State.Issue(Outcome.Issue.ErrorResponse(503), retry = {})
+    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+}
+
+@Preview(locale = "fr")
+@Preview
+@Composable
+private fun ChallengeNetworkIssuePreview() = SecurityTheme {
+    val state = Challenge.State.Issue(Outcome.Issue.Network(UnknownHostException()), retry = {})
+    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+}
+
+fun challengeForPreview(
+    state: Challenge.State?,
+    timeAgo: Duration = 57.seconds,
+    dismiss: () -> Unit = {},
+): Challenge {
+    return Challenge(
+        data = ConnectionAttemptInfo(
             targetAccount = ConnectionAttemptInfo.TargetAccount(
                 avatarUrl = "https://picsum.photos/id/140/200/200",
                 fullName = "Ellen Ripley",
@@ -267,6 +467,8 @@ private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
             deviceType = Tablet,
             location = "Genève, Suisse",
         ),
-        confirmRequest = confirmRequest
+        attemptTimeMark = TimeSource.Monotonic.markNow() - timeAgo,
+        dismiss = dismiss,
+        state = state,
     )
 }

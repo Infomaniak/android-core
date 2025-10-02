@@ -15,53 +15,71 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalUuidApi::class)
+@file:OptIn(ExperimentalUuidApi::class, ExperimentalSplittiesApi::class)
 
 package com.infomaniak.core.twofactorauth.front
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.compose.basics.CallableState
 import com.infomaniak.core.compose.basics.WithLatestNotNull
-import com.infomaniak.core.compose.basics.rememberCallableState
 import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel
+import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.front.components.SecurityTheme
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
+import splitties.coroutines.raceOf
+import splitties.experimental.ExperimentalSplittiesApi
+import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ConfirmLoginAutoManagedBottomSheet(
     twoFactorAuthViewModel: AbstractTwoFactorAuthViewModel
 ) = SecurityTheme {
-    val challenge by twoFactorAuthViewModel.challengeToResolve.collectAsState()
-    ConfirmLoginAutoManagedBottomSheet(challenge)
+    val challengeState = twoFactorAuthViewModel.challengeToResolve.collectAsState()
+    ConfirmLoginAutoManagedBottomSheet(challengeState)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ConfirmLoginAutoManagedBottomSheet(challenge: AbstractTwoFactorAuthViewModel.Challenge?) {
+private fun ConfirmLoginAutoManagedBottomSheet(challengeState: State<Challenge?>) {
+    // Must be a state read rather than a simple parameter, to ensure that the confirmValueChange lambda
+    // below (remembered by default) can read an up to date value (and not the one from the first composition).
+    val challenge: Challenge? by challengeState
 
-    val sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState: SheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = { if (it == SheetValue.Hidden) challenge == null else true }
+    )
     var showTheSheet by remember { mutableStateOf(false) }
 
-    val confirmRequest = rememberCallableState<Boolean>()
-
-    val challengeAction = challenge?.action
-    LaunchedEffect(challengeAction) {
-        val action = challengeAction ?: return@LaunchedEffect
-        action(confirmRequest.awaitOneCall())
-    }
     LaunchedEffect(challenge) {
         when (challenge) {
             null -> {
@@ -72,17 +90,15 @@ private fun ConfirmLoginAutoManagedBottomSheet(challenge: AbstractTwoFactorAuthV
         }
     }
 
-    if (showTheSheet) challenge?.WithLatestNotNull { challenge ->
+    if (showTheSheet) challenge.WithLatestNotNull { challenge ->
         ModalBottomSheet(
-            onDismissRequest = { challenge.action?.invoke(null) },
+            onDismissRequest = challenge.dismiss,
+            dragHandle = null,
             tonalElevation = 1.dp,
+            contentWindowInsets = { WindowInsets.systemBars },
             sheetState = sheetState,
         ) {
-            ConfirmLoginBottomSheetContent(
-                attemptTimeMark = challenge.attemptTimeMark,
-                connectionAttemptInfo = challenge.data,
-                confirmRequest = confirmRequest
-            )
+            ConfirmLoginBottomSheetContent(challenge)
         }
     }
 }
@@ -94,4 +110,52 @@ private suspend fun SheetState.hideCatching(): Boolean = try {
 } catch (_: CancellationException) { // Thrown when the user swipes the sheet during hiding.
     currentCoroutineContext().ensureActive()
     false
+}
+
+@Preview
+@Composable
+private fun ConfirmLoginAutoManagedBottomSheetPreview() = SecurityTheme {
+    val state = produceState<Challenge?>(initialValue = null) {
+        var iteration = 0
+        while (true) {
+            iteration++
+            val approval = CallableState<Boolean>()
+            val dismissal = Job()
+            val dismiss = fun () { dismissal.complete() }
+            value = challengeForPreview(Challenge.State.ApproveOrReject(approval), dismiss = dismiss)
+            raceOf({ dismissal.join() }, {
+                val nextState = when (iteration % 3) {
+                    1 -> {
+                        delay(2.seconds)
+                        Challenge.State.Done(Outcome.Done.AlreadyActioned)
+                    }
+                    2 -> {
+                        delay(5.seconds)
+                        Challenge.State.Done(Outcome.Done.Expired)
+                    }
+                    else -> awaitCancellation()
+                }
+                value = challengeForPreview(state = nextState, dismiss = dismiss)
+                awaitCancellation()
+            }, {
+                val rejected = !approval.awaitOneCall()
+                value = challengeForPreview(state = null, dismiss = dismiss)
+                delay(.5.seconds)
+                if (rejected) {
+                    value = challengeForPreview(
+                        state = Challenge.State.Done(Outcome.Done.Rejected),
+                        dismiss = dismiss
+                    )
+                    awaitCancellation()
+                }
+            })
+            value = null
+            delay(2.seconds)
+        }
+    }
+    // We have a black background to hide the ugly-ish PreviewActivity that doesn't support edge-to-edge.
+    //TODO[issue-blocked]: Remove when https://issuetracker.google.com/issues/441665274 is addressed.
+    Box(Modifier.background(Color.Black).fillMaxSize()) {
+        ConfirmLoginAutoManagedBottomSheet(state)
+    }
 }
