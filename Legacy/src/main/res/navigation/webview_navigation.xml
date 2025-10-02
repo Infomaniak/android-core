@@ -23,7 +23,7 @@
 
     <activity
         android:id="@+id/webViewActivity"
-        android:name="com.infomaniak.lib.core.ui.WebViewActivity"
+        android:name="com.infomaniak.core.legacy.ui.WebViewActivity"
         android:label="WebViewActivity"
         tools:layout="@layout/activity_webview">
 

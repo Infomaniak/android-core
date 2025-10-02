@@ -55,7 +55,7 @@
             android:orientation="vertical"
             android:padding="@dimen/marginStandard">
 
-            <com.infomaniak.lib.core.views.EndIconTextInputLayout
+            <com.infomaniak.core.legacy.views.EndIconTextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,9 +69,9 @@
                     android:inputType="none"
                     app:simpleItems="@array/bugTrackerTypeArray" />
 
-            </com.infomaniak.lib.core.views.EndIconTextInputLayout>
+            </com.infomaniak.core.legacy.views.EndIconTextInputLayout>
 
-            <com.infomaniak.lib.core.views.EndIconTextInputLayout
+            <com.infomaniak.core.legacy.views.EndIconTextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                     android:inputType="none"
                     app:simpleItems="@array/bugTrackerPriorityArray" />
 
-            </com.infomaniak.lib.core.views.EndIconTextInputLayout>
+            </com.infomaniak.core.legacy.views.EndIconTextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/subjectField"
