@@ -56,7 +56,7 @@ fun BottomStickyButtonScaffold(
 ) {
     SinglePaneScaffold(
         modifier = modifier,
-        maxScreenWidth = maxPaneWidth,
+        maxPaneWidth = maxPaneWidth,
         snackbarHost = { snackbarHostState?.let { SnackbarHost(hostState = it) } },
         topBar = topBar,
     ) { contentPaddings ->
