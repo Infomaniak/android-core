@@ -51,11 +51,11 @@ class TwoFactorAuthTestImpl(
 
     override suspend fun approveChallenge(challengeUid: Uuid): TwoFactorAuth.Outcome {
         delay(1.5.seconds)
-        return TwoFactorAuth.Outcome.Success
+        return TwoFactorAuth.Outcome.Done.Success
     }
 
     override suspend fun rejectChallenge(challengeUid: Uuid): TwoFactorAuth.Outcome {
         delay(1.5.seconds)
-        return TwoFactorAuth.Outcome.Success
+        return TwoFactorAuth.Outcome.Done.Success
     }
 }

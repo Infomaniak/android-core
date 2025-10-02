@@ -135,16 +135,18 @@ internal class TwoFactorAuthImpl(
         SentryLog.i(TAG, "Trying to $actionVerb the challenge ($challengeUid)")
         val response = operation()
         when {
-            //TODO: Handle expired. Will it be http 410 Gone?
             response.status.isSuccess() -> {
                 SentryLog.i(TAG, "Attempt to $actionVerb the challenge succeeded! ($challengeUid)")
-                Outcome.Success
+                Outcome.Done.Success
             }
-            else -> {
-                val httpCode = response.status.value
-                val bodyString = runCatching { response.bodyAsText() }.cancellable().getOrNull()
-                SentryLog.e(TAG, "Failed to $actionVerb the challenge [http $httpCode] ($challengeUid) $bodyString")
-                Outcome.Issue.ErrorResponse(httpCode)
+            else -> when (val httpCode = response.status.value) {
+                410 -> Outcome.Done.Expired
+                404 -> Outcome.Done.AlreadyActioned
+                else -> {
+                    val bodyString = runCatching { response.bodyAsText() }.cancellable().getOrNull()
+                    SentryLog.e(TAG, "Failed to $actionVerb the challenge [http $httpCode] ($challengeUid) $bodyString")
+                    Outcome.Issue.ErrorResponse(httpCode)
+                }
             }
         }
     }.cancellable().getOrElse { t ->
