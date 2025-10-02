@@ -44,8 +44,8 @@ class TwoFactorAuthTestImpl(
             ),
             type = RemoteChallenge.Type.Approval,
             location = "Geneva, Switzerland",
-            createdAt = (System.currentTimeMillis() / 1000L) - 58L,
-            expiresAt = (System.currentTimeMillis() / 1000L) + 300L
+            createdAt = System.currentTimeMillis() / 1000L - 58L,
+            expiresAt = System.currentTimeMillis() / 1000L + 300L
         )
     }
 
