@@ -21,14 +21,20 @@
     <string name="buttonApprove">Approve</string>
     <string name="buttonDeny">Deny</string>
     <string name="buttonModifyPassword">Modify password</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">This request has already been processed</string>
+    <string name="twoFactorAuthCheckOriginDescription">You didn’t initiate this action? Check your active devices, and disconnect the ones you don’t recognize.</string>
     <string name="twoFactorAuthConfirmationDescription">Confirming this login attempt will allow that device to access your Infomaniak account</string>
     <string name="twoFactorAuthConnectionAlreadyValidatedTitle">This connection has already been validated from another device</string>
     <string name="twoFactorAuthConnectionExpiredTitle">This connection request has expired</string>
     <string name="twoFactorAuthConnectionRefusedDescription">You have refused a login attempt. To secure your account, change your password. If you are the source of this attempt, try logging in again.</string>
     <string name="twoFactorAuthConnectionRefusedTitle">Connection Refused</string>
-    <string name="twoFactorAuthConnectionValidationDescription">You didn\'t initiate this validation? Check the activity of your last used devices.</string>
+    <string name="twoFactorAuthConnectionValidationDescription">You didn’t initiate this validation? Check the activity of your last used devices.</string>
     <string name="twoFactorAuthDeviceLabel">Device</string>
+    <string name="twoFactorAuthExpiredErrorTitle">This connection request has expired</string>
+    <string name="twoFactorAuthGenericErrorDescription">Unable to complete the operation.\\nPlease try again.</string>
     <string name="twoFactorAuthLocationLabel">Location</string>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Unable to complete the operation.\\nCheck your connection and try again.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">No network connection</string>
     <string name="twoFactorAuthTryingToLogInTitle">Are you trying to login?</string>
     <string name="twoFactorAuthWhenLabel">When</string>
 </resources>
