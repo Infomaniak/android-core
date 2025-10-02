@@ -92,6 +92,7 @@ import java.io.Serializable
 import java.text.Normalizer
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
+import androidx.core.net.toUri
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
 
@@ -205,7 +206,7 @@ fun Context.startAppSettingsConfig() {
     Intent().apply {
         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         addCategory(Intent.CATEGORY_DEFAULT)
-        data = Uri.parse("package:$packageName")
+        data = "package:$packageName".toUri()
     }.also(::startActivity)
 }
 

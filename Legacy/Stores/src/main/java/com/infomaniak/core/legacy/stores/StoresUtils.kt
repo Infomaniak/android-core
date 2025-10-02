@@ -29,6 +29,7 @@ import com.infomaniak.core.legacy.stores.updaterequired.UpdateRequiredActivity
 import com.infomaniak.core.legacy.stores.updaterequired.data.api.ApiRepositoryStores
 import com.infomaniak.core.legacy.stores.updaterequired.data.models.AppVersion
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 
 internal interface StoresUtils {
 
@@ -59,9 +60,9 @@ internal interface StoresUtils {
     // TODO: When the Stores module will be moved from Legacy to the new Core, we'll be able to remove this function.
     fun Context.goToPlayStore(appPackageName: String = packageName) {
         try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+            startActivity(Intent(Intent.ACTION_VIEW, "market://details?id=$appPackageName".toUri()))
         } catch (_: ActivityNotFoundException) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+            startActivity(Intent(Intent.ACTION_VIEW, "https://play.google.com/store/apps/details?id=$appPackageName".toUri()))
         }
     }
     //endregion

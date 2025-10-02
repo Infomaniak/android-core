@@ -25,6 +25,7 @@ import com.infomaniak.core.extensions.appName
 import com.infomaniak.core.extensions.appVersionName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
+import androidx.core.net.toUri
 
 object DownloadManagerUtils {
 
@@ -43,13 +44,13 @@ object DownloadManagerUtils {
         mimeType: String?,
         userAgent: String,
         extraHeaders: Iterable<Pair<String, String>> = emptySet(),
-    ): Request = Request(Uri.parse(url)).also { req ->
-        req.setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
-        req.setTitle(nameWithoutProblematicChars)
-        req.setDescription(appName)
+    ): Request = Request(url.toUri()).also { request ->
+        request.setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
+        request.setTitle(nameWithoutProblematicChars)
+        request.setDescription(appName)
         Dispatchers.IO {
             try {
-                req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
             } catch (e: IllegalStateException) {
                 // The call above tries to create the directory if it doesn't exist,
                 // and throws an `IllegalStateException` if its attempt at creating the directory fails…
@@ -57,13 +58,13 @@ object DownloadManagerUtils {
                 // like the DownloadManager app creating it in parallel, just after the `exists()` check,
                 // and before the `mkdirs()` call tries to create the directory.
                 // That's why we try once more if that case happens.
-                req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
             }
         }
-        req.setMimeType(mimeType)
-        req.addHeaders(userAgent, extraHeaders)
+        request.setMimeType(mimeType)
+        request.addHeaders(userAgent, extraHeaders)
 
-        req.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        request.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
     }
 
     private fun Request.addHeaders(userAgent: String, extraHeaders: Iterable<Pair<String, String>>) {
