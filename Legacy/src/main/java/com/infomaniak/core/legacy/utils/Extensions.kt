@@ -38,6 +38,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.WindowManager.LayoutParams
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
@@ -243,31 +244,20 @@ fun Context.isNightModeEnabled(): Boolean {
     return resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
 
-// TODO: Fix deprecated
+@Suppress("DEPRECATION")
 fun Window.lightStatusBar(enabled: Boolean) {
-    // TODO: DOESN'T WORK
-    // if (SDK_INT >= 30) {
-    //     if (enabled) {
-    //         insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
-    //     } else {
-    //         insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
-    //     }
-    // } else {
-    if (enabled) {
-        decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    if (SDK_INT >= 30) {
+        if (enabled) {
+            insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
+        } else {
+            insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
+        }
     } else {
-        decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-    }
-    // }
-}
-
-// TODO: Fix deprecated
-fun Window.lightNavigationBar(enabled: Boolean) {
-    // TODO Android 11
-    if (enabled) {
-        decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-    } else {
-        decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+        if (enabled) {
+            decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+        }
     }
 }
 
