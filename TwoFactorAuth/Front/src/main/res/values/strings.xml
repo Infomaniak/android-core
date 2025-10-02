@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="twoFactorAuthJustNowLabel">Just now</string>
     <string name="buttonApprove">Approve</string>
     <string name="buttonDeny">Deny</string>
     <string name="buttonModifyPassword">Modify password</string>
