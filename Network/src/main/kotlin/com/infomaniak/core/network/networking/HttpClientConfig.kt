@@ -40,6 +40,7 @@ object HttpClientConfig {
         if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
         addInterceptor(GZipInterceptor())
         addInterceptor(SentryOkHttpInterceptor(captureFailedRequests = true))
+        addInterceptor(UrlTraceInterceptor())
 
         customInterceptors?.forEach(::addInterceptor)
     }
