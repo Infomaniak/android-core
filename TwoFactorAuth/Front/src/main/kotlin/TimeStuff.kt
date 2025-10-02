@@ -2,16 +2,20 @@
 
 package com.infomaniak.core.twofactorauth.front
 
+import android.content.res.Resources
+import android.text.format.DateUtils
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.ui.platform.LocalResources
+import com.infomaniak.core.time.timeToNextMinute
 import kotlinx.coroutines.delay
 import splitties.coroutines.repeatWhileActive
 import splitties.experimental.ExperimentalSplittiesApi
-import com.infomaniak.core.time.timeToNextMinute
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.TimeMark
 
 /*
@@ -41,23 +45,22 @@ fun TimeAgoText(timeMark: TimeMark) {
 @Composable
 fun TimeMark.minutesAgoState(): State<String> {
     var now = elapsedNow()
-    return produceState(initialValue = now.elapsedTimePerMinuteFormatted()) {
+    val resources = LocalResources.current
+    return produceState(initialValue = now.elapsedTimePerMinuteFormatted(resources)) {
         repeatWhileActive {
             delay(now.timeToNextMinute())
             //TODO: Race with next onStart
             now = elapsedNow()
-            value = now.elapsedTimePerMinuteFormatted()
+            value = now.elapsedTimePerMinuteFormatted(resources)
         }
     }
 }
 
-fun Duration.elapsedTimePerMinuteFormatted(): String {
-    val minutes = inWholeMinutes
-    return if (minutes == 0L) {
-        "Just now"
-    } else if (minutes < 0) {
-        "Dans $minutes minutes"
-    } else {
-        "Il y a $minutes minutes"
-    }
+fun Duration.elapsedTimePerMinuteFormatted(resources: Resources): String = when (inWholeMinutes) {
+    0L -> resources.getString(R.string.twoFactorAuthJustNowLabel)
+    else -> DateUtils.getRelativeTimeSpanString(
+        /* time = */ 0L,
+        /* now = */ inWholeMilliseconds,
+        /* minResolution = */ 1.minutes.inWholeMilliseconds,
+    ).toString()
 }
