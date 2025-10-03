@@ -29,7 +29,6 @@ import android.content.res.Resources
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
@@ -53,7 +52,7 @@ import androidx.annotation.StyleRes
 import androidx.annotation.StyleableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle.Event
@@ -93,7 +92,6 @@ import java.io.Serializable
 import java.text.Normalizer
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
-import androidx.core.net.toUri
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
 
@@ -235,10 +233,6 @@ fun Exception.isSerializationException(): Boolean {
 }
 
 fun String.firstOrEmpty(): String = if (isNotEmpty()) first().toString() else ""
-
-fun Window.toggleEdgeToEdge(enabled: Boolean) {
-    WindowCompat.setDecorFitsSystemWindows(this, !enabled)
-}
 
 fun Context.isNightModeEnabled(): Boolean {
     return resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
