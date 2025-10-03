@@ -29,7 +29,6 @@ import android.content.res.Resources
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
@@ -38,6 +37,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.WindowManager.LayoutParams
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
@@ -52,7 +52,7 @@ import androidx.annotation.StyleRes
 import androidx.annotation.StyleableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle.Event
@@ -92,7 +92,6 @@ import java.io.Serializable
 import java.text.Normalizer
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
-import androidx.core.net.toUri
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
 
@@ -235,39 +234,24 @@ fun Exception.isSerializationException(): Boolean {
 
 fun String.firstOrEmpty(): String = if (isNotEmpty()) first().toString() else ""
 
-fun Window.toggleEdgeToEdge(enabled: Boolean) {
-    WindowCompat.setDecorFitsSystemWindows(this, !enabled)
-}
-
 fun Context.isNightModeEnabled(): Boolean {
     return resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
 
-// TODO: Fix deprecated
+@Suppress("DEPRECATION")
 fun Window.lightStatusBar(enabled: Boolean) {
-    // TODO: DOESN'T WORK
-    // if (SDK_INT >= 30) {
-    //     if (enabled) {
-    //         insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
-    //     } else {
-    //         insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
-    //     }
-    // } else {
-    if (enabled) {
-        decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    if (SDK_INT >= 30) {
+        if (enabled) {
+            insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
+        } else {
+            insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
+        }
     } else {
-        decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-    }
-    // }
-}
-
-// TODO: Fix deprecated
-fun Window.lightNavigationBar(enabled: Boolean) {
-    // TODO Android 11
-    if (enabled) {
-        decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-    } else {
-        decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+        if (enabled) {
+            decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+        }
     }
 }
 
