@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Compose:MaterialThemeFromXml"))
     implementation(project(":Core:KSuite"))
+    implementation(project(":Core:Network")) // To access API URL
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)

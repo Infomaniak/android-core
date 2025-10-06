@@ -19,8 +19,8 @@ package com.infomaniak.core.auth.api
 
 import com.google.gson.JsonParser
 import com.infomaniak.core.auth.AuthConfiguration
-import com.infomaniak.core.auth.BuildConfig
 import com.infomaniak.core.auth.TokenInterceptorListener
+import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.api.ApiController.RefreshTokenException
 import com.infomaniak.core.network.api.ApiController.gson
 import com.infomaniak.core.network.networking.HttpClient
@@ -47,7 +47,7 @@ object ApiController {
         if (AuthConfiguration.accessType == null) formBuilder.addFormDataPart("duration", "infinite")
 
         val request = Request.Builder()
-            .url("${BuildConfig.LOGIN_ENDPOINT_URL}token")
+            .url("${LOGIN_ENDPOINT_URL}token")
             .post(formBuilder.build())
             .build()
 

@@ -15,20 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.inappupdate.updaterequired.data.api
+package com.infomaniak.core.network
 
-import com.infomaniak.core.inappupdate.StoreUtils
-import com.infomaniak.core.inappupdate.updaterequired.data.models.AppVersion.Platform
-import com.infomaniak.core.network.INFOMANIAK_API_V1
+sealed class ApiEnvironment(open val host: String) {
+    data object Prod : ApiEnvironment("infomaniak.com")
+    data object PreProd : ApiEnvironment("preprod.dev.infomaniak.ch")
+    data class Custom(override val host: String) : ApiEnvironment(host)
 
-object ApiRoutesStores {
+    companion object {
+        private var sealed = false
 
-    fun appVersion(appName: String): String {
-        val store = StoreUtils.REQUIRED_UPDATE_STORE.apiValue
-        val platform = Platform.ANDROID.apiValue
-
-        val parameters = "?only=min_version,published_versions.tag&filter_versions[]=production"
-
-        return "${INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName$parameters"
+        var current: ApiEnvironment = Prod
+            get() = synchronized(Companion) {
+                sealed = true
+                field
+            }
+            set(value) = synchronized(Companion) {
+                check(sealed.not()) { "Changing ApiEnvironment.current after first read is forbidden." }
+                field = value
+            }
     }
 }

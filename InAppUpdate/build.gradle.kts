@@ -17,8 +17,6 @@ android {
     defaultConfig {
         minSdk = coreMinSdk
 
-        buildConfigField("String", "INFOMANIAK_API_V1", "\"https://api.infomaniak.com/1\"")
-
         consumerProguardFiles("consumer-rules.pro")
     }
 

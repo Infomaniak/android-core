@@ -17,11 +17,14 @@
  */
 package com.infomaniak.core.ksuite.myksuite.ui.network
 
+import com.infomaniak.core.network.ApiEnvironment
+
 object ApiRoutes {
 
-    const val MANAGER_URL = "https://manager.infomaniak.com/v3/ng/home"
+    private val host = ApiEnvironment.current.host
+    val MANAGER_URL = "https://manager.$host/v3/ng/home"
 
-    private const val BASE_URL = "https://api.infomaniak.com"
+    private val BASE_URL = "https://api.$host"
 
     fun myKSuiteData() = "$BASE_URL/1/my_ksuite/current?with=drive,mail"
 }
