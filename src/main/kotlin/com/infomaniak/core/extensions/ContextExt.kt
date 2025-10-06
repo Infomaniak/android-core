@@ -23,7 +23,6 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -44,7 +43,10 @@ fun Context.openUrl(url: String) {
     startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
 }
 
-fun Context.goToPlayStore(appPackageName: String = packageName) {
+/**
+ * Historically, `market://` is only for the Google PlayStore, but F-Droid handles it too.
+ */
+fun Context.goToAppStore(appPackageName: String = packageName) {
     try {
         startActivity(Intent(Intent.ACTION_VIEW, "market://details?id=$appPackageName".toUri()))
     } catch (_: ActivityNotFoundException) {

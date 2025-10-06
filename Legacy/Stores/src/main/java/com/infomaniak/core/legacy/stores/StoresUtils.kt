@@ -58,7 +58,10 @@ internal interface StoresUtils {
 
     //region Context Extensions
     // TODO: When the Stores module will be moved from Legacy to the new Core, we'll be able to remove this function.
-    fun Context.goToPlayStore(appPackageName: String = packageName) {
+    /**
+     * Historically, `market://` is only for the Google PlayStore, but F-Droid handles it too.
+     */
+    fun Context.goToAppStore(appPackageName: String = packageName) {
         try {
             startActivity(Intent(Intent.ACTION_VIEW, "market://details?id=$appPackageName".toUri()))
         } catch (_: ActivityNotFoundException) {
