@@ -10,8 +10,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.platform.LocalResources
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.infomaniak.core.isStartedFlow
 import com.infomaniak.core.time.timeToNextMinute
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import splitties.coroutines.repeatWhileActive
 import splitties.experimental.ExperimentalSplittiesApi
 import kotlin.time.Duration
@@ -46,12 +49,14 @@ fun TimeAgoText(timeMark: TimeMark) {
 fun TimeMark.minutesAgoState(): State<String> {
     var now = elapsedNow()
     val resources = LocalResources.current
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     return produceState(initialValue = now.elapsedTimePerMinuteFormatted(resources)) {
-        repeatWhileActive {
-            delay(now.timeToNextMinute())
-            //TODO: Race with next onStart
-            now = elapsedNow()
-            value = now.elapsedTimePerMinuteFormatted(resources)
+        lifecycle.isStartedFlow().collectLatest { isStarted ->
+            if (isStarted) repeatWhileActive {
+                now = elapsedNow()
+                value = now.elapsedTimePerMinuteFormatted(resources)
+                delay(now.timeToNextMinute())
+            }
         }
     }
 }
