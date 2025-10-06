@@ -18,6 +18,7 @@
 package com.infomaniak.core.ksuite.myksuite.ui.screens
 
 import android.content.res.Configuration
+import android.os.Build.VERSION
 import android.os.Parcelable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -35,14 +36,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.DialogWindowProvider
 import com.infomaniak.core.compose.basics.ButtonType
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
@@ -61,7 +66,13 @@ fun MyKSuiteUpgradeBottomSheet(
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismissRequest: () -> Unit,
 ) {
-    ModalBottomSheet(onDismissRequest, modifier, sheetState) {
+    ModalBottomSheet(onDismissRequest, modifier, sheetState, scrimColor = Color.Transparent) {
+        (LocalView.current.parent as? DialogWindowProvider)?.window?.let { window ->
+            LaunchedEffect(Unit) {
+                if (VERSION.SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
+            }
+        }
+
         UpgradeBottomSheetContent(app, onDismissRequest)
     }
 }
