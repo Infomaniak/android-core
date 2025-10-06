@@ -27,7 +27,7 @@ import androidx.navigation.navArgs
 import com.google.android.material.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
-import com.infomaniak.core.legacy.stores.StoreUtils.goToPlayStore
+import com.infomaniak.core.legacy.stores.StoreUtils.goToAppStore
 import com.infomaniak.core.legacy.stores.databinding.ActivityUpdateRequiredBinding
 import com.infomaniak.core.legacy.stores.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.legacy.utils.clearStack
@@ -51,7 +51,7 @@ class UpdateRequiredActivity : AppCompatActivity() {
             mustRequireImmediateUpdate = true,
             onInstallFailure = {
                 showToast(RCore.string.errorUpdateInstall)
-                goToPlayStore()
+                goToAppStore()
             },
         )
 

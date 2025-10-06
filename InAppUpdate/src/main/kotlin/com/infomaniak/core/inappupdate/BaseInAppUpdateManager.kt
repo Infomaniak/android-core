@@ -22,7 +22,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.infomaniak.core.extensions.goToPlayStore
+import com.infomaniak.core.extensions.goToAppStore
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.APP_UPDATE_LAUNCHES_KEY
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.DEFAULT_APP_UPDATE_LAUNCHES
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY
@@ -63,7 +63,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     open fun installDownloadedUpdate() = Unit
 
     // TODO: What about the F-Droid variant?
-    open fun requireUpdate(onFailure: ((Exception) -> Unit)? = null) = activity.goToPlayStore()
+    open fun requireUpdate(onFailure: ((Exception) -> Unit)? = null) = activity.goToAppStore()
 
     open fun init(
         isUpdateRequired: Boolean = false,
