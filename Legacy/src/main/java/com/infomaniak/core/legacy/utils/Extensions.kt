@@ -234,27 +234,6 @@ fun Exception.isSerializationException(): Boolean {
 
 fun String.firstOrEmpty(): String = if (isNotEmpty()) first().toString() else ""
 
-fun Context.isNightModeEnabled(): Boolean {
-    return resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-}
-
-@Suppress("DEPRECATION")
-fun Window.lightStatusBar(enabled: Boolean) {
-    if (SDK_INT >= 30) {
-        if (enabled) {
-            insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
-        } else {
-            insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
-        }
-    } else {
-        if (enabled) {
-            decorView.systemUiVisibility = decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        } else {
-            decorView.systemUiVisibility = decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-        }
-    }
-}
-
 fun View.hideKeyboard() {
     (context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(this.windowToken, 0)
 }
