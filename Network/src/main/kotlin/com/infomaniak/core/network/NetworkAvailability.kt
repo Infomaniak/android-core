@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -71,7 +72,7 @@ class NetworkAvailability(private val context: Context, private val ioDispatcher
         registerNetworkCallback(connectivityManager, callback, ::send)
 
         awaitClose { unregisterNetworkCallback(connectivityManager, callback) }
-    }
+    }.conflate()
 
     private suspend fun registerNetworkCallback(
         connectivityManager: ConnectivityManager,
