@@ -17,9 +17,9 @@
  */
 package com.infomaniak.core.legacy.stores.updaterequired.data.api
 
-import com.infomaniak.core.legacy.BuildConfig
 import com.infomaniak.core.legacy.stores.StoreUtils
 import com.infomaniak.core.legacy.stores.updaterequired.data.models.AppVersion.Platform
+import com.infomaniak.core.network.INFOMANIAK_API_V1
 
 object ApiRoutesStores {
 
@@ -29,6 +29,6 @@ object ApiRoutesStores {
 
         val parameters = "?only=min_version,published_versions.tag&filter_versions[]=production"
 
-        return "${BuildConfig.INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName$parameters"
+        return "${INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName$parameters"
     }
 }

@@ -17,8 +17,8 @@
  */
 package com.infomaniak.core.legacy.api
 
-import com.infomaniak.core.legacy.BuildConfig.INFOMANIAK_API
-import com.infomaniak.core.legacy.BuildConfig.INFOMANIAK_API_V1
+import com.infomaniak.core.network.INFOMANIAK_API
+import com.infomaniak.core.network.INFOMANIAK_API_V1
 
 object ApiRoutesCore {
 

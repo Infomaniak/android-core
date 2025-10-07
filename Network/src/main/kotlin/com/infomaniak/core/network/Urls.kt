@@ -15,20 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.inappupdate.updaterequired.data.api
+package com.infomaniak.core.network
 
-import com.infomaniak.core.inappupdate.StoreUtils
-import com.infomaniak.core.inappupdate.updaterequired.data.models.AppVersion.Platform
-import com.infomaniak.core.network.INFOMANIAK_API_V1
+private val host = ApiEnvironment.current.host
 
-object ApiRoutesStores {
+val LOGIN_ENDPOINT_URL = "https://login.$host/"
+val INFOMANIAK_API = "https://api.$host/2/"
+val INFOMANIAK_API_V1 = "https://api.$host/1"
 
-    fun appVersion(appName: String): String {
-        val store = StoreUtils.REQUIRED_UPDATE_STORE.apiValue
-        val platform = Platform.ANDROID.apiValue
+val AUTOLOG_URL = "https://manager.$host/v3/mobile_login"
 
-        val parameters = "?only=min_version,published_versions.tag&filter_versions[]=production"
+val SHOP_URL = "https://shop.infomaniak.com/order/" //Should it be host dependent?
+val SUPPORT_URL = "https://support.infomaniak.com" //Should it be host dependent?
 
-        return "${INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName$parameters"
-    }
-}
+val MANAGER_URL = "https://manager.${host}/v3/"
+
+val TERMINATE_ACCOUNT_URL = "${MANAGER_URL}ng/profile/user/dashboard?open-terminate-account-modal"
+
+val MATOMO_URL = "https://analytics.$host/matomo.php"

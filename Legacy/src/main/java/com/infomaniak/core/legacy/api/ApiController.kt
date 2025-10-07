@@ -21,7 +21,6 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
-import com.infomaniak.core.legacy.BuildConfig.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.legacy.InfomaniakCore
 import com.infomaniak.core.legacy.auth.TokenInterceptorListener
 import com.infomaniak.core.legacy.models.ApiError
@@ -36,6 +35,7 @@ import com.infomaniak.core.legacy.utils.await
 import com.infomaniak.core.legacy.utils.bodyAsStringOrNull
 import com.infomaniak.core.legacy.utils.isNetworkException
 import com.infomaniak.core.legacy.utils.isSerializationException
+import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.Sentry
 import io.sentry.SentryLevel

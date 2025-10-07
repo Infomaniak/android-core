@@ -16,8 +16,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-
-        buildConfigField("String", "MATOMO_URL", "\"https://analytics.infomaniak.com/matomo.php\"")
     }
 
     buildTypes {
@@ -42,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":Core:Network")) // To access API URL
+
     api(core.matomo)
     implementation(core.splitties.appctx)
 }

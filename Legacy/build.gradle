@@ -24,13 +24,6 @@ android {
         testOptions.unitTests.includeAndroidResources = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'AUTOLOG_URL', '"https://manager.infomaniak.com/v3/mobile_login"'
-        buildConfigField 'String', 'TERMINATE_ACCOUNT_URL', '"https://manager.infomaniak.com/v3/ng/profile/user/dashboard?open-terminate-account-modal"'
-        buildConfigField 'String', 'LOGIN_ENDPOINT_URL', '"https://login.infomaniak.com/"'
-        buildConfigField 'String', 'INFOMANIAK_API_V1', '"https://api.infomaniak.com/1"'
-        buildConfigField 'String', 'INFOMANIAK_API', '"https://api.infomaniak.com/2/"'
-        buildConfigField 'String', 'MATOMO_URL', '"https://analytics.infomaniak.com/matomo.php"'
-
         ksp { arg("room.schemaLocation", "$projectDir/schemas") }
     }
 
@@ -48,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation project(":Core:Network") // To access API URL
 
     api core.kotlinx.coroutines.android
     api core.kotlinx.coroutines.test

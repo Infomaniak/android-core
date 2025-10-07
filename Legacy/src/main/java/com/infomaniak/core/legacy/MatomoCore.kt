@@ -22,6 +22,7 @@ import android.content.Context
 import android.util.Log
 import androidx.fragment.app.Fragment
 import com.infomaniak.core.legacy.utils.snakeToCamelCase
+import com.infomaniak.core.network.MATOMO_URL
 import org.matomo.sdk.Matomo
 import org.matomo.sdk.Tracker
 import org.matomo.sdk.TrackerBuilder
@@ -34,7 +35,7 @@ interface MatomoCore {
     val siteId: Int
 
     fun Context.buildTracker(shouldOptOut: Boolean = false): Tracker {
-        return TrackerBuilder(BuildConfig.MATOMO_URL, siteId, "AndroidTracker").build(Matomo.getInstance(this)).also {
+        return TrackerBuilder(MATOMO_URL, siteId, "AndroidTracker").build(Matomo.getInstance(this)).also {
             // Put a tracker on app installs to have statistics on the number of times the app is installed or updated
             TrackHelper.track().download().identifier(DownloadTracker.Extra.ApkChecksum(this)).with(it)
             it.isOptOut = shouldOptOut

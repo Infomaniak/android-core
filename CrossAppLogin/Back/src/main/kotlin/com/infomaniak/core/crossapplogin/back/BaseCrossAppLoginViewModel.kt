@@ -23,8 +23,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.Xor
-import com.infomaniak.core.auth.BuildConfig
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
+import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
@@ -56,7 +56,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
         coroutineScope = viewModelScope,
-        tokenRetrievalUrl = "${BuildConfig.LOGIN_ENDPOINT_URL}token",
+        tokenRetrievalUrl = "${LOGIN_ENDPOINT_URL}token",
         hostAppPackageName = applicationId,
         clientId = clientId,
         userAgent = HttpUtils.getUserAgent,
