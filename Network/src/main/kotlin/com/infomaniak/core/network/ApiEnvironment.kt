@@ -26,7 +26,7 @@ sealed class ApiEnvironment(open val host: String) {
         private var sealed = false
 
         var current: ApiEnvironment = Prod
-            get() = synchronized(Companion) {
+            get() = if (sealed) field else synchronized(Companion) {
                 sealed = true
                 field
             }
