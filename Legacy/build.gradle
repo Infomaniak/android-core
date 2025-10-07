@@ -41,9 +41,9 @@ android {
 }
 
 dependencies {
+    implementation project(":Core:Network") // To access API URL
 
     api core.kotlinx.coroutines.android
-    api project(":Core:Network") // To access API URL
     api core.kotlinx.coroutines.test
     api core.kotlinx.serialization.json
 

@@ -40,7 +40,8 @@ android {
 }
 
 dependencies {
-    api(core.matomo)
     implementation(project(":Core:Network")) // To access API URL
+
+    api(core.matomo)
     implementation(core.splitties.appctx)
 }
