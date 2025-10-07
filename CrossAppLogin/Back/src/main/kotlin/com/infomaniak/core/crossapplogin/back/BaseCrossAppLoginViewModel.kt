@@ -56,7 +56,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
         coroutineScope = viewModelScope,
-        tokenRetrievalUrl = "${LOGIN_ENDPOINT_URL}token",
+        tokenRetrievalUrl = "$LOGIN_ENDPOINT_URL/token",
         hostAppPackageName = applicationId,
         clientId = clientId,
         userAgent = HttpUtils.getUserAgent,
