@@ -35,7 +35,8 @@ progressButton = "2.1.0"
 recyclerView = "1.3.2" # TODO: Update to 1.4.0 or later after we bump compileSdk to 35
 robolectric = "4.13" # Don't update this because it breaks tests
 room = "2.7.2"
-sentry = "8.21.0"
+sentry = "8.23.0"
+sentryPlugin = "5.12.1"
 splitties = "3.0.0"
 stethoOkhttp3 = "1.6.0"
 swipeRefreshLayout = "1.1.0"
@@ -141,3 +142,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
 ksp = { id = "com.google.devtools.ksp" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
+sentry-plugin = { id = "io.sentry.android.gradle", version.ref = "sentryPlugin" }
