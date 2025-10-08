@@ -19,17 +19,17 @@ package com.infomaniak.core.network
 
 private val host = ApiEnvironment.current.host
 
-val LOGIN_ENDPOINT_URL = "https://login.$host/"
-val INFOMANIAK_API = "https://api.$host/2/"
+val LOGIN_ENDPOINT_URL = "https://login.$host"
+val INFOMANIAK_API = "https://api.$host/2"
 val INFOMANIAK_API_V1 = "https://api.$host/1"
 
 val AUTOLOG_URL = "https://manager.$host/v3/mobile_login"
 
-val SHOP_URL = "https://shop.infomaniak.com/order/" //Should it be host dependent?
-val SUPPORT_URL = "https://support.infomaniak.com" //Should it be host dependent?
+val SHOP_URL = "https://shop.infomaniak.com/order" // Should it be host dependent?
+val SUPPORT_URL = "https://support.infomaniak.com" // Should it be host dependent?
 
-val MANAGER_URL = "https://manager.${host}/v3/"
+val MANAGER_URL = "https://manager.${host}/v3"
 
-val TERMINATE_ACCOUNT_URL = "${MANAGER_URL}ng/profile/user/dashboard?open-terminate-account-modal"
+val TERMINATE_ACCOUNT_URL = "$MANAGER_URL/ng/profile/user/dashboard?open-terminate-account-modal"
 
 val MATOMO_URL = "https://analytics.$host/matomo.php"

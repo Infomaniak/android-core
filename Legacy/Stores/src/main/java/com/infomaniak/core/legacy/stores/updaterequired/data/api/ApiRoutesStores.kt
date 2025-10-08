@@ -29,6 +29,6 @@ object ApiRoutesStores {
 
         val parameters = "?only=min_version,published_versions.tag&filter_versions[]=production"
 
-        return "${INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName$parameters"
+        return "$INFOMANIAK_API_V1/app-information/versions/$store/$platform/$appName$parameters"
     }
 }

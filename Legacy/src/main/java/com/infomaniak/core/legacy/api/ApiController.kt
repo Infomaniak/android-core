@@ -131,7 +131,7 @@ object ApiController {
         if (InfomaniakCore.accessType == null) formBuilder.addFormDataPart("duration", "infinite")
 
         val request = Request.Builder()
-            .url("${LOGIN_ENDPOINT_URL}token")
+            .url("$LOGIN_ENDPOINT_URL/token")
             .post(formBuilder.build())
             .build()
 
