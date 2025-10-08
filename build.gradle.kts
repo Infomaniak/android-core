@@ -1,8 +1,8 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    id("com.android.library")
-    alias(core.plugins.kotlin.android)
+    id("com.android.library") version "8.13.0"
+    alias(core.plugins.kotlin.android) version "2.2.0"
     alias(core.plugins.ktlint)
 }
 
