@@ -24,7 +24,6 @@ import android.view.ContextThemeWrapper
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
-import com.google.android.material.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
 import com.infomaniak.core.legacy.stores.StoreUtils.goToAppStore
@@ -33,6 +32,7 @@ import com.infomaniak.core.legacy.stores.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.legacy.utils.clearStack
 import com.infomaniak.core.legacy.utils.showToast
 import kotlin.system.exitProcess
+import androidx.appcompat.R as RAndroid
 import com.infomaniak.core.legacy.R as RCore
 
 class UpdateRequiredActivity : AppCompatActivity() {
@@ -68,7 +68,7 @@ class UpdateRequiredActivity : AppCompatActivity() {
     }
 
     private fun MaterialButton.getPrimaryColor(): Int {
-        return MaterialColors.getColor(ContextThemeWrapper(context, theme), R.attr.colorPrimary, UNDEFINED_PRIMARY_COLOR)
+        return MaterialColors.getColor(ContextThemeWrapper(context, theme), RAndroid.attr.colorPrimary, UNDEFINED_PRIMARY_COLOR)
     }
 
     companion object {

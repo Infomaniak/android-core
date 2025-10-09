@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.R as RMaterial
+import androidx.appcompat.R as RAndroid
 
 /**
  * Automatically defines the Jetpack Compose MaterialTheme based on the
@@ -33,7 +34,7 @@ import com.google.android.material.R as RMaterial
  */
 @Composable
 fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalContext.current) {
-    val primary = getMaterialColor(RMaterial.attr.colorPrimary)
+    val primary = getMaterialColor(RAndroid.attr.colorPrimary)
 
     MaterialTheme(
         colorScheme = ColorScheme(
@@ -50,7 +51,7 @@ fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalCont
             onTertiary = getMaterialColor(RMaterial.attr.colorOnTertiary),
             tertiaryContainer = getMaterialColor(RMaterial.attr.colorTertiaryContainer),
             onTertiaryContainer = getMaterialColor(RMaterial.attr.colorOnTertiaryContainer),
-            background = getMaterialColor(RMaterial.attr.background),
+            background = getMaterialColor(RAndroid.attr.background),
             onBackground = getMaterialColor(RMaterial.attr.colorOnBackground),
             surface = getMaterialColor(RMaterial.attr.colorSurface),
             onSurface = getMaterialColor(RMaterial.attr.colorOnSurface),
@@ -61,7 +62,7 @@ fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalCont
             surfaceTint = primary,
             inverseSurface = getMaterialColor(RMaterial.attr.colorSurfaceInverse),
             inverseOnSurface = getMaterialColor(RMaterial.attr.colorOnSurfaceInverse),
-            error = getMaterialColor(RMaterial.attr.colorError),
+            error = getMaterialColor(RAndroid.attr.colorError),
             onError = getMaterialColor(RMaterial.attr.colorOnError),
             errorContainer = getMaterialColor(RMaterial.attr.colorErrorContainer),
             onErrorContainer = getMaterialColor(RMaterial.attr.colorOnErrorContainer),
