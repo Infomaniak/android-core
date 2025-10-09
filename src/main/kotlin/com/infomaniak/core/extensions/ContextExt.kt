@@ -23,6 +23,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -60,4 +61,8 @@ fun Context.isDontKeepActivitiesEnabled(): Boolean {
     }.getOrElse {
         false
     }
+}
+
+fun Context.isNightModeEnabled(): Boolean {
+    return resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
