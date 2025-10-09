@@ -34,9 +34,11 @@ object NetworkConfiguration {
         appId: String,
         appVersionCode: Int,
         appVersionName: String,
+        apiEnvironment: ApiEnvironment = ApiEnvironment.Prod,
     ) {
         this.appId = appId
         this.appVersionCode = appVersionCode
         this.appVersionName = appVersionName
+        ApiEnvironment.current = apiEnvironment
     }
 }

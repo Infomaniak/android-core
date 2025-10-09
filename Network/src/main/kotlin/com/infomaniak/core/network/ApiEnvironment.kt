@@ -25,28 +25,19 @@ package com.infomaniak.core.network
  * val host = ApiEnvironment.current.host
  * val someUrl = "https://whatever.$host/something/gentle-endpoint"
  * ```
- *
- * ### Change the host:
- *
- * You can either temporarily change the initial value of `current` in this file,
- * or you can, in the first `init` block of the [android.app.Application] class of
- * the host app, change its value, as below.
- * **WARNING:** Never change the value later.
- *
- * ```
- * class App : Application {
- *     init {
- *         ApiEnvironment.current = ApiEnvironment.Custom("whatever.dev.infomaniak.ch")
- *     }
- * }
- * ```
  */
 sealed class ApiEnvironment(open val host: String) {
+    @Suppress("unused")
     data object Prod : ApiEnvironment("infomaniak.com")
+
+    @Suppress("unused")
     data object PreProd : ApiEnvironment("preprod.dev.infomaniak.ch")
+
+    @Suppress("unused")
     data class Custom(override val host: String) : ApiEnvironment(host)
 
     companion object {
         var current: ApiEnvironment = Prod
+            internal set
     }
 }
