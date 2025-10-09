@@ -49,5 +49,5 @@ android {
 
 dependencies {
     implementation(platform(core.compose.bom))
-    debugImplementation(core.compose.ui.tooling)
+    implementation(core.compose.ui.tooling.preview)
 }
