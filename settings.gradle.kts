@@ -26,7 +26,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CoreInf"
+rootProject.name = "Core"
 
 include(
     ":AppIntegrity",
