@@ -1,8 +1,7 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
-    kotlin("plugin.serialization")
 
 }
 
@@ -49,11 +48,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core"))
-    implementation(project(":Core:AppVersionChecker"))
-    implementation(project(":Core:Ui:Compose:Margin"))
-    implementation(project(":Core:Network"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":"))
+    implementation(project(":AppVersionChecker"))
+    implementation(project(":Ui:Compose:Margin"))
+    implementation(project(":Network"))
+    implementation(project(":Sentry"))
 
     implementation(core.androidx.datastore.preferences)
     implementation(core.appcompat)

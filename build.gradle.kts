@@ -1,5 +1,11 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
+buildscript {
+    dependencies {
+        classpath(core.navigation.safeargs)
+    }
+}
+
 plugins {
     alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)

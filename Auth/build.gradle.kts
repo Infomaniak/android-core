@@ -1,8 +1,7 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     kotlin("plugin.parcelize")
-    kotlin("plugin.serialization")
     alias(core.plugins.ksp)
 }
 
@@ -45,9 +44,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core"))
-    implementation(project(":Core:Network"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":"))
+    implementation(project(":Network"))
+    implementation(project(":Sentry"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)
