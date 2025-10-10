@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
 }
@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Compose:Margin"))
+    implementation(project(":Compose:Margin"))
 
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)
