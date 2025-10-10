@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
 }
 
@@ -35,7 +35,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core"))
+    implementation(project(":"))
     implementation(core.play.review)
     implementation(core.play.review.ktx)
 }

@@ -16,6 +16,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
     }
 
     versionCatalogs {
@@ -27,5 +28,34 @@ dependencyResolutionManagement {
 
 rootProject.name = "CoreInf"
 
-include(":Compose:Margin")
-include(":Onboarding")
+include(
+    ":AppIntegrity",
+    ":Auth",
+    ":Avatar",
+    ":Coil",
+    ":Compose:BasicButton",
+    ":Compose:Basics",
+    ":Compose:Margin",
+    ":Compose:MaterialThemeFromXml",
+    ":Compose:Preview",
+    ":CrossAppLogin:Back",
+    ":CrossAppLogin:Front",
+    ":FileTypes",
+    ":FragmentNavigation",
+    ":InAppReview",
+    ":InAppStore",
+    ":InAppUpdate",
+    ":KSuite",
+    ":KSuite:KSuitePro",
+    ":KSuite:MyKSuite",
+    ":Ktor",
+    ":Matomo",
+    ":Network",
+    ":Network:Models",
+    ":Notifications",
+    ":Onboarding",
+    ":RecyclerView",
+    ":Sentry",
+    ":Thumbnails",
+    ":WebView",
+)

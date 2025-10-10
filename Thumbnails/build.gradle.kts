@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
 }
 
 val coreCompileSdk: Int by rootProject.extra
-val legacyMinSdk: Int by rootProject.extra
+val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
@@ -12,7 +12,7 @@ android {
     compileSdk = coreCompileSdk
 
     defaultConfig {
-        minSdk = legacyMinSdk
+        minSdk = coreMinSdk
 
         consumerProguardFiles("consumer-rules.pro")
     }

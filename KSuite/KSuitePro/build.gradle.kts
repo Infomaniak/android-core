@@ -1,9 +1,8 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
     kotlin("plugin.parcelize")
-    kotlin("plugin.serialization")
     id("androidx.navigation.safeargs.kotlin")
 }
 
@@ -50,11 +49,11 @@ android {
 
 dependencies {
 
-    implementation(project(":Core"))
-    implementation(project(":Core:Ui:Compose:Basics"))
-    implementation(project(":Core:Ui:Compose:Margin"))
-    implementation(project(":Core:Ui:Compose:MaterialThemeFromXml"))
-    implementation(project(":Core:KSuite"))
+    implementation(project(":"))
+    implementation(project(":Ui:Compose:Basics"))
+    implementation(project(":Ui:Compose:Margin"))
+    implementation(project(":Ui:Compose:MaterialThemeFromXml"))
+    implementation(project(":KSuite"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)

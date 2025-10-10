@@ -1,7 +1,6 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
-    kotlin("plugin.serialization")
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -51,11 +50,11 @@ dependencies {
     api(core.kotlinx.serialization.protobuf)
     api(core.androidx.work.runtime)
 
-    implementation(project(":Core"))
-    implementation(project(":Core:AppIntegrity"))
-    implementation(project(":Core:Auth"))
-    implementation(project(":Core:Network:Ktor"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":"))
+    implementation(project(":AppIntegrity"))
+    implementation(project(":Auth"))
+    implementation(project(":Network:Ktor"))
+    implementation(project(":Sentry"))
     implementation(core.splitties.mainthread)
     implementation(core.ktor.client.core)
     implementation(core.ktor.client.okhttp)
