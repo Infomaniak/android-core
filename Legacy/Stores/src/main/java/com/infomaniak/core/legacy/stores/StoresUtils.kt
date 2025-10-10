@@ -20,8 +20,8 @@ package com.infomaniak.core.legacy.stores
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.annotation.StyleRes
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.legacy.networking.HttpClient
@@ -29,7 +29,6 @@ import com.infomaniak.core.legacy.stores.updaterequired.UpdateRequiredActivity
 import com.infomaniak.core.legacy.stores.updaterequired.data.api.ApiRepositoryStores
 import com.infomaniak.core.legacy.stores.updaterequired.data.models.AppVersion
 import kotlinx.coroutines.launch
-import androidx.core.net.toUri
 
 internal interface StoresUtils {
 
