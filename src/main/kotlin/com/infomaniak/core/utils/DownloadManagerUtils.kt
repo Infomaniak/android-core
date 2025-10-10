@@ -18,14 +18,13 @@
 package com.infomaniak.core.utils
 
 import android.app.DownloadManager.Request
-import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
+import androidx.core.net.toUri
 import com.infomaniak.core.extensions.appName
 import com.infomaniak.core.extensions.appVersionName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
-import androidx.core.net.toUri
 
 object DownloadManagerUtils {
 

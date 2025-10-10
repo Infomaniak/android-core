@@ -25,8 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.material.color.MaterialColors
-import com.google.android.material.R as RMaterial
 import androidx.appcompat.R as RAndroid
+import com.google.android.material.R as RMaterial
 
 /**
  * Automatically defines the Jetpack Compose MaterialTheme based on the
