@@ -17,31 +17,23 @@
  */
 package com.infomaniak.core.compose.basics
 
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
-object Dimens {
-
-    /** 12 dp */
-    val labelIconSize = 12.dp
-    /** 16 dp */
-    val smallIconSize = 16.dp
-    /** 24 dp */
-    val iconSize = 24.dp
-
-    /** 32 dp */
-    val avatarSize = 32.dp
-
-    /** 40 dp */
-    val bigAvatarSize = 40.dp
-
-    /** 8 dp */
-    val smallCornerRadius = 8.dp
-    /** 16 dp */
-    val largeCornerRadius = 16.dp
-
-    /** 56 dp */
-    val buttonHeight = 56.dp
-
-    /** 5 dp */
-    val cardElevation = 5.dp
+/**
+ * Gives access to the latest non null value of the receiver.
+ *
+ * Helpful to keep showing populated UI during exit animations.
+ */
+@Composable
+fun <T> T?.WithLatestNotNull(content: @Composable (T) -> Unit) {
+    // The implementation is similar to rememberUpdatedState.
+    val value by remember { mutableStateOf(this) }.also {
+        if (this != null) it.value = this
+    }
+    value?.let {
+        content(it)
+    }
 }
