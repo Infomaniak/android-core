@@ -67,6 +67,7 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.basics.CallableState
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.rememberCallableState
+import com.infomaniak.core.network.EDIT_PASSWORD_URL
 import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge
 import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge
@@ -172,7 +173,7 @@ private fun EditPasswordButton() {
     val uriHandler = LocalUriHandler.current
     Button(
         modifier = Modifier.fillMaxWidth(),
-        onClick = { /*uriHandler.openUri(TODO())*/ },
+        onClick = { uriHandler.openUri(EDIT_PASSWORD_URL) },
     ) { Text(stringResource(R.string.buttonEditPassword), overflow = TextOverflow.Ellipsis, maxLines = 1) }
 }
 

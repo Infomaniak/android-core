@@ -78,7 +78,7 @@ internal class TwoFactorAuthImpl(
             retryOnExceptionIf { request, cause -> cause !is SerializationException }
         }
         defaultRequest {
-            url(LOGIN_ENDPOINT_URL + "api/2fa/push/")
+            url("$LOGIN_ENDPOINT_URL/api/2fa/push/")
             userAgent(HttpUtils.getUserAgent)
             headers {
                 @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.

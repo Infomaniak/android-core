@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":Core:Compose:BasicButton"))
     implementation(project(":Core:Compose:Basics"))
     implementation(project(":Core:Compose:Margin"))
+    implementation(project(":Core:Network"))
 
     implementation(core.androidx.core.ktx)
 

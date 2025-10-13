@@ -29,6 +29,7 @@ val SHOP_URL = "https://shop.infomaniak.com/order" // Should it be host dependen
 val SUPPORT_URL = "https://support.infomaniak.com" // Should it be host dependent?
 
 val MANAGER_URL = "https://manager.${host}/v3"
+val EDIT_PASSWORD_URL = "$MANAGER_URL/ng/profile/edit-password"
 
 val TERMINATE_ACCOUNT_URL = "$MANAGER_URL/ng/profile/user/dashboard?open-terminate-account-modal"
 
