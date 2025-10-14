@@ -220,7 +220,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
     @ExperimentalUuidApi
     private fun currentDeviceInfo(
         currentCrossAppDeviceId: Uuid,
-        appAppVersions: DeviceInfoUpdateManager.AppVersions,
+        appVersions: DeviceInfoUpdateManager.AppVersions,
     ): DeviceInfo {
         val hasTabletSizedScreen = appCtx.resources.configuration.smallestScreenWidthDp >= 600
         val packageManager = appCtx.packageManager
@@ -243,7 +243,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
             capabilities = listOf(
                 "2fa:push_challenge:approval",
             ),
-            version = appAppVersions.versionName
+            version = appVersions.versionName
         )
     }
 
