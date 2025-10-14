@@ -319,9 +319,9 @@ private fun DeviceRow(connectionAttemptInfo: ConnectionAttemptInfo) {
 @Composable
 private fun DeviceIcon(type: RemoteChallenge.Device.Type) {
     val resId = when (type) {
-        Phone -> R.drawable.mobile_24dp
-        Tablet -> R.drawable.tablet_24dp
-        Computer -> R.drawable.computer_24dp
+        Phone -> R.drawable.mobile
+        Tablet -> R.drawable.tablet
+        Computer -> R.drawable.computer
     }
     Icon(painterResource(resId), contentDescription = null)
 }
