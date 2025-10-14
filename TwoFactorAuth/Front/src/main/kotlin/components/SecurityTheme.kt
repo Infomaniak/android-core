@@ -35,19 +35,27 @@ fun SecurityTheme(
             onPrimary = Color(0xFF_EAECFA),
             secondaryContainer = Color(0xFF_ABB4EC),
             onSecondaryContainer = Color(0xFF_121B53),
+            tertiary = Color(0xFF_F39835),
+            onTertiary = Color.White,
             surface = Color(0xFF_191919),
             surfaceContainerLow = Color(0xFF_191919),
             surfaceContainerHighest = Color(0xFF_191919),
+            error = Color(0xFF_F55D51),
+            onError = Color.White,
         )
         else -> lightColorScheme(
             primary = Color(0xFF_3243AE),
             onPrimary = Color(0xFF_EAECFA),
             secondaryContainer = Color(0xFF_D5D9F5),
             onSecondaryContainer = Color(0xFF_121B53),
+            tertiary = Color(0xFF_FFAA4D),
+            onTertiary = Color.White,
             surface = Color(0xFF_F4F6FD),
             surfaceContainerLow = Color(0xFF_F4F6FD),
             surfaceContainer = Color.White,
             surfaceContainerHighest = Color.White,
+            error = Color(0xFF_F66A5F),
+            onError = Color.White,
         )
     },
     content = content
