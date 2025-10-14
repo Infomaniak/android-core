@@ -148,35 +148,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
         if (deviceInfoUpdateManager.isUpToDate(crossAppDeviceId, targetUserId)) {
             return Outcome.Done
         }
-        val okHttpClient = getConnectedHttpClient(userId = targetUserId.toInt())
-        val httpClient = HttpClient(OkHttp) {
-            engine { preconfigured = okHttpClient }
-            install(ContentNegotiation) {
-                json()
-            }
-            install(HttpRequestRetry) {
-                maxRetries = 3
-                retryOnExceptionIf { request, cause -> cause !is SerializationException }
-            }
-            defaultRequest {
-                userAgent(HttpUtils.getUserAgent)
-                headers {
-                    @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
-                    HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
-                }
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-            }
-            HttpResponseValidator {
-                validateResponse { response ->
-                    response.validateContentType { accepted, received ->
-                        val url = response.request.url
-                        val method = response.request.method
-                        throw IllegalArgumentException("Expected Content-Type $accepted but got $received from $method on $url")
-                    }
-                }
-            }
-        }
+        val httpClient = createHttpClientForUser(targetUserId)
 
         SentryLog.i(TAG, "Will attempt updating device info for user id $targetUserId")
 
@@ -245,6 +217,39 @@ abstract class AbstractDeviceInfoUpdateWorker(
             ),
             version = appVersions.versionName
         )
+    }
+
+    private suspend fun createHttpClientForUser(userId: Long): HttpClient {
+        return createHttpClientForUser(getConnectedHttpClient(userId = userId.toInt()))
+    }
+
+    private fun createHttpClientForUser(connectedOkHttpClient: OkHttpClient): HttpClient = HttpClient(OkHttp) {
+        engine { preconfigured = connectedOkHttpClient }
+        install(ContentNegotiation) {
+            json()
+        }
+        install(HttpRequestRetry) {
+            maxRetries = 3
+            retryOnExceptionIf { request, cause -> cause !is SerializationException }
+        }
+        defaultRequest {
+            userAgent(HttpUtils.getUserAgent)
+            headers {
+                @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
+                HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
+            }
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+        }
+        HttpResponseValidator {
+            validateResponse { response ->
+                response.validateContentType { accepted, received ->
+                    val url = response.request.url
+                    val method = response.request.method
+                    throw IllegalArgumentException("Expected Content-Type $accepted but got $received from $method on $url")
+                }
+            }
+        }
     }
 
     companion object {
