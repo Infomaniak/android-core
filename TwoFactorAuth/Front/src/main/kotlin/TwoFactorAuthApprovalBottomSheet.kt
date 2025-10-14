@@ -124,28 +124,16 @@ private fun ConfirmLoginAutoManagedBottomSheetPreview() = SecurityTheme {
             val dismiss = fun () { dismissal.complete() }
             value = challengeForPreview(Challenge.State.ApproveOrReject(approval), dismiss = dismiss)
             raceOf({ dismissal.join() }, {
-                val nextState = when (iteration % 3) {
-                    1 -> {
-                        delay(2.seconds)
-                        Challenge.State.Done(Outcome.Done.AlreadyActioned)
-                    }
-                    2 -> {
-                        delay(5.seconds)
-                        Challenge.State.Done(Outcome.Done.Expired)
-                    }
-                    else -> awaitCancellation()
-                }
-                value = challengeForPreview(state = nextState, dismiss = dismiss)
-                awaitCancellation()
-            }, {
                 val rejected = !approval.awaitOneCall()
                 value = challengeForPreview(state = null, dismiss = dismiss)
                 delay(.5.seconds)
-                if (rejected) {
-                    value = challengeForPreview(
-                        state = Challenge.State.Done(Outcome.Done.Rejected),
-                        dismiss = dismiss
-                    )
+                val outcome = when (iteration % 3) {
+                    1 -> Outcome.Done.AlreadyActioned
+                    2 -> Outcome.Done.Expired
+                    else -> if (rejected) Outcome.Done.Rejected else null
+                }
+                outcome?.let {
+                    value = challengeForPreview(state = Challenge.State.Done(it), dismiss = dismiss)
                     awaitCancellation()
                 }
             })
