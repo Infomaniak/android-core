@@ -21,7 +21,6 @@
 package com.infomaniak.core.twofactorauth.front
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,7 +34,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -46,6 +44,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -55,6 +54,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -83,6 +83,7 @@ import com.infomaniak.core.twofactorauth.front.components.SecurityTheme
 import com.infomaniak.core.twofactorauth.front.components.VirtualCardState
 import com.infomaniak.core.twofactorauth.front.components.rememberVirtualCardState
 import com.infomaniak.core.twofactorauth.front.components.virtualCardHost
+import com.infomaniak.core.twofactorauth.front.elements.CircledIcon
 import com.infomaniak.core.twofactorauth.front.elements.ShieldK
 import com.infomaniak.core.twofactorauth.front.elements.lightSourceBehind
 import kotlinx.coroutines.CoroutineStart
@@ -142,23 +143,24 @@ private fun ColumnScope.ChallengeDone(outcome: Outcome.Done, close: () -> Unit) 
     when (outcome) {
         Outcome.Done.Success -> return // Not showing any confirmation screen, should be auto-dismissed.
         Outcome.Done.Rejected -> {
-            iconResId = R.drawable.stop_hand_crossed_48
+            iconResId = R.drawable.hand_octagon_slash
             titleResId = R.string.twoFactorAuthConnectionRejectedTitle
             descResId = R.string.twoFactorAuthConnectionRejectedDescription
         }
         Outcome.Done.Expired -> {
-            iconResId = R.drawable.clock_48
+            iconResId = R.drawable.clock
             titleResId = R.string.twoFactorAuthExpiredErrorTitle
             descResId = R.string.twoFactorAuthExpiredErrorDescription
         }
         Outcome.Done.AlreadyActioned -> {
-            iconResId = R.drawable.device_sync_48
+            iconResId = R.drawable.phone_circular_arrows_clockwise
             titleResId = R.string.twoFactorAuthAlreadyProcessedErrorTitle
             descResId = R.string.twoFactorAuthCheckOriginDescription
         }
     }
     ChallengeResponseResult(
-        bigIconResId = iconResId,
+        iconResId = iconResId,
+        iconBackground = MaterialTheme.colorScheme.tertiary,
         titleResId = titleResId,
         contentText = {
             Text(text = stringResource(descResId))
@@ -189,10 +191,14 @@ private fun ColumnScope.ChallengeResponseIssue(
         is Outcome.Issue.Unknown -> RCore.string.anErrorHasOccurred
     }
     ChallengeResponseResult(
-        bigIconResId = when (outcome) {
-            is Outcome.Issue.ErrorResponse -> R.drawable.error_48
-            is Outcome.Issue.Network -> R.drawable.no_signal_48
-            is Outcome.Issue.Unknown -> R.drawable.error_48
+        iconResId = when (outcome) {
+            is Outcome.Issue.ErrorResponse -> R.drawable.cross
+            is Outcome.Issue.Network -> R.drawable.antenna_slash
+            is Outcome.Issue.Unknown -> R.drawable.cross
+        },
+        iconBackground = when (outcome) {
+            is Outcome.Issue.Network -> MaterialTheme.colorScheme.tertiary
+            else -> MaterialTheme.colorScheme.error
         },
         titleResId = titleResId,
         contentText = {
@@ -214,14 +220,15 @@ private fun ColumnScope.ChallengeResponseIssue(
 
 @Composable
 private fun ColumnScope.ChallengeResponseResult(
-    bigIconResId: Int,
+    iconResId: Int,
+    iconBackground: Color,
     titleResId: Int,
     contentText: @Composable () -> Unit,
     close: () -> Unit,
     actionButton: (@Composable () -> Unit)? = null
 ) {
     Spacer(Modifier.height(16.dp))
-    Image(painterResource(bigIconResId), contentDescription = null, Modifier.size(48.dp))
+    CircledIcon(iconResId, color = iconBackground)
     Spacer(Modifier.height(32.dp))
     Text(
         text = stringResource(titleResId),
@@ -410,7 +417,7 @@ private fun ConfirmLoginBottomSheetContentMinutesAgoPreview() = SecurityTheme {
 }
 
 @Preview(locale = "fr")
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Preview(device = "spec:width=673dp,height=841dp")
 @Composable
 private fun ChallengeExpiredPreview() = SecurityTheme {
@@ -419,7 +426,7 @@ private fun ChallengeExpiredPreview() = SecurityTheme {
 }
 
 @Preview(locale = "fr")
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun ChallengeAlreadyActionedPreview() = SecurityTheme {
     val state = Challenge.State.Done(Outcome.Done.AlreadyActioned)
@@ -427,7 +434,7 @@ private fun ChallengeAlreadyActionedPreview() = SecurityTheme {
 }
 
 @Preview(locale = "fr")
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun ChallengePromptCredentialsUpdatePreview() = SecurityTheme {
     val state = Challenge.State.Done(Outcome.Done.Rejected)
@@ -435,7 +442,7 @@ private fun ChallengePromptCredentialsUpdatePreview() = SecurityTheme {
 }
 
 @Preview(locale = "fr")
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun ChallengeResponseIssuePreview() = SecurityTheme {
     val state = Challenge.State.Issue(Outcome.Issue.ErrorResponse(503), retry = {})
@@ -443,7 +450,7 @@ private fun ChallengeResponseIssuePreview() = SecurityTheme {
 }
 
 @Preview(locale = "fr")
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun ChallengeNetworkIssuePreview() = SecurityTheme {
     val state = Challenge.State.Issue(Outcome.Issue.Network(UnknownHostException()), retry = {})
