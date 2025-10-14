@@ -16,22 +16,26 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="twoFactorAuthJustNowLabel">Just now</string>
+<resources>
     <string name="buttonApprove">Approve</string>
     <string name="buttonDeny">Deny</string>
     <string name="buttonEditPassword">Edit password</string>
     <string name="twoFactorAuthAlreadyProcessedErrorTitle">This request has already been processed</string>
-    <string name="twoFactorAuthCheckOriginDescription">You didn’t initiate this action? Check your active devices, and disconnect the ones you don’t recognize.</string>
+    <string name="twoFactorAuthCheckOriginDescription">You didn’t initiate this action?\nCheck your active devices, and disconnect the ones you don’t recognize.</string>
     <string name="twoFactorAuthConfirmationDescription">Confirming this login attempt will allow that device to access your Infomaniak account</string>
-    <string name="twoFactorAuthConnectionRejectedDescription">You have refused a login attempt. To secure your account, change your password. If you are the source of this attempt, try logging in again.</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">You have refused a login attempt. To secure your account, change your password.\nIf you are the source of this attempt, try logging in again.</string>
     <string name="twoFactorAuthConnectionRejectedTitle">Connection Rejected</string>
     <string name="twoFactorAuthDeviceLabel">Device</string>
-    <string name="twoFactorAuthExpiredErrorDescription">The validation window timed out.\\nPlease start over.</string>
+    <string name="twoFactorAuthExpiredErrorDescription">The confirmation period has ended.\nPlease try again</string>
     <string name="twoFactorAuthExpiredErrorTitle">This login request has expired</string>
-    <string name="twoFactorAuthGenericErrorDescription">Unable to complete the operation.\\nPlease try again.</string>
+    <string name="twoFactorAuthGenericErrorDescription">Unable to complete the operation.\nPlease try again.</string>
+    <string name="twoFactorAuthJustNowLabel">Just now</string>
     <string name="twoFactorAuthLocationLabel">Location</string>
-    <string name="twoFactorAuthNoNetworkErrorDescription">Unable to complete the operation.\\nCheck your connection and try again.</string>
+    <plurals name="twoFactorAuthMinutesAgoLabel">
+        <item quantity="one">A minute ago</item>
+        <item quantity="other">%d minutes ago</item>
+    </plurals>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Unable to complete the operation.\nCheck your connection and try again.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">No network connection</string>
     <string name="twoFactorAuthTryingToLogInTitle">Are you trying to login?</string>
     <string name="twoFactorAuthWhenLabel">When</string>
