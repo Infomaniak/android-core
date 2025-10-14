@@ -57,24 +57,6 @@ import kotlin.uuid.ExperimentalUuidApi
 
 abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
 
-    data class Challenge(
-        val data: ConnectionAttemptInfo,
-        val attemptTimeMark: TimeMark,
-        val dismiss: () -> Unit,
-        val state: State?
-    ) {
-        sealed interface State {
-
-            /** @property action Send true for approval, false for reject, and null for dismiss */
-            data class ApproveOrReject(val action: ((Boolean) -> Unit)) : State
-            data class Done(val data: Outcome.Done) : State
-            data class Issue(
-                val data: Outcome.Issue,
-                val retry: () -> Unit
-            ) : State
-        }
-    }
-
     protected abstract suspend fun getConnectedHttpClient(userId: Int): OkHttpClient
 
     private val rateLimitedForegroundEvents = ProcessLifecycleOwner.get().lifecycle.eventFlow.filter {
@@ -162,6 +144,24 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         currentUsersTwoFactorAuth.forEach { twoFactorAuth ->
             val challenge = twoFactorAuth.tryGettingLatestChallenge() ?: return@forEach
             put(twoFactorAuth, challenge)
+        }
+    }
+
+    data class Challenge(
+        val data: ConnectionAttemptInfo,
+        val attemptTimeMark: TimeMark,
+        val dismiss: () -> Unit,
+        val state: State?
+    ) {
+        sealed interface State {
+
+            /** @property action Send true for approval, false for reject, and null for dismiss */
+            data class ApproveOrReject(val action: ((Boolean) -> Unit)) : State
+            data class Done(val data: Outcome.Done) : State
+            data class Issue(
+                val data: Outcome.Issue,
+                val retry: () -> Unit
+            ) : State
         }
     }
 }
