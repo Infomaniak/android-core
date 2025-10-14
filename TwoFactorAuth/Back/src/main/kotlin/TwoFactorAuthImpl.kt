@@ -75,7 +75,7 @@ internal class TwoFactorAuthImpl(
         }
         install(HttpRequestRetry) {
             maxRetries = 3
-            retryOnExceptionIf { request, cause -> cause !is SerializationException }
+            retryOnExceptionIf { _, cause -> cause !is SerializationException }
         }
         defaultRequest {
             url("$LOGIN_ENDPOINT_URL/api/2fa/push/")
