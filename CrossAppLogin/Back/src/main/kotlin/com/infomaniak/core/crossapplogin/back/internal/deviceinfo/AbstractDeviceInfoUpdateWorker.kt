@@ -90,27 +90,6 @@ abstract class AbstractDeviceInfoUpdateWorker(
     params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
 
-    companion object {
-
-        suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> schedule() {
-            val workManager = WorkManager.getInstance(appCtx)
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-            val workRequest = OneTimeWorkRequestBuilder<T>()
-                .setBackoffCriteria(BackoffPolicy.LINEAR, backoffDelay = 10L, timeUnit = TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build()
-            workManager.enqueueUniqueWork(
-                "device-info-update",
-                ExistingWorkPolicy.APPEND_OR_REPLACE,
-                workRequest
-            ).await()
-        }
-
-        private const val TAG = "AbstractDeviceInfoUpdateWorker"
-    }
-
     protected abstract suspend fun getConnectedHttpClient(userId: Int): OkHttpClient
 
     override suspend fun doWork(): Result = autoCancelScope {
@@ -266,6 +245,27 @@ abstract class AbstractDeviceInfoUpdateWorker(
             ),
             version = appAppVersions.versionName
         )
+    }
+
+    companion object {
+
+        suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> schedule() {
+            val workManager = WorkManager.getInstance(appCtx)
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+            val workRequest = OneTimeWorkRequestBuilder<T>()
+                .setBackoffCriteria(BackoffPolicy.LINEAR, backoffDelay = 10L, timeUnit = TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
+            workManager.enqueueUniqueWork(
+                "device-info-update",
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                workRequest
+            ).await()
+        }
+
+        private const val TAG = "AbstractDeviceInfoUpdateWorker"
     }
 }
 
