@@ -192,7 +192,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
     @ExperimentalUuidApi
     private fun currentDeviceInfo(
         currentCrossAppDeviceId: Uuid,
-        appVersions: DeviceInfoUpdateManager.AppVersions,
+        appVersions: DeviceInfoUpdateManager.AppVersionData,
     ): DeviceInfo {
         val hasTabletSizedScreen = appCtx.resources.configuration.smallestScreenWidthDp >= 600
         val packageManager = appCtx.packageManager

@@ -56,7 +56,7 @@ class DeviceInfoUpdateManager private constructor() {
                 SDK_INT >= 28 -> it.longVersionCode
                 else -> @Suppress("Deprecation") it.versionCode.toLong()
             }
-            AppVersions(versionName = it.versionName, versionCode = versionCode)
+            AppVersionData(versionName = it.versionName, versionCode = versionCode)
         }
     }
 
@@ -111,7 +111,7 @@ class DeviceInfoUpdateManager private constructor() {
 
     private fun lastSyncKeyFileForUser(userId: Long): AtomicFile = AtomicFile(lastSyncedKeyDir.resolve("$userId"))
 
-    data class AppVersions(
+    data class AppVersionData(
         val versionName: String?,
         val versionCode: Long,
     )
