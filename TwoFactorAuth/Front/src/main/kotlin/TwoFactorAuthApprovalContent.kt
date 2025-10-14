@@ -228,9 +228,9 @@ private fun ColumnScope.ChallengeResponseResult(
     close: () -> Unit,
     actionButton: (@Composable () -> Unit)? = null
 ) {
-    Spacer(Modifier.height(Margin.Medium))
-    CircledIcon(iconResId, color = iconBackground)
     Spacer(Modifier.height(Margin.Huge))
+    CircledIcon(iconResId, color = iconBackground)
+    Spacer(Modifier.height(Margin.Medium))
     Text(
         text = stringResource(titleResId),
         style = Typography.h1,
@@ -262,7 +262,7 @@ private fun ColumnScope.PendingChallenge(
     state: Challenge.State.ApproveOrReject?,
 ) {
 
-    Spacer(Modifier.weight(1f))
+    Spacer(Modifier.height(Margin.Huge))
 
     BrandedPrompt()
 
