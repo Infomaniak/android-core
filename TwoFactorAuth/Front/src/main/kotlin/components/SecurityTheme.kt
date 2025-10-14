@@ -33,7 +33,6 @@ fun SecurityTheme(
         isInDarkTheme -> darkColorScheme(
             primary = Color(0xFF_5869D9),
             onPrimary = Color(0xFF_EAECFA),
-            secondary = Color.Red,
             secondaryContainer = Color(0xFF_ABB4EC),
             onSecondaryContainer = Color(0xFF_121B53),
             surface = Color(0xFF_191919),
