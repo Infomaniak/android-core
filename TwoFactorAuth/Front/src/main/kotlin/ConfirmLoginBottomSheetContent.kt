@@ -67,6 +67,7 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.basics.CallableState
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.rememberCallableState
+import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.network.EDIT_PASSWORD_URL
 import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge
 import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
@@ -104,7 +105,7 @@ fun ConfirmLoginBottomSheetContent(challenge: Challenge) = Surface(Modifier.fill
         val virtualCardState = rememberVirtualCardState(kind = if (isSystemInDarkTheme()) CardKind.Outlined else CardKind.Normal)
         val scrollState = rememberScrollState()
         val maxWidth = 480.dp
-        val cardOuterPadding = 16.dp
+        val cardOuterPadding = Margin.Medium
         Column(
             modifier = Modifier
                 .widthIn(max = maxWidth)
@@ -227,24 +228,24 @@ private fun ColumnScope.ChallengeResponseResult(
     close: () -> Unit,
     actionButton: (@Composable () -> Unit)? = null
 ) {
-    Spacer(Modifier.height(16.dp))
+    Spacer(Modifier.height(Margin.Medium))
     CircledIcon(iconResId, color = iconBackground)
-    Spacer(Modifier.height(32.dp))
+    Spacer(Modifier.height(Margin.Huge))
     Text(
         text = stringResource(titleResId),
         style = Typography.h1,
         textAlign = TextAlign.Center
     )
-    Spacer(Modifier.height(16.dp))
+    Spacer(Modifier.height(Margin.Medium))
     ProvideTextStyle(LocalTextStyle.current.copy(textAlign = TextAlign.Center)) {
         contentText()
     }
     Spacer(Modifier.weight(2f))
     actionButton?.let {
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(Margin.Medium))
         it()
     }
-    Spacer(Modifier.height(16.dp))
+    Spacer(Modifier.height(Margin.Medium))
     Button(
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.filledTonalButtonColors(),
@@ -268,7 +269,7 @@ private fun ColumnScope.PendingChallenge(
     Spacer(Modifier.weight(1f))
     //TODO[issue-blocked]: Replace line below with heightIn above once this is fixed:
     // https://issuetracker.google.com/issues/294046936
-    Spacer(Modifier.height(16.dp))
+    Spacer(Modifier.height(Margin.Medium))
 
     CardElement(
         virtualCardState,
@@ -276,8 +277,8 @@ private fun ColumnScope.PendingChallenge(
         elementPosition = CardElementPosition.First
     ) {
         Column(
-            Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            Modifier.padding(Margin.Medium),
+            verticalArrangement = Arrangement.spacedBy(Margin.Medium)
         ) {
             AccountInfoContent(challenge.data.targetAccount)
             HorizontalDivider()
@@ -290,7 +291,7 @@ private fun ColumnScope.PendingChallenge(
     val confirmRequest = rememberCallableState<Boolean>()
     LaunchedEffect(state) { state?.action(confirmRequest.awaitOneCall()) }
     CardElement(virtualCardState, elementPosition = CardElementPosition.Last) {
-        ConfirmOrRejectRow(confirmRequest, Modifier.padding(16.dp))
+        ConfirmOrRejectRow(confirmRequest, Modifier.padding(Margin.Medium))
     }
 }
 
@@ -309,7 +310,7 @@ private fun CloseButton(
 
 @Composable
 private fun DeviceRow(connectionAttemptInfo: ConnectionAttemptInfo) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(horizontalArrangement = Arrangement.spacedBy(Margin.Mini), verticalAlignment = Alignment.CenterVertically) {
         Text(connectionAttemptInfo.deviceOrBrowserName)
         connectionAttemptInfo.deviceType?.let { DeviceIcon(it) }
     }
@@ -339,10 +340,10 @@ private fun ConfirmOrRejectRow(
         style = Typography.bodyRegular,
         textAlign = TextAlign.Center
     )
-    Spacer(Modifier.height(16.dp))
+    Spacer(Modifier.height(Margin.Medium))
     FlowRow(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally),
+        horizontalArrangement = Arrangement.spacedBy(Margin.Medium, alignment = Alignment.CenterHorizontally),
     ) {
         Button(
             modifier = Modifier.weight(1f),
@@ -363,9 +364,9 @@ private fun BrandedPrompt() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 32.dp * 1 / LocalDensity.current.fontScale),
+            .padding(horizontal = Margin.Huge * 1 / LocalDensity.current.fontScale),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(Margin.Medium)
     ) {
         ShieldK()
         Text(
@@ -378,7 +379,7 @@ private fun BrandedPrompt() {
 
 @Composable
 private fun InfoElement(label: String, content: @Composable () -> Unit) {
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Margin.Micro)) {
         Text(label, style = Typography.labelRegular)
         ProvideTextStyle(Typography.bodyMedium) {
             content()
