@@ -99,7 +99,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import com.infomaniak.core.R as RCore
 
 @Composable
-fun ConfirmLoginBottomSheetContent(challenge: Challenge) = Surface(Modifier.fillMaxSize()) {
+fun TwoFactorAuthApprovalContent(challenge: Challenge) = Surface(Modifier.fillMaxSize()) {
     Box(Modifier, contentAlignment = Alignment.Center) {
 
         val virtualCardState = rememberVirtualCardState(kind = if (isSystemInDarkTheme()) CardKind.Outlined else CardKind.Normal)
@@ -400,21 +400,21 @@ private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
         CallableState<Boolean>().also { scope.launch(start = CoroutineStart.UNDISPATCHED) { it.awaitOneCall() } }
     }
     val state = Challenge.State.ApproveOrReject(confirmRequest)
-    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+    TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 
 @Preview
 @Composable
 private fun ConfirmLoginBottomSheetContentMinuteAgoPreview() = SecurityTheme {
     val state = Challenge.State.ApproveOrReject(CallableState())
-    ConfirmLoginBottomSheetContent(challengeForPreview(state, timeAgo = 1.minutes))
+    TwoFactorAuthApprovalContent(challengeForPreview(state, timeAgo = 1.minutes))
 }
 
 @Preview
 @Composable
 private fun ConfirmLoginBottomSheetContentMinutesAgoPreview() = SecurityTheme {
     val state = Challenge.State.ApproveOrReject(CallableState())
-    ConfirmLoginBottomSheetContent(challengeForPreview(state, timeAgo = 4.minutes))
+    TwoFactorAuthApprovalContent(challengeForPreview(state, timeAgo = 4.minutes))
 }
 
 @Preview(locale = "fr")
@@ -423,7 +423,7 @@ private fun ConfirmLoginBottomSheetContentMinutesAgoPreview() = SecurityTheme {
 @Composable
 private fun ChallengeExpiredPreview() = SecurityTheme {
     val state = Challenge.State.Done(Outcome.Done.Expired)
-    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+    TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 
 @Preview(locale = "fr")
@@ -431,7 +431,7 @@ private fun ChallengeExpiredPreview() = SecurityTheme {
 @Composable
 private fun ChallengeAlreadyActionedPreview() = SecurityTheme {
     val state = Challenge.State.Done(Outcome.Done.AlreadyActioned)
-    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+    TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 
 @Preview(locale = "fr")
@@ -439,7 +439,7 @@ private fun ChallengeAlreadyActionedPreview() = SecurityTheme {
 @Composable
 private fun ChallengePromptCredentialsUpdatePreview() = SecurityTheme {
     val state = Challenge.State.Done(Outcome.Done.Rejected)
-    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+    TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 
 @Preview(locale = "fr")
@@ -447,7 +447,7 @@ private fun ChallengePromptCredentialsUpdatePreview() = SecurityTheme {
 @Composable
 private fun ChallengeResponseIssuePreview() = SecurityTheme {
     val state = Challenge.State.Issue(Outcome.Issue.ErrorResponse(503), retry = {})
-    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+    TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 
 @Preview(locale = "fr")
@@ -455,7 +455,7 @@ private fun ChallengeResponseIssuePreview() = SecurityTheme {
 @Composable
 private fun ChallengeNetworkIssuePreview() = SecurityTheme {
     val state = Challenge.State.Issue(Outcome.Issue.Network(UnknownHostException()), retry = {})
-    ConfirmLoginBottomSheetContent(challengeForPreview(state))
+    TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 
 fun challengeForPreview(
