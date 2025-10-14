@@ -230,7 +230,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
         }
         install(HttpRequestRetry) {
             maxRetries = 3
-            retryOnExceptionIf { request, cause -> cause !is SerializationException }
+            retryOnExceptionIf { _, cause -> cause !is SerializationException }
         }
         defaultRequest {
             userAgent(HttpUtils.getUserAgent)
