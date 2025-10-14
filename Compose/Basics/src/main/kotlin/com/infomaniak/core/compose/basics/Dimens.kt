@@ -34,6 +34,11 @@ object Dimens {
     /** 40 dp */
     val bigAvatarSize = 40.dp
 
+    /** 52 dp */
+    val avatarsBoxWidth = 52.dp
+    /** 32 dp */
+    val avatarsBoxHeight = 32.dp
+
     /** 8 dp */
     val smallCornerRadius = 8.dp
     /** 16 dp */
