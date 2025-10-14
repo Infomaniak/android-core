@@ -60,16 +60,16 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
-fun ConfirmLoginAutoManagedBottomSheet(
+fun TwoFactorAuthApprovalAutoManagedBottomSheet(
     twoFactorAuthViewModel: AbstractTwoFactorAuthViewModel
 ) = SecurityTheme {
     val challengeState = twoFactorAuthViewModel.challengeToResolve.collectAsState()
-    ConfirmLoginAutoManagedBottomSheet(challengeState)
+    TwoFactorAuthApprovalAutoManagedBottomSheet(challengeState)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ConfirmLoginAutoManagedBottomSheet(challengeState: State<Challenge?>) {
+private fun TwoFactorAuthApprovalAutoManagedBottomSheet(challengeState: State<Challenge?>) {
     // Must be a state read rather than a simple parameter, to ensure that the confirmValueChange lambda
     // below (remembered by default) can read an up to date value (and not the one from the first composition).
     val challenge: Challenge? by challengeState
@@ -98,7 +98,7 @@ private fun ConfirmLoginAutoManagedBottomSheet(challengeState: State<Challenge?>
             contentWindowInsets = { WindowInsets.systemBars },
             sheetState = sheetState,
         ) {
-            ConfirmLoginBottomSheetContent(challenge)
+            TwoFactorAuthApprovalContent(challenge)
         }
     }
 }
@@ -156,6 +156,6 @@ private fun ConfirmLoginAutoManagedBottomSheetPreview() = SecurityTheme {
     // We have a black background to hide the ugly-ish PreviewActivity that doesn't support edge-to-edge.
     //TODO[issue-blocked]: Remove when https://issuetracker.google.com/issues/441665274 is addressed.
     Box(Modifier.background(Color.Black).fillMaxSize()) {
-        ConfirmLoginAutoManagedBottomSheet(state)
+        TwoFactorAuthApprovalAutoManagedBottomSheet(state)
     }
 }
