@@ -50,11 +50,6 @@ class DeviceInfoUpdateManager private constructor() {
 
     private val lastSyncedKeyDir = appCtx.filesDir.resolve("lastSyncedDeviceInfoKeys")
 
-    data class AppVersions(
-        val versionName: String?,
-        val versionCode: Long,
-    )
-
     val currentAppVersions = suspendBlockingLazy(Dispatchers.IO) {
         appCtx.packageManager.getPackageInfo(appCtx.packageName, 0).let {
             val versionCode = when {
@@ -115,4 +110,9 @@ class DeviceInfoUpdateManager private constructor() {
         }
 
     private fun lastSyncKeyFileForUser(userId: Long): AtomicFile = AtomicFile(lastSyncedKeyDir.resolve("$userId"))
+
+    data class AppVersions(
+        val versionName: String?,
+        val versionCode: Long,
+    )
 }
