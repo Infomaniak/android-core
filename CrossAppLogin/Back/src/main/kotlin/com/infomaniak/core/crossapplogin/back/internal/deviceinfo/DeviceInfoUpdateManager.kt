@@ -55,7 +55,7 @@ class DeviceInfoUpdateManager private constructor() {
         val versionCode: Long,
     )
 
-    val currentAppAppVersions = suspendBlockingLazy(Dispatchers.IO) {
+    val currentAppVersions = suspendBlockingLazy(Dispatchers.IO) {
         appCtx.packageManager.getPackageInfo(appCtx.packageName, 0).let {
             val versionCode = when {
                 SDK_INT >= 28 -> it.longVersionCode
@@ -78,7 +78,7 @@ class DeviceInfoUpdateManager private constructor() {
                 )
                 lastSyncedAppVersion = stream.readLong()
             }
-            val currentAppVersion = currentAppAppVersions().versionCode
+            val currentAppVersion = currentAppVersions().versionCode
             currentAppVersion == lastSyncedAppVersion && lastSyncedUuid == crossAppDeviceId
         } catch (_: FileNotFoundException) {
             false
@@ -88,7 +88,7 @@ class DeviceInfoUpdateManager private constructor() {
     @Throws(IOException::class)
     suspend fun updateLastSyncedKey(crossAppDeviceId: Uuid, userId: Long) = Dispatchers.IO {
         val lastSyncedKeyFile = lastSyncKeyFileForUser(userId)
-        val currentAppVersion = currentAppAppVersions().versionCode
+        val currentAppVersion = currentAppVersions().versionCode
         lastSyncedKeyFile.write { outputStream ->
             DataOutputStream(outputStream).use {
                 crossAppDeviceId.toLongs { mostSignificantBits: Long, leastSignificantBits: Long ->
