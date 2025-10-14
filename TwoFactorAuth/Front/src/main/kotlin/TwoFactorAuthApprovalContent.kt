@@ -144,17 +144,17 @@ private fun ColumnScope.ChallengeDone(outcome: Outcome.Done, close: () -> Unit) 
     when (outcome) {
         Outcome.Done.Success -> return // Not showing any confirmation screen, should be auto-dismissed.
         Outcome.Done.Rejected -> {
-            iconResId = R.drawable.hand_octagon_slash
+            iconResId = R.drawable.ic_hand_octagon_slash
             titleResId = R.string.twoFactorAuthConnectionRejectedTitle
             descResId = R.string.twoFactorAuthConnectionRejectedDescription
         }
         Outcome.Done.Expired -> {
-            iconResId = R.drawable.clock
+            iconResId = R.drawable.ic_clock
             titleResId = R.string.twoFactorAuthExpiredErrorTitle
             descResId = R.string.twoFactorAuthExpiredErrorDescription
         }
         Outcome.Done.AlreadyActioned -> {
-            iconResId = R.drawable.phone_circular_arrows_clockwise
+            iconResId = R.drawable.ic_phone_circular_arrows_clockwise
             titleResId = R.string.twoFactorAuthAlreadyProcessedErrorTitle
             descResId = R.string.twoFactorAuthCheckOriginDescription
         }
@@ -193,9 +193,9 @@ private fun ColumnScope.ChallengeResponseIssue(
     }
     ChallengeResponseResult(
         iconResId = when (outcome) {
-            is Outcome.Issue.ErrorResponse -> R.drawable.cross
-            is Outcome.Issue.Network -> R.drawable.antenna_slash
-            is Outcome.Issue.Unknown -> R.drawable.cross
+            is Outcome.Issue.ErrorResponse -> R.drawable.ic_cross
+            is Outcome.Issue.Network -> R.drawable.ic_antenna_slash
+            is Outcome.Issue.Unknown -> R.drawable.ic_cross
         },
         iconBackground = when (outcome) {
             is Outcome.Issue.Network -> MaterialTheme.colorScheme.tertiary
@@ -319,9 +319,9 @@ private fun DeviceRow(connectionAttemptInfo: ConnectionAttemptInfo) {
 @Composable
 private fun DeviceIcon(type: RemoteChallenge.Device.Type) {
     val resId = when (type) {
-        Phone -> R.drawable.mobile
-        Tablet -> R.drawable.tablet
-        Computer -> R.drawable.computer
+        Phone -> R.drawable.ic_mobile
+        Tablet -> R.drawable.ic_tablet
+        Computer -> R.drawable.ic_computer
     }
     Icon(painterResource(resId), contentDescription = null)
 }
