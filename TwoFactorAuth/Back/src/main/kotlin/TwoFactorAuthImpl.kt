@@ -57,7 +57,7 @@ internal class TwoFactorAuthImpl(
         engine { preconfigured = connectedHttpClient }
         install(ContentNegotiation) {
             val jsonConfig = Json {
-                // From DefaultJson (in ktor kotlinx.serialization):
+                /** From [io.ktor.serialization.kotlinx.json.DefaultJson] */
                 encodeDefaults = true
                 isLenient = true
                 allowSpecialFloatingPointValues = true
