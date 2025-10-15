@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/fdroid/kotlin/com/infomaniak/core/appintegrity/AppIntegrityManagerFdroid.kt">
+        <error line="1" column="1" source="standard:filename" />
+        <error line="25" column="5" source="standard:class-signature" />
+        <error line="26" column="5" source="standard:class-signature" />
+        <error line="26" column="42" source="standard:class-signature" />
+        <error line="27" column="5" source="standard:class-signature" />
+        <error line="42" column="89" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/appintegrity/ApiClientProvider.kt">
+        <error line="44" column="5" source="standard:class-signature" />
+        <error line="45" column="5" source="standard:class-signature" />
+        <error line="45" column="35" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/appintegrity/AppIntegrityRepository.kt">
+        <error line="65" column="64" source="standard:function-expression-body" />
+        <error line="77" column="10" source="standard:function-expression-body" />
+        <error line="85" column="69" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/appintegrity/AppIntegrityRoutes.kt">
+        <error line="26" column="15" source="standard:property-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/appintegrity/models/ApiError.kt">
+        <error line="24" column="5" source="standard:class-signature" />
+        <error line="25" column="5" source="standard:class-signature" />
+        <error line="25" column="30" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/appintegrity/models/ApiResponseStatus.kt">
+        <error line="36" column="12" source="standard:no-semi" />
+    </file>
+    <file name="src/standard/kotlin/com/infomaniak/core/appintegrity/AppIntegrityManager.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+    <file name="src/test/kotlin/com/infomaniak/core/appintegrity/ApiClientProviderTest.kt">
+        <error line="61" column="74" source="standard:function-expression-body" />
+        <error line="68" column="69" source="standard:function-expression-body" />
+    </file>
+</baseline>
