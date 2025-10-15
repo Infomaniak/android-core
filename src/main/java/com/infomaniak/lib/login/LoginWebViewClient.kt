@@ -23,7 +23,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
 import android.webkit.SslErrorHandler
-import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -37,7 +36,6 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.CODE_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.ERROR_ACCESS_DENIED
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.ERROR_CODE_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.ERROR_TRANSLATED_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.HTTP_ERROR_CODE
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.SSL_ERROR_CODE
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
@@ -74,15 +72,10 @@ open class LoginWebViewClient(
         errorResult(SSL_ERROR_CODE)
     }
 
-    override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-        if (isValidUrl(request.url.toString())) errorResult(error.description.toString())
-    }
-
     override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
         if (errorResponse?.statusCode !in 500..599) {
             InfomaniakLogin.sentryCallback?.invoke("${request?.url.toString()} ${request?.method} ${errorResponse?.statusCode}")
         }
-        if (request?.method == "GET") errorResult(HTTP_ERROR_CODE, errorResponse?.statusCode)
     }
 
     private fun isValidUrl(inputUrl: String?): Boolean {
@@ -116,13 +109,13 @@ open class LoginWebViewClient(
         finish()
     }
 
-    protected fun errorResult(errorCode: String, statusCode: Int? = null) = with(activity) {
+    protected fun errorResult(errorCode: String) = with(activity) {
         val intent = Intent().apply {
             putExtra(ERROR_CODE_TAG, errorCode)
             putExtra(ERROR_TRANSLATED_TAG, translateError(errorCode))
         }
         setResult(AppCompatActivity.RESULT_OK, intent)
-        if ((statusCode in 400..499).not()) finish()
+        finish()
     }
 
     private fun translateError(errorCode: String): String = with(activity) {
