@@ -128,7 +128,7 @@ private fun ConfirmLoginAutoManagedBottomSheetPreview() = SecurityTheme {
                 value = challengeForPreview(state = null, dismiss = dismiss)
                 delay(.5.seconds)
                 val outcome = when (iteration % 3) {
-                    1 -> Outcome.Done.AlreadyActioned
+                    1 -> Outcome.Done.AlreadyProcessed
                     2 -> Outcome.Done.Expired
                     else -> if (rejected) Outcome.Done.Rejected else null
                 }
