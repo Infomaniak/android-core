@@ -124,37 +124,6 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, initialValue = null)
 
-    /**
-     * Emit a new version of the [AbstractTwoFactorAuthViewModel.Challenge] with its state updated accordingly to the [Outcome]
-     *
-     * @return true if the user approved, denied or dismissed the two factor authorization or false if an error occurred
-     * and the user clicked on `Retry`
-     */
-    private suspend fun FlowCollector<Challenge?>.handleOutcome(
-        outcome: Outcome,
-        userChoice: Challenge.ApprovalAction,
-        uiChallenge: Challenge,
-        dismissCompletable: CompletableDeferred<Nothing?>,
-    ): Boolean = when (outcome) {
-        is Outcome.Done -> {
-            val doneChallengeState = computeDoneChallengeState(userChoice, outcome)
-            emit(uiChallenge.copy(state = doneChallengeState))
-            if (doneChallengeState.data != Outcome.Done.Success) dismissCompletable.join()
-            true // Return true to break repeatWhileActive loop as the challenge was either approved or dismissed
-        }
-        is Outcome.Issue -> {
-            val retryCompletable = Job()
-            val issueChallengeState = Challenge.State.Issue(data = outcome, retry = { retryCompletable.complete() })
-            emit(uiChallenge.copy(state = issueChallengeState))
-            // Wait for either user choose to retry or dismiss the screen
-            val retryOrDismissResult = raceOf({ retryCompletable.join() }, { dismissCompletable.await() })
-
-            // Break the retry loop by returning true as dismissal completes with `null`, which means user dismissed the screen
-            // Or return false to continue in repeatWhileActive loop if retry completed
-            retryOrDismissResult == null
-        }
-    }
-
     private val userIds = UserDatabase().userDao().allUsers.map { users ->
         users.mapTo(hashSetOf()) { it.id }
     }.distinctUntilChanged()
@@ -211,6 +180,37 @@ private fun utcTimestampToTimeMark(utcOffsetMillis: Long): TimeMark {
     val nowUtcMillis = System.currentTimeMillis()
     val elapsedMillis = nowUtcMillis - utcOffsetMillis
     return TimeSource.Monotonic.markNow() - elapsedMillis.milliseconds
+}
+
+/**
+ * Emit a new version of the [AbstractTwoFactorAuthViewModel.Challenge] with its state updated accordingly to the [Outcome]
+ *
+ * @return true if the user approved, denied or dismissed the two factor authorization or false if an error occurred
+ * and the user clicked on `Retry`
+ */
+private suspend fun FlowCollector<Challenge?>.handleOutcome(
+    outcome: Outcome,
+    userChoice: Challenge.ApprovalAction,
+    uiChallenge: Challenge,
+    dismissCompletable: CompletableDeferred<Nothing?>,
+): Boolean = when (outcome) {
+    is Outcome.Done -> {
+        val doneChallengeState = computeDoneChallengeState(userChoice, outcome)
+        emit(uiChallenge.copy(state = doneChallengeState))
+        if (doneChallengeState.data != Outcome.Done.Success) dismissCompletable.join()
+        true // Return true to break repeatWhileActive loop as the challenge was either approved or dismissed
+    }
+    is Outcome.Issue -> {
+        val retryCompletable = Job()
+        val issueChallengeState = Challenge.State.Issue(data = outcome, retry = { retryCompletable.complete() })
+        emit(uiChallenge.copy(state = issueChallengeState))
+        // Wait for either user choose to retry or dismiss the screen
+        val retryOrDismissResult = raceOf({ retryCompletable.join() }, { dismissCompletable.await() })
+
+        // Break the retry loop by returning true as dismissal completes with `null`, which means user dismissed the screen
+        // Or return false to continue in repeatWhileActive loop if retry completed
+        retryOrDismissResult == null
+    }
 }
 
 private fun computeDoneChallengeState(userChoice: Challenge.ApprovalAction, outcome: Outcome.Done): Done {
