@@ -50,8 +50,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -346,15 +349,20 @@ private fun ApproveOrRejectRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(Margin.Medium, alignment = Alignment.CenterHorizontally),
     ) {
+        var lastAction: ApprovalAction? by remember { mutableStateOf(null) }
         Button(
             modifier = Modifier.weight(1f),
-            onClick = { answerRequest(ApprovalAction.Reject) },
+            onClick = { answerRequest(ApprovalAction.Reject.also { lastAction = it }) },
             colors = ButtonDefaults.filledTonalButtonColors(),
+            showIndeterminateProgress = { lastAction == ApprovalAction.Reject && answerRequest.isAwaitingCall.not() },
+            indeterminateProgressDelay = 0.4.seconds,
             enabled = { answerRequest.isAwaitingCall },
         ) { Text(stringResource(R.string.buttonDeny), overflow = TextOverflow.Ellipsis, maxLines = 1) }
         Button(
             modifier = Modifier.weight(1f),
-            onClick = { answerRequest(ApprovalAction.Approve) },
+            onClick = { answerRequest(ApprovalAction.Approve.also { lastAction = it }) },
+            showIndeterminateProgress = { lastAction == ApprovalAction.Approve && answerRequest.isAwaitingCall.not() },
+            indeterminateProgressDelay = 0.4.seconds,
             enabled = { answerRequest.isAwaitingCall },
         ) { Text(stringResource(R.string.buttonApprove), overflow = TextOverflow.Ellipsis, maxLines = 1) }
     }
