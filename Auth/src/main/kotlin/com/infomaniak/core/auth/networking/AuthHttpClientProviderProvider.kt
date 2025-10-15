@@ -20,22 +20,18 @@ package com.infomaniak.core.auth.networking
 import com.infomaniak.core.auth.TokenAuthenticator
 import com.infomaniak.core.auth.TokenInterceptor
 import com.infomaniak.core.auth.TokenInterceptorListener
-import com.infomaniak.core.network.networking.HttpClient.addCache
-import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
-import com.infomaniak.core.network.networking.HttpClient.addCustomTimeout
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider.addCache
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider.addCommonInterceptors
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider.addCustomTimeout
 import okhttp3.OkHttpClient
 
-object HttpClient : BaseHttpClient()
+object AuthHttpClientProvider : BaseHttpClientProvider()
 
-abstract class BaseHttpClient {
+abstract class BaseHttpClientProvider {
 
-    protected var tokenInterceptorListener: TokenInterceptorListener? = null
+    internal var tokenInterceptorListener: TokenInterceptorListener? = null
 
-    fun init(tokenInterceptorListener: TokenInterceptorListener) {
-        this.tokenInterceptorListener = tokenInterceptorListener
-    }
-
-    val okHttpClientWithTokenInterceptor: OkHttpClient by lazy {
+    val authOkHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder().apply {
             addCache()
             addTokenInterceptor()
@@ -43,7 +39,7 @@ abstract class BaseHttpClient {
         }.build()
     }
 
-    val okHttpClientLongTimeoutWithTokenInterceptor: OkHttpClient by lazy {
+    val authOkHttpClientLongTimeout: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .apply {
                 addCache()
