@@ -29,7 +29,7 @@ import com.infomaniak.core.network.models.ApiResponseStatus
 import com.infomaniak.core.network.models.ResponseHeaders
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import com.infomaniak.core.network.models.exceptions.ServerErrorException
-import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.networking.ManualAuthorizationRequired
 import com.infomaniak.core.network.utils.CustomDateTypeAdapter
