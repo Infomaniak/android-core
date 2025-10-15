@@ -27,6 +27,7 @@ import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.rateLimit
+import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge
 import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge.State.Done
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import kotlinx.coroutines.CompletableDeferred
@@ -154,15 +155,6 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         }
     }
 
-    private fun computeDoneChallengeState(userChoice: Challenge.ApprovalAction, outcome: Outcome.Done): Done {
-        return if (userChoice == Challenge.ApprovalAction.Approve && outcome == Outcome.Done.Success) {
-            Done(Outcome.Done.Success)
-        } else {
-            val unsuccessfulOutcome = if (userChoice == Challenge.ApprovalAction.Approve) outcome else Outcome.Done.Rejected
-            Done(unsuccessfulOutcome)
-        }
-    }
-
     private val userIds = UserDatabase().userDao().allUsers.map { users ->
         users.mapTo(hashSetOf()) { it.id }
     }.distinctUntilChanged()
@@ -219,4 +211,13 @@ private fun utcTimestampToTimeMark(utcOffsetMillis: Long): TimeMark {
     val nowUtcMillis = System.currentTimeMillis()
     val elapsedMillis = nowUtcMillis - utcOffsetMillis
     return TimeSource.Monotonic.markNow() - elapsedMillis.milliseconds
+}
+
+private fun computeDoneChallengeState(userChoice: Challenge.ApprovalAction, outcome: Outcome.Done): Done {
+    return if (userChoice == Challenge.ApprovalAction.Approve && outcome == Outcome.Done.Success) {
+        Done(Outcome.Done.Success)
+    } else {
+        val unsuccessfulOutcome = if (userChoice == Challenge.ApprovalAction.Approve) outcome else Outcome.Done.Rejected
+        Done(unsuccessfulOutcome)
+    }
 }
