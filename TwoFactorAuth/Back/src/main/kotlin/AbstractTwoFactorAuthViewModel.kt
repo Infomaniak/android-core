@@ -39,10 +39,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import okhttp3.OkHttpClient
@@ -139,13 +141,15 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
        userIds.map { id -> TwoFactorAuthImpl(getConnectedHttpClient(id), id) }
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
-    private suspend fun attemptGettingAllCurrentChallenges(): Map<TwoFactorAuth, RemoteChallenge> = buildMap {
+    private suspend fun attemptGettingAllCurrentChallenges(): Map<TwoFactorAuth, RemoteChallenge> = flow {
         val currentUsersTwoFactorAuth = allUsersTwoFactorAuth.first()
         currentUsersTwoFactorAuth.forEach { twoFactorAuth ->
             val challenge = twoFactorAuth.tryGettingLatestChallenge() ?: return@forEach
-            put(twoFactorAuth, challenge)
+            emit(twoFactorAuth to challenge)
         }
-    }
+    }.toList().sortedBy { (_, challenge) ->
+        challenge.createdAt
+    }.toMap()
 
     data class Challenge(
         val data: ConnectionAttemptInfo,
