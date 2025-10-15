@@ -28,9 +28,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
+import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
 import com.infomaniak.core.twofactorauth.front.components.TwoFactorAuthAvatar
 
@@ -38,7 +38,7 @@ import com.infomaniak.core.twofactorauth.front.components.TwoFactorAuthAvatar
 fun AccountInfoContent(account: ConnectionAttemptInfo.TargetAccount) = Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(8.dp)
+    horizontalArrangement = Arrangement.spacedBy(Margin.Mini)
 ) {
     TwoFactorAuthAvatar(
         modifier = Modifier
