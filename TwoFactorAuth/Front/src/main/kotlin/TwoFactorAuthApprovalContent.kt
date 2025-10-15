@@ -153,7 +153,7 @@ private fun ColumnScope.ChallengeDone(outcome: Outcome.Done, close: () -> Unit) 
             titleResId = R.string.twoFactorAuthExpiredErrorTitle
             descResId = R.string.twoFactorAuthExpiredErrorDescription
         }
-        Outcome.Done.AlreadyActioned -> {
+        Outcome.Done.AlreadyProcessed -> {
             iconResId = R.drawable.ic_phone_circular_arrows_clockwise
             titleResId = R.string.twoFactorAuthAlreadyProcessedErrorTitle
             descResId = R.string.twoFactorAuthCheckOriginDescription
@@ -430,7 +430,7 @@ private fun ChallengeExpiredPreview() = SecurityTheme {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun ChallengeAlreadyActionedPreview() = SecurityTheme {
-    val state = Challenge.State.Done(Outcome.Done.AlreadyActioned)
+    val state = Challenge.State.Done(Outcome.Done.AlreadyProcessed)
     TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 

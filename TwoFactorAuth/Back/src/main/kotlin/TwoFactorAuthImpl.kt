@@ -141,7 +141,7 @@ internal class TwoFactorAuthImpl(
             }
             else -> when (val httpCode = response.status.value) {
                 410 -> Outcome.Done.Expired
-                404 -> Outcome.Done.AlreadyActioned
+                404 -> Outcome.Done.AlreadyProcessed
                 else -> {
                     val bodyString = runCatching { response.bodyAsText() }.cancellable().getOrNull()
                     SentryLog.e(TAG, "Failed to $actionVerb the challenge [http $httpCode] ($challengeUid) $bodyString")

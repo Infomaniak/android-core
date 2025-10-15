@@ -111,7 +111,7 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
                     emit(uiChallenge.copy(state = Challenge.State.Done(outcome)))
                     when (outcome) {
                         Outcome.Done.Success -> Unit
-                        Outcome.Done.Rejected, Outcome.Done.Expired, Outcome.Done.AlreadyActioned -> dismissCompletable.join()
+                        Outcome.Done.Rejected, Outcome.Done.Expired, Outcome.Done.AlreadyProcessed -> dismissCompletable.join()
                     }
                     return@transform
                 } else { // Rejected.
