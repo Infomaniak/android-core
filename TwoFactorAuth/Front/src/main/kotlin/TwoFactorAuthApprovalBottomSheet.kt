@@ -126,7 +126,7 @@ private fun TwoFactorAuthApprovalAutoManagedBottomSheetPreview() = SecurityTheme
             raceOf({ dismissal.join() }, {
                 val rejected = approval.awaitOneCall() == Challenge.ApprovalAction.Reject
                 value = challengeForPreview(state = null, dismiss = dismiss)
-                delay(.5.seconds)
+                delay(1.5.seconds)
                 val outcome = when (iteration % 3) {
                     1 -> Outcome.Done.AlreadyProcessed
                     2 -> Outcome.Done.Expired
@@ -138,7 +138,7 @@ private fun TwoFactorAuthApprovalAutoManagedBottomSheetPreview() = SecurityTheme
                 }
             })
             value = null
-            delay(2.seconds)
+            delay(1.5.seconds)
         }
     }
     // We have a black background to hide the ugly-ish PreviewActivity that doesn't support edge-to-edge.
