@@ -114,7 +114,7 @@ private suspend fun SheetState.hideCatching(): Boolean = try {
 
 @Preview
 @Composable
-private fun ConfirmLoginAutoManagedBottomSheetPreview() = SecurityTheme {
+private fun TwoFactorAuthApprovalAutoManagedBottomSheetPreview() = SecurityTheme {
     val state = produceState<Challenge?>(initialValue = null) {
         var iteration = 0
         while (true) {
