@@ -28,7 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import com.infomaniak.core.compose.basics.Dimens
 
 @Composable
 fun CircledIcon(
@@ -38,14 +38,13 @@ fun CircledIcon(
 ) = Surface(
     shape = CircleShape,
     color = color,
-    modifier = modifier
-        .size(48.dp)
+    modifier = modifier.size(Dimens.circledIconSize)
 ) {
     Box(contentAlignment = Alignment.Center) {
         Icon(
             painterResource(iconResId),
             contentDescription = null,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(Dimens.iconSize)
         )
     }
 }

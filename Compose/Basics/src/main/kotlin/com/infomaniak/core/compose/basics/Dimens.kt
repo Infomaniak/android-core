@@ -28,6 +28,9 @@ object Dimens {
     /** 24 dp */
     val iconSize = 24.dp
 
+    /** 48 dp */
+    val circledIconSize = 48.dp
+
     /** 32 dp */
     val avatarSize = 32.dp
 
