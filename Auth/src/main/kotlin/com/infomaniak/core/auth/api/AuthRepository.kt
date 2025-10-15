@@ -23,14 +23,15 @@ import com.infomaniak.core.auth.TokenInterceptorListener
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.api.ApiController.RefreshTokenException
 import com.infomaniak.core.network.api.ApiController.gson
-import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.lib.login.ApiToken
 import okhttp3.MultipartBody
 import okhttp3.Request
 
-object ApiController {
+object AuthRepository {
+
     suspend fun refreshToken(refreshToken: String, tokenInterceptorListener: TokenInterceptorListener): ApiToken {
 
         if (refreshToken.isBlank()) {
@@ -51,7 +52,7 @@ object ApiController {
             .post(formBuilder.build())
             .build()
 
-        val apiToken = HttpClient.okHttpClient.newCall(request).await().use {
+        val apiToken = DefaultHttpClientProvider.okHttpClient.newCall(request).await().use {
             val bodyResponse = it.bodyAsStringOrNull()
 
             when {
