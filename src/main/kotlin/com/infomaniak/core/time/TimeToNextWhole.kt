@@ -23,12 +23,12 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-fun Duration.timeOffFromWholeDay(): Duration = this - this.inWholeDays.days
+fun Duration.timeOffFromWholeDays(): Duration = this - this.inWholeDays.days
 fun Duration.timeOffFromWholeHours(): Duration = this - this.inWholeHours.hours
 fun Duration.timeOffFromWholeMinutes(): Duration = this - this.inWholeMinutes.minutes
 fun Duration.timeOffFromWholeSeconds(): Duration = this - this.inWholeSeconds.seconds
 
-fun Duration.timeToNextDay(): Duration = 1.days - timeOffFromWholeDay()
+fun Duration.timeToNextDay(): Duration = 1.days - timeOffFromWholeDays()
 fun Duration.timeToNextHour(): Duration = 1.hours - timeOffFromWholeHours()
 fun Duration.timeToNextMinute(): Duration = 1.minutes - timeOffFromWholeMinutes()
 fun Duration.timeToNextSecond(): Duration = 1.seconds - timeOffFromWholeSeconds()
