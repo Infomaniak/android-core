@@ -84,45 +84,10 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         }
     }
 
-    val challengeToResolve: StateFlow<Challenge?> = firstUnactionedChallenge.transform { unactionedChallenge ->
-        emit(null) // Start with no challenge.
-        val (twoFactorAuth, remoteChallenge) = unactionedChallenge ?: return@transform
-
-        // User was removed in the meantime (unlikely, but possible).
-        val user = UserDatabase().userDao().findById(twoFactorAuth.userId) ?: return@transform
-
-        val dismissCompletable = CompletableDeferred<Nothing?>()
-        val confirmOrRejectAsync = CompletableDeferred<Challenge.ApprovalAction>()
-        val uiChallenge = Challenge(
-            data = remoteChallenge.toConnectionAttemptInfo(user),
-            attemptTimeMark = utcTimestampToTimeMark(utcOffsetMillis = remoteChallenge.createdAt * 1000L),
-            dismiss = { dismissCompletable.complete(null) },
-            state = Challenge.State.ApproveOrReject(action = { confirmOrRejectAsync.complete(it) })
-        )
-        val awaitForUserChoice: suspend () -> Challenge.ApprovalAction? = {
-            raceOf(
-                { confirmOrRejectAsync.await() },
-                { dismissCompletable.await() }
-            )
-        }
-
-        repeatWhileActive {
-            emit(uiChallenge)
-            val userChoice = awaitForUserChoice()
-
-            emit(uiChallenge.copy(state = null))
-            actionedChallengesFlow.update { it + remoteChallenge }
-
-            // We intentionally don't immediately act on dismissal while sending the action to the backend.
-            val outcome: Outcome = when (userChoice) {
-                Challenge.ApprovalAction.Approve -> twoFactorAuth.approveChallenge(remoteChallenge.uuid)
-                Challenge.ApprovalAction.Reject -> twoFactorAuth.rejectChallenge(remoteChallenge.uuid)
-                null -> return@transform // Dismissal.
-            }
-
-            if (handleOutcome(outcome, userChoice, uiChallenge, dismissCompletable)) return@transform
-        }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, initialValue = null)
+    val challengeToResolve: StateFlow<Challenge?> = challengeToResolveFlow(
+        firstUnactionedChallenge = firstUnactionedChallenge,
+        actionedChallengesFlow = actionedChallengesFlow,
+    ).stateIn(viewModelScope, SharingStarted.Lazily, initialValue = null)
 
     private val userIds = UserDatabase().userDao().allUsers.map { users ->
         users.mapTo(hashSetOf()) { it.id }
@@ -180,6 +145,49 @@ private fun utcTimestampToTimeMark(utcOffsetMillis: Long): TimeMark {
     val nowUtcMillis = System.currentTimeMillis()
     val elapsedMillis = nowUtcMillis - utcOffsetMillis
     return TimeSource.Monotonic.markNow() - elapsedMillis.milliseconds
+}
+
+private fun challengeToResolveFlow(
+    firstUnactionedChallenge: Flow<Pair<TwoFactorAuth, RemoteChallenge>?>,
+    actionedChallengesFlow: MutableStateFlow<Set<RemoteChallenge>>,
+): Flow<Challenge?> = firstUnactionedChallenge.transform { unactionedChallenge ->
+    emit(null) // Start with no challenge.
+    val (twoFactorAuth, remoteChallenge) = unactionedChallenge ?: return@transform
+
+    val user = UserDatabase().userDao().findById(twoFactorAuth.userId)
+        ?: return@transform // User was removed in the meantime (unlikely, but possible).
+
+    val dismissCompletable = CompletableDeferred<Nothing?>()
+    val confirmOrRejectAsync = CompletableDeferred<Challenge.ApprovalAction>()
+    val uiChallenge = Challenge(
+        data = remoteChallenge.toConnectionAttemptInfo(user),
+        attemptTimeMark = utcTimestampToTimeMark(utcOffsetMillis = remoteChallenge.createdAt * 1000L),
+        dismiss = { dismissCompletable.complete(null) },
+        state = Challenge.State.ApproveOrReject(action = { confirmOrRejectAsync.complete(it) })
+    )
+    val awaitForUserChoice: suspend () -> Challenge.ApprovalAction? = {
+        raceOf(
+            { confirmOrRejectAsync.await() },
+            { dismissCompletable.await() }
+        )
+    }
+
+    repeatWhileActive {
+        emit(uiChallenge)
+        val userChoice = awaitForUserChoice()
+
+        emit(uiChallenge.copy(state = null))
+        actionedChallengesFlow.update { it + remoteChallenge }
+
+        // We intentionally don't immediately act on dismissal while sending the action to the backend.
+        val outcome: Outcome = when (userChoice) {
+            Challenge.ApprovalAction.Approve -> twoFactorAuth.approveChallenge(remoteChallenge.uuid)
+            Challenge.ApprovalAction.Reject -> twoFactorAuth.rejectChallenge(remoteChallenge.uuid)
+            null -> return@transform // Dismissal.
+        }
+
+        if (handleOutcome(outcome, userChoice, uiChallenge, dismissCompletable)) return@transform
+    }
 }
 
 /**
