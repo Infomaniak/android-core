@@ -264,6 +264,8 @@ private fun ColumnScope.PendingChallenge(
     challenge: Challenge,
     state: Challenge.State.ApproveOrReject?,
 ) {
+    val answerRequest = rememberCallableState<ApprovalAction>()
+    LaunchedEffect(state) { state?.action(answerRequest.awaitOneCall()) }
 
     Spacer(Modifier.height(Margin.Huge))
 
@@ -291,8 +293,6 @@ private fun ColumnScope.PendingChallenge(
         }
     }
     CardElement(virtualCardState, Modifier.weight(1f).fillMaxWidth())
-    val answerRequest = rememberCallableState<ApprovalAction>()
-    LaunchedEffect(state) { state?.action(answerRequest.awaitOneCall()) }
     CardElement(virtualCardState, elementPosition = CardElementPosition.Last) {
         ApproveOrRejectRow(answerRequest, Modifier.padding(Margin.Medium))
     }
