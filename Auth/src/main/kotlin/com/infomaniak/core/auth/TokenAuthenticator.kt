@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.auth
 
+import com.infomaniak.core.auth.api.AuthRepository
 import com.infomaniak.core.auth.utils.ApiTokenExt.isInfinite
 import com.infomaniak.core.login.ApiToken
 import com.infomaniak.core.sentry.SentryLog
@@ -54,7 +55,7 @@ class TokenAuthenticator(
                     }
                     isAlreadyRefreshed -> changeAccessToken(request, apiToken)
                     else -> {
-                        val newToken = AuthApiController.refreshToken(apiToken.refreshToken!!, tokenInterceptorListener)
+                        val newToken = AuthRepository.refreshToken(apiToken.refreshToken!!, tokenInterceptorListener)
                         changeAccessToken(request, newToken)
                     }
                 }
