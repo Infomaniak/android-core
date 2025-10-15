@@ -373,7 +373,7 @@ private fun BrandedPrompt() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Margin.Huge * 1 / LocalDensity.current.fontScale),
+            .padding(horizontal = Margin.Huge / LocalDensity.current.fontScale),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Margin.Medium)
     ) {
