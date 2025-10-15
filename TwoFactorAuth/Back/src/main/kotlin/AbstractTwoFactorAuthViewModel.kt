@@ -85,7 +85,7 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         val user = UserDatabase().userDao().findById(twoFactorAuth.userId)
             ?: return@transform // User was removed in the meantime (unlikely, but possible).
         val dismissCompletable = CompletableDeferred<Nothing?>()
-        val confirmOrRejectAsync = CompletableDeferred<Boolean>()
+        val confirmOrRejectAsync = CompletableDeferred<Challenge.ApprovalAction>()
         val uiChallenge = Challenge(
             data = remoteChallenge.toConnectionAttemptInfo(user),
             attemptTimeMark = utcTimestampToTimeMark(utcOffsetMillis = remoteChallenge.createdAt * 1000L),
@@ -94,20 +94,20 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         )
         repeatWhileActive {
             emit(uiChallenge)
-            val confirmOrReject: Boolean? = raceOf(
+            val userChoice: Challenge.ApprovalAction? = raceOf(
                 { confirmOrRejectAsync.await() },
                 { dismissCompletable.await() }
             )
             emit(uiChallenge.copy(state = null))
             actionedChallengesFlow.update { it + remoteChallenge }
             // We intentionally don't immediately act on dismissal while sending the action to the backend.
-            val outcome: Outcome = when (confirmOrReject) {
-                true -> twoFactorAuth.approveChallenge(remoteChallenge.uuid)
-                false -> twoFactorAuth.rejectChallenge(remoteChallenge.uuid)
+            val outcome: Outcome = when (userChoice) {
+                Challenge.ApprovalAction.Approve -> twoFactorAuth.approveChallenge(remoteChallenge.uuid)
+                Challenge.ApprovalAction.Reject -> twoFactorAuth.rejectChallenge(remoteChallenge.uuid)
                 null -> return@transform // Dismissal.
             }
             when (outcome) {
-                is Outcome.Done -> if (confirmOrReject) { // Confirmed.
+                is Outcome.Done -> if (userChoice == Challenge.ApprovalAction.Approve) {
                     emit(uiChallenge.copy(state = Challenge.State.Done(outcome)))
                     when (outcome) {
                         Outcome.Done.Success -> Unit
@@ -153,10 +153,12 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
         val dismiss: () -> Unit,
         val state: State?
     ) {
+        enum class ApprovalAction { Approve, Reject; }
+
         sealed interface State {
 
             /** @property action Send true for approval, false for reject, and null for dismiss */
-            data class ApproveOrReject(val action: ((Boolean) -> Unit)) : State
+            data class ApproveOrReject(val action: ((ApprovalAction) -> Unit)) : State
             data class Done(val data: Outcome.Done) : State
             data class Issue(
                 val data: Outcome.Issue,

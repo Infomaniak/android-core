@@ -70,6 +70,7 @@ import com.infomaniak.core.compose.basics.rememberCallableState
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.network.EDIT_PASSWORD_URL
 import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge
+import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge.ApprovalAction
 import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Computer
@@ -288,10 +289,10 @@ private fun ColumnScope.PendingChallenge(
         }
     }
     CardElement(virtualCardState, Modifier.weight(1f).fillMaxWidth())
-    val confirmRequest = rememberCallableState<Boolean>()
-    LaunchedEffect(state) { state?.action(confirmRequest.awaitOneCall()) }
+    val answerRequest = rememberCallableState<ApprovalAction>()
+    LaunchedEffect(state) { state?.action(answerRequest.awaitOneCall()) }
     CardElement(virtualCardState, elementPosition = CardElementPosition.Last) {
-        ConfirmOrRejectRow(confirmRequest, Modifier.padding(Margin.Medium))
+        ApproveOrRejectRow(answerRequest, Modifier.padding(Margin.Medium))
     }
 }
 
@@ -328,8 +329,8 @@ private fun DeviceIcon(type: RemoteChallenge.Device.Type) {
 
 
 @Composable
-private fun ConfirmOrRejectRow(
-    confirmRequest: CallableState<Boolean>,
+private fun ApproveOrRejectRow(
+    answerRequest: CallableState<ApprovalAction>,
     modifier: Modifier = Modifier,
 ) = Column(
     modifier = modifier,
@@ -347,14 +348,14 @@ private fun ConfirmOrRejectRow(
     ) {
         Button(
             modifier = Modifier.weight(1f),
-            onClick = { confirmRequest(false) },
+            onClick = { answerRequest(ApprovalAction.Reject) },
             colors = ButtonDefaults.filledTonalButtonColors(),
-            enabled = { confirmRequest.isAwaitingCall },
+            enabled = { answerRequest.isAwaitingCall },
         ) { Text(stringResource(R.string.buttonDeny), overflow = TextOverflow.Ellipsis, maxLines = 1) }
         Button(
             modifier = Modifier.weight(1f),
-            onClick = { confirmRequest(true) },
-            enabled = { confirmRequest.isAwaitingCall },
+            onClick = { answerRequest(ApprovalAction.Approve) },
+            enabled = { answerRequest.isAwaitingCall },
         ) { Text(stringResource(R.string.buttonApprove), overflow = TextOverflow.Ellipsis, maxLines = 1) }
     }
 }
@@ -397,7 +398,7 @@ private fun InfoElement(label: String, content: @Composable () -> Unit) {
 private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
     val scope = rememberCoroutineScope()
     val confirmRequest = remember {
-        CallableState<Boolean>().also { scope.launch(start = CoroutineStart.UNDISPATCHED) { it.awaitOneCall() } }
+        CallableState<ApprovalAction>().also { scope.launch(start = CoroutineStart.UNDISPATCHED) { it.awaitOneCall() } }
     }
     val state = Challenge.State.ApproveOrReject(confirmRequest)
     TwoFactorAuthApprovalContent(challengeForPreview(state))
