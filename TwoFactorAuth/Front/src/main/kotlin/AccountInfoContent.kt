@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
@@ -56,4 +57,17 @@ fun AccountInfoContent(account: ConnectionAttemptInfo.TargetAccount) = Row(
             style = Typography.bodyRegular
         )
     }
+}
+
+@Preview
+@Composable
+private fun AccountInfoContentPreview() {
+    val account = ConnectionAttemptInfo.TargetAccount(
+        avatarUrl = "https://picsum.photos/id/140/200/200",
+        fullName = "Jane Doe",
+        initials = "JD",
+        email = "jane.doe@ik.me",
+        id = 1,
+    )
+    AccountInfoContent(account)
 }
