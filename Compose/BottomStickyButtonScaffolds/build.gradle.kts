@@ -50,7 +50,7 @@ android {
 dependencies {
     implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Compose:Preview"))
-    debugImplementation(project(":Core:Compose:BasicButton"))
+    implementation(project(":Core:Compose:BasicButton"))
 
     implementation(platform(core.compose.bom))
     implementation(core.compose.material3)
