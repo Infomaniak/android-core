@@ -191,10 +191,11 @@ private fun challengeToResolveFlow(
 }
 
 /**
- * Emit a new version of the [AbstractTwoFactorAuthViewModel.Challenge] with its state updated accordingly to the [Outcome]
+ * Emit a new version of the [AbstractTwoFactorAuthViewModel.Challenge] with its state updated accordingly to the [Outcome],
+ * and let the user dismiss or ask retrying if applicable.
  *
- * @return true if the user approved, denied or dismissed the two factor authorization or false if an error occurred
- * and the user clicked on `Retry`
+ * @return `true` if handling is done (e.g. the user approved, denied, or dismissed the 2FA challenge),
+ * `false` if there's an error and the user chose to retry.
  */
 private suspend fun FlowCollector<Challenge?>.handleOutcome(
     outcome: Outcome,
@@ -206,18 +207,18 @@ private suspend fun FlowCollector<Challenge?>.handleOutcome(
         val doneChallengeState = outcome.toDoneChallengeState(userChoice)
         emit(uiChallenge.copy(state = doneChallengeState))
         if (doneChallengeState.data != Outcome.Done.Success) dismissCompletable.join()
-        true // Return true to break repeatWhileActive loop as the challenge was either approved or dismissed
+        true // Return true to break the loop as the challenge was either approved or dismissed
     }
     is Outcome.Issue -> {
         val retryCompletable = Job()
         val issueChallengeState = Challenge.State.Issue(data = outcome, retry = { retryCompletable.complete() })
         emit(uiChallenge.copy(state = issueChallengeState))
-        // Wait for either user choose to retry or dismiss the screen
-        val retryOrDismissResult = raceOf({ retryCompletable.join() }, { dismissCompletable.await() })
+        // Wait for either user to choose between retry or dismissal
+        val wasDismissed = raceOf({ retryCompletable.join() }, { dismissCompletable.await() }) == null
 
-        // Break the retry loop by returning true as dismissal completes with `null`, which means user dismissed the screen
-        // Or return false to continue in repeatWhileActive loop if retry completed
-        retryOrDismissResult == null
+        // If dismissed, we consider handling done, hence returning `true`.
+        // Otherwise, we return `false` to have the caller loop for the retry action.
+        wasDismissed
     }
 }
 
