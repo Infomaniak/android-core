@@ -119,12 +119,12 @@ private fun ConfirmLoginAutoManagedBottomSheetPreview() = SecurityTheme {
         var iteration = 0
         while (true) {
             iteration++
-            val approval = CallableState<Boolean>()
+            val approval = CallableState<Challenge.ApprovalAction>()
             val dismissal = Job()
             val dismiss = fun () { dismissal.complete() }
             value = challengeForPreview(Challenge.State.ApproveOrReject(approval), dismiss = dismiss)
             raceOf({ dismissal.join() }, {
-                val rejected = !approval.awaitOneCall()
+                val rejected = approval.awaitOneCall() == Challenge.ApprovalAction.Reject
                 value = challengeForPreview(state = null, dismiss = dismiss)
                 delay(.5.seconds)
                 val outcome = when (iteration % 3) {
