@@ -31,7 +31,7 @@ import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.HAS
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.IS_USER_WANTING_UPDATES_KEY
 import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionName
-import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
