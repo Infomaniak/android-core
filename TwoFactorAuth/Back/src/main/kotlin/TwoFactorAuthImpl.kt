@@ -145,7 +145,7 @@ internal class TwoFactorAuthImpl(
                 else -> {
                     val bodyString = runCatching { response.bodyAsText() }.cancellable().getOrNull()
                     SentryLog.e(TAG, "Failed to $actionVerb the challenge [http $httpCode] ($challengeUid) $bodyString")
-                    Outcome.Issue.ErrorResponse(httpCode)
+                    Outcome.Issue.ErrorResponse
                 }
             }
         }
@@ -153,11 +153,11 @@ internal class TwoFactorAuthImpl(
         when (t) {
             is IOException -> {
                 SentryLog.i(TAG, "I/O issue while trying to $actionVerb the challenge ($challengeUid)", t)
-                Outcome.Issue.Network(t)
+                Outcome.Issue.Network
             }
             else -> {
                 SentryLog.e(TAG, "Couldn't $actionVerb the challenge ($challengeUid) because of an unknow issue", t)
-                Outcome.Issue.Unknown(t)
+                Outcome.Issue.Unknown
             }
         }
     }

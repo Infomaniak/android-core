@@ -94,7 +94,6 @@ import com.infomaniak.core.twofactorauth.front.elements.lightSourceBehind
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import splitties.experimental.ExperimentalSplittiesApi
-import java.net.UnknownHostException
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -455,7 +454,7 @@ private fun ChallengePromptCredentialsUpdatePreview() = SecurityTheme {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun ChallengeResponseIssuePreview() = SecurityTheme {
-    val state = Challenge.State.Issue(Outcome.Issue.ErrorResponse(503), retry = {})
+    val state = Challenge.State.Issue(Outcome.Issue.ErrorResponse, retry = {})
     TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 
@@ -463,7 +462,7 @@ private fun ChallengeResponseIssuePreview() = SecurityTheme {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun ChallengeNetworkIssuePreview() = SecurityTheme {
-    val state = Challenge.State.Issue(Outcome.Issue.Network(UnknownHostException()), retry = {})
+    val state = Challenge.State.Issue(Outcome.Issue.Network, retry = {})
     TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 
