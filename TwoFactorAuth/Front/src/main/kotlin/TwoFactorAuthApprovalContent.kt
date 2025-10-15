@@ -207,9 +207,8 @@ private fun ColumnScope.ChallengeResponseIssue(
         titleResId = titleResId,
         contentText = {
             val textResId = when (outcome) {
-                is Outcome.Issue.ErrorResponse -> R.string.twoFactorAuthGenericErrorDescription
                 is Outcome.Issue.Network -> R.string.twoFactorAuthNoNetworkErrorDescription
-                is Outcome.Issue.Unknown -> R.string.twoFactorAuthGenericErrorDescription
+                else -> R.string.twoFactorAuthGenericErrorDescription
             }
             Text(text = stringResource(textResId))
         },
