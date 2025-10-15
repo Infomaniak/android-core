@@ -105,7 +105,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
 
         val currentCrossAppDeviceId = sharedDeviceIdManager.crossAppDeviceIdFlow.first()
 
-        val deviceInfo = currentDeviceInfo(currentCrossAppDeviceId, deviceInfoUpdateManager.currentAppVersions())
+        val deviceInfo = currentDeviceInfo(currentCrossAppDeviceId, deviceInfoUpdateManager.currentAppVersionData())
 
         val deviceInfoUpdatersForUserId = DynamicLazyMap<Long, Deferred<Outcome>>(
             cacheManager = { userId, deferred ->
