@@ -203,7 +203,7 @@ private suspend fun FlowCollector<Challenge?>.handleOutcome(
     dismissCompletable: CompletableDeferred<Nothing?>,
 ): Boolean = when (outcome) {
     is Outcome.Done -> {
-        val doneChallengeState = computeDoneChallengeState(userChoice, outcome)
+        val doneChallengeState = outcome.toDoneChallengeState(userChoice)
         emit(uiChallenge.copy(state = doneChallengeState))
         if (doneChallengeState.data != Outcome.Done.Success) dismissCompletable.join()
         true // Return true to break repeatWhileActive loop as the challenge was either approved or dismissed
@@ -221,11 +221,9 @@ private suspend fun FlowCollector<Challenge?>.handleOutcome(
     }
 }
 
-private fun computeDoneChallengeState(userChoice: Challenge.ApprovalAction, outcome: Outcome.Done): Done {
-    return if (userChoice == Challenge.ApprovalAction.Approve && outcome == Outcome.Done.Success) {
-        Done(Outcome.Done.Success)
-    } else {
-        val unsuccessfulOutcome = if (userChoice == Challenge.ApprovalAction.Approve) outcome else Outcome.Done.Rejected
-        Done(unsuccessfulOutcome)
-    }
+private fun Outcome.Done.toDoneChallengeState(
+    userChoice: Challenge.ApprovalAction
+): Done = when (this) {
+    Outcome.Done.Success -> Done(if (userChoice == Challenge.ApprovalAction.Reject) Outcome.Done.Rejected else this)
+    else -> Done(this)
 }
