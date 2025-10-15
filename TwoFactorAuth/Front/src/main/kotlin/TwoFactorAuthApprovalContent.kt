@@ -21,6 +21,7 @@
 package com.infomaniak.core.twofactorauth.front
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -230,15 +231,10 @@ private fun ColumnScope.ChallengeResponseResult(
     close: () -> Unit,
     actionButton: (@Composable () -> Unit)? = null
 ) {
-    Spacer(Modifier.height(Margin.Huge))
-    CircledIcon(iconResId, color = iconBackground)
-    Spacer(Modifier.height(Margin.Medium))
-    Text(
-        text = stringResource(titleResId),
-        style = Typography.h1,
-        textAlign = TextAlign.Center
+    ChallengeHeader(
+        illustrationImage = { CircledIcon(iconResId, color = iconBackground) },
+        titleResId = titleResId
     )
-    Spacer(Modifier.height(Margin.Medium))
     ProvideTextStyle(LocalTextStyle.current.copy(textAlign = TextAlign.Center)) {
         contentText()
     }
@@ -266,14 +262,12 @@ private fun ColumnScope.PendingChallenge(
     val answerRequest = rememberCallableState<ApprovalAction>()
     LaunchedEffect(state) { state?.action(answerRequest.awaitOneCall()) }
 
-    Spacer(Modifier.height(Margin.Huge))
-
-    BrandedPrompt()
+    ChallengeHeader(
+        illustrationImage = { ShieldK() },
+        titleResId = R.string.twoFactorAuthTryingToLogInTitle
+    )
 
     Spacer(Modifier.weight(1f))
-    //TODO[issue-blocked]: Replace line below with heightIn above once this is fixed:
-    // https://issuetracker.google.com/issues/294046936
-    Spacer(Modifier.height(Margin.Medium))
 
     CardElement(
         virtualCardState,
@@ -295,6 +289,27 @@ private fun ColumnScope.PendingChallenge(
     CardElement(virtualCardState, elementPosition = CardElementPosition.Last) {
         ApproveOrRejectRow(answerRequest, Modifier.padding(Margin.Medium))
     }
+}
+
+@Composable
+private fun ChallengeHeader(
+    illustrationImage: @Composable () -> Unit,
+    @StringRes titleResId: Int,
+) = Column(
+    Modifier.fillMaxWidth(),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(Margin.Medium)
+) {
+    Spacer(Modifier.height(Margin.Huge))
+    illustrationImage()
+    Spacer(Modifier.height(Margin.Medium))
+    Text(
+        text = stringResource(titleResId),
+        modifier = Modifier.padding(horizontal = Margin.Huge / LocalDensity.current.fontScale),
+        style = Typography.h1,
+        textAlign = TextAlign.Center
+    )
+    Spacer(Modifier.height(Margin.Medium))
 }
 
 @Composable
@@ -363,24 +378,6 @@ private fun ApproveOrRejectRow(
             indeterminateProgressDelay = 0.4.seconds,
             enabled = { answerRequest.isAwaitingCall },
         ) { Text(stringResource(R.string.buttonApprove), overflow = TextOverflow.Ellipsis, maxLines = 1) }
-    }
-}
-
-@Composable
-private fun BrandedPrompt() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Margin.Huge / LocalDensity.current.fontScale),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Margin.Medium)
-    ) {
-        ShieldK()
-        Text(
-            text = stringResource(R.string.twoFactorAuthTryingToLogInTitle),
-            style = Typography.h1,
-            textAlign = TextAlign.Center
-        )
     }
 }
 
