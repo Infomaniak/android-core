@@ -84,11 +84,15 @@ object ApiController {
         gson = gsonBuilder.create()
     }
 
+    /**
+     * Executes an API request to the given URL with the specified parameters.
+     * Use [DefaultHttpClientProvider.okHttpClient] or [AuthHttpClientProvider.okHttpClient] for the client.
+     */
     suspend inline fun <reified T> callApi(
         url: String,
         method: ApiMethod,
         body: Any? = null,
-        okHttpClient: OkHttpClient = HttpClient.okHttpClient,
+        okHttpClient: OkHttpClient,
         useKotlinxSerialization: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
     ): T {
