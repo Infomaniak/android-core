@@ -80,7 +80,7 @@ fun rememberVirtualCardState(kind: CardKind): VirtualCardState = rememberVirtual
 )
 
 @Composable
-fun rememberVirtualCardState(
+private fun rememberVirtualCardState(
     shape: Shape = CardDefaults.shape,
     colors: CardColors = CardDefaults.outlinedCardColors(),
     elevation: CardElevation = CardDefaults.outlinedCardElevation(),
@@ -150,12 +150,12 @@ fun CardElement(
     )
 }
 
-fun Modifier.virtualBorderTopLeftCorner(borderState: VirtualCardState): Modifier = composed {
+private fun Modifier.virtualBorderTopLeftCorner(borderState: VirtualCardState): Modifier = composed {
     DisposableEffect(Unit) { onDispose { borderState.mutable.topLeft = Offset.Unspecified } }
     onPlaced { borderState.mutable.topLeft = it.positionInParent() }
 }
 
-fun Modifier.virtualBorderBottomRightCorner(borderState: VirtualCardState): Modifier = composed {
+private fun Modifier.virtualBorderBottomRightCorner(borderState: VirtualCardState): Modifier = composed {
     DisposableEffect(Unit) { onDispose { borderState.mutable.size = Size.Zero } }
     onPlaced { borderState.mutable.size = it.positionInParent() + it.size }
 }
