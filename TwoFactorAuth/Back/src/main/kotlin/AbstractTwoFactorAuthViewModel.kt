@@ -27,11 +27,13 @@ import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.rateLimit
+import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge.State.Done
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -84,8 +86,10 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
     val challengeToResolve: StateFlow<Challenge?> = firstUnactionedChallenge.transform { unactionedChallenge ->
         emit(null) // Start with no challenge.
         val (twoFactorAuth, remoteChallenge) = unactionedChallenge ?: return@transform
-        val user = UserDatabase().userDao().findById(twoFactorAuth.userId)
-            ?: return@transform // User was removed in the meantime (unlikely, but possible).
+
+        // User was removed in the meantime (unlikely, but possible).
+        val user = UserDatabase().userDao().findById(twoFactorAuth.userId) ?: return@transform
+
         val dismissCompletable = CompletableDeferred<Nothing?>()
         val confirmOrRejectAsync = CompletableDeferred<Challenge.ApprovalAction>()
         val uiChallenge = Challenge(
@@ -94,51 +98,77 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
             dismiss = { dismissCompletable.complete(null) },
             state = Challenge.State.ApproveOrReject(action = { confirmOrRejectAsync.complete(it) })
         )
-        repeatWhileActive {
-            emit(uiChallenge)
-            val userChoice: Challenge.ApprovalAction? = raceOf(
+        val awaitForUserChoice: suspend () -> Challenge.ApprovalAction? = {
+            raceOf(
                 { confirmOrRejectAsync.await() },
                 { dismissCompletable.await() }
             )
+        }
+
+        repeatWhileActive {
+            emit(uiChallenge)
+            val userChoice = awaitForUserChoice()
+
             emit(uiChallenge.copy(state = null))
             actionedChallengesFlow.update { it + remoteChallenge }
+
             // We intentionally don't immediately act on dismissal while sending the action to the backend.
             val outcome: Outcome = when (userChoice) {
                 Challenge.ApprovalAction.Approve -> twoFactorAuth.approveChallenge(remoteChallenge.uuid)
                 Challenge.ApprovalAction.Reject -> twoFactorAuth.rejectChallenge(remoteChallenge.uuid)
                 null -> return@transform // Dismissal.
             }
-            when (outcome) {
-                is Outcome.Done -> if (userChoice == Challenge.ApprovalAction.Approve) {
-                    emit(uiChallenge.copy(state = Challenge.State.Done(outcome)))
-                    when (outcome) {
-                        Outcome.Done.Success -> Unit
-                        Outcome.Done.Rejected, Outcome.Done.Expired, Outcome.Done.AlreadyProcessed -> dismissCompletable.join()
-                    }
-                    return@transform
-                } else { // Rejected.
-                    emit(uiChallenge.copy(state = Challenge.State.Done(Outcome.Done.Rejected)))
-                    dismissCompletable.join()
-                    return@transform
-                }
-                is Outcome.Issue -> {
-                    val retryCompletable = Job()
-                    emit(uiChallenge.copy(state = Challenge.State.Issue(outcome, retry = { retryCompletable.complete() })))
-                    raceOf(
-                        { retryCompletable.join() },
-                        { dismissCompletable.await() }
-                    ) ?: return@transform // Break the retry loop as dismissal hands back `null`.
-                }
-            }
+
+            if (handleOutcome(outcome, userChoice, uiChallenge, dismissCompletable)) return@transform
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, initialValue = null)
+
+    /**
+     * Emit a new version of the [AbstractTwoFactorAuthViewModel.Challenge] with its state updated accordingly to the [Outcome]
+     *
+     * @return true if the user approved, denied or dismissed the two factor authorization or false if an error occurred
+     * and the user clicked on `Retry`
+     */
+    private suspend fun FlowCollector<Challenge?>.handleOutcome(
+        outcome: Outcome,
+        userChoice: Challenge.ApprovalAction,
+        uiChallenge: Challenge,
+        dismissCompletable: CompletableDeferred<Nothing?>,
+    ): Boolean = when (outcome) {
+        is Outcome.Done -> {
+            val doneChallengeState = computeDoneChallengeState(userChoice, outcome)
+            emit(uiChallenge.copy(state = doneChallengeState))
+            if (doneChallengeState.data != Outcome.Done.Success) dismissCompletable.join()
+            true // Return true to break repeatWhileActive loop as the challenge was either approved or dismissed
+        }
+        is Outcome.Issue -> {
+            val retryCompletable = Job()
+            val issueChallengeState = Challenge.State.Issue(data = outcome, retry = { retryCompletable.complete() })
+            emit(uiChallenge.copy(state = issueChallengeState))
+            // Wait for either user choose to retry or dismiss the screen
+            val retryOrDismissResult = raceOf({ retryCompletable.join() }, { dismissCompletable.await() })
+
+            // Break the retry loop by returning true as dismissal completes with `null`, which means user dismissed the screen
+            // Or return false to continue in repeatWhileActive loop if retry completed
+            retryOrDismissResult == null
+        }
+    }
+
+    private fun computeDoneChallengeState(userChoice: Challenge.ApprovalAction, outcome: Outcome.Done): Done {
+        return if (userChoice == Challenge.ApprovalAction.Approve && outcome == Outcome.Done.Success) {
+            Done(Outcome.Done.Success)
+        } else {
+            val unsuccessfulOutcome = if (userChoice == Challenge.ApprovalAction.Approve) outcome else Outcome.Done.Rejected
+            Done(unsuccessfulOutcome)
+        }
+    }
 
     private val userIds = UserDatabase().userDao().allUsers.map { users ->
         users.mapTo(hashSetOf()) { it.id }
     }.distinctUntilChanged()
 
     private val allUsersTwoFactorAuth: Flow<List<TwoFactorAuth>> = userIds.mapLatest { userIds ->
-       userIds.map { id -> TwoFactorAuthImpl(getConnectedHttpClient(id), id) }
+        userIds.map { id -> TwoFactorAuthImpl(getConnectedHttpClient(id), id) }
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
     private suspend fun attemptGettingAllCurrentChallenges(): Map<TwoFactorAuth, RemoteChallenge> = flow {
