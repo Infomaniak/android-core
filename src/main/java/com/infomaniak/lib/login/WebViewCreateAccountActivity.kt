@@ -20,7 +20,6 @@ package com.infomaniak.lib.login
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -29,6 +28,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.CANCEL_HOST_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.CREATE_ACCOUNT_URL_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
@@ -108,7 +108,7 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
         }
 
         private fun openUrl(url: String) = runCatching {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
         }
 
         private fun successResult() {
