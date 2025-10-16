@@ -120,10 +120,7 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
             /** @property action Send true for approval, false for reject, and null for dismiss */
             data class ApproveOrReject(val action: ((ApprovalAction) -> Unit)) : State
             data class Done(val data: Outcome.Done) : State
-            data class Issue(
-                val data: Outcome.Issue,
-                val retry: () -> Unit
-            ) : State
+            data class Issue(val data: Outcome.Issue, val retry: () -> Unit) : State
         }
     }
 }
