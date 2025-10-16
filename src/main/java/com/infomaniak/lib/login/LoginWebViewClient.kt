@@ -23,6 +23,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
 import android.webkit.SslErrorHandler
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -70,6 +71,10 @@ open class LoginWebViewClient(
             if (issuedBy?.cName == "localhost" && issuedTo?.cName == "localhost") return
         }
         errorResult(SSL_ERROR_CODE)
+    }
+
+    override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
+        if (request.isForMainFrame && isValidUrl(request.url.toString())) errorResult(error.description.toString())
     }
 
     override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
