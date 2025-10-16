@@ -69,6 +69,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.res.ResourcesCompat.ID_NULL
 import com.infomaniak.core.compose.basics.CallableState
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.rememberCallableState
@@ -313,7 +314,7 @@ private fun DeviceIcon(type: RemoteChallenge.Device.Type) {
 
 private val Outcome.Done.iconResId: Int
     @DrawableRes get() = when (this) {
-        Outcome.Done.Success -> 0 // Never displayed.
+        Outcome.Done.Success -> ID_NULL // Never displayed.
         Outcome.Done.Expired -> R.drawable.ic_clock
         Outcome.Done.AlreadyProcessed -> R.drawable.ic_phone_circular_arrows_clockwise
         Outcome.Done.Rejected -> R.drawable.ic_hand_octagon_slash
@@ -321,7 +322,7 @@ private val Outcome.Done.iconResId: Int
 
 private val Outcome.Done.titleResId: Int
     @StringRes get() = when (this) {
-        Outcome.Done.Success -> 0 // Never displayed.
+        Outcome.Done.Success -> ID_NULL // Never displayed.
         Outcome.Done.Expired -> R.string.twoFactorAuthExpiredErrorTitle
         Outcome.Done.AlreadyProcessed -> R.string.twoFactorAuthAlreadyProcessedErrorTitle
         Outcome.Done.Rejected -> R.string.twoFactorAuthConnectionRejectedTitle
@@ -329,7 +330,7 @@ private val Outcome.Done.titleResId: Int
 
 private val Outcome.Done.descResId: Int
     @StringRes get() = when (this) {
-        Outcome.Done.Success -> 0 // Never displayed.
+        Outcome.Done.Success -> ID_NULL // Never displayed.
         Outcome.Done.Expired -> R.string.twoFactorAuthExpiredErrorDescription
         Outcome.Done.AlreadyProcessed -> R.string.twoFactorAuthCheckOriginDescription
         Outcome.Done.Rejected -> R.string.twoFactorAuthConnectionRejectedDescription
