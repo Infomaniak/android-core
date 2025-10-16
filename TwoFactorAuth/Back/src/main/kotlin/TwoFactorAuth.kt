@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.twofactorauth.back
 
-import java.io.IOException
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -40,12 +39,11 @@ interface TwoFactorAuth {
     suspend fun rejectChallenge(challengeUid: Uuid): Outcome
 
     sealed interface Outcome {
-        data object Success : Outcome
+        enum class Done : Outcome { Success, Expired, AlreadyProcessed, Rejected; }
         sealed interface Issue : Outcome {
-            data object Expired : Issue
-            data class ErrorResponse(val httpStatusCode: Int) : Issue
-            data class Network(val exception: IOException) : Issue
-            data class Unknown(val exception: Throwable) : Issue
+            data object ErrorResponse : Issue
+            data object Network : Issue
+            data object Unknown : Issue
         }
     }
 }

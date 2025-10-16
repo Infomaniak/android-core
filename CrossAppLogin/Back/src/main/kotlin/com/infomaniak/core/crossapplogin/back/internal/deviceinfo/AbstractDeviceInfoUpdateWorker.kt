@@ -90,27 +90,6 @@ abstract class AbstractDeviceInfoUpdateWorker(
     params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
 
-    companion object {
-
-        suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> schedule() {
-            val workManager = WorkManager.getInstance(appCtx)
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-            val workRequest = OneTimeWorkRequestBuilder<T>()
-                .setBackoffCriteria(BackoffPolicy.LINEAR, backoffDelay = 10L, timeUnit = TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build()
-            workManager.enqueueUniqueWork(
-                "device-info-update",
-                ExistingWorkPolicy.APPEND_OR_REPLACE,
-                workRequest
-            ).await()
-        }
-
-        private const val TAG = "AbstractDeviceInfoUpdateWorker"
-    }
-
     protected abstract suspend fun getConnectedHttpClient(userId: Int): OkHttpClient
 
     override suspend fun doWork(): Result = autoCancelScope {
@@ -126,7 +105,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
 
         val currentCrossAppDeviceId = sharedDeviceIdManager.crossAppDeviceIdFlow.first()
 
-        val deviceInfo = currentDeviceInfo(currentCrossAppDeviceId, deviceInfoUpdateManager.currentAppAppVersions())
+        val deviceInfo = createDeviceInfo(currentCrossAppDeviceId, deviceInfoUpdateManager.currentAppVersionData())
 
         val deviceInfoUpdatersForUserId = DynamicLazyMap<Long, Deferred<Outcome>>(
             cacheManager = { userId, deferred ->
@@ -169,35 +148,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
         if (deviceInfoUpdateManager.isUpToDate(crossAppDeviceId, targetUserId)) {
             return Outcome.Done
         }
-        val okHttpClient = getConnectedHttpClient(userId = targetUserId.toInt())
-        val httpClient = HttpClient(OkHttp) {
-            engine { preconfigured = okHttpClient }
-            install(ContentNegotiation) {
-                json()
-            }
-            install(HttpRequestRetry) {
-                maxRetries = 3
-                retryOnExceptionIf { request, cause -> cause !is SerializationException }
-            }
-            defaultRequest {
-                userAgent(HttpUtils.getUserAgent)
-                headers {
-                    @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
-                    HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
-                }
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-            }
-            HttpResponseValidator {
-                validateResponse { response ->
-                    response.validateContentType { accepted, received ->
-                        val url = response.request.url
-                        val method = response.request.method
-                        throw IllegalArgumentException("Expected Content-Type $accepted but got $received from $method on $url")
-                    }
-                }
-            }
-        }
+        val httpClient = createHttpClientForUser(targetUserId)
 
         SentryLog.i(TAG, "Will attempt updating device info for user id $targetUserId")
 
@@ -239,9 +190,9 @@ abstract class AbstractDeviceInfoUpdateWorker(
     }
 
     @ExperimentalUuidApi
-    private fun currentDeviceInfo(
+    private fun createDeviceInfo(
         currentCrossAppDeviceId: Uuid,
-        appAppVersions: DeviceInfoUpdateManager.AppVersions,
+        appVersions: DeviceInfoUpdateManager.AppVersionData,
     ): DeviceInfo {
         val hasTabletSizedScreen = appCtx.resources.configuration.smallestScreenWidthDp >= 600
         val packageManager = appCtx.packageManager
@@ -264,8 +215,62 @@ abstract class AbstractDeviceInfoUpdateWorker(
             capabilities = listOf(
                 "2fa:push_challenge:approval",
             ),
-            version = appAppVersions.versionName
+            version = appVersions.versionName
         )
+    }
+
+    private suspend fun createHttpClientForUser(userId: Long): HttpClient {
+        return createHttpClientForUser(getConnectedHttpClient(userId = userId.toInt()))
+    }
+
+    private fun createHttpClientForUser(connectedOkHttpClient: OkHttpClient): HttpClient = HttpClient(OkHttp) {
+        engine { preconfigured = connectedOkHttpClient }
+        install(ContentNegotiation) {
+            json()
+        }
+        install(HttpRequestRetry) {
+            maxRetries = 3
+            retryOnExceptionIf { _, cause -> cause !is SerializationException }
+        }
+        defaultRequest {
+            userAgent(HttpUtils.getUserAgent)
+            headers {
+                @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
+                HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
+            }
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+        }
+        HttpResponseValidator {
+            validateResponse { response ->
+                response.validateContentType { accepted, received ->
+                    val url = response.request.url
+                    val method = response.request.method
+                    throw IllegalArgumentException("Expected Content-Type $accepted but got $received from $method on $url")
+                }
+            }
+        }
+    }
+
+    companion object {
+
+        suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> schedule() {
+            val workManager = WorkManager.getInstance(appCtx)
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+            val workRequest = OneTimeWorkRequestBuilder<T>()
+                .setBackoffCriteria(BackoffPolicy.LINEAR, backoffDelay = 10L, timeUnit = TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
+            workManager.enqueueUniqueWork(
+                "device-info-update",
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                workRequest
+            ).await()
+        }
+
+        private const val TAG = "AbstractDeviceInfoUpdateWorker"
     }
 }
 

@@ -50,18 +50,13 @@ class DeviceInfoUpdateManager private constructor() {
 
     private val lastSyncedKeyDir = appCtx.filesDir.resolve("lastSyncedDeviceInfoKeys")
 
-    data class AppVersions(
-        val versionName: String?,
-        val versionCode: Long,
-    )
-
-    val currentAppAppVersions = suspendBlockingLazy(Dispatchers.IO) {
+    val currentAppVersionData = suspendBlockingLazy(Dispatchers.IO) {
         appCtx.packageManager.getPackageInfo(appCtx.packageName, 0).let {
             val versionCode = when {
                 SDK_INT >= 28 -> it.longVersionCode
                 else -> @Suppress("Deprecation") it.versionCode.toLong()
             }
-            AppVersions(versionName = it.versionName, versionCode = versionCode)
+            AppVersionData(versionName = it.versionName, versionCode = versionCode)
         }
     }
 
@@ -78,7 +73,7 @@ class DeviceInfoUpdateManager private constructor() {
                 )
                 lastSyncedAppVersion = stream.readLong()
             }
-            val currentAppVersion = currentAppAppVersions().versionCode
+            val currentAppVersion = currentAppVersionData().versionCode
             currentAppVersion == lastSyncedAppVersion && lastSyncedUuid == crossAppDeviceId
         } catch (_: FileNotFoundException) {
             false
@@ -88,7 +83,7 @@ class DeviceInfoUpdateManager private constructor() {
     @Throws(IOException::class)
     suspend fun updateLastSyncedKey(crossAppDeviceId: Uuid, userId: Long) = Dispatchers.IO {
         val lastSyncedKeyFile = lastSyncKeyFileForUser(userId)
-        val currentAppVersion = currentAppAppVersions().versionCode
+        val currentAppVersion = currentAppVersionData().versionCode
         lastSyncedKeyFile.write { outputStream ->
             DataOutputStream(outputStream).use {
                 crossAppDeviceId.toLongs { mostSignificantBits: Long, leastSignificantBits: Long ->
@@ -115,4 +110,9 @@ class DeviceInfoUpdateManager private constructor() {
         }
 
     private fun lastSyncKeyFileForUser(userId: Long): AtomicFile = AtomicFile(lastSyncedKeyDir.resolve("$userId"))
+
+    data class AppVersionData(
+        val versionName: String?,
+        val versionCode: Long,
+    )
 }

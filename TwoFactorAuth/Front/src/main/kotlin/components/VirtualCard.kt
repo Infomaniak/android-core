@@ -26,6 +26,7 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -34,9 +35,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.isUnspecified
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawOutline
@@ -77,7 +80,7 @@ fun rememberVirtualCardState(kind: CardKind): VirtualCardState = rememberVirtual
 )
 
 @Composable
-fun rememberVirtualCardState(
+private fun rememberVirtualCardState(
     shape: Shape = CardDefaults.shape,
     colors: CardColors = CardDefaults.outlinedCardColors(),
     elevation: CardElevation = CardDefaults.outlinedCardElevation(),
@@ -95,13 +98,11 @@ fun rememberVirtualCardState(
  * # WARNING: Make sure you put this after any padding to get the desired placement.
  */
 fun Modifier.virtualCardHost(borderState: VirtualCardState): Modifier = drawWithCache {
-    when (borderState) {
-        is VirtualCardStateImpl -> Unit
-    }
-    val border = borderState.borderState.value ?: return@drawWithCache onDrawBehind {}
+    val border = borderState.mutable.borderState.value ?: return@drawWithCache onDrawBehind {}
+    if (borderState.size.isEmpty() || borderState.topLeft.isUnspecified) return@drawWithCache onDrawBehind {}
 
     val drawStyle = Stroke(width = border.width.toPx())
-    val outline = borderState.shape.createOutline(
+    val outline = borderState.mutable.shape.createOutline(
         size = borderState.size.offsetSize(borderState.topLeft),
         layoutDirection = layoutDirection,
         density = this
@@ -140,7 +141,7 @@ fun CardElement(
         modifier = when (elementPosition) {
             CardElementPosition.First -> modifier.virtualBorderTopLeftCorner(virtualCardState)
             CardElementPosition.Middle -> modifier
-            CardElementPosition.Last -> modifier.virtualBorderBottomLeftCorner(virtualCardState)
+            CardElementPosition.Last -> modifier.virtualBorderBottomRightCorner(virtualCardState)
         },
         shape = shape,
         colors = virtualCardState.colors,
@@ -149,25 +150,21 @@ fun CardElement(
     )
 }
 
-fun Modifier.virtualBorderTopLeftCorner(borderState: VirtualCardState): Modifier = onPlaced {
-    when (borderState) {
-        is VirtualCardStateImpl -> Unit
-    }
-    borderState.topLeft = it.positionInParent()
+private fun Modifier.virtualBorderTopLeftCorner(borderState: VirtualCardState): Modifier = composed {
+    DisposableEffect(Unit) { onDispose { borderState.mutable.topLeft = Offset.Unspecified } }
+    onPlaced { borderState.mutable.topLeft = it.positionInParent() }
 }
 
-fun Modifier.virtualBorderBottomLeftCorner(borderState: VirtualCardState): Modifier = onPlaced {
-    when (borderState) {
-        is VirtualCardStateImpl -> Unit
-    }
-    borderState.size = it.positionInParent() + it.size
+private fun Modifier.virtualBorderBottomRightCorner(borderState: VirtualCardState): Modifier = composed {
+    DisposableEffect(Unit) { onDispose { borderState.mutable.size = Size.Zero } }
+    onPlaced { borderState.mutable.size = it.positionInParent() + it.size }
 }
 
 sealed interface VirtualCardState {
     val firstElementShape: Shape
     val lastElementShape: Shape
     val middleElementsShape: Shape
-    
+
     val colors: CardColors
     val elevation: CardElevation
 
@@ -186,6 +183,11 @@ private operator fun Offset.plus(size: IntSize): Size {
 /** Helper method to offset the provided size with the offset in box width and height */
 private fun Size.offsetSize(offset: Offset): Size =
     Size(this.width - offset.x, this.height - offset.y)
+
+private val VirtualCardState.mutable: VirtualCardStateImpl
+    get() = when (this) {
+        is VirtualCardStateImpl -> this
+    }
 
 @Stable
 private class VirtualCardStateImpl(

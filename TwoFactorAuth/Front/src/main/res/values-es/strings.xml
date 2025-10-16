@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
     <string name="buttonApprove">Aprobar</string>
     <string name="buttonDeny">Denegar</string>
-    <string name="buttonModifyPassword">Cambiar contraseña</string>
+    <string name="buttonEditPassword">Cambiar contraseña</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Esta solicitud ya ha sido tramitada</string>
+    <string name="twoFactorAuthCheckOriginDescription">¿No has iniciado esta acción?\nComprueba tus dispositivos activos y desconecta los que no reconozcas.</string>
     <string name="twoFactorAuthConfirmationDescription">Al confirmar esta conexión, autorizas a este dispositivo a acceder a tu cuenta Infomaniak.</string>
-    <string name="twoFactorAuthConnectionAlreadyValidatedTitle">Esta conexión ya ha sido validada desde otro dispositivo</string>
-    <string name="twoFactorAuthConnectionExpiredTitle">Esta solicitud de conexión ha expirado</string>
-    <string name="twoFactorAuthConnectionRefusedDescription">Ha rechazado un intento de conexión. Para asegurar su cuenta, cambie su contraseña. Si usted es el origen de este intento, intente conectarse de nuevo.</string>
-    <string name="twoFactorAuthConnectionRefusedTitle">Conexión rechazada</string>
-    <string name="twoFactorAuthConnectionValidationDescription">¿No has iniciado esta validación? Comprueba la actividad de tus últimos dispositivos utilizados.</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Ha rechazado un intento de conexión. Para asegurar su cuenta, cambie su contraseña.\nSi usted es el origen de este intento, intente conectarse de nuevo.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Conexión rechazada</string>
     <string name="twoFactorAuthDeviceLabel">Dispositivo</string>
+    <string name="twoFactorAuthExpiredErrorDescription">La ventana de validación ha expirado.\nVuelva a intentarlo.</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Esta solicitud de conexión ha expirado</string>
+    <string name="twoFactorAuthGenericErrorDescription">No se pudo completar la operación.\nVuelve a intentarlo.</string>
+    <string name="twoFactorAuthJustNowLabel">Ahora</string>
     <string name="twoFactorAuthLocationLabel">Lugar</string>
+    <plurals name="twoFactorAuthMinutesAgoLabel">
+        <item quantity="one">hace un minuto</item>
+        <item quantity="other">hace %d minutos</item>
+    </plurals>
+    <string name="twoFactorAuthNoNetworkErrorDescription">No se ha podido completar la operación.\nCompruebe su conexión e inténtelo de nuevo.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">No hay red</string>
     <string name="twoFactorAuthTryingToLogInTitle">¿Está intentando conectarse?</string>
     <string name="twoFactorAuthWhenLabel">En</string>
 </resources>

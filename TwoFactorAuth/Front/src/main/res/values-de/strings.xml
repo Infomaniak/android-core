@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
     <string name="buttonApprove">Genehmigen Sie</string>
     <string name="buttonDeny">Verweigern</string>
-    <string name="buttonModifyPassword">Passwort ändern</string>
+    <string name="buttonEditPassword">Passwort ändern</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Diese Anfrage wurde bereits bearbeitet</string>
+    <string name="twoFactorAuthCheckOriginDescription">Sie haben diese Validierung nicht veranlasst?\nÜberprüfen Sie Ihre aktiven Geräte, und trennen Sie die, die Sie nicht erkennen.</string>
     <string name="twoFactorAuthConfirmationDescription">Durch die Bestätigung dieser Verbindung wird diesem Gerät der Zugriff auf Ihr Infomaniak-Konto gestattet.</string>
-    <string name="twoFactorAuthConnectionAlreadyValidatedTitle">Diese Verbindung wurde bereits von einem anderen Gerät aus bestätigt</string>
-    <string name="twoFactorAuthConnectionExpiredTitle">Diese Verbindungsanfrage ist abgelaufen</string>
-    <string name="twoFactorAuthConnectionRefusedDescription">Sie haben einen Anmeldeversuch abgelehnt. Um Ihr Konto zu sichern, ändern Sie Ihr Passwort.nWenn Sie diesen Versuch veranlasst haben, versuchen Sie es erneut, sich anzumelden.</string>
-    <string name="twoFactorAuthConnectionRefusedTitle">Verbindung Abgelehnt</string>
-    <string name="twoFactorAuthConnectionValidationDescription">Sie haben die Validierung nicht veranlasst? Sehen Sie sich die Aktivitäten Ihrer zuletzt verwendeten Geräte an.</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Sie haben einen Anmeldeversuch abgelehnt. Um Ihr Konto zu sichern, ändern Sie Ihr Passwort.\nWenn Sie diesen Versuch veranlasst haben, versuchen Sie es erneut, sich anzumelden.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Verbindung Abgelehnt</string>
     <string name="twoFactorAuthDeviceLabel">Gerät</string>
+    <string name="twoFactorAuthExpiredErrorDescription">Die Bestätigungsfrist ist abgelaufen.\nBitte versuchen Sie es erneut</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Diese Verbindungsanfrage ist abgelaufen</string>
+    <string name="twoFactorAuthGenericErrorDescription">Der Vorgang konnte nicht abgeschlossen werden.\nBitte versuchen Sie es erneut.</string>
+    <string name="twoFactorAuthJustNowLabel">Jetzt</string>
     <string name="twoFactorAuthLocationLabel">Ort</string>
+    <plurals name="twoFactorAuthMinutesAgoLabel">
+        <item quantity="one">vor einer Minute</item>
+        <item quantity="other">vor %d Minuten</item>
+    </plurals>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Der Vorgang kann nicht abgeschlossen werden.\nÜberprüfen Sie Ihre Verbindung und versuchen Sie es erneut.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Kein Netz</string>
     <string name="twoFactorAuthTryingToLogInTitle">Versuchen Sie, sich anzumelden?</string>
     <string name="twoFactorAuthWhenLabel">Wenn</string>
 </resources>

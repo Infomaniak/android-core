@@ -57,7 +57,7 @@ internal class TwoFactorAuthImpl(
         engine { preconfigured = connectedHttpClient }
         install(ContentNegotiation) {
             val jsonConfig = Json {
-                // From DefaultJson (in ktor kotlinx.serialization):
+                /** From [io.ktor.serialization.kotlinx.json.DefaultJson] */
                 encodeDefaults = true
                 isLenient = true
                 allowSpecialFloatingPointValues = true
@@ -75,10 +75,10 @@ internal class TwoFactorAuthImpl(
         }
         install(HttpRequestRetry) {
             maxRetries = 3
-            retryOnExceptionIf { request, cause -> cause !is SerializationException }
+            retryOnExceptionIf { _, cause -> cause !is SerializationException }
         }
         defaultRequest {
-            url(LOGIN_ENDPOINT_URL + "api/2fa/push/")
+            url("$LOGIN_ENDPOINT_URL/api/2fa/push/")
             userAgent(HttpUtils.getUserAgent)
             headers {
                 @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
@@ -135,27 +135,29 @@ internal class TwoFactorAuthImpl(
         SentryLog.i(TAG, "Trying to $actionVerb the challenge ($challengeUid)")
         val response = operation()
         when {
-            //TODO: Handle expired. Will it be http 410 Gone?
             response.status.isSuccess() -> {
                 SentryLog.i(TAG, "Attempt to $actionVerb the challenge succeeded! ($challengeUid)")
-                Outcome.Success
+                Outcome.Done.Success
             }
-            else -> {
-                val httpCode = response.status.value
-                val bodyString = runCatching { response.bodyAsText() }.cancellable().getOrNull()
-                SentryLog.e(TAG, "Failed to $actionVerb the challenge [http $httpCode] ($challengeUid) $bodyString")
-                Outcome.Issue.ErrorResponse(httpCode)
+            else -> when (val httpCode = response.status.value) {
+                410 -> Outcome.Done.Expired
+                404 -> Outcome.Done.AlreadyProcessed
+                else -> {
+                    val bodyString = runCatching { response.bodyAsText() }.cancellable().getOrNull()
+                    SentryLog.e(TAG, "Failed to $actionVerb the challenge [http $httpCode] ($challengeUid) $bodyString")
+                    Outcome.Issue.ErrorResponse
+                }
             }
         }
     }.cancellable().getOrElse { t ->
         when (t) {
             is IOException -> {
                 SentryLog.i(TAG, "I/O issue while trying to $actionVerb the challenge ($challengeUid)", t)
-                Outcome.Issue.Network(t)
+                Outcome.Issue.Network
             }
             else -> {
                 SentryLog.e(TAG, "Couldn't $actionVerb the challenge ($challengeUid) because of an unknow issue", t)
-                Outcome.Issue.Unknown(t)
+                Outcome.Issue.Unknown
             }
         }
     }
