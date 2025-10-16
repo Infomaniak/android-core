@@ -21,6 +21,7 @@
 package com.infomaniak.core.twofactorauth.front
 
 import android.content.res.Configuration
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -142,33 +143,13 @@ fun TwoFactorAuthApprovalContent(challenge: Challenge) = Surface(Modifier.fillMa
 
 @Composable
 private fun ColumnScope.ChallengeDone(outcome: Outcome.Done, close: () -> Unit) {
-    val iconResId: Int
-    val titleResId: Int
-    val descResId: Int
-    when (outcome) {
-        Outcome.Done.Success -> return // Not showing any confirmation screen, should be auto-dismissed.
-        Outcome.Done.Rejected -> {
-            iconResId = R.drawable.ic_hand_octagon_slash
-            titleResId = R.string.twoFactorAuthConnectionRejectedTitle
-            descResId = R.string.twoFactorAuthConnectionRejectedDescription
-        }
-        Outcome.Done.Expired -> {
-            iconResId = R.drawable.ic_clock
-            titleResId = R.string.twoFactorAuthExpiredErrorTitle
-            descResId = R.string.twoFactorAuthExpiredErrorDescription
-        }
-        Outcome.Done.AlreadyProcessed -> {
-            iconResId = R.drawable.ic_phone_circular_arrows_clockwise
-            titleResId = R.string.twoFactorAuthAlreadyProcessedErrorTitle
-            descResId = R.string.twoFactorAuthCheckOriginDescription
-        }
-    }
+    if (outcome == Outcome.Done.Success) return
     ChallengeResponseResult(
-        iconResId = iconResId,
+        iconResId = outcome.iconResId,
         iconBackground = MaterialTheme.colorScheme.tertiary,
-        titleResId = titleResId,
+        titleResId = outcome.titleResId,
         contentText = {
-            Text(text = stringResource(descResId))
+            Text(text = stringResource(outcome.descResId))
         },
         close = close,
         actionButton = if (outcome == Outcome.Done.Rejected) { { EditPasswordButton() } } else null
@@ -190,28 +171,15 @@ private fun ColumnScope.ChallengeResponseIssue(
     close: () -> Unit,
     retry: () -> Unit
 ) {
-    val titleResId: Int = when (outcome) {
-        is Outcome.Issue.ErrorResponse -> RCore.string.anErrorHasOccurred
-        is Outcome.Issue.Network -> R.string.twoFactorAuthNoNetworkErrorTitle
-        is Outcome.Issue.Unknown -> RCore.string.anErrorHasOccurred
-    }
     ChallengeResponseResult(
-        iconResId = when (outcome) {
-            is Outcome.Issue.ErrorResponse -> R.drawable.ic_cross
-            is Outcome.Issue.Network -> R.drawable.ic_antenna_slash
-            is Outcome.Issue.Unknown -> R.drawable.ic_cross
-        },
+        iconResId = outcome.iconResId,
         iconBackground = when (outcome) {
             is Outcome.Issue.Network -> MaterialTheme.colorScheme.tertiary
             else -> MaterialTheme.colorScheme.error
         },
-        titleResId = titleResId,
+        titleResId = outcome.titleResId,
         contentText = {
-            val textResId = when (outcome) {
-                is Outcome.Issue.Network -> R.string.twoFactorAuthNoNetworkErrorDescription
-                else -> R.string.twoFactorAuthGenericErrorDescription
-            }
-            Text(text = stringResource(textResId))
+            Text(text = stringResource(outcome.descResId))
         },
         close = close
     ) {
@@ -343,6 +311,49 @@ private fun DeviceIcon(type: RemoteChallenge.Device.Type) {
     Icon(painterResource(resId), contentDescription = null)
 }
 
+private val Outcome.Done.iconResId: Int
+    @DrawableRes get() = when (this) {
+        Outcome.Done.Success -> 0 // Never displayed.
+        Outcome.Done.Expired -> R.drawable.ic_clock
+        Outcome.Done.AlreadyProcessed -> R.drawable.ic_phone_circular_arrows_clockwise
+        Outcome.Done.Rejected -> R.drawable.ic_hand_octagon_slash
+    }
+
+private val Outcome.Done.titleResId: Int
+    @StringRes get() = when (this) {
+        Outcome.Done.Success -> 0 // Never displayed.
+        Outcome.Done.Expired -> R.string.twoFactorAuthExpiredErrorTitle
+        Outcome.Done.AlreadyProcessed -> R.string.twoFactorAuthAlreadyProcessedErrorTitle
+        Outcome.Done.Rejected -> R.string.twoFactorAuthConnectionRejectedTitle
+    }
+
+private val Outcome.Done.descResId: Int
+    @StringRes get() = when (this) {
+        Outcome.Done.Success -> 0 // Never displayed.
+        Outcome.Done.Expired -> R.string.twoFactorAuthExpiredErrorDescription
+        Outcome.Done.AlreadyProcessed -> R.string.twoFactorAuthCheckOriginDescription
+        Outcome.Done.Rejected -> R.string.twoFactorAuthConnectionRejectedDescription
+    }
+
+private val Outcome.Issue.titleResId: Int
+    @StringRes get() = when (this) {
+        is Outcome.Issue.ErrorResponse -> RCore.string.anErrorHasOccurred
+        is Outcome.Issue.Network -> R.string.twoFactorAuthNoNetworkErrorTitle
+        is Outcome.Issue.Unknown -> RCore.string.anErrorHasOccurred
+    }
+
+private val Outcome.Issue.iconResId: Int
+    @DrawableRes get() = when (this) {
+        is Outcome.Issue.ErrorResponse -> R.drawable.ic_cross
+        is Outcome.Issue.Network -> R.drawable.ic_antenna_slash
+        is Outcome.Issue.Unknown -> R.drawable.ic_cross
+    }
+
+private val Outcome.Issue.descResId: Int
+    @StringRes get() = when (this) {
+        is Outcome.Issue.Network -> R.string.twoFactorAuthNoNetworkErrorDescription
+        else -> R.string.twoFactorAuthGenericErrorDescription
+    }
 
 @Composable
 private fun ApproveOrRejectRow(
