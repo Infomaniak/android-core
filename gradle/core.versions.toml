@@ -1,7 +1,7 @@
 [versions]
 activityCompose = "1.10.1" # TODO: Update to 1.11.0 or later after we bump compileSdk to 36
 adaptive = "1.1.0"
-androidLogin = "3.1.6"
+androidLogin = "3.1.7"
 androidxCollection = "1.5.0"
 androidxCore = "1.16.0" # TODO: Update to 1.17.0 or later after we bump compileSdk to 36
 appUpdateVersion = "2.1.0"
