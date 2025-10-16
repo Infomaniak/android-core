@@ -15,17 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.crossapplogin.front.theme
+@file:OptIn(ExperimentalUuidApi::class)
 
-import androidx.compose.ui.unit.dp
+package com.infomaniak.core.twofactorauth.back
 
-internal object Dimens {
+import kotlin.uuid.ExperimentalUuidApi
 
-    /** 40 dp */
-    val bigAvatarSize = 40.dp
-
-    /** 52 dp */
-    val avatarsBoxWidth = 52.dp
-    /** 32 dp */
-    val avatarsBoxHeight = 32.dp
+data class ConnectionAttemptInfo(
+    val targetAccount: TargetAccount,
+    val deviceOrBrowserName: String,
+    val deviceType: RemoteChallenge.Device.Type?,
+    val location: String,
+) {
+    data class TargetAccount(
+        val avatarUrl: String?,
+        val fullName: String,
+        val initials: String,
+        val email: String,
+        val id: Long,
+    )
 }

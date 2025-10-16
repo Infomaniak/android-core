@@ -15,22 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.network
+package com.infomaniak.core.compose.basics
 
-private val host = ApiEnvironment.current.host
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
-val LOGIN_ENDPOINT_URL = "https://login.$host"
-val INFOMANIAK_API = "https://api.$host/2"
-val INFOMANIAK_API_V1 = "https://api.$host/1"
-
-val AUTOLOG_URL = "https://manager.$host/v3/mobile_login"
-
-val SHOP_URL = "https://shop.infomaniak.com/order" // Should it be host dependent?
-val SUPPORT_URL = "https://support.infomaniak.com" // Should it be host dependent?
-
-val MANAGER_URL = "https://manager.${host}/v3"
-val EDIT_PASSWORD_URL = "$MANAGER_URL/ng/profile/edit-password"
-
-val TERMINATE_ACCOUNT_URL = "$MANAGER_URL/ng/profile/user/dashboard?open-terminate-account-modal"
-
-val MATOMO_URL = "https://analytics.$host/matomo.php"
+/**
+ * Gives access to the latest non null value of the receiver.
+ *
+ * Helpful to keep showing populated UI during exit animations.
+ */
+@Composable
+fun <T> T?.WithLatestNotNull(content: @Composable (T) -> Unit) {
+    // The implementation is similar to rememberUpdatedState.
+    val value by remember { mutableStateOf(this) }.also {
+        if (this != null) it.value = this
+    }
+    value?.let {
+        content(it)
+    }
+}

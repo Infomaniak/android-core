@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="buttonApprove">Approvare</string>
+    <string name="buttonDeny">Negare</string>
+    <string name="buttonEditPassword">Modifica della password</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Questa richiesta è già stata elaborata</string>
+    <string name="twoFactorAuthCheckOriginDescription">Non hai avviato tu questa azione?\nControlla i tuoi dispositivi attivi e disconnetti quelli che non riconosci.</string>
+    <string name="twoFactorAuthConfirmationDescription">Confermando questa connessione, autorizzi questo dispositivo ad accedere al tuo account Infomaniak.</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">È stato rifiutato un tentativo di connessione. Per proteggere il vostro account, cambiate la password.\nSe siete voi la fonte di questo tentativo, provate ad accedere di nuovo.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Connessione rifiutata</string>
+    <string name="twoFactorAuthDeviceLabel">Dispositivo</string>
+    <string name="twoFactorAuthExpiredErrorDescription">Il periodo di convalida è terminato.\nRilanciare la richiesta.</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Questa richiesta di connessione è scaduta</string>
+    <string name="twoFactorAuthGenericErrorDescription">Impossibile completare l’operazione.\nRiprova.</string>
+    <string name="twoFactorAuthJustNowLabel">Ora</string>
+    <string name="twoFactorAuthLocationLabel">Luogo</string>
+    <plurals name="twoFactorAuthMinutesAgoLabel">
+        <item quantity="one">un minuto fa</item>
+        <item quantity="other">%d minuti fa</item>
+    </plurals>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Impossibile completare l’operazione.\nControllare la connessione e riprovare.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Nessuna rete</string>
+    <string name="twoFactorAuthTryingToLogInTitle">Stai cercando di accedere?</string>
+    <string name="twoFactorAuthWhenLabel">Quando</string>
+</resources>

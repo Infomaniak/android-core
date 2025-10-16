@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalSplittiesApi::class, ExperimentalContracts::class)
 
 package com.infomaniak.core.crossapplogin.back.internal.deviceinfo
 
@@ -39,19 +39,26 @@ import com.infomaniak.core.autoCancelScope
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfo.Type
-import com.infomaniak.core.crossapplogin.back.internal.extensions.toHexDashStringKotlin2
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.networking.ManualAuthorizationRequired
 import com.infomaniak.core.sentry.SentryLog
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.accept
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.request
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.headers
 import io.ktor.http.isSuccess
+import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,10 +71,15 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.serialization.SerializationException
 import okhttp3.OkHttpClient
+import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -77,27 +89,6 @@ abstract class AbstractDeviceInfoUpdateWorker(
     appContext: Context,
     params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
-
-    companion object {
-
-        suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> schedule() {
-            val workManager = WorkManager.getInstance(appCtx)
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-            val workRequest = OneTimeWorkRequestBuilder<T>()
-                .setBackoffCriteria(BackoffPolicy.LINEAR, backoffDelay = 10L, timeUnit = TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build()
-            workManager.enqueueUniqueWork(
-                "device-info-update",
-                ExistingWorkPolicy.APPEND_OR_REPLACE,
-                workRequest
-            ).await()
-        }
-
-        private const val TAG = "AbstractDeviceInfoUpdateWorker"
-    }
 
     protected abstract suspend fun getConnectedHttpClient(userId: Int): OkHttpClient
 
@@ -114,7 +105,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
 
         val currentCrossAppDeviceId = sharedDeviceIdManager.crossAppDeviceIdFlow.first()
 
-        val deviceInfo = currentDeviceInfo(currentCrossAppDeviceId)
+        val deviceInfo = createDeviceInfo(currentCrossAppDeviceId, deviceInfoUpdateManager.currentAppVersionData())
 
         val deviceInfoUpdatersForUserId = DynamicLazyMap<Long, Deferred<Outcome>>(
             cacheManager = { userId, deferred ->
@@ -157,23 +148,12 @@ abstract class AbstractDeviceInfoUpdateWorker(
         if (deviceInfoUpdateManager.isUpToDate(crossAppDeviceId, targetUserId)) {
             return Outcome.Done
         }
-        val okHttpClient = getConnectedHttpClient(userId = targetUserId.toInt())
-        val httpClient = HttpClient(OkHttp) {
-            engine { preconfigured = okHttpClient }
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        val httpClient = createHttpClientForUser(targetUserId)
 
         SentryLog.i(TAG, "Will attempt updating device info for user id $targetUserId")
 
         val url = ApiRoutesCore.sendDeviceInfo()
         val response = httpClient.post(url) {
-            headers {
-                @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
-                HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
-            }
-            contentType(ContentType.Application.Json)
             setBody(deviceInfo)
         }
         if (response.status.isSuccess()) {
@@ -184,7 +164,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
             val httpStatusCode = response.status.value
             val errorMessage = "attemptUpdatingDeviceInfoIfNeeded led to http $httpStatusCode"
             when (httpStatusCode) {
-                in 500..599 -> {
+                in 500..<600 -> {
                     SentryLog.i(TAG, errorMessage)
                     Outcome.ShouldRetry
                 }
@@ -210,7 +190,10 @@ abstract class AbstractDeviceInfoUpdateWorker(
     }
 
     @ExperimentalUuidApi
-    private fun currentDeviceInfo(currentCrossAppDeviceId: Uuid): DeviceInfo {
+    private fun createDeviceInfo(
+        currentCrossAppDeviceId: Uuid,
+        appVersions: DeviceInfoUpdateManager.AppVersionData,
+    ): DeviceInfo {
         val hasTabletSizedScreen = appCtx.resources.configuration.smallestScreenWidthDp >= 600
         val packageManager = appCtx.packageManager
         val isFoldable = when {
@@ -228,7 +211,86 @@ abstract class AbstractDeviceInfoUpdateWorker(
                 hasTabletSizedScreen -> Type.Tablet
                 else -> Type.Phone
             },
-            uuidV4 = currentCrossAppDeviceId.toHexDashStringKotlin2(),
+            uuidV4 = currentCrossAppDeviceId.toHexDashString(),
+            capabilities = listOf(
+                "2fa:push_challenge:approval",
+            ),
+            version = appVersions.versionName
         )
     }
+
+    private suspend fun createHttpClientForUser(userId: Long): HttpClient {
+        return createHttpClientForUser(getConnectedHttpClient(userId = userId.toInt()))
+    }
+
+    private fun createHttpClientForUser(connectedOkHttpClient: OkHttpClient): HttpClient = HttpClient(OkHttp) {
+        engine { preconfigured = connectedOkHttpClient }
+        install(ContentNegotiation) {
+            json()
+        }
+        install(HttpRequestRetry) {
+            maxRetries = 3
+            retryOnExceptionIf { _, cause -> cause !is SerializationException }
+        }
+        defaultRequest {
+            userAgent(HttpUtils.getUserAgent)
+            headers {
+                @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
+                HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
+            }
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+        }
+        HttpResponseValidator {
+            validateResponse { response ->
+                response.validateContentType { accepted, received ->
+                    val url = response.request.url
+                    val method = response.request.method
+                    throw IllegalArgumentException("Expected Content-Type $accepted but got $received from $method on $url")
+                }
+            }
+        }
+    }
+
+    companion object {
+
+        suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> schedule() {
+            val workManager = WorkManager.getInstance(appCtx)
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+            val workRequest = OneTimeWorkRequestBuilder<T>()
+                .setBackoffCriteria(BackoffPolicy.LINEAR, backoffDelay = 10L, timeUnit = TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
+            workManager.enqueueUniqueWork(
+                "device-info-update",
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                workRequest
+            ).await()
+        }
+
+        private const val TAG = "AbstractDeviceInfoUpdateWorker"
+    }
+}
+
+private inline fun HttpResponse.validateContentType(
+    onContentTypeMismatch: (accepted: String, received: String?) -> Unit
+) {
+    contract { callsInPlace(onContentTypeMismatch, InvocationKind.AT_MOST_ONCE) }
+    val acceptedContentType = request.headers[HttpHeaders.Accept]
+    val receivedContentType = headers[HttpHeaders.ContentType]
+
+    when (acceptedContentType) {
+        receivedContentType, null -> return
+    }
+
+    val expectedContentType = ContentType.parse(acceptedContentType)
+
+    if (expectedContentType == ContentType.Any) return
+
+    val actualContentType = receivedContentType?.let { ContentType.parse(it) }
+    if (actualContentType?.match(expectedContentType) ?: false) return
+
+    onContentTypeMismatch(acceptedContentType, receivedContentType)
 }

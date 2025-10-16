@@ -34,7 +34,6 @@ import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
-import com.infomaniak.core.crossapplogin.front.theme.Dimens as CrossLoginDimens
 
 @Composable
 internal fun ThreeAccountsView(
@@ -51,7 +50,7 @@ internal fun ThreeAccountsView(
                 strokeColor = avatarStrokeColor,
             )
 
-            Spacer(Modifier.width(width = CrossLoginDimens.avatarsBoxWidth - (Dimens.iconSize + Dimens.iconSize)))
+            Spacer(Modifier.width(width = Dimens.avatarsBoxWidth - (Dimens.iconSize + Dimens.iconSize)))
 
             // Right
             CrossLoginAvatar(
@@ -63,7 +62,7 @@ internal fun ThreeAccountsView(
 
         // Center
         CrossLoginAvatar(
-            modifier = Modifier.size(CrossLoginDimens.avatarsBoxHeight),
+            modifier = Modifier.size(Dimens.avatarsBoxHeight),
             account = accounts[0],
             strokeColor = avatarStrokeColor,
         )
