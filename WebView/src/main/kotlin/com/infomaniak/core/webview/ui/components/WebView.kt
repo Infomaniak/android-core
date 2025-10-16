@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.webview.ui.components
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.serialization.json.Json
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebView(
     url: String,
@@ -51,6 +53,7 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
                 loadUrl(url, headers)
+                settings.domStorageEnabled = true
             }
         })
 }
