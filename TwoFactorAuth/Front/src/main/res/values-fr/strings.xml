@@ -31,10 +31,6 @@
     <string name="twoFactorAuthGenericErrorDescription">Impossible de terminer l’opération.\nRelancez la demande.</string>
     <string name="twoFactorAuthJustNowLabel">À l’instant</string>
     <string name="twoFactorAuthLocationLabel">Lieu</string>
-    <plurals name="twoFactorAuthMinutesAgoLabel">
-        <item quantity="one">il y a une minute</item>
-        <item quantity="other">il y a %d minutes</item>
-    </plurals>
     <string name="twoFactorAuthNoNetworkErrorDescription">Impossible de terminer l’opération.\nVérifiez votre connexion et réessayez.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">Pas de connexion internet</string>
     <string name="twoFactorAuthTryingToLogInTitle">Êtes-vous en train d’essayer de vous connecter ?</string>

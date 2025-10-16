@@ -31,10 +31,6 @@
     <string name="twoFactorAuthGenericErrorDescription">Impossibile completare l’operazione.\nRiprova.</string>
     <string name="twoFactorAuthJustNowLabel">Ora</string>
     <string name="twoFactorAuthLocationLabel">Luogo</string>
-    <plurals name="twoFactorAuthMinutesAgoLabel">
-        <item quantity="one">un minuto fa</item>
-        <item quantity="other">%d minuti fa</item>
-    </plurals>
     <string name="twoFactorAuthNoNetworkErrorDescription">Impossibile completare l’operazione.\nControllare la connessione e riprovare.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">Nessuna rete</string>
     <string name="twoFactorAuthTryingToLogInTitle">Stai cercando di accedere?</string>

@@ -31,10 +31,6 @@
     <string name="twoFactorAuthGenericErrorDescription">Der Vorgang konnte nicht abgeschlossen werden.\nBitte versuchen Sie es erneut.</string>
     <string name="twoFactorAuthJustNowLabel">Jetzt</string>
     <string name="twoFactorAuthLocationLabel">Ort</string>
-    <plurals name="twoFactorAuthMinutesAgoLabel">
-        <item quantity="one">vor einer Minute</item>
-        <item quantity="other">vor %d Minuten</item>
-    </plurals>
     <string name="twoFactorAuthNoNetworkErrorDescription">Der Vorgang kann nicht abgeschlossen werden.\nÜberprüfen Sie Ihre Verbindung und versuchen Sie es erneut.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">Kein Netz</string>
     <string name="twoFactorAuthTryingToLogInTitle">Versuchen Sie, sich anzumelden?</string>
