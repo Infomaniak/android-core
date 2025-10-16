@@ -67,6 +67,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat.ID_NULL
@@ -410,7 +412,7 @@ private fun InfoElement(label: String, content: @Composable () -> Unit) {
 @Preview(device = "spec:width=673dp,height=841dp")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
-private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
+private fun TwoFactorAuthApprovalContentPreview() = SecurityTheme {
     val scope = rememberCoroutineScope()
     val confirmRequest = remember {
         CallableState<ApprovalAction>().also { scope.launch(start = CoroutineStart.UNDISPATCHED) { it.awaitOneCall() } }
@@ -421,57 +423,38 @@ private fun ConfirmLoginBottomSheetContentPreview() = SecurityTheme {
 
 @Preview
 @Composable
-private fun ConfirmLoginBottomSheetContentMinuteAgoPreview() = SecurityTheme {
+private fun TwoFactorAuthApprovalContentMinuteAgoPreview() = SecurityTheme {
     val state = Challenge.State.ApproveOrReject(CallableState())
     TwoFactorAuthApprovalContent(challengeForPreview(state, timeAgo = 1.minutes))
 }
 
 @Preview
 @Composable
-private fun ConfirmLoginBottomSheetContentMinutesAgoPreview() = SecurityTheme {
+private fun TwoFactorAuthApprovalContentMinutesAgoPreview() = SecurityTheme {
     val state = Challenge.State.ApproveOrReject(CallableState())
     TwoFactorAuthApprovalContent(challengeForPreview(state, timeAgo = 4.minutes))
 }
 
 @Preview(locale = "fr")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
-@Preview(device = "spec:width=673dp,height=841dp")
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
+    device = "spec:width=673dp,height=841dp"
+)
 @Composable
-private fun ChallengeExpiredPreview() = SecurityTheme {
-    val state = Challenge.State.Done(Outcome.Done.Expired)
+private fun TwoFactorAuthApprovalContentPreview(
+    @PreviewParameter(ChallengeStatePreviewParamProvider::class) state: Challenge.State
+) = SecurityTheme {
     TwoFactorAuthApprovalContent(challengeForPreview(state))
 }
 
-@Preview(locale = "fr")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
-@Composable
-private fun ChallengeAlreadyActionedPreview() = SecurityTheme {
-    val state = Challenge.State.Done(Outcome.Done.AlreadyProcessed)
-    TwoFactorAuthApprovalContent(challengeForPreview(state))
-}
-
-@Preview(locale = "fr")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
-@Composable
-private fun ChallengePromptCredentialsUpdatePreview() = SecurityTheme {
-    val state = Challenge.State.Done(Outcome.Done.Rejected)
-    TwoFactorAuthApprovalContent(challengeForPreview(state))
-}
-
-@Preview(locale = "fr")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
-@Composable
-private fun ChallengeResponseIssuePreview() = SecurityTheme {
-    val state = Challenge.State.Issue(Outcome.Issue.ErrorResponse, retry = {})
-    TwoFactorAuthApprovalContent(challengeForPreview(state))
-}
-
-@Preview(locale = "fr")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
-@Composable
-private fun ChallengeNetworkIssuePreview() = SecurityTheme {
-    val state = Challenge.State.Issue(Outcome.Issue.Network, retry = {})
-    TwoFactorAuthApprovalContent(challengeForPreview(state))
+private class ChallengeStatePreviewParamProvider : PreviewParameterProvider<Challenge.State> {
+    override val values: Sequence<Challenge.State> = sequenceOf(
+        Challenge.State.Done(Outcome.Done.Expired),
+        Challenge.State.Done(Outcome.Done.AlreadyProcessed),
+        Challenge.State.Done(Outcome.Done.Rejected),
+        Challenge.State.Issue(Outcome.Issue.ErrorResponse, retry = {}),
+        Challenge.State.Issue(Outcome.Issue.Network, retry = {}),
+    )
 }
 
 fun challengeForPreview(
