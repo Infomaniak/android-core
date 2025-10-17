@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.infomaniak.core.webview.ui
 
 import android.content.Context
@@ -34,6 +35,7 @@ class WebViewActivity : ComponentActivity() {
         val headers = intent.getStringExtra(EXTRA_HEADERS)
         val urlToQuit = intent.getStringExtra(EXTRA_URL_TO_QUIT)
         val url = intent.getStringExtra(EXTRA_URL)
+        val domStorageEnabled = intent.getBooleanExtra(EXTRA_DOM_STORAGE_ENABLED, false)
 
         if (url == null) {
             finish()
@@ -49,6 +51,7 @@ class WebViewActivity : ComponentActivity() {
                     finish()
                 },
                 urlToQuit = urlToQuit,
+                domStorageEnabled = domStorageEnabled,
             )
         }
     }
@@ -57,18 +60,21 @@ class WebViewActivity : ComponentActivity() {
         private const val EXTRA_URL = "EXTRA_URL"
         private const val EXTRA_HEADERS = "EXTRA_HEADERS"
         private const val EXTRA_URL_TO_QUIT = "EXTRA_URL_TO_QUIT"
+        private const val EXTRA_DOM_STORAGE_ENABLED = "EXTRA_DOM_STORAGE_ENABLED"
 
         fun startActivity(
             context: Context,
             url: String,
             headers: Map<String, String>? = mapOf(),
             urlToQuit: String? = null,
+            domStorageEnabled: Boolean = false,
             activityResultLauncher: ActivityResultLauncher<Intent>? = null,
         ) {
             val intent = Intent(context, WebViewActivity::class.java).apply {
                 putExtra(EXTRA_URL, url)
                 putExtra(EXTRA_HEADERS, Json.encodeToString(headers))
                 putExtra(EXTRA_URL_TO_QUIT, urlToQuit)
+                putExtra(EXTRA_DOM_STORAGE_ENABLED, domStorageEnabled)
             }
 
             activityResultLauncher?.let {

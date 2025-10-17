@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.infomaniak.core.webview.ui.components
 
 import android.annotation.SuppressLint
@@ -35,6 +36,7 @@ fun WebView(
     headersString: String?,
     onUrlToQuitReached: () -> Unit,
     urlToQuit: String?,
+    domStorageEnabled: Boolean = false,
 ) {
     AndroidView(
         modifier = Modifier.safeDrawingPadding(),
@@ -51,9 +53,10 @@ fun WebView(
                 )
 
                 settings.javaScriptEnabled = true
+                settings.domStorageEnabled = domStorageEnabled
+
                 val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
                 loadUrl(url, headers)
-                settings.domStorageEnabled = true
             }
         })
 }
