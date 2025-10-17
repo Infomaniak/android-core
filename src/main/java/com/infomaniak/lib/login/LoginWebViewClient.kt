@@ -75,13 +75,15 @@ open class LoginWebViewClient(
     }
 
     override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-        if (request.isForMainFrame && isValidUrl(request.url.toString())) errorResult(error.description.toString())
+        if (request.shouldFinishOnError()) errorResult(error.description.toString())
     }
 
     override fun onReceivedHttpError(view: WebView, request: WebResourceRequest, errorResponse: WebResourceResponse) {
-        if (request.isForMainFrame) errorResult(HTTP_ERROR_CODE)
+        if (request.shouldFinishOnError()) errorResult(HTTP_ERROR_CODE)
         InfomaniakLogin.sentryCallback?.invoke("${request.url} ${request.method} ${errorResponse.statusCode}")
     }
+
+    private fun WebResourceRequest.shouldFinishOnError(): Boolean = isForMainFrame && isValidUrl(this.url.toString())
 
     private fun isValidUrl(inputUrl: String?): Boolean {
         if (inputUrl == null || onAuthResponse(inputUrl.toUri()) || inputUrl.startsWith("intent://")) return false
