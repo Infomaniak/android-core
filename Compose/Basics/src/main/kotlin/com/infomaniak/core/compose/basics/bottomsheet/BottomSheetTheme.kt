@@ -100,6 +100,9 @@ object BottomSheetThemeDefaults {
     )
 }
 
+/**
+ * If you need to provide more than one local value, just use [CompositionLocalProvider] directly.
+ */
 @Composable
 fun ProvideBottomSheetTheme(theme: BottomSheetTheme = BottomSheetThemeDefaults.theme(), content: @Composable () -> Unit) {
     CompositionLocalProvider(LocalBottomSheetTheme provides theme, content)
