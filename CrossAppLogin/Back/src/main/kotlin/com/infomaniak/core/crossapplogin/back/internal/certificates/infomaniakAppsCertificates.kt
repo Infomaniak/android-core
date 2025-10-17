@@ -27,6 +27,9 @@ internal val infomaniakAppsCertificates = AppSigningCertificates {
         this["com.infomaniak.mail"] = setOf(
             LazyCertificate { "9C:03:99:5E:A4:89:26:53:85:09:A3:1D:6D:54:CB:A7:0F:72:0A:DF:9A:8E:54:BE:36:57:F5:78:70:48:1E:F6" },
         )
+        this["com.infomaniak.euria"] = setOf(
+            LazyCertificate { "9C:03:99:5E:A4:89:26:53:85:09:A3:1D:6D:54:CB:A7:0F:72:0A:DF:9A:8E:54:BE:36:57:F5:78:70:48:1E:F6" },
+        )
         return@AppSigningCertificates
     }
     this["com.infomaniak.drive"] = setOf(
