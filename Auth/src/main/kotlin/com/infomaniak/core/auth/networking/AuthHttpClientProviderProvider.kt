@@ -34,7 +34,7 @@ abstract class BaseHttpClientProvider {
     val authOkHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder().apply {
             addCache()
-            addTokenInterceptor()
+            addTokenInterceptor(tokenInterceptorListener)
             addCommonInterceptors()
         }.build()
     }
@@ -43,13 +43,13 @@ abstract class BaseHttpClientProvider {
         OkHttpClient.Builder()
             .apply {
                 addCache()
-                addTokenInterceptor()
+                addTokenInterceptor(tokenInterceptorListener)
                 addCommonInterceptors()
                 addCustomTimeout()
             }.build()
     }
 
-    protected open fun OkHttpClient.Builder.addTokenInterceptor() {
+    protected open fun OkHttpClient.Builder.addTokenInterceptor(tokenInterceptorListener: TokenInterceptorListener?) {
         tokenInterceptorListener?.let { listener ->
             addInterceptor(TokenInterceptor(listener))
             authenticator(TokenAuthenticator(listener))
