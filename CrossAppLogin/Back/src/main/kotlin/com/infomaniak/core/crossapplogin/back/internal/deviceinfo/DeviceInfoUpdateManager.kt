@@ -60,6 +60,10 @@ class DeviceInfoUpdateManager private constructor() {
         }
     }
 
+    suspend fun resetInfoKey(userId: Long) = Dispatchers.IO {
+        lastSyncKeyFileForUser(userId).delete()
+    }
+
     @Throws(IOException::class)
     suspend fun isUpToDate(crossAppDeviceId: Uuid, userId: Long): Boolean = Dispatchers.IO {
         try {
