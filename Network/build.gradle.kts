@@ -46,6 +46,6 @@ dependencies {
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)
     implementation(core.gson)
-    implementation(core.okhttp)
+    api(core.okhttp)
     implementation(core.stetho.okhttp3)
 }
