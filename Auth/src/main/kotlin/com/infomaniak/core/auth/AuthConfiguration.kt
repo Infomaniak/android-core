@@ -17,6 +17,9 @@
  */
 package com.infomaniak.core.auth
 
+import com.infomaniak.core.auth.networking.AuthHttpClientProvider
+import com.infomaniak.core.network.ApiEnvironment
+import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.lib.login.InfomaniakLogin.AccessType
 
 /**
@@ -24,21 +27,19 @@ import com.infomaniak.lib.login.InfomaniakLogin.AccessType
  */
 object AuthConfiguration {
 
-    lateinit var appId: String
-    var appVersionCode: Int = -1
-    lateinit var appVersionName: String
     lateinit var clientId: String
-    var accessType: AccessType? = AccessType.OFFLINE
+    internal var accessType: AccessType? = AccessType.OFFLINE
 
     fun init(
         appId: String,
         appVersionCode: Int,
         appVersionName: String,
         clientId: String,
+        tokenInterceptorListener: TokenInterceptorListener,
+        apiEnvironment: ApiEnvironment = ApiEnvironment.Prod,
     ) {
-        this.appId = appId
-        this.appVersionCode = appVersionCode
-        this.appVersionName = appVersionName
         this.clientId = clientId
+        AuthHttpClientProvider.tokenInterceptorListener = tokenInterceptorListener
+        NetworkConfiguration.init(appId, appVersionCode, appVersionName, apiEnvironment)
     }
 }
