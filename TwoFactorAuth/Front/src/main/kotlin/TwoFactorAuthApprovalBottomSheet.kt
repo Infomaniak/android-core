@@ -44,8 +44,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.basics.CallableState
 import com.infomaniak.core.compose.basics.WithLatestNotNull
-import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel
-import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.front.components.SecurityTheme
 import kotlinx.coroutines.CancellationException
@@ -61,9 +61,9 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun TwoFactorAuthApprovalAutoManagedBottomSheet(
-    twoFactorAuthViewModel: AbstractTwoFactorAuthViewModel
+    twoFactorAuthManager: TwoFactorAuthManager
 ) = SecurityTheme {
-    val challengeState = twoFactorAuthViewModel.challengeToResolve.collectAsState()
+    val challengeState = twoFactorAuthManager.challengeToResolve.collectAsState()
     TwoFactorAuthApprovalAutoManagedBottomSheet(challengeState)
 }
 

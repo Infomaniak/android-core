@@ -21,16 +21,16 @@ package com.infomaniak.core.twofactorauth.back
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.eventFlow
-import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.rateLimit
-import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge
-import com.infomaniak.core.twofactorauth.back.AbstractTwoFactorAuthViewModel.Challenge.State.Done
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge.State.Done
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -60,9 +60,27 @@ import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 import kotlin.uuid.ExperimentalUuidApi
 
-abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
-
-    protected abstract suspend fun getConnectedHttpClient(userId: Int): OkHttpClient
+/**
+ * All consumers need is [challengeToResolve].
+ *
+ * The state inside the [Challenge] type contains callbacks to perform the relevant actions.
+ *
+ * ### IMPORTANT:
+ *
+ * The instance of this class **shall be a singleton**.
+ *
+ * Initialize it in a top-level property, or inside another singleton (not in a getter!):
+ * ```
+ * val twoFactorAuthManager = TwoFactorAuthManager { userId -> AccountUtils.getHttpClient(userId) }
+ * ```
+ *
+ * This will ensure that there's no double concurrent states.
+ */
+class TwoFactorAuthManager(
+    // The CoroutineScope (and its Job) is strongly referenced by shareIn and stateIn, so no need to keep a reference here.
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    private val getConnectedHttpClient: suspend (userId: Int) -> OkHttpClient
+) {
 
     private val rateLimitedForegroundEvents = ProcessLifecycleOwner.get().lifecycle.eventFlow.filter {
         it == Lifecycle.Event.ON_START
@@ -87,7 +105,7 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
     val challengeToResolve: StateFlow<Challenge?> = challengeToResolveFlow(
         firstUnactionedChallenge = firstUnactionedChallenge,
         actionedChallengesFlow = actionedChallengesFlow,
-    ).stateIn(viewModelScope, SharingStarted.Lazily, initialValue = null)
+    ).stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
 
     private val userIds = UserDatabase().userDao().allUsers.map { users ->
         users.mapTo(hashSetOf()) { it.id }
@@ -95,7 +113,7 @@ abstract class AbstractTwoFactorAuthViewModel : ViewModel() {
 
     private val allUsersTwoFactorAuth: Flow<List<TwoFactorAuth>> = userIds.mapLatest { userIds ->
         userIds.map { id -> TwoFactorAuthImpl(getConnectedHttpClient(id), id) }
-    }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    }.shareIn(coroutineScope, SharingStarted.Lazily, replay = 1)
 
     private suspend fun attemptGettingAllCurrentChallenges(): Map<TwoFactorAuth, RemoteChallenge> = flow {
         val currentUsersTwoFactorAuth = allUsersTwoFactorAuth.first()
@@ -188,7 +206,7 @@ private fun challengeToResolveFlow(
 }
 
 /**
- * Emit a new version of the [AbstractTwoFactorAuthViewModel.Challenge] with its state updated accordingly to the [Outcome],
+ * Emit a new version of the [TwoFactorAuthManager.Challenge] with its state updated accordingly to the [Outcome],
  * and let the user dismiss or ask retrying if applicable.
  *
  * @return `true` if handling is done (e.g. the user approved, denied, or dismissed the 2FA challenge),
