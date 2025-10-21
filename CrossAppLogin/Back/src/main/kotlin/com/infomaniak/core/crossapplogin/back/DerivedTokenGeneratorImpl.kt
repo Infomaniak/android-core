@@ -17,8 +17,6 @@
  */
 package com.infomaniak.core.crossapplogin.back
 
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
 import com.infomaniak.core.appintegrity.AppIntegrityManager
@@ -27,6 +25,7 @@ import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
+import com.infomaniak.core.network.api.ApiController
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
@@ -96,8 +95,6 @@ internal class DerivedTokenGeneratorImpl(
         return getToken(okHttpClient, targetUrl, form)
     }
 
-    private val gson: Gson by lazy { Gson() }
-
     private suspend fun getToken(
         okHttpClient: OkHttpClient,
         url: String,
@@ -113,9 +110,8 @@ internal class DerivedTokenGeneratorImpl(
         val response = okHttpClient.newCall(request).await()
         val bodyResponse = response.bodyAsStringOrNull()
 
-        return if (response.isSuccessful) {
-            val jsonResult = JsonParser.parseString(bodyResponse)
-            val apiToken = gson.fromJson(jsonResult, ApiToken::class.java)
+        return if (response.isSuccessful && bodyResponse != null) {
+            val apiToken = ApiController.json.decodeFromString<ApiToken>(bodyResponse)
 
             // Set the token expiration date (with margin-delay)
             apiToken.expiresAt = System.currentTimeMillis() + ((apiToken.expiresIn - 60) * 1_000)
