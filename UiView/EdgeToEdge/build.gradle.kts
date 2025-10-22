@@ -45,4 +45,5 @@ android {
 
 dependencies {
     implementation(core.appcompat)
+    implementation(core.material)
 }
