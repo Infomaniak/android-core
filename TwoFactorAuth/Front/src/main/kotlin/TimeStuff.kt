@@ -67,7 +67,7 @@ fun TimeMark.minutesAgoState(): State<String> {
     var now = elapsedNow()
     val resources = LocalResources.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    return produceState(initialValue = now.elapsedTimePerMinuteFormatted(resources)) {
+    return produceState(initialValue = now.elapsedTimePerMinuteFormatted(resources), key1 = this) {
         lifecycle.isStartedFlow().collectLatest { isStarted ->
             if (isStarted) repeatWhileActive {
                 now = elapsedNow()
