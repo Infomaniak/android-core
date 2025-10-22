@@ -59,6 +59,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * All consumers need is [challengeToResolve].
@@ -100,7 +101,7 @@ class TwoFactorAuthManager(
                 challenge.takeIf { it !in actionedChallenges }?.let { auth to challenge }
             }
         }
-    }
+    }.distinctUntilChanged()
 
     val challengeToResolve: StateFlow<Challenge?> = challengeToResolveFlow(
         firstUnactionedChallenge = firstUnactionedChallenge,
@@ -180,28 +181,39 @@ private fun challengeToResolveFlow(
         dismiss = { dismissCompletable.complete(null) },
         state = Challenge.State.ApproveOrReject(action = { confirmOrRejectAsync.complete(it) })
     )
-    val awaitForUserChoice: suspend () -> Challenge.ApprovalAction? = {
-        raceOf(
-            { confirmOrRejectAsync.await() },
-            { dismissCompletable.await() }
-        )
-    }
 
+    emit(uiChallenge)
+    val userChoice = raceOf(
+        { confirmOrRejectAsync.await() },
+        { dismissCompletable.await() }
+    )
+    actionedChallengesFlow.update { it + remoteChallenge }
+
+    executeChallengeAction(
+        userChoice = userChoice,
+        dismissCompletable = dismissCompletable,
+        uiChallenge = uiChallenge.copy(state = null),
+        challengeUid = remoteChallenge.uuid,
+        twoFactorAuth = twoFactorAuth
+    )
+}
+
+private suspend fun FlowCollector<Challenge?>.executeChallengeAction(
+    userChoice: Challenge.ApprovalAction?,
+    dismissCompletable: CompletableDeferred<Nothing?>,
+    uiChallenge: Challenge,
+    challengeUid: Uuid,
+    twoFactorAuth: TwoFactorAuth,
+) {
     repeatWhileActive {
         emit(uiChallenge)
-        val userChoice = awaitForUserChoice()
-
-        emit(uiChallenge.copy(state = null))
-        actionedChallengesFlow.update { it + remoteChallenge }
-
         // We intentionally don't immediately act on dismissal while sending the action to the backend.
         val outcome: Outcome = when (userChoice) {
-            Challenge.ApprovalAction.Approve -> twoFactorAuth.approveChallenge(remoteChallenge.uuid)
-            Challenge.ApprovalAction.Reject -> twoFactorAuth.rejectChallenge(remoteChallenge.uuid)
-            null -> return@transform // Dismissal.
+            Challenge.ApprovalAction.Approve -> twoFactorAuth.approveChallenge(challengeUid)
+            Challenge.ApprovalAction.Reject -> twoFactorAuth.rejectChallenge(challengeUid)
+            null -> return // Dismissal.
         }
-
-        if (handleOutcome(outcome, userChoice, uiChallenge, dismissCompletable)) return@transform
+        if (handleOutcome(outcome, userChoice, uiChallenge, dismissCompletable)) return
     }
 }
 
