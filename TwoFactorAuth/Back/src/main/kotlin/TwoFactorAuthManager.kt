@@ -22,8 +22,10 @@ package com.infomaniak.core.twofactorauth.back
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.eventFlow
+import com.infomaniak.core.Xor
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.emitFirstsUntilSecond
 import com.infomaniak.core.rateLimit
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
@@ -48,7 +50,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import okhttp3.OkHttpClient
 import splitties.coroutines.raceOf
@@ -93,7 +95,7 @@ class TwoFactorAuthManager(
      * We don't want to bring back any challenges that have been actioned, and are being sent to the backend,
      * or have been fully handled since the most recent call to [attemptGettingAllCurrentChallenges].
      */
-    private val firstUnactionedChallenge: Flow<Pair<TwoFactorAuth, RemoteChallenge>?> = rateLimitedForegroundEvents.map {
+    private val firstUnactionedChallenge: StateFlow<Pair<TwoFactorAuth, RemoteChallenge>?> = rateLimitedForegroundEvents.map {
         attemptGettingAllCurrentChallenges()
     }.flatMapLatest { challengesMap ->
         actionedChallengesFlow.map { actionedChallenges ->
@@ -101,7 +103,11 @@ class TwoFactorAuthManager(
                 challenge.takeIf { it !in actionedChallenges }?.let { auth to challenge }
             }
         }
-    }.distinctUntilChanged()
+    }.distinctUntilChanged().stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.Lazily,
+        initialValue = null
+    )
 
     val challengeToResolve: StateFlow<Challenge?> = challengeToResolveFlow(
         firstUnactionedChallenge = firstUnactionedChallenge,
@@ -166,12 +172,34 @@ private fun utcTimestampToTimeMark(utcOffsetMillis: Long): TimeMark {
 private fun challengeToResolveFlow(
     firstUnactionedChallenge: Flow<Pair<TwoFactorAuth, RemoteChallenge>?>,
     actionedChallengesFlow: MutableStateFlow<Set<RemoteChallenge>>,
-): Flow<Challenge?> = firstUnactionedChallenge.transform { unactionedChallenge ->
-    emit(null) // Start with no challenge.
-    val (twoFactorAuth, remoteChallenge) = unactionedChallenge ?: return@transform
+): Flow<Challenge?> = flow {
+    repeatWhileActive {
+        val actionData = emitOngoingChallengeUntilAction(firstUnactionedChallenge)
+        actionedChallengesFlow.update { it + actionData.remoteChallenge }
 
+        executeChallengeAction(
+            userChoice = actionData.userChoice,
+            dismissCompletable = actionData.dismissCompletable,
+            uiChallenge = actionData.uiChallenge.copy(state = null),
+            challengeUid = actionData.remoteChallenge.uuid,
+            twoFactorAuth = actionData.twoFactorAuth
+        )
+    }
+}
+
+private suspend fun FlowCollector<Challenge?>.emitOngoingChallengeUntilAction(
+    firstUnactionedChallenge: Flow<Pair<TwoFactorAuth, RemoteChallenge>?>,
+): ActionedChallengeData {
+    return emitFirstsUntilSecond(ongoingChallengeAndActionFlow(firstUnactionedChallenge))
+}
+
+private fun ongoingChallengeAndActionFlow(
+    firstUnactionedChallenge: Flow<Pair<TwoFactorAuth, RemoteChallenge>?>,
+): Flow<Xor<Challenge?, ActionedChallengeData>> = firstUnactionedChallenge.transformLatest { unactionedChallenge ->
+    emit(Xor.First(null)) // Start with no challenge.
+    val (twoFactorAuth, remoteChallenge) = unactionedChallenge ?: return@transformLatest
     val user = UserDatabase().userDao().findById(twoFactorAuth.userId)
-        ?: return@transform // User was removed in the meantime (unlikely, but possible).
+        ?: return@transformLatest // User was removed in the meantime (unlikely, but possible).
 
     val dismissCompletable = CompletableDeferred<Nothing?>()
     val confirmOrRejectAsync = CompletableDeferred<Challenge.ApprovalAction>()
@@ -181,21 +209,19 @@ private fun challengeToResolveFlow(
         dismiss = { dismissCompletable.complete(null) },
         state = Challenge.State.ApproveOrReject(action = { confirmOrRejectAsync.complete(it) })
     )
-
-    emit(uiChallenge)
+    emit(Xor.First(uiChallenge))
     val userChoice = raceOf(
         { confirmOrRejectAsync.await() },
         { dismissCompletable.await() }
     )
-    actionedChallengesFlow.update { it + remoteChallenge }
-
-    executeChallengeAction(
-        userChoice = userChoice,
+    val actionedChallengeData = ActionedChallengeData(
+        remoteChallenge = remoteChallenge,
+        uiChallenge = uiChallenge,
         dismissCompletable = dismissCompletable,
-        uiChallenge = uiChallenge.copy(state = null),
-        challengeUid = remoteChallenge.uuid,
-        twoFactorAuth = twoFactorAuth
+        twoFactorAuth = twoFactorAuth,
+        userChoice = userChoice
     )
+    emit(Xor.Second(actionedChallengeData))
 }
 
 private suspend fun FlowCollector<Challenge?>.executeChallengeAction(
@@ -255,3 +281,11 @@ private fun Outcome.Done.toDoneChallengeState(
     Outcome.Done.Success -> Done(if (userChoice == Challenge.ApprovalAction.Reject) Outcome.Done.Rejected else this)
     else -> Done(this)
 }
+
+private data class ActionedChallengeData(
+    val remoteChallenge: RemoteChallenge,
+    val uiChallenge: Challenge,
+    val dismissCompletable: CompletableDeferred<Nothing?>,
+    val twoFactorAuth: TwoFactorAuth,
+    val userChoice: Challenge.ApprovalAction?,
+)
