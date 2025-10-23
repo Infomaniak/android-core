@@ -27,6 +27,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -35,6 +36,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.flow.transformWhile
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.nanoseconds
 
@@ -117,3 +119,46 @@ fun <T> Flow<T>.flowOnLazyClosable(
         emitAll(flowOn(dispatcher))
     }
 }
+
+/**
+ * Takes a [source] Flow of type [Xor]`<A, B>`, and emits all `A` values until a `B` value is encountered.
+ *
+ * Suspends while emitting `A` values that were collected in [source] into this [FlowCollector],
+ * until a `B` value is collected.
+ *
+ * Example usage:
+ * ```kotlin
+ * val someStateOrTerminalAction: Flow<Xor<SomeState, TerminalAction>> = whatever()
+ *
+ * fun someState(): Flow<SomeState> = flow {
+ *     while (currentCoroutineContext().isActive) {
+ *         val someAction: TerminalAction = emitFirstsUntilSecond(someStateOrTerminalAction)
+ *         val newState: SomeState = something(someAction)
+ *         emit(newState)
+ *     }
+ * }
+ * ```
+ *
+ * @return The first `B` value collected from [source].
+ */
+suspend fun <A, B> FlowCollector<A>.emitFirstsUntilSecond(source: Flow<Xor<A, B>>): B {
+    var result: Any? = nullSurrogate
+    source.transformWhile {
+        when (it) {
+            is Xor.First -> {
+                emit(it.value)
+                true
+            }
+            is Xor.Second -> {
+                result = it.value
+                false
+            }
+        }
+    }.collect(this)
+
+    if (result === nullSurrogate) throw NoSuchElementException("The flow ended without emitting a value of type B")
+    @Suppress("unchecked_cast")
+    return result as B
+}
+
+private val nullSurrogate = Any() // To disambiguate with null that could be emitted.
