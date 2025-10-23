@@ -20,13 +20,18 @@ package com.infomaniak.core.webview.ui.components
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
+
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -38,6 +43,9 @@ fun WebView(
     @SuppressLint("ModifierParameter") // We have this to match the previous behavior when there was no modifier parameter.
     modifier: Modifier = Modifier.safeDrawingPadding(),
     domStorageEnabled: Boolean = false,
+    systemBarsColor: Color = Color.Transparent,
+    webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
+    webChromeClient: WebChromeClient? = null,
 ) {
     AndroidView(
         modifier = modifier,
@@ -48,18 +56,18 @@ fun WebView(
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
 
-                webViewClient = CustomWebViewClient(
-                    urlToQuit = urlToQuit,
-                    onUrlToQuitReached = onUrlToQuitReached,
-                )
+                    this.webViewClient = webViewClient
+                    this.webChromeClient = webChromeClient
 
-                settings.javaScriptEnabled = true
-                settings.domStorageEnabled = domStorageEnabled
+                    settings.mediaPlaybackRequiresUserGesture = false;
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = domStorageEnabled
 
-                loadUrl(url, headers)
-            }
-        }
-    )
+                    val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
+                }
+                    loadUrl(url, headers)
+            })
+    }
 }
 
 private class CustomWebViewClient(
