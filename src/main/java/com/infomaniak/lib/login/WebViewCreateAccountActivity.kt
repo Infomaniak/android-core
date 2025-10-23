@@ -98,7 +98,14 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
                     openUrl(url.toString())
                     cancelResult()
                 }
-                else -> openUrl(url.toString())
+                else -> {
+                    val authorizedUrls = arrayOf(InfomaniakLogin.SHOP_URL, InfomaniakLogin.LOGIN_URL, InfomaniakLogin.MANAGER_URL)
+                    if (authorizedUrls.contains(url.host)) {
+                        view.loadUrl(url.toString())
+                    } else {
+                        openUrl(url.toString())
+                    }
+                }
             }
             return true
         }
