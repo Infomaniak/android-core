@@ -20,14 +20,19 @@ package com.infomaniak.core.webview.ui.components
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.serialization.json.Json
+
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -37,28 +42,32 @@ fun WebView(
     onUrlToQuitReached: () -> Unit,
     urlToQuit: String?,
     domStorageEnabled: Boolean = false,
+    systemBarsColor: Color = Color.Transparent,
+    webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
+    webChromeClient: WebChromeClient? = null,
 ) {
-    AndroidView(
-        modifier = Modifier.safeDrawingPadding(),
-        factory = {
-            WebView(it).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
+    Row(modifier = Modifier.background(systemBarsColor)) {
+        AndroidView(
+            modifier = Modifier.safeDrawingPadding(),
+            factory = { context ->
+                WebView(context).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
 
-                webViewClient = CustomWebViewClient(
-                    urlToQuit = urlToQuit,
-                    onUrlToQuitReached = onUrlToQuitReached,
-                )
+                    this.webViewClient = webViewClient
+                    this.webChromeClient = webChromeClient
 
-                settings.javaScriptEnabled = true
-                settings.domStorageEnabled = domStorageEnabled
+                    settings.mediaPlaybackRequiresUserGesture = false;
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = domStorageEnabled
 
-                val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
-                loadUrl(url, headers)
-            }
-        })
+                    val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
+                    loadUrl(url, headers)
+                }
+            })
+    }
 }
 
 private class CustomWebViewClient(
