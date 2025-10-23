@@ -419,10 +419,5 @@ class InfomaniakLogin(
         const val HTTP_ERROR_CODE = "http_error_code"
 
         internal var sentryCallback: ((message: String) -> Unit)? = null
-
-        // Authorized Urls during account creation
-        internal const val SHOP_URL = "shop.infomaniak.com"
-        internal const val LOGIN_URL = "login.infomaniak.com"
-        internal const val MANAGER_URL = "manager.infomaniak.com"
     }
 }

@@ -23,6 +23,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
 import android.webkit.SslErrorHandler
+import android.webkit.URLUtil.isValidUrl
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -92,8 +93,10 @@ open class LoginWebViewClient(
 
         return inputUrlHost == baseUrlHost
                 || inputUrl.contains("oauth2redirect")
-                || !inputUrlHost.contains(INFOMANIAK_REGEX) // Allow all other redirects except unmanaged Infomaniak redirects
+                || !isInfomaniakUrl(inputUrlHost) // Allow all other redirects except unmanaged Infomaniak redirects
     }
+
+    protected fun isInfomaniakUrl(inputUrlHost: String) = inputUrlHost.contains(INFOMANIAK_REGEX)
 
     private fun onAuthResponse(uri: Uri?): Boolean {
         if (uri?.scheme != appUID) return false
