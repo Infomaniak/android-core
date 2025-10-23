@@ -52,11 +52,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -77,14 +74,14 @@ import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.rememberCallableState
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.network.EDIT_PASSWORD_URL
-import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
-import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge.ApprovalAction
 import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Computer
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Phone
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge.Device.Type.Tablet
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge.ApprovalAction
 import com.infomaniak.core.twofactorauth.front.components.Button
 import com.infomaniak.core.twofactorauth.front.components.CardElement
 import com.infomaniak.core.twofactorauth.front.components.CardElementPosition
@@ -127,9 +124,7 @@ fun TwoFactorAuthApprovalContent(challenge: Challenge) = Surface(Modifier.fillMa
             CloseButton(onClick = challenge.dismiss, Modifier.align(Alignment.Start))
 
             when (val state = challenge.state) {
-                is Challenge.State.ApproveOrReject, null -> {
-                    PendingChallenge(virtualCardState, maxWidth, cardOuterPadding, challenge, state)
-                }
+                is Challenge.State.Ongoing -> PendingChallenge(virtualCardState, maxWidth, cardOuterPadding, challenge, state)
                 is Challenge.State.Done -> ChallengeDone(
                     outcome = state.data,
                     close = challenge.dismiss
@@ -228,10 +223,8 @@ private fun ColumnScope.PendingChallenge(
     maxWidth: Dp,
     cardOuterPadding: Dp,
     challenge: Challenge,
-    state: Challenge.State.ApproveOrReject?,
+    state: Challenge.State.Ongoing,
 ) {
-    val answerRequest = rememberCallableState<ApprovalAction>()
-    LaunchedEffect(state) { state?.action(answerRequest.awaitOneCall()) }
 
     ChallengeHeader(
         illustrationImage = { ShieldK() },
@@ -256,9 +249,11 @@ private fun ColumnScope.PendingChallenge(
             InfoElement(stringResource(R.string.twoFactorAuthLocationLabel)) { Text(challenge.data.location) }
         }
     }
-    CardElement(virtualCardState, Modifier.weight(1f).fillMaxWidth())
+    CardElement(virtualCardState, Modifier
+        .weight(1f)
+        .fillMaxWidth())
     CardElement(virtualCardState, elementPosition = CardElementPosition.Last) {
-        ApproveOrRejectRow(answerRequest, Modifier.padding(Margin.Medium))
+        ApproveOrRejectRow(state, Modifier.padding(Margin.Medium))
     }
 }
 
@@ -360,12 +355,16 @@ private val Outcome.Issue.descResId: Int
 
 @Composable
 private fun ApproveOrRejectRow(
-    answerRequest: CallableState<ApprovalAction>,
+    state: Challenge.State.Ongoing,
     modifier: Modifier = Modifier,
-) = Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally
-) {
+) = Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+
+    val answerRequest = rememberCallableState<ApprovalAction>()
+    LaunchedEffect(state) {
+        val approveOrReject = state as? Challenge.State.ApproveOrReject ?: return@LaunchedEffect
+        approveOrReject.action(answerRequest.awaitOneCall())
+    }
+
     Text(
         text = stringResource(R.string.twoFactorAuthConfirmationDescription),
         style = Typography.bodyRegular,
@@ -376,22 +375,25 @@ private fun ApproveOrRejectRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(Margin.Medium, alignment = Alignment.CenterHorizontally),
     ) {
-        var lastAction: ApprovalAction? by remember { mutableStateOf(null) }
         Button(
             modifier = Modifier.weight(1f),
-            onClick = { answerRequest(ApprovalAction.Reject.also { lastAction = it }) },
+            onClick = { answerRequest(ApprovalAction.Reject) },
             colors = ButtonDefaults.filledTonalButtonColors(),
-            showIndeterminateProgress = { lastAction == ApprovalAction.Reject && answerRequest.isAwaitingCall.not() },
+            showIndeterminateProgress = { (state as? Challenge.State.SendingAction)?.userChoice == ApprovalAction.Reject },
             indeterminateProgressDelay = 0.4.seconds,
             enabled = { answerRequest.isAwaitingCall },
-        ) { Text(stringResource(R.string.buttonDeny), overflow = TextOverflow.Ellipsis, maxLines = 1) }
+        ) {
+            Text(stringResource(R.string.buttonDeny), overflow = TextOverflow.Ellipsis, maxLines = 1)
+        }
         Button(
             modifier = Modifier.weight(1f),
-            onClick = { answerRequest(ApprovalAction.Approve.also { lastAction = it }) },
-            showIndeterminateProgress = { lastAction == ApprovalAction.Approve && answerRequest.isAwaitingCall.not() },
+            onClick = { answerRequest(ApprovalAction.Approve) },
+            showIndeterminateProgress = { (state as? Challenge.State.SendingAction)?.userChoice == ApprovalAction.Approve },
             indeterminateProgressDelay = 0.4.seconds,
             enabled = { answerRequest.isAwaitingCall },
-        ) { Text(stringResource(R.string.buttonApprove), overflow = TextOverflow.Ellipsis, maxLines = 1) }
+        ) {
+            Text(stringResource(R.string.buttonApprove), overflow = TextOverflow.Ellipsis, maxLines = 1)
+        }
     }
 }
 
@@ -458,7 +460,7 @@ private class ChallengeStatePreviewParamProvider : PreviewParameterProvider<Chal
 }
 
 fun challengeForPreview(
-    state: Challenge.State?,
+    state: Challenge.State,
     timeAgo: Duration = 57.seconds,
     dismiss: () -> Unit = {},
 ): Challenge {

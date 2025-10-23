@@ -44,9 +44,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.compose.basics.CallableState
 import com.infomaniak.core.compose.basics.WithLatestNotNull
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
-import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.front.components.SecurityTheme
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -124,8 +124,9 @@ private fun TwoFactorAuthApprovalAutoManagedBottomSheetPreview() = SecurityTheme
             val dismiss = fun () { dismissal.complete() }
             value = challengeForPreview(Challenge.State.ApproveOrReject(approval), dismiss = dismiss)
             raceOf({ dismissal.join() }, {
-                val rejected = approval.awaitOneCall() == Challenge.ApprovalAction.Reject
-                value = challengeForPreview(state = null, dismiss = dismiss)
+                val userChoice = approval.awaitOneCall()
+                val rejected = userChoice == Challenge.ApprovalAction.Reject
+                value = challengeForPreview(state = Challenge.State.SendingAction(userChoice), dismiss = dismiss)
                 delay(1.5.seconds)
                 val outcome = when (iteration % 3) {
                     1 -> Outcome.Done.AlreadyProcessed

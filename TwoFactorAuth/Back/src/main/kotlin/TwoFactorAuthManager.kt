@@ -61,7 +61,6 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 /**
  * All consumers need is [challengeToResolve].
@@ -109,10 +108,13 @@ class TwoFactorAuthManager(
         initialValue = null
     )
 
-    val challengeToResolve: StateFlow<Challenge?> = challengeToResolveFlow(
-        firstUnactionedChallenge = firstUnactionedChallenge,
-        actionedChallengesFlow = actionedChallengesFlow,
-    ).stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
+    val challengeToResolve: StateFlow<Challenge?> = flow {
+        repeatWhileActive {
+            val actionData = emitOngoingChallengeUntilAction(firstUnactionedChallenge = firstUnactionedChallenge)
+            actionedChallengesFlow.update { it + actionData.remoteChallenge }
+            executeChallengeAction(actionData)
+        }
+    }.stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
 
     private val userIds = UserDatabase().userDao().allUsers.map { users ->
         users.mapTo(hashSetOf()) { it.id }
@@ -136,16 +138,19 @@ class TwoFactorAuthManager(
         val data: ConnectionAttemptInfo,
         val attemptTimeMark: TimeMark,
         val dismiss: () -> Unit,
-        val state: State?
+        val state: State
     ) {
         enum class ApprovalAction { Approve, Reject; }
 
         sealed interface State {
 
             /** @property action Send true for approval, false for reject, and null for dismiss */
-            data class ApproveOrReject(val action: ((ApprovalAction) -> Unit)) : State
+            data class ApproveOrReject(val action: ((ApprovalAction) -> Unit)) : Ongoing
+            data class SendingAction(val userChoice: ApprovalAction) : Ongoing
             data class Done(val data: Outcome.Done) : State
             data class Issue(val data: Outcome.Issue, val retry: () -> Unit) : State
+
+            sealed interface Ongoing : State
         }
     }
 }
@@ -169,24 +174,10 @@ private fun utcTimestampToTimeMark(utcOffsetMillis: Long): TimeMark {
     return TimeSource.Monotonic.markNow() - elapsedMillis.milliseconds
 }
 
-private fun challengeToResolveFlow(
-    firstUnactionedChallenge: Flow<Pair<TwoFactorAuth, RemoteChallenge>?>,
-    actionedChallengesFlow: MutableStateFlow<Set<RemoteChallenge>>,
-): Flow<Challenge?> = flow {
-    repeatWhileActive {
-        val actionData = emitOngoingChallengeUntilAction(firstUnactionedChallenge)
-        actionedChallengesFlow.update { it + actionData.remoteChallenge }
-
-        executeChallengeAction(
-            userChoice = actionData.userChoice,
-            dismissCompletable = actionData.dismissCompletable,
-            uiChallenge = actionData.uiChallenge.copy(state = null),
-            challengeUid = actionData.remoteChallenge.uuid,
-            twoFactorAuth = actionData.twoFactorAuth
-        )
-    }
-}
-
+/**
+ * Emits the ongoing challenge (or null if none yet), and returns the [ActionedChallengeData] once it has been… actioned
+ * (by the user through the callback in the state included into the [Challenge] object that was emitted beforehand).
+ */
 private suspend fun FlowCollector<Challenge?>.emitOngoingChallengeUntilAction(
     firstUnactionedChallenge: Flow<Pair<TwoFactorAuth, RemoteChallenge>?>,
 ): ActionedChallengeData {
@@ -224,20 +215,24 @@ private fun ongoingChallengeAndActionFlow(
     emit(Xor.Second(actionedChallengeData))
 }
 
-private suspend fun FlowCollector<Challenge?>.executeChallengeAction(
-    userChoice: Challenge.ApprovalAction?,
-    dismissCompletable: CompletableDeferred<Nothing?>,
-    uiChallenge: Challenge,
-    challengeUid: Uuid,
-    twoFactorAuth: TwoFactorAuth,
-) {
+/**
+ * Performs the backend API call according to the user choice, and handles potential issues (with retry ability).
+ */
+private suspend fun FlowCollector<Challenge?>.executeChallengeAction(actionData: ActionedChallengeData) {
+
+    val userChoice = actionData.userChoice ?: return // Dismissal, nothing to do.
+
+    val dismissCompletable = actionData.dismissCompletable
+    val uiChallenge = actionData.uiChallenge.copy(state = Challenge.State.SendingAction(userChoice = userChoice))
+    val challengeUid = actionData.remoteChallenge.uuid
+    val twoFactorAuth = actionData.twoFactorAuth
+
     repeatWhileActive {
         emit(uiChallenge)
         // We intentionally don't immediately act on dismissal while sending the action to the backend.
         val outcome: Outcome = when (userChoice) {
             Challenge.ApprovalAction.Approve -> twoFactorAuth.approveChallenge(challengeUid)
             Challenge.ApprovalAction.Reject -> twoFactorAuth.rejectChallenge(challengeUid)
-            null -> return // Dismissal.
         }
         if (handleOutcome(outcome, userChoice, uiChallenge, dismissCompletable)) return
     }
