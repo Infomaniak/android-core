@@ -123,21 +123,24 @@ private fun TwoFactorAuthApprovalAutoManagedBottomSheetPreview() = SecurityTheme
             val dismissal = Job()
             val dismiss = fun () { dismissal.complete() }
             value = challengeForPreview(Challenge.State.ApproveOrReject(approval), dismiss = dismiss)
-            raceOf({ dismissal.join() }, {
-                val userChoice = approval.awaitOneCall()
-                val rejected = userChoice == Challenge.ApprovalAction.Reject
-                value = challengeForPreview(state = Challenge.State.SendingAction(userChoice), dismiss = dismiss)
-                delay(1.5.seconds)
-                val outcome = when (iteration % 3) {
-                    1 -> Outcome.Done.AlreadyProcessed
-                    2 -> Outcome.Done.Expired
-                    else -> if (rejected) Outcome.Done.Rejected else null
+            raceOf(
+                { dismissal.join() },
+                {
+                    val userChoice = approval.awaitOneCall()
+                    val rejected = userChoice == Challenge.ApprovalAction.Reject
+                    value = challengeForPreview(state = Challenge.State.SendingAction(userChoice), dismiss = dismiss)
+                    delay(1.5.seconds)
+                    val outcome = when (iteration % 3) {
+                        1 -> Outcome.Done.AlreadyProcessed
+                        2 -> Outcome.Done.Expired
+                        else -> if (rejected) Outcome.Done.Rejected else null
+                    }
+                    outcome?.let {
+                        value = challengeForPreview(state = Challenge.State.Done(it), dismiss = dismiss)
+                        awaitCancellation()
+                    }
                 }
-                outcome?.let {
-                    value = challengeForPreview(state = Challenge.State.Done(it), dismiss = dismiss)
-                    awaitCancellation()
-                }
-            })
+            )
             value = null
             delay(1.5.seconds)
         }
