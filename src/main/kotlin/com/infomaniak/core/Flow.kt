@@ -63,6 +63,28 @@ fun <T> Flow<T>.rateLimit(minInterval: Duration): Flow<T> = channelFlow {
     }
 }.buffer(Channel.RENDEZVOUS)
 
+fun <T> Flow<T>.rateLimit(minInterval: Duration, elementsBeforeLimit: Int): Flow<T> = channelFlow {
+    var lastLimitReachedElapsedNanos = 0L
+    var elementsCountSinceLastRateLimit = 0
+    collectLatest { newValue ->
+        val nanosSinceLastEmit = SystemClock.elapsedRealtimeNanos() - lastLimitReachedElapsedNanos
+        val timeSinceLastEmit = nanosSinceLastEmit.nanoseconds
+        val timeToWait = minInterval - timeSinceLastEmit.coerceAtMost(minInterval)
+        delay(timeToWait)
+        // We use `sendAtomic` instead of just `send` to ensure `lastEmitElapsedNanos` is updated
+        // if the value was successfully sent while cancellation was happening.
+        // That ensures we count every value being sent, and respect the desired rate limiting.
+        // FYI, as its documentation states, `send` can deliver the value to the receiver,
+        // and throw a `CancellationException` instead of returning (if coroutine's `Job` gets cancelled).
+        sendAtomic(newValue)
+        elementsCountSinceLastRateLimit++
+        if (elementsCountSinceLastRateLimit >= elementsBeforeLimit) {
+            lastLimitReachedElapsedNanos = SystemClock.elapsedRealtimeNanos()
+            elementsCountSinceLastRateLimit = 0
+        }
+    }
+}.buffer(Channel.RENDEZVOUS)
+
 /**
  * Every time the resulting flow is collected, it will create a new internal [android.os.HandlerThread],
  * and when the flow is cancelled or completes, this thread will be quit (with [android.os.HandlerThread.quitSafely]).

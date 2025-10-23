@@ -86,7 +86,7 @@ class TwoFactorAuthManager(
 
     private val rateLimitedForegroundEvents = ProcessLifecycleOwner.get().lifecycle.eventFlow.filter {
         it == Lifecycle.Event.ON_START
-    }.rateLimit(30.seconds)
+    }.rateLimit(30.seconds, elementsBeforeLimit = 2)
 
     private val actionedChallengesFlow = MutableStateFlow<Set<RemoteChallenge>>(emptySet())
 
