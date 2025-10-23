@@ -1,6 +1,6 @@
 /*
- * Infomaniak SwissTransfer - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Infomaniak Core - Android
+ * Copyright (C) 2025-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -126,6 +126,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     onUseAnotherAccountClicked: () -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
     modifier: Modifier = Modifier,
+    singleSelection: Boolean = false,
     isLoginButtonLoading: () -> Boolean = { false },
     isSignUpButtonLoading: () -> Boolean = { false },
     nextButtonShape: Shape = CrossLoginBottomContentDefaults.buttonShape,
@@ -135,7 +136,8 @@ fun OnboardingComponents.CrossLoginBottomContent(
 ) {
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
-    val localSkipped by remember { derivedStateOf { mutableStateSetOf(*skippedIds().toTypedArray()) } }
+    val localSkipped = remember { mutableStateSetOf(*skippedIds().toTypedArray()) }
+    TODO("Use newSkippedAccountIdsToKeepSingleSelection to update localSkipped in case of singleSelection")
 
     val scope = rememberCoroutineScope()
 
@@ -221,7 +223,10 @@ fun OnboardingComponents.CrossLoginBottomContent(
                 accounts = accounts,
                 skippedIds = { localSkipped },
                 onAccountClicked = { accountId ->
-                    if (accountId in localSkipped) localSkipped -= accountId else localSkipped += accountId
+                    if (singleSelection) {
+                        localSkipped.addAll(accounts().map { it.id })
+                        localSkipped.remove(accountId)
+                    } else if (accountId in localSkipped) localSkipped -= accountId else localSkipped += accountId
                 },
                 onAnotherAccountClicked = onUseAnotherAccountClicked,
                 onSaveClicked = {

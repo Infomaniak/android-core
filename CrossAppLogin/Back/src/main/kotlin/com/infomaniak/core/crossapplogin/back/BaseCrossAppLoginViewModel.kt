@@ -36,8 +36,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
 import com.infomaniak.core.R as RCore
@@ -63,11 +65,12 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     )
 
     @OptIn(ExperimentalSerializationApi::class)
-    suspend fun activateUpdates(hostActivity: ComponentActivity): Nothing = coroutineScope {
+    suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
         val crossAppLogin = CrossAppLogin.forContext(
             context = hostActivity,
             coroutineScope = this + Dispatchers.Default
         )
+        if (singleSelection) launch { keepSingleSelection() }
         hostActivity.repeatOnLifecycle(Lifecycle.State.STARTED) {
             _availableAccounts.emit(crossAppLogin.retrieveAccountsFromOtherApps())
         }
@@ -93,6 +96,18 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         }
 
         return LoginResult(tokens, errorMessageIds)
+    }
+
+    /**
+     * Ensures that there's only one selected account, even through updates to [availableAccounts] and [skippedAccountIds].
+     */
+    private suspend fun keepSingleSelection(): Nothing {
+        availableAccounts.collectLatest { accounts ->
+            skippedAccountIds.collectLatest { currentSkippedAccountIds ->
+                skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(accounts, currentSkippedAccountIds)
+            }
+        }
+        awaitCancellation() // Unreachable because availableAccounts is a StateFlow, and collectLatest is not truncating.
     }
 
     // @StringRes // Doesn't work with a suspend function because they technically return java.lang.Object
