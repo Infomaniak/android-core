@@ -249,9 +249,7 @@ private fun ColumnScope.PendingChallenge(
             InfoElement(stringResource(R.string.twoFactorAuthLocationLabel)) { Text(challenge.data.location) }
         }
     }
-    CardElement(virtualCardState, Modifier
-        .weight(1f)
-        .fillMaxWidth())
+    CardElement(virtualCardState, Modifier.weight(1f).fillMaxWidth())
     CardElement(virtualCardState, elementPosition = CardElementPosition.Last) {
         ApproveOrRejectRow(state, Modifier.padding(Margin.Medium))
     }
