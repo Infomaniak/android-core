@@ -38,9 +38,9 @@ import kotlinx.serialization.json.Json
 @Composable
 fun WebView(
     url: String,
-    headersString: String?,
-    onUrlToQuitReached: () -> Unit,
-    urlToQuit: String?,
+    headersString: String? = null,
+    onUrlToQuitReached: (() -> Unit)? = null,
+    urlToQuit: String? = null,
     domStorageEnabled: Boolean = false,
     systemBarsColor: Color = Color.Transparent,
     webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
@@ -59,7 +59,6 @@ fun WebView(
                     this.webViewClient = webViewClient
                     this.webChromeClient = webChromeClient
 
-                    settings.mediaPlaybackRequiresUserGesture = false;
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = domStorageEnabled
 
@@ -72,12 +71,12 @@ fun WebView(
 
 private class CustomWebViewClient(
     private val urlToQuit: String?,
-    private val onUrlToQuitReached: () -> Unit,
+    private val onUrlToQuitReached: (() -> Unit)?,
 ) : WebViewClient() {
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest?): Boolean {
         return if (urlToQuit != null && request?.url?.toString()?.contains(urlToQuit) == true) {
-            onUrlToQuitReached()
+            onUrlToQuitReached?.invoke()
             true
         } else {
             super.shouldOverrideUrlLoading(view, request)
