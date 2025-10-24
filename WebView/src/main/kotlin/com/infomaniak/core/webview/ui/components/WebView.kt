@@ -45,6 +45,7 @@ fun WebView(
     systemBarsColor: Color = Color.Transparent,
     webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
     webChromeClient: WebChromeClient? = null,
+    callback: ((WebView) -> Unit)? = null,
 ) {
     Row(modifier = Modifier.background(systemBarsColor)) {
         AndroidView(
@@ -61,6 +62,8 @@ fun WebView(
 
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = domStorageEnabled
+
+                    callback?.invoke(this)
 
                     val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
                     loadUrl(url, headers)
