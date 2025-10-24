@@ -59,7 +59,6 @@ fun WebView(
                     this.webViewClient = webViewClient
                     this.webChromeClient = webChromeClient
 
-                    settings.mediaPlaybackRequiresUserGesture = false;
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = domStorageEnabled
 
@@ -72,12 +71,12 @@ fun WebView(
 
 private class CustomWebViewClient(
     private val urlToQuit: String?,
-    private val onUrlToQuitReached: () -> Unit,
+    private val onUrlToQuitReached: (() -> Unit)?,
 ) : WebViewClient() {
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest?): Boolean {
         return if (urlToQuit != null && request?.url?.toString()?.contains(urlToQuit) == true) {
-            onUrlToQuitReached()
+            onUrlToQuitReached?.invoke()
             true
         } else {
             super.shouldOverrideUrlLoading(view, request)
