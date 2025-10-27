@@ -39,6 +39,7 @@ import com.infomaniak.core.compose.preview.PreviewLightAndDark
 fun SinglePaneScaffold(
     modifier: Modifier = Modifier,
     maxPaneWidth: Dp = LocalScaffoldTheme.current.singlePaneMaxWidth,
+    containerColor: Color = MaterialTheme.colorScheme.background,
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
@@ -49,6 +50,7 @@ fun SinglePaneScaffold(
         topBar = topBar,
         bottomBar = bottomBar,
         snackbarHost = snackbarHost,
+        containerColor = containerColor,
     ) { contentPadding ->
         Box(
             contentAlignment = Alignment.TopCenter,
