@@ -27,7 +27,7 @@ val javaVersion: JavaVersion by rootProject.extra
 
 android {
 
-    namespace = "com.infomaniak.core.twofactorauth.back"
+    namespace = "com.infomaniak.core.twofactorauth.back.withuserdb"
     compileSdk = coreCompileSdk
 
     defaultConfig {
@@ -51,18 +51,7 @@ android {
 }
 
 dependencies {
-    api(core.kotlinx.coroutines.core)
-    api(core.okhttp)
+    api(project(":Core:TwoFactorAuth:Back"))
 
-    implementation(project(":Core"))
-    implementation(project(":Core:Network"))
-    implementation(project(":Core:Sentry"))
-
-    implementation(core.androidx.core.ktx)
-    implementation(core.androidx.lifecycle.process)
-    implementation(core.kotlinx.serialization.json)
-    implementation(core.ktor.client.json)
-    implementation(core.ktor.client.content.negociation)
-    implementation(core.ktor.client.core)
-    implementation(core.ktor.client.okhttp)
+    implementation(project(":Core:Auth"))
 }
