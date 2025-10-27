@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -50,8 +49,8 @@ private const val ROTATION_ANGLE_DEGREE = -3.0
 @Composable
 fun HighlightedText(
     modifier: Modifier = Modifier,
-    templateRes: Int,
-    argumentRes: Int,
+    template: String,
+    argument: String,
     style: TextStyle,
     verticalPadding: Float = VERTICAL_PADDING,
     horizontalPadding: Float = HORIZONTAL_PADDING,
@@ -59,8 +58,6 @@ fun HighlightedText(
     highlightedColor: Color,
     isHighlighted: () -> Boolean,
 ) {
-    val template = stringResource(templateRes)
-    val argument = stringResource(argumentRes)
     val text = String.format(template, argument)
 
     var boundingBoxes by remember { mutableStateOf<List<Rect>>(emptyList()) }

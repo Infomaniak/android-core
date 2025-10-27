@@ -18,7 +18,6 @@
 package com.infomaniak.core.onboarding.components
 
 import androidx.annotation.RawRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -120,9 +118,9 @@ object OnboardingComponents {
 
     @Composable
     fun HighlightedTitleAndDescription(
-        @StringRes titleRes: Int,
-        @StringRes subtitleTemplateRes: Int,
-        @StringRes subtitleArgumentRes: Int,
+        title: String,
+        subtitleTemplate: String,
+        subtitleArgument: String,
         textStyle: TextStyle,
         descriptionWidth: Dp,
         highlightedTextStyle: TextStyle,
@@ -133,7 +131,7 @@ object OnboardingComponents {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 textAlign = TextAlign.Center,
-                text = stringResource(titleRes),
+                text = title,
                 style = textStyle,
             )
 
@@ -141,8 +139,8 @@ object OnboardingComponents {
 
             HighlightedText(
                 modifier = Modifier.widthIn(max = descriptionWidth),
-                templateRes = subtitleTemplateRes,
-                argumentRes = subtitleArgumentRes,
+                template = subtitleTemplate,
+                argument = subtitleArgument,
                 style = highlightedTextStyle,
                 angleDegrees = highlightedAngleDegree,
                 highlightedColor = highlightedColor,
