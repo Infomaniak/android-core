@@ -49,6 +49,7 @@ fun BottomStickyButtonScaffold(
     snackbarHostState: SnackbarHostState? = null,
     maxPaneWidth: Dp = LocalScaffoldTheme.current.singlePaneMaxWidth,
     stackedButtonVerticalPadding: Dp = LocalScaffoldTheme.current.stackedButtonVerticalPadding,
+    containerColor: Color = MaterialTheme.colorScheme.background,
     topBar: @Composable () -> Unit,
     topButton: @Composable ((Modifier) -> Unit)? = null,
     bottomButton: @Composable ((Modifier) -> Unit)? = null,
@@ -57,6 +58,7 @@ fun BottomStickyButtonScaffold(
     SinglePaneScaffold(
         modifier = modifier,
         maxPaneWidth = maxPaneWidth,
+        containerColor = containerColor,
         snackbarHost = { snackbarHostState?.let { SnackbarHost(hostState = it) } },
         topBar = topBar,
     ) { contentPaddings ->
