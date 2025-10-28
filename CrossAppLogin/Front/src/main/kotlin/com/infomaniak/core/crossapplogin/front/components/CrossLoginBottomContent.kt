@@ -70,12 +70,14 @@ import com.infomaniak.core.R
 import com.infomaniak.core.compose.basicbutton.BasicButton
 import com.infomaniak.core.compose.basicbutton.BasicButtonDelay
 import com.infomaniak.core.compose.basics.ButtonStyle
+import com.infomaniak.core.compose.basics.ButtonType
 import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
+import com.infomaniak.core.crossapplogin.front.components.CrossLoginBottomContentDefaults.primaryButtonType
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
@@ -97,8 +99,6 @@ private val FAB_SIZE = 64.dp
  * we're at the last page and to navigate between page shen the arrow button is clicked.
  * @param accounts The list of all available accounts that can be chosen from and used for login.
  * @param skippedIds The list of ids of accounts that are not currently selected by the user.
- * @param titleColor The primary color to use for the [CrossLoginSelectAccounts].
- * @param descriptionColor The secondary lighter color to use for the [CrossLoginSelectAccounts].
  * @param onLogin When the user has no accounts for cross app login and clicks on the button to log in a new user.
  * @param onContinueWithSelectedAccounts When the user has accounts for cross app login and clicks on the button to log them.
  * @param onCreateAccount When the user has no accounts for cross app login and clicks on the button to create a new account.
@@ -111,9 +111,7 @@ private val FAB_SIZE = 64.dp
  * needs to start loading so it cannot be clicked multiple times while the api calls are being sent when the user has slow internet.
  * @param isSignUpButtonLoading Whether the button to create a new account is loading or not. Same as [isLoginButtonLoading].
  * @param nextButtonShape To specify a different shape for the big button with an arrow that lets you go to the next page.
- * @param primaryButtonShape To specify a specific shape for the big primary textual buttons to match each app's unique style.
- * @param primaryButtonHeight To specify a specific height for the big primary textual buttons to match each app's unique style.
- * @param accountsBottomSheetCustomization Use it to style differently the content of the bottom sheet that lets the user select
+ * @param customization Use it to style differently the buttons and the content of the bottom sheet that lets the user select
  * what accounts to use for cross app login.
  */
 @Suppress("UnusedReceiverParameter")
@@ -123,20 +121,17 @@ fun OnboardingComponents.CrossLoginBottomContent(
     pagerState: PagerState,
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
-    titleColor: Color,
-    descriptionColor: Color,
     onLogin: () -> Unit,
     onContinueWithSelectedAccounts: () -> Unit,
     onCreateAccount: () -> Unit,
     onUseAnotherAccountClicked: () -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
     modifier: Modifier = Modifier,
-    singleSelection: Boolean = false,
+    isSingleSelection: Boolean = false,
     isLoginButtonLoading: () -> Boolean = { false },
     isSignUpButtonLoading: () -> Boolean = { false },
     nextButtonShape: Shape = CrossLoginBottomContentDefaults.nextButtonShape,
-    primaryButtonType: ButtonStyle = CrossLoginBottomContentDefaults.primaryButtonType,
-    accountsBottomSheetCustomization: CrossLoginCustomization = CrossLoginDefaults.customize(),
+    customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
 ) {
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
@@ -162,10 +157,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                         CrossLoginSelectAccounts(
                             accounts = accounts,
                             skippedIds = skippedIds,
-                            customization = CrossLoginDefaults.customize(
-                                colors = CrossLoginDefaults.colors(titleColor = titleColor, descriptionColor = descriptionColor),
-                                buttonStyle = primaryButtonType,
-                            ),
+                            customization = customization,
                             onClick = { showAccountsBottomSheet = true },
                         )
                     }
@@ -200,12 +192,12 @@ fun OnboardingComponents.CrossLoginBottomContent(
     if (showAccountsBottomSheet) {
         val sheetState = rememberModalBottomSheetState()
         ThemedBottomSheetScaffold(sheetState = sheetState, onDismissRequest = { showAccountsBottomSheet = false }) {
-            val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds, singleSelection)
+            val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds, isSingleSelection)
             CrossLoginListAccounts(
                 accounts = accounts,
                 skippedIds = { localSkipped },
                 onAccountClicked = { accountId ->
-                    if (singleSelection) {
+                    if (isSingleSelection) {
                         localSkipped.addAll(accounts().map { it.id })
                         localSkipped.remove(accountId)
                     } else if (accountId in localSkipped) localSkipped -= accountId else localSkipped += accountId
@@ -215,7 +207,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     onSaveSkippedAccounts(localSkipped)
                     scope.launch { sheetState.hide() }.invokeOnCompletion { showAccountsBottomSheet = false }
                 },
-                customization = accountsBottomSheetCustomization,
+                customization = customization,
             )
         }
     }
@@ -365,8 +357,10 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 pagerState = rememberPagerState { 1 },
                 accounts = { accounts },
                 skippedIds = { emptySet() },
-                titleColor = Color.Black,
-                descriptionColor = Color.Gray,
+                customization = CrossLoginCustomization(
+                    colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
+                    buttonStyle = ButtonType.Mail,
+                ),
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
                 onCreateAccount = {},
