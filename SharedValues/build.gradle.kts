@@ -18,7 +18,6 @@
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
-    alias(core.plugins.compose.compiler)
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -36,10 +35,6 @@ android {
     compileOptions {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
-    }
-
-    buildFeatures {
-        compose = true
     }
 
     kotlinOptions {
