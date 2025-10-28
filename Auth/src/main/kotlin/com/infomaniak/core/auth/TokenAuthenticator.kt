@@ -19,7 +19,6 @@ package com.infomaniak.core.auth
 
 import com.infomaniak.core.auth.api.AuthRepository
 import com.infomaniak.core.auth.utils.ApiTokenExt.isInfinite
-import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -50,10 +49,10 @@ class TokenAuthenticator(
                         tokenInterceptorListener.onRefreshTokenError()
                         null
                     }
-                    isAlreadyRefreshed -> changeAccessToken(request, apiToken)
+                    isAlreadyRefreshed -> changeAccessToken(request, apiToken.accessToken)
                     else -> {
                         val newToken = AuthRepository.refreshToken(apiToken.refreshToken!!, tokenInterceptorListener)
-                        changeAccessToken(request, newToken)
+                        changeAccessToken(request, newToken.accessToken)
                     }
                 }
             }
@@ -63,9 +62,9 @@ class TokenAuthenticator(
     companion object {
         val mutex = Mutex()
 
-        fun changeAccessToken(request: Request, apiToken: ApiToken): Request {
+        fun changeAccessToken(request: Request, accessToken: String): Request {
             val builder = request.newBuilder()
-            builder.header("Authorization", "Bearer ${apiToken.accessToken}")
+            builder.header("Authorization", "Bearer $accessToken")
             return builder.build()
         }
     }
