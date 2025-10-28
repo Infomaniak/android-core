@@ -38,6 +38,7 @@ include(
     ":Compose:Margin",
     ":Compose:MaterialThemeFromXml",
     ":Compose:Preview",
+    ":Compose:Theme",
     ":CrossAppLogin:Back",
     ":CrossAppLogin:Front",
     ":FileTypes",
