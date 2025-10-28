@@ -23,8 +23,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.eventFlow
 import com.infomaniak.core.Xor
-import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.emitFirstsUntilSecond
 import com.infomaniak.core.rateLimit
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
@@ -81,6 +79,8 @@ import kotlin.uuid.ExperimentalUuidApi
 class TwoFactorAuthManager(
     // The CoroutineScope (and its Job) is strongly referenced by shareIn and stateIn, so no need to keep a reference here.
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    userIds: Flow<Set<Int>>,
+    private val getAccountInfo: suspend (userId: Int) -> ConnectionAttemptInfo.TargetAccount?,
     private val getConnectedHttpClient: suspend (userId: Int) -> OkHttpClient
 ) {
 
@@ -110,15 +110,14 @@ class TwoFactorAuthManager(
 
     val challengeToResolve: StateFlow<Challenge?> = flow {
         repeatWhileActive {
-            val actionData = emitOngoingChallengeUntilAction(firstUnactionedChallenge = firstUnactionedChallenge)
+            val actionData = emitOngoingChallengeUntilAction(
+                firstUnactionedChallenge = firstUnactionedChallenge,
+                getAccountInfo = getAccountInfo
+            )
             actionedChallengesFlow.update { it + actionData.remoteChallenge }
             executeChallengeAction(actionData)
         }
     }.stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
-
-    private val userIds = UserDatabase().userDao().allUsers.map { users ->
-        users.mapTo(hashSetOf()) { it.id }
-    }.distinctUntilChanged()
 
     private val allUsersTwoFactorAuth: Flow<List<TwoFactorAuth>> = userIds.mapLatest { userIds ->
         userIds.map { id -> TwoFactorAuthImpl(getConnectedHttpClient(id), id) }
@@ -155,14 +154,10 @@ class TwoFactorAuthManager(
     }
 }
 
-private fun RemoteChallenge.toConnectionAttemptInfo(user: User): ConnectionAttemptInfo = ConnectionAttemptInfo(
-    targetAccount = ConnectionAttemptInfo.TargetAccount(
-        avatarUrl = user.avatar,
-        fullName = user.displayName ?: user.run { "$firstname $lastname" },
-        initials = user.getInitials(),
-        email = user.email,
-        id = user.id.toLong(),
-    ),
+private fun RemoteChallenge.toConnectionAttemptInfo(
+    targetAccount: ConnectionAttemptInfo.TargetAccount
+) = ConnectionAttemptInfo(
+    targetAccount = targetAccount,
     deviceOrBrowserName = device.name,
     deviceType = device.type,
     location = location
@@ -180,22 +175,24 @@ private fun utcTimestampToTimeMark(utcOffsetMillis: Long): TimeMark {
  */
 private suspend fun FlowCollector<Challenge?>.emitOngoingChallengeUntilAction(
     firstUnactionedChallenge: Flow<Pair<TwoFactorAuth, RemoteChallenge>?>,
+    getAccountInfo: suspend (userId: Int) -> ConnectionAttemptInfo.TargetAccount?,
 ): ActionedChallengeData {
-    return emitFirstsUntilSecond(ongoingChallengeAndActionFlow(firstUnactionedChallenge))
+    return emitFirstsUntilSecond(ongoingChallengeAndActionFlow(firstUnactionedChallenge, getAccountInfo))
 }
 
 private fun ongoingChallengeAndActionFlow(
     firstUnactionedChallenge: Flow<Pair<TwoFactorAuth, RemoteChallenge>?>,
+    getAccountInfo: suspend (userId: Int) -> ConnectionAttemptInfo.TargetAccount?,
 ): Flow<Xor<Challenge?, ActionedChallengeData>> = firstUnactionedChallenge.transformLatest { unactionedChallenge ->
     emit(Xor.First(null)) // Start with no challenge.
     val (twoFactorAuth, remoteChallenge) = unactionedChallenge ?: return@transformLatest
-    val user = UserDatabase().userDao().findById(twoFactorAuth.userId)
+    val targetAccount = getAccountInfo(twoFactorAuth.userId)
         ?: return@transformLatest // User was removed in the meantime (unlikely, but possible).
 
     val dismissCompletable = CompletableDeferred<Nothing?>()
     val confirmOrRejectAsync = CompletableDeferred<Challenge.ApprovalAction>()
     val uiChallenge = Challenge(
-        data = remoteChallenge.toConnectionAttemptInfo(user),
+        data = remoteChallenge.toConnectionAttemptInfo(targetAccount),
         attemptTimeMark = utcTimestampToTimeMark(utcOffsetMillis = remoteChallenge.createdAt * 1000L),
         dismiss = { dismissCompletable.complete(null) },
         state = Challenge.State.ApproveOrReject(action = { confirmOrRejectAsync.complete(it) })
