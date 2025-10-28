@@ -138,7 +138,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
 ) {
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
-    val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds)
+    val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds, singleSelection)
 
     val scope = rememberCoroutineScope()
 
@@ -243,12 +243,13 @@ fun OnboardingComponents.CrossLoginBottomContent(
 @Composable
 private fun rememberLocalSkippedAccountIds(
     accounts: () -> List<ExternalAccount>,
-    skippedIds: () -> Set<Long>
+    skippedIds: () -> Set<Long>,
+    isSingleSelection: Boolean,
 ): SnapshotStateSet<Long> {
     val accounts = accounts()
     val skippedIds = skippedIds()
     val localSkipped = remember { mutableStateSetOf(*skippedIds.toTypedArray()) }
-    LaunchedEffect(accounts, skippedIds) {
+    if (isSingleSelection) LaunchedEffect(accounts, skippedIds) {
         val newSet = newSkippedAccountIdsToKeepSingleSelection(accounts, localSkipped)
         localSkipped.addAll(newSet)
         localSkipped.retainAll(newSet) // Drop elements not in newSet
