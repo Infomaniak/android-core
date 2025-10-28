@@ -52,6 +52,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -71,6 +72,7 @@ import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
+import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
@@ -136,8 +138,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
 ) {
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
-    val localSkipped = remember { mutableStateSetOf(*skippedIds().toTypedArray()) }
-    TODO("Use newSkippedAccountIdsToKeepSingleSelection to update localSkipped in case of singleSelection")
+    val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds)
 
     val scope = rememberCoroutineScope()
 
@@ -237,6 +238,22 @@ fun OnboardingComponents.CrossLoginBottomContent(
             )
         }
     }
+}
+
+@Composable
+private fun rememberLocalSkippedAccountIds(
+    accounts: () -> List<ExternalAccount>,
+    skippedIds: () -> Set<Long>
+): SnapshotStateSet<Long> {
+    val accounts = accounts()
+    val skippedIds = skippedIds()
+    val localSkipped = remember { mutableStateSetOf(*skippedIds.toTypedArray()) }
+    LaunchedEffect(accounts, skippedIds) {
+        val newSet = newSkippedAccountIdsToKeepSingleSelection(accounts, localSkipped)
+        localSkipped.addAll(newSet)
+        localSkipped.retainAll(newSet) // Drop elements not in newSet
+    }
+    return localSkipped
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
