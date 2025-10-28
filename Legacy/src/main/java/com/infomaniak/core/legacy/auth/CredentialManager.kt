@@ -26,6 +26,7 @@ import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import okhttp3.Cache
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -63,18 +64,36 @@ abstract class CredentialManager {
     private val mutex = Mutex()
     private val httpClientMap: ArrayMap<Pair<Int, Long?>, OkHttpClient> = ArrayMap()
 
-    suspend fun getHttpClient(userId: Int, timeout: Long? = null): OkHttpClient {
+    val defaultTokenAuthenticatorFactory: (TokenInterceptorListener) -> TokenAuthenticator = { tokenInterceptorListener ->
+        TokenAuthenticator(tokenInterceptorListener)
+    }
+
+    val defaultTokenInterceptorFactory: (TokenInterceptorListener) -> TokenInterceptor = { tokenInterceptorListener ->
+        TokenInterceptor(tokenInterceptorListener)
+    }
+
+    suspend fun getHttpClient(
+        userId: Int,
+        timeout: Long? = null,
+        getAuthenticator: ((TokenInterceptorListener) -> TokenAuthenticator)? = defaultTokenAuthenticatorFactory,
+        getInterceptor: (TokenInterceptorListener) -> Interceptor = defaultTokenInterceptorFactory,
+    ): OkHttpClient {
         mutex.withLock {
             var httpClient = httpClientMap[Pair(userId, timeout)]
             if (httpClient == null) {
-                httpClient = getHttpClientUser(userId, timeout)
+                httpClient = getHttpClientUser(userId, timeout, getAuthenticator, getInterceptor)
                 httpClientMap[Pair(userId, timeout)] = httpClient
             }
             return httpClient
         }
     }
 
-    private suspend fun getHttpClientUser(userId: Int, timeout: Long?): OkHttpClient {
+    private suspend fun getHttpClientUser(
+        userId: Int,
+        timeout: Long?,
+        getAuthenticator: ((TokenInterceptorListener) -> TokenAuthenticator)?,
+        getInterceptor: (TokenInterceptorListener) -> Interceptor
+    ): OkHttpClient {
         return OkHttpClient.Builder().apply {
             timeout?.let {
                 // NEVER set `callTimeout` to a too low value, because it would break users on slow connexions.
@@ -84,32 +103,39 @@ abstract class CredentialManager {
                 connectTimeout(timeout, TimeUnit.SECONDS)
             }
 
-            var user = getUserById(userId)
-            val tokenInterceptorListener = object : TokenInterceptorListener {
-                override suspend fun onRefreshTokenSuccess(apiToken: ApiToken) {
-                    setUserToken(user, apiToken)
-                }
-
-                override suspend fun onRefreshTokenError() {
-                    user?.let { onRefreshTokenError?.invoke(it) }
-                }
-
-                override suspend fun getUserApiToken(): ApiToken? {
-                    user = getUserById(userId)
-                    return user?.apiToken
-                }
-
-                override fun getCurrentUserId() = null
-            }
+            val tokenInterceptorListener = getDefaultTokenInterceptorListener(userId)
 
             HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
-            addInterceptor(TokenInterceptor(tokenInterceptorListener))
-            authenticator(TokenAuthenticator(tokenInterceptorListener))
+            addInterceptor(getInterceptor(tokenInterceptorListener))
+            getAuthenticator?.let { tokenAuthenticator ->
+                authenticator(tokenAuthenticator(tokenInterceptorListener))
+            }
 
             HttpClientConfig.addCommonInterceptors(this) // Needs to be added last
         }.run {
             build()
         }
+    }
+
+    private suspend fun getDefaultTokenInterceptorListener(userId: Int): TokenInterceptorListener {
+        var user = getUserById(userId)
+        val tokenInterceptorListener = object : TokenInterceptorListener {
+            override suspend fun onRefreshTokenSuccess(apiToken: ApiToken) {
+                setUserToken(user, apiToken)
+            }
+
+            override suspend fun onRefreshTokenError() {
+                user?.let { onRefreshTokenError?.invoke(it) }
+            }
+
+            override suspend fun getUserApiToken(): ApiToken? {
+                user = getUserById(userId)
+                return user?.apiToken
+            }
+
+            override fun getCurrentUserId() = null
+        }
+        return tokenInterceptorListener
     }
     //endregion
 }
