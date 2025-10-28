@@ -138,7 +138,6 @@ fun OnboardingComponents.CrossLoginBottomContent(
 ) {
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
-    val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds, singleSelection)
 
     val scope = rememberCoroutineScope()
 
@@ -220,6 +219,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     if (showAccountsBottomSheet) {
         val sheetState = rememberModalBottomSheetState()
         ThemedBottomSheetScaffold(sheetState = sheetState, onDismissRequest = { showAccountsBottomSheet = false }) {
+            val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds, singleSelection)
             CrossLoginListAccounts(
                 accounts = accounts,
                 skippedIds = { localSkipped },
