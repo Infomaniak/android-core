@@ -77,7 +77,6 @@ import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
-import com.infomaniak.core.crossapplogin.front.components.CrossLoginBottomContentDefaults.primaryButtonType
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
@@ -167,20 +166,20 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
                             shape = nextButtonShape,
                             modifier = Modifier.sharedElement(
-                                rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
+                                sharedContentState = rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
                                 animatedVisibilityScope = this@AnimatedContent,
                             )
                         )
                     } else {
                         ConnectionButtons(
-                            primaryButtonType,
-                            accounts,
-                            skippedIds,
-                            isLoginButtonLoading,
-                            onLogin,
-                            onContinueWithSelectedAccounts,
-                            onCreateAccount,
-                            isSignUpButtonLoading,
+                            primaryButtonType = customization.buttonStyle,
+                            accounts = accounts,
+                            skippedIds = skippedIds,
+                            isLoginButtonLoading = isLoginButtonLoading,
+                            onLogin = onLogin,
+                            onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
+                            onCreateAccount = onCreateAccount,
+                            isSignUpButtonLoading = isSignUpButtonLoading,
                             animatedVisibilityScope = this@AnimatedContent,
                         )
                     }
@@ -197,10 +196,14 @@ fun OnboardingComponents.CrossLoginBottomContent(
                 accounts = accounts,
                 skippedIds = { localSkipped },
                 onAccountClicked = { accountId ->
-                    if (isSingleSelection) {
-                        localSkipped.addAll(accounts().map { it.id })
-                        localSkipped.remove(accountId)
-                    } else if (accountId in localSkipped) localSkipped -= accountId else localSkipped += accountId
+                    when {
+                        isSingleSelection -> {
+                            localSkipped.addAll(accounts().map { it.id })
+                            localSkipped.remove(accountId)
+                        }
+                        accountId in localSkipped -> localSkipped -= accountId
+                        else -> localSkipped += accountId
+                    }
                 },
                 onAnotherAccountClicked = onUseAnotherAccountClicked,
                 onSaveClicked = {
@@ -222,11 +225,15 @@ private fun rememberLocalSkippedAccountIds(
     val accounts = accounts()
     val skippedIds = skippedIds()
     val localSkipped = remember { mutableStateSetOf(*skippedIds.toTypedArray()) }
-    if (isSingleSelection) LaunchedEffect(accounts, skippedIds) {
-        val newSet = newSkippedAccountIdsToKeepSingleSelection(accounts, localSkipped)
-        localSkipped.addAll(newSet)
-        localSkipped.retainAll(newSet) // Drop elements not in newSet
+
+    if (isSingleSelection) {
+        LaunchedEffect(accounts, skippedIds) {
+            val newSet = newSkippedAccountIdsToKeepSingleSelection(accounts, localSkipped)
+            localSkipped.addAll(newSet)
+            localSkipped.retainAll(newSet) // Drop elements not in newSet
+        }
     }
+
     return localSkipped
 }
 
