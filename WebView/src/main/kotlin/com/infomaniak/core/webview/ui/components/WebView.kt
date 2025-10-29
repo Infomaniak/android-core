@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,9 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
 
 
@@ -41,34 +38,32 @@ fun WebView(
     urlToQuit: String?,
     headers: Map<String, String>,
     domStorageEnabled: Boolean = false,
-    systemBarsColor: Color = Color.Transparent,
     webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
+    withSafeArea: Boolean = true,
     webChromeClient: WebChromeClient? = null,
     callback: ((WebView) -> Unit)? = null,
 ) {
-    Row(modifier = Modifier.background(systemBarsColor)) {
-        AndroidView(
-            modifier = Modifier.safeDrawingPadding(),
-            factory = { context ->
-                WebView(context).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
+    AndroidView(
+        modifier = if (withSafeArea) Modifier.safeDrawingPadding() else Modifier,
+        factory = { context ->
+            WebView(context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
 
-                    this.webViewClient = webViewClient
-                    this.webChromeClient = webChromeClient
+                this.webViewClient = webViewClient
+                this.webChromeClient = webChromeClient
 
-                    settings.javaScriptEnabled = true
-                    settings.domStorageEnabled = domStorageEnabled
+                settings.javaScriptEnabled = true
+                settings.domStorageEnabled = domStorageEnabled
 
-                    callback?.invoke(this)
+                callback?.invoke(this)
 
-                    val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
-                }
-                    loadUrl(url, headers)
-            })
-    }
+                loadUrl(url, headers)
+            }
+        }
+    )
 }
 
 private class CustomWebViewClient(
