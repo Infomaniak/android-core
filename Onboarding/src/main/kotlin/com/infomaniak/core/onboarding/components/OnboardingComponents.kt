@@ -28,7 +28,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +44,9 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.infomaniak.core.compose.margin.Margin
+import com.lottiefiles.dotlottie.core.compose.runtime.DotLottieController
+import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation
+import com.lottiefiles.dotlottie.core.util.DotLottieSource
 
 /**
  * A few helper components for when you need to create an onboarding with simple specs. Using these components inside of
@@ -78,8 +83,8 @@ object OnboardingComponents {
      * Example usage:
      * ```
      * DefaultLottieIllustration(
-     *     LottieCompositionSpec.RawRes(R.raw.storage_cardboard_box_pile),
-     *     pagerState.currentPage == illustrationIndex
+     *     R.raw.storage_cardboard_box_pile,
+     *     { pagerState.currentPage == illustrationIndex }
      * )
      * ```
      */
@@ -90,6 +95,51 @@ object OnboardingComponents {
         // We have to specify the isPlaying parameter in order to play the animation only when the page is selected.
         // Otherwise, the ViewPager can load the page and start the animation before it's visible.
         LottieAnimation(composition, restartOnPlay = true, isPlaying = isCurrentPageVisible(), modifier = modifier)
+    }
+
+    /**
+     * Easy to reuse way of displaying a .lottie animation with embedded themes. When on the same screen, the animation will play
+     * once and then stop forever and not loop. The animation will restart from zero when leaving the page and coming back to it.
+     *
+     * @param dotLottieSource the lottie animation to display.
+     * @param isCurrentPageVisible whether or not the current page is presented to the user. This makes it so the animation only
+     * starts playing when the page is presented to the user and not while it's loaded but outside of the screen. This also makes
+     * so the animation can start again when the user goes back to a previously seen page.
+     * @param themeId the id of the embedded theme to display. Provide null when you want to reset the theme to the default one.
+     *
+     * Example usage:
+     * ```
+     * ThemedDotLottie(
+     *     DotLottieSource.Asset("onboarding_1.lottie"),
+     *     { pagerState.currentPage == index },
+     *     { if (isSystemInDarkTheme()) "dark" else null },
+     * )
+     * ```
+     */
+    @Composable
+    fun ThemedDotLottie(
+        dotLottieSource: DotLottieSource,
+        isCurrentPageVisible: () -> Boolean,
+        themeId: @Composable () -> String?,
+    ) {
+        val controller = remember { DotLottieController() }
+
+        // We have to compute the isCurrentPageVisible value in order to play the animation only when the page is selected.
+        // Otherwise, the ViewPager can load the page and start the animation before it's visible.
+        val isCurrentPageVisible = isCurrentPageVisible()
+        LaunchedEffect(isCurrentPageVisible) {
+            if (isCurrentPageVisible) controller.play()
+        }
+
+        val themeId = themeId()
+        LaunchedEffect(themeId) {
+            controller.setNullableTheme(themeId)
+        }
+
+        DotLottieAnimation(
+            source = dotLottieSource,
+            controller = controller,
+        )
     }
 
     /**
@@ -148,4 +198,9 @@ object OnboardingComponents {
             )
         }
     }
+}
+
+private fun DotLottieController.setNullableTheme(themeId: String?) {
+    themeId?.let { setTheme(it) } ?: run { resetTheme() }
+    play()
 }
