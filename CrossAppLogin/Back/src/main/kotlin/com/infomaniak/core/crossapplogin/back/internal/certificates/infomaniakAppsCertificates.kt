@@ -38,5 +38,8 @@ internal val infomaniakAppsCertificates = AppSigningCertificates {
     this["com.infomaniak.mail"] = setOf(
         LazyCertificate { "54:CE:26:CB:66:CB:12:EE:E6:FF:51:04:C9:5A:C4:1C:F1:93:9D:B9:C1:83:13:13:AA:52:3D:41:D7:29:EC:C2" },
     )
+    this["com.infomaniak.euria"] = setOf(
+        LazyCertificate { "C3:10:73:8F:60:AC:5B:F6:65:95:53:BE:C7:21:7D:BF:24:4E:9D:4C:04:BD:7D:5B:F5:51:51:2D:22:E5:03:03" },
+    )
     // TODO: Add other Infomaniak apps that are expected to support cross-app login.
 }
