@@ -43,6 +43,9 @@ interface UserDao {
     @Query("SELECT * FROM user LIMIT 1")
     suspend fun getFirst(): User?
 
+    @Query("SELECT * FROM user LIMIT 1")
+    fun getFirstFlow(): Flow<User?>
+
     @Query("SELECT * FROM user WHERE id IN (:userIds)")
     suspend fun loadAllByIds(userIds: IntArray): List<User>
 
