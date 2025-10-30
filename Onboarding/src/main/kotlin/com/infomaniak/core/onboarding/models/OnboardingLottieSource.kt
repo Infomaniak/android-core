@@ -19,26 +19,26 @@ package com.infomaniak.core.onboarding.models
 
 import com.lottiefiles.dotlottie.core.util.DotLottieSource
 
-sealed interface OnboardingLottieSource {
-    data class Url(val urlString: String) : OnboardingLottieSource {  // .json / .lottie
+sealed class OnboardingLottieSource {
+    data class Url(val urlString: String) : OnboardingLottieSource() {  // .json / .lottie
         override fun toDotLottieSource(): DotLottieSource = DotLottieSource.Url(urlString)
     }
 
-    data class Asset(val assetPath: String) : OnboardingLottieSource {  // .json / .lottie
+    data class Asset(val assetPath: String) : OnboardingLottieSource() {  // .json / .lottie
         override fun toDotLottieSource(): DotLottieSource = DotLottieSource.Asset(assetPath)
     }
 
-    data class Res(val resourceId: Int) : OnboardingLottieSource {  // .json / .lottie from raw resources
+    data class Res(val resourceId: Int) : OnboardingLottieSource() {  // .json / .lottie from raw resources
         override fun toDotLottieSource(): DotLottieSource = DotLottieSource.Res(resourceId)
     }
 
-    data class Data(val data: ByteArray) : OnboardingLottieSource {
+    data class Data(val data: ByteArray) : OnboardingLottieSource() {
         override fun toDotLottieSource(): DotLottieSource = DotLottieSource.Data(data)
     }
 
-    data class Json(val jsonString: String) : OnboardingLottieSource {
+    data class Json(val jsonString: String) : OnboardingLottieSource() {
         override fun toDotLottieSource(): DotLottieSource = DotLottieSource.Json(jsonString)
     }
 
-    fun toDotLottieSource(): DotLottieSource
+    internal abstract fun toDotLottieSource(): DotLottieSource
 }
