@@ -28,3 +28,15 @@ suspend fun <T> Iterable<T>.allConcurrent(
         true
     }
 }
+
+suspend fun <T> Iterable<T>.anyConcurrent(
+    predicate: suspend (T) -> Boolean
+): Boolean {
+    if (this is Collection && isEmpty()) return false
+    return completableScope { completable ->
+        for (element in this@anyConcurrent) {
+            if (predicate(element)) completable.complete(true)
+        }
+        false
+    }
+}
