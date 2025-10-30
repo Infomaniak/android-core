@@ -138,6 +138,8 @@ object OnboardingComponents {
 
         DotLottieAnimation(
             source = source.toDotLottieSource(),
+            // Initial theme is never set by the LaunchedEffect because the LaunchedEffect triggers before the animation is loaded
+            themeId = themeId,
             controller = controller,
         )
     }
