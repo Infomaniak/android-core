@@ -30,6 +30,7 @@ import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.IScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
@@ -68,6 +69,11 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
+        if (!derivedTokenGenerator.isAppIntegrityCallable()) {
+            _availableAccounts.emit(emptyList())
+            throw CancellationException()
+        }
+
         val crossAppLogin = CrossAppLogin.forContext(
             context = hostActivity,
             coroutineScope = this + Dispatchers.Default

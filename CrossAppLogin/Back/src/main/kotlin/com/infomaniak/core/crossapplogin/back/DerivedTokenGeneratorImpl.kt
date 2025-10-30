@@ -73,6 +73,18 @@ internal class DerivedTokenGeneratorImpl(
         }.last()
     }
 
+    override suspend fun isAppIntegrityCallable() = runCatching {
+        appIntegrityManager.requestClassicIntegrityVerdictToken("Dummy challenge to know if AppIntegrity can be reached")
+        true
+    }.cancellable().getOrElse { exception ->
+        if (exception is IntegrityException) {
+            // If we get one of these Integrity exceptions, it means we won't be able to connect to the Service when tying later
+            exception.cause?.message?.contains(Regex("(CANNOT_BIND_TO_SERVICE|PLAY_STORE_NOT_FOUND|PLAY_SERVICES_NOT_FOUND|PLAY_SERVICES_VERSION_OUTDATED|PLAY_STORE_VERSION_OUTDATED|TOO_MANY_REQUESTS)"))
+            return@getOrElse false
+        }
+        true
+    }
+
     private suspend fun attemptDerivingToken(token: String): Xor<ApiToken, Issue> {
         val targetUrl = tokenRetrievalUrl
         val attestationToken: String = when (val result = attestationTokensForUrls.useElement(targetUrl) { it.await() }) {

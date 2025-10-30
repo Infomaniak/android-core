@@ -25,6 +25,7 @@ import okhttp3.Response
 internal sealed interface DerivedTokenGenerator {
 
     suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
+    suspend fun isAppIntegrityCallable(): Boolean
 
     sealed interface Issue {
         data class ErrorResponse(val response: Response) : Issue
