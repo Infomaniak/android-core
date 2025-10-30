@@ -77,16 +77,17 @@ internal class DerivedTokenGeneratorImpl(
     }
 
     override suspend fun isAppIntegrityCallable() = runCatching {
-        // Be sure this length is between 16 and 500 char so the computed nonce to send to AppIntegrity will have a correct size
+        // Be sure the length is between 16 and 500 char so the computed nonce sent to AppIntegrity will have a correct size
         val dummyChallenge = "Dummy challenge to know if AppIntegrity can be reached"
         appIntegrityManager.requestClassicIntegrityVerdictToken(dummyChallenge)
         true
     }.cancellable().getOrElse { exception ->
-        if (exception is IntegrityException) {
+        if (
+            exception is IntegrityException &&
+            exception.cause?.message?.contains(Regex(INTEGRITY_UNAVAILABLE_ERROR_REGEX)) == true
+        ) {
             // If we get one of these Integrity exceptions, it means we won't be able to connect to the Service when tying later
-            if (exception.cause?.message?.contains(Regex(INTEGRITY_UNAVAILABLE_ERROR_REGEX)) == true) {
-                return@getOrElse false
-            }
+            return@getOrElse false
         }
         true
     }

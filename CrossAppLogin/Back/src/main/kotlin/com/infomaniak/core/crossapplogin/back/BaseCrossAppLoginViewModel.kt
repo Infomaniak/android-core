@@ -69,6 +69,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
+        // Directly stop the flow if the user's device cannot be verified by AppIntegrity to avoid displaying the CrossAppLogin
         if (!derivedTokenGenerator.isAppIntegrityCallable()) throw CancellationException()
 
         val crossAppLogin = CrossAppLogin.forContext(
