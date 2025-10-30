@@ -76,7 +76,7 @@ internal class DerivedTokenGeneratorImpl(
         }.last()
     }
 
-    override suspend fun isAppIntegrityCallable() = runCatching {
+    override suspend fun checkIfAppIntegrityCouldSucceed() = runCatching {
         // Be sure the length is between 16 and 500 char so the computed nonce sent to AppIntegrity will have a correct size
         val dummyChallenge = "Dummy challenge to know if AppIntegrity can be reached"
         appIntegrityManager.requestClassicIntegrityVerdictToken(dummyChallenge)

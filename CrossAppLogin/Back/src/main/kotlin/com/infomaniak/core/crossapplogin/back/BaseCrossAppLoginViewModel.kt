@@ -30,7 +30,6 @@ import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.IScope
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
@@ -69,8 +68,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
-        // Directly stop the flow if the user's device cannot be verified by AppIntegrity to avoid displaying the CrossAppLogin
-        if (!derivedTokenGenerator.isAppIntegrityCallable()) throw CancellationException()
+        // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
+        if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) awaitCancellation()
 
         val crossAppLogin = CrossAppLogin.forContext(
             context = hostActivity,
