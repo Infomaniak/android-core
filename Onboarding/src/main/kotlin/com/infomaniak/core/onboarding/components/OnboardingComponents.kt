@@ -44,9 +44,9 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.onboarding.models.OnboardingLottieSource
 import com.lottiefiles.dotlottie.core.compose.runtime.DotLottieController
 import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation
-import com.lottiefiles.dotlottie.core.util.DotLottieSource
 
 /**
  * A few helper components for when you need to create an onboarding with simple specs. Using these components inside of
@@ -118,7 +118,7 @@ object OnboardingComponents {
      */
     @Composable
     fun ThemedDotLottie(
-        dotLottieSource: DotLottieSource,
+        source: OnboardingLottieSource,
         isCurrentPageVisible: () -> Boolean,
         themeId: @Composable () -> String?,
     ) {
@@ -137,7 +137,7 @@ object OnboardingComponents {
         }
 
         DotLottieAnimation(
-            source = dotLottieSource,
+            source = source.toDotLottieSource(),
             controller = controller,
         )
     }
