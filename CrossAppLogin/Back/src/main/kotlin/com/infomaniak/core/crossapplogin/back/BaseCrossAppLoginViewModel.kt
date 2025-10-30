@@ -69,10 +69,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
-        if (!derivedTokenGenerator.isAppIntegrityCallable()) {
-            _availableAccounts.emit(emptyList())
-            throw CancellationException()
-        }
+        if (!derivedTokenGenerator.isAppIntegrityCallable()) throw CancellationException()
 
         val crossAppLogin = CrossAppLogin.forContext(
             context = hostActivity,
