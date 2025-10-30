@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
 import com.infomaniak.core.R as RCore
+import com.infomaniak.core.appintegrity.R as RAppIntegrity
 import com.infomaniak.core.network.R as RCoreNetwork
 
 abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
@@ -116,7 +117,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         val messageResId = when (issue) {
             is Issue.AppIntegrityCheckFailed -> {
                 shouldReport = false
-                RCore.string.anErrorHasOccurred
+                RAppIntegrity.string.errorAppIntegrity
             }
             is Issue.ErrorResponse -> {
                 shouldReport = issue.response.code !in 500..599
