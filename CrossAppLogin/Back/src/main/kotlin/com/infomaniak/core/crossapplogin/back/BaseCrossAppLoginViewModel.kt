@@ -140,7 +140,9 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         }
         val errorMessage = "Failed to derive token"
         when (shouldReport) {
-            true -> SentryLog.e(TAG, errorMessage) { scope -> scope.addErrorExtraAndTag(account, issue, details) }
+            true -> SentryLog.e(TAG, errorMessage, (issue as? Issue.OtherIssue)?.e) { scope ->
+                scope.addErrorExtraAndTag(account, issue, details)
+            }
             false -> SentryLog.i(TAG, "$errorMessage for account ${account.id}, with reason: $issue | Details: [$details]")
         }
 
