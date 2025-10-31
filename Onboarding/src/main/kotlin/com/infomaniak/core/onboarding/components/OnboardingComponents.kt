@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -126,21 +125,13 @@ object OnboardingComponents {
 
         // We have to compute the isCurrentPageVisible value in order to play the animation only when the page is selected.
         // Otherwise, the ViewPager can load the page and start the animation before it's visible.
-        val isCurrentPageVisible = isCurrentPageVisible()
-        LaunchedEffect(isCurrentPageVisible) {
-            if (isCurrentPageVisible) controller.play()
-        }
-
-        val themeId = themeId()
-        LaunchedEffect(themeId) {
-            controller.setNullableTheme(themeId)
-        }
+        if (isCurrentPageVisible()) controller.play()
 
         DotLottieAnimation(
             source = source.toDotLottieSource(),
-            // Initial theme is never set by the LaunchedEffect because the LaunchedEffect triggers before the animation is loaded
-            themeId = themeId,
+            themeId = themeId(),
             controller = controller,
+            autoplay = true,
         )
     }
 
@@ -200,9 +191,4 @@ object OnboardingComponents {
             )
         }
     }
-}
-
-private fun DotLottieController.setNullableTheme(themeId: String?) {
-    themeId?.let { setTheme(it) } ?: run { resetTheme() }
-    play()
 }
