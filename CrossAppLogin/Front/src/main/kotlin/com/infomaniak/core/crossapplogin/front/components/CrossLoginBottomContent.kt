@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -68,7 +67,6 @@ import com.infomaniak.core.R
 import com.infomaniak.core.compose.basicbutton.BasicButton
 import com.infomaniak.core.compose.basicbutton.BasicButtonDelay
 import com.infomaniak.core.compose.basics.ButtonStyle
-import com.infomaniak.core.compose.basics.ButtonType
 import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
@@ -150,9 +148,14 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    val animatedButtonModifier = Modifier.sharedElement(
+                        sharedContentState = rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
+                        animatedVisibilityScope = this@AnimatedContent,
+                    )
+
                     if (isLastPage) {
                         val shouldDisplayCrossLogin = accounts().isNotEmpty()
-                        
+
                         if (shouldDisplayCrossLogin) {
                             CrossLoginSelectAccounts(
                                 accounts = accounts,
@@ -169,10 +172,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             isLoginButtonLoading = isLoginButtonLoading,
                             onLogin = onLogin,
                             onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
-                            modifier = Modifier.sharedElement(
-                                sharedContentState = rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
-                                animatedVisibilityScope = this@AnimatedContent,
-                            )
+                            modifier = animatedButtonModifier,
                         )
 
                         if (shouldDisplayCrossLogin.not()) AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
@@ -180,10 +180,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                         ButtonNext(
                             onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
                             shape = nextButtonShape,
-                            modifier = Modifier.sharedElement(
-                                sharedContentState = rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
-                                animatedVisibilityScope = this@AnimatedContent,
-                            )
+                            modifier = animatedButtonModifier,
                         )
                     }
                 }
@@ -283,9 +280,9 @@ private fun ConnectionButton(
     ButtonExpanded(
         text = getConnexionButtonText,
         shape = primaryButtonType.shape,
-        modifier = modifier.height(primaryButtonType.height),
         isLoginButtonLoading = isLoginButtonLoading,
         onClick = if (accounts().isEmpty()) onLogin else onContinueWithSelectedAccounts,
+        modifier = modifier.height(primaryButtonType.height),
     )
 }
 
@@ -294,9 +291,9 @@ private fun ConnectionButton(
 private fun ButtonExpanded(
     text: String,
     shape: Shape,
-    modifier: Modifier = Modifier,
     isLoginButtonLoading: () -> Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var visibility by rememberSaveable { mutableFloatStateOf(0f) }
 
@@ -340,11 +337,7 @@ private fun AccountCreationButton(isSignUpButtonLoading: () -> Boolean, onClick:
 }
 
 object CrossLoginBottomContentDefaults {
-    val primaryButtonType = object : ButtonStyle {
-        override val height = Dimens.buttonHeight
-        override val shape = RoundedCornerShape(Dimens.largeCornerRadius)
-    }
-    val nextButtonShape = CircleShape
+    val nextButtonShape = RoundedCornerShape(Dimens.largeCornerRadius)
 }
 
 @Preview
@@ -356,9 +349,8 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 pagerState = rememberPagerState { 1 },
                 accounts = { accounts },
                 skippedIds = { emptySet() },
-                customization = CrossLoginCustomization(
+                customization = CrossLoginDefaults.customize(
                     colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
-                    buttonStyle = ButtonType.Mail,
                 ),
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
