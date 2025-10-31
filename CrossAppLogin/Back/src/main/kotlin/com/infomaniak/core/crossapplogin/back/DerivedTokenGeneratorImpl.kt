@@ -41,6 +41,9 @@ import okhttp3.RequestBody
 import splitties.init.appCtx
 import java.io.IOException
 
+private const val INTEGRITY_UNAVAILABLE_ERROR_REGEX =
+    "(CANNOT_BIND_TO_SERVICE|PLAY_STORE_NOT_FOUND|PLAY_SERVICES_NOT_FOUND|PLAY_SERVICES_VERSION_OUTDATED|PLAY_STORE_VERSION_OUTDATED|TOO_MANY_REQUESTS)"
+
 internal class DerivedTokenGeneratorImpl(
     coroutineScope: CoroutineScope,
     private val tokenRetrievalUrl: String,
@@ -71,6 +74,22 @@ internal class DerivedTokenGeneratorImpl(
                 is Xor.Second -> result
             }
         }.last()
+    }
+
+    override suspend fun checkIfAppIntegrityCouldSucceed() = runCatching {
+        // Be sure the length is between 16 and 500 char so the computed nonce sent to AppIntegrity will have a correct size
+        val dummyChallenge = "Dummy challenge to know if AppIntegrity can be reached"
+        appIntegrityManager.requestClassicIntegrityVerdictToken(dummyChallenge)
+        true
+    }.cancellable().getOrElse { exception ->
+        if (
+            exception is IntegrityException &&
+            exception.cause?.message?.contains(Regex(INTEGRITY_UNAVAILABLE_ERROR_REGEX)) == true
+        ) {
+            // If we get one of these Integrity exceptions, it means we won't be able to connect to the Service when tying later
+            return@getOrElse false
+        }
+        true
     }
 
     private suspend fun attemptDerivingToken(token: String): Xor<ApiToken, Issue> {
