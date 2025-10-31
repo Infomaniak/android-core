@@ -18,10 +18,8 @@
 package com.infomaniak.core.crossapplogin.front.components
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -152,16 +150,33 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    if (isLastPage && accounts().isNotEmpty()) {
-                        CrossLoginSelectAccounts(
+                    if (isLastPage) {
+                        val shouldDisplayCrossLogin = accounts().isNotEmpty()
+                        
+                        if (shouldDisplayCrossLogin) {
+                            CrossLoginSelectAccounts(
+                                accounts = accounts,
+                                skippedIds = skippedIds,
+                                customization = customization,
+                                onClick = { showAccountsBottomSheet = true },
+                            )
+                        }
+
+                        ConnectionButton(
+                            primaryButtonType = customization.buttonStyle,
                             accounts = accounts,
                             skippedIds = skippedIds,
-                            customization = customization,
-                            onClick = { showAccountsBottomSheet = true },
+                            isLoginButtonLoading = isLoginButtonLoading,
+                            onLogin = onLogin,
+                            onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
+                            modifier = Modifier.sharedElement(
+                                sharedContentState = rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
+                                animatedVisibilityScope = this@AnimatedContent,
+                            )
                         )
-                    }
 
-                    if (!isLastPage) {
+                        if (shouldDisplayCrossLogin.not()) AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
+                    } else {
                         ButtonNext(
                             onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
                             shape = nextButtonShape,
@@ -169,18 +184,6 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                 sharedContentState = rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
                                 animatedVisibilityScope = this@AnimatedContent,
                             )
-                        )
-                    } else {
-                        ConnectionButtons(
-                            primaryButtonType = customization.buttonStyle,
-                            accounts = accounts,
-                            skippedIds = skippedIds,
-                            isLoginButtonLoading = isLoginButtonLoading,
-                            onLogin = onLogin,
-                            onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
-                            onCreateAccount = onCreateAccount,
-                            isSignUpButtonLoading = isSignUpButtonLoading,
-                            animatedVisibilityScope = this@AnimatedContent,
                         )
                     }
                 }
@@ -262,16 +265,14 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun SharedTransitionScope.ConnectionButtons(
+private fun ConnectionButton(
     primaryButtonType: ButtonStyle,
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
     isLoginButtonLoading: () -> Boolean,
     onLogin: () -> Unit,
     onContinueWithSelectedAccounts: () -> Unit,
-    onCreateAccount: () -> Unit,
-    isSignUpButtonLoading: () -> Boolean,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    modifier: Modifier = Modifier,
 ) {
     val getConnexionButtonText = if (accounts().isEmpty()) {
         stringResource(RCross.string.buttonLogin)
@@ -279,35 +280,13 @@ private fun SharedTransitionScope.ConnectionButtons(
         pluralStringResource(RCross.plurals.buttonContinueWithAccounts, accounts().size - skippedIds().size)
     }
 
-    Column(
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        ButtonExpanded(
-            text = getConnexionButtonText,
-            shape = primaryButtonType.shape,
-            modifier = Modifier
-                .sharedElement(
-                    sharedContentState = rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                )
-                .height(primaryButtonType.height),
-            isLoginButtonLoading = isLoginButtonLoading,
-            onClick = if (accounts().isEmpty()) onLogin else onContinueWithSelectedAccounts,
-        )
-
-        if (accounts().isEmpty()) {
-            BasicButton(
-                modifier = Modifier.height(48.dp),
-                onClick = onCreateAccount,
-                colors = ButtonDefaults.textButtonColors(),
-                showIndeterminateProgress = isSignUpButtonLoading,
-                indeterminateProgressDelay = BasicButtonDelay.Delayed,
-            ) {
-                Text(stringResource(RCross.string.buttonCreateAccount), style = Typography.bodyMedium)
-            }
-        }
-    }
+    ButtonExpanded(
+        text = getConnexionButtonText,
+        shape = primaryButtonType.shape,
+        modifier = modifier.height(primaryButtonType.height),
+        isLoginButtonLoading = isLoginButtonLoading,
+        onClick = if (accounts().isEmpty()) onLogin else onContinueWithSelectedAccounts,
+    )
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -344,6 +323,19 @@ private fun ButtonExpanded(
                 modifier = Modifier.graphicsLayer { alpha = textVisibility }
             )
         }
+    }
+}
+
+@Composable
+private fun AccountCreationButton(isSignUpButtonLoading: () -> Boolean, onClick: () -> Unit) {
+    BasicButton(
+        modifier = Modifier.height(48.dp),
+        onClick = onClick,
+        colors = ButtonDefaults.textButtonColors(),
+        showIndeterminateProgress = isSignUpButtonLoading,
+        indeterminateProgressDelay = BasicButtonDelay.Delayed,
+    ) {
+        Text(stringResource(RCross.string.buttonCreateAccount), style = Typography.bodyMedium)
     }
 }
 
