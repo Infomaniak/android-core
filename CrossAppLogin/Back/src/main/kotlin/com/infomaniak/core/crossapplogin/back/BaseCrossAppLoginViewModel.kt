@@ -29,6 +29,7 @@ import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
+import io.sentry.IScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
@@ -137,13 +138,22 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             is Issue.ErrorResponse -> runCatching { issue.response.bodyAsStringOrNull() ?: "" }.getOrDefault("")
             else -> ""
         }
-        val errorMessage = "Failed to derive token for account ${account.id}, with reason: $issue | Details: [$details]"
+        val errorMessage = "Failed to derive token"
         when (shouldReport) {
-            true -> SentryLog.e(TAG, errorMessage)
-            false -> SentryLog.i(TAG, errorMessage)
+            true -> SentryLog.e(TAG, errorMessage, (issue as? Issue.OtherIssue)?.e) { scope ->
+                scope.addErrorExtraAndTag(account, issue, details)
+            }
+            false -> SentryLog.i(TAG, "$errorMessage for account ${account.id}, with reason: $issue | Details: [$details]")
         }
 
         return messageResId
+    }
+
+    private fun IScope.addErrorExtraAndTag(account: ExternalAccount, issue: Issue, details: String) {
+        setTag("accountId", account.id.toString())
+        setExtra("accountId", account.id.toString())
+        setExtra("issue", issue.toString())
+        setExtra("details", details)
     }
 
     data class LoginResult(val tokens: List<ApiToken>, val errorMessageIds: List<Int>)
