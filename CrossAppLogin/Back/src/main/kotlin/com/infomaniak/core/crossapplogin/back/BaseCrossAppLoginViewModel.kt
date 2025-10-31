@@ -112,7 +112,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         awaitCancellation() // Unreachable because availableAccounts is a StateFlow, and collectLatest is not truncating.
     }
 
-    // @StringRes // Doesn't work with a suspend function because they technically return java.lang.Object
+    // @StringRes doesn't work with a suspend function because they technically return java.lang.Object
     private suspend fun getTokenDerivationIssueErrorMessage(account: ExternalAccount, issue: Issue): Int {
         val shouldReport: Boolean
         val messageResId = when (issue) {
@@ -161,11 +161,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     companion object {
         private val TAG = BaseCrossAppLoginViewModel::class.java.simpleName
 
-        fun List<ExternalAccount>.filterSelectedAccounts(
-            skippedIds: Set<Long>
-        ): List<ExternalAccount> {
-            if (isEmpty()) return this
-            return filter { it.id !in skippedIds }
+        fun List<ExternalAccount>.filterSelectedAccounts(skippedIds: Set<Long>): List<ExternalAccount> {
+            return if (isNotEmpty()) filter { it.id !in skippedIds } else this
         }
     }
 }

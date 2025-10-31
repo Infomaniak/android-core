@@ -62,9 +62,7 @@ object CrossLoginDefaults {
         buttonStrokeColor = buttonStrokeColor ?: MaterialTheme.colorScheme.outlineVariant,
     )
 
-    fun buttonType(
-        buttonType: ButtonStyle? = null,
-    ): ButtonStyle {
+    fun buttonType(buttonType: ButtonStyle? = null): ButtonStyle {
         return buttonType ?: ButtonType.Mail
     }
 }
