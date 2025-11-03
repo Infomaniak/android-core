@@ -22,15 +22,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
+import com.infomaniak.core.auth.api.ApiRepositoryCore
+import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
+import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
+import com.infomaniak.core.network.networking.HttpClient.addCache
+import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.IScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,18 +46,32 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
+import okhttp3.OkHttpClient
 import com.infomaniak.core.R as RCore
 import com.infomaniak.core.appintegrity.R as RAppIntegrity
 import com.infomaniak.core.network.R as RCoreNetwork
+
+val apiRepository = object : ApiRepositoryCore() {}
 
 abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
     private val _availableAccounts = MutableStateFlow(emptyList<ExternalAccount>())
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
+
+    val availableAccounts2: StateFlow<List<ExternalAccount>> = _availableAccounts.map { accounts ->
+        accounts.map { account ->
+            account.copy(
+                tokens = account.tokens.filterTo(mutableSetOf()) {
+                    tokenCheckStatuses.useElement(it) { statusAsync -> statusAsync.await() }
+                }
+            )
+        }
+    }.stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList())
 
     // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
     val selectedAccounts: StateFlow<List<ExternalAccount>> =
@@ -58,12 +79,28 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             allExternalAccounts.filterSelectedAccounts(idsToSkip)
         }.stateIn(viewModelScope, started = SharingStarted.Eagerly, initialValue = emptyList())
 
+    private val baseOkHttpClient by lazy {
+        OkHttpClient.Builder().apply {
+            addCache()
+            addCommonInterceptors()
+        }
+    }
+
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
         coroutineScope = viewModelScope,
         tokenRetrievalUrl = "$LOGIN_ENDPOINT_URL/token",
         hostAppPackageName = applicationId,
         clientId = clientId,
         userAgent = HttpUtils.getUserAgent,
+    )
+
+    private val tokenCheckStatuses = DynamicLazyMap<String, _>(
+        cacheManager = { _, _ -> awaitCancellation() },
+        coroutineScope = viewModelScope,
+        createElement = { token ->
+            val okHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
+            async { apiRepository.getUserProfile(okHttpClient).data is User }
+        },
     )
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -104,10 +141,10 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     }
 
     /**
-     * Ensures that there's only one selected account, even through updates to [availableAccounts] and [skippedAccountIds].
+     * Ensures that there's only one selected account, even through updates to [availableAccounts2] and [skippedAccountIds].
      */
     private suspend fun keepSingleSelection(): Nothing {
-        availableAccounts.collectLatest { accounts ->
+        availableAccounts2.collectLatest { accounts ->
             skippedAccountIds.collectLatest { currentSkippedAccountIds ->
                 skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(accounts, currentSkippedAccountIds)
             }
