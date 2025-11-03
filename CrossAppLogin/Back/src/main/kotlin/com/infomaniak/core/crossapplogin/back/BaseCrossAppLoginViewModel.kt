@@ -67,7 +67,11 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     val accountsWithCheckedTokens: StateFlow<List<ExternalAccount>> = _availableAccounts.transform { accounts ->
         accounts.forEach { account ->
             accountCheckStatuses.useElement(account) { statusAsync ->
-                if (statusAsync.await()) emit(accountsWithCheckedTokens.value + account)
+                val currentCheckedAccount = accountsWithCheckedTokens.value
+
+                if (statusAsync.await() && currentCheckedAccount.contains(account).not()) {
+                    emit(currentCheckedAccount + account)
+                }
             }
         }
     }.stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList())
