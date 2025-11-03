@@ -131,7 +131,6 @@ object OnboardingComponents {
             source = source.toDotLottieSource(),
             themeId = themeId(),
             controller = controller,
-            autoplay = true,
         )
     }
 
