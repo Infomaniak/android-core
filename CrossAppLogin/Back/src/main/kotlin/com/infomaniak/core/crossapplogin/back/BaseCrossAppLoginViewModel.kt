@@ -26,6 +26,7 @@ import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.completableScope
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
@@ -63,13 +64,9 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
 
-    val availableAccounts2: StateFlow<List<ExternalAccount>> = _availableAccounts.map { accounts ->
-        accounts.map { account ->
-            account.copy(
-                tokens = account.tokens.filterTo(mutableSetOf()) {
-                    tokenCheckStatuses.useElement(it) { statusAsync -> statusAsync.await() }
-                }
-            )
+    val accountsWithCheckedTokens: StateFlow<List<ExternalAccount>> = _availableAccounts.map { accounts ->
+        accounts.mapNotNull { account ->
+            account.takeIf { accountCheckStatuses.useElement(account) { statusAsync -> statusAsync.await() } }
         }
     }.stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList())
 
@@ -94,12 +91,22 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         userAgent = HttpUtils.getUserAgent,
     )
 
-    private val tokenCheckStatuses = DynamicLazyMap<String, _>(
+    private val accountCheckStatuses = DynamicLazyMap<ExternalAccount, _>(
         cacheManager = { _, _ -> awaitCancellation() },
         coroutineScope = viewModelScope,
-        createElement = { token ->
-            val okHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
-            async { apiRepository.getUserProfile(okHttpClient).data is User }
+        createElement = { account ->
+            async {
+                val checkingTokenDeferred = account.tokens.map { token ->
+                    val customTokenHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
+                    async { apiRepository.getUserProfile(customTokenHttpClient).data is User }
+                }
+                completableScope { completable ->
+                    checkingTokenDeferred.forEach { checkToken ->
+                        launch { if (checkToken.await()) completable.complete(true) }
+                    }
+                    false // Will make it only if there is no match after all child coroutines complete.
+                }
+            }
         },
     )
 
@@ -141,10 +148,10 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     }
 
     /**
-     * Ensures that there's only one selected account, even through updates to [availableAccounts2] and [skippedAccountIds].
+     * Ensures that there's only one selected account, even through updates to [accountsWithCheckedTokens] and [skippedAccountIds].
      */
     private suspend fun keepSingleSelection(): Nothing {
-        availableAccounts2.collectLatest { accounts ->
+        accountsWithCheckedTokens.collectLatest { accounts ->
             skippedAccountIds.collectLatest { currentSkippedAccountIds ->
                 skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(accounts, currentSkippedAccountIds)
             }
