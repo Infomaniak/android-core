@@ -47,8 +47,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -64,9 +64,11 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
 
-    val accountsWithCheckedTokens: StateFlow<List<ExternalAccount>> = _availableAccounts.map { accounts ->
-        accounts.mapNotNull { account ->
-            account.takeIf { accountCheckStatuses.useElement(account) { statusAsync -> statusAsync.await() } }
+    val accountsWithCheckedTokens: StateFlow<List<ExternalAccount>> = _availableAccounts.transform { accounts ->
+        accounts.forEach { account ->
+            accountCheckStatuses.useElement(account) { statusAsync ->
+                if (statusAsync.await()) emit(accountsWithCheckedTokens.value + account)
+            }
         }
     }.stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList())
 
