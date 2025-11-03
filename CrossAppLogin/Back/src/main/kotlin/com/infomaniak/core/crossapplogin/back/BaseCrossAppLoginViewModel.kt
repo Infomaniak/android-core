@@ -97,10 +97,14 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         createElement = { account ->
             async {
                 val checkingTokenDeferred = account.tokens.map { token ->
+                    // For each token of the account on the other apps, we check if getting the profile works.
+                    // If it's the case, the token should be able to be derivated later successfully.
                     val customTokenHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
                     async { apiRepository.getUserProfile(customTokenHttpClient).data is User }
                 }
+
                 completableScope { completable ->
+                    // Launch all token check concurrently, and stop as soon as one of them returned a valid data
                     checkingTokenDeferred.forEach { checkToken ->
                         launch { if (checkToken.await()) completable.complete(true) }
                     }
