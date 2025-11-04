@@ -3,7 +3,7 @@ plugins {
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
     kotlin("plugin.parcelize")
-    id("androidx.navigation.safeargs.kotlin")
+    alias(core.plugins.navigation.safeargs)
 }
 
 val coreCompileSdk: Int by rootProject.extra
