@@ -2,17 +2,18 @@
  * Infomaniak Core - Android
  * Copyright (C) 2025 Infomaniak Network SA
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.infomaniak.core.crossapplogin.back.internal.certificates
 
@@ -21,15 +22,12 @@ import com.infomaniak.core.crossapplogin.back.internal.certificates.LazyAppSigni
 
 internal val infomaniakAppsCertificates = AppSigningCertificates {
     if (BuildConfig.DEBUG) {
-        this["com.infomaniak.drive"] = setOf(
+        val debugCertificates = setOf(
             LazyCertificate { "9C:03:99:5E:A4:89:26:53:85:09:A3:1D:6D:54:CB:A7:0F:72:0A:DF:9A:8E:54:BE:36:57:F5:78:70:48:1E:F6" },
         )
-        this["com.infomaniak.mail"] = setOf(
-            LazyCertificate { "9C:03:99:5E:A4:89:26:53:85:09:A3:1D:6D:54:CB:A7:0F:72:0A:DF:9A:8E:54:BE:36:57:F5:78:70:48:1E:F6" },
-        )
-        this["com.infomaniak.euria"] = setOf(
-            LazyCertificate { "9C:03:99:5E:A4:89:26:53:85:09:A3:1D:6D:54:CB:A7:0F:72:0A:DF:9A:8E:54:BE:36:57:F5:78:70:48:1E:F6" },
-        )
+        this["com.infomaniak.drive"] = debugCertificates
+        this["com.infomaniak.mail"] = debugCertificates
+        this["com.infomaniak.euria"] = debugCertificates
         return@AppSigningCertificates
     }
     this["com.infomaniak.drive"] = setOf(
@@ -41,5 +39,6 @@ internal val infomaniakAppsCertificates = AppSigningCertificates {
     this["com.infomaniak.euria"] = setOf(
         LazyCertificate { "C3:10:73:8F:60:AC:5B:F6:65:95:53:BE:C7:21:7D:BF:24:4E:9D:4C:04:BD:7D:5B:F5:51:51:2D:22:E5:03:03" },
     )
-    // TODO: Add other Infomaniak apps that are expected to support cross-app login.
+    // TODO[keep-in-sync]: Add other Infomaniak apps that are expected to support cross-app login,
+    //  and keep in sync with the <queries> in the AndroidManifest.xml of this module.
 }
