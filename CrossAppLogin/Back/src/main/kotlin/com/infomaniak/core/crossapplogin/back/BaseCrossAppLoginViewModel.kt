@@ -57,9 +57,17 @@ import com.infomaniak.core.R as RCore
 import com.infomaniak.core.appintegrity.R as RAppIntegrity
 import com.infomaniak.core.network.R as RCoreNetwork
 
-val apiRepository = object : ApiRepositoryCore() {}
+private val apiRepository = object : ApiRepositoryCore() {}
+
+private val baseOkHttpClient by lazy {
+    OkHttpClient.Builder().apply {
+        addCache()
+        addCommonInterceptors()
+    }
+}
 
 abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
+
     private val _availableAccounts = MutableStateFlow(emptyList<ExternalAccount>())
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
@@ -81,13 +89,6 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         combine(availableAccounts, skippedAccountIds) { allExternalAccounts, idsToSkip ->
             allExternalAccounts.filterSelectedAccounts(idsToSkip)
         }.stateIn(viewModelScope, started = SharingStarted.Eagerly, initialValue = emptyList())
-
-    private val baseOkHttpClient by lazy {
-        OkHttpClient.Builder().apply {
-            addCache()
-            addCommonInterceptors()
-        }
-    }
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
         coroutineScope = viewModelScope,
