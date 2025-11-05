@@ -35,6 +35,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -60,6 +61,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -113,6 +115,7 @@ private val FAB_SIZE = 64.dp
 @Composable
 fun OnboardingComponents.CrossLoginBottomContent(
     pagerState: PagerState,
+    isLoadingAccounts: () -> Boolean,
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
     onLogin: () -> Unit,
@@ -153,28 +156,32 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     )
 
                     if (isLastPage) {
-                        val shouldDisplayCrossLogin = accounts().isNotEmpty()
+                        if (isLoadingAccounts()) {
+                            CrossAppLoginAccountsLoader(customization)
+                        } else {
+                            val shouldDisplayCrossLogin = accounts().isNotEmpty()
 
-                        if (shouldDisplayCrossLogin) {
-                            CrossLoginSelectAccounts(
+                            if (shouldDisplayCrossLogin) {
+                                CrossLoginSelectAccounts(
+                                    accounts = accounts,
+                                    skippedIds = skippedIds,
+                                    customization = customization,
+                                    onClick = { showAccountsBottomSheet = true },
+                                )
+                            }
+
+                            ConnectionButton(
+                                primaryButtonType = customization.buttonStyle,
                                 accounts = accounts,
                                 skippedIds = skippedIds,
-                                customization = customization,
-                                onClick = { showAccountsBottomSheet = true },
+                                isLoginButtonLoading = isLoginButtonLoading,
+                                onLogin = onLogin,
+                                onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
+                                modifier = animatedButtonModifier,
                             )
+
+                            if (shouldDisplayCrossLogin.not()) AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
                         }
-
-                        ConnectionButton(
-                            primaryButtonType = customization.buttonStyle,
-                            accounts = accounts,
-                            skippedIds = skippedIds,
-                            isLoginButtonLoading = isLoginButtonLoading,
-                            onLogin = onLogin,
-                            onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
-                            modifier = animatedButtonModifier,
-                        )
-
-                        if (shouldDisplayCrossLogin.not()) AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
                     } else {
                         ButtonNext(
                             onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
@@ -212,6 +219,23 @@ fun OnboardingComponents.CrossLoginBottomContent(
                 customization = customization,
             )
         }
+    }
+}
+
+@Composable
+private fun CrossAppLoginAccountsLoader(customization: CrossLoginCustomization) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Margin.Medium),
+    ) {
+        Text(
+            text = stringResource(R.string.crossAppLoginAccountsLoaderTitle),
+            textAlign = TextAlign.Center,
+            style = Typography.bodyRegular,
+            color = customization.colors.titleColor,
+        )
+        CircularProgressIndicator(Modifier.width(Dimens.iconSize))
     }
 }
 
@@ -346,6 +370,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         Surface {
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
+                isLoadingAccounts = { true },
                 accounts = { accounts },
                 skippedIds = { emptySet() },
                 customization = CrossLoginDefaults.customize(
