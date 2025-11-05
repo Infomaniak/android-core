@@ -63,7 +63,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.R
 import com.infomaniak.core.compose.basicbutton.BasicButton
 import com.infomaniak.core.compose.basicbutton.BasicButtonDelay
 import com.infomaniak.core.compose.basics.ButtonStyle
@@ -73,6 +72,7 @@ import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
+import com.infomaniak.core.crossapplogin.front.R
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
@@ -81,7 +81,6 @@ import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginListAc
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
 import com.infomaniak.core.onboarding.components.OnboardingComponents
 import kotlinx.coroutines.launch
-import com.infomaniak.core.crossapplogin.front.R as RCross
 
 private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
 private val FAB_SIZE = 64.dp
@@ -272,9 +271,9 @@ private fun ConnectionButton(
     modifier: Modifier = Modifier,
 ) {
     val getConnexionButtonText = if (accounts().isEmpty()) {
-        stringResource(RCross.string.buttonLogin)
+        stringResource(R.string.buttonLogin)
     } else {
-        pluralStringResource(RCross.plurals.buttonContinueWithAccounts, accounts().size - skippedIds().size)
+        pluralStringResource(R.plurals.buttonContinueWithAccounts, accounts().size - skippedIds().size)
     }
 
     ButtonExpanded(
@@ -332,7 +331,7 @@ private fun AccountCreationButton(isSignUpButtonLoading: () -> Boolean, onClick:
         showIndeterminateProgress = isSignUpButtonLoading,
         indeterminateProgressDelay = BasicButtonDelay.Delayed,
     ) {
-        Text(stringResource(RCross.string.buttonCreateAccount), style = Typography.bodyMedium)
+        Text(stringResource(R.string.buttonCreateAccount), style = Typography.bodyMedium)
     }
 }
 
