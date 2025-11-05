@@ -95,8 +95,10 @@ fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Inten
 @SuppressLint("QueryPermissionsNeeded")
 fun Intent.hasSupportedApplications(context: Context) = resolveActivity(context.packageManager) != null
 
+@Deprecated("Use the method exposed through the Core:UiView module")
 fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
+@Deprecated("Use the method exposed through the Core:UiView module")
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
 fun Context.showToast(title: String, duration: Int = Toast.LENGTH_LONG) {
