@@ -41,8 +41,9 @@ data class RegistrationInfo private constructor(
             topics: List<String>,
         ): RegistrationInfo {
             val deviceModel = android.os.Build.MODEL
-            val cr = appCtx.contentResolver
-            val deviceName = Dispatchers.IO { Settings.Global.getString(cr, "device_name") }.let {
+            val deviceName = Dispatchers.IO {
+                Settings.Global.getString(appCtx.contentResolver, "device_name")
+            }.let {
                 // Some Xiaomi devices return null for this "device_name" so we need to check this case and not just "blank"
                 if (it.isNullOrBlank()) deviceModel else it
             }
