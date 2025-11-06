@@ -55,10 +55,19 @@ import java.util.Date
 
 object ApiController {
 
+    /** Contains config from `io.ktor.serialization.kotlinx.json.DefaultJson` */
     val json = Json {
+        //region DefaultJson config
+        encodeDefaults = true
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+        allowStructuredMapKeys = true
+        prettyPrint = false
+        useArrayPolymorphism = false
+        //endregion
+
         ignoreUnknownKeys = true
         coerceInputValues = true
-        isLenient = true
     }
 
     var gson: Gson = GsonBuilder()
