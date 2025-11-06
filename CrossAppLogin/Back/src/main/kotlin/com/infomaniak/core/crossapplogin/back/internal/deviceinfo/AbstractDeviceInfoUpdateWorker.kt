@@ -97,7 +97,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
         val currentUsersFlow = UserDatabase().userDao().allUsers.stateIn(this)
         if (currentUsersFlow.value.isEmpty()) return@autoCancelScope Result.success()
 
-        val deviceInfoUpdateManager = DeviceInfoUpdateManager.sharedInstance
+        val deviceInfoUpdateManager = DeviceInfoUpdateManager
         val sharedDeviceIdManager = CrossAppLogin.Companion.forContext(
             context = applicationContext,
             coroutineScope = this

@@ -42,11 +42,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class DeviceInfoUpdateManager private constructor() {
-
-    companion object {
-        val sharedInstance = DeviceInfoUpdateManager()
-    }
+object DeviceInfoUpdateManager {
 
     private val lastSyncedKeyDir = appCtx.filesDir.resolve("lastSyncedDeviceInfoKeys")
 
@@ -101,7 +97,7 @@ class DeviceInfoUpdateManager private constructor() {
 
     suspend inline fun <reified T : AbstractDeviceInfoUpdateWorker> scheduleWorkerOnDeviceInfoUpdate(): Nothing =
         Dispatchers.Default {
-            val crossAppLogin = CrossAppLogin.Companion.forContext(context = appCtx, coroutineScope = this)
+            val crossAppLogin = CrossAppLogin.forContext(context = appCtx, coroutineScope = this)
             crossAppLogin.sharedDeviceIdFlow.collectLatest { currentCrossAppDeviceId ->
                 val userIdsFlow = UserDatabase().userDao().allUsers.map { users -> users.map { it.id } }.distinctUntilChanged()
                 userIdsFlow.collect { userIds ->
