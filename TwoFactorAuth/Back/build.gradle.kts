@@ -56,6 +56,7 @@ dependencies {
 
     implementation(project(":Core"))
     implementation(project(":Core:Network"))
+    implementation(project(":Core:Notifications"))
     implementation(project(":Core:Sentry"))
 
     implementation(core.androidx.core.ktx)
