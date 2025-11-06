@@ -145,8 +145,10 @@ object NotificationsRegistrationManager {
         latestNotificationTopics: Flow<List<String>>
     ) {
         latestNotificationTopics.first { topics ->
-            val info = RegistrationInfo.create(fcmToken, topics)
-            needsUpdate(registrationInfo = info, userId = userId.toLong())
+            needsUpdate(
+                registrationInfo = RegistrationInfo.create(fcmToken, topics),
+                userId = userId.toLong()
+            )
         }
     }
 
