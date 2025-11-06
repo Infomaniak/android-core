@@ -19,14 +19,23 @@ package com.infomaniak.core
 
 import kotlinx.coroutines.launch
 
-suspend fun <T> Iterable<T>.allConcurrent(
-    predicate: suspend (T) -> Boolean
+suspend fun <T> Iterable<T>.allConcurrent(predicate: suspend (T) -> Boolean): Boolean {
+    return anyMatchConcurrent(value = false, predicate = predicate)
+}
+
+suspend fun <T> Iterable<T>.anyConcurrent(predicate: suspend (T) -> Boolean): Boolean {
+    return anyMatchConcurrent(value = true, predicate = predicate)
+}
+
+private suspend fun <T> Iterable<T>.anyMatchConcurrent(
+    value: Boolean,
+    predicate: suspend (T) -> Boolean,
 ): Boolean {
-    if (this is Collection && isEmpty()) return true
+    if (this is Collection && isEmpty()) return value.not()
     return completableScope { completable ->
-        for (element in this@allConcurrent) launch {
-            if (!predicate(element)) completable.complete(false)
+        for (element in this@anyMatchConcurrent) launch {
+            if (predicate(element) == value) completable.complete(value)
         }
-        true
+        value.not()
     }
 }
