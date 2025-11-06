@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import okhttp3.OkHttpClient
+
 fun TwoFactorAuthManager(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     getConnectedHttpClient: suspend (userId: Int) -> OkHttpClient
