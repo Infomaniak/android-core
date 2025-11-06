@@ -29,10 +29,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.ColorInt
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.infomaniak.core.extensions.hasPermission
 import com.infomaniak.core.extensions.hasPermissions
+import splitties.init.appCtx
 
 fun buildNotificationChannel(
     channelId: String,
@@ -91,6 +92,17 @@ fun Context.buildNotification(
 fun NotificationManagerCompat.notifyCompat(context: Context, notificationId: Int, build: Notification) {
     if (SDK_INT < 33 || context.hasPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))) {
         notify(notificationId, build)
+    }
+}
+
+@SuppressLint("MissingPermission")
+fun NotificationManagerCompat.notifyCompat(
+    tag: String,
+    notificationId: Int,
+    notification: Notification
+) {
+    if (SDK_INT < 33 || appCtx.hasPermission(Manifest.permission.POST_NOTIFICATIONS)) {
+        notify(tag, notificationId, notification)
     }
 }
 
