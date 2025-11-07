@@ -72,7 +72,6 @@ import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountCheckingStatus
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
@@ -84,7 +83,6 @@ import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginListAccounts
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
 import com.infomaniak.core.onboarding.components.OnboardingComponents
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
@@ -118,7 +116,6 @@ private val FAB_SIZE = 64.dp
 @Composable
 fun OnboardingComponents.CrossLoginBottomContent(
     pagerState: PagerState,
-    accounts: () -> List<ExternalAccount>,
     accountCheckingStatus: () -> AccountCheckingStatus,
     skippedIds: () -> Set<Long>,
     onLogin: () -> Unit,
@@ -140,12 +137,12 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
     var shouldLoadAccount by rememberSaveable { mutableStateOf(false) }
 
+    var accounts by remember { mutableStateOf(emptyList<ExternalAccount>()) }
+
     LaunchedEffect(accountCheckingStatus()) {
         val status = accountCheckingStatus()
-        scope.launch {
-            delay(400)
-            shouldLoadAccount = status is AccountCheckingStatus.Loading
-        }
+        if (status is AccountCheckingStatus.Ongoing) accounts = status.checkedAccounts
+        shouldLoadAccount = status is AccountCheckingStatus.Loading
     }
 
     Box(
@@ -172,11 +169,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
                         if (shouldLoadAccount) {
                             CrossAppLoginAccountsLoader(customization)
                         } else {
-                            val shouldDisplayCrossLogin = accounts().isNotEmpty()
+                            val shouldDisplayCrossLogin = accounts.isNotEmpty()
 
                             if (shouldDisplayCrossLogin) {
                                 CrossLoginSelectAccounts(
-                                    accounts = accounts,
+                                    accounts = { accounts },
                                     skippedIds = skippedIds,
                                     customization = customization,
                                     onClick = { showAccountsBottomSheet = true },
@@ -185,7 +182,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
                             ConnectionButton(
                                 primaryButtonType = customization.buttonStyle,
-                                accounts = accounts,
+                                accounts = { accounts },
                                 skippedIds = skippedIds,
                                 isLoginButtonLoading = isLoginButtonLoading,
                                 onLogin = onLogin,
@@ -210,14 +207,14 @@ fun OnboardingComponents.CrossLoginBottomContent(
     if (showAccountsBottomSheet) {
         val sheetState = rememberModalBottomSheetState()
         ThemedBottomSheetScaffold(sheetState = sheetState, onDismissRequest = { showAccountsBottomSheet = false }) {
-            val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds, isSingleSelection)
+            val localSkipped = rememberLocalSkippedAccountIds({ accounts }, skippedIds, isSingleSelection)
             CrossLoginListAccounts(
-                accounts = accounts,
+                accounts = { accounts },
                 skippedIds = { localSkipped },
                 onAccountClicked = { accountId ->
                     when {
                         isSingleSelection -> {
-                            localSkipped.addAll(accounts().map { it.id })
+                            localSkipped.addAll(accounts.map { it.id })
                             localSkipped.remove(accountId)
                         }
                         accountId in localSkipped -> localSkipped -= accountId
@@ -383,7 +380,6 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         Surface {
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
-                accounts = { accounts },
                 accountCheckingStatus = { AccountCheckingStatus.Loading },
                 skippedIds = { emptySet() },
                 onLogin = {},
