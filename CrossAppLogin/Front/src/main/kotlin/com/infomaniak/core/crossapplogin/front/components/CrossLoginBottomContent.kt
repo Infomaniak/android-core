@@ -72,10 +72,11 @@ import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountCheckingStatus
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
 import com.infomaniak.core.crossapplogin.front.R
-import com.infomaniak.core.crossapplogin.front.components.CrossLoginBottomContentDefaults.nextButtonShape
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
@@ -118,7 +119,7 @@ private val FAB_SIZE = 64.dp
 fun OnboardingComponents.CrossLoginBottomContent(
     pagerState: PagerState,
     accounts: () -> List<ExternalAccount>,
-    checkedAccounts: () -> List<ExternalAccount>,
+    accountCheckingStatus: () -> AccountCheckingStatus,
     skippedIds: () -> Set<Long>,
     onLogin: () -> Unit,
     onContinueWithSelectedAccounts: () -> Unit,
@@ -139,10 +140,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
     var shouldLoadAccount by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(accounts(), checkedAccounts()) {
+    LaunchedEffect(accountCheckingStatus()) {
+        val status = accountCheckingStatus()
         scope.launch {
             delay(400)
-            shouldLoadAccount = accounts().isNotEmpty() && checkedAccounts().isEmpty()
+            shouldLoadAccount = status is AccountCheckingStatus.Loading
         }
     }
 
@@ -382,17 +384,17 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
                 accounts = { accounts },
-                checkedAccounts = { emptyList() },
+                accountCheckingStatus = { AccountCheckingStatus.Loading },
                 skippedIds = { emptySet() },
-                customization = CrossLoginDefaults.customize(
-                    colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
-                ),
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
                 onCreateAccount = {},
                 onUseAnotherAccountClicked = {},
                 onSaveSkippedAccounts = {},
-                isLoginButtonLoading = { true }
+                isLoginButtonLoading = { true },
+                customization = CrossLoginDefaults.customize(
+                    colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
+                )
             )
         }
     }
