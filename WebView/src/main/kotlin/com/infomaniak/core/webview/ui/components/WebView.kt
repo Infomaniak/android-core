@@ -60,9 +60,10 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = domStorageEnabled
 
-                callback?.invoke(this)
 
                 loadUrl(url, headers)
+
+                callback?.invoke(this)
             }
         }
     )
