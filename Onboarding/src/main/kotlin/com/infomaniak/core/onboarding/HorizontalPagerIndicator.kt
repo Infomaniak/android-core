@@ -46,18 +46,22 @@ fun HorizontalPagerIndicator(
     pagerState: PagerState,
     indicatorStyle: IndicatorStyle = HorizontalPagerIndicatorDefaults.style(),
 ) {
-    Row(modifier, horizontalArrangement = Arrangement.Center) {
-        repeat(pagerState.pageCount) { index ->
-            val (indicatorWidth, indicatorColor: Color) = computeIndicatorProperties(index, pagerState, indicatorStyle)
+    if (pagerState.pageCount == 1) {
+        Box(modifier = modifier.size(indicatorStyle.inactiveSize))
+    } else {
+        Row(modifier, horizontalArrangement = Arrangement.Center) {
+            repeat(pagerState.pageCount) { index ->
+                val (indicatorWidth, indicatorColor: Color) = computeIndicatorProperties(index, pagerState, indicatorStyle)
 
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(indicatorColor)
-                    .size(height = indicatorStyle.inactiveSize, width = indicatorWidth)
-            )
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(indicatorColor)
+                        .size(height = indicatorStyle.inactiveSize, width = indicatorWidth)
+                )
 
-            if (index < pagerState.pageCount - 1) Spacer(modifier = Modifier.width(indicatorStyle.indicatorSpacing))
+                if (index < pagerState.pageCount - 1) Spacer(modifier = Modifier.width(indicatorStyle.indicatorSpacing))
+            }
         }
     }
 }
