@@ -52,7 +52,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
@@ -77,12 +76,6 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         started = SharingStarted.WhileSubscribed(),
         initialValue = AccountsCheckingState(status = Checking)
     )
-
-    // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
-    val selectedAccounts: StateFlow<List<ExternalAccount>> =
-        combine(availableAccounts, skippedAccountIds) { allExternalAccounts, idsToSkip ->
-            allExternalAccounts.filterSelectedAccounts(idsToSkip)
-        }.stateIn(viewModelScope, started = SharingStarted.Eagerly, initialValue = emptyList())
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
         coroutineScope = viewModelScope,

@@ -28,13 +28,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RippleConfiguration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,34 +54,30 @@ internal fun SelectedAccountsButton(
     contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     content: @Composable RowScope.() -> Unit,
 ) {
-    CompositionLocalProvider(
-        LocalRippleConfiguration provides RippleConfiguration(color = customization.colors.primaryColor)
+    TextButton(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(Dimens.buttonHeight),
+        border = BorderStroke(1.dp, customization.colors.buttonStrokeColor),
+        shape = RoundedCornerShape(Dimens.largeCornerRadius),
+        onClick = onClick,
+        contentPadding = contentPadding,
     ) {
-        TextButton(
-            modifier = modifier
+        Row(
+            modifier = Modifier
                 .fillMaxWidth()
-                .height(Dimens.buttonHeight),
-            border = BorderStroke(1.dp, customization.colors.buttonStrokeColor),
-            shape = RoundedCornerShape(Dimens.largeCornerRadius),
-            onClick = onClick,
-            contentPadding = contentPadding,
+                .padding(vertical = Margin.Mini),
+            horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = Margin.Mini),
-                horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
 
-                content()
+            content()
 
-                Icon(
-                    imageVector = Chevron,
-                    contentDescription = null,
-                    tint = customization.colors.primaryColor,
-                )
-            }
+            Icon(
+                imageVector = Chevron,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+            )
         }
     }
 }
