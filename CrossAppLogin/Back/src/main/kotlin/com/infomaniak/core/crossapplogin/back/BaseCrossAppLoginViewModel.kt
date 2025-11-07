@@ -76,23 +76,27 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     val accountsCheckingStatus: StateFlow<AccountCheckingStatus> = _availableAccounts.transform { accounts ->
         emit(Loading)
+
+        var hasAtLeastOneCheckedAccount = false
+        var checkError: Error = Error.Network
+
         accounts.forEach { account ->
             accountCheckStatuses.useElement(account) { statusAsync ->
-                val currentCheckedAccount =
-                    (accountsCheckingStatus.value as? Success)?.checkedAccounts ?: emptyList()
+                val currentCheckedAccount = (accountsCheckingStatus.value as? Ongoing)?.checkedAccounts ?: emptyList()
 
                 val status = statusAsync.await()
                 when (status) {
-                    WaitingForAccount -> Unit // Not possible, this is only the initial value of the flow
-                    is Success -> {
-                        if (currentCheckedAccount.contains(account).not()) {
-                            emit(Success(currentCheckedAccount + account))
-                        }
+                    is Ongoing -> if (currentCheckedAccount.contains(account).not()) {
+                        hasAtLeastOneCheckedAccount = true
+                        emit(Ongoing(currentCheckedAccount + account))
                     }
-                    else -> status
+                    is Complete, Loading, WaitingForAccount -> Unit
+                    is Error -> if (status is Error.Unknown) checkError = Error.Unknown
                 }
             }
         }
+
+        emit(if (hasAtLeastOneCheckedAccount) Complete else checkError)
     }.stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = WaitingForAccount)
 
     // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
@@ -121,7 +125,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                     async {
                         runCatching {
                             if (apiRepository.getUserProfile(customTokenHttpClient).data is User) {
-                                Success(listOf(account))
+                                Ongoing(listOf(account))
                             } else {
                                 Error.Unknown
                             }
@@ -141,7 +145,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                     checkingTokenDeferred.forEach { checkToken ->
                         launch {
                             when (val result = checkToken.await()) {
-                                is Success -> completable.complete(result)
+                                is Ongoing -> completable.complete(result)
                                 // If at least one error is not network, we change the error to avoid displaying network error
                                 Error.Unknown -> accountCheckingError = Error.Unknown
                                 else -> Unit
@@ -197,7 +201,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
      */
     private suspend fun keepSingleSelection(): Nothing {
         accountsCheckingStatus.collectLatest { status ->
-            if (status !is Success) return@collectLatest
+            if (status !is Ongoing) return@collectLatest
 
             skippedAccountIds.collectLatest { currentSkippedAccountIds ->
                 skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(
@@ -258,7 +262,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     sealed interface AccountCheckingStatus {
         data object WaitingForAccount : AccountCheckingStatus
         data object Loading : AccountCheckingStatus
-        data class Success(val checkedAccounts: List<ExternalAccount>) : AccountCheckingStatus
+        data class Ongoing(val checkedAccounts: List<ExternalAccount>) : AccountCheckingStatus
+        data object Complete : AccountCheckingStatus
         sealed class Error : AccountCheckingStatus {
             data object Network : Error()
             data object Unknown : Error()
