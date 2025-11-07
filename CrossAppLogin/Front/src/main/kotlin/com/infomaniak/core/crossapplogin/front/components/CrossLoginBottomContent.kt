@@ -75,6 +75,7 @@ import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
 import com.infomaniak.core.crossapplogin.front.R
+import com.infomaniak.core.crossapplogin.front.components.CrossLoginBottomContentDefaults.nextButtonShape
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
@@ -82,6 +83,7 @@ import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginListAccounts
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
 import com.infomaniak.core.onboarding.components.OnboardingComponents
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
@@ -115,8 +117,8 @@ private val FAB_SIZE = 64.dp
 @Composable
 fun OnboardingComponents.CrossLoginBottomContent(
     pagerState: PagerState,
-    isLoadingAccounts: () -> Boolean,
     accounts: () -> List<ExternalAccount>,
+    checkedAccounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
     onLogin: () -> Unit,
     onContinueWithSelectedAccounts: () -> Unit,
@@ -134,6 +136,15 @@ fun OnboardingComponents.CrossLoginBottomContent(
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
 
     val scope = rememberCoroutineScope()
+
+    var shouldLoadAccount by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(accounts(), checkedAccounts()) {
+        scope.launch {
+            delay(400)
+            shouldLoadAccount = accounts().isNotEmpty() && checkedAccounts().isEmpty()
+        }
+    }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -156,7 +167,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     )
 
                     if (isLastPage) {
-                        if (isLoadingAccounts()) {
+                        if (shouldLoadAccount) {
                             CrossAppLoginAccountsLoader(customization)
                         } else {
                             val shouldDisplayCrossLogin = accounts().isNotEmpty()
@@ -370,8 +381,8 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         Surface {
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
-                isLoadingAccounts = { true },
                 accounts = { accounts },
+                checkedAccounts = { emptyList() },
                 skippedIds = { emptySet() },
                 customization = CrossLoginDefaults.customize(
                     colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
