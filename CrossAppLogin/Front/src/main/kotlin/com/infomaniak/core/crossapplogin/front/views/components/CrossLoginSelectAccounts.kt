@@ -18,14 +18,19 @@
 package com.infomaniak.core.crossapplogin.front.views.components
 
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.components.MultipleAccounts
 import com.infomaniak.core.crossapplogin.front.components.SelectedAccountsButton
@@ -39,6 +44,7 @@ import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 fun CrossLoginSelectAccounts(
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
+    isLoading: () -> Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
@@ -52,9 +58,12 @@ fun CrossLoginSelectAccounts(
         onClick = onClick,
         modifier = modifier,
     ) {
-        when {
-            count == 1 -> SingleAccount(selectedAccounts.single(), customization, Modifier.weight(1.0f))
-            count > 1 -> MultipleAccounts(selectedAccounts, customization, Modifier.weight(1.0f))
+        Row(modifier = Modifier.weight(1.0f), verticalAlignment = Alignment.CenterVertically) {
+            when {
+                count == 1 -> SingleAccount(selectedAccounts.single(), customization, Modifier.weight(1.0f))
+                count > 1 -> MultipleAccounts(selectedAccounts, customization, Modifier.weight(1.0f))
+            }
+            if (isLoading()) CircularProgressIndicator(modifier = Modifier.size(Dimens.iconSize))
         }
     }
 }
@@ -69,6 +78,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         CrossLoginSelectAccounts(
             accounts = { accounts },
             skippedIds = { skippedIds },
+            isLoading = { true },
             onClick = {},
         )
     }
