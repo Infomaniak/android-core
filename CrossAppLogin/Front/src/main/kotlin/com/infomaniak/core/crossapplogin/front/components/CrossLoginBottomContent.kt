@@ -176,6 +176,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                     accounts = { accounts },
                                     skippedIds = skippedIds,
                                     customization = customization,
+                                    isLoading = { accountCheckingStatus() != AccountCheckingStatus.Complete },
                                     onClick = { showAccountsBottomSheet = true },
                                 )
                             }
