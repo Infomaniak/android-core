@@ -34,12 +34,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -51,12 +48,6 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     private val _availableAccounts = MutableStateFlow(emptyList<ExternalAccount>())
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
-
-    // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
-    val selectedAccounts: StateFlow<List<ExternalAccount>> =
-        combine(availableAccounts, skippedAccountIds) { allExternalAccounts, idsToSkip ->
-            allExternalAccounts.filterSelectedAccounts(idsToSkip)
-        }.stateIn(viewModelScope, started = SharingStarted.Eagerly, initialValue = emptyList())
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
         coroutineScope = viewModelScope,
