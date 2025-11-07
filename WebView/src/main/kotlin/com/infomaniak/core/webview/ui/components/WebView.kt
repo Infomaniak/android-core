@@ -59,10 +59,11 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = domStorageEnabled
 
-                callback?.invoke(this)
 
                 val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
                 loadUrl(url, headers)
+
+                callback?.invoke(this)
             }
         })
 }
