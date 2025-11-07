@@ -26,14 +26,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RippleConfiguration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -54,40 +51,36 @@ internal fun AddAccount(
     contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     onClick: () -> Unit,
 ) {
-    CompositionLocalProvider(
-        LocalRippleConfiguration provides RippleConfiguration(color = customization.colors.primaryColor)
+    TextButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = Dimens.buttonHeight),
+        shape = RectangleShape,
+        onClick = onClick,
+        contentPadding = contentPadding,
     ) {
-        TextButton(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = Dimens.buttonHeight),
-            shape = RectangleShape,
-            onClick = onClick,
-            contentPadding = contentPadding,
+                .padding(vertical = Margin.Mini),
+            horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
+
+            Icon(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = Margin.Mini),
-                horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+                    .padding(all = Margin.Mini)
+                    .size(size = Dimens.iconSize),
+                imageVector = AddUser,
+                tint = MaterialTheme.colorScheme.primary,
+                contentDescription = null,
+            )
 
-                Icon(
-                    modifier = Modifier
-                        .padding(all = Margin.Mini)
-                        .size(size = Dimens.iconSize),
-                    imageVector = AddUser,
-                    tint = customization.colors.primaryColor,
-                    contentDescription = null,
-                )
-
-                Text(
-                    text = stringResource(R.string.buttonUseOtherAccount),
-                    style = Typography.bodyRegular,
-                    color = customization.colors.titleColor,
-                )
-            }
+            Text(
+                text = stringResource(R.string.buttonUseOtherAccount),
+                style = Typography.bodyRegular,
+                color = customization.colors.titleColor,
+            )
         }
     }
 }

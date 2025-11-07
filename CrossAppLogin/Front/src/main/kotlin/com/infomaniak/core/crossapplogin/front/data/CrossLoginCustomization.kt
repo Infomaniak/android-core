@@ -29,8 +29,6 @@ data class CrossLoginCustomization(
 )
 
 data class CrossLoginColors(
-    val primaryColor: Color, // Only needed in kMail because we are dissociated from the Material theme actual value
-    val onPrimaryColor: Color, // Only needed in kMail because we are dissociated from the Material theme actual value
     val titleColor: Color,
     val descriptionColor: Color,
     val avatarStrokeColor: Color,
@@ -47,15 +45,11 @@ object CrossLoginDefaults {
 
     @Composable
     fun colors(
-        primaryColor: Color? = null,
-        onPrimaryColor: Color? = null,
         titleColor: Color? = null,
         descriptionColor: Color? = null,
         avatarStrokeColor: Color? = null,
         buttonStrokeColor: Color? = null,
     ): CrossLoginColors = CrossLoginColors(
-        primaryColor = primaryColor ?: MaterialTheme.colorScheme.primary,
-        onPrimaryColor = onPrimaryColor ?: MaterialTheme.colorScheme.onPrimary,
         titleColor = titleColor ?: MaterialTheme.colorScheme.onSurface,
         descriptionColor = descriptionColor ?: MaterialTheme.colorScheme.onSurfaceVariant,
         avatarStrokeColor = avatarStrokeColor ?: MaterialTheme.colorScheme.surface,
