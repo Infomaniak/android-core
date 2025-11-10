@@ -135,14 +135,22 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
     val scope = rememberCoroutineScope()
 
-    var shouldLoadAccount by rememberSaveable { mutableStateOf(false) }
+    val accounts by remember {
+        derivedStateOf { (accountCheckingStatus() as? AccountCheckingStatus.CheckingAccounts)?.checkedAccounts ?: emptyList() }
+    }
 
-    var accounts by remember { mutableStateOf(emptyList<ExternalAccount>()) }
+    val shouldLoadAccount by remember {
+        derivedStateOf {
+            val status = accountCheckingStatus()
+            status is AccountCheckingStatus.CheckingAccounts && status.checkedAccounts.isEmpty()
+        }
+    }
 
-    LaunchedEffect(accountCheckingStatus()) {
-        val status = accountCheckingStatus()
-        if (status is AccountCheckingStatus.Ongoing) accounts = status.checkedAccounts
-        shouldLoadAccount = status is AccountCheckingStatus.Loading || status is AccountCheckingStatus.Ongoing
+    val isCheckingComplete by remember {
+        derivedStateOf {
+            val status = accountCheckingStatus()
+            status is AccountCheckingStatus.CheckingAccounts && status.isComplete
+        }
     }
 
     Box(
@@ -166,7 +174,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     )
 
                     if (isLastPage) {
-                        if (accountCheckingStatus() is AccountCheckingStatus.Loading) {
+                        if (shouldLoadAccount) {
                             CrossAppLoginAccountsLoader(customization)
                         } else {
                             val shouldDisplayCrossLogin = accounts.isNotEmpty()
@@ -176,7 +184,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                     accounts = { accounts },
                                     skippedIds = skippedIds,
                                     customization = customization,
-                                    isLoading = { shouldLoadAccount },
+                                    isLoading = { !isCheckingComplete },
                                     onClick = { showAccountsBottomSheet = true },
                                 )
                             }
@@ -191,7 +199,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                 modifier = animatedButtonModifier,
                             )
 
-                            if (shouldDisplayCrossLogin.not()) AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
+                            if (!shouldDisplayCrossLogin) AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
                         }
                     } else {
                         ButtonNext(
@@ -212,7 +220,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
             CrossLoginListAccounts(
                 accounts = { accounts },
                 skippedIds = { localSkipped },
-                isLoading = { shouldLoadAccount },
+                isLoading = { !isCheckingComplete },
                 onAccountClicked = { accountId ->
                     when {
                         isSingleSelection -> {
@@ -382,7 +390,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         Surface {
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
-                accountCheckingStatus = { AccountCheckingStatus.Loading },
+                accountCheckingStatus = { AccountCheckingStatus.CheckingAccounts(checkedAccounts = accounts) },
                 skippedIds = { emptySet() },
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
