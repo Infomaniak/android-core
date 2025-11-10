@@ -50,6 +50,7 @@ android {
 
 dependencies {
     implementation(project(":Core"))
+    implementation(project(":Core:AppVersionChecker"))
     implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Network"))
     implementation(project(":Core:Sentry"))
@@ -65,7 +66,6 @@ dependencies {
     implementation(core.androidx.concurrent.futures.ktx)
 
     implementation(core.okhttp)
-    implementation(core.gson)
 
     // Compose
     implementation(platform(core.compose.bom))

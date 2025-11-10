@@ -15,20 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.inappupdate.updaterequired.data.api
+package com.infomaniak.core.appversionchecker.data.models
 
-import com.infomaniak.core.inappupdate.StoreUtils
-import com.infomaniak.core.inappupdate.updaterequired.data.models.AppVersion.Platform
-import com.infomaniak.core.network.INFOMANIAK_API_V1
+import kotlinx.serialization.Serializable
 
-object ApiRoutesStores {
-
-    fun appVersion(appName: String): String {
-        val store = StoreUtils.REQUIRED_UPDATE_STORE.apiValue
-        val platform = Platform.ANDROID.apiValue
-
-        val parameters = "?only=min_version,published_versions.tag&filter_versions[]=production"
-
-        return "${INFOMANIAK_API_V1}/app-information/versions/$store/$platform/$appName$parameters"
-    }
-}
+@Serializable
+data class AppPublishedVersion(var tag: String)
