@@ -23,7 +23,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.await
@@ -131,12 +130,7 @@ abstract class AbstractNotificationsRegistrationWorker(
 
         suspend fun awaitWorkerCompletion(uuid: UUID) {
             val workManager = WorkManager.getInstance(appCtx)
-            workManager.getWorkInfoByIdFlow(uuid).first {
-                when (it?.state) {
-                    WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED, WorkInfo.State.CANCELLED -> true
-                    null, WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING, WorkInfo.State.BLOCKED -> false
-                }
-            }
+            workManager.getWorkInfoByIdFlow(uuid).first { it?.state?.isFinished == true }
         }
 
         @PublishedApi
