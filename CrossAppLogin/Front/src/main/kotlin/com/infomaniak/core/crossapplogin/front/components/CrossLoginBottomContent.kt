@@ -73,6 +73,7 @@ import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountCheckingStatus
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.Companion.filterSelectedAccounts
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
@@ -95,7 +96,7 @@ private val FAB_SIZE = 64.dp
  *
  * @param pagerState The pager state of the [com.infomaniak.core.onboarding.OnboardingScaffold]. Used to automatically detect if
  * we're at the last page and to navigate between page shen the arrow button is clicked.
- * @param accountCheckingStatus The status of the accounts check. Used to know when displaying loader, the account or an error.
+ * @param accountsCheckingState The status of the accounts check. Used to know when displaying loader, the account or an error.
  * @param skippedIds The list of ids of accounts that are not currently selected by the user.
  * @param onLogin When the user has no accounts for cross app login and clicks on the button to log in a new user.
  * @param onContinueWithSelectedAccounts When the user has accounts for cross app login and clicks on the button to log them.
@@ -117,7 +118,7 @@ private val FAB_SIZE = 64.dp
 @Composable
 fun OnboardingComponents.CrossLoginBottomContent(
     pagerState: PagerState,
-    accountCheckingStatus: () -> AccountCheckingStatus,
+    accountsCheckingState: () -> AccountsCheckingState,
     skippedIds: () -> Set<Long>,
     onLogin: () -> Unit,
     onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
@@ -136,18 +137,13 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
     val scope = rememberCoroutineScope()
 
-    val accounts by remember {
-        derivedStateOf { (accountCheckingStatus() as? AccountCheckingStatus.CheckingAccounts)?.checkedAccounts ?: emptyList() }
-    }
+    val accounts by remember { derivedStateOf { accountsCheckingState().checkedAccounts } }
 
     val shouldLoadAccount by remember {
         derivedStateOf {
-            (accountCheckingStatus() as? AccountCheckingStatus.CheckingAccounts)?.checkedAccounts?.isNotEmpty() == true
+            val state = accountsCheckingState()
+            state.checkedAccounts().isEmpty() && state.status() is AccountCheckingStatus.CheckingAccounts
         }
-    }
-
-    val isCheckingComplete by remember {
-        derivedStateOf { (accountCheckingStatus() as? AccountCheckingStatus.CheckingAccounts)?.isComplete == true }
     }
 
     Box(
@@ -174,26 +170,26 @@ fun OnboardingComponents.CrossLoginBottomContent(
                         if (shouldLoadAccount) {
                             CrossAppLoginAccountsLoader(customization)
                         } else {
-                            val shouldDisplayCrossLogin = accounts.isNotEmpty()
+                            val shouldDisplayCrossLogin = accounts().isNotEmpty()
 
                             if (shouldDisplayCrossLogin) {
                                 CrossLoginSelectAccounts(
-                                    accounts = { accounts },
+                                    accounts = accounts,
                                     skippedIds = skippedIds,
                                     customization = customization,
-                                    isLoading = { !isCheckingComplete },
+                                    isLoading = { !accountsCheckingState().isComplete },
                                     onClick = { showAccountsBottomSheet = true },
                                 )
                             }
 
                             ConnectionButton(
                                 primaryButtonType = customization.buttonStyle,
-                                accounts = { accounts },
+                                accounts = accounts,
                                 skippedIds = skippedIds,
                                 isLoginButtonLoading = isLoginButtonLoading,
                                 onLogin = onLogin,
                                 onContinueWithSelectedAccounts = {
-                                    onContinueWithSelectedAccounts(accounts.filterSelectedAccounts(skippedIds()))
+                                    onContinueWithSelectedAccounts(accounts().filterSelectedAccounts(skippedIds()))
                                 },
                                 modifier = animatedButtonModifier,
                             )
@@ -215,15 +211,15 @@ fun OnboardingComponents.CrossLoginBottomContent(
     if (showAccountsBottomSheet) {
         val sheetState = rememberModalBottomSheetState()
         ThemedBottomSheetScaffold(sheetState = sheetState, onDismissRequest = { showAccountsBottomSheet = false }) {
-            val localSkipped = rememberLocalSkippedAccountIds({ accounts }, skippedIds, isSingleSelection)
+            val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds, isSingleSelection)
             CrossLoginListAccounts(
-                accounts = { accounts },
+                accounts = accounts,
                 skippedIds = { localSkipped },
-                isLoading = { !isCheckingComplete },
+                isLoading = { !accountsCheckingState().isComplete },
                 onAccountClicked = { accountId ->
                     when {
                         isSingleSelection -> {
-                            localSkipped.addAll(accounts.map { it.id })
+                            localSkipped.addAll(accounts().map { it.id })
                             localSkipped.remove(accountId)
                         }
                         accountId in localSkipped -> localSkipped -= accountId
@@ -389,7 +385,9 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         Surface {
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
-                accountCheckingStatus = { AccountCheckingStatus.CheckingAccounts(checkedAccounts = accounts) },
+                accountsCheckingState = {
+                    AccountsCheckingState({ AccountCheckingStatus.CheckingAccounts }, checkedAccounts = { accounts })
+                },
                 skippedIds = { emptySet() },
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
