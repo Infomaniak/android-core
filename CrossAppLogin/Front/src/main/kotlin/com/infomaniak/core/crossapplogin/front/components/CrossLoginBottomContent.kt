@@ -73,6 +73,7 @@ import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountCheckingStatus
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.Companion.filterSelectedAccounts
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
 import com.infomaniak.core.crossapplogin.front.R
@@ -119,7 +120,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     accountCheckingStatus: () -> AccountCheckingStatus,
     skippedIds: () -> Set<Long>,
     onLogin: () -> Unit,
-    onContinueWithSelectedAccounts: () -> Unit,
+    onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
     onCreateAccount: () -> Unit,
     onUseAnotherAccountClicked: () -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
@@ -141,16 +142,12 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
     val shouldLoadAccount by remember {
         derivedStateOf {
-            val status = accountCheckingStatus()
-            status is AccountCheckingStatus.CheckingAccounts && status.checkedAccounts.isEmpty()
+            (accountCheckingStatus() as? AccountCheckingStatus.CheckingAccounts)?.checkedAccounts?.isNotEmpty() == true
         }
     }
 
     val isCheckingComplete by remember {
-        derivedStateOf {
-            val status = accountCheckingStatus()
-            status is AccountCheckingStatus.CheckingAccounts && status.isComplete
-        }
+        derivedStateOf { (accountCheckingStatus() as? AccountCheckingStatus.CheckingAccounts)?.isComplete == true }
     }
 
     Box(
@@ -195,7 +192,9 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                 skippedIds = skippedIds,
                                 isLoginButtonLoading = isLoginButtonLoading,
                                 onLogin = onLogin,
-                                onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
+                                onContinueWithSelectedAccounts = {
+                                    onContinueWithSelectedAccounts(accounts.filterSelectedAccounts(skippedIds()))
+                                },
                                 modifier = animatedButtonModifier,
                             )
 
