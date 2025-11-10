@@ -77,7 +77,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     val accountsCheckingState: StateFlow<AccountsCheckingState> = _availableAccounts.transform { accounts ->
         if (accounts.isEmpty()) return@transform
 
-        emit(AccountsCheckingState(status = { CheckingAccounts }))
+        emit(AccountsCheckingState(status = { Ongoing }))
 
         var checkedAccounts = mutableListOf<ExternalAccount>()
         var checkError: Error = Error.Network
@@ -86,18 +86,12 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             accountCheckStatuses.useElement(account) { statusAsync ->
                 val status = statusAsync.await()
                 when (status) {
-                    CheckingAccounts -> if (checkedAccounts.contains(account).not()) {
+                    Ongoing -> if (checkedAccounts.contains(account).not()) {
                         checkedAccounts.add(account)
-                        emit(
-                            AccountsCheckingState(
-                                status = { CheckingAccounts },
-                                checkedAccounts = { checkedAccounts },
-                                isComplete = false
-                            )
-                        )
+                        emit(AccountsCheckingState(status = { Ongoing }, checkedAccounts = { checkedAccounts }))
                     }
                     is Error -> if (status is Error.Unknown) checkError = Error.Unknown
-                    WaitingForAccount -> Unit
+                    WaitingForAccount, Complete -> Unit // Cannot happened, the checkStatuses don't return these values
                 }
             }
         }
@@ -105,8 +99,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         emit(
             AccountsCheckingState(
                 checkedAccounts = { checkedAccounts },
-                status = { if (checkedAccounts.isNotEmpty()) CheckingAccounts else checkError },
-                isComplete = true,
+                status = { if (checkedAccounts.isNotEmpty()) Complete else checkError },
             )
         )
     }.stateIn(
@@ -141,7 +134,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                     async {
                         runCatching {
                             if (apiRepository.getUserProfile(customTokenHttpClient).data is User) {
-                                CheckingAccounts
+                                Ongoing
                             } else {
                                 Error.Unknown
                             }
@@ -161,7 +154,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                     checkingTokenDeferred.forEach { checkToken ->
                         launch {
                             when (val result = checkToken.await()) {
-                                is CheckingAccounts -> completable.complete(result)
+                                is Ongoing -> completable.complete(result)
                                 // If at least one error is not network, we change the error to avoid displaying network error
                                 Error.Unknown -> accountCheckingError = Error.Unknown
                                 else -> Unit
@@ -217,7 +210,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
      */
     private suspend fun keepSingleSelection(): Nothing {
         accountsCheckingState.collectLatest { state ->
-            if (state.status() !is CheckingAccounts) return@collectLatest
+            if (state.status() !is Ongoing) return@collectLatest
 
             skippedAccountIds.collectLatest { currentSkippedAccountIds ->
                 skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(
@@ -278,12 +271,12 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     data class AccountsCheckingState(
         val status: () -> AccountCheckingStatus,
         val checkedAccounts: () -> List<ExternalAccount> = { emptyList() },
-        val isComplete: Boolean = false,
     )
 
     sealed interface AccountCheckingStatus {
         data object WaitingForAccount : AccountCheckingStatus
-        data object CheckingAccounts : AccountCheckingStatus
+        data object Ongoing : AccountCheckingStatus
+        data object Complete : AccountCheckingStatus
         sealed class Error : AccountCheckingStatus {
             data object Network : Error()
             data object Unknown : Error()

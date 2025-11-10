@@ -142,9 +142,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
     val shouldLoadAccount by remember {
         derivedStateOf {
             val state = accountsCheckingState()
-            state.checkedAccounts().isEmpty() && state.status() is AccountCheckingStatus.CheckingAccounts
+            state.checkedAccounts().isEmpty() && state.status() is AccountCheckingStatus.Ongoing
         }
     }
+
+    val isCheckingComplete by remember { derivedStateOf { accountsCheckingState().status() is AccountCheckingStatus.Complete } }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -177,7 +179,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                     accounts = accounts,
                                     skippedIds = skippedIds,
                                     customization = customization,
-                                    isLoading = { !accountsCheckingState().isComplete },
+                                    isLoading = { !isCheckingComplete },
                                     onClick = { showAccountsBottomSheet = true },
                                 )
                             }
@@ -215,7 +217,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
             CrossLoginListAccounts(
                 accounts = accounts,
                 skippedIds = { localSkipped },
-                isLoading = { !accountsCheckingState().isComplete },
+                isLoading = { !isCheckingComplete },
                 onAccountClicked = { accountId ->
                     when {
                         isSingleSelection -> {
@@ -386,7 +388,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
                 accountsCheckingState = {
-                    AccountsCheckingState({ AccountCheckingStatus.CheckingAccounts }, checkedAccounts = { accounts })
+                    AccountsCheckingState({ AccountCheckingStatus.Ongoing }, checkedAccounts = { accounts })
                 },
                 skippedIds = { emptySet() },
                 onLogin = {},
