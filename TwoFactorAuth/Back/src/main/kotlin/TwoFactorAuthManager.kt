@@ -25,6 +25,7 @@ import androidx.lifecycle.eventFlow
 import com.infomaniak.core.Xor
 import com.infomaniak.core.emitFirstsUntilSecond
 import com.infomaniak.core.rateLimit
+import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge.State.Done
@@ -60,6 +61,7 @@ import splitties.coroutines.raceOf
 import splitties.coroutines.repeatWhileActive
 import splitties.experimental.ExperimentalSplittiesApi
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
@@ -119,7 +121,42 @@ class TwoFactorAuthManager(
         initialValue = null
     )
 
-    fun onApprovalChallengePushed(userId: Long?, expirationTimeInMillis: Long) {
+    /**
+     * Usage example:
+     *
+     * ```
+     * override fun onMessageReceived(message: RemoteMessage) {
+     *     when (val type = message.data["type"]) {
+     *         TwoFactorAuthNotifications.TYPE -> twoFactorAuthManager.onApprovalChallengePushed(
+     *             remoteMessageData = message.data,
+     *             remoteMessageSentTimeUtcMillis = message.sentTime,
+     *             remoteMessageTimeToLiveSeconds = message.ttl // Note: could be 0 if not set.
+     *         )
+     *         // Other types of notifications
+     *     }
+     * }
+     * ```
+     */
+    fun onApprovalChallengePushed(
+        remoteMessageData: Map<String, String>,
+        remoteMessageSentTimeUtcMillis: Long,
+        remoteMessageTimeToLiveSeconds: Int
+    ) {
+        val userId = remoteMessageData["user_id"]?.toLongOrNull().also {
+            if (it == null) SentryLog.e(TAG, "User id missing, or not an integer")
+        }
+        val timeToLive = remoteMessageTimeToLiveSeconds.let {
+            when (it) {
+                0 -> 5.minutes // 0 if not set (see FCM RemoteMessage.ttl), fallback to a hardcoded value in this case.
+                else -> it.seconds
+            }
+        }
+        val expirationTimeInMillis = remoteMessageSentTimeUtcMillis + timeToLive.inWholeMilliseconds
+
+        onApprovalChallengePushed(userId, expirationTimeInMillis)
+    }
+
+    private fun onApprovalChallengePushed(userId: Long?, expirationTimeInMillis: Long) {
         approvalChallengePushes.tryEmit(Unit)
         TwoFactorAuthNotifications.postIncomingChallengeNotification(
             userId = userId,
@@ -151,6 +188,10 @@ class TwoFactorAuthManager(
     }.toList().sortedBy { (_, challenge) ->
         challenge.createdAt
     }.toMap()
+
+    private companion object {
+        private const val TAG = "TwoFactorAuthManager"
+    }
 
     data class Challenge(
         val data: ConnectionAttemptInfo,
