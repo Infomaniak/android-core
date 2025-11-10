@@ -27,7 +27,7 @@ val javaVersion: JavaVersion by rootProject.extra
 
 android {
 
-    namespace = "com.infomaniak.core.twofactorauth.back"
+    namespace = "com.infomaniak.core.notifications.registration"
     compileSdk = coreCompileSdk
 
     defaultConfig {
@@ -52,15 +52,16 @@ android {
 
 dependencies {
     api(core.kotlinx.coroutines.core)
+    api(core.androidx.work.runtime.ktx)
     api(core.okhttp)
 
     implementation(project(":Core"))
-    implementation(project(":Core:Network"))
-    implementation(project(":Core:Notifications"))
+    implementation(project(":Core:Auth"))
+    implementation(project(":Core:Network:Ktor"))
     implementation(project(":Core:Sentry"))
 
+    implementation(core.firebase.messaging.ktx)
     implementation(core.androidx.core.ktx)
-    implementation(core.androidx.lifecycle.process)
     implementation(core.kotlinx.serialization.json)
     implementation(core.ktor.client.json)
     implementation(core.ktor.client.content.negociation)

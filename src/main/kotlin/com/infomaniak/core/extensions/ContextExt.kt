@@ -35,9 +35,11 @@ tailrec fun Context.findActivity(): Activity? = when (this) {
 }
 
 fun Context.hasPermissions(permissions: Array<String>): Boolean {
-    return permissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
+    return permissions.all { hasPermission(it) }
+}
+
+fun Context.hasPermission(permission: String): Boolean {
+    return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 }
 
 fun Context.openUrl(url: String) {

@@ -64,6 +64,7 @@ dependencies {
     implementation(project(":Core:Compose:Basics"))
     implementation(project(":Core:Compose:Margin"))
     implementation(project(":Core:Network"))
+    implementation(project(":Core:Notifications"))
 
     implementation(core.androidx.core.ktx)
 

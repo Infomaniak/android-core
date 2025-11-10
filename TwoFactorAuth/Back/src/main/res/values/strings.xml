@@ -23,7 +23,7 @@
     <string name="twoFactorAuthAlreadyProcessedErrorTitle">This request has already been processed</string>
     <string name="twoFactorAuthCheckOriginDescription">You didn’t initiate this action?\nCheck your active devices, and disconnect the ones you don’t recognize.</string>
     <string name="twoFactorAuthConfirmationDescription">Confirming this login attempt will allow that device to access your Infomaniak account</string>
-    <string name="twoFactorAuthConnectionRejectedDescription">You have refused a login attempt. To secure your account, change your password.\nIf you are the source of this attempt, try logging in again.</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">You have refused a login attempt. To secure your account, change your password.\n\nIf you are the source of this attempt, try logging in again.</string>
     <string name="twoFactorAuthConnectionRejectedTitle">Connection Rejected</string>
     <string name="twoFactorAuthDeviceLabel">Device</string>
     <string name="twoFactorAuthExpiredErrorDescription">The confirmation period has ended.\nPlease try again</string>
@@ -33,6 +33,9 @@
     <string name="twoFactorAuthLocationLabel">Location</string>
     <string name="twoFactorAuthNoNetworkErrorDescription">Unable to complete the operation.\nCheck your connection and try again.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">No network connection</string>
+    <string name="twoFactorAuthNotificationApproval">Confirm login</string>
+    <string name="twoFactorAuthNotificationChannelDescription">2 factor authentication confirmation</string>
+    <string name="twoFactorAuthNotificationChannelName">Login confirmation</string>
     <string name="twoFactorAuthTryingToLogInTitle">Are you trying to login?</string>
     <string name="twoFactorAuthWhenLabel">When</string>
 </resources>

@@ -102,6 +102,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 import kotlin.uuid.ExperimentalUuidApi
 import com.infomaniak.core.R as RCore
+import com.infomaniak.core.twofactorauth.back.R as RBack
 
 @Composable
 fun TwoFactorAuthApprovalContent(challenge: Challenge) = Surface(Modifier.fillMaxSize()) {
@@ -160,7 +161,7 @@ private fun EditPasswordButton() {
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = { uriHandler.openUri(EDIT_PASSWORD_URL) },
-    ) { Text(stringResource(R.string.buttonEditPassword), overflow = TextOverflow.Ellipsis, maxLines = 1) }
+    ) { Text(stringResource(RBack.string.buttonEditPassword), overflow = TextOverflow.Ellipsis, maxLines = 1) }
 }
 
 @Composable
@@ -228,7 +229,7 @@ private fun ColumnScope.PendingChallenge(
 
     ChallengeHeader(
         illustrationImage = { ShieldK() },
-        titleResId = R.string.twoFactorAuthTryingToLogInTitle
+        titleResId = RBack.string.twoFactorAuthTryingToLogInTitle
     )
 
     Spacer(Modifier.weight(1f))
@@ -244,9 +245,9 @@ private fun ColumnScope.PendingChallenge(
         ) {
             AccountInfoContent(challenge.data.targetAccount)
             HorizontalDivider()
-            InfoElement(stringResource(R.string.twoFactorAuthWhenLabel)) { TimeAgoText(challenge.attemptTimeMark) }
-            InfoElement(stringResource(R.string.twoFactorAuthDeviceLabel)) { DeviceRow(challenge.data) }
-            InfoElement(stringResource(R.string.twoFactorAuthLocationLabel)) { Text(challenge.data.location) }
+            InfoElement(stringResource(RBack.string.twoFactorAuthWhenLabel)) { TimeAgoText(challenge.attemptTimeMark) }
+            InfoElement(stringResource(RBack.string.twoFactorAuthDeviceLabel)) { DeviceRow(challenge.data) }
+            InfoElement(stringResource(RBack.string.twoFactorAuthLocationLabel)) { Text(challenge.data.location) }
         }
     }
     CardElement(virtualCardState, Modifier.weight(1f).fillMaxWidth())
@@ -318,23 +319,23 @@ private val Outcome.Done.iconResId: Int
 private val Outcome.Done.titleResId: Int
     @StringRes get() = when (this) {
         Outcome.Done.Success -> ID_NULL // Never displayed.
-        Outcome.Done.Expired -> R.string.twoFactorAuthExpiredErrorTitle
-        Outcome.Done.AlreadyProcessed -> R.string.twoFactorAuthAlreadyProcessedErrorTitle
-        Outcome.Done.Rejected -> R.string.twoFactorAuthConnectionRejectedTitle
+        Outcome.Done.Expired -> RBack.string.twoFactorAuthExpiredErrorTitle
+        Outcome.Done.AlreadyProcessed -> RBack.string.twoFactorAuthAlreadyProcessedErrorTitle
+        Outcome.Done.Rejected -> RBack.string.twoFactorAuthConnectionRejectedTitle
     }
 
 private val Outcome.Done.descResId: Int
     @StringRes get() = when (this) {
         Outcome.Done.Success -> ID_NULL // Never displayed.
-        Outcome.Done.Expired -> R.string.twoFactorAuthExpiredErrorDescription
-        Outcome.Done.AlreadyProcessed -> R.string.twoFactorAuthCheckOriginDescription
-        Outcome.Done.Rejected -> R.string.twoFactorAuthConnectionRejectedDescription
+        Outcome.Done.Expired -> RBack.string.twoFactorAuthExpiredErrorDescription
+        Outcome.Done.AlreadyProcessed -> RBack.string.twoFactorAuthCheckOriginDescription
+        Outcome.Done.Rejected -> RBack.string.twoFactorAuthConnectionRejectedDescription
     }
 
 private val Outcome.Issue.titleResId: Int
     @StringRes get() = when (this) {
         is Outcome.Issue.ErrorResponse -> RCore.string.anErrorHasOccurred
-        is Outcome.Issue.Network -> R.string.twoFactorAuthNoNetworkErrorTitle
+        is Outcome.Issue.Network -> RBack.string.twoFactorAuthNoNetworkErrorTitle
         is Outcome.Issue.Unknown -> RCore.string.anErrorHasOccurred
     }
 
@@ -347,8 +348,8 @@ private val Outcome.Issue.iconResId: Int
 
 private val Outcome.Issue.descResId: Int
     @StringRes get() = when (this) {
-        is Outcome.Issue.Network -> R.string.twoFactorAuthNoNetworkErrorDescription
-        else -> R.string.twoFactorAuthGenericErrorDescription
+        is Outcome.Issue.Network -> RBack.string.twoFactorAuthNoNetworkErrorDescription
+        else -> RBack.string.twoFactorAuthGenericErrorDescription
     }
 
 @Composable
@@ -364,7 +365,7 @@ private fun ApproveOrRejectRow(
     }
 
     Text(
-        text = stringResource(R.string.twoFactorAuthConfirmationDescription),
+        text = stringResource(RBack.string.twoFactorAuthConfirmationDescription),
         style = Typography.bodyRegular,
         textAlign = TextAlign.Center
     )
@@ -381,7 +382,7 @@ private fun ApproveOrRejectRow(
             indeterminateProgressDelay = 0.4.seconds,
             enabled = { answerRequest.isAwaitingCall },
         ) {
-            Text(stringResource(R.string.buttonDeny), overflow = TextOverflow.Ellipsis, maxLines = 1)
+            Text(stringResource(RBack.string.buttonDeny), overflow = TextOverflow.Ellipsis, maxLines = 1)
         }
         Button(
             modifier = Modifier.weight(1f),
@@ -390,7 +391,7 @@ private fun ApproveOrRejectRow(
             indeterminateProgressDelay = 0.4.seconds,
             enabled = { answerRequest.isAwaitingCall },
         ) {
-            Text(stringResource(R.string.buttonApprove), overflow = TextOverflow.Ellipsis, maxLines = 1)
+            Text(stringResource(RBack.string.buttonApprove), overflow = TextOverflow.Ellipsis, maxLines = 1)
         }
     }
 }

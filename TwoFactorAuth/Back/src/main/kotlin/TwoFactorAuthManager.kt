@@ -25,9 +25,11 @@ import androidx.lifecycle.eventFlow
 import com.infomaniak.core.Xor
 import com.infomaniak.core.emitFirstsUntilSecond
 import com.infomaniak.core.rateLimit
+import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge.State.Done
+import com.infomaniak.core.twofactorauth.back.notifications.TwoFactorAuthNotifications
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,9 +37,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
@@ -50,11 +55,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import splitties.coroutines.raceOf
 import splitties.coroutines.repeatWhileActive
 import splitties.experimental.ExperimentalSplittiesApi
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
@@ -83,10 +90,16 @@ class TwoFactorAuthManager(
     private val getAccountInfo: suspend (userId: Int) -> ConnectionAttemptInfo.TargetAccount?,
     private val getConnectedHttpClient: suspend (userId: Int) -> OkHttpClient
 ) {
+    private val approvalChallengePushes = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     private val rateLimitedForegroundEvents = ProcessLifecycleOwner.get().lifecycle.eventFlow.filter {
         it == Lifecycle.Event.ON_START
     }.rateLimit(30.seconds, elementsBeforeLimit = 2)
+
+    private val refreshEvents = channelFlow {
+        launch { rateLimitedForegroundEvents.collect { send(Unit) } }
+        approvalChallengePushes.collect { send(Unit) }
+    }.conflate()
 
     private val actionedChallengesFlow = MutableStateFlow<Set<RemoteChallenge>>(emptySet())
 
@@ -94,7 +107,7 @@ class TwoFactorAuthManager(
      * We don't want to bring back any challenges that have been actioned, and are being sent to the backend,
      * or have been fully handled since the most recent call to [attemptGettingAllCurrentChallenges].
      */
-    private val firstUnactionedChallenge: StateFlow<Pair<TwoFactorAuth, RemoteChallenge>?> = rateLimitedForegroundEvents.map {
+    private val firstUnactionedChallenge: StateFlow<Pair<TwoFactorAuth, RemoteChallenge>?> = refreshEvents.map {
         attemptGettingAllCurrentChallenges()
     }.flatMapLatest { challengesMap ->
         actionedChallengesFlow.map { actionedChallenges ->
@@ -107,6 +120,49 @@ class TwoFactorAuthManager(
         started = SharingStarted.Lazily,
         initialValue = null
     )
+
+    /**
+     * Usage example:
+     *
+     * ```
+     * override fun onMessageReceived(message: RemoteMessage) {
+     *     when (val type = message.data["type"]) {
+     *         TwoFactorAuthNotifications.TYPE -> twoFactorAuthManager.onApprovalChallengePushed(
+     *             remoteMessageData = message.data,
+     *             remoteMessageSentTimeUtcMillis = message.sentTime,
+     *             remoteMessageTimeToLiveSeconds = message.ttl // Note: could be 0 if not set.
+     *         )
+     *         // Other types of notifications
+     *     }
+     * }
+     * ```
+     */
+    fun onApprovalChallengePushed(
+        remoteMessageData: Map<String, String>,
+        remoteMessageSentTimeUtcMillis: Long,
+        remoteMessageTimeToLiveSeconds: Int
+    ) {
+        val userId = remoteMessageData["user_id"]?.toLongOrNull().also {
+            if (it == null) SentryLog.e(TAG, "User id missing, or not an integer")
+        }
+        val timeToLive = remoteMessageTimeToLiveSeconds.let {
+            when (it) {
+                0 -> 5.minutes // 0 if not set (see FCM RemoteMessage.ttl), fallback to a hardcoded value in this case.
+                else -> it.seconds
+            }
+        }
+        val expirationTimeInMillis = remoteMessageSentTimeUtcMillis + timeToLive.inWholeMilliseconds
+
+        onApprovalChallengePushed(userId, expirationTimeInMillis)
+    }
+
+    private fun onApprovalChallengePushed(userId: Long?, expirationTimeInMillis: Long) {
+        approvalChallengePushes.tryEmit(Unit)
+        TwoFactorAuthNotifications.postIncomingChallengeNotification(
+            userId = userId,
+            expirationTimeInMillis = expirationTimeInMillis
+        )
+    }
 
     val challengeToResolve: StateFlow<Challenge?> = flow {
         repeatWhileActive {
@@ -132,6 +188,10 @@ class TwoFactorAuthManager(
     }.toList().sortedBy { (_, challenge) ->
         challenge.createdAt
     }.toMap()
+
+    private companion object {
+        private const val TAG = "TwoFactorAuthManager"
+    }
 
     data class Challenge(
         val data: ConnectionAttemptInfo,

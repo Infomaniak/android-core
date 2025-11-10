@@ -39,27 +39,12 @@ import com.infomaniak.core.autoCancelScope
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfo.Type
-import com.infomaniak.core.network.networking.HttpUtils
-import com.infomaniak.core.network.networking.ManualAuthorizationRequired
 import com.infomaniak.core.sentry.SentryLog
+import createHttpClient
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.okhttp.OkHttp
-import io.ktor.client.plugins.HttpRequestRetry
-import io.ktor.client.plugins.HttpResponseValidator
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.request.accept
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.request
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.contentType
-import io.ktor.http.headers
 import io.ktor.http.isSuccess
-import io.ktor.http.userAgent
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -71,15 +56,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.serialization.SerializationException
 import okhttp3.OkHttpClient
 import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -97,8 +79,8 @@ abstract class AbstractDeviceInfoUpdateWorker(
         val currentUsersFlow = UserDatabase().userDao().allUsers.stateIn(this)
         if (currentUsersFlow.value.isEmpty()) return@autoCancelScope Result.success()
 
-        val deviceInfoUpdateManager = DeviceInfoUpdateManager.sharedInstance
-        val sharedDeviceIdManager = CrossAppLogin.Companion.forContext(
+        val deviceInfoUpdateManager = DeviceInfoUpdateManager
+        val sharedDeviceIdManager = CrossAppLogin.forContext(
             context = applicationContext,
             coroutineScope = this
         ).sharedDeviceIdManager
@@ -220,36 +202,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
     }
 
     private suspend fun createHttpClientForUser(userId: Long): HttpClient {
-        return createHttpClientForUser(getConnectedHttpClient(userId = userId.toInt()))
-    }
-
-    private fun createHttpClientForUser(connectedOkHttpClient: OkHttpClient): HttpClient = HttpClient(OkHttp) {
-        engine { preconfigured = connectedOkHttpClient }
-        install(ContentNegotiation) {
-            json()
-        }
-        install(HttpRequestRetry) {
-            maxRetries = 3
-            retryOnExceptionIf { _, cause -> cause !is SerializationException }
-        }
-        defaultRequest {
-            userAgent(HttpUtils.getUserAgent)
-            headers {
-                @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
-                HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
-            }
-            contentType(ContentType.Application.Json)
-            accept(ContentType.Application.Json)
-        }
-        HttpResponseValidator {
-            validateResponse { response ->
-                response.validateContentType { accepted, received ->
-                    val url = response.request.url
-                    val method = response.request.method
-                    throw IllegalArgumentException("Expected Content-Type $accepted but got $received from $method on $url")
-                }
-            }
-        }
+        return createHttpClient(getConnectedHttpClient(userId = userId.toInt()))
     }
 
     companion object {
@@ -272,25 +225,4 @@ abstract class AbstractDeviceInfoUpdateWorker(
 
         private const val TAG = "AbstractDeviceInfoUpdateWorker"
     }
-}
-
-private inline fun HttpResponse.validateContentType(
-    onContentTypeMismatch: (accepted: String, received: String?) -> Unit
-) {
-    contract { callsInPlace(onContentTypeMismatch, InvocationKind.AT_MOST_ONCE) }
-    val acceptedContentType = request.headers[HttpHeaders.Accept]
-    val receivedContentType = headers[HttpHeaders.ContentType]
-
-    when (acceptedContentType) {
-        receivedContentType, null -> return
-    }
-
-    val expectedContentType = ContentType.parse(acceptedContentType)
-
-    if (expectedContentType == ContentType.Any) return
-
-    val actualContentType = receivedContentType?.let { ContentType.parse(it) }
-    if (actualContentType?.match(expectedContentType) ?: false) return
-
-    onContentTypeMismatch(acceptedContentType, receivedContentType)
 }

@@ -23,7 +23,7 @@
     <string name="twoFactorAuthAlreadyProcessedErrorTitle">Esta solicitud ya ha sido tramitada</string>
     <string name="twoFactorAuthCheckOriginDescription">¿No has iniciado esta acción?\nComprueba tus dispositivos activos y desconecta los que no reconozcas.</string>
     <string name="twoFactorAuthConfirmationDescription">Al confirmar esta conexión, autorizas a este dispositivo a acceder a tu cuenta Infomaniak.</string>
-    <string name="twoFactorAuthConnectionRejectedDescription">Ha rechazado un intento de conexión. Para asegurar su cuenta, cambie su contraseña.\nSi usted es el origen de este intento, intente conectarse de nuevo.</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Ha rechazado un intento de conexión. Para asegurar su cuenta, cambie su contraseña.\n\nSi usted es el origen de este intento, intente conectarse de nuevo.</string>
     <string name="twoFactorAuthConnectionRejectedTitle">Conexión rechazada</string>
     <string name="twoFactorAuthDeviceLabel">Dispositivo</string>
     <string name="twoFactorAuthExpiredErrorDescription">La ventana de validación ha expirado.\nVuelva a intentarlo.</string>
@@ -33,6 +33,9 @@
     <string name="twoFactorAuthLocationLabel">Lugar</string>
     <string name="twoFactorAuthNoNetworkErrorDescription">No se ha podido completar la operación.\nCompruebe su conexión e inténtelo de nuevo.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">No hay red</string>
+    <string name="twoFactorAuthNotificationApproval">Confirmar inicio de sesión</string>
+    <string name="twoFactorAuthNotificationChannelDescription">Confirmación de autenticación de 2 factores</string>
+    <string name="twoFactorAuthNotificationChannelName">Confirmación de inicio de sesión</string>
     <string name="twoFactorAuthTryingToLogInTitle">¿Está intentando conectarse?</string>
     <string name="twoFactorAuthWhenLabel">En</string>
 </resources>
