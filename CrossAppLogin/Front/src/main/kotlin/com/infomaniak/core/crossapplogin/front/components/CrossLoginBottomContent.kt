@@ -142,7 +142,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     LaunchedEffect(accountCheckingStatus()) {
         val status = accountCheckingStatus()
         if (status is AccountCheckingStatus.Ongoing) accounts = status.checkedAccounts
-        shouldLoadAccount = status is AccountCheckingStatus.Loading
+        shouldLoadAccount = status is AccountCheckingStatus.Loading || status is AccountCheckingStatus.Ongoing
     }
 
     Box(
@@ -166,7 +166,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     )
 
                     if (isLastPage) {
-                        if (shouldLoadAccount) {
+                        if (accountCheckingStatus() is AccountCheckingStatus.Loading) {
                             CrossAppLoginAccountsLoader(customization)
                         } else {
                             val shouldDisplayCrossLogin = accounts.isNotEmpty()
@@ -176,7 +176,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                                     accounts = { accounts },
                                     skippedIds = skippedIds,
                                     customization = customization,
-                                    isLoading = { accountCheckingStatus() != AccountCheckingStatus.Complete },
+                                    isLoading = { shouldLoadAccount },
                                     onClick = { showAccountsBottomSheet = true },
                                 )
                             }
@@ -212,6 +212,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
             CrossLoginListAccounts(
                 accounts = { accounts },
                 skippedIds = { localSkipped },
+                isLoading = { shouldLoadAccount },
                 onAccountClicked = { accountId ->
                     when {
                         isSingleSelection -> {
