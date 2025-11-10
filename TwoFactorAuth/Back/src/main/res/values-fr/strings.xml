@@ -23,7 +23,7 @@
     <string name="twoFactorAuthAlreadyProcessedErrorTitle">Cette demande a déjà été traitée</string>
     <string name="twoFactorAuthCheckOriginDescription">Vous n’êtes pas à l’origine de cette action ?\nVérifiez vos appareils actifs et déconnectez ceux que vous ne reconnaissez pas.</string>
     <string name="twoFactorAuthConfirmationDescription">Confirmer cette connexion autorisera cet appareil à accéder à votre compte Infomaniak</string>
-    <string name="twoFactorAuthConnectionRejectedDescription">Vous avez refusé une tentative de connexion. Pour sécuriser votre compte, changez votre mot de passe.\nSi vous êtes à l’origine de cette tentative, réessayez de vous connecter.</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Vous avez refusé une tentative de connexion. Pour sécuriser votre compte, changez votre mot de passe.\n\nSi vous êtes à l’origine de cette tentative, réessayez de vous connecter.</string>
     <string name="twoFactorAuthConnectionRejectedTitle">Connexion Refusée</string>
     <string name="twoFactorAuthDeviceLabel">Appareil</string>
     <string name="twoFactorAuthExpiredErrorDescription">Le délai de validation est terminé.\nRelancez la demande.</string>
@@ -33,6 +33,9 @@
     <string name="twoFactorAuthLocationLabel">Lieu</string>
     <string name="twoFactorAuthNoNetworkErrorDescription">Impossible de terminer l’opération.\nVérifiez votre connexion et réessayez.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">Pas de connexion internet</string>
+    <string name="twoFactorAuthNotificationApproval">Confirmer la connexion</string>
+    <string name="twoFactorAuthNotificationChannelDescription">Confirmation de l\'authentification à 2 facteurs</string>
+    <string name="twoFactorAuthNotificationChannelName">Confirmation de la connexion</string>
     <string name="twoFactorAuthTryingToLogInTitle">Êtes-vous en train d’essayer de vous connecter ?</string>
     <string name="twoFactorAuthWhenLabel">Quand</string>
 </resources>

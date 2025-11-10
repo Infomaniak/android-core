@@ -64,10 +64,10 @@ object TwoFactorAuthNotifications {
 
     fun channel() = NotificationChannel(
         CHANNEL_ID,
-        "Login confirmation", // TODO: Translate this
+        appCtx.getString(R.string.twoFactorAuthNotificationChannelName),
         NotificationManager.IMPORTANCE_HIGH,
     ).also {
-        it.description = "2 factor authentication confirmation" //TODO: Translate this too
+        it.description = appCtx.getString(R.string.twoFactorAuthNotificationChannelDescription)
         it.enableLights(true)
         it.enableVibration(true)
         it.setSound(null, AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION).build())
@@ -105,7 +105,7 @@ object TwoFactorAuthNotifications {
         val timeoutMillis = expirationTimeInMillis - System.currentTimeMillis()
         return NotificationCompat.Builder(appCtx, CHANNEL_ID)
             .setSmallIcon(R.drawable.shield_k)
-            .setContentTitle("Confirmer la connexion") //TODO: Use localized string
+            .setContentTitle(appCtx.getString(R.string.twoFactorAuthNotificationApproval))
             .setContentIntent(pendingIntent)
             .setTimeoutAfter(timeoutMillis)
             .setAutoCancel(true)

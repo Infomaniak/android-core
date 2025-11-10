@@ -23,7 +23,7 @@
     <string name="twoFactorAuthAlreadyProcessedErrorTitle">Questa richiesta è già stata elaborata</string>
     <string name="twoFactorAuthCheckOriginDescription">Non hai avviato tu questa azione?\nControlla i tuoi dispositivi attivi e disconnetti quelli che non riconosci.</string>
     <string name="twoFactorAuthConfirmationDescription">Confermando questa connessione, autorizzi questo dispositivo ad accedere al tuo account Infomaniak.</string>
-    <string name="twoFactorAuthConnectionRejectedDescription">È stato rifiutato un tentativo di connessione. Per proteggere il vostro account, cambiate la password.\nSe siete voi la fonte di questo tentativo, provate ad accedere di nuovo.</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">È stato rifiutato un tentativo di connessione. Per proteggere il vostro account, cambiate la password.\n\nSe siete voi la fonte di questo tentativo, provate ad accedere di nuovo.</string>
     <string name="twoFactorAuthConnectionRejectedTitle">Connessione rifiutata</string>
     <string name="twoFactorAuthDeviceLabel">Dispositivo</string>
     <string name="twoFactorAuthExpiredErrorDescription">Il periodo di convalida è terminato.\nRilanciare la richiesta.</string>
@@ -33,6 +33,9 @@
     <string name="twoFactorAuthLocationLabel">Luogo</string>
     <string name="twoFactorAuthNoNetworkErrorDescription">Impossibile completare l’operazione.\nControllare la connessione e riprovare.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">Nessuna rete</string>
+    <string name="twoFactorAuthNotificationApproval">Confermare l’accesso</string>
+    <string name="twoFactorAuthNotificationChannelDescription">Conferma dell\'autenticazione a 2 fattori</string>
+    <string name="twoFactorAuthNotificationChannelName">Conferma dell\'accesso</string>
     <string name="twoFactorAuthTryingToLogInTitle">Stai cercando di accedere?</string>
     <string name="twoFactorAuthWhenLabel">Quando</string>
 </resources>
