@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.inappupdate.updaterequired.data.models
+package com.infomaniak.core.appversionchecker.data.models
 
 import io.sentry.Sentry
 import io.sentry.SentryLevel
@@ -37,6 +37,17 @@ data class AppVersion(
 
     enum class Platform(val apiValue: String) {
         ANDROID("android")
+    }
+
+    enum class ProjectionFields(val value: String) {
+        MinVersion("min_version"),
+        PublishedVersionsTag("published_versions.tag")
+    }
+
+    enum class VersionChannel(val value: String) {
+        Production("production"),
+        Beta("beta"),
+        Internal("internal"),
     }
 
     fun mustRequireUpdate(currentVersion: String): Boolean = runCatching {
