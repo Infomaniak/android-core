@@ -17,12 +17,14 @@
  */
 package com.infomaniak.core.crossapplogin.front.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -40,6 +42,7 @@ import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
+import com.infomaniak.core.crossapplogin.front.views.components.smallProgressStrokeWidth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +50,7 @@ internal fun SingleAccount(
     account: ExternalAccount,
     customization: CrossLoginCustomization,
     modifier: Modifier = Modifier,
+    isLoading: () -> Boolean = { false },
 ) {
     Row(
         modifier = modifier,
@@ -62,11 +66,19 @@ internal fun SingleAccount(
         Spacer(Modifier.width(Margin.Mini))
 
         Column {
-            Text(
-                text = account.fullName,
-                style = Typography.bodyMedium,
-                color = customization.colors.titleColor,
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = account.fullName,
+                    style = Typography.bodyMedium,
+                    color = customization.colors.titleColor,
+                )
+                if (isLoading()) {
+                    CircularProgressIndicator(Modifier.size(Dimens.smallIconSize), strokeWidth = smallProgressStrokeWidth)
+                }
+            }
             Text(
                 text = account.email,
                 style = Typography.bodyRegular,
@@ -85,6 +97,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 SingleAccount(
                     account = accounts.first(),
                     customization = CrossLoginDefaults.customize(),
+                    isLoading = { true },
                     modifier = Modifier.weight(1.0f),
                 )
             }
