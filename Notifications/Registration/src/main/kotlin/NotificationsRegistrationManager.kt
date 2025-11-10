@@ -25,6 +25,7 @@ import androidx.core.util.writeText
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.ktx.messaging
+import com.infomaniak.core.AssociatedUserDataCleanable
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.completableScope
@@ -48,7 +49,7 @@ import kotlinx.serialization.json.Json
 import splitties.init.appCtx
 import java.io.FileNotFoundException
 
-object NotificationsRegistrationManager {
+object NotificationsRegistrationManager : AssociatedUserDataCleanable {
 
     internal const val FCM_TOKEN_RETRIEVAL_FAILED_MESSAGE = "Couldn't retrieve the FCM token!"
 
@@ -65,7 +66,7 @@ object NotificationsRegistrationManager {
         fcmTokenUpdates.tryEmit(fcmToken)
     }
 
-    suspend fun resetForUser(userId: Long) = Dispatchers.IO {
+    override suspend fun resetForUser(userId: Long) = Dispatchers.IO {
         lastSyncKeyFileForUser(userId).delete()
     }
 
