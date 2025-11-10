@@ -94,7 +94,7 @@ private val FAB_SIZE = 64.dp
  *
  * @param pagerState The pager state of the [com.infomaniak.core.onboarding.OnboardingScaffold]. Used to automatically detect if
  * we're at the last page and to navigate between page shen the arrow button is clicked.
- * @param accounts The list of all available accounts that can be chosen from and used for login.
+ * @param accountCheckingStatus The status of the accounts check. Used to know when displaying loader, the account or an error.
  * @param skippedIds The list of ids of accounts that are not currently selected by the user.
  * @param onLogin When the user has no accounts for cross app login and clicks on the button to log in a new user.
  * @param onContinueWithSelectedAccounts When the user has accounts for cross app login and clicks on the button to log them.
