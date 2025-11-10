@@ -142,11 +142,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
     val shouldLoadAccount by remember {
         derivedStateOf {
             val state = accountsCheckingState()
-            state.checkedAccounts().isEmpty() && state.status() is AccountCheckingStatus.Ongoing
+            state.checkedAccounts().isEmpty() && state.status is AccountCheckingStatus.Ongoing
         }
     }
 
-    val isCheckingComplete by remember { derivedStateOf { accountsCheckingState().status() is AccountCheckingStatus.Complete } }
+    val isCheckingComplete by remember { derivedStateOf { accountsCheckingState().status is AccountCheckingStatus.Complete } }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -388,7 +388,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
                 accountsCheckingState = {
-                    AccountsCheckingState({ AccountCheckingStatus.Ongoing }, checkedAccounts = { accounts })
+                    AccountsCheckingState(AccountCheckingStatus.Ongoing, checkedAccounts = { accounts })
                 },
                 skippedIds = { emptySet() },
                 onLogin = {},
