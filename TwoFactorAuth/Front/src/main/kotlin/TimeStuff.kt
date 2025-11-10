@@ -37,6 +37,7 @@ import splitties.experimental.ExperimentalSplittiesApi
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.TimeMark
+import com.infomaniak.core.twofactorauth.back.R as RBack
 
 /*
  * Infomaniak Core - Android
@@ -79,7 +80,7 @@ fun TimeMark.minutesAgoState(): State<String> {
 }
 
 fun Duration.elapsedTimePerMinuteFormatted(resources: Resources): String = when (inWholeMinutes) {
-    0L -> resources.getString(R.string.twoFactorAuthJustNowLabel)
+    0L -> resources.getString(RBack.string.twoFactorAuthJustNowLabel)
     else -> DateUtils.getRelativeTimeSpanString(
         /* time = */ 0L,
         /* now = */ inWholeMilliseconds,
