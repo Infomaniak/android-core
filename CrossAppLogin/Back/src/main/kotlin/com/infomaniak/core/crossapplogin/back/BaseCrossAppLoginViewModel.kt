@@ -77,7 +77,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     val accountsCheckingState: StateFlow<AccountsCheckingState> = _availableAccounts.transform { accounts ->
         if (accounts.isEmpty()) return@transform
 
-        emit(AccountsCheckingState(status = { Ongoing }))
+        emit(AccountsCheckingState(status = Ongoing))
 
         var checkedAccounts = mutableListOf<ExternalAccount>()
         var checkError: Error = Error.Network
@@ -88,7 +88,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                 when (status) {
                     Ongoing -> if (checkedAccounts.contains(account).not()) {
                         checkedAccounts.add(account)
-                        emit(AccountsCheckingState(status = { Ongoing }, checkedAccounts = { checkedAccounts }))
+                        emit(AccountsCheckingState(status = Ongoing, checkedAccounts = { checkedAccounts }))
                     }
                     is Error -> if (status is Error.Unknown) checkError = Error.Unknown
                     WaitingForAccount, Complete -> Unit // Cannot happened, the checkStatuses don't return these values
@@ -99,13 +99,13 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         emit(
             AccountsCheckingState(
                 checkedAccounts = { checkedAccounts },
-                status = { if (checkedAccounts.isNotEmpty()) Complete else checkError },
+                status = if (checkedAccounts.isNotEmpty()) Complete else checkError,
             )
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
-        initialValue = AccountsCheckingState(status = { WaitingForAccount })
+        initialValue = AccountsCheckingState(status = WaitingForAccount)
     )
 
     // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
@@ -210,7 +210,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
      */
     private suspend fun keepSingleSelection(): Nothing {
         accountsCheckingState.collectLatest { state ->
-            if (state.status() !is Ongoing) return@collectLatest
+            if (state.status !is Ongoing) return@collectLatest
 
             skippedAccountIds.collectLatest { currentSkippedAccountIds ->
                 skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(
@@ -269,7 +269,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     data class LoginResult(val tokens: List<ApiToken>, val errorMessageIds: List<Int>)
 
     data class AccountsCheckingState(
-        val status: () -> AccountCheckingStatus,
+        val status: AccountCheckingStatus,
         val checkedAccounts: () -> List<ExternalAccount> = { emptyList() },
     )
 
