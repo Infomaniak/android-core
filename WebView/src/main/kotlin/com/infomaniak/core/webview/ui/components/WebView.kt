@@ -43,7 +43,7 @@ fun WebView(
     webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
     withSafeArea: Boolean = true,
     webChromeClient: WebChromeClient? = null,
-    callback: ((WebView) -> Unit)? = null,
+    getWebView: ((WebView) -> Unit)? = null,
 ) {
     AndroidView(
         modifier = modifier,
@@ -63,7 +63,7 @@ fun WebView(
 
                 loadUrl(url, headers)
 
-                callback?.invoke(this)
+                getWebView?.invoke(this)
             }
         }
     )
