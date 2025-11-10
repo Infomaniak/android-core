@@ -21,6 +21,7 @@ package com.infomaniak.core.crossapplogin.back.internal.deviceinfo
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.core.util.AtomicFile
+import com.infomaniak.core.AssociatedUserDataCleanable
 import com.infomaniak.core.allConcurrent
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin
@@ -42,7 +43,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-object DeviceInfoUpdateManager {
+object DeviceInfoUpdateManager : AssociatedUserDataCleanable {
 
     private val lastSyncedKeyDir = appCtx.filesDir.resolve("lastSyncedDeviceInfoKeys")
 
@@ -56,7 +57,7 @@ object DeviceInfoUpdateManager {
         }
     }
 
-    suspend fun resetInfoKey(userId: Long) = Dispatchers.IO {
+    override suspend fun resetForUser(userId: Long) = Dispatchers.IO {
         lastSyncKeyFileForUser(userId).delete()
     }
 
