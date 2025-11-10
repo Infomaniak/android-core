@@ -41,7 +41,7 @@ fun WebView(
     webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
     withSafeArea: Boolean = true,
     webChromeClient: WebChromeClient? = null,
-    callback: ((WebView) -> Unit)? = null,
+    getWebView: ((WebView) -> Unit)? = null,
 ) {
     AndroidView(
         modifier = if (withSafeArea) Modifier.safeDrawingPadding() else Modifier,
@@ -61,7 +61,7 @@ fun WebView(
 
                 loadUrl(url, headers)
 
-                callback?.invoke(this)
+                getWebView?.invoke(this)
             }
         }
     )
