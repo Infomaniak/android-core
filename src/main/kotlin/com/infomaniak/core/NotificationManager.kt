@@ -68,7 +68,6 @@ fun NotificationManager.areNotificationsEnabledFlow(): Flow<Boolean> = broadcast
  *
  * Both of these things are in control of the code in the app.
  */
-@RequiresApi(26)
 fun NotificationManager.isChannelEnabledFlow(channelId: String): Flow<Boolean?> = channelFlow {
     if (SDK_INT >= 28) {
         val channelGroupId = getNotificationChannel(channelId)?.group
