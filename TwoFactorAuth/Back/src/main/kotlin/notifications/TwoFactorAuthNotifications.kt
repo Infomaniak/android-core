@@ -45,7 +45,7 @@ object TwoFactorAuthNotifications {
 
     const val TOPIC = "2fa:push_challenge"
 
-    private const val CHANNEL_ID = "2fa-challenge"
+    const val CHANNEL_ID = "2fa-challenge"
     private const val NOTIFICATION_ID = 0
 
     private const val NOTIFICATION_TAG_PREFIX = "2fa-challenge-"
