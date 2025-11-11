@@ -136,12 +136,10 @@ fun OnboardingComponents.CrossLoginBottomContent(
 ) {
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
+    val accounts by remember { derivedStateOf { accountsCheckingState().checkedAccounts } }
+    val isCheckingComplete by remember { derivedStateOf { accountsCheckingState().status is AccountCheckingStatus.Complete } }
 
     val scope = rememberCoroutineScope()
-
-    val accounts by remember { derivedStateOf { accountsCheckingState().checkedAccounts } }
-
-    val isCheckingComplete by remember { derivedStateOf { accountsCheckingState().status is AccountCheckingStatus.Complete } }
 
     Box(
         contentAlignment = Alignment.Center,
