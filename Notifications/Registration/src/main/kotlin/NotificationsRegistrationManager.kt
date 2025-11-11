@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalSplittiesApi::class)
 
 package com.infomaniak.core.notifications.registration
 
@@ -46,6 +46,9 @@ import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
+import splitties.coroutines.launchRacer
+import splitties.coroutines.race
+import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
 import java.io.FileNotFoundException
 
@@ -128,16 +131,14 @@ object NotificationsRegistrationManager : AssociatedUserDataCleanable {
         fcmToken: String,
         latestNotificationTopics: (userId: Int) -> Flow<List<String>>
     ) {
-        completableScope { completable ->
-            for (userId in userIds) launch {
+        race {
+            for (userId in userIds) launchRacer {
                 awaitNeedForUpdate(
                     fcmToken = fcmToken,
                     userId = userId,
                     latestNotificationTopics = latestNotificationTopics(userId)
                 )
-                completable.complete(Unit)
             }
-            awaitCancellation() // Don't let the scope finish if there are no users.
         }
     }
 
