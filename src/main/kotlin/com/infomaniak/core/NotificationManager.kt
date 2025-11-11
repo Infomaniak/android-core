@@ -51,7 +51,7 @@ fun NotificationManager.areNotificationsEnabledFlow(): Flow<Boolean> = broadcast
 ).conflate().map { intent ->
     if (intent.hasExtra(NotificationManager.EXTRA_BLOCKED_STATE)) {
         intent.getBooleanExtra(NotificationManager.EXTRA_BLOCKED_STATE, false).not()
-    } else {
+    } else { // Post registration empty Intent, get the current state.
         compatNotificationManager.areNotificationsEnabled()
     }
 }
@@ -122,7 +122,9 @@ private fun NotificationManager.isChannelEnabledReceiverFlow(channelId: String):
     emitInitialEmptyIntent = true
 ).conflate().transform { intent ->
     when (intent.getStringExtra(NotificationManager.EXTRA_NOTIFICATION_CHANNEL_ID)) {
-        null -> emit(isChannelEnabled(channelId, checkApp = false, checkGroup = false))
+        null -> { // Post registration empty Intent, get the current state.
+            emit(isChannelEnabled(channelId, checkApp = false, checkGroup = false))
+        }
         channelId -> emit(intent.getBooleanExtra(NotificationManager.EXTRA_BLOCKED_STATE, false).not())
         else -> Unit
     }
@@ -139,7 +141,9 @@ private fun NotificationManager.isChannelGroupEnabledReceiverFlow(groupId: Strin
     emitInitialEmptyIntent = true
 ).conflate().transform { intent ->
     when (intent.getStringExtra(NotificationManager.EXTRA_NOTIFICATION_CHANNEL_GROUP_ID)) {
-        null -> emit(getNotificationChannelGroup(groupId)?.isBlocked?.not())
+        null -> { // Post registration empty Intent, get the current state.
+            emit(getNotificationChannelGroup(groupId)?.isBlocked?.not())
+        }
         groupId -> emit(intent.getBooleanExtra(NotificationManager.EXTRA_BLOCKED_STATE, false).not())
         else -> Unit
     }
