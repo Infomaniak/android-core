@@ -28,7 +28,6 @@ import com.google.firebase.messaging.ktx.messaging
 import com.infomaniak.core.AssociatedUserDataCleanable
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.cancellable
-import com.infomaniak.core.completableScope
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,7 +42,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.invoke
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import splitties.coroutines.launchRacer
