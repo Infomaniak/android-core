@@ -70,24 +70,19 @@ private fun broadcastReceiverFlowUnchecked(
         }
     }
     val ctx = appCtx
-    if (SDK_INT >= 26) {
-        val flag = when {
-            SDK_INT >= 33 -> when {
-                exported -> Context.RECEIVER_EXPORTED
-                else -> Context.RECEIVER_NOT_EXPORTED
-            }
-            else -> 0
-        }.let {
-            when {
-                visibleToInstantApps -> it.withFlag(Context.RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                else -> it
-            }
+    val flag = when {
+        SDK_INT >= 33 -> when {
+            exported -> Context.RECEIVER_EXPORTED
+            else -> Context.RECEIVER_NOT_EXPORTED
         }
-        ctx.registerReceiver(receiver, filter, flag)
-    } else {
-        @Suppress("UnspecifiedRegisterReceiverFlag") // Unsupported before API 26/33.
-        ctx.registerReceiver(receiver, filter)
+        else -> 0
+    }.let {
+        when {
+            visibleToInstantApps -> it.withFlag(Context.RECEIVER_VISIBLE_TO_INSTANT_APPS)
+            else -> it
+        }
     }
+    ctx.registerReceiver(receiver, filter, flag)
     if (emitInitialEmptyIntent) trySend(Intent())
     awaitClose {
         ctx.unregisterReceiver(receiver)
