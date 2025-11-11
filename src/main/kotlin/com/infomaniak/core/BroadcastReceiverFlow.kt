@@ -30,6 +30,27 @@ import kotlinx.coroutines.flow.flowOn
 import splitties.bitflags.withFlag
 import splitties.init.appCtx
 
+/**
+ * Example usage:
+ * ```
+ * val isSomethingEnabled: Flow<Boolean> = broadcastReceiverFlow(
+ *     action = Whatever.ACTION_SOMETHING_STATE_CHANGE,
+ *     emitInitialEmptyIntent = true
+ * ).map { intent ->
+ *     if (intent.hasExtra(Whatever.EXTRA_SOMETHING_ENABLED)) {
+ *         intent.getBooleanExtra(Whatever.EXTRA_SOMETHING_ENABLED, false)
+ *     } else {
+ *         Whatever.isSomethingEnabled() // Get current value when getting the empty intent.
+ *     }
+ * }
+ * ```
+ *
+ * @param action used for the [IntentFilter]. Pass an [IntentFilter] to the overload if you need a more complex version.
+ * @param priority between -999 and 999. See [IntentFilter.setPriority].
+ * @param emitInitialEmptyIntent if enabled, will emit an empty `Intent` after registration, which can be detected to
+ * check the current value.
+ * @param exported Only needed for cross-app usage. See [Context.RECEIVER_EXPORTED] and [Context.RECEIVER_NOT_EXPORTED].
+ */
 fun broadcastReceiverFlow(
     action: String,
     priority: Int = 999, // This is the max for non system apps.
@@ -43,6 +64,13 @@ fun broadcastReceiverFlow(
     visibleToInstantApps = visibleToInstantApps
 )
 
+/**
+ * This overload that takes an [IntentFilter] is for advanced usages where specifying one action and the priority isn't enough.
+ *
+ * @param emitInitialEmptyIntent if enabled, will emit an empty `Intent` after registration, which can be detected to
+ * check the current value.
+ * @param exported Only needed for cross-app usage. See [Context.RECEIVER_EXPORTED] and [Context.RECEIVER_NOT_EXPORTED].
+ */
 fun broadcastReceiverFlow(
     filter: IntentFilter,
     emitInitialEmptyIntent: Boolean = false,
