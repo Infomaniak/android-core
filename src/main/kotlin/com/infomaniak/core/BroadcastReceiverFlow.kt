@@ -71,16 +71,10 @@ private fun broadcastReceiverFlowUnchecked(
     }
     val ctx = appCtx
     val flag = when {
-        SDK_INT >= 33 -> when {
-            exported -> Context.RECEIVER_EXPORTED
-            else -> Context.RECEIVER_NOT_EXPORTED
-        }
+        SDK_INT >= 33 -> if (exported) Context.RECEIVER_EXPORTED else Context.RECEIVER_NOT_EXPORTED
         else -> 0
     }.let {
-        when {
-            visibleToInstantApps -> it.withFlag(Context.RECEIVER_VISIBLE_TO_INSTANT_APPS)
-            else -> it
-        }
+        if (visibleToInstantApps) it.withFlag(Context.RECEIVER_VISIBLE_TO_INSTANT_APPS) else it
     }
     ctx.registerReceiver(receiver, filter, flag)
     if (emitInitialEmptyIntent) trySend(Intent())
