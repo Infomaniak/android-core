@@ -137,6 +137,7 @@ object NotificationsRegistrationManager : AssociatedUserDataCleanable {
                 )
                 completable.complete(Unit)
             }
+            awaitCancellation() // Don't let the scope finish if there are no users.
         }
     }
 
