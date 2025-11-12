@@ -48,6 +48,11 @@ object ApiRepositoryStores {
         channelFilter: AppVersion.VersionChannel,
         okHttpClient: OkHttpClient
     ): ApiResponse<AppVersion> {
-        return ApiController.callApi(ApiRoutesStores.appVersion(appName, store, projectionFields, channelFilter), ApiMethod.GET, okHttpClient = okHttpClient)
+        return ApiController.callApi(
+            url = ApiRoutesStores.appVersion(appName, store, projectionFields, channelFilter),
+            method = ApiMethod.GET,
+            okHttpClient = okHttpClient,
+            useKotlinxSerialization = true
+        )
     }
 }

@@ -17,7 +17,22 @@
  */
 package com.infomaniak.core.appversionchecker.data.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AppPublishedVersion(var tag: String)
+data class AppPublishedVersion(
+    val tag: String? = null,
+    @SerialName("tag_updated_at")
+    val tagUpdatedAt: String? = null,
+    @SerialName("version_changelog")
+    val versionChangelog: String? = null,
+    val type: String? = null,
+    @SerialName("build_version")
+    val buildVersion: String? = null,
+    @SerialName("build_min_os_version")
+    val buildMinOsVersion: String? = null,
+    @SerialName("download_link")
+    val downloadLink: String? = null,
+    val data: List<String>? = null
+)
