@@ -26,4 +26,5 @@ android {
 
 dependencies {
     implementation project(':Core:Legacy')
+    implementation project(':Core:Auth')
 }
