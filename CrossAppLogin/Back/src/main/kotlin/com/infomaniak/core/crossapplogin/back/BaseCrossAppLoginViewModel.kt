@@ -39,6 +39,8 @@ import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.IScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
@@ -103,43 +105,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         coroutineScope = viewModelScope,
         createElement = { account ->
             async {
-                val checkingTokenDeferred = account.tokens.map { token ->
-                    // For each token of the account on the other apps, we check if getting the profile works.
-                    // If it's the case, the token should be able to be derivated later successfully.
-                    val customTokenHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
-                    async {
-                        runCatching {
-                            if (apiRepository.getUserProfile(customTokenHttpClient).data is User) {
-                                Ongoing
-                            } else {
-                                Error.Unknown
-                            }
-                        }.getOrElse { exception ->
-                            when (exception) {
-                                is NetworkException -> Error.Network
-                                else -> Error.Unknown
-                            }
-                        }
-                    }
-                }
-
-                completableScope { completable ->
-                    var accountCheckingError: Error = Error.Network // Default error case
-
-                    // Launch all token check concurrently, and stop as soon as one of them returned a valid data
-                    checkingTokenDeferred.forEach { checkToken ->
-                        launch {
-                            when (val result = checkToken.await()) {
-                                is Ongoing -> completable.complete(result)
-                                // If at least one error is not network, we change the error to avoid displaying network error
-                                Error.Unknown -> accountCheckingError = Error.Unknown
-                                else -> Unit
-                            }
-                        }
-                    }
-
-                    accountCheckingError // Will make it only if there is no match after all child coroutines complete.
-                }
+                val checkingTokensDeferredList = account.tokens.map { token -> getTokenCheckAsync(token) }
+                getFirstValidTokenOrError(checkingTokensDeferredList)
             }
         },
     )
@@ -231,6 +198,50 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             is Error -> status
             WaitingForAccount, Complete -> null // Cannot happened, the checkStatuses don't return these values
         }
+    }
+
+    private fun CoroutineScope.getTokenCheckAsync(token: String): Deferred<AccountCheckingStatus> {
+        // For each token of the account on the other apps, we check if getting the profile works.
+        // If it's the case, the token should be able to be derivated later successfully.
+        val customTokenHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
+        return async {
+            runCatching {
+                if (apiRepository.getUserProfile(customTokenHttpClient).data is User) {
+                    Ongoing
+                } else {
+                    Error.Unknown
+                }
+            }.getOrElse { exception ->
+                when (exception) {
+                    is NetworkException -> Error.Network
+                    else -> Error.Unknown
+                }
+            }
+        }
+    }
+
+    /**
+     * Use a [completableScope] to check all token concurrently, and stop as soon as one of them returned a valid data
+     *
+     * @return The [AccountCheckingStatus] of the check: [Ongoing] if it succeeded, [Error] otherwise
+     */
+    private suspend fun getFirstValidTokenOrError(
+        checkingTokensDeferredList: List<Deferred<AccountCheckingStatus>>
+    ): AccountCheckingStatus = completableScope { completable ->
+        var accountCheckingError: Error = Error.Network // Default error case
+
+        checkingTokensDeferredList.forEach { checkToken ->
+            launch {
+                when (val result = checkToken.await()) {
+                    is Ongoing -> completable.complete(result)
+                    // If at least one error is not network, we change the error to avoid displaying network error
+                    Error.Unknown -> accountCheckingError = Error.Unknown
+                    else -> Unit
+                }
+            }
+        }
+
+        accountCheckingError // Will make it only if there is no match after all child coroutines complete.
     }
 
     /**
