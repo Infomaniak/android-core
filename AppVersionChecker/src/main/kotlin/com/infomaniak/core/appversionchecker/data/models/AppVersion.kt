@@ -17,17 +17,24 @@
  */
 package com.infomaniak.core.appversionchecker.data.models
 
-import io.sentry.Sentry
-import io.sentry.SentryLevel
+import com.infomaniak.core.sentry.SentryLog
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppVersion(
+    val id: Int? = null,
+    val name: String? = null,
+    val platform: String? = null,
+    val store: String? = null,
+    @SerialName("api_id")
+    val apiId: String? = null,
     @SerialName("min_version")
-    var minimalAcceptedVersion: String,
+    val minimalAcceptedVersion: String? = null,
+    @SerialName("next_version_rate")
+    val nextVersionRate: String? = null,
     @SerialName("published_versions")
-    var publishedVersions: List<AppPublishedVersion>,
+    val publishedVersions: List<AppPublishedVersion>,
 ) {
 
     enum class Store(val apiValue: String) {
@@ -51,6 +58,10 @@ data class AppVersion(
     }
 
     fun mustRequireUpdate(currentVersion: String): Boolean = runCatching {
+        if (minimalAcceptedVersion == null) {
+            SentryLog.d(TAG, "min_version field is empty. Don't forget to use AppVersion.ProjectionFields.MinVersion")
+            return false
+        }
 
         val currentVersionNumbers = currentVersion.toVersionNumbers()
         val minimalAcceptedVersionNumbers = minimalAcceptedVersion.toVersionNumbers()
@@ -58,8 +69,7 @@ data class AppVersion(
         return isMinimalVersionValid(minimalAcceptedVersionNumbers) &&
                 currentVersionNumbers.compareVersionTo(minimalAcceptedVersionNumbers) < 0
     }.getOrElse { exception ->
-        Sentry.captureException(exception) { scope ->
-            scope.level = SentryLevel.ERROR
+        SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking", exception) { scope ->
             scope.setExtra("Version from API", minimalAcceptedVersion)
             scope.setExtra("Current Version", currentVersion)
         }
@@ -75,6 +85,8 @@ data class AppVersion(
     }
 
     companion object {
+        const val TAG = "AppVersion"
+
         fun String.toVersionNumbers() = split(".").map(String::toInt)
 
         /**
