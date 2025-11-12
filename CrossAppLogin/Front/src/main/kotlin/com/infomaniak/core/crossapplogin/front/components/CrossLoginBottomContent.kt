@@ -86,6 +86,7 @@ import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginListAc
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
 import com.infomaniak.core.onboarding.components.OnboardingComponents
 import kotlinx.coroutines.launch
+import com.infomaniak.core.R as RCore
 
 private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
 private val FAB_SIZE = 64.dp
@@ -294,7 +295,7 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
         Box(contentAlignment = Alignment.Center) {
             Icon(
                 imageVector = ArrowRight,
-                contentDescription = stringResource(R.string.buttonNext),
+                contentDescription = stringResource(RCore.string.buttonNext),
             )
         }
     }
