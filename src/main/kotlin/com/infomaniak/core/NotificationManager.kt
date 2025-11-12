@@ -96,6 +96,15 @@ fun NotificationManager.isChannelEnabledFlow(channelId: String): Flow<Boolean?> 
     }
 }.conflate().flowOn(Dispatchers.IO).distinctUntilChanged()
 
+/**
+ * Emits a map containing a `Boolean?` for each passed id passed in [channelIds].
+ *
+ * This Boolean is is true if the channel is enabled, all while its group (if any), and the app notifications are enabled too.
+ * If the channel is not found (i.e. not created, or deleted by the app), the value will be `null`.
+ *
+ * @see isChannelEnabledFlow
+ * @see isChannelEnabled
+ */
 @RequiresApi(28)
 fun NotificationManager.areChannelsEnabledFlow(
     channelIds: List<String>
