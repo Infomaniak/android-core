@@ -106,7 +106,7 @@ fun NotificationManager.isChannelEnabled(
     if (channel.importance == NotificationManager.IMPORTANCE_NONE) return false
     if (checkApp && compatNotificationManager.areNotificationsEnabled().not()) return false
     if (checkGroup) channel.group?.let { groupId ->
-        if (getNotificationChannelGroup(groupId)?.isBlocked ?: true) return false
+        if (compatNotificationManager.getNotificationChannelGroupCompat(groupId)?.isBlocked ?: true) return false
     }
     return true
 }
