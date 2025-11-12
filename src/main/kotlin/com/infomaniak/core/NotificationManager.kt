@@ -15,14 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.infomaniak.core
 
 import android.app.NotificationManager
+import android.content.IntentFilter
 import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.combine
@@ -42,6 +46,9 @@ private val compatNotificationManager by lazy { NotificationManagerCompat.from(a
  * Why such a weird wording? Well, as of API 36, Android kills the app process when
  * notifications are disabled (just like for any permission), so the flow can't actually emit
  * false if the initial value was true.
+ *
+ * @see isChannelEnabledFlow
+ * @see areChannelsEnabledFlow
  */
 @Suppress("UnusedReceiverParameter") // Receiver for discoverability
 @RequiresApi(28)
@@ -67,6 +74,9 @@ fun NotificationManager.areNotificationsEnabledFlow(): Flow<Boolean> = broadcast
  * In short, this function expects the channel to have been already created, and to not be deleted either.
  *
  * Both of these things are in control of the code in the app.
+ *
+ * @see areChannelsEnabledFlow
+ * @see isChannelEnabled
  */
 fun NotificationManager.isChannelEnabledFlow(channelId: String): Flow<Boolean?> = channelFlow {
     if (SDK_INT >= 28) {
@@ -93,9 +103,40 @@ fun NotificationManager.isChannelEnabledFlow(channelId: String): Flow<Boolean?> 
 }.conflate().flowOn(Dispatchers.IO).distinctUntilChanged()
 
 /**
+ * Emits a map containing a `Boolean?` for each passed id passed in [channelIds].
+ *
+ * This Boolean is true if the channel is enabled, all while its group (if any), and the app notifications are enabled too.
+ * If the channel is not found (i.e. not created, or deleted by the app), the value will be `null`.
+ *
+ * @see isChannelEnabledFlow
+ * @see isChannelEnabled
+ */
+@RequiresApi(28)
+fun NotificationManager.areChannelsEnabledFlow(
+    channelIds: List<String>
+): Flow<Map<String, Boolean?>> = broadcastReceiverFlow(
+    filter = IntentFilter().also {
+        it.addAction(NotificationManager.ACTION_APP_BLOCK_STATE_CHANGED)
+        it.addAction(NotificationManager.ACTION_NOTIFICATION_CHANNEL_GROUP_BLOCK_STATE_CHANGED)
+        it.addAction(NotificationManager.ACTION_NOTIFICATION_CHANNEL_BLOCK_STATE_CHANGED)
+    },
+    emitInitialEmptyIntent = true
+).conflate().map { _ ->
+    // We expect the channels enabled state to not move frequently,
+    // so instead of keeping our cache, and looking into the Intent data to update it,
+    // we query the current state each time.
+    // That keeps the code simple, and it's only slightly less efficient
+    // when the user changes notification settings for the host app.
+    channelIds.associateWith { isChannelEnabled(it) }
+}.flowOn(Dispatchers.IO).conflate().distinctUntilChanged()
+
+/**
  * Checks if the given channel is currently enabled.
  * Also checks its group is enabled (unless [checkGroup] is set to false), and if the specified group is not found,
  * considers it deleted, and considers this child channel to be disabled.
+ *
+ * @see isChannelEnabledFlow
+ * @see areChannelsEnabledFlow
  */
 fun NotificationManager.isChannelEnabled(
     channelId: String,
