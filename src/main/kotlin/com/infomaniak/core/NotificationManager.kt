@@ -46,6 +46,9 @@ private val compatNotificationManager by lazy { NotificationManagerCompat.from(a
  * Why such a weird wording? Well, as of API 36, Android kills the app process when
  * notifications are disabled (just like for any permission), so the flow can't actually emit
  * false if the initial value was true.
+ *
+ * @see isChannelEnabledFlow
+ * @see areChannelsEnabledFlow
  */
 @Suppress("UnusedReceiverParameter") // Receiver for discoverability
 @RequiresApi(28)
@@ -71,6 +74,9 @@ fun NotificationManager.areNotificationsEnabledFlow(): Flow<Boolean> = broadcast
  * In short, this function expects the channel to have been already created, and to not be deleted either.
  *
  * Both of these things are in control of the code in the app.
+ *
+ * @see areChannelsEnabledFlow
+ * @see isChannelEnabled
  */
 fun NotificationManager.isChannelEnabledFlow(channelId: String): Flow<Boolean?> = channelFlow {
     if (SDK_INT >= 28) {
@@ -99,7 +105,7 @@ fun NotificationManager.isChannelEnabledFlow(channelId: String): Flow<Boolean?> 
 /**
  * Emits a map containing a `Boolean?` for each passed id passed in [channelIds].
  *
- * This Boolean is is true if the channel is enabled, all while its group (if any), and the app notifications are enabled too.
+ * This Boolean is true if the channel is enabled, all while its group (if any), and the app notifications are enabled too.
  * If the channel is not found (i.e. not created, or deleted by the app), the value will be `null`.
  *
  * @see isChannelEnabledFlow
@@ -128,6 +134,9 @@ fun NotificationManager.areChannelsEnabledFlow(
  * Checks if the given channel is currently enabled.
  * Also checks its group is enabled (unless [checkGroup] is set to false), and if the specified group is not found,
  * considers it deleted, and considers this child channel to be disabled.
+ *
+ * @see isChannelEnabledFlow
+ * @see areChannelsEnabledFlow
  */
 fun NotificationManager.isChannelEnabled(
     channelId: String,
