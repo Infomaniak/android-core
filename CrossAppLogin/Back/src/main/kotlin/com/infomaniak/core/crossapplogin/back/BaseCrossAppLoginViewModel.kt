@@ -187,10 +187,12 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
             emit(AccountsCheckingState(status = Ongoing))
 
-            val checkedAccounts = mutableListOf<ExternalAccount>()
+            // Initial error value. Meant to be replaced as soon as another error happened, it means we had network at some point
+            // so we don't want to display something like "no network" to the user
             var checkError: Error = Error.Network
+            val checkedAccounts = mutableListOf<ExternalAccount>()
 
-            accounts.forEach { account -> checkAccount(account, checkedAccounts)?.let { checkError = it } }
+            accounts.forEach { account -> checkAccount(account, checkedAccounts)?.let { error -> checkError = error } }
 
             emit(
                 AccountsCheckingState(
@@ -202,27 +204,33 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     }
 
     /**
-     * Check if an account can be derivated
+     * Check if an account can be derivated, and cache the result in [accountCheckStatuses]
+     *
      * Emit an [AccountsCheckingState] with status [AccountCheckingStatus.Ongoing] and the current checked account to allow
      * displaying each account as soon as they're checked.
      *
-     * @return an [AccountCheckingStatus.Error.Unknown] if the check fail for another reason than network, or null in other cases
+     * @param account The account that will be checked
+     * @param checkedAccounts The mutable list of account that are checked and must be displayed to the user
+     *
+     * @return an [AccountCheckingStatus.Error] if the check fail or null in other cases
      */
     private suspend fun FlowCollector<AccountsCheckingState>.checkAccount(
         account: ExternalAccount,
         checkedAccounts: MutableList<ExternalAccount>,
-    ): Error.Unknown? = accountCheckStatuses.useElement(account) { statusAsync ->
+    ): Error? = accountCheckStatuses.useElement(account) { statusAsync ->
         val status = statusAsync.await()
-        when (status) {
-            Ongoing -> if (checkedAccounts.contains(account).not()) {
-                checkedAccounts.add(account)
-                emit(AccountsCheckingState(status = Ongoing, checkedAccounts = { checkedAccounts }))
+        return when (status) {
+            Ongoing -> {
+                if (checkedAccounts.contains(account).not()) {
+                    checkedAccounts.add(account)
+                    emit(AccountsCheckingState(status = Ongoing, checkedAccounts = { checkedAccounts }))
+                }
+                null
             }
-            is Error -> if (status is Error.Unknown) return Error.Unknown
-            WaitingForAccount, Complete -> Unit // Cannot happened, the checkStatuses don't return these values
+            Error.Network -> null // We don't want to replace the possible real errors
+            is Error -> status
+            WaitingForAccount, Complete -> null // Cannot happened, the checkStatuses don't return these values
         }
-
-        return@useElement null
     }
 
     /**
