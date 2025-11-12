@@ -70,8 +70,8 @@ fun broadcastReceiverFlow(
  */
 fun broadcastReceiverFlow(
     filter: IntentFilter,
-    emitInitialEmptyIntent: Boolean,
-    exported: Boolean,
+    emitInitialEmptyIntent: Boolean = false,
+    exported: Boolean = SDK_INT < 33,
 ): Flow<Intent> = callbackFlow {
     val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
