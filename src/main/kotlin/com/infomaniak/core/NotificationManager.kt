@@ -15,14 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.infomaniak.core
 
 import android.app.NotificationManager
+import android.content.IntentFilter
 import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.combine
@@ -91,6 +95,25 @@ fun NotificationManager.isChannelEnabledFlow(channelId: String): Flow<Boolean?> 
         }
     }
 }.conflate().flowOn(Dispatchers.IO).distinctUntilChanged()
+
+@RequiresApi(28)
+fun NotificationManager.areChannelsEnabledFlow(
+    channelIds: List<String>
+): Flow<Map<String, Boolean?>> = broadcastReceiverFlow(
+    filter = IntentFilter().also {
+        it.addAction(NotificationManager.ACTION_APP_BLOCK_STATE_CHANGED)
+        it.addAction(NotificationManager.ACTION_NOTIFICATION_CHANNEL_GROUP_BLOCK_STATE_CHANGED)
+        it.addAction(NotificationManager.ACTION_NOTIFICATION_CHANNEL_BLOCK_STATE_CHANGED)
+    },
+    emitInitialEmptyIntent = true
+).conflate().map { _ ->
+    // We expect the channels enabled state to not move frequently,
+    // so instead of keeping our cache, and looking into the Intent data to update it,
+    // we query the current state each time.
+    // That keeps the code simple, and it's only slightly less efficient
+    // when the user changes notification settings for the host app.
+    channelIds.associateWith { isChannelEnabled(it) }
+}.flowOn(Dispatchers.IO).conflate().distinctUntilChanged()
 
 /**
  * Checks if the given channel is currently enabled.
