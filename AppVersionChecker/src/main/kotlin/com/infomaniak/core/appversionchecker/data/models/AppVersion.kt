@@ -34,7 +34,7 @@ data class AppVersion(
     @SerialName("next_version_rate")
     val nextVersionRate: String? = null,
     @SerialName("published_versions")
-    val publishedVersions: List<AppPublishedVersion>,
+    val publishedVersions: List<AppPublishedVersion>? = null,
 ) {
 
     enum class Store(val apiValue: String) {
@@ -48,7 +48,10 @@ data class AppVersion(
 
     enum class ProjectionFields(val value: String) {
         MinVersion("min_version"),
-        PublishedVersionsTag("published_versions.tag")
+        PublishedVersionsTag("published_versions.tag"),
+        PublishedVersionType("published_versions.type"),
+        PublishedVersionBuildVersion("published_versions.build_version"),
+        PublishedVersionMinOs("published_versions.build_min_os_version")
     }
 
     enum class VersionChannel(val value: String) {
@@ -78,7 +81,7 @@ data class AppVersion(
     }
 
     fun isMinimalVersionValid(minimalVersionNumbers: List<Int>): Boolean {
-        val productionVersion = publishedVersions.singleOrNull()?.tag ?: return false
+        val productionVersion = publishedVersions?.singleOrNull()?.tag ?: return false
         val productionVersionNumbers = productionVersion.toVersionNumbers()
 
         return minimalVersionNumbers.compareVersionTo(productionVersionNumbers) <= 0
