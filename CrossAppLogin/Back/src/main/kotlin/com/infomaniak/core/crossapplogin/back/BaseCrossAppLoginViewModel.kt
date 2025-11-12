@@ -43,6 +43,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -74,39 +76,13 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
 
-    val accountsCheckingState: StateFlow<AccountsCheckingState> = _availableAccounts.transform { accounts ->
-        if (accounts.isEmpty()) return@transform
-
-        emit(AccountsCheckingState(status = Ongoing))
-
-        var checkedAccounts = mutableListOf<ExternalAccount>()
-        var checkError: Error = Error.Network
-
-        accounts.forEach { account ->
-            accountCheckStatuses.useElement(account) { statusAsync ->
-                val status = statusAsync.await()
-                when (status) {
-                    Ongoing -> if (checkedAccounts.contains(account).not()) {
-                        checkedAccounts.add(account)
-                        emit(AccountsCheckingState(status = Ongoing, checkedAccounts = { checkedAccounts }))
-                    }
-                    is Error -> if (status is Error.Unknown) checkError = Error.Unknown
-                    WaitingForAccount, Complete -> Unit // Cannot happened, the checkStatuses don't return these values
-                }
-            }
-        }
-
-        emit(
-            AccountsCheckingState(
-                checkedAccounts = { checkedAccounts },
-                status = if (checkedAccounts.isNotEmpty()) Complete else checkError,
-            )
+    val accountsCheckingState: StateFlow<AccountsCheckingState> = _availableAccounts
+        .transformToAccountsCheckingState()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = AccountsCheckingState(status = WaitingForAccount)
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Lazily,
-        initialValue = AccountsCheckingState(status = WaitingForAccount)
-    )
 
     // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
     val selectedAccounts: StateFlow<List<ExternalAccount>> =
@@ -203,6 +179,50 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         }
 
         return LoginResult(tokens, errorMessageIds)
+    }
+
+    private fun StateFlow<List<ExternalAccount>>.transformToAccountsCheckingState(): Flow<AccountsCheckingState> {
+        return transform { accounts ->
+            if (accounts.isEmpty()) return@transform
+
+            emit(AccountsCheckingState(status = Ongoing))
+
+            val checkedAccounts = mutableListOf<ExternalAccount>()
+            var checkError: Error = Error.Network
+
+            accounts.forEach { account -> checkAccount(account, checkedAccounts)?.let { checkError = it } }
+
+            emit(
+                AccountsCheckingState(
+                    checkedAccounts = { checkedAccounts },
+                    status = if (checkedAccounts.isNotEmpty()) Complete else checkError,
+                )
+            )
+        }
+    }
+
+    /**
+     * Check if an account can be derivated
+     * Emit an [AccountsCheckingState] with status [AccountCheckingStatus.Ongoing] and the current checked account to allow
+     * displaying each account as soon as they're checked.
+     *
+     * @return an [AccountCheckingStatus.Error.Unknown] if the check fail for another reason than network, or null in other cases
+     */
+    private suspend fun FlowCollector<AccountsCheckingState>.checkAccount(
+        account: ExternalAccount,
+        checkedAccounts: MutableList<ExternalAccount>,
+    ): Error.Unknown? = accountCheckStatuses.useElement(account) { statusAsync ->
+        val status = statusAsync.await()
+        when (status) {
+            Ongoing -> if (checkedAccounts.contains(account).not()) {
+                checkedAccounts.add(account)
+                emit(AccountsCheckingState(status = Ongoing, checkedAccounts = { checkedAccounts }))
+            }
+            is Error -> if (status is Error.Unknown) return Error.Unknown
+            WaitingForAccount, Complete -> Unit // Cannot happened, the checkStatuses don't return these values
+        }
+
+        return@useElement null
     }
 
     /**
