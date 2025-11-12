@@ -24,10 +24,10 @@ import androidx.annotation.StyleRes
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryStores
+import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.legacy.networking.HttpClient
 import com.infomaniak.core.legacy.stores.updaterequired.UpdateRequiredActivity
-import com.infomaniak.core.legacy.stores.updaterequired.data.api.ApiRepositoryStores
-import com.infomaniak.core.legacy.stores.updaterequired.data.models.AppVersion
 import kotlinx.coroutines.launch
 
 internal interface StoresUtils {
@@ -42,7 +42,18 @@ internal interface StoresUtils {
         versionCode: Int,
         @StyleRes themeRes: Int,
     ) = lifecycleScope.launch {
-        val apiResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClientNoTokenInterceptor)
+        val projectionFields = listOf(
+            AppVersion.ProjectionFields.MinVersion,
+            AppVersion.ProjectionFields.PublishedVersionsTag,
+        )
+
+        val apiResponse = ApiRepositoryStores.getAppVersion(
+            appName = appId,
+            store = REQUIRED_UPDATE_STORE,
+            projectionFields = projectionFields,
+            channelFilter = AppVersion.VersionChannel.Production,
+            okHttpClient = HttpClient.okHttpClient
+        )
 
         if (apiResponse.data?.mustRequireUpdate(appVersion) == true) {
             UpdateRequiredActivity.startUpdateRequiredActivity(this@checkUpdateIsRequired, appId, versionCode, themeRes)
