@@ -27,7 +27,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
-import splitties.bitflags.withFlag
 import splitties.init.appCtx
 
 /**
@@ -56,12 +55,10 @@ fun broadcastReceiverFlow(
     priority: Int = 999, // This is the max for non system apps.
     emitInitialEmptyIntent: Boolean = false,
     exported: Boolean = SDK_INT < 33,
-    visibleToInstantApps: Boolean = false
 ): Flow<Intent> = broadcastReceiverFlow(
     filter = IntentFilter(action).also { it.priority = priority },
     emitInitialEmptyIntent = emitInitialEmptyIntent,
     exported = exported,
-    visibleToInstantApps = visibleToInstantApps
 )
 
 /**
@@ -73,24 +70,8 @@ fun broadcastReceiverFlow(
  */
 fun broadcastReceiverFlow(
     filter: IntentFilter,
-    emitInitialEmptyIntent: Boolean = false,
-    exported: Boolean = SDK_INT < 33,
-    visibleToInstantApps: Boolean = false
-): Flow<Intent> {
-    if (visibleToInstantApps) require(exported)
-    return broadcastReceiverFlowUnchecked(
-        filter = filter,
-        emitInitialEmptyIntent = emitInitialEmptyIntent,
-        exported = exported,
-        visibleToInstantApps = visibleToInstantApps
-    )
-}
-
-private fun broadcastReceiverFlowUnchecked(
-    filter: IntentFilter,
     emitInitialEmptyIntent: Boolean,
     exported: Boolean,
-    visibleToInstantApps: Boolean
 ): Flow<Intent> = callbackFlow {
     val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -101,8 +82,6 @@ private fun broadcastReceiverFlowUnchecked(
     val flag = when {
         SDK_INT >= 33 -> if (exported) Context.RECEIVER_EXPORTED else Context.RECEIVER_NOT_EXPORTED
         else -> 0
-    }.let {
-        if (visibleToInstantApps) it.withFlag(Context.RECEIVER_VISIBLE_TO_INSTANT_APPS) else it
     }
     ctx.registerReceiver(receiver, filter, flag)
     if (emitInitialEmptyIntent) trySend(Intent())
