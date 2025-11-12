@@ -19,7 +19,6 @@ package com.infomaniak.core.appversionchecker.data.api
 
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.network.INFOMANIAK_API_V1
-import io.sentry.cache.PersistingScopeObserver.store
 
 object ApiRoutesStores {
     fun appVersion(appName: String, store: AppVersion.Store): String {

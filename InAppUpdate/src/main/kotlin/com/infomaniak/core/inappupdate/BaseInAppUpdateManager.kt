@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) : DefaultLifecycleObserver {
 
