@@ -29,16 +29,19 @@ object AuthConfiguration {
     lateinit var appVersionName: String
     lateinit var clientId: String
     var accessType: AccessType? = AccessType.OFFLINE
+        private set
 
     fun init(
         appId: String,
         appVersionCode: Int,
         appVersionName: String,
         clientId: String,
+        accessType: AccessType? = this.accessType,
     ) {
         this.appId = appId
         this.appVersionCode = appVersionCode
         this.appVersionName = appVersionName
         this.clientId = clientId
+        this.accessType = accessType
     }
 }

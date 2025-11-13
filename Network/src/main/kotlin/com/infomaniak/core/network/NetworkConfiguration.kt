@@ -29,16 +29,19 @@ object NetworkConfiguration {
     lateinit var appVersionName: String
     var customHeaders: MutableMap<String, String>? = null
     var apiErrorCodes: List<ErrorCodeTranslated>? = null
+        private set
 
     fun init(
         appId: String,
         appVersionCode: Int,
         appVersionName: String,
         apiEnvironment: ApiEnvironment = ApiEnvironment.Prod,
+        apiErrorCodes: List<ErrorCodeTranslated>? = this.apiErrorCodes,
     ) {
         this.appId = appId
         this.appVersionCode = appVersionCode
         this.appVersionName = appVersionName
         ApiEnvironment.current = apiEnvironment
+        this.apiErrorCodes = apiErrorCodes
     }
 }
