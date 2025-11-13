@@ -43,6 +43,7 @@ import io.sentry.IScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
@@ -54,7 +55,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -148,25 +149,28 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         return LoginResult(tokens, errorMessageIds)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun StateFlow<List<ExternalAccount>>.transformToAccountsCheckingState(): Flow<AccountsCheckingState> {
-        return transform { accounts ->
-            if (accounts.isEmpty()) return@transform
-
+        return transformLatest { accounts ->
+            if (accounts.isEmpty()) return@transformLatest
             emit(AccountsCheckingState(status = Ongoing))
 
             // Initial error value. Meant to be replaced as soon as another error happened, it means we had network at some point
             // so we don't want to display something like "no network" to the user
             var checkError: Error = Error.Network
+
             val checkedAccounts = accounts.fold(initial = emptyList<ExternalAccount>()) { checkedAccounts, currentAccount ->
-                checkAccount(currentAccount, checkedAccounts)?.let { isValidAccount ->
-                    if (isValidAccount) {
-                        emit(AccountsCheckingState(status = Ongoing, checkedAccounts = checkedAccounts.toList()))
-                        checkedAccounts + currentAccount
-                    } else {
-                        checkError = Error.Unknown
+                when (val checkResult = checkAccount(currentAccount, checkedAccounts)) {
+                    is Xor.First -> {
+                        emit(AccountsCheckingState(checkedAccounts = checkResult.value, status = Ongoing))
+                        checkResult.value
+                    }
+                    is Xor.Second -> {
+                        checkError = checkResult.value
                         checkedAccounts
                     }
-                } ?: checkedAccounts
+                    null -> checkedAccounts
+                }
             }
 
             emit(
@@ -181,20 +185,24 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     /**
      * Check if an account can be derivated, and cache the result in [accountCheckStatuses]
      *
-     * @param account The account that will be checked
+     * @param currentAccount The account that will be checked
      * @param checkedAccounts The mutable list of account that are checked and must be displayed to the user
      *
-     * @return an [AccountCheckingStatus.Error] if the check fail or null in other cases
+     * @return a new updated list of [checkedAccounts] with [currentAccount] if the check succeeds,
+     *         an [AccountCheckingStatus.Error] if the check fails,
+     *         or null in other cases
      */
     private suspend fun checkAccount(
-        account: ExternalAccount,
+        currentAccount: ExternalAccount,
         checkedAccounts: List<ExternalAccount>,
-    ): Boolean? = accountCheckStatuses.useElement(account) { statusAsync ->
+    ): Xor<List<ExternalAccount>, Error>? = accountCheckStatuses.useElement(currentAccount) { statusAsync ->
         when (statusAsync.await()) {
-            Ongoing -> if (checkedAccounts.contains(account).not()) true else null
-            Error.Network -> null // We don't want to replace the possible real errors
-            is Error -> false
+            Ongoing -> {
+                if (checkedAccounts.contains(currentAccount).not()) Xor.First(checkedAccounts + currentAccount) else null
+            }
             WaitingForAccount, Complete -> null // Cannot happened, the checkStatuses don't return these values
+            Error.Network -> null // We don't want to replace the possible real errors
+            is Error -> Xor.Second(Error.Unknown)
         }
     }
 
