@@ -52,7 +52,7 @@ internal interface StoresUtils {
             store = REQUIRED_UPDATE_STORE,
             projectionFields = projectionFields,
             channelFilter = AppVersion.VersionChannel.Production,
-            okHttpClient = HttpClient.okHttpClient
+            okHttpClient = HttpClient.okHttpClientNoTokenInterceptor
         )
 
         if (apiResponse.data?.mustRequireUpdate(appVersion) == true) {
