@@ -47,6 +47,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
 
     private val accounts = mutableStateListOf<ExternalAccount>()
     private val skippedIds = mutableStateSetOf<Long>()
+    private var isLoading = false
 
     private var onClickListener: OnClickListener? = null
 
@@ -93,6 +94,7 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
                 accounts = { accounts },
                 skippedIds = { skippedIds },
                 customization = customization,
+                isLoading = { isLoading },
                 onClick = { onClickListener?.onClick(this) },
             )
         }
@@ -118,6 +120,10 @@ class CrossLoginSelectAccountsView @JvmOverloads constructor(
             clear()
             addAll(items)
         }
+    }
+
+    fun setLoader(isLoading: Boolean) {
+        this.isLoading = isLoading
     }
 
     override fun setOnClickListener(l: OnClickListener?) {

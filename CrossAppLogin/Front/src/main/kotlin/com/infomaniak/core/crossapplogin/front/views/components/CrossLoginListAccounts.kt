@@ -17,12 +17,16 @@
  */
 package com.infomaniak.core.crossapplogin.front.views.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
@@ -53,6 +58,7 @@ import com.infomaniak.core.R as RCore
 fun CrossLoginListAccounts(
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
+    isLoading: () -> Boolean,
     onAccountClicked: (Long) -> Unit,
     onAnotherAccountClicked: () -> Unit,
     onSaveClicked: () -> Unit,
@@ -66,13 +72,21 @@ fun CrossLoginListAccounts(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        Text(
+        Row(
             modifier = Modifier.padding(horizontal = Margin.Medium),
-            text = stringResource(R.string.selectAccountPanelTitle),
-            textAlign = TextAlign.Center,
-            style = Typography.bodyMedium,
-            color = customization.colors.titleColor,
-        )
+            horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(R.string.selectAccountPanelTitle),
+                textAlign = TextAlign.Center,
+                style = Typography.bodyMedium,
+                color = customization.colors.titleColor,
+            )
+            if (isLoading()) {
+                CircularProgressIndicator(Modifier.size(Dimens.smallIconSize), strokeWidth = smallProgressStrokeWidth)
+            }
+        }
 
         Spacer(Modifier.height(Margin.Medium))
 
@@ -127,6 +141,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         CrossLoginListAccounts(
             accounts = { accounts },
             skippedIds = { skippedIds },
+            isLoading = { true },
             onAccountClicked = {},
             onAnotherAccountClicked = {},
             onSaveClicked = {},

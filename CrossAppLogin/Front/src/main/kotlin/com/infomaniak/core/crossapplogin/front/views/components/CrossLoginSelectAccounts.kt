@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.components.MultipleAccounts
 import com.infomaniak.core.crossapplogin.front.components.SelectedAccountsButton
@@ -34,11 +35,14 @@ import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 
+val smallProgressStrokeWidth = 2.dp
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CrossLoginSelectAccounts(
     accounts: () -> List<ExternalAccount>,
     skippedIds: () -> Set<Long>,
+    isLoading: () -> Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
@@ -53,8 +57,8 @@ fun CrossLoginSelectAccounts(
         modifier = modifier,
     ) {
         when {
-            count == 1 -> SingleAccount(selectedAccounts.single(), customization, Modifier.weight(1.0f))
-            count > 1 -> MultipleAccounts(selectedAccounts, customization, Modifier.weight(1.0f))
+            count == 1 -> SingleAccount(selectedAccounts.single(), customization, Modifier.weight(1.0f), isLoading)
+            count > 1 -> MultipleAccounts(selectedAccounts, customization, Modifier.weight(1.0f), isLoading)
         }
     }
 }
@@ -69,6 +73,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         CrossLoginSelectAccounts(
             accounts = { accounts },
             skippedIds = { skippedIds },
+            isLoading = { true },
             onClick = {},
         )
     }

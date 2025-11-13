@@ -128,7 +128,7 @@ internal class CrossAppLoginImpl(
     @ExperimentalSerializationApi
     private suspend fun retrieveAccountsFromUncheckedService(service: Intent): List<ExternalAccount> {
         val targetPackageName = service.`package`!!
-        val bytesOrNull = context.withBoundService<ByteArray?>(
+        val bytesOrNull = context.withBoundService(
             service = service,
             timeoutConnection = ipcIssuesManager.timeoutConnection(targetPackageName, isUserWaiting = true),
             onDisconnected = { OnServiceDisconnectionBehavior.UnbindImmediately(null) },

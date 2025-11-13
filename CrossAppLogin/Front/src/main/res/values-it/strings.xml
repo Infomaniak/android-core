@@ -23,7 +23,9 @@
     <string name="buttonCreateAccount">Crea un account</string>
     <string name="buttonLogin">Accesso</string>
     <string name="buttonUseOtherAccount">Utilizza un altro account</string>
+    <string name="crossAppLoginAccountsLoaderTitle">Recuperare i conti…</string>
     <string name="selectAccountPanelTitle">Seleziona uno o più account</string>
+    <string name="selectSingleAccountPanelTitle">Selezionare un account</string>
     <plurals name="selectedAccountCountLabel">
         <item quantity="one">%d conto selezionato</item>
         <item quantity="other">%d conti selezionati</item>
