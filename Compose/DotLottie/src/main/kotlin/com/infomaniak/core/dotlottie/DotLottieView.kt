@@ -41,12 +41,12 @@ class DotLottieView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    var animationRes by mutableStateOf<Int?>(null)
     var theme by mutableStateOf<DotLottieTheme>(DotLottieTheme.Embedded(null))
 
     init {
-        val styledAttributes = context.obtainStyledAttributes(attrs, R.styleable.DotLottieView, defStyleAttr, 0)
-        val animationRes = styledAttributes.getResourceId(R.styleable.DotLottieView_animationRes, NO_ID)
-        styledAttributes.apply {
+        context.obtainStyledAttributes(attrs, R.styleable.DotLottieView, defStyleAttr, 0).apply {
+            animationRes = getResourceId(R.styleable.DotLottieView_animationRes, NO_ID)
             theme = DotLottieTheme.Embedded(getNonResourceString(R.styleable.DotLottieView_themeId))
             recycle()
         }
@@ -54,7 +54,7 @@ class DotLottieView @JvmOverloads constructor(
         val composeView = ComposeView(context).apply {
             setContent {
                 MaterialThemeFromXml {
-                    ViewContent(animationRes)
+                    animationRes?.let { ViewContent(it, theme) }
                 }
             }
         }
@@ -62,24 +62,23 @@ class DotLottieView @JvmOverloads constructor(
         addView(composeView)
     }
 
-    @Composable
-    private fun ViewContent(@RawRes animationRes: Int) {
-        val controller = remember { DotLottieController() }
+}
 
-        DotLottieAnimation(
-            source = DotLottieSource.Res(animationRes),
-            autoplay = true,
-            themeId = theme.id,
-            controller = controller,
-            eventListeners = listOf(
-                object : DotLottieEventListener {
-                    override fun onLoad() {
-                        theme.let {
-                            if (it is DotLottieTheme.Custom) controller.setThemeData(it.toData())
-                        }
-                    }
+@Composable
+private fun ViewContent(@RawRes animationRes: Int, theme: DotLottieTheme) {
+    val controller = remember { DotLottieController() }
+
+    DotLottieAnimation(
+        source = DotLottieSource.Res(animationRes),
+        autoplay = true,
+        themeId = theme.id,
+        controller = controller,
+        eventListeners = listOf(
+            object : DotLottieEventListener {
+                override fun onLoad() {
+                    if (theme is DotLottieTheme.Custom) controller.setThemeData(theme.toData())
                 }
-            ),
-        )
-    }
+            }
+        ),
+    )
 }
