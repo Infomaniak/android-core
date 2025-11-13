@@ -20,7 +20,7 @@ package com.infomaniak.core.crossapplogin.back.internal
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class CustomTokenInterceptor(private val token: String) : Interceptor {
+internal class CustomTokenInterceptor(private val token: String) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder = chain.request().newBuilder()
