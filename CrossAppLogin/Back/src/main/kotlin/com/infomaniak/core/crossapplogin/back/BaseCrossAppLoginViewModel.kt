@@ -26,6 +26,7 @@ import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.cancellable
 import com.infomaniak.core.completableScope
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountCheckingStatus.*
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
@@ -62,15 +63,6 @@ import okhttp3.OkHttpClient
 import com.infomaniak.core.R as RCore
 import com.infomaniak.core.appintegrity.R as RAppIntegrity
 import com.infomaniak.core.network.R as RCoreNetwork
-
-private val apiRepository = object : ApiRepositoryCore() {}
-
-private val baseOkHttpClient by lazy {
-    OkHttpClient.Builder().apply {
-        addCache()
-        addCommonInterceptors()
-    }
-}
 
 abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
 
@@ -110,6 +102,15 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             }
         },
     )
+
+    private val apiRepository = object : ApiRepositoryCore() {}
+
+    private val baseOkHttpClient by lazy {
+        OkHttpClient.Builder().apply {
+            addCache()
+            addCommonInterceptors()
+        }
+    }
 
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
@@ -211,7 +212,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                 } else {
                     Error.Unknown
                 }
-            }.getOrElse { exception ->
+            }.cancellable().getOrElse { exception ->
                 when (exception) {
                     is NetworkException -> Error.Network
                     else -> Error.Unknown
@@ -249,8 +250,6 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
      */
     private suspend fun keepSingleSelection(): Nothing {
         accountsCheckingState.collectLatest { state ->
-            if (state.status !is Ongoing) return@collectLatest
-
             skippedAccountIds.collectLatest { currentSkippedAccountIds ->
                 skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(
                     accounts = state.checkedAccounts(),
