@@ -31,6 +31,7 @@ import com.infomaniak.core.completableScope
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus.*
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
+import com.infomaniak.core.mapSync
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import com.infomaniak.core.network.networking.HttpClient.addCache
@@ -68,14 +69,14 @@ import com.infomaniak.core.network.R as RCoreNetwork
 
 abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
 
-    private val _availableAccounts = MutableStateFlow(emptyList<ExternalAccount>())
-    val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
+    private val _availableAccounts = MutableStateFlow<List<ExternalAccount>?>(null)
+    val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow().mapSync { it ?: emptyList() }
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
 
     val accountsCheckingState: StateFlow<AccountsCheckingState> = accountsCheckingStateFlow().stateIn(
         scope = viewModelScope,
-        started = SharingStarted.Lazily,
-        initialValue = AccountsCheckingState(status = UpToDate)
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = AccountsCheckingState(status = Checking)
     )
 
     // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
@@ -117,7 +118,9 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
         if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) awaitCancellation()
 
-        accountsCheckingState.launchIn(this) // Make the flow hot
+        accountsCheckingState.launchIn(this) // Make the flow hot.
+        // We don't use SharingStarted.Eagerly because the ViewModel can be present without
+        // needing the StateFlow to be hot (e.g. in a single Activity app)
 
         val crossAppLogin = CrossAppLogin.forContext(
             context = hostActivity,
@@ -152,11 +155,15 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     }
 
     private fun accountsCheckingStateFlow(): Flow<AccountsCheckingState> = channelFlow {
-        send(AccountsCheckingState(Checking))
-        availableAccounts.collectLatest { accounts ->
-            val stateFlow = MutableStateFlow(AccountsCheckingState(status = if (accounts.isEmpty()) UpToDate else Checking))
-            send(stateFlow.value)
+        send(AccountsCheckingState(status = Checking))
+        _availableAccounts.collectLatest { accounts ->
+            when {
+                accounts == null -> return@collectLatest send(AccountsCheckingState(status = Checking))
+                accounts.isEmpty() -> return@collectLatest send(AccountsCheckingState(status = UpToDate))
+            }
+            val stateFlow = MutableStateFlow(AccountsCheckingState(status = Checking))
             val errorIfAny = MutableStateFlow<Error?>(null)
+            send(stateFlow.value)
             coroutineScope {
                 accounts.forEach { account ->
                     launch {
