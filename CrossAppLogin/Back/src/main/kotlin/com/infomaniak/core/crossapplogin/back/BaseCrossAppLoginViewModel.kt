@@ -47,7 +47,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -158,13 +157,21 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             // Initial error value. Meant to be replaced as soon as another error happened, it means we had network at some point
             // so we don't want to display something like "no network" to the user
             var checkError: Error = Error.Network
-            val checkedAccounts = mutableListOf<ExternalAccount>()
-
-            accounts.forEach { account -> checkAccount(account, checkedAccounts)?.let { error -> checkError = error } }
+            val checkedAccounts = accounts.fold(initial = emptyList<ExternalAccount>()) { checkedAccounts, currentAccount ->
+                checkAccount(currentAccount, checkedAccounts)?.let { isValidAccount ->
+                    if (isValidAccount) {
+                        emit(AccountsCheckingState(status = Ongoing, checkedAccounts = checkedAccounts.toList()))
+                        checkedAccounts + currentAccount
+                    } else {
+                        checkError = Error.Unknown
+                        checkedAccounts
+                    }
+                } ?: checkedAccounts
+            }
 
             emit(
                 AccountsCheckingState(
-                    checkedAccounts = { checkedAccounts },
+                    checkedAccounts = checkedAccounts,
                     status = if (checkedAccounts.isNotEmpty()) Complete else checkError,
                 )
             )
@@ -174,29 +181,19 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     /**
      * Check if an account can be derivated, and cache the result in [accountCheckStatuses]
      *
-     * Emit an [AccountsCheckingState] with status [AccountCheckingStatus.Ongoing] and the current checked account to allow
-     * displaying each account as soon as they're checked.
-     *
      * @param account The account that will be checked
      * @param checkedAccounts The mutable list of account that are checked and must be displayed to the user
      *
      * @return an [AccountCheckingStatus.Error] if the check fail or null in other cases
      */
-    private suspend fun FlowCollector<AccountsCheckingState>.checkAccount(
+    private suspend fun checkAccount(
         account: ExternalAccount,
-        checkedAccounts: MutableList<ExternalAccount>,
-    ): Error? = accountCheckStatuses.useElement(account) { statusAsync ->
-        val status = statusAsync.await()
-        return when (status) {
-            Ongoing -> {
-                if (checkedAccounts.contains(account).not()) {
-                    checkedAccounts.add(account)
-                    emit(AccountsCheckingState(status = Ongoing, checkedAccounts = { checkedAccounts }))
-                }
-                null
-            }
+        checkedAccounts: List<ExternalAccount>,
+    ): Boolean? = accountCheckStatuses.useElement(account) { statusAsync ->
+        when (statusAsync.await()) {
+            Ongoing -> if (checkedAccounts.contains(account).not()) true else null
             Error.Network -> null // We don't want to replace the possible real errors
-            is Error -> status
+            is Error -> false
             WaitingForAccount, Complete -> null // Cannot happened, the checkStatuses don't return these values
         }
     }
@@ -252,7 +249,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         accountsCheckingState.collectLatest { state ->
             skippedAccountIds.collectLatest { currentSkippedAccountIds ->
                 skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(
-                    accounts = state.checkedAccounts(),
+                    accounts = state.checkedAccounts,
                     currentlySkippedAccountIds = currentSkippedAccountIds,
                 )
             }
@@ -308,7 +305,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     data class AccountsCheckingState(
         val status: AccountCheckingStatus,
-        val checkedAccounts: () -> List<ExternalAccount> = { emptyList() },
+        val checkedAccounts: List<ExternalAccount> = emptyList(),
     )
 
     sealed interface AccountCheckingStatus {

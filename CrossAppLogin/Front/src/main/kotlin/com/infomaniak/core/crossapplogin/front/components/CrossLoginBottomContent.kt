@@ -138,6 +138,12 @@ fun OnboardingComponents.CrossLoginBottomContent(
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
     val accounts by remember { derivedStateOf { accountsCheckingState().checkedAccounts } }
     val isCheckingComplete by remember { derivedStateOf { accountsCheckingState().status is AccountCheckingStatus.Complete } }
+    val shouldLoadAccount by remember {
+        derivedStateOf {
+            val state = accountsCheckingState()
+            state.checkedAccounts.isEmpty() && state.status is AccountCheckingStatus.Ongoing
+        }
+    }
 
     val scope = rememberCoroutineScope()
 
@@ -163,9 +169,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
                     if (isLastPage) {
                         LoginPage(
-                            accountsCheckingState = accountsCheckingState,
+                            accounts = accounts,
                             customization = customization,
                             skippedIds = skippedIds,
+                            isCheckingComplete = { isCheckingComplete },
+                            shouldLoadAccount = { shouldLoadAccount },
                             isLoginButtonLoading = isLoginButtonLoading,
                             isSignUpButtonLoading = isSignUpButtonLoading,
                             onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
@@ -188,7 +196,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
 
     if (showAccountsBottomSheet) {
         AccountsBottomSheetDialog(
-            accounts = accounts,
+            accounts = { accounts },
             skippedIds = skippedIds,
             isSingleSelection = isSingleSelection,
             isCheckingComplete = isCheckingComplete,
@@ -244,9 +252,11 @@ private fun AccountsBottomSheetDialog(
 
 @Composable
 private fun LoginPage(
-    accountsCheckingState: () -> AccountsCheckingState,
+    accounts: List<ExternalAccount>,
     customization: CrossLoginCustomization,
     skippedIds: () -> Set<Long>,
+    isCheckingComplete: () -> Boolean,
+    shouldLoadAccount: () -> Boolean,
     isLoginButtonLoading: () -> Boolean,
     isSignUpButtonLoading: () -> Boolean,
     onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
@@ -256,41 +266,28 @@ private fun LoginPage(
     @SuppressLint("ModifierParameter") animatedButtonModifier: Modifier,
 ) {
 
-    val accounts by remember { derivedStateOf { accountsCheckingState().checkedAccounts } }
-
-    val shouldLoadAccount by remember {
-        derivedStateOf {
-            val state = accountsCheckingState()
-            state.checkedAccounts().isEmpty() && state.status is AccountCheckingStatus.Ongoing
-        }
-    }
-
-    val isCheckingComplete by remember { derivedStateOf { accountsCheckingState().status is AccountCheckingStatus.Complete } }
-
-    if (shouldLoadAccount) {
+    if (shouldLoadAccount()) {
         CrossAppLoginAccountsLoader(customization)
     } else {
-        val shouldDisplayCrossLogin = accounts().isNotEmpty()
+        val shouldDisplayCrossLogin = accounts.isNotEmpty()
 
         if (shouldDisplayCrossLogin) {
             CrossLoginSelectAccounts(
-                accounts = accounts,
+                accounts = { accounts },
                 skippedIds = skippedIds,
                 customization = customization,
-                isLoading = { !isCheckingComplete },
+                isLoading = { !isCheckingComplete() },
                 onClick = onAccountsSelectionClicked,
             )
         }
 
         ConnectionButton(
             primaryButtonType = customization.buttonStyle,
-            accounts = accounts,
+            accounts = { accounts },
             skippedIds = skippedIds,
             isLoginButtonLoading = isLoginButtonLoading,
             onLogin = onLogin,
-            onContinueWithSelectedAccounts = {
-                onContinueWithSelectedAccounts(accounts().filterSelectedAccounts(skippedIds()))
-            },
+            onContinueWithSelectedAccounts = { onContinueWithSelectedAccounts(accounts.filterSelectedAccounts(skippedIds())) },
             modifier = animatedButtonModifier,
         )
 
@@ -447,7 +444,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
                 accountsCheckingState = {
-                    AccountsCheckingState(AccountCheckingStatus.Ongoing, checkedAccounts = { accounts })
+                    AccountsCheckingState(AccountCheckingStatus.Ongoing, checkedAccounts = accounts)
                 },
                 skippedIds = { emptySet() },
                 onLogin = {},
