@@ -28,7 +28,7 @@ import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.completableScope
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountCheckingStatus.*
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus.*
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
@@ -40,10 +40,8 @@ import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.IScope
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
@@ -52,10 +50,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -70,13 +72,11 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
 
-    val accountsCheckingState: StateFlow<AccountsCheckingState> = _availableAccounts
-        .transformToAccountsCheckingState()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = AccountsCheckingState(status = WaitingForAccount)
-        )
+    val accountsCheckingState: StateFlow<AccountsCheckingState> = accountsCheckingStateFlow().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = AccountsCheckingState(status = UpToDate)
+    )
 
     // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
     val selectedAccounts: StateFlow<List<ExternalAccount>> =
@@ -97,7 +97,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         coroutineScope = viewModelScope,
         createElement = { account ->
             async {
-                val checkingTokensDeferredList = account.tokens.map { token -> getTokenCheckAsync(token) }
+                val checkingTokensDeferredList = account.tokens.map { token -> async { checkToken(account, token) } }
                 getFirstValidTokenOrError(checkingTokensDeferredList)
             }
         },
@@ -116,6 +116,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
         // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
         if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) awaitCancellation()
+
+        accountsCheckingState.launchIn(this) // Make the flow hot
 
         val crossAppLogin = CrossAppLogin.forContext(
             context = hostActivity,
@@ -149,105 +151,77 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         return LoginResult(tokens, errorMessageIds)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun StateFlow<List<ExternalAccount>>.transformToAccountsCheckingState(): Flow<AccountsCheckingState> {
-        return transformLatest { accounts ->
-            if (accounts.isEmpty()) return@transformLatest
-            emit(AccountsCheckingState(status = Ongoing))
-
-            // Initial error value. Meant to be replaced as soon as another error happened, it means we had network at some point
-            // so we don't want to display something like "no network" to the user
-            var checkError: Error = Error.Network
-
-            val checkedAccounts = accounts.fold(initial = emptyList<ExternalAccount>()) { checkedAccounts, currentAccount ->
-                when (val checkResult = checkAccount(currentAccount, checkedAccounts)) {
-                    is Xor.First -> {
-                        emit(AccountsCheckingState(checkedAccounts = checkResult.value, status = Ongoing))
-                        checkResult.value
+    private fun accountsCheckingStateFlow(): Flow<AccountsCheckingState> = channelFlow {
+        send(AccountsCheckingState(Checking))
+        availableAccounts.collectLatest { accounts ->
+            val stateFlow = MutableStateFlow(AccountsCheckingState(status = if (accounts.isEmpty()) UpToDate else Checking))
+            send(stateFlow.value)
+            val errorIfAny = MutableStateFlow<Error?>(null)
+            coroutineScope {
+                accounts.forEach { account ->
+                    launch {
+                        when (val result = checkAccount(account)) {
+                            is AccountCheckResult.Valid -> send(stateFlow.updateAndGet { it.withAccount(result.account) })
+                            AccountCheckResult.Issue.Network -> errorIfAny.update { it ?: Error.Network }
+                            AccountCheckResult.Issue.Other -> errorIfAny.update { it }
+                        }
                     }
-                    is Xor.Second -> {
-                        checkError = checkResult.value
-                        checkedAccounts
-                    }
-                    null -> checkedAccounts
                 }
             }
+            send(stateFlow.value.copy(status = errorIfAny.value ?: UpToDate))
+        }
+    }.conflate()
 
-            emit(
-                AccountsCheckingState(
-                    checkedAccounts = checkedAccounts,
-                    status = if (checkedAccounts.isNotEmpty()) Complete else checkError,
-                )
-            )
+    private fun AccountsCheckingState.withAccount(account: ExternalAccount) = copy(checkedAccounts = checkedAccounts + account)
+
+    private suspend fun checkAccount(account: ExternalAccount): AccountCheckResult {
+        return accountCheckStatuses.useElement(account) { resultAsync ->
+            resultAsync.await()
         }
     }
 
-    /**
-     * Check if an account can be derivated, and cache the result in [accountCheckStatuses]
-     *
-     * @param currentAccount The account that will be checked
-     * @param checkedAccounts The mutable list of account that are checked and must be displayed to the user
-     *
-     * @return a new updated list of [checkedAccounts] with [currentAccount] if the check succeeds,
-     *         an [AccountCheckingStatus.Error] if the check fails,
-     *         or null in other cases
-     */
-    private suspend fun checkAccount(
-        currentAccount: ExternalAccount,
-        checkedAccounts: List<ExternalAccount>,
-    ): Xor<List<ExternalAccount>, Error>? = accountCheckStatuses.useElement(currentAccount) { statusAsync ->
-        when (statusAsync.await()) {
-            Ongoing -> {
-                if (checkedAccounts.contains(currentAccount).not()) Xor.First(checkedAccounts + currentAccount) else null
-            }
-            WaitingForAccount, Complete -> null // Cannot happened, the checkStatuses don't return these values
-            Error.Network -> null // We don't want to replace the possible real errors
-            is Error -> Xor.Second(Error.Unknown)
-        }
-    }
+    private suspend fun checkToken(account: ExternalAccount, token: String): AccountCheckResult = runCatching {
 
-    private fun CoroutineScope.getTokenCheckAsync(token: String): Deferred<AccountCheckingStatus> {
-        // For each token of the account on the other apps, we check if getting the profile works.
-        // If it's the case, the token should be able to be derivated later successfully.
         val customTokenHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
-        return async {
-            runCatching {
-                if (apiRepository.getUserProfile(customTokenHttpClient).data is User) {
-                    Ongoing
-                } else {
-                    Error.Unknown
-                }
-            }.cancellable().getOrElse { exception ->
-                when (exception) {
-                    is NetworkException -> Error.Network
-                    else -> Error.Unknown
-                }
+
+        when (apiRepository.getUserProfile(customTokenHttpClient).data) {
+            is User -> {
+                // Put the just checked token first. Will speed up later derivation attempts.
+                val tokens = setOf(token) + account.tokens
+                AccountCheckResult.Valid(account.copy(tokens = tokens))
             }
+            else -> AccountCheckResult.Issue.Other
+        }
+    }.cancellable().getOrElse { exception ->
+        when (exception) {
+            is NetworkException -> AccountCheckResult.Issue.Network
+            else -> AccountCheckResult.Issue.Other
         }
     }
 
     /**
      * Use a [completableScope] to check all token concurrently, and stop as soon as one of them returned a valid data
      *
-     * @return The [AccountCheckingStatus] of the check: [Ongoing] if it succeeded, [Error] otherwise
+     * @return The [AccountsCheckingStatus] of the check: [Checking] if it succeeded, [Error] otherwise
      */
     private suspend fun getFirstValidTokenOrError(
-        checkingTokensDeferredList: List<Deferred<AccountCheckingStatus>>
-    ): AccountCheckingStatus = completableScope { completable ->
-        var accountCheckingError: Error = Error.Network // Default error case
+        asyncTokenChecks: List<Deferred<AccountCheckResult>>
+    ): AccountCheckResult = completableScope { completable ->
+        var mostImportantIssue: AccountCheckResult.Issue = AccountCheckResult.Issue.Network
+        // Default result. Any other issue is more important.
 
-        checkingTokensDeferredList.forEach { checkToken ->
+        asyncTokenChecks.forEach { checkToken ->
             launch {
                 when (val result = checkToken.await()) {
-                    is Ongoing -> completable.complete(result)
+                    is AccountCheckResult.Valid -> completable.complete(result)
                     // If at least one error is not network, we change the error to avoid displaying network error
-                    Error.Unknown -> accountCheckingError = Error.Unknown
-                    else -> Unit
+                    AccountCheckResult.Issue.Other -> mostImportantIssue = AccountCheckResult.Issue.Other
+                    AccountCheckResult.Issue.Network -> Unit
                 }
             }
         }
 
-        accountCheckingError // Will make it only if there is no match after all child coroutines complete.
+        mostImportantIssue // Will make it only if there is no match after all child coroutines complete.
     }
 
     /**
@@ -312,17 +286,24 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     data class LoginResult(val tokens: List<ApiToken>, val errorMessageIds: List<Int>)
 
     data class AccountsCheckingState(
-        val status: AccountCheckingStatus,
+        val status: AccountsCheckingStatus,
         val checkedAccounts: List<ExternalAccount> = emptyList(),
     )
 
-    sealed interface AccountCheckingStatus {
-        data object WaitingForAccount : AccountCheckingStatus
-        data object Ongoing : AccountCheckingStatus
-        data object Complete : AccountCheckingStatus
-        sealed class Error : AccountCheckingStatus {
+    sealed interface AccountsCheckingStatus {
+        data object Checking : AccountsCheckingStatus
+        data object UpToDate : AccountsCheckingStatus
+        sealed class Error : AccountsCheckingStatus {
             data object Network : Error()
             data object Unknown : Error()
+        }
+    }
+
+    private sealed interface AccountCheckResult {
+        data class Valid(val account: ExternalAccount) : AccountCheckResult
+        sealed interface Issue : AccountCheckResult {
+            data object Network : Issue
+            data object Other : Issue
         }
     }
 
