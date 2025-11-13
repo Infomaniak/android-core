@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
-  ~ Copyright (C) 2022-2024 Infomaniak Network SA
+  ~ Copyright (C) 2022-2025 Infomaniak Network SA
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -27,8 +27,18 @@
         android:label="activity_bug_tracker"
         tools:layout="@layout/activity_bug_tracker">
         <argument
-            android:name="user"
-            app:argType="com.infomaniak.core.legacy.models.user.User" />
+            android:name="userId"
+            app:argType="integer" />
+        <argument
+            android:name="userCurrentOrganizationId"
+            app:argType="integer" />
+        <argument
+            android:name="userEmail"
+            app:argType="string" />
+        <argument
+            android:name="userDisplayName"
+            app:argType="string"
+            app:nullable="true" />
         <argument
             android:name="appBuildNumber"
             app:argType="string" />

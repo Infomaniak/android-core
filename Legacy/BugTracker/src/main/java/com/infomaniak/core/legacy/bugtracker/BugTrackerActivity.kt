@@ -186,10 +186,10 @@ class BugTrackerActivity : AppCompatActivity() {
         val extraRoute = "undefined"
         val extraUserAgent = "InfomaniakBugTracker/1"
 
-        val extraUserId = navigationArgs.user.id.toString()
-        val extraOrganizationId = navigationArgs.user.preferences.organizationPreference.currentOrganizationId.toString()
-        val extraUserMail = navigationArgs.user.email
-        val extraUserDisplayName = navigationArgs.user.displayName ?: "undefined"
+        val extraUserId = navigationArgs.userId.toString()
+        val extraOrganizationId = navigationArgs.userCurrentOrganizationId.toString()
+        val extraUserMail = navigationArgs.userEmail
+        val extraUserDisplayName = navigationArgs.userDisplayName ?: "undefined"
 
         val brand = Build.BRAND
         val osVersion = SDK_INT.toString()
