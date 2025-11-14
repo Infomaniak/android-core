@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024-2025 Infomaniak Network SA
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,19 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.legacy.stores.updaterequired.data.models
+package com.infomaniak.core.appversionchecker.data.models
 
-import com.google.gson.annotations.SerializedName
-import io.sentry.Sentry
-import io.sentry.SentryLevel
+import com.infomaniak.core.sentry.SentryLog
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppVersion(
-    @SerializedName("min_version")
-    var minimalAcceptedVersion: String,
-    @SerializedName("published_versions")
-    var publishedVersions: List<AppPublishedVersion>,
+    val id: Int? = null,
+    val name: String? = null,
+    val platform: String? = null,
+    val store: String? = null,
+    @SerialName("api_id")
+    val apiId: String? = null,
+    @SerialName("min_version")
+    val minimalAcceptedVersion: String? = null,
+    @SerialName("next_version_rate")
+    val nextVersionRate: String? = null,
+    @SerialName("published_versions")
+    val publishedVersions: List<AppPublishedVersion>? = null,
 ) {
 
     enum class Store(val apiValue: String) {
@@ -39,7 +46,25 @@ data class AppVersion(
         ANDROID("android")
     }
 
+    enum class ProjectionFields(val value: String) {
+        MinVersion("min_version"),
+        PublishedVersionsTag("published_versions.tag"),
+        PublishedVersionType("published_versions.type"),
+        PublishedVersionBuildVersion("published_versions.build_version"),
+        PublishedVersionMinOs("published_versions.build_min_os_version")
+    }
+
+    enum class VersionChannel(val value: String) {
+        Production("production"),
+        Beta("beta"),
+        Internal("internal"),
+    }
+
     fun mustRequireUpdate(currentVersion: String): Boolean = runCatching {
+        if (minimalAcceptedVersion == null) {
+            SentryLog.d(TAG, "min_version field is empty. Don't forget to use AppVersion.ProjectionFields.MinVersion")
+            return false
+        }
 
         val currentVersionNumbers = currentVersion.toVersionNumbers()
         val minimalAcceptedVersionNumbers = minimalAcceptedVersion.toVersionNumbers()
@@ -47,8 +72,7 @@ data class AppVersion(
         return isMinimalVersionValid(minimalAcceptedVersionNumbers) &&
                 currentVersionNumbers.compareVersionTo(minimalAcceptedVersionNumbers) < 0
     }.getOrElse { exception ->
-        Sentry.captureException(exception) { scope ->
-            scope.level = SentryLevel.ERROR
+        SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking", exception) { scope ->
             scope.setExtra("Version from API", minimalAcceptedVersion)
             scope.setExtra("Current Version", currentVersion)
         }
@@ -57,13 +81,15 @@ data class AppVersion(
     }
 
     fun isMinimalVersionValid(minimalVersionNumbers: List<Int>): Boolean {
-        val productionVersion = publishedVersions.singleOrNull()?.tag ?: return false
+        val productionVersion = publishedVersions?.singleOrNull()?.tag ?: return false
         val productionVersionNumbers = productionVersion.toVersionNumbers()
 
         return minimalVersionNumbers.compareVersionTo(productionVersionNumbers) <= 0
     }
 
     companion object {
+        const val TAG = "AppVersion"
+
         fun String.toVersionNumbers() = split(".").map(String::toInt)
 
         /**
