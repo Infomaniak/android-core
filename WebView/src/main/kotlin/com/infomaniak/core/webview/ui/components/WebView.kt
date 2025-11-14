@@ -37,6 +37,7 @@ fun WebView(
     onUrlToQuitReached: () -> Unit,
     urlToQuit: String?,
     headers: Map<String, String>,
+    userAgentString: String? = null,
     @SuppressLint("ModifierParameter") // We have this to match the previous behavior when there was no modifier parameter.
     modifier: Modifier = Modifier.safeDrawingPadding(),
     domStorageEnabled: Boolean = false,
@@ -60,6 +61,7 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = domStorageEnabled
 
+                userAgentString?.let { settings.userAgentString = it }
 
                 loadUrl(url, headers)
 
