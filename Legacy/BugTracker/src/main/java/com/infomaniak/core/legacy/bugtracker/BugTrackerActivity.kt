@@ -31,9 +31,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.legacy.bugtracker.databinding.ActivityBugTrackerBinding
-import com.infomaniak.core.legacy.githubTools.GitHubViewModel
 import com.infomaniak.core.legacy.utils.FilePicker
 import com.infomaniak.core.legacy.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.core.legacy.utils.getFileNameAndSize
@@ -42,6 +45,7 @@ import com.infomaniak.core.legacy.utils.initProgress
 import com.infomaniak.core.legacy.utils.setMargins
 import com.infomaniak.core.legacy.utils.showProgressCatching
 import com.infomaniak.core.legacy.utils.showToast
+import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
 class BugTrackerActivity : AppCompatActivity() {
@@ -52,7 +56,6 @@ class BugTrackerActivity : AppCompatActivity() {
 
     private val binding: ActivityBugTrackerBinding by lazy { ActivityBugTrackerBinding.inflate(layoutInflater) }
     private val bugTrackerViewModel: BugTrackerViewModel by viewModels()
-    private val gitHubViewModel: GitHubViewModel by viewModels()
     private val navigationArgs: BugTrackerActivityArgs by navArgs()
 
     private val fileAdapter = BugTrackerFileAdapter { updateFileTotalSize() }
@@ -123,9 +126,20 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private fun ActivityBugTrackerBinding.checkLastAppVersion() {
-        gitHubViewModel.getLastRelease(navigationArgs.repoGitHub).observe(this@BugTrackerActivity) { lastRelease ->
-            appNotUpToDate.isGone = lastRelease?.name == navigationArgs.appBuildNumber
+        lifecycleScope.launch {
+            bugTrackerViewModel.mustRequireUpdate(
+                appId = navigationArgs.appId,
+                appVersion = navigationArgs.appBuildNumber,
+                store = AppVersion.Store.PLAY_STORE,
+                channelFilter = AppVersion.VersionChannel.Internal
+            ).flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collect { updateRequired ->
+                appNotUpToDate.isGone = !updateRequired
+            }
         }
+
+        // gitHubViewModel.getLastRelease(navigationArgs.repoGitHub).observe(this@BugTrackerActivity) { lastRelease ->
+        //     appNotUpToDate.isGone = lastRelease?.name == navigationArgs.appBuildNumber
+        // }
     }
 
     private fun ActivityBugTrackerBinding.observeBugReportResult() {

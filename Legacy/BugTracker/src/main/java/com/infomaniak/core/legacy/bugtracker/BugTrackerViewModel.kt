@@ -19,6 +19,8 @@ package com.infomaniak.core.legacy.bugtracker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryStores
+import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.legacy.networking.HttpClient
 import com.infomaniak.core.legacy.networking.HttpUtils
 import com.infomaniak.core.legacy.networking.ManualAuthorizationRequired
@@ -26,6 +28,8 @@ import com.infomaniak.core.legacy.utils.SingleLiveEvent
 import com.infomaniak.core.legacy.utils.await
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -65,6 +69,29 @@ class BugTrackerViewModel : ViewModel() {
         }
 
         return isSuccessful
+    }
+
+    fun mustRequireUpdate(
+        appId: String,
+        appVersion: String,
+        store: AppVersion.Store,
+        channelFilter: AppVersion.VersionChannel,
+    ): Flow<Boolean> = flow {
+        val projectionFields = listOf(
+            AppVersion.ProjectionFields.MinVersion,
+            AppVersion.ProjectionFields.PublishedVersionsTag,
+            AppVersion.ProjectionFields.PublishedVersionType
+        )
+
+        val apiResponse = ApiRepositoryStores.getAppVersion(
+            appName = appId,
+            store = store,
+            projectionFields = projectionFields,
+            channelFilter = channelFilter,
+            okHttpClient = HttpClient.okHttpClient
+        )
+
+        emit(apiResponse.data?.mustRequireUpdate(appVersion) ?: false)
     }
 
     private companion object {
