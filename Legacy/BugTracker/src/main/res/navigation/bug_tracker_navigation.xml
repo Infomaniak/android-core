@@ -43,6 +43,9 @@
             android:name="appId"
             app:argType="string" />
         <argument
+            android:name="appId"
+            app:argType="string" />
+        <argument
             android:name="appBuildNumber"
             app:argType="string" />
         <argument

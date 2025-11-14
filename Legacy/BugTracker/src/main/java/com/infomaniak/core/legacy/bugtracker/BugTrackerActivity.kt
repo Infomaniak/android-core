@@ -136,6 +136,10 @@ class BugTrackerActivity : AppCompatActivity() {
                 appNotUpToDate.isVisible = updateIsAvailable
             }
         }
+
+        // gitHubViewModel.getLastRelease(navigationArgs.repoGitHub).observe(this@BugTrackerActivity) { lastRelease ->
+        //     appNotUpToDate.isGone = lastRelease?.name == navigationArgs.appBuildNumber
+        // }
     }
 
     private fun ActivityBugTrackerBinding.observeBugReportResult() {
