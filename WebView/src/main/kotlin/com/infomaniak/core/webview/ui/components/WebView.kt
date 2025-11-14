@@ -36,6 +36,7 @@ import kotlinx.serialization.json.Json
 fun WebView(
     url: String,
     headersString: String? = null,
+    userAgentString: String? = null,
     onUrlToQuitReached: (() -> Unit)? = null,
     urlToQuit: String? = null,
     domStorageEnabled: Boolean = false,
@@ -59,6 +60,7 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = domStorageEnabled
 
+                userAgentString?.let { settings.userAgentString = it }
 
                 val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
                 loadUrl(url, headers)
