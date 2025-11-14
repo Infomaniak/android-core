@@ -37,6 +37,7 @@ fun WebView(
     onUrlToQuitReached: () -> Unit,
     urlToQuit: String?,
     headers: Map<String, String>,
+    userAgentString: String? = null,
     domStorageEnabled: Boolean = false,
     webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
     withSafeArea: Boolean = true,
@@ -58,6 +59,7 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = domStorageEnabled
 
+                userAgentString?.let { settings.userAgentString = it }
 
                 loadUrl(url, headers)
 
