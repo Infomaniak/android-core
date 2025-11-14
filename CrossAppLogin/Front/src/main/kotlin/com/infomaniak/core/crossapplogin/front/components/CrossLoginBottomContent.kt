@@ -73,7 +73,7 @@ import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountCheckingStatus
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.Companion.filterSelectedAccounts
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
@@ -137,11 +137,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
     val accounts by remember { derivedStateOf { accountsCheckingState().checkedAccounts } }
-    val isCheckingComplete by remember { derivedStateOf { accountsCheckingState().status is AccountCheckingStatus.Complete } }
+    val isCheckingUpToDate by remember { derivedStateOf { accountsCheckingState().status is AccountsCheckingStatus.UpToDate } }
     val shouldLoadAccount by remember {
         derivedStateOf {
             val state = accountsCheckingState()
-            state.checkedAccounts.isEmpty() && state.status is AccountCheckingStatus.Ongoing
+            state.checkedAccounts.isEmpty() && state.status is AccountsCheckingStatus.Checking
         }
     }
 
@@ -172,7 +172,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             accounts = accounts,
                             customization = customization,
                             skippedIds = skippedIds,
-                            isCheckingComplete = { isCheckingComplete },
+                            isCheckingUpToDate = { isCheckingUpToDate },
                             shouldLoadAccount = { shouldLoadAccount },
                             isLoginButtonLoading = isLoginButtonLoading,
                             isSignUpButtonLoading = isSignUpButtonLoading,
@@ -199,7 +199,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
             accounts = { accounts },
             skippedIds = skippedIds,
             isSingleSelection = isSingleSelection,
-            isCheckingComplete = isCheckingComplete,
+            isCheckingComplete = isCheckingUpToDate,
             onUseAnotherAccountClicked = onUseAnotherAccountClicked,
             onSaveSkippedAccounts = onSaveSkippedAccounts,
             customization = customization,
@@ -255,7 +255,7 @@ private fun LoginPage(
     accounts: List<ExternalAccount>,
     customization: CrossLoginCustomization,
     skippedIds: () -> Set<Long>,
-    isCheckingComplete: () -> Boolean,
+    isCheckingUpToDate: () -> Boolean,
     shouldLoadAccount: () -> Boolean,
     isLoginButtonLoading: () -> Boolean,
     isSignUpButtonLoading: () -> Boolean,
@@ -276,7 +276,7 @@ private fun LoginPage(
                 accounts = { accounts },
                 skippedIds = skippedIds,
                 customization = customization,
-                isLoading = { !isCheckingComplete() },
+                isLoading = { !isCheckingUpToDate() },
                 onClick = onAccountsSelectionClicked,
             )
         }
@@ -444,7 +444,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
                 accountsCheckingState = {
-                    AccountsCheckingState(AccountCheckingStatus.Ongoing, checkedAccounts = accounts)
+                    AccountsCheckingState(AccountsCheckingStatus.Checking, checkedAccounts = accounts)
                 },
                 skippedIds = { emptySet() },
                 onLogin = {},
