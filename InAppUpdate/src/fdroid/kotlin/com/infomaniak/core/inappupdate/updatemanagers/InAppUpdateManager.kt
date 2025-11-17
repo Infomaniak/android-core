@@ -33,8 +33,8 @@ class InAppUpdateManager(
     private val activity: ComponentActivity,
 ) : BaseInAppUpdateManager(activity) {
 
-    override val store: AppVersion.Store = AppVersion.Store.PLAY_STORE
-    override val appUpdateTag: String = "inAppUpdate"
+    override val store: AppVersion.Store = AppVersion.Store.FDROID
+    override val appUpdateTag: String = "appUpdateFDroid"
 
     override fun checkUpdateIsAvailable() {
         SentryLog.d(appUpdateTag, "Checking for update on FDroid")
