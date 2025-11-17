@@ -226,9 +226,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             launch {
                 when (val result = tokenCheck.await()) {
                     is AccountCheckResult.Valid -> completable.complete(result)
-                    // If at least one error is not network, we change the error to avoid displaying network error
-                    AccountCheckResult.Issue.Other -> mostImportantIssue = AccountCheckResult.Issue.Other
                     AccountCheckResult.Issue.Network -> Unit
+                    is AccountCheckResult.Issue -> mostImportantIssue = result // The last non-network error "wins".
                 }
             }
         }
