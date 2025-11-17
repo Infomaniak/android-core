@@ -51,6 +51,7 @@ android {
 dependencies {
     implementation(project(":Core"))
     implementation(project(":Core:AppVersionChecker"))
+    implementation(project(":Core:Compose:BottomStickyButtonScaffolds"))
     implementation(project(":Core:Ui:Compose:Margin"))
     implementation(project(":Core:Network"))
     implementation(project(":Core:Sentry"))
@@ -75,4 +76,5 @@ dependencies {
     implementation(core.compose.ui)
     implementation(core.compose.ui.tooling.preview)
     implementation(core.androidx.adaptive)
+    implementation(core.activity.compose)
 }
