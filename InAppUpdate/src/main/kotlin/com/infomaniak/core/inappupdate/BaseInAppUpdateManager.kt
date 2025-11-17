@@ -22,7 +22,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryStores
+import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryAppVersion
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.extensions.goToAppStore
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.APP_UPDATE_LAUNCHES_KEY
@@ -59,7 +59,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
             AppVersion.ProjectionFields.MinVersion,
             AppVersion.ProjectionFields.PublishedVersionsTag
         )
-        val apiResponse = ApiRepositoryStores.getAppVersion(
+        val apiResponse = ApiRepositoryAppVersion.getAppVersion(
             appName = appId,
             store = store,
             projectionFields = projectionFields,
