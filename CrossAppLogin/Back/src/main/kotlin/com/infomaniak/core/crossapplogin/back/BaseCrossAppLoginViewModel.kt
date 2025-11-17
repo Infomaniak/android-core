@@ -96,12 +96,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     private val accountCheckStatuses = DynamicLazyMap<ExternalAccount, _>(
         cacheManager = { _, _ -> awaitCancellation() },
         coroutineScope = viewModelScope,
-        createElement = { account ->
-            async {
-                val checkingTokensDeferredList = account.tokens.map { token -> async { checkToken(account, token) } }
-                getFirstValidTokenOrError(checkingTokensDeferredList)
-            }
-        },
+        createElement = { account -> async { getFirstValidTokenOrError(account) } },
     )
 
     private val apiRepository = object : ApiRepositoryCore() {}
@@ -187,9 +182,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     private fun AccountsCheckingState.withAccount(account: ExternalAccount) = copy(checkedAccounts = checkedAccounts + account)
 
     private suspend fun checkAccount(account: ExternalAccount): AccountCheckResult {
-        return accountCheckStatuses.useElement(account) { resultAsync ->
-            resultAsync.await()
-        }
+        return accountCheckStatuses.useElement(account) { resultAsync -> resultAsync.await() }
     }
 
     private suspend fun checkToken(account: ExternalAccount, token: String): AccountCheckResult = runCatching {
@@ -217,8 +210,9 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
      * @return The [AccountsCheckingStatus] of the check: [Checking] if it succeeded, [Error] otherwise
      */
     private suspend fun getFirstValidTokenOrError(
-        asyncTokenChecks: List<Deferred<AccountCheckResult>>
+        account: ExternalAccount
     ): AccountCheckResult = completableScope { completable ->
+        val asyncTokenChecks = account.tokens.map { token -> async { checkToken(account, token) } }
         // Default result. Any other issue is more important.
         var mostImportantIssue: AccountCheckResult.Issue = AccountCheckResult.Issue.Network
 
