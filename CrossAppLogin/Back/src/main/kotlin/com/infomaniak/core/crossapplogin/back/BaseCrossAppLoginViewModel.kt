@@ -31,8 +31,8 @@ import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
 import com.infomaniak.core.mapSync
 import com.infomaniak.core.network.models.exceptions.NetworkException
-import com.infomaniak.core.network.networking.HttpClient.addCache
-import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider.addCache
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider.addCommonInterceptors
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
