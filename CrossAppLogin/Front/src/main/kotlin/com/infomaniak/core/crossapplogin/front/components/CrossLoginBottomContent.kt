@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.crossapplogin.front.components
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
@@ -35,6 +36,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -60,10 +62,10 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.R
 import com.infomaniak.core.compose.basicbutton.BasicButton
 import com.infomaniak.core.compose.basicbutton.BasicButtonDelay
 import com.infomaniak.core.compose.basics.ButtonStyle
@@ -71,8 +73,12 @@ import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.Companion.filterSelectedAccounts
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
+import com.infomaniak.core.crossapplogin.front.R
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.ArrowRight
@@ -81,7 +87,7 @@ import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginListAc
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
 import com.infomaniak.core.onboarding.components.OnboardingComponents
 import kotlinx.coroutines.launch
-import com.infomaniak.core.crossapplogin.front.R as RCross
+import com.infomaniak.core.R as RCore
 
 private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
 private val FAB_SIZE = 64.dp
@@ -92,7 +98,7 @@ private val FAB_SIZE = 64.dp
  *
  * @param pagerState The pager state of the [com.infomaniak.core.onboarding.OnboardingScaffold]. Used to automatically detect if
  * we're at the last page and to navigate between page shen the arrow button is clicked.
- * @param accounts The list of all available accounts that can be chosen from and used for login.
+ * @param accountsCheckingState The status of the accounts check. Used to know when displaying loader, the account or an error.
  * @param skippedIds The list of ids of accounts that are not currently selected by the user.
  * @param onLogin When the user has no accounts for cross app login and clicks on the button to log in a new user.
  * @param onContinueWithSelectedAccounts When the user has accounts for cross app login and clicks on the button to log them.
@@ -114,10 +120,10 @@ private val FAB_SIZE = 64.dp
 @Composable
 fun OnboardingComponents.CrossLoginBottomContent(
     pagerState: PagerState,
-    accounts: () -> List<ExternalAccount>,
+    accountsCheckingState: () -> AccountsCheckingState,
     skippedIds: () -> Set<Long>,
     onLogin: () -> Unit,
-    onContinueWithSelectedAccounts: () -> Unit,
+    onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
     onCreateAccount: () -> Unit,
     onUseAnotherAccountClicked: () -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
@@ -130,6 +136,14 @@ fun OnboardingComponents.CrossLoginBottomContent(
 ) {
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
+    val accounts by remember { derivedStateOf { accountsCheckingState().checkedAccounts } }
+    val isCheckingUpToDate by remember { derivedStateOf { accountsCheckingState().status !is AccountsCheckingStatus.Checking } }
+    val shouldLoadAccount by remember {
+        derivedStateOf {
+            val state = accountsCheckingState()
+            state.checkedAccounts.isEmpty() && state.status is AccountsCheckingStatus.Checking
+        }
+    }
 
     val scope = rememberCoroutineScope()
 
@@ -154,28 +168,20 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     )
 
                     if (isLastPage) {
-                        val shouldDisplayCrossLogin = accounts().isNotEmpty()
-
-                        if (shouldDisplayCrossLogin) {
-                            CrossLoginSelectAccounts(
-                                accounts = accounts,
-                                skippedIds = skippedIds,
-                                customization = customization,
-                                onClick = { showAccountsBottomSheet = true },
-                            )
-                        }
-
-                        ConnectionButton(
-                            primaryButtonType = customization.buttonStyle,
+                        LoginPage(
                             accounts = accounts,
+                            customization = customization,
                             skippedIds = skippedIds,
+                            isCheckingUpToDate = { isCheckingUpToDate },
+                            shouldLoadAccount = { shouldLoadAccount },
                             isLoginButtonLoading = isLoginButtonLoading,
-                            onLogin = onLogin,
+                            isSignUpButtonLoading = isSignUpButtonLoading,
                             onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
-                            modifier = animatedButtonModifier,
+                            onAccountsSelectionClicked = { showAccountsBottomSheet = true },
+                            onLogin = onLogin,
+                            onCreateAccount = onCreateAccount,
+                            animatedButtonModifier = animatedButtonModifier,
                         )
-
-                        if (shouldDisplayCrossLogin.not()) AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
                     } else {
                         ButtonNext(
                             onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
@@ -189,30 +195,120 @@ fun OnboardingComponents.CrossLoginBottomContent(
     }
 
     if (showAccountsBottomSheet) {
-        val sheetState = rememberModalBottomSheetState()
-        ThemedBottomSheetScaffold(sheetState = sheetState, onDismissRequest = { showAccountsBottomSheet = false }) {
-            val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds, isSingleSelection)
-            CrossLoginListAccounts(
-                accounts = accounts,
-                skippedIds = { localSkipped },
-                onAccountClicked = { accountId ->
-                    when {
-                        isSingleSelection -> {
-                            localSkipped.addAll(accounts().map { it.id })
-                            localSkipped.remove(accountId)
-                        }
-                        accountId in localSkipped -> localSkipped -= accountId
-                        else -> localSkipped += accountId
+        AccountsBottomSheetDialog(
+            accounts = { accounts },
+            skippedIds = skippedIds,
+            isSingleSelection = isSingleSelection,
+            isCheckingComplete = isCheckingUpToDate,
+            onUseAnotherAccountClicked = onUseAnotherAccountClicked,
+            onSaveSkippedAccounts = onSaveSkippedAccounts,
+            customization = customization,
+            close = { showAccountsBottomSheet = false },
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun AccountsBottomSheetDialog(
+    accounts: () -> List<ExternalAccount>,
+    skippedIds: () -> Set<Long>,
+    isSingleSelection: Boolean,
+    isCheckingComplete: Boolean,
+    onUseAnotherAccountClicked: () -> Unit,
+    onSaveSkippedAccounts: (Set<Long>) -> Unit,
+    customization: CrossLoginCustomization,
+    close: () -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState()
+
+    ThemedBottomSheetScaffold(sheetState = sheetState, onDismissRequest = close) {
+        val localSkipped = rememberLocalSkippedAccountIds(accounts, skippedIds, isSingleSelection)
+
+        CrossLoginListAccounts(
+            accounts = accounts,
+            skippedIds = { localSkipped },
+            isLoading = { !isCheckingComplete },
+            onAccountClicked = { accountId ->
+                when {
+                    isSingleSelection -> {
+                        localSkipped.addAll(accounts().map { it.id })
+                        localSkipped.remove(accountId)
                     }
-                },
-                onAnotherAccountClicked = onUseAnotherAccountClicked,
-                onSaveClicked = {
-                    onSaveSkippedAccounts(localSkipped)
-                    scope.launch { sheetState.hide() }.invokeOnCompletion { showAccountsBottomSheet = false }
-                },
+                    accountId in localSkipped -> localSkipped -= accountId
+                    else -> localSkipped += accountId
+                }
+            },
+            onAnotherAccountClicked = onUseAnotherAccountClicked,
+            onSaveClicked = {
+                onSaveSkippedAccounts(localSkipped)
+                scope.launch { sheetState.hide() }.invokeOnCompletion { close() }
+            },
+            customization = customization,
+        )
+    }
+}
+
+@Composable
+private fun LoginPage(
+    accounts: List<ExternalAccount>,
+    customization: CrossLoginCustomization,
+    skippedIds: () -> Set<Long>,
+    isCheckingUpToDate: () -> Boolean,
+    shouldLoadAccount: () -> Boolean,
+    isLoginButtonLoading: () -> Boolean,
+    isSignUpButtonLoading: () -> Boolean,
+    onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
+    onAccountsSelectionClicked: () -> Unit,
+    onLogin: () -> Unit,
+    onCreateAccount: () -> Unit,
+    @SuppressLint("ModifierParameter") animatedButtonModifier: Modifier,
+) {
+
+    if (shouldLoadAccount()) {
+        CrossAppLoginAccountsLoader(customization)
+    } else {
+        val shouldDisplayCrossLogin = accounts.isNotEmpty()
+
+        if (shouldDisplayCrossLogin) {
+            CrossLoginSelectAccounts(
+                accounts = { accounts },
+                skippedIds = skippedIds,
                 customization = customization,
+                isLoading = { !isCheckingUpToDate() },
+                onClick = onAccountsSelectionClicked,
             )
         }
+
+        ConnectionButton(
+            primaryButtonType = customization.buttonStyle,
+            accounts = { accounts },
+            skippedIds = skippedIds,
+            isLoginButtonLoading = isLoginButtonLoading,
+            onLogin = onLogin,
+            onContinueWithSelectedAccounts = { onContinueWithSelectedAccounts(accounts.filterSelectedAccounts(skippedIds())) },
+            modifier = animatedButtonModifier,
+        )
+
+        if (!shouldDisplayCrossLogin) AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
+    }
+}
+
+@Composable
+private fun CrossAppLoginAccountsLoader(customization: CrossLoginCustomization) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Margin.Medium),
+    ) {
+        Text(
+            text = stringResource(R.string.crossAppLoginAccountsLoaderTitle),
+            textAlign = TextAlign.Center,
+            style = Typography.bodyRegular,
+            color = customization.colors.titleColor,
+        )
+        CircularProgressIndicator(Modifier.width(Dimens.iconSize))
     }
 }
 
@@ -254,7 +350,7 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
         Box(contentAlignment = Alignment.Center) {
             Icon(
                 imageVector = ArrowRight,
-                contentDescription = stringResource(R.string.buttonNext),
+                contentDescription = stringResource(RCore.string.buttonNext),
             )
         }
     }
@@ -272,9 +368,9 @@ private fun ConnectionButton(
     modifier: Modifier = Modifier,
 ) {
     val getConnexionButtonText = if (accounts().isEmpty()) {
-        stringResource(RCross.string.buttonLogin)
+        stringResource(R.string.buttonLogin)
     } else {
-        pluralStringResource(RCross.plurals.buttonContinueWithAccounts, accounts().size - skippedIds().size)
+        pluralStringResource(R.plurals.buttonContinueWithAccounts, accounts().size - skippedIds().size)
     }
 
     ButtonExpanded(
@@ -332,7 +428,7 @@ private fun AccountCreationButton(isSignUpButtonLoading: () -> Boolean, onClick:
         showIndeterminateProgress = isSignUpButtonLoading,
         indeterminateProgressDelay = BasicButtonDelay.Delayed,
     ) {
-        Text(stringResource(RCross.string.buttonCreateAccount), style = Typography.bodyMedium)
+        Text(stringResource(R.string.buttonCreateAccount), style = Typography.bodyMedium)
     }
 }
 
@@ -347,17 +443,19 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
         Surface {
             OnboardingComponents.CrossLoginBottomContent(
                 pagerState = rememberPagerState { 1 },
-                accounts = { accounts },
+                accountsCheckingState = {
+                    AccountsCheckingState(AccountsCheckingStatus.Checking, checkedAccounts = accounts)
+                },
                 skippedIds = { emptySet() },
-                customization = CrossLoginDefaults.customize(
-                    colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
-                ),
                 onLogin = {},
                 onContinueWithSelectedAccounts = {},
                 onCreateAccount = {},
                 onUseAnotherAccountClicked = {},
                 onSaveSkippedAccounts = {},
-                isLoginButtonLoading = { true }
+                isLoginButtonLoading = { true },
+                customization = CrossLoginDefaults.customize(
+                    colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
+                )
             )
         }
     }

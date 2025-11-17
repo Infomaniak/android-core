@@ -22,35 +22,62 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
+import com.infomaniak.core.auth.api.ApiRepositoryCore
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.cancellable
+import com.infomaniak.core.completableScope
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus.*
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
+import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
+import com.infomaniak.core.mapSync
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
+import com.infomaniak.core.network.models.exceptions.NetworkException
+import com.infomaniak.core.network.networking.HttpClient.addCache
+import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.IScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
+import okhttp3.OkHttpClient
 import com.infomaniak.core.R as RCore
 import com.infomaniak.core.appintegrity.R as RAppIntegrity
 import com.infomaniak.core.network.R as RCoreNetwork
 
 abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
-    private val _availableAccounts = MutableStateFlow(emptyList<ExternalAccount>())
-    val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow()
+
+    private val _availableAccounts = MutableStateFlow<List<ExternalAccount>?>(null)
+    val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow().mapSync { it ?: emptyList() }
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
+
+    val accountsCheckingState: StateFlow<AccountsCheckingState> = accountsCheckingStateFlow().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = AccountsCheckingState(status = Checking)
+    )
 
     // TODO: Remove once mail uses the compose onboarding screen as well. This value won't be needed anymore then.
     val selectedAccounts: StateFlow<List<ExternalAccount>> =
@@ -66,10 +93,29 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         userAgent = HttpUtils.getUserAgent,
     )
 
+    private val accountCheckStatuses = DynamicLazyMap<ExternalAccount, _>(
+        cacheManager = { _, _ -> awaitCancellation() },
+        coroutineScope = viewModelScope,
+        createElement = { account -> async { getFirstValidTokenOrError(account) } },
+    )
+
+    private val apiRepository = object : ApiRepositoryCore() {}
+
+    private val baseOkHttpClient by lazy {
+        OkHttpClient.Builder().apply {
+            addCache()
+            addCommonInterceptors()
+        }
+    }
+
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
         // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
         if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) awaitCancellation()
+
+        accountsCheckingState.launchIn(this) // Make the flow hot.
+        // We don't use SharingStarted.Eagerly because the ViewModel can be present without
+        // needing the StateFlow to be hot (e.g. in a single Activity app)
 
         val crossAppLogin = CrossAppLogin.forContext(
             context = hostActivity,
@@ -103,13 +149,96 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         return LoginResult(tokens, errorMessageIds)
     }
 
+    private fun accountsCheckingStateFlow(): Flow<AccountsCheckingState> = channelFlow {
+        send(AccountsCheckingState(status = Checking))
+
+        _availableAccounts.collectLatest { accounts ->
+            when {
+                accounts == null -> return@collectLatest send(AccountsCheckingState(status = Checking))
+                accounts.isEmpty() -> return@collectLatest send(AccountsCheckingState(status = UpToDate))
+            }
+
+            val stateFlow = MutableStateFlow(AccountsCheckingState(status = Checking))
+            val errorIfAny = MutableStateFlow<Error?>(null)
+
+            send(stateFlow.value)
+
+            coroutineScope {
+                accounts.forEach { account ->
+                    launch {
+                        when (val result = checkAccount(account)) {
+                            is AccountCheckResult.Valid -> send(stateFlow.updateAndGet { it.withAccount(result.account) })
+                            AccountCheckResult.Issue.Network -> errorIfAny.update { it ?: Error.Network }
+                            AccountCheckResult.Issue.Other -> errorIfAny.update { it }
+                        }
+                    }
+                }
+            }
+
+            send(stateFlow.value.copy(status = errorIfAny.value ?: UpToDate))
+        }
+    }.conflate()
+
+    private fun AccountsCheckingState.withAccount(account: ExternalAccount) = copy(checkedAccounts = checkedAccounts + account)
+
+    private suspend fun checkAccount(account: ExternalAccount): AccountCheckResult {
+        return accountCheckStatuses.useElement(account) { resultAsync -> resultAsync.await() }
+    }
+
+    private suspend fun checkToken(account: ExternalAccount, token: String): AccountCheckResult = runCatching {
+
+        val customTokenHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
+
+        when (apiRepository.getUserProfile(customTokenHttpClient).data) {
+            is User -> {
+                // Put the just checked token first. Will speed up later derivation attempts.
+                val tokens = setOf(token) + account.tokens
+                AccountCheckResult.Valid(account.copy(tokens = tokens))
+            }
+            else -> AccountCheckResult.Issue.Other
+        }
+    }.cancellable().getOrElse { exception ->
+        when (exception) {
+            is NetworkException -> AccountCheckResult.Issue.Network
+            else -> AccountCheckResult.Issue.Other
+        }
+    }
+
     /**
-     * Ensures that there's only one selected account, even through updates to [availableAccounts] and [skippedAccountIds].
+     * Use a [completableScope] to check all token concurrently, and stop as soon as one of them returned a valid data
+     *
+     * @return The [AccountsCheckingStatus] of the check: [Checking] if it succeeded, [Error] otherwise
+     */
+    private suspend fun getFirstValidTokenOrError(
+        account: ExternalAccount
+    ): AccountCheckResult = completableScope { completable ->
+        val asyncTokenChecks = account.tokens.map { token -> async { checkToken(account, token) } }
+        // Default result. Any other issue is more important.
+        var mostImportantIssue: AccountCheckResult.Issue = AccountCheckResult.Issue.Network
+
+        asyncTokenChecks.forEach { tokenCheck ->
+            launch {
+                when (val result = tokenCheck.await()) {
+                    is AccountCheckResult.Valid -> completable.complete(result)
+                    AccountCheckResult.Issue.Network -> Unit
+                    is AccountCheckResult.Issue -> mostImportantIssue = result // The last non-network error "wins".
+                }
+            }
+        }
+
+        mostImportantIssue // Will make it only if there is no match after all child coroutines complete.
+    }
+
+    /**
+     * Ensures that there's only one selected account, even through updates to [accountsCheckingState] and [skippedAccountIds].
      */
     private suspend fun keepSingleSelection(): Nothing {
-        availableAccounts.collectLatest { accounts ->
+        accountsCheckingState.collectLatest { state ->
             skippedAccountIds.collectLatest { currentSkippedAccountIds ->
-                skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(accounts, currentSkippedAccountIds)
+                skippedAccountIds.value = newSkippedAccountIdsToKeepSingleSelection(
+                    accounts = state.checkedAccounts,
+                    currentlySkippedAccountIds = currentSkippedAccountIds,
+                )
             }
         }
         awaitCancellation() // Unreachable because availableAccounts is a StateFlow, and collectLatest is not truncating.
@@ -160,6 +289,28 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     }
 
     data class LoginResult(val tokens: List<ApiToken>, val errorMessageIds: List<Int>)
+
+    data class AccountsCheckingState(
+        val status: AccountsCheckingStatus,
+        val checkedAccounts: List<ExternalAccount> = emptyList(),
+    )
+
+    sealed interface AccountsCheckingStatus {
+        data object Checking : AccountsCheckingStatus
+        data object UpToDate : AccountsCheckingStatus
+        sealed class Error : AccountsCheckingStatus {
+            data object Network : Error()
+            data object Unknown : Error()
+        }
+    }
+
+    private sealed interface AccountCheckResult {
+        data class Valid(val account: ExternalAccount) : AccountCheckResult
+        sealed interface Issue : AccountCheckResult {
+            data object Network : Issue
+            data object Other : Issue
+        }
+    }
 
     companion object {
         private val TAG = BaseCrossAppLoginViewModel::class.java.simpleName
