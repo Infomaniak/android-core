@@ -219,8 +219,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     private suspend fun getFirstValidTokenOrError(
         asyncTokenChecks: List<Deferred<AccountCheckResult>>
     ): AccountCheckResult = completableScope { completable ->
-        var mostImportantIssue: AccountCheckResult.Issue = AccountCheckResult.Issue.Network
         // Default result. Any other issue is more important.
+        var mostImportantIssue: AccountCheckResult.Issue = AccountCheckResult.Issue.Network
 
         asyncTokenChecks.forEach { tokenCheck ->
             launch {
