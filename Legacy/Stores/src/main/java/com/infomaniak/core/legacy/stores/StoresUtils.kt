@@ -24,7 +24,7 @@ import androidx.annotation.StyleRes
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryStores
+import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryAppVersion
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.legacy.networking.HttpClient
 import com.infomaniak.core.legacy.stores.updaterequired.UpdateRequiredActivity
@@ -47,7 +47,7 @@ internal interface StoresUtils {
             AppVersion.ProjectionFields.PublishedVersionsTag,
         )
 
-        val apiResponse = ApiRepositoryStores.getAppVersion(
+        val apiResponse = ApiRepositoryAppVersion.getAppVersion(
             appName = appId,
             store = REQUIRED_UPDATE_STORE,
             projectionFields = projectionFields,

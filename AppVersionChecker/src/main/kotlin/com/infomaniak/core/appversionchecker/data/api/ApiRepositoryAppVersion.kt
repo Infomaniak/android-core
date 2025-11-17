@@ -23,13 +23,13 @@ import com.infomaniak.core.network.api.ApiController.ApiMethod
 import com.infomaniak.core.network.models.ApiResponse
 import okhttp3.OkHttpClient
 
-object ApiRepositoryStores {
+object ApiRepositoryAppVersion {
     suspend fun getAppVersion(
         appName: String,
         store: AppVersion.Store,
         okHttpClient: OkHttpClient
     ): ApiResponse<AppVersion> {
-        return ApiController.callApi(ApiRoutesStores.appVersion(appName, store), ApiMethod.GET, okHttpClient = okHttpClient)
+        return ApiController.callApi(ApiRoutesAppVersion.appVersion(appName, store), ApiMethod.GET, okHttpClient = okHttpClient)
     }
 
     /**
@@ -49,7 +49,7 @@ object ApiRepositoryStores {
         okHttpClient: OkHttpClient
     ): ApiResponse<AppVersion> {
         return ApiController.callApi(
-            url = ApiRoutesStores.appVersion(appName, store, projectionFields, channelFilter),
+            url = ApiRoutesAppVersion.appVersion(appName, store, projectionFields, channelFilter),
             method = ApiMethod.GET,
             okHttpClient = okHttpClient,
             useKotlinxSerialization = true
