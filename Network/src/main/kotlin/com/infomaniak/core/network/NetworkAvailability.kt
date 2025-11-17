@@ -30,14 +30,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import splitties.systemservices.connectivityManager
 
-class NetworkAvailability(private val context: Context, private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
+class NetworkAvailability(private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
-    private val connectivityManager by lazy { context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
+    @Deprecated(
+        message = "No need to pass Context",
+        replaceWith = ReplaceWith("NetworkAvailability()"),
+        level = DeprecationLevel.WARNING
+    )
+    constructor(@Suppress("unused") context: Context) : this() // TODO[short-deprecation]: Remove this once apps are updated.
+
     private val mutex = Mutex()
 
     val isNetworkAvailable: Flow<Boolean> = callbackFlow {
@@ -71,7 +79,7 @@ class NetworkAvailability(private val context: Context, private val ioDispatcher
         registerNetworkCallback(connectivityManager, callback, ::send)
 
         awaitClose { unregisterNetworkCallback(connectivityManager, callback) }
-    }
+    }.conflate()
 
     private suspend fun registerNetworkCallback(
         connectivityManager: ConnectivityManager,
