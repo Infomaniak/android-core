@@ -19,7 +19,7 @@ package com.infomaniak.core.legacy.bugtracker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryStores
+import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryAppVersion
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.legacy.networking.HttpClient
 import com.infomaniak.core.legacy.networking.HttpUtils
@@ -83,12 +83,12 @@ class BugTrackerViewModel : ViewModel() {
             AppVersion.ProjectionFields.PublishedVersionType
         )
 
-        val apiResponse = ApiRepositoryStores.getAppVersion(
+        val apiResponse = ApiRepositoryAppVersion.getAppVersion(
             appName = appId,
             store = store,
             projectionFields = projectionFields,
             channelFilter = channelFilter,
-            okHttpClient = HttpClient.okHttpClient
+            okHttpClient = HttpClient.okHttpClientNoTokenInterceptor
         )
 
         emit(apiResponse.data?.mustRequireUpdate(appVersion) ?: false)
