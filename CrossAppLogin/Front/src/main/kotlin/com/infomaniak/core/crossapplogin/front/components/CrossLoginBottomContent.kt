@@ -73,8 +73,8 @@ import com.infomaniak.core.compose.basics.Dimens
 import com.infomaniak.core.compose.basics.Typography
 import com.infomaniak.core.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.compose.margin.Margin
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.Companion.filterSelectedAccounts
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.back.newSkippedAccountIdsToKeepSingleSelection
@@ -137,7 +137,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
     val isLastPage by remember { derivedStateOf { pagerState.currentPage >= pagerState.pageCount - 1 } }
     val accounts by remember { derivedStateOf { accountsCheckingState().checkedAccounts } }
-    val isCheckingUpToDate by remember { derivedStateOf { accountsCheckingState().status is AccountsCheckingStatus.UpToDate } }
+    val isCheckingUpToDate by remember { derivedStateOf { accountsCheckingState().status !is AccountsCheckingStatus.Checking } }
     val shouldLoadAccount by remember {
         derivedStateOf {
             val state = accountsCheckingState()
