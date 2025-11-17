@@ -19,6 +19,7 @@ package com.infomaniak.core.inappupdate
 
 import android.content.Context
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -60,6 +61,10 @@ class AppUpdateSettingsRepository(private val context: Context) {
         }.onFailure { exception ->
             SentryLog.e(TAG, "Error while trying to set value into DataStore for key : $key", exception)
         }
+    }
+
+    suspend fun clear() {
+        context.dataStore.edit(MutablePreferences::clear)
     }
 
     suspend fun resetUpdateSettings() {

@@ -20,6 +20,7 @@
     <string name="applicationSourceCode">See source code</string>
     <string name="buttonCancel">Cancel</string>
     <string name="buttonClose">Close</string>
+    <string name="buttonLater">Later</string>
     <string name="buttonNext">Next</string>
     <string name="buttonNo">No</string>
     <string name="buttonRetry">Retry</string>
