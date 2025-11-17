@@ -156,14 +156,18 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     private fun accountsCheckingStateFlow(): Flow<AccountsCheckingState> = channelFlow {
         send(AccountsCheckingState(status = Checking))
+
         _availableAccounts.collectLatest { accounts ->
             when {
                 accounts == null -> return@collectLatest send(AccountsCheckingState(status = Checking))
                 accounts.isEmpty() -> return@collectLatest send(AccountsCheckingState(status = UpToDate))
             }
+
             val stateFlow = MutableStateFlow(AccountsCheckingState(status = Checking))
             val errorIfAny = MutableStateFlow<Error?>(null)
+
             send(stateFlow.value)
+
             coroutineScope {
                 accounts.forEach { account ->
                     launch {
@@ -175,6 +179,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                     }
                 }
             }
+
             send(stateFlow.value.copy(status = errorIfAny.value ?: UpToDate))
         }
     }.conflate()
