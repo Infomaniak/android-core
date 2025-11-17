@@ -18,8 +18,6 @@
 package com.infomaniak.core.auth
 
 import com.infomaniak.core.auth.networking.AuthHttpClientProvider
-import com.infomaniak.core.network.ApiEnvironment
-import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.login.InfomaniakLogin.AccessType
 
 /**
@@ -35,11 +33,9 @@ object AuthConfiguration {
         clientId: String,
         accessType: AccessType? = this.accessType,
         tokenInterceptorListener: TokenInterceptorListener,
-        apiEnvironment: ApiEnvironment = ApiEnvironment.Prod,
     ) {
         this.clientId = clientId
         this.accessType = accessType
         AuthHttpClientProvider.tokenInterceptorListener = tokenInterceptorListener
-        NetworkConfiguration.init(appId, appVersionCode, appVersionName, apiEnvironment)
     }
 }
