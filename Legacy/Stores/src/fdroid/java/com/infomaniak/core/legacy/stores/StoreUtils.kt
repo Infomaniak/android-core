@@ -17,10 +17,10 @@
  */
 package com.infomaniak.core.legacy.stores
 
-import com.infomaniak.core.legacy.stores.updaterequired.data.models.AppVersion.Store
+import com.infomaniak.core.appversionchecker.data.models.AppVersion
 
 object StoreUtils : StoresUtils {
 
     const val APP_UPDATE_TAG = "appUpdateFDroid"
-    override val REQUIRED_UPDATE_STORE = Store.FDROID
+    override val REQUIRED_UPDATE_STORE = AppVersion.Store.FDROID
 }

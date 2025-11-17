@@ -22,12 +22,13 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryAppVersion
+import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.extensions.goToAppStore
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.APP_UPDATE_LAUNCHES_KEY
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.DEFAULT_APP_UPDATE_LAUNCHES
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.IS_USER_WANTING_UPDATES_KEY
-import com.infomaniak.core.inappupdate.updaterequired.data.api.ApiRepositoryStores
 import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionName
 import com.infomaniak.core.network.networking.HttpClient
@@ -40,6 +41,9 @@ import kotlinx.coroutines.launch
 
 abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) : DefaultLifecycleObserver {
 
+    abstract val store: AppVersion.Store
+    abstract val appUpdateTag: String
+
     protected var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
     protected var onFDroidResult: ((Boolean) -> Unit)? = null
 
@@ -51,7 +55,17 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
         .flowOf(HAS_APP_UPDATE_DOWNLOADED_KEY).distinctUntilChanged()
 
     val isUpdateRequired = flow {
-        val apiResponse = ApiRepositoryStores.getAppVersion(appId, HttpClient.okHttpClient)
+        val projectionFields = listOf(
+            AppVersion.ProjectionFields.MinVersion,
+            AppVersion.ProjectionFields.PublishedVersionsTag
+        )
+        val apiResponse = ApiRepositoryAppVersion.getAppVersion(
+            appName = appId,
+            store = store,
+            projectionFields = projectionFields,
+            channelFilter = AppVersion.VersionChannel.Production,
+            okHttpClient = HttpClient.okHttpClient
+        )
 
         emit(apiResponse.data?.mustRequireUpdate(appVersionName) == true)
     }.stateIn(

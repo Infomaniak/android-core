@@ -19,12 +19,12 @@ package com.infomaniak.core.inappupdate.updatemanagers
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
+import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionCode
 import com.infomaniak.core.inappupdate.FdroidApiTools
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.inappupdate.BaseInAppUpdateManager
-import com.infomaniak.core.inappupdate.StoreUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,8 +33,11 @@ class InAppUpdateManager(
     private val activity: ComponentActivity,
 ) : BaseInAppUpdateManager(activity) {
 
+    override val store: AppVersion.Store = AppVersion.Store.FDROID
+    override val appUpdateTag: String = "appUpdateFDroid"
+
     override fun checkUpdateIsAvailable() {
-        SentryLog.d(StoreUtils.APP_UPDATE_TAG, "Checking for update on FDroid")
+        SentryLog.d(appUpdateTag, "Checking for update on FDroid")
         activity.lifecycleScope.launch(Dispatchers.IO) {
             val lastVersionCode = FdroidApiTools().getLastRelease(appId)
 

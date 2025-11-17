@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024-2025 Infomaniak Network SA
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.legacy.stores.updaterequired.data.models
+package com.infomaniak.core.appversionchecker.data.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AppPublishedVersion(var tag: String)
+data class AppPublishedVersion(
+    val tag: String? = null,
+    @SerialName("tag_updated_at")
+    val tagUpdatedAt: String? = null,
+    @SerialName("version_changelog")
+    val versionChangelog: String? = null,
+    val type: String? = null,
+    @SerialName("build_version")
+    val buildVersion: String? = null,
+    @SerialName("build_min_os_version")
+    val buildMinOsVersion: String? = null,
+    @SerialName("download_link")
+    val downloadLink: String? = null,
+    val data: List<String>? = null
+)
