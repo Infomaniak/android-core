@@ -222,9 +222,9 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         var mostImportantIssue: AccountCheckResult.Issue = AccountCheckResult.Issue.Network
         // Default result. Any other issue is more important.
 
-        asyncTokenChecks.forEach { checkToken ->
+        asyncTokenChecks.forEach { tokenCheck ->
             launch {
-                when (val result = checkToken.await()) {
+                when (val result = tokenCheck.await()) {
                     is AccountCheckResult.Valid -> completable.complete(result)
                     // If at least one error is not network, we change the error to avoid displaying network error
                     AccountCheckResult.Issue.Other -> mostImportantIssue = AccountCheckResult.Issue.Other
