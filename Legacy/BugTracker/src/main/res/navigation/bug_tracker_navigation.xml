@@ -40,6 +40,9 @@
             app:argType="string"
             app:nullable="true" />
         <argument
+            android:name="appId"
+            app:argType="string" />
+        <argument
             android:name="appBuildNumber"
             app:argType="string" />
         <argument
@@ -47,9 +50,6 @@
             app:argType="string" />
         <argument
             android:name="projectName"
-            app:argType="string" />
-        <argument
-            android:name="repoGitHub"
             app:argType="string" />
     </activity>
 </navigation>
