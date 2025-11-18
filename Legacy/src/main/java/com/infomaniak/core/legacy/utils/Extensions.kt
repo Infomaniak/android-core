@@ -101,10 +101,12 @@ fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toIn
 @Deprecated("Use the method exposed through the Core:UiView module")
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
+@Deprecated("Use the method exposed through the Core:Ui module")
 fun Context.showToast(title: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, title, duration).show()
 }
 
+@Deprecated("Use the method exposed through the Core:Ui module")
 fun Context.showToast(title: Int, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, title, duration).show()
 }
