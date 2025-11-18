@@ -1,6 +1,6 @@
 /*
- * Infomaniak SwissTransfer - Android
- * Copyright (C) 2025-2025 Infomaniak Network SA
+ * Infomaniak Core - Android
+ * Copyright (C) 2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
-    namespace = "com.infomaniak.core.compose.bottomstickybuttonscaffolds"
+    namespace = "com.infomaniak.core.compose.basicbutton"
     compileSdk = coreCompileSdk
 
     defaultConfig {
@@ -48,9 +48,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Compose:Margin"))
-    implementation(project(":Core:Compose:Preview"))
-    implementation(project(":Core:Compose:BasicButton"))
+    implementation(project(":Core:Ui:Compose:Margin"))
 
     implementation(platform(core.compose.bom))
     implementation(core.compose.material3)
