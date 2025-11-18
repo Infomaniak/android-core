@@ -127,13 +127,13 @@ class BugTrackerActivity : AppCompatActivity() {
 
     private fun ActivityBugTrackerBinding.checkLastAppVersion() {
         lifecycleScope.launch {
-            bugTrackerViewModel.mustRequireUpdate(
+            bugTrackerViewModel.checkIfUpdateIsAvailable(
                 appId = navigationArgs.appId,
                 appVersion = navigationArgs.appBuildNumber,
                 store = AppVersion.Store.PLAY_STORE,
                 channelFilter = AppVersion.VersionChannel.Internal
-            ).flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collect { updateRequired ->
-                appNotUpToDate.isVisible = updateRequired
+            ).flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collect { updateIsAvailable ->
+                appNotUpToDate.isVisible = updateIsAvailable
             }
         }
     }

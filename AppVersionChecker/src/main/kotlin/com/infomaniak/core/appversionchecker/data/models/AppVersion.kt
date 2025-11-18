@@ -80,6 +80,25 @@ data class AppVersion(
         return false
     }
 
+    fun updateIsAvailable(currentVersion: String, channelFilter: VersionChannel): Boolean = runCatching {
+        val currentVersionNumbers = currentVersion.toVersionNumbers()
+        val publishedVersionNumber = publishedVersions?.first { it.type == channelFilter.value }?.tag?.toVersionNumbers()
+
+        if (publishedVersionNumber == null) {
+            SentryLog.d(TAG, "buildVersion for $channelFilter is null. Verify that the publishedVersions object is present in the response.")
+            return false
+        }
+
+        return currentVersionNumbers.compareVersionTo(publishedVersionNumber) < 0
+    } .getOrElse { exception ->
+        SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking $channelFilter version", exception) { scope ->
+            scope.setExtra("Version from API", publishedVersions?.first { it.type == channelFilter.value }?.tag)
+            scope.setExtra("Current Version", currentVersion)
+        }
+        
+        return false
+    }
+
     fun isMinimalVersionValid(minimalVersionNumbers: List<Int>): Boolean {
         val productionVersion = publishedVersions?.singleOrNull()?.tag ?: return false
         val productionVersionNumbers = productionVersion.toVersionNumbers()

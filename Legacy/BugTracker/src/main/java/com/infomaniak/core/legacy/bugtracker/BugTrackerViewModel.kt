@@ -71,7 +71,7 @@ class BugTrackerViewModel : ViewModel() {
         return isSuccessful
     }
 
-    fun mustRequireUpdate(
+    fun checkIfUpdateIsAvailable(
         appId: String,
         appVersion: String,
         store: AppVersion.Store,
@@ -91,7 +91,7 @@ class BugTrackerViewModel : ViewModel() {
             okHttpClient = HttpClient.okHttpClientNoTokenInterceptor
         )
 
-        emit(apiResponse.data?.mustRequireUpdate(appVersion) ?: false)
+        emit(apiResponse.data?.updateIsAvailable(appVersion, channelFilter) ?: false)
     }
 
     private companion object {
