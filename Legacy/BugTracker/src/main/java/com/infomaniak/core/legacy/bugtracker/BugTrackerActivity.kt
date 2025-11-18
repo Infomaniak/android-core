@@ -133,7 +133,7 @@ class BugTrackerActivity : AppCompatActivity() {
                 store = AppVersion.Store.PLAY_STORE,
                 channelFilter = AppVersion.VersionChannel.Internal
             ).flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collect { updateRequired ->
-                appNotUpToDate.isGone = !updateRequired
+                appNotUpToDate.isVisible = updateRequired
             }
         }
     }
