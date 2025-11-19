@@ -102,6 +102,10 @@ internal class CrossAppLoginImpl(
             }
         }
         targetPackageNames.collectLatest { packages ->
+            if (packages.isEmpty()) {
+                send(emptyList())
+                return@collectLatest
+            }
             packages.forEach { targetPackage ->
                 launch {
                     accountsPerApp.flowForKey(targetPackage).collect { accounts ->
