@@ -35,7 +35,9 @@ internal class AppSigningCertificates(
     }
 
     suspend fun matches(targetPackageName: String, signingCertificate: SigningCertificate): Boolean {
-        val acceptedCertificates = certificatesMapForPackages[targetPackageName] ?: return false
+        val acceptedCertificates = certificatesMapForPackages[targetPackageName]
+            ?: certificatesMapForPackages[WILD_CARD]
+            ?: return false
         return Dispatchers.Default {
             val givenSha256 = signingCertificate.sha256()
             acceptedCertificates.any { it.matches(givenSha256) }
@@ -43,4 +45,8 @@ internal class AppSigningCertificates(
     }
 
     private fun SigningCertificate.sha256(): ByteArray = MessageDigest.getInstance("SHA-256").digest(toByteArray())
+
+    companion object {
+        const val WILD_CARD = "*"
+    }
 }

@@ -18,11 +18,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <queries>
-        <package android:name="com.infomaniak.drive" />
-        <package android:name="com.infomaniak.mail" />
-        <package android:name="com.infomaniak.euria" />
-        <!--TODO[keep-in-sync]: Add other Infomaniak apps that are expected to support cross-app login,-->
-        <!-- and keep in sync with the infomaniakAppsCertificates.kt file.-->
+        <intent>
+            <action android:name="com.infomaniak.crossapp.login"/>
+        </intent>
     </queries>
 
 </manifest>
