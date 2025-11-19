@@ -96,13 +96,13 @@ internal class CrossAppLoginImpl(
 
         val accountsFlow = MutableStateFlow(emptyList<ExternalAccount>())
 
+        launch {
+            alreadyConnectedEmailsFlow.collect { alreadyConnectedEmails ->
+                send(accountsFlow.updateAndGet { it.withAccounts(emptyList(), alreadyConnectedEmails) })
+            }
+        }
         targetPackageNames.collectLatest { packages ->
             packages.forEach { targetPackage ->
-                launch {
-                    alreadyConnectedEmailsFlow.collect { alreadyConnectedEmails ->
-                        send(accountsFlow.updateAndGet { it.withAccounts(emptyList(), alreadyConnectedEmails) })
-                    }
-                }
                 launch {
                     accountsPerApp.flowForKey(targetPackage).collect { accounts ->
                         send(accountsFlow.updateAndGet { it.withAccounts(accounts, alreadyConnectedEmailsFlow.value) })
