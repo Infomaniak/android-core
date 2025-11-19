@@ -100,7 +100,11 @@ internal class TwoFactorAuthImpl(
             response.status.isSuccess() -> response.body<ApiResponse<RemoteChallenge>>().data
             else -> {
                 val httpCode = response.status.value
-                SentryLog.e(TAG, "Failed to get the latest challenge [http $httpCode]")
+                if (httpCode != 401) {
+                    SentryLog.e(TAG, "Failed to get the latest challenge") { scope ->
+                        scope.setTag("httpCode", httpCode.toString())
+                    }
+                }
                 null
             }
         }
