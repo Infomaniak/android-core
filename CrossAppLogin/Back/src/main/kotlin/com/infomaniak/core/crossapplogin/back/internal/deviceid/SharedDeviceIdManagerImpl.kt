@@ -71,7 +71,7 @@ internal class SharedDeviceIdManagerImpl(
     private val coroutineScope: CoroutineScope,
     private val ipcIssuesManager: IpcIssuesManager,
     private val certificateChecker: AppCertificateChecker,
-    private val targetPackageNames: Set<String>
+    private val targetPackageNames: suspend () -> Set<String>
 ) : SharedDeviceIdManager() {
 
     private val sharedDeviceIdMutex = SharedDeviceIdManager.sharedDeviceIdMutex
@@ -107,6 +107,7 @@ internal class SharedDeviceIdManagerImpl(
     }
 
     private suspend fun findCrossAppDeviceIdInApps(request: CrossAppDeviceIdRequest): Uuid? = completableScope { completable ->
+        val targetPackageNames = targetPackageNames()
 
         val packagesToLookup = targetPackageNames - request.packageNamesAlreadyBeingChecked
 
@@ -127,6 +128,7 @@ internal class SharedDeviceIdManagerImpl(
     }
 
     private suspend fun retrieveAndSyncDeviceId(): Uuid = coroutineScope {
+        val targetPackageNames = targetPackageNames()
         val deviceIdCompletable = CompletableDeferred<Uuid>()
         val allPackagesCheckedJob = Job(parent = coroutineContext.job)
         val syncJobs = targetPackageNames.map { packageName ->
@@ -208,7 +210,7 @@ internal class SharedDeviceIdManagerImpl(
     ): Result<Unit> = runCatching {
         // requestSharedDeviceId isn't supposed to throw, so this wrapping `runCatching` shouldn't be necessary,
         // but if a dev mistake ever happens, and breaks the communication format, it's still best to not crash.
-        requestSharedDeviceId(binder, packageNamesToSkip = targetPackageNames + context.packageName)
+        requestSharedDeviceId(binder, packageNamesToSkip = targetPackageNames() + context.packageName)
     }.also { // This is the `runCatching` equivalent to a `finally` block for a `try` block.
         thisPackageCheckedJob.complete()
     }.cancellable().onSuccess { id ->

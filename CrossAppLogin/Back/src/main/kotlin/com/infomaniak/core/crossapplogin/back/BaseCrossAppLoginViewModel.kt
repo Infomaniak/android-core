@@ -18,9 +18,7 @@
 package com.infomaniak.core.crossapplogin.back
 
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
@@ -53,6 +51,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -115,10 +114,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             coroutineScope = this + Dispatchers.Default
         )
         if (singleSelection) launch { keepSingleSelection() }
-        hostActivity.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            _availableAccounts.emit(crossAppLogin.retrieveAccountsFromOtherApps())
-        }
-        awaitCancellation() // Should never be reached. Unfortunately, `repeatOnLifecycle` doesn't return `Nothing`.
+        _availableAccounts.emitAll(crossAppLogin.accountsFromOtherApps(hostActivity.lifecycle))
+        awaitCancellation() // Should never be reached because the accountsFromOtherApps Flow should be infinite.
     }
 
     suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {

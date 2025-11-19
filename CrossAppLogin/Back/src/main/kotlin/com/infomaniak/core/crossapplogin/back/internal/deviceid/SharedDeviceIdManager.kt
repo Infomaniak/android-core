@@ -39,7 +39,7 @@ internal sealed class SharedDeviceIdManager {
             coroutineScope: CoroutineScope,
             ipcIssuesManager: IpcIssuesManager,
             certificateChecker: AppCertificateChecker,
-            targetPackageNames: Set<String>
+            targetPackageNames: suspend () -> Set<String>
         ): SharedDeviceIdManager = SharedDeviceIdManagerImpl(
             context,
             coroutineScope,
