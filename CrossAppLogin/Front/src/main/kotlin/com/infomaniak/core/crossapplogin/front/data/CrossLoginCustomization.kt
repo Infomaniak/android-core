@@ -20,8 +20,8 @@ package com.infomaniak.core.crossapplogin.front.data
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.infomaniak.core.compose.basics.ButtonStyle
-import com.infomaniak.core.compose.basics.ButtonType
+import com.infomaniak.core.ui.compose.basics.ButtonStyle
+import com.infomaniak.core.ui.compose.basics.ButtonType
 
 data class CrossLoginCustomization(
     val colors: CrossLoginColors,

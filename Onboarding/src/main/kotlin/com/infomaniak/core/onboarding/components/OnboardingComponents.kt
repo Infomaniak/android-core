@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.onboarding.models.OnboardingLottieSource
 import com.lottiefiles.dotlottie.core.compose.runtime.DotLottieController
 import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation

@@ -33,9 +33,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
-import com.infomaniak.core.compose.basics.Dimens
-import com.infomaniak.core.compose.basics.Typography
-import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.ui.compose.basics.Dimens
+import com.infomaniak.core.ui.compose.basics.Typography
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.components.TextWithIcon
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors

@@ -42,8 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.compose.basics.CallableState
-import com.infomaniak.core.compose.basics.WithLatestNotNull
+import com.infomaniak.core.ui.compose.basics.CallableState
+import com.infomaniak.core.ui.compose.basics.WithLatestNotNull
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge

@@ -28,8 +28,8 @@ import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
-import com.infomaniak.core.compose.basics.ButtonType
-import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
+import com.infomaniak.core.ui.compose.basics.ButtonType
+import com.infomaniak.core.ui.compose.materialthemefromxml.MaterialThemeFromXml
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.R
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization

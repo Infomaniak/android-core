@@ -9,7 +9,7 @@ val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
-    namespace = "com.infomaniak.core.compose.basics"
+    namespace = "com.infomaniak.core.ui.compose.basics"
     compileSdk = coreCompileSdk
 
     defaultConfig {

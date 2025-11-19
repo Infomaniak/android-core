@@ -53,9 +53,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.core.compose.basics.Dimens
-import com.infomaniak.core.compose.basics.Typography
-import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.ui.compose.basics.Dimens
+import com.infomaniak.core.ui.compose.basics.Typography
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ksuite.data.KSuite
 import com.infomaniak.core.ksuite.ksuitepro.R
 import com.infomaniak.core.ksuite.ksuitepro.data.ProFeature

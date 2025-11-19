@@ -29,8 +29,8 @@ import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import com.google.android.material.color.MaterialColors
-import com.infomaniak.core.compose.basics.Typography
-import com.infomaniak.core.compose.materialthemefromxml.MaterialThemeFromXml
+import com.infomaniak.core.ui.compose.basics.Typography
+import com.infomaniak.core.ui.compose.materialthemefromxml.MaterialThemeFromXml
 
 internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = staticCompositionLocalOf { MyKSuiteColors() }
 

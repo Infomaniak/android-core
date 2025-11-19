@@ -26,7 +26,7 @@ val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
-    namespace = "com.infomaniak.core.compose.materialthemefromxml"
+    namespace = "com.infomaniak.core.ui.compose.materialthemefromxml"
     compileSdk = coreCompileSdk
 
     defaultConfig {
