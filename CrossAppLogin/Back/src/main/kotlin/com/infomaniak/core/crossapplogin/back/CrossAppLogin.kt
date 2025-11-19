@@ -18,8 +18,10 @@
 package com.infomaniak.core.crossapplogin.back
 
 import android.content.Context
+import androidx.lifecycle.Lifecycle
 import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdManager
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.uuid.ExperimentalUuidApi
@@ -35,12 +37,13 @@ sealed class CrossAppLogin {
     }
 
     /**
-     * Returns a merge of accounts found in other known apps.
+     * Each time the passed [hostLifecycle] transitions to [Lifecycle.State.STARTED],
+     * emits a merge of accounts found in other known apps, as they arrive.
      *
      * Must return selected accounts **last** (account(s) currently selected in other apps).
      */
     @ExperimentalSerializationApi
-    abstract suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount>
+    abstract fun accountsFromOtherApps(hostLifecycle: Lifecycle): Flow<List<ExternalAccount>>
 
     /**
      * Gives an id for this device, that is shared across all our apps.
