@@ -142,12 +142,9 @@ private fun produceUiState(
     key2 = indeterminateProgressDelay,
     key3 = progress,
 ) {
-    val effectiveShowIndeterminate = if (showIndeterminateProgress()) {
+    if (showIndeterminateProgress()) {
         value = UiState.Loading.Delayed
         delay(indeterminateProgressDelay)
-        true
-    } else {
-        false
     }
 
     value = computeUiState(progress, showIndeterminateProgress)
