@@ -21,12 +21,10 @@ import androidx.compose.ui.graphics.Color
 import com.infomaniak.core.dotlottie.ThemeData
 import kotlinx.serialization.json.Json
 
-sealed interface DotLottieTheme {
-    val id: String?
+sealed class DotLottieTheme(val id: String?) {
+    class Embedded(id: String?) : DotLottieTheme(id)
 
-    data class Embedded(override val id: String?) : DotLottieTheme
-    data class Custom(val colorMapping: Map<String, Color>) : DotLottieTheme {
-        override val id: String? = null
+    data class Custom(private val colorMapping: Map<String, Color>) : DotLottieTheme(null) {
         internal fun toData(): String = json.encodeToString(ThemeData(rules = colorMapping.map(ThemeData::Rule)))
     }
 
