@@ -3,7 +3,7 @@ plugins {
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
     kotlin("plugin.serialization")
-
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -45,14 +45,17 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        viewBinding = true
     }
 }
 
 dependencies {
     implementation(project(":Core"))
     implementation(project(":Core:AppVersionChecker"))
-    implementation(project(":Core:Compose:BottomStickyButtonScaffolds"))
+    implementation(project(":Core:Ui"))
+    implementation(project(":Core:Ui:Compose:BottomStickyButtonScaffolds"))
     implementation(project(":Core:Ui:Compose:Margin"))
+    implementation(project(":Core:Ui:View"))
     implementation(project(":Core:Network"))
     implementation(project(":Core:Sentry"))
 
@@ -63,6 +66,11 @@ dependencies {
 
     implementation(core.app.update)
     implementation(core.app.update.ktx)
+
+    implementation(core.navigation.fragment.ktx)
+    implementation(core.navigation.ui.ktx)
+
+    implementation(core.material)
 
     implementation(core.androidx.concurrent.futures.ktx)
 

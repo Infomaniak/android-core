@@ -17,16 +17,71 @@
  */
 package com.infomaniak.core.inappupdate.updaterequired.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.view.ContextThemeWrapper
+import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.navArgs
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.color.MaterialColors
+import com.infomaniak.core.extensions.clearStack
+import com.infomaniak.core.extensions.goToAppStore
+import com.infomaniak.core.inappupdate.R
+import com.infomaniak.core.inappupdate.databinding.ActivityUpdateRequiredBinding
+import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
+import com.infomaniak.core.legacy.stores.updaterequired.UpdateRequiredActivityArgs
+import com.infomaniak.core.ui.showToast
+import kotlin.getValue
+import kotlin.system.exitProcess
+import androidx.appcompat.R as RAndroid
 
-class UpdateRequiredActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class UpdateRequiredActivity : AppCompatActivity() {
+
+    private val binding by lazy { ActivityUpdateRequiredBinding.inflate(layoutInflater) }
+    private val navigationArgs: UpdateRequiredActivityArgs by navArgs()
+
+    private val inAppUpdateManager by lazy { InAppUpdateManager(this) }
+
+    override fun onCreate(savedInstanceState: Bundle?): Unit = with(binding) {
         super.onCreate(savedInstanceState)
+        setTheme(navigationArgs.appTheme)
+        setContentView(root)
 
-        setContent {
+        inAppUpdateManager.init(
+            isUpdateRequired = true,
+            onInstallFailure = {
+                showToast(R.string.errorUpdateInstall)
+                goToAppStore()
+            },
+        )
 
+        onBackPressedDispatcher.addCallback(this@UpdateRequiredActivity) {
+            finishAffinity()
+            exitProcess(0)
+        }
+
+        updateAppButton.apply {
+            val primaryColor = getPrimaryColor()
+            if (primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(primaryColor)
+            setOnClickListener { inAppUpdateManager.requireUpdate() }
+        }
+    }
+
+    private fun MaterialButton.getPrimaryColor(): Int {
+        return MaterialColors.getColor(ContextThemeWrapper(context, theme), RAndroid.attr.colorPrimary, UNDEFINED_PRIMARY_COLOR)
+    }
+
+    companion object {
+        private const val UNDEFINED_PRIMARY_COLOR = 0
+
+        fun startUpdateRequiredActivity(context: Context, appId: String, versionCode: Int, appTheme: Int) {
+            Intent(context, UpdateRequiredActivity::class.java).apply {
+                val args = UpdateRequiredActivityArgs(appId, versionCode, appTheme)
+                putExtras(args.toBundle())
+                clearStack()
+            }.also(context::startActivity)
         }
     }
 }

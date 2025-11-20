@@ -32,10 +32,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import com.infomaniak.core.compose.bottomstickybuttonscaffolds.DoubleStackedButtonScaffold
-import com.infomaniak.core.compose.margin.Margin
 import com.infomaniak.core.extensions.appName
 import com.infomaniak.core.inappupdate.R
+import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.DoubleStackedButtonScaffold
+import com.infomaniak.core.ui.compose.margin.Margin
 
 @Composable
 fun UpdateAvailableBottomSheetContent(
