@@ -76,7 +76,6 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
 
     open fun installDownloadedUpdate() = Unit
 
-    // TODO: What about the F-Droid variant?
     open fun requireUpdate(onFailure: ((Exception) -> Unit)? = null) = activity.goToAppStore()
 
     open fun init(
