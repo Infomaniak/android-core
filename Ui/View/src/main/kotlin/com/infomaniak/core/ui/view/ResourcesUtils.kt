@@ -15,10 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.infomaniak.core.ui.view
 
-import android.content.res.Resources
+import android.content.Context
+import android.view.View
 
-fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
-fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+fun Int.toPx(context: Context): Int = (this * context.resources.displayMetrics.density).toInt()
+inline fun Int.toPx(view: View): Int = toPx(view.context)
+fun Float.toPx(context: Context): Float = (this * context.resources.displayMetrics.density)
+inline fun Float.toPx(view: View): Float = toPx(view.context)
+
+fun Int.toDp(context: Context): Int = (this / context.resources.displayMetrics.density).toInt()
+inline fun Int.toDp(view: View): Int = toDp(view.context)
+fun Float.toDp(context: Context): Float = (this / context.resources.displayMetrics.density)
+inline fun Float.toDp(view: View): Float = toDp(view.context)
