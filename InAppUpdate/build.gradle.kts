@@ -51,7 +51,7 @@ android {
 dependencies {
     implementation(project(":Core"))
     implementation(project(":Core:AppVersionChecker"))
-    implementation(project(":Core:Compose:Margin"))
+    implementation(project(":Core:Ui:Compose:Margin"))
     implementation(project(":Core:Network"))
     implementation(project(":Core:Sentry"))
 

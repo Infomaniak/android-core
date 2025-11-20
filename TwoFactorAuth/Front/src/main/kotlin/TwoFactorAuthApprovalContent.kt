@@ -69,10 +69,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat.ID_NULL
-import com.infomaniak.core.compose.basics.CallableState
-import com.infomaniak.core.compose.basics.Typography
-import com.infomaniak.core.compose.basics.rememberCallableState
-import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.ui.compose.basics.CallableState
+import com.infomaniak.core.ui.compose.basics.Typography
+import com.infomaniak.core.ui.compose.basics.rememberCallableState
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.network.EDIT_PASSWORD_URL
 import com.infomaniak.core.twofactorauth.back.ConnectionAttemptInfo
 import com.infomaniak.core.twofactorauth.back.RemoteChallenge

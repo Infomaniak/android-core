@@ -60,9 +60,9 @@ dependencies {
     implementation(project(":Core"))
     implementation(project(":Core:Avatar"))
     implementation(project(":Core:Coil"))
-    implementation(project(":Core:Compose:BasicButton"))
-    implementation(project(":Core:Compose:Basics"))
-    implementation(project(":Core:Compose:Margin"))
+    implementation(project(":Core:Ui:Compose:BasicButton"))
+    implementation(project(":Core:Ui:Compose:Basics"))
+    implementation(project(":Core:Ui:Compose:Margin"))
     implementation(project(":Core:Network"))
     implementation(project(":Core:Notifications"))
 

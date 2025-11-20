@@ -40,7 +40,7 @@ import coil3.compose.LocalPlatformContext
 import com.infomaniak.core.avatar.R
 import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
-import com.infomaniak.core.compose.margin.Margin
+import com.infomaniak.core.ui.compose.margin.Margin
 
 @Composable
 fun Avatar(

@@ -28,9 +28,9 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.compose.basicbutton.BasicButton
-import com.infomaniak.core.compose.basicbutton.BasicButtonDelay
-import com.infomaniak.core.compose.basics.Typography
+import com.infomaniak.core.ui.compose.basicbutton.BasicButton
+import com.infomaniak.core.ui.compose.basicbutton.BasicButtonDelay
+import com.infomaniak.core.ui.compose.basics.Typography
 import kotlin.time.Duration
 
 @Composable

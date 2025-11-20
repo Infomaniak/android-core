@@ -59,9 +59,9 @@ dependencies {
     implementation(project(":Core"))
     implementation(project(":Core:Avatar"))
     implementation(project(":Core:Coil"))
-    implementation(project(":Core:Compose:Basics"))
-    implementation(project(":Core:Compose:Margin"))
-    implementation(project(":Core:Compose:MaterialThemeFromXml"))
+    implementation(project(":Core:Ui:Compose:Basics"))
+    implementation(project(":Core:Ui:Compose:Margin"))
+    implementation(project(":Core:Ui:Compose:MaterialThemeFromXml"))
     implementation(project(":Core:KSuite"))
     implementation(project(":Core:Network")) // To access API URL
 

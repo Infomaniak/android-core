@@ -38,7 +38,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Compose:Margin"))
+    implementation(project(":Core:Ui:Compose:Margin"))
 
     implementation(core.androidx.core.ktx)
     implementation(platform(core.compose.bom))

@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Compose:Margin"))
+    implementation(project(":Core:Ui:Compose:Margin"))
 
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)
