@@ -60,7 +60,6 @@ class DotLottieView @JvmOverloads constructor(
 
         addView(composeView)
     }
-
 }
 
 @Composable
