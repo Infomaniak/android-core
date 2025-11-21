@@ -18,4 +18,8 @@
 package com.infomaniak.core.appintegrity.exceptions
 
 /** An error has occurred when verified by api play integrity or our remote api */
-class IntegrityException(override val cause: Throwable? = null) : Exception()
+sealed class IntegrityException(override val cause: Throwable? = null) : Exception()
+
+class AppIntegrityException(cause: Throwable?) : IntegrityException(cause)
+
+class FDroidUnsupportedIntegrityException() : IntegrityException()

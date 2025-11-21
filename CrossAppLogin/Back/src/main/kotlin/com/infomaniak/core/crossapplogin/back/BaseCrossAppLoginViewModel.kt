@@ -41,7 +41,6 @@ import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.IScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
@@ -111,7 +110,10 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
         // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
-        if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) awaitCancellation()
+        if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) {
+            _availableAccounts.emit(emptyList())
+            awaitCancellation()
+        }
 
         accountsCheckingState.launchIn(this) // Make the flow hot.
         // We don't use SharingStarted.Eagerly because the ViewModel can be present without
