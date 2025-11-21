@@ -25,7 +25,7 @@ import com.google.android.play.core.integrity.IntegrityTokenRequest
 import com.google.android.play.core.integrity.StandardIntegrityManager.PrepareIntegrityTokenRequest
 import com.google.android.play.core.integrity.StandardIntegrityManager.StandardIntegrityTokenProvider
 import com.google.android.play.core.integrity.StandardIntegrityManager.StandardIntegrityTokenRequest
-import com.infomaniak.core.appintegrity.exceptions.IntegrityException
+import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.appintegrity.exceptions.UnexpectedApiErrorFormatException
 import com.infomaniak.core.cancellable
@@ -111,7 +111,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
         return runCatching {
             token.await()
         }.cancellable().getOrElse { exception ->
-            throw IntegrityException(exception)
+            throw AppIntegrityException(exception)
         }
     }
 
@@ -140,7 +140,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
             return apiResponse.data ?: error("Integrity ApiResponse cannot contain null data")
         }.cancellable().getOrElse { exception ->
             if (exception is UnexpectedApiErrorFormatException && exception.bodyResponse.contains("invalid_attestation")) {
-                throw IntegrityException(exception)
+                throw AppIntegrityException(exception)
             } else {
                 throw exception
             }

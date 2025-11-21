@@ -18,9 +18,7 @@
 package com.infomaniak.core.appintegrity
 
 import android.content.Context
-import com.infomaniak.core.appintegrity.exceptions.CustomAppIntegrityException
-import com.infomaniak.core.appintegrity.exceptions.IntegrityException
-import java.io.IOException
+import com.infomaniak.core.appintegrity.exceptions.FDroidUnsupportedIntegrityException
 
 class AppIntegrityManager(
     @Suppress("unused") private val appContext: Context,
@@ -41,16 +39,16 @@ class AppIntegrityManager(
     }
 
     override suspend fun requestClassicIntegrityVerdictToken(challenge: String): String {
-        throw CustomAppIntegrityException("Fdroid doesn't support app integrity")
+        throw FDroidUnsupportedIntegrityException()
     }
 
-    override suspend fun getChallenge() = throw IOException("Unsupported for this app build")
+    override suspend fun getChallenge() = throw FDroidUnsupportedIntegrityException()
 
     override suspend fun getApiIntegrityVerdict(
         integrityToken: String,
         packageName: String,
         targetUrl: String,
-    ) = throw IntegrityException(Exception("Unsupported for this app build"))
+    ) = throw FDroidUnsupportedIntegrityException()
 
     companion object {
         const val APP_INTEGRITY_MANAGER_TAG = "App integrity manager"
