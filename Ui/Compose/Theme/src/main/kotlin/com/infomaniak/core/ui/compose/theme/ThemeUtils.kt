@@ -35,7 +35,7 @@ fun selectSchemeForContrast(
     highContrastDarkColorScheme: ColorScheme,
     highContrastLightColorScheme: ColorScheme,
 ): ColorScheme {
-    fun defaultTheme(): ColorScheme = if (isDark) darkScheme else lightScheme
+    fun defaultColorScheme(): ColorScheme = if (isDark) darkScheme else lightScheme
 
     val isPreview = LocalInspectionMode.current
     return if (!isPreview && isContrastAvailable()) {
@@ -43,10 +43,10 @@ fun selectSchemeForContrast(
         val contrastLevel = uiModeManager.contrast
 
         when (contrastLevel) {
-            in 0.0f..0.33f -> defaultTheme()
-            in 0.34f..0.66f -> if (isDark) mediumContrastDarkColorScheme else mediumContrastLightColorScheme
-            in 0.67f..1.0f -> if (isDark) highContrastDarkColorScheme else highContrastLightColorScheme
-            else -> defaultTheme()
+            in 0.0f..0.33f -> defaultColorScheme()
+            in 0.33f..0.66f -> if (isDark) mediumContrastDarkColorScheme else mediumContrastLightColorScheme
+            in 0.66f..1.0f -> if (isDark) highContrastDarkColorScheme else highContrastLightColorScheme
+            else -> defaultColorScheme()
         }
-    } else defaultTheme()
+    } else defaultColorScheme()
 }
