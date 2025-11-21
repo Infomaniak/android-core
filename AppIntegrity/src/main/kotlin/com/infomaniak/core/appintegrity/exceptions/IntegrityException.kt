@@ -18,4 +18,4 @@
 package com.infomaniak.core.appintegrity.exceptions
 
 /** An error has occurred when verified by api play integrity or our remote api */
-class IntegrityException(override val cause: Throwable? = null) : Exception()
+open class IntegrityException(override val cause: Throwable? = null) : Exception()

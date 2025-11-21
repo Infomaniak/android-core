@@ -18,6 +18,7 @@
 package com.infomaniak.core.appintegrity
 
 import android.content.Context
+import com.infomaniak.core.appintegrity.exceptions.CustomAppIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import java.io.IOException
 
@@ -40,7 +41,7 @@ class AppIntegrityManager(
     }
 
     override suspend fun requestClassicIntegrityVerdictToken(challenge: String): String {
-        return "fake integrity token"
+        throw CustomAppIntegrityException("Fdroid doesn't support app integrity")
     }
 
     override suspend fun getChallenge() = throw IOException("Unsupported for this app build")

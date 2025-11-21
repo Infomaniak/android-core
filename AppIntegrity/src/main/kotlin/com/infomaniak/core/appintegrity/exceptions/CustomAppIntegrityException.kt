@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2024-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,4 +22,4 @@ package com.infomaniak.core.appintegrity.exceptions
  *
  * @param message A detailed message describing the error.
  */
-class AppIntegrityException(message: String) : Exception(message)
+class CustomAppIntegrityException(override val message: String) : IntegrityException()

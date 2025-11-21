@@ -21,6 +21,7 @@ import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
 import com.infomaniak.core.appintegrity.AppIntegrityManager
 import com.infomaniak.core.appintegrity.AppIntegrityManager.Companion.APP_INTEGRITY_MANAGER_TAG
+import com.infomaniak.core.appintegrity.exceptions.CustomAppIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.cancellable
@@ -82,14 +83,14 @@ internal class DerivedTokenGeneratorImpl(
         appIntegrityManager.requestClassicIntegrityVerdictToken(dummyChallenge)
         true
     }.cancellable().getOrElse { exception ->
-        if (
-            exception is IntegrityException &&
-            exception.cause?.message?.contains(Regex(INTEGRITY_UNAVAILABLE_ERROR_REGEX)) == true
-        ) {
-            // If we get one of these Integrity exceptions, it means we won't be able to connect to the Service when tying later
-            return@getOrElse false
+        when (exception) {
+            is CustomAppIntegrityException -> false // fDroid
+            is IntegrityException -> {
+                // If we get one of these Integrity exceptions, it means we won't be able to connect to the Service when tying later
+                exception.cause?.message?.contains(Regex(INTEGRITY_UNAVAILABLE_ERROR_REGEX)) == false
+            }
+            else -> true
         }
-        true
     }
 
     private suspend fun attemptDerivingToken(token: String): Xor<ApiToken, Issue> {
@@ -161,7 +162,7 @@ internal class DerivedTokenGeneratorImpl(
     // TODO: Improve error handling as some are recoverable (network or backends availability related), while some are not.
     //  See Play Integrity error codes: https://developer.android.com/google/play/integrity/error-codes,
     //  and remediation: https://developer.android.com/google/play/integrity/remediation
-    @Throws(IntegrityException::class)
+    @Throws(IntegrityException::class, CustomAppIntegrityException::class)
     private suspend inline fun fetchNewAttestationToken(targetUrl: String): String {
         val challenge = appIntegrityManager.getChallenge()
 
