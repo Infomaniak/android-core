@@ -140,7 +140,9 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     }
 
     private fun accountsCheckingStateFlow(): Flow<AccountsCheckingState> = channelFlow {
-        send(AccountsCheckingState(status = Checking))
+
+        val stateFlow = MutableStateFlow(AccountsCheckingState(status = Checking))
+        send(stateFlow.value)
 
         _availableAccounts.collectLatest { accounts ->
             when {
@@ -148,16 +150,19 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                 accounts.isEmpty() -> return@collectLatest send(AccountsCheckingState(status = UpToDate))
             }
 
-            val stateFlow = MutableStateFlow(AccountsCheckingState(status = Checking))
             val errorIfAny = MutableStateFlow<Error?>(null)
+            val currentlyCheckedAccounts = MutableStateFlow(emptyList<ExternalAccount>())
 
-            send(stateFlow.value)
+            send(stateFlow.value.copy(status = Checking))
 
             coroutineScope {
                 accounts.forEach { account ->
                     launch {
                         when (val result = checkAccount(account)) {
-                            is AccountCheckResult.Valid -> send(stateFlow.updateAndGet { it.withAccount(result.account) })
+                            is AccountCheckResult.Valid -> {
+                                currentlyCheckedAccounts.update { it + result.account }
+                                send(stateFlow.updateAndGet { it.withAccount(result.account) })
+                            }
                             AccountCheckResult.Issue.Network -> errorIfAny.update { it ?: Error.Network }
                             AccountCheckResult.Issue.Other -> errorIfAny.update { it }
                         }
@@ -165,7 +170,14 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                 }
             }
 
-            send(stateFlow.value.copy(status = errorIfAny.value ?: UpToDate))
+            val finalValue = stateFlow.updateAndGet { lastState ->
+                val accountsToKeep = currentlyCheckedAccounts.value // We will filter accounts that are no longer in other apps.
+                lastState.copy(
+                    status = errorIfAny.value ?: UpToDate,
+                    checkedAccounts = lastState.checkedAccounts.filter { it in accountsToKeep }
+                )
+            }
+            send(finalValue)
         }
     }.conflate()
 
