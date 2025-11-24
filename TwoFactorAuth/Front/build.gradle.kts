@@ -76,6 +76,7 @@ dependencies {
     implementation(core.compose.ui.android)
     debugImplementation(core.compose.ui.tooling)
     implementation(core.compose.material3)
+    implementation(core.compose.material.icons)
     api(core.compose.ui)
     implementation(core.compose.ui.tooling.preview)
 }
