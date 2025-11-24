@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
@@ -82,14 +83,6 @@ internal class CrossAppLoginImpl(
 
         val isStartedFlow = hostLifecycle.currentStateFlow.map { it.isAtLeast(Lifecycle.State.STARTED) }.stateIn(this)
 
-        val accountsPerApp = DynamicLazyMap.sharedFlow(
-            cacheManager = { _, _ -> awaitCancellation() },
-            coroutineScope = this,
-            createFlow = { packageName: String ->
-                isStartedFlow.transform { isStarted -> if (isStarted) emit(retrieveAccountsFromApp(packageName)) }
-            }
-        )
-
         val targetPackageNames = isStartedFlow.transform { isStarted -> if (isStarted) emit(targetPackageNames()) }.stateIn(this)
 
         // We actively listen for connected emails, so if one is added (likely through cross-app login),
@@ -103,23 +96,28 @@ internal class CrossAppLoginImpl(
             users.mapTo(mutableSetOf()) { it.email }
         }.stateIn(this)
 
-        val accountsFlow = MutableStateFlow(emptyList<ExternalAccount>())
 
-        val alreadyConnectedEmailsUpdatingJob = launch(
-            start = CoroutineStart.LAZY // To not send an empty list before the first available responds.
-        ) {
-            alreadyConnectedEmailsFlow.collect { alreadyConnectedEmails ->
-                send(accountsFlow.updateAndGet { it.withAccounts(emptyList(), alreadyConnectedEmails) })
-            }
-        }
         targetPackageNames.collectLatest { packages ->
             if (packages.isEmpty()) {
                 send(emptyList())
                 return@collectLatest
             }
-            packages.forEach { targetPackage ->
-                launch {
-                    accountsPerApp.flowForKey(targetPackage).collect { accounts ->
+
+            isStartedFlow.collectLatest { isStarted ->
+                if (isStarted.not()) return@collectLatest
+
+                val accountsFlow = MutableStateFlow(emptyList<ExternalAccount>())
+
+                // Lazy start to not send an empty list before the first available responds.
+                val alreadyConnectedEmailsUpdatingJob = launch(start = CoroutineStart.LAZY) {
+                    alreadyConnectedEmailsFlow.collect { alreadyConnectedEmails ->
+                        send(accountsFlow.updateAndGet { it.withAccounts(emptyList(), alreadyConnectedEmails) })
+                    }
+                }
+
+                packages.forEach { targetPackage ->
+                    launch {
+                        val accounts = retrieveAccountsFromApp(targetPackage)
                         send(accountsFlow.updateAndGet { it.withAccounts(accounts, alreadyConnectedEmailsFlow.value) })
                         alreadyConnectedEmailsUpdatingJob.start() // At least one app responded, we can now have this job run.
                     }
