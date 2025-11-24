@@ -181,7 +181,9 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         }
     }.conflate()
 
-    private fun AccountsCheckingState.withAccount(account: ExternalAccount) = copy(checkedAccounts = checkedAccounts + account)
+    private fun AccountsCheckingState.withAccount(account: ExternalAccount): AccountsCheckingState {
+        return copy(checkedAccounts = (checkedAccounts + account).distinctBy { it.email })
+    }
 
     private suspend fun checkAccount(account: ExternalAccount): AccountCheckResult {
         return accountCheckStatuses.useElement(account) { resultAsync -> resultAsync.await() }
