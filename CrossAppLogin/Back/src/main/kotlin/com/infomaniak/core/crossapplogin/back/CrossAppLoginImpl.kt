@@ -39,6 +39,7 @@ import com.infomaniak.core.flowForKey
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.sharedFlow
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
@@ -90,13 +91,23 @@ internal class CrossAppLoginImpl(
         )
 
         val targetPackageNames = isStartedFlow.transform { isStarted -> if (isStarted) emit(targetPackageNames()) }.stateIn(this)
+
+        // We actively listen for connected emails, so if one is added (likely through cross-app login),
+        // while cross-app login is still connected, we don't try to log it in again.
+        // That might happen for cases where the login UI stays active as the login of one of 2+ accounts
+        // fails, with the app not navigating away.
+        // NOTE: If we can know for sure that this Flow gets cancelled/restarted after a login attempt of multiple accounts,
+        // then we can replace this Flow with a suspend function (`UserDatabase().userDao().allUsers.first().map { it.email }`),
+        // and drop the `alreadyConnectedEmailsUpdatingJob` altogether.
         val alreadyConnectedEmailsFlow: StateFlow<Set<String>> = UserDatabase().userDao().allUsers.map { users ->
             users.mapTo(mutableSetOf()) { it.email }
         }.stateIn(this)
 
         val accountsFlow = MutableStateFlow(emptyList<ExternalAccount>())
 
-        launch {
+        val alreadyConnectedEmailsUpdatingJob = launch(
+            start = CoroutineStart.LAZY // To not send an empty list before the first available responds.
+        ) {
             alreadyConnectedEmailsFlow.collect { alreadyConnectedEmails ->
                 send(accountsFlow.updateAndGet { it.withAccounts(emptyList(), alreadyConnectedEmails) })
             }
@@ -110,6 +121,7 @@ internal class CrossAppLoginImpl(
                 launch {
                     accountsPerApp.flowForKey(targetPackage).collect { accounts ->
                         send(accountsFlow.updateAndGet { it.withAccounts(accounts, alreadyConnectedEmailsFlow.value) })
+                        alreadyConnectedEmailsUpdatingJob.start() // At least one app responded, we can now have this job run.
                     }
                 }
             }
