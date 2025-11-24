@@ -25,7 +25,6 @@ import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
 import androidx.lifecycle.Lifecycle
-import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.android.service.OnBindingIssue
 import com.infomaniak.core.android.service.OnServiceDisconnectionBehavior
 import com.infomaniak.core.android.service.withBoundService
@@ -35,9 +34,7 @@ import com.infomaniak.core.crossapplogin.back.internal.ChannelMessageHandler
 import com.infomaniak.core.crossapplogin.back.internal.DisposableMessage
 import com.infomaniak.core.crossapplogin.back.internal.certificates.AppCertificateChecker
 import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdManager
-import com.infomaniak.core.flowForKey
 import com.infomaniak.core.sentry.SentryLog
-import com.infomaniak.core.sharedFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +51,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
