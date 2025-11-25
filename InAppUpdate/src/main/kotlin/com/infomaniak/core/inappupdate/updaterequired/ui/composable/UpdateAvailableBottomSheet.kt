@@ -26,19 +26,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Density
-import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.inappupdate.R
+import com.infomaniak.core.ui.compose.margin.Margin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,8 +48,10 @@ fun UpdateAvailableBottomSheet(
     dismissButton: @Composable() () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
     ModalBottomSheet(
-        sheetState = SheetState(skipPartiallyExpanded = true, density = Density(LocalContext.current)),
+        sheetState = sheetState,
         onDismissRequest = onDismissRequest,
     ) {
         Column(
