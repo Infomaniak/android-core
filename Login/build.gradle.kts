@@ -8,7 +8,7 @@ val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
-    namespace = "com.infomaniak.core.crossapplogin.login"
+    namespace = "com.infomaniak.core.login"
     compileSdk = coreCompileSdk
 
     defaultConfig {
@@ -26,7 +26,9 @@ android {
 }
 
 dependencies {
-    api(project(":Core:Login"))
-    implementation(project(":Core:Auth"))
+    api(project(":Core:Auth")) // The class CredentialManager is required by the exposed public method
     implementation(project(":Core:Network"))
+
+    implementation(core.appcompat)
+    api(core.okhttp)
 }

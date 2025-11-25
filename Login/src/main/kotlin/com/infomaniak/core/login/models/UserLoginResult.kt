@@ -15,22 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.crossapplogin.login
+package com.infomaniak.core.login.models
 
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.network.api.ApiController.toApiError
-import com.infomaniak.core.network.api.InternalTranslatedErrorCode
-import com.infomaniak.core.network.models.ApiResponse
-import com.infomaniak.core.network.models.ApiResponseStatus
 
-internal sealed interface UserResult {
-    data class Success(val user: User) : UserResult
-    open class Failure(val apiResponse: ApiResponse<*>) : UserResult {
-        data object Unknown : Failure(
-            ApiResponse<Unit>(
-                result = ApiResponseStatus.ERROR,
-                error = InternalTranslatedErrorCode.UnknownError.toApiError()
-            )
-        )
-    }
+sealed interface UserLoginResult {
+    data class Success(val user: User) : UserLoginResult
+    data class Failure(val errorMessage: String) : UserLoginResult
 }
