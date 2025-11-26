@@ -22,6 +22,7 @@
     </plurals>
     <string name="buttonCreateAccount">Create an account</string>
     <string name="buttonLogin">Login</string>
+    <string name="buttonStart">Start</string>
     <string name="buttonUseOtherAccount">Use another account</string>
     <string name="crossAppLoginAccountsLoaderTitle">Fetching your accounts…</string>
     <string name="selectAccountPanelTitle">Select one or multiple accounts</string>
