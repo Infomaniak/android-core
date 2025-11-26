@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.login.models
+package com.infomaniak.core.auth.utils.models
 
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.network.api.ApiController.toApiError

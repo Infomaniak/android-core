@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.login
+package com.infomaniak.core.auth.utils
 
 import android.content.Context
 import androidx.activity.result.ActivityResult
@@ -23,10 +23,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.core.auth.CredentialManager
 import com.infomaniak.core.auth.TokenAuthenticator.Companion.changeAccessToken
 import com.infomaniak.core.auth.api.ApiRepositoryCore
-import com.infomaniak.core.login.LoginUtils.getLoginResultAfterWebView
-import com.infomaniak.core.login.models.AuthCodeResult
-import com.infomaniak.core.login.models.UserLoginResult
-import com.infomaniak.core.login.models.UserResult
+import com.infomaniak.core.auth.utils.LoginUtils.getLoginResultAfterWebView
+import com.infomaniak.core.auth.utils.models.AuthCodeResult
+import com.infomaniak.core.auth.utils.models.UserLoginResult
+import com.infomaniak.core.auth.utils.models.UserResult
 import com.infomaniak.core.network.api.ApiController.toApiError
 import com.infomaniak.core.network.api.InternalTranslatedErrorCode
 import com.infomaniak.core.network.models.ApiResponse
@@ -44,7 +44,7 @@ object LoginUtils {
     /**
      * Logs the user based on the ActivityResult of our login WebView.
      *
-     * @return a [com.infomaniak.core.login.models.UserLoginResult] or null if the user canceled the login webview without going through to the end
+     * @return a [UserLoginResult] or null if the user canceled the login webview without going through to the end
      */
     suspend fun getLoginResultAfterWebView(
         result: ActivityResult,
@@ -73,6 +73,24 @@ object LoginUtils {
                 UserLoginResult.Failure(context.getString(userResult.apiResponse.translateError()))
             }
             is UserResult.Success -> UserLoginResult.Success(userResult.user)
+        }
+    }
+
+    /**
+     * Logs the user based on the [ApiToken]s returned by the cross app login logic.
+     *
+     * @return a [UserLoginResult] or null if the user canceled the login webview without going through to the end
+     */
+    suspend fun getLoginResultsAfterCrossApp(
+        apiTokens: List<ApiToken>,
+        context: Context,
+        credentialManager: CredentialManager,
+    ): List<UserLoginResult> = buildList {
+        authenticateUsers(apiTokens, credentialManager).forEach { result ->
+            when (result) {
+                is UserResult.Success -> add(UserLoginResult.Success(result.user))
+                is UserResult.Failure -> add(UserLoginResult.Failure(context.getString(result.apiResponse.translateError())))
+            }
         }
     }
 
