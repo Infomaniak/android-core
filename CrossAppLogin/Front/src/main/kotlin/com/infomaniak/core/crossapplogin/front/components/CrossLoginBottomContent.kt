@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -429,7 +430,7 @@ object CrossLoginBottomButton {
      * needs to start loading so it cannot be clicked multiple times while the api calls are being sent when the user has slow internet.
      * @param isSignUpButtonLoading Whether the button to create a new account is loading or not. Same as [isLoginButtonLoading].
      */
-    fun default(
+    fun accountRequired(
         onLogin: () -> Unit,
         onCreateAccount: () -> Unit,
         isLoginButtonLoading: () -> Boolean = { false },
@@ -450,7 +451,7 @@ object CrossLoginBottomButton {
      *
      * @param onStartClicked When the user clicks on the button to start.
      */
-    fun start(
+    fun accountOptional(
         onStartClicked: () -> Unit,
     ): @Composable (Modifier, CrossLoginCustomization) -> Unit = { modifier, customization ->
         ButtonExpanded(
@@ -481,7 +482,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 customization = CrossLoginDefaults.customize(
                     colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
                 ),
-                noAccountsBottomButtons = CrossLoginBottomButton.start { }
+                noAccountsBottomButtons = CrossLoginBottomButton.accountOptional { }
             )
         }
     }
