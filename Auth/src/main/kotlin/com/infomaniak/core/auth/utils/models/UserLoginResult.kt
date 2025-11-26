@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.login.models
+package com.infomaniak.core.auth.utils.models
 
-internal sealed interface AuthCodeResult {
-    data class Success(val code: String) : AuthCodeResult
-    data class Error(val message: String) : AuthCodeResult
-    data object Canceled : AuthCodeResult
+import com.infomaniak.core.auth.models.user.User
+
+sealed interface UserLoginResult {
+    data class Success(val user: User) : UserLoginResult
+    data class Failure(val errorMessage: String) : UserLoginResult
 }
