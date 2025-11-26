@@ -66,13 +66,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.ui.compose.basicbutton.BasicButton
-import com.infomaniak.core.ui.compose.basicbutton.BasicButtonDelay
-import com.infomaniak.core.ui.compose.basics.ButtonStyle
-import com.infomaniak.core.ui.compose.basics.Dimens
-import com.infomaniak.core.ui.compose.basics.Typography
-import com.infomaniak.core.ui.compose.basics.bottomsheet.ThemedBottomSheetScaffold
-import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.Companion.filterSelectedAccounts
@@ -86,6 +79,13 @@ import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginListAccounts
 import com.infomaniak.core.crossapplogin.front.views.components.CrossLoginSelectAccounts
 import com.infomaniak.core.onboarding.components.OnboardingComponents
+import com.infomaniak.core.ui.compose.basicbutton.BasicButton
+import com.infomaniak.core.ui.compose.basicbutton.BasicButtonDelay
+import com.infomaniak.core.ui.compose.basics.ButtonStyle
+import com.infomaniak.core.ui.compose.basics.Dimens
+import com.infomaniak.core.ui.compose.basics.Typography
+import com.infomaniak.core.ui.compose.basics.bottomsheet.ThemedBottomSheetScaffold
+import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.coroutines.launch
 import com.infomaniak.core.R as RCore
 
@@ -100,9 +100,7 @@ private val FAB_SIZE = 64.dp
  * we're at the last page and to navigate between page shen the arrow button is clicked.
  * @param accountsCheckingState The status of the accounts check. Used to know when displaying loader, the account or an error.
  * @param skippedIds The list of ids of accounts that are not currently selected by the user.
- * @param onLogin When the user has no accounts for cross app login and clicks on the button to log in a new user.
  * @param onContinueWithSelectedAccounts When the user has accounts for cross app login and clicks on the button to log them.
- * @param onCreateAccount When the user has no accounts for cross app login and clicks on the button to create a new account.
  * @param onUseAnotherAccountClicked When the user has accounts for cross app login but wants to connect a different account.
  * @param onSaveSkippedAccounts When the user has confirmed his selection of accounts to use for cross app login. The updated
  * skipped accounts need to be saved at the view model level so that when login only selected accounts are taken into accounts.
@@ -110,7 +108,6 @@ private val FAB_SIZE = 64.dp
  * @param isLoginButtonLoading Whether the buttons to login are loading or not. This includes both the standard login button when
  * there's no accounts for cross app login and the confirmation button when there are accounts for cross app login. The button
  * needs to start loading so it cannot be clicked multiple times while the api calls are being sent when the user has slow internet.
- * @param isSignUpButtonLoading Whether the button to create a new account is loading or not. Same as [isLoginButtonLoading].
  * @param nextButtonShape To specify a different shape for the big button with an arrow that lets you go to the next page.
  * @param customization Use it to style differently the buttons and the content of the bottom sheet that lets the user select
  * what accounts to use for cross app login.
@@ -122,15 +119,13 @@ fun OnboardingComponents.CrossLoginBottomContent(
     pagerState: PagerState,
     accountsCheckingState: () -> AccountsCheckingState,
     skippedIds: () -> Set<Long>,
-    onLogin: () -> Unit,
     onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
-    onCreateAccount: () -> Unit,
     onUseAnotherAccountClicked: () -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
+    noAccountsBottomButtons: @Composable (Modifier, CrossLoginCustomization) -> Unit,
     modifier: Modifier = Modifier,
     isSingleSelection: Boolean = false,
     isLoginButtonLoading: () -> Boolean = { false },
-    isSignUpButtonLoading: () -> Boolean = { false },
     nextButtonShape: Shape = CrossLoginBottomContentDefaults.nextButtonShape,
     customization: CrossLoginCustomization = CrossLoginDefaults.customize(),
 ) {
@@ -175,12 +170,10 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             isCheckingUpToDate = { isCheckingUpToDate },
                             shouldLoadAccount = { shouldLoadAccount },
                             isLoginButtonLoading = isLoginButtonLoading,
-                            isSignUpButtonLoading = isSignUpButtonLoading,
                             onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
                             onAccountsSelectionClicked = { showAccountsBottomSheet = true },
-                            onLogin = onLogin,
-                            onCreateAccount = onCreateAccount,
                             animatedButtonModifier = animatedButtonModifier,
+                            noAccountsBottomButtons = { noAccountsBottomButtons(animatedButtonModifier, customization) }
                         )
                     } else {
                         ButtonNext(
@@ -258,12 +251,10 @@ private fun LoginPage(
     isCheckingUpToDate: () -> Boolean,
     shouldLoadAccount: () -> Boolean,
     isLoginButtonLoading: () -> Boolean,
-    isSignUpButtonLoading: () -> Boolean,
     onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
     onAccountsSelectionClicked: () -> Unit,
-    onLogin: () -> Unit,
-    onCreateAccount: () -> Unit,
     @SuppressLint("ModifierParameter") animatedButtonModifier: Modifier,
+    noAccountsBottomButtons: @Composable () -> Unit,
 ) {
 
     if (shouldLoadAccount()) {
@@ -279,19 +270,17 @@ private fun LoginPage(
                 isLoading = { !isCheckingUpToDate() },
                 onClick = onAccountsSelectionClicked,
             )
+
+            ConnectionButton(
+                primaryButtonType = customization.buttonStyle,
+                isLoginButtonLoading = isLoginButtonLoading,
+                modifier = animatedButtonModifier,
+                text = pluralStringResource(R.plurals.buttonContinueWithAccounts, accounts.size - skippedIds().size),
+                onClick = { onContinueWithSelectedAccounts(accounts.filterSelectedAccounts(skippedIds())) }
+            )
+        } else {
+            noAccountsBottomButtons()
         }
-
-        ConnectionButton(
-            primaryButtonType = customization.buttonStyle,
-            accounts = { accounts },
-            skippedIds = skippedIds,
-            isLoginButtonLoading = isLoginButtonLoading,
-            onLogin = onLogin,
-            onContinueWithSelectedAccounts = { onContinueWithSelectedAccounts(accounts.filterSelectedAccounts(skippedIds())) },
-            modifier = animatedButtonModifier,
-        )
-
-        if (!shouldDisplayCrossLogin) AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
     }
 }
 
@@ -360,24 +349,16 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
 @Composable
 private fun ConnectionButton(
     primaryButtonType: ButtonStyle,
-    accounts: () -> List<ExternalAccount>,
-    skippedIds: () -> Set<Long>,
     isLoginButtonLoading: () -> Boolean,
-    onLogin: () -> Unit,
-    onContinueWithSelectedAccounts: () -> Unit,
     modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit,
 ) {
-    val getConnexionButtonText = if (accounts().isEmpty()) {
-        stringResource(R.string.buttonLogin)
-    } else {
-        pluralStringResource(R.plurals.buttonContinueWithAccounts, accounts().size - skippedIds().size)
-    }
-
     ButtonExpanded(
-        text = getConnexionButtonText,
+        text = text,
         shape = primaryButtonType.shape,
         isLoginButtonLoading = isLoginButtonLoading,
-        onClick = if (accounts().isEmpty()) onLogin else onContinueWithSelectedAccounts,
+        onClick = onClick,
         modifier = modifier.height(primaryButtonType.height),
     )
 }
@@ -436,6 +417,52 @@ object CrossLoginBottomContentDefaults {
     val nextButtonShape = RoundedCornerShape(Dimens.largeCornerRadius)
 }
 
+object CrossLoginBottomButton {
+
+    /**
+     * When accounts are required.
+     *
+     * @param onLogin When the user has no accounts for cross app login and clicks on the button to log in a new user.
+     * @param onCreateAccount When the user has no accounts for cross app login and clicks on the button to create a new account.
+     * @param isLoginButtonLoading Whether the buttons to login are loading or not. This includes both the standard login button when
+     * there's no accounts for cross app login and the confirmation button when there are accounts for cross app login. The button
+     * needs to start loading so it cannot be clicked multiple times while the api calls are being sent when the user has slow internet.
+     * @param isSignUpButtonLoading Whether the button to create a new account is loading or not. Same as [isLoginButtonLoading].
+     */
+    fun default(
+        onLogin: () -> Unit,
+        onCreateAccount: () -> Unit,
+        isLoginButtonLoading: () -> Boolean = { false },
+        isSignUpButtonLoading: () -> Boolean = { false },
+    ): @Composable (Modifier, CrossLoginCustomization) -> Unit = { modifier, customization ->
+        ConnectionButton(
+            primaryButtonType = customization.buttonStyle,
+            isLoginButtonLoading = isLoginButtonLoading,
+            modifier = modifier,
+            text = stringResource(R.string.buttonLogin),
+            onClick = onLogin,
+        )
+        AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
+    }
+
+    /**
+     * When no account is required.
+     *
+     * @param onStartClicked When the user clicks on the button to start.
+     */
+    fun start(
+        onStartClicked: () -> Unit,
+    ): @Composable (Modifier, CrossLoginCustomization) -> Unit = { modifier, customization ->
+        ButtonExpanded(
+            text = stringResource(R.string.buttonStart),
+            shape = customization.buttonStyle.shape,
+            isLoginButtonLoading = { false },
+            onClick = { onStartClicked() },
+            modifier = modifier.height(customization.buttonStyle.height),
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>) {
@@ -447,15 +474,14 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                     AccountsCheckingState(AccountsCheckingStatus.Checking, checkedAccounts = accounts)
                 },
                 skippedIds = { emptySet() },
-                onLogin = {},
                 onContinueWithSelectedAccounts = {},
-                onCreateAccount = {},
                 onUseAnotherAccountClicked = {},
                 onSaveSkippedAccounts = {},
                 isLoginButtonLoading = { true },
                 customization = CrossLoginDefaults.customize(
                     colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
-                )
+                ),
+                noAccountsBottomButtons = CrossLoginBottomButton.start { }
             )
         }
     }
