@@ -24,6 +24,7 @@ import com.infomaniak.core.auth.CredentialManager
 import com.infomaniak.core.auth.TokenAuthenticator.Companion.changeAccessToken
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.utils.LoginUtils.getLoginResultAfterWebView
+import com.infomaniak.core.auth.utils.LoginUtils.getLoginResultsAfterCrossApp
 import com.infomaniak.core.auth.utils.models.AuthCodeResult
 import com.infomaniak.core.auth.utils.models.UserLoginResult
 import com.infomaniak.core.auth.utils.models.UserResult
@@ -37,8 +38,6 @@ import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
 import com.infomaniak.lib.login.InfomaniakLogin.ErrorStatus
 import com.infomaniak.lib.login.InfomaniakLogin.TokenResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.invoke
 
 object LoginUtils {
     /**
@@ -61,13 +60,11 @@ object LoginUtils {
 
         val tokenResult = infomaniakLogin.getToken(okHttpClient = HttpClient.okHttpClient, code = authCodeResult.code)
         when (tokenResult) {
-            is TokenResult.Error -> {
-                return UserLoginResult.Failure(context.getUserAuthenticationErrorMessage(tokenResult.errorStatus))
-            }
+            is TokenResult.Error -> return UserLoginResult.Failure(context.formatAuthErrorMessage(tokenResult.errorStatus))
             is TokenResult.Success -> Unit
         }
 
-        val userResult = authenticateUsers(listOf(tokenResult.apiToken), credentialManager).single()
+        val userResult = getUserByToken(listOf(tokenResult.apiToken), credentialManager).single()
         return when (userResult) {
             is UserResult.Failure -> {
                 UserLoginResult.Failure(context.getString(userResult.apiResponse.translateError()))
@@ -85,21 +82,19 @@ object LoginUtils {
         apiTokens: List<ApiToken>,
         context: Context,
         credentialManager: CredentialManager,
-    ): List<UserLoginResult> = buildList {
-        authenticateUsers(apiTokens, credentialManager).forEach { result ->
-            when (result) {
-                is UserResult.Success -> add(UserLoginResult.Success(result.user))
-                is UserResult.Failure -> add(UserLoginResult.Failure(context.getString(result.apiResponse.translateError())))
-            }
+    ): List<UserLoginResult> = getUserByToken(apiTokens, credentialManager).map { result ->
+        when (result) {
+            is UserResult.Success -> UserLoginResult.Success(result.user)
+            is UserResult.Failure -> UserLoginResult.Failure(context.getString(result.apiResponse.translateError()))
         }
     }
 
     /**
-     * This method is the basis on which [getLoginResultAfterWebView] and its alternative getLoginResultAfterWebView are based on.
-     * It needs to be public to be used inside of the CrossAppLgin:Login module but there is no reason to call this directly, the
-     * other two methods make it easier to reuse correctly.
+     * This method is the basis on which [getLoginResultAfterWebView] and its alternative [getLoginResultsAfterCrossApp] are built
+     * upon. It needs to be public to be used inside of the CrossAppLgin:Login module but there is no reason to call this
+     * directly, the other two methods make it easier to reuse correctly.
      */
-    suspend fun authenticateUsers(
+    private suspend fun getUserByToken(
         apiTokens: List<ApiToken>,
         credentialManager: CredentialManager,
     ): List<UserResult> = apiTokens.map { apiToken ->
@@ -122,7 +117,7 @@ private fun ActivityResult.toAuthCodeResult(context: Context): AuthCodeResult {
     }
 }
 
-private fun Context.getUserAuthenticationErrorMessage(errorStatus: ErrorStatus): String {
+private fun Context.formatAuthErrorMessage(errorStatus: ErrorStatus): String {
     return getString(
         when (errorStatus) {
             ErrorStatus.SERVER -> InternalTranslatedErrorCode.ServerError
@@ -142,12 +137,12 @@ private suspend fun authenticateUser(apiToken: ApiToken, credentialManager: Cred
         chain.proceed(newRequest)
     }.build()
 
-    val userProfileResponse = Dispatchers.IO { ApiRepositoryCore.getUserProfile(okhttpClient) }
+    val userProfileResponse = ApiRepositoryCore.getUserProfile(okhttpClient)
 
     if (userProfileResponse.result == ApiResponseStatus.ERROR) return UserResult.Failure(userProfileResponse)
-    if (userProfileResponse.data == null) return UserResult.Failure.Unknown
+    val userData = userProfileResponse.data ?: return UserResult.Failure.Unknown
 
-    val user = userProfileResponse.data!!.apply {
+    val user = userData.apply {
         this.apiToken = apiToken
         this.organizations = arrayListOf()
     }
