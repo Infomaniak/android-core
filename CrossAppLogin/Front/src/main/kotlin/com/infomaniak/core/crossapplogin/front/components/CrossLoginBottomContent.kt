@@ -297,7 +297,7 @@ private fun CrossAppLoginAccountsLoader(customization: CrossLoginCustomization) 
             style = Typography.bodyRegular,
             color = customization.colors.titleColor,
         )
-        CircularProgressIndicator(Modifier.width(Dimens.iconSize))
+        CircularProgressIndicator(Modifier.size(Dimens.iconSize))
     }
 }
 
