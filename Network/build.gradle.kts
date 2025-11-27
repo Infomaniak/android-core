@@ -48,4 +48,5 @@ dependencies {
     implementation(core.gson)
     implementation(core.okhttp)
     implementation(core.stetho.okhttp3)
+    implementation(core.splitties.systemservices)
 }
