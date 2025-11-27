@@ -64,7 +64,7 @@ object LoginUtils {
             is TokenResult.Success -> Unit
         }
 
-        val userResult = getUserByToken(listOf(tokenResult.apiToken), credentialManager).single()
+        val userResult = getUsersByToken(listOf(tokenResult.apiToken), credentialManager).single()
         return when (userResult) {
             is UserResult.Failure -> {
                 UserLoginResult.Failure(context.getString(userResult.apiResponse.translateError()))
@@ -82,26 +82,24 @@ object LoginUtils {
         apiTokens: List<ApiToken>,
         context: Context,
         credentialManager: CredentialManager,
-    ): List<UserLoginResult> = getUserByToken(apiTokens, credentialManager).map { result ->
+    ): List<UserLoginResult> = getUsersByToken(apiTokens, credentialManager).map { result ->
         when (result) {
             is UserResult.Success -> UserLoginResult.Success(result.user)
             is UserResult.Failure -> UserLoginResult.Failure(context.getString(result.apiResponse.translateError()))
         }
     }
+}
 
-    /**
-     * This method is the basis on which [getLoginResultAfterWebView] and its alternative [getLoginResultsAfterCrossApp] are built
-     * upon. It needs to be public to be used inside of the CrossAppLgin:Login module but there is no reason to call this
-     * directly, the other two methods make it easier to reuse correctly.
-     */
-    private suspend fun getUserByToken(
-        apiTokens: List<ApiToken>,
-        credentialManager: CredentialManager,
-    ): List<UserResult> = apiTokens.map { apiToken ->
-        runCatching {
-            authenticateUser(apiToken, credentialManager)
-        }.getOrDefault(UserResult.Failure.Unknown)
-    }
+/**
+ * This method is the basis on which [getLoginResultAfterWebView] and its alternative [getLoginResultsAfterCrossApp] are built.
+ */
+private suspend fun getUsersByToken(
+    apiTokens: List<ApiToken>,
+    credentialManager: CredentialManager,
+): List<UserResult> = apiTokens.map { apiToken ->
+    runCatching {
+        authenticateUser(apiToken, credentialManager)
+    }.getOrDefault(UserResult.Failure.Unknown)
 }
 
 private fun ActivityResult.toAuthCodeResult(context: Context): AuthCodeResult {

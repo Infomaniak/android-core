@@ -23,7 +23,7 @@ import com.infomaniak.core.network.api.InternalTranslatedErrorCode
 import com.infomaniak.core.network.models.ApiResponse
 import com.infomaniak.core.network.models.ApiResponseStatus
 
-sealed interface UserResult {
+internal sealed interface UserResult {
     data class Success(val user: User) : UserResult
     open class Failure(val apiResponse: ApiResponse<*>) : UserResult {
         data object Unknown : Failure(
