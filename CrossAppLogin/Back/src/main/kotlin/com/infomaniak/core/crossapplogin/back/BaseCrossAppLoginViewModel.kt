@@ -98,8 +98,6 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         createElement = { account -> async { getFirstValidTokenOrError(account) } },
     )
 
-    private val apiRepository = object : ApiRepositoryCore() {}
-
     private val baseOkHttpClient by lazy {
         OkHttpClient.Builder().apply {
             addCache()
@@ -191,7 +189,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
         val customTokenHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
 
-        when (apiRepository.getUserProfile(customTokenHttpClient).data) {
+        when (ApiRepositoryCore.getUserProfile(customTokenHttpClient).data) {
             is User -> {
                 // Put the just checked token first. Will speed up later derivation attempts.
                 val tokens = setOf(token) + account.tokens
