@@ -92,7 +92,6 @@ internal class CrossAppLoginImpl(
             users.mapTo(mutableSetOf()) { it.email }
         }.stateIn(this)
 
-
         targetPackageNames.collectLatest { packages ->
             if (packages.isEmpty()) {
                 send(emptyList())
