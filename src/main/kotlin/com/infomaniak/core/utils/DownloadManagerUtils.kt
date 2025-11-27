@@ -17,14 +17,22 @@
  */
 package com.infomaniak.core.utils
 
+import android.app.DownloadManager
 import android.app.DownloadManager.Request
+import android.content.Context
+import android.database.Cursor
 import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import androidx.core.net.toUri
+import com.infomaniak.core.R
 import com.infomaniak.core.extensions.appName
 import com.infomaniak.core.extensions.appVersionName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.invoke
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object DownloadManagerUtils {
 
@@ -71,5 +79,55 @@ object DownloadManagerUtils {
         addRequestHeader("App-Version", "Android $appVersionName")
         addRequestHeader("User-Agent", userAgent)
         extraHeaders.forEach { (key, value) -> addRequestHeader(key, value) }
+    }
+
+    fun scheduleDownload(
+        context: Context,
+        url: String,
+        name: String,
+        userBearerToken: String?,
+        extraHeaders: Iterable<Pair<String, String>> = emptySet(),
+        onError: (Int) -> Unit
+    ) {
+        val formattedName = name.replace(regexInvalidSystemChar, "_").replace("%", "_").let {
+            // fix IllegalArgumentException only on Android 10 if multi dot
+            if (SDK_INT == 29) it.replace(Regex("\\.{2,}"), ".") else it
+        }
+
+        DownloadManager.Request(url.toUri()).apply {
+            setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+            setTitle(formattedName)
+            setDescription(appName)
+            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, formattedName)
+            extraHeaders.forEach { (key, value) -> addRequestHeader(key, value) }
+            userBearerToken?.let { addRequestHeader("Authorization", "Bearer $it") }
+            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+
+            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            context.handleDownloadManagerErrors(downloadManager.enqueue(this), downloadManager, onError)
+        }
+    }
+
+    private fun Context.handleDownloadManagerErrors(downloadReference: Long, downloadManager: DownloadManager, onError: (Int) -> Unit) {
+        CoroutineScope(Dispatchers.Default).launch {
+            delay(1_000L)
+            DownloadManager.Query().apply {
+                setFilterById(downloadReference)
+                downloadManager.query(this).use {
+                    if (it.moveToFirst()) withContext(Dispatchers.Main) { checkStatus(it, onError) }
+                }
+            }
+        }
+    }
+
+    private fun Context.checkStatus(cursor: Cursor, onError: (Int) -> Unit) {
+        val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+        val reason = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON))
+        if (status == DownloadManager.STATUS_FAILED) {
+            when (reason) {
+                DownloadManager.ERROR_INSUFFICIENT_SPACE -> onError(R.string.errorDownloadInsufficientSpace)
+                else -> onError(R.string.errorDownload)
+            }
+        }
     }
 }
