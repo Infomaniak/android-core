@@ -81,6 +81,7 @@ object DownloadManagerUtils {
         extraHeaders.forEach { (key, value) -> addRequestHeader(key, value) }
     }
 
+    @Deprecated("Use requestFor and extensions in DownloadManager.kt as SwissTransfer")
     fun scheduleDownload(
         context: Context,
         url: String,
@@ -108,6 +109,7 @@ object DownloadManagerUtils {
         }
     }
 
+    // Remove this once scheduleDownload is removed
     private fun handleDownloadManagerErrors(downloadReference: Long, downloadManager: DownloadManager, onError: (Int) -> Unit) {
         CoroutineScope(Dispatchers.Default).launch {
             delay(1_000L)
@@ -120,6 +122,7 @@ object DownloadManagerUtils {
         }
     }
 
+    // Remove this once scheduleDownload is removed
     private fun checkStatus(cursor: Cursor, onError: (Int) -> Unit) {
         val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
         val reason = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON))
