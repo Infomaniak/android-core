@@ -94,7 +94,7 @@ object DownloadManagerUtils {
             if (SDK_INT == 29) it.replace(Regex("\\.{2,}"), ".") else it
         }
 
-        DownloadManager.Request(url.toUri()).apply {
+        Request(url.toUri()).apply {
             setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             setTitle(formattedName)
             setDescription(appName)
@@ -104,11 +104,11 @@ object DownloadManagerUtils {
             setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
             val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-            context.handleDownloadManagerErrors(downloadManager.enqueue(this), downloadManager, onError)
+            handleDownloadManagerErrors(downloadManager.enqueue(this), downloadManager, onError)
         }
     }
 
-    private fun Context.handleDownloadManagerErrors(downloadReference: Long, downloadManager: DownloadManager, onError: (Int) -> Unit) {
+    private fun handleDownloadManagerErrors(downloadReference: Long, downloadManager: DownloadManager, onError: (Int) -> Unit) {
         CoroutineScope(Dispatchers.Default).launch {
             delay(1_000L)
             DownloadManager.Query().apply {
@@ -120,7 +120,7 @@ object DownloadManagerUtils {
         }
     }
 
-    private fun Context.checkStatus(cursor: Cursor, onError: (Int) -> Unit) {
+    private fun checkStatus(cursor: Cursor, onError: (Int) -> Unit) {
         val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
         val reason = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON))
         if (status == DownloadManager.STATUS_FAILED) {
