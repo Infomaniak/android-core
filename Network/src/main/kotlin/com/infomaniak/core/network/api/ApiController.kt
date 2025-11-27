@@ -108,7 +108,7 @@ object ApiController {
         url: String,
         method: ApiMethod,
         body: Any? = null,
-        okHttpClient: OkHttpClient = HttpClient.okHttpClient,
+        okHttpClient: OkHttpClient = DefaultHttpClientProvider.okHttpClient,
         useKotlinxSerialization: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
     ): T {
