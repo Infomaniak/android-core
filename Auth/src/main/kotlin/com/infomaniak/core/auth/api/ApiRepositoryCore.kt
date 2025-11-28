@@ -29,14 +29,23 @@ abstract class ApiRepositoryCore {
         withEmails: Boolean = false,
         withPhones: Boolean = false,
         withSecurity: Boolean = false,
-    ): ApiResponse<User> {
-        var with = ""
-        if (withEmails) with += "emails"
-        if (withPhones) with += "phones"
-        if (withSecurity) with += "security"
-        if (with.isNotEmpty()) with = "?with=$with"
+    ): ApiResponse<User> = ApiRepositoryCore.getUserProfile(okHttpClient, withEmails, withPhones, withSecurity)
 
-        val url = "${ApiRoutesCore.getUserProfile()}$with"
-        return ApiController.callApi(url, ApiController.ApiMethod.GET, okHttpClient = okHttpClient)
+    companion object {
+        suspend fun getUserProfile(
+            okHttpClient: OkHttpClient,
+            withEmails: Boolean = false,
+            withPhones: Boolean = false,
+            withSecurity: Boolean = false,
+        ): ApiResponse<User> {
+            var with = ""
+            if (withEmails) with += "emails"
+            if (withPhones) with += "phones"
+            if (withSecurity) with += "security"
+            if (with.isNotEmpty()) with = "?with=$with"
+
+            val url = "${ApiRoutesCore.getUserProfile()}$with"
+            return ApiController.callApi(url, ApiController.ApiMethod.GET, okHttpClient = okHttpClient)
+        }
     }
 }
