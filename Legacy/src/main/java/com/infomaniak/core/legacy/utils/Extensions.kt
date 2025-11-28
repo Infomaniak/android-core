@@ -71,7 +71,6 @@ import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
 import com.github.razir.progressbutton.TextChangeAnimatorParams
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.bindProgressButton
-import com.github.razir.progressbutton.detachTextChangeAnimator
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
@@ -125,11 +124,6 @@ fun MaterialButton.initProgress(lifecycle: LifecycleOwner? = null, color: Int? =
     }
 
     params?.let(::attachTextChangeAnimator) ?: attachTextChangeAnimator()
-}
-
-fun MaterialButton.updateTextColor(color: Int?) {
-    detachTextChangeAnimator()
-    initProgress(color = color)
 }
 
 fun MaterialButton.showProgressCatching(color: Int? = null) {
