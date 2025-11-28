@@ -23,11 +23,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.core.auth.CredentialManager
 import com.infomaniak.core.auth.TokenAuthenticator.Companion.changeAccessToken
 import com.infomaniak.core.auth.api.ApiRepositoryCore
+import com.infomaniak.core.auth.models.AuthCodeResult
+import com.infomaniak.core.auth.models.UserLoginResult
+import com.infomaniak.core.auth.models.UserResult
 import com.infomaniak.core.auth.utils.LoginUtils.getLoginResultAfterWebView
 import com.infomaniak.core.auth.utils.LoginUtils.getLoginResultsAfterCrossApp
-import com.infomaniak.core.auth.utils.models.AuthCodeResult
-import com.infomaniak.core.auth.utils.models.UserLoginResult
-import com.infomaniak.core.auth.utils.models.UserResult
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.network.api.ApiController.toApiError
 import com.infomaniak.core.network.api.InternalTranslatedErrorCode

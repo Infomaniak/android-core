@@ -15,10 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.auth.utils.models
+package com.infomaniak.core.auth.models
 
-internal sealed interface AuthCodeResult {
-    data class Success(val code: String) : AuthCodeResult
-    data class Error(val message: String) : AuthCodeResult
-    data object Canceled : AuthCodeResult
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.network.api.ApiController.toApiError
+import com.infomaniak.core.network.api.InternalTranslatedErrorCode
+import com.infomaniak.core.network.models.ApiResponse
+import com.infomaniak.core.network.models.ApiResponseStatus
+
+internal sealed interface UserResult {
+    data class Success(val user: User) : UserResult
+    open class Failure(val apiResponse: ApiResponse<*>) : UserResult {
+        data object Unknown : Failure(
+            ApiResponse<Unit>(
+                result = ApiResponseStatus.ERROR,
+                error = InternalTranslatedErrorCode.UnknownError.toApiError()
+            )
+        )
+    }
 }
