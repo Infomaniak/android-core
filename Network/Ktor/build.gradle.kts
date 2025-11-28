@@ -40,8 +40,8 @@ android {
 }
 
 dependencies {
-    api(project(":Core:Network"))
-    implementation(project(":Core:Sentry"))
+    api(project(":Network"))
+    implementation(project(":Sentry"))
 
     api(core.ktor.client.json)
     api(core.ktor.client.content.negociation)

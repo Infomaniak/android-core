@@ -55,9 +55,9 @@ dependencies {
     api(core.okhttp)
 
     implementation(project(":Core"))
-    implementation(project(":Core:Network"))
+    implementation(project(":Network"))
     implementation(project(":Core:Notifications"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":Sentry"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.androidx.lifecycle.process)

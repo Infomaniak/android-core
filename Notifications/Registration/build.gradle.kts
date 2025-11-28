@@ -57,8 +57,8 @@ dependencies {
 
     implementation(project(":Core"))
     implementation(project(":Core:Auth"))
-    implementation(project(":Core:Network:Ktor"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":Network:Ktor"))
+    implementation(project(":Sentry"))
 
     implementation(core.firebase.messaging.ktx)
     implementation(core.androidx.core.ktx)

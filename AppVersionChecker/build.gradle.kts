@@ -18,7 +18,6 @@
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
-    kotlin("plugin.serialization")
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -44,9 +43,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core"))
-    implementation(project(":Core:Network"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":"))
+    implementation(project(":Network"))
+    implementation(project(":Sentry"))
 
     implementation(core.kotlinx.serialization.json)
     implementation(core.okhttp)
