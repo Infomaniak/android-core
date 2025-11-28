@@ -123,7 +123,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
     onUseAnotherAccountClicked: () -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
-    noAccountsBottomButtons: @Composable (Modifier, CrossLoginCustomization) -> Unit,
+    noCrossAppLoginAccountsContent: @Composable (Modifier, CrossLoginCustomization) -> Unit,
     modifier: Modifier = Modifier,
     isSingleSelection: Boolean = false,
     isLoginButtonLoading: () -> Boolean = { false },
@@ -174,7 +174,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
                             onAccountsSelectionClicked = { showAccountsBottomSheet = true },
                             animatedButtonModifier = animatedButtonModifier,
-                            noAccountsBottomButtons = { noAccountsBottomButtons(animatedButtonModifier, customization) }
+                            noCrossAppLoginAccountsContent = { noCrossAppLoginAccountsContent(animatedButtonModifier, customization) }
                         )
                     } else {
                         ButtonNext(
@@ -255,7 +255,7 @@ private fun LoginPage(
     onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
     onAccountsSelectionClicked: () -> Unit,
     @SuppressLint("ModifierParameter") animatedButtonModifier: Modifier,
-    noAccountsBottomButtons: @Composable () -> Unit,
+    noCrossAppLoginAccountsContent: @Composable () -> Unit,
 ) {
 
     if (shouldLoadAccount()) {
@@ -280,7 +280,7 @@ private fun LoginPage(
                 onClick = { onContinueWithSelectedAccounts(accounts.filterSelectedAccounts(skippedIds())) }
             )
         } else {
-            noAccountsBottomButtons()
+            noCrossAppLoginAccountsContent()
         }
     }
 }
@@ -418,7 +418,7 @@ object CrossLoginBottomContentDefaults {
     val nextButtonShape = RoundedCornerShape(Dimens.largeCornerRadius)
 }
 
-object CrossLoginBottomButton {
+object NoCrossAppLoginAccountsContent {
 
     /**
      * When accounts are required.
@@ -482,7 +482,7 @@ private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts:
                 customization = CrossLoginDefaults.customize(
                     colors = CrossLoginDefaults.colors(titleColor = Color.Black, descriptionColor = Color.Gray),
                 ),
-                noAccountsBottomButtons = CrossLoginBottomButton.accountOptional { }
+                noCrossAppLoginAccountsContent = NoCrossAppLoginAccountsContent.accountOptional { }
             )
         }
     }
