@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">An error has occurred</string>
     <string name="connectionError">Internet connection problem</string>
-    <string name="errorUserAlreadyPresent">Error, User already present</string>
+    <string name="errorUserAlreadyPresent">Error, user already present</string>
     <string name="noConnection">No connection</string>
+    <string name="serverError">Server Error</string>
 </resources>

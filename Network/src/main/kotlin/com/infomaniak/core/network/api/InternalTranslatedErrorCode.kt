@@ -27,6 +27,7 @@ enum class InternalTranslatedErrorCode(
 ) : ErrorCodeTranslated {
     NoConnection("no_connection", R.string.noConnection),
     ConnectionError("connection_error", R.string.connectionError),
+    ServerError("server_error", R.string.serverError),
     UnknownError("an_error_has_occurred", R.string.anErrorHasOccurred),
     UserLoggedOut("user_logged_out", R.string.anErrorHasOccurred), // We don't display this error
     UserAlreadyPresent("user_already_present", R.string.errorUserAlreadyPresent),

@@ -20,4 +20,5 @@
     <string name="connectionError">Problem mit der Internetverbindung</string>
     <string name="errorUserAlreadyPresent">Fehler Benutzer bereits vorhanden</string>
     <string name="noConnection">Keine Verbindung</string>
+    <string name="serverError">Server-Fehler</string>
 </resources>
