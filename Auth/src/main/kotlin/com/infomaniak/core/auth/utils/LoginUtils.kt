@@ -20,8 +20,8 @@ package com.infomaniak.core.auth.utils
 import android.content.Context
 import androidx.activity.result.ActivityResult
 import androidx.appcompat.app.AppCompatActivity
-import com.infomaniak.core.auth.CredentialManager
 import com.infomaniak.core.auth.TokenAuthenticator.Companion.changeAccessToken
+import com.infomaniak.core.auth.UserExistenceChecker
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.models.AuthCodeResult
 import com.infomaniak.core.auth.models.UserLoginResult
@@ -50,7 +50,7 @@ object LoginUtils {
         result: ActivityResult,
         context: Context,
         infomaniakLogin: InfomaniakLogin,
-        credentialManager: CredentialManager,
+        userExistenceChecker: UserExistenceChecker,
     ): UserLoginResult? {
         val authCodeResult = result.toAuthCodeResult(context)
         when (authCodeResult) {
@@ -65,7 +65,7 @@ object LoginUtils {
             is TokenResult.Success -> Unit
         }
 
-        val userResult = getUsersByToken(listOf(tokenResult.apiToken), credentialManager).single()
+        val userResult = getUsersByToken(listOf(tokenResult.apiToken), userExistenceChecker).single()
         return when (userResult) {
             is UserResult.Failure -> {
                 UserLoginResult.Failure(context.getString(userResult.apiResponse.translateError()))
@@ -82,8 +82,8 @@ object LoginUtils {
     suspend fun getLoginResultsAfterCrossApp(
         apiTokens: List<ApiToken>,
         context: Context,
-        credentialManager: CredentialManager,
-    ): List<UserLoginResult> = getUsersByToken(apiTokens, credentialManager).map { result ->
+        userExistenceChecker: UserExistenceChecker,
+    ): List<UserLoginResult> = getUsersByToken(apiTokens, userExistenceChecker).map { result ->
         when (result) {
             is UserResult.Success -> UserLoginResult.Success(result.user)
             is UserResult.Failure -> UserLoginResult.Failure(context.getString(result.apiResponse.translateError()))
@@ -96,10 +96,10 @@ object LoginUtils {
  */
 private suspend fun getUsersByToken(
     apiTokens: List<ApiToken>,
-    credentialManager: CredentialManager,
+    userExistenceChecker: UserExistenceChecker,
 ): List<UserResult> = apiTokens.map { apiToken ->
     runCatching {
-        authenticateUser(apiToken, credentialManager)
+        authenticateUser(apiToken, userExistenceChecker)
     }.cancellable().getOrDefault(UserResult.Failure.Unknown)
 }
 
@@ -126,8 +126,8 @@ private fun Context.formatAuthErrorMessage(errorStatus: ErrorStatus): String {
     )
 }
 
-private suspend fun authenticateUser(apiToken: ApiToken, credentialManager: CredentialManager): UserResult {
-    if (credentialManager.getUserById(apiToken.userId) != null) return UserResult.Failure(
+private suspend fun authenticateUser(apiToken: ApiToken, userExistenceChecker: UserExistenceChecker): UserResult {
+    if (userExistenceChecker.isUserAlreadyPresent(apiToken.userId)) return UserResult.Failure(
         getErrorResponse(InternalTranslatedErrorCode.UserAlreadyPresent)
     )
 
