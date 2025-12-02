@@ -33,7 +33,9 @@ import java.util.concurrent.TimeUnit
 /**
  * CredentialManager interface : Implement the essential methods to get Users and their Credentials to pass
  */
-abstract class CredentialManager {
+abstract class CredentialManager : UserExistenceChecker {
+
+    override suspend fun isUserAlreadyPresent(userId: Int): Boolean = getUserById(userId) != null
 
     //region User
     protected abstract var userDatabase: UserDatabase
