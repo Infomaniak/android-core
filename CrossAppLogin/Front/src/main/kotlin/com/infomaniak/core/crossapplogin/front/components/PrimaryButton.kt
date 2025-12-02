@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,8 +43,8 @@ internal fun PrimaryButton(
     Button(
         modifier = modifier.height(customization.buttonStyle.height),
         colors = ButtonDefaults.buttonColors(
-            containerColor = customization.colors.primaryColor,
-            contentColor = customization.colors.onPrimaryColor,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         shape = customization.buttonStyle.shape,
         onClick = onClick,

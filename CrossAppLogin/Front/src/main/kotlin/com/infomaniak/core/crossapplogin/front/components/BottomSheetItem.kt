@@ -26,13 +26,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RippleConfiguration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -58,36 +55,32 @@ internal fun BottomSheetItem(
     contentPadding: PaddingValues = PaddingValues(horizontal = Margin.Medium),
     onClick: () -> Unit,
 ) {
-    CompositionLocalProvider(
-        LocalRippleConfiguration provides RippleConfiguration(color = customization.colors.primaryColor)
+    TextButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = Dimens.buttonHeight)
+            .semantics { toggleableState = if (isSelected()) ToggleableState.On else ToggleableState.Off },
+        shape = RectangleShape,
+        onClick = onClick,
+        contentPadding = contentPadding,
     ) {
-        TextButton(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = Dimens.buttonHeight)
-                .semantics { toggleableState = if (isSelected()) ToggleableState.On else ToggleableState.Off },
-            shape = RectangleShape,
-            onClick = onClick,
-            contentPadding = contentPadding,
+                .padding(vertical = Margin.Mini),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = Margin.Mini),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
 
-                SingleAccount(account, customization, Modifier.weight(1.0f))
+            SingleAccount(account, customization, Modifier.weight(1.0f))
 
-                Spacer(Modifier.width(Margin.Mini))
+            Spacer(Modifier.width(Margin.Mini))
 
-                if (isSelected()) {
-                    Icon(
-                        imageVector = Checkmark,
-                        tint = customization.colors.primaryColor,
-                        contentDescription = null,
-                    )
-                }
+            if (isSelected()) {
+                Icon(
+                    imageVector = Checkmark,
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = null,
+                )
             }
         }
     }
