@@ -47,7 +47,7 @@ internal object IpcIssuesManagerImpl : IpcIssuesManager {
         val timeout = acceptableDuration
         delay(timeout)
         SentryLog.i(TAG, "Waited $timeout for IPC with $targetPackageName for $operationName")
-        SentryLog.e(TAG, "Timing out IPC with $targetPackageName for $operationName")
+        SentryLog.w(TAG, "Timing out IPC with $targetPackageName for $operationName")
     }
 
     override fun logBindingIssue(
