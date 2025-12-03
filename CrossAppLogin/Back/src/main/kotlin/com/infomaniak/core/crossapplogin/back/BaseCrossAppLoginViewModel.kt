@@ -18,9 +18,7 @@
 package com.infomaniak.core.crossapplogin.back
 
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
@@ -53,6 +51,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -115,10 +114,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             coroutineScope = this + Dispatchers.Default
         )
         if (singleSelection) launch { keepSingleSelection() }
-        hostActivity.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            _availableAccounts.emit(crossAppLogin.retrieveAccountsFromOtherApps())
-        }
-        awaitCancellation() // Should never be reached. Unfortunately, `repeatOnLifecycle` doesn't return `Nothing`.
+        _availableAccounts.emitAll(crossAppLogin.accountsFromOtherApps(hostActivity.lifecycle))
+        awaitCancellation() // Should never be reached because the accountsFromOtherApps Flow should be infinite.
     }
 
     suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {
@@ -143,7 +140,9 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     }
 
     private fun accountsCheckingStateFlow(): Flow<AccountsCheckingState> = channelFlow {
-        send(AccountsCheckingState(status = Checking))
+
+        val stateFlow = MutableStateFlow(AccountsCheckingState(status = Checking))
+        send(stateFlow.value)
 
         _availableAccounts.collectLatest { accounts ->
             when {
@@ -151,16 +150,19 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                 accounts.isEmpty() -> return@collectLatest send(AccountsCheckingState(status = UpToDate))
             }
 
-            val stateFlow = MutableStateFlow(AccountsCheckingState(status = Checking))
             val errorIfAny = MutableStateFlow<Error?>(null)
+            val currentlyCheckedAccounts = MutableStateFlow(emptyList<ExternalAccount>())
 
-            send(stateFlow.value)
+            send(stateFlow.value.copy(status = Checking))
 
             coroutineScope {
                 accounts.forEach { account ->
                     launch {
                         when (val result = checkAccount(account)) {
-                            is AccountCheckResult.Valid -> send(stateFlow.updateAndGet { it.withAccount(result.account) })
+                            is AccountCheckResult.Valid -> {
+                                currentlyCheckedAccounts.update { it + result.account }
+                                send(stateFlow.updateAndGet { it.withAccount(result.account) })
+                            }
                             AccountCheckResult.Issue.Network -> errorIfAny.update { it ?: Error.Network }
                             AccountCheckResult.Issue.Other -> errorIfAny.update { it }
                         }
@@ -168,11 +170,20 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                 }
             }
 
-            send(stateFlow.value.copy(status = errorIfAny.value ?: UpToDate))
+            val finalValue = stateFlow.updateAndGet { lastState ->
+                val accountsToKeep = currentlyCheckedAccounts.value // We will filter accounts that are no longer in other apps.
+                lastState.copy(
+                    status = errorIfAny.value ?: UpToDate,
+                    checkedAccounts = lastState.checkedAccounts.filter { it in accountsToKeep }
+                )
+            }
+            send(finalValue)
         }
     }.conflate()
 
-    private fun AccountsCheckingState.withAccount(account: ExternalAccount) = copy(checkedAccounts = checkedAccounts + account)
+    private fun AccountsCheckingState.withAccount(account: ExternalAccount): AccountsCheckingState {
+        return copy(checkedAccounts = (checkedAccounts + account).distinctBy { it.email })
+    }
 
     private suspend fun checkAccount(account: ExternalAccount): AccountCheckResult {
         return accountCheckStatuses.useElement(account) { resultAsync -> resultAsync.await() }

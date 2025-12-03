@@ -24,6 +24,7 @@ import android.content.Intent
 import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
+import androidx.lifecycle.Lifecycle
 import com.infomaniak.core.android.service.OnBindingIssue
 import com.infomaniak.core.android.service.OnServiceDisconnectionBehavior
 import com.infomaniak.core.android.service.withBoundService
@@ -35,19 +36,30 @@ import com.infomaniak.core.crossapplogin.back.internal.certificates.AppCertifica
 import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdManager
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.invoke
+import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
+import splitties.init.appCtx
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -59,21 +71,61 @@ internal class CrossAppLoginImpl(
 
     private val certificateChecker = AppCertificateChecker.withInfomaniakApps
     private val ourPackageName = context.packageName
-    private val targetPackageNames = certificateChecker.signingCertificates.packageNames.filter { it != ourPackageName }
 
     private val ipcIssuesManager: IpcIssuesManager = IpcIssuesManagerImpl
 
     @ExperimentalSerializationApi
-    override suspend fun retrieveAccountsFromOtherApps(): List<ExternalAccount> {
-        val lists: List<List<ExternalAccount>> = Dispatchers.Default {
-            targetPackageNames.map { packageName ->
-                async { retrieveAccountsFromApp(packageName) }
-            }.awaitAll()
+    override fun accountsFromOtherApps(hostLifecycle: Lifecycle): Flow<List<ExternalAccount>> = channelFlow {
+
+        val isStartedFlow = hostLifecycle.currentStateFlow.map { it.isAtLeast(Lifecycle.State.STARTED) }.stateIn(this)
+
+        val targetPackageNames = isStartedFlow.transform { isStarted -> if (isStarted) emit(targetPackageNames()) }.stateIn(this)
+
+        // We actively listen for connected emails, so if one is added (likely through cross-app login),
+        // while cross-app login is still connected, we don't try to log it in again.
+        // That might happen for cases where the login UI stays active as the login of one of 2+ accounts
+        // fails, with the app not navigating away.
+        // NOTE: If we can know for sure that this Flow gets cancelled/restarted after a login attempt of multiple accounts,
+        // then we can replace this Flow with a suspend function (`UserDatabase().userDao().allUsers.first().map { it.email }`),
+        // and drop the `alreadyConnectedEmailsUpdatingJob` altogether.
+        val alreadyConnectedEmailsFlow: StateFlow<Set<String>> = UserDatabase().userDao().allUsers.map { users ->
+            users.mapTo(mutableSetOf()) { it.email }
+        }.stateIn(this)
+
+        targetPackageNames.collectLatest { packages ->
+            if (packages.isEmpty()) {
+                send(emptyList())
+                return@collectLatest
+            }
+
+            isStartedFlow.collectLatest { isStarted ->
+                if (isStarted.not()) return@collectLatest
+
+                val accountsFlow = MutableStateFlow(emptyList<ExternalAccount>())
+
+                // Lazy start to not send an empty list before the first available responds.
+                val alreadyConnectedEmailsUpdatingJob = launch(start = CoroutineStart.LAZY) {
+                    alreadyConnectedEmailsFlow.collect { alreadyConnectedEmails ->
+                        send(accountsFlow.updateAndGet { it.withAccounts(emptyList(), alreadyConnectedEmails) })
+                    }
+                }
+
+                packages.forEach { targetPackage ->
+                    launch {
+                        val accounts = retrieveAccountsFromApp(targetPackage)
+                        send(accountsFlow.updateAndGet { it.withAccounts(accounts, alreadyConnectedEmailsFlow.value) })
+                        alreadyConnectedEmailsUpdatingJob.start() // At least one app responded, we can now have this job run.
+                    }
+                }
+            }
         }
+    }.flowOn(Dispatchers.Default).conflate()
 
-        val alreadyConnectedEmails = UserDatabase().userDao().allUsers.first().map { it.email }
-
-        return lists.flatten()
+    private fun List<ExternalAccount>.withAccounts(
+        accounts: List<ExternalAccount>,
+        alreadyConnectedEmails: Set<String>
+    ): List<ExternalAccount> {
+        return (this + accounts)
             .filter { it.email !in alreadyConnectedEmails }
             .groupBy { it.email }
             .map { (_, externalAccounts) ->
@@ -92,8 +144,15 @@ internal class CrossAppLoginImpl(
         coroutineScope = coroutineScope,
         ipcIssuesManager = ipcIssuesManager,
         certificateChecker = certificateChecker,
-        targetPackageNames = targetPackageNames.toSet()
+        targetPackageNames = ::targetPackageNames
     )
+
+    private suspend fun targetPackageNames(): Set<String> {
+        val resolveInfoList = Dispatchers.IO { appCtx.packageManager.queryIntentServices(Intent(INTENT_ACTION), 0) }
+        return resolveInfoList.mapNotNullTo(mutableSetOf()) { info ->
+            info.serviceInfo.packageName.takeUnless { it == ourPackageName }
+        }
+    }
 
     @ExperimentalSerializationApi
     private suspend fun retrieveAccountsFromApp(packageName: String): List<ExternalAccount> = raceOf(
@@ -115,7 +174,7 @@ internal class CrossAppLoginImpl(
     private suspend fun retrieveAccountsFromUncheckedApp(packageName: String): List<ExternalAccount> {
         val intent = Intent().also {
             it.`package` = packageName
-            it.action = "com.infomaniak.crossapp.login"
+            it.action = INTENT_ACTION
         }
         return runCatching {
             retrieveAccountsFromUncheckedService(intent)
@@ -171,5 +230,7 @@ internal class CrossAppLoginImpl(
 
     private companion object {
         const val TAG = "CrossAppLoginImpl"
+
+        private const val INTENT_ACTION = "com.infomaniak.crossapp.login"
     }
 }
