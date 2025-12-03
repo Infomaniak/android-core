@@ -105,7 +105,7 @@ object NotificationsRegistrationManager : AssociatedUserDataCleanable {
                 Firebase.messaging.token.await()
             }.cancellable().getOrElse { t ->
                 // If there are "normal" cases where this happens, decrease the priority of this Sentry log.
-                return@onStart SentryLog.e(TAG, FCM_TOKEN_RETRIEVAL_FAILED_MESSAGE, t)
+                return@onStart SentryLog.w(TAG, FCM_TOKEN_RETRIEVAL_FAILED_MESSAGE, t)
             }
             emit(token)
         }.stateIn(this)
