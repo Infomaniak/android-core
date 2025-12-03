@@ -47,5 +47,6 @@ dependencies {
     implementation(core.kotlinx.serialization.json)
     implementation(core.gson)
     implementation(core.okhttp)
+    implementation(core.splitties.toast)
     implementation(core.stetho.okhttp3)
 }
