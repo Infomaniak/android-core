@@ -18,6 +18,8 @@
 package com.infomaniak.core.network
 
 import com.infomaniak.core.network.utils.ErrorCodeTranslated
+import splitties.toast.UnreliableToastApi
+import splitties.toast.toast
 
 /**
  * NetworkConfiguration : Allow to configure this module.
@@ -43,5 +45,13 @@ object NetworkConfiguration {
         this.appVersionName = appVersionName
         ApiEnvironment.current = apiEnvironment
         this.apiErrorCodes = apiErrorCodes
+
+        // Show which API environment is being used on process creation.
+        @OptIn(UnreliableToastApi::class)
+        when (apiEnvironment) {
+            ApiEnvironment.Prod -> if (BuildConfig.DEBUG) toast("api host: Prod")
+            ApiEnvironment.PreProd -> toast("api host: Preprod")
+            is ApiEnvironment.Custom -> toast("api host: ${apiEnvironment.host}")
+        }
     }
 }
