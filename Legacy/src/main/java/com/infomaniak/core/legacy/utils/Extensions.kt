@@ -432,8 +432,8 @@ inline fun <reified T : Serializable> Intent.serializableExtra(key: String): T? 
     else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
 }
 
-fun ActivityResult.whenResultIsOk(completion: (Intent?) -> Unit) {
-    if (resultCode == Activity.RESULT_OK) data.let(completion::invoke)
+inline fun ActivityResult.whenResultIsOk(completion: (Intent?) -> Unit) {
+    if (resultCode == Activity.RESULT_OK) completion(data)
 }
 
 /**
