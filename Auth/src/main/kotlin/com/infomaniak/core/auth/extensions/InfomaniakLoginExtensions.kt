@@ -20,13 +20,13 @@ package com.infomaniak.core.auth.extensions
 
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.cancellable
-import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.InfomaniakLogin
 
 suspend fun InfomaniakLogin.logoutToken(user: User) = runCatching {
     deleteToken(
-        okHttpClient = HttpClient.okHttpClient,
+        okHttpClient = DefaultHttpClientProvider.okHttpClient,
         token = user.apiToken,
     )?.let { errorStatus ->
         SentryLog.i("Logout", "API response error: $errorStatus")
