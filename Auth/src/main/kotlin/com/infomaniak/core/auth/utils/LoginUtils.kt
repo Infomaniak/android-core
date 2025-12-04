@@ -106,8 +106,7 @@ object LoginUtils {
             is TokenResult.Success -> Unit
         }
 
-        val userResult = getUsersByToken(listOf(tokenResult.apiToken), userExistenceChecker).single()
-        return when (userResult) {
+        return when (val userResult = getUsersByToken(listOf(tokenResult.apiToken), userExistenceChecker).single()) {
             is UserResult.Failure -> {
                 UserLoginResult.Failure(context.getString(userResult.apiResponse.translateError()))
             }
@@ -193,7 +192,7 @@ private suspend fun authenticateUser(apiToken: ApiToken, userExistenceChecker: U
     )
 
     val okhttpClient = DefaultHttpClientProvider.okHttpClient.newBuilder().addInterceptor { chain ->
-        val newRequest = changeAccessToken(chain.request(), apiToken)
+        val newRequest = changeAccessToken(chain.request(), apiToken.accessToken)
         chain.proceed(newRequest)
     }.build()
 
