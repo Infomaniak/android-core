@@ -20,7 +20,9 @@ package com.infomaniak.core.auth.api
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.network.api.ApiController
 import com.infomaniak.core.network.models.ApiResponse
+import com.infomaniak.core.network.utils.await
 import okhttp3.OkHttpClient
+import okhttp3.Request
 
 abstract class ApiRepositoryCore {
 
@@ -46,6 +48,15 @@ abstract class ApiRepositoryCore {
 
             val url = "${ApiRoutesCore.getUserProfile()}$with"
             return ApiController.callApi(url, ApiController.ApiMethod.GET, okHttpClient = okHttpClient)
+        }
+
+        suspend fun checkTokenValidity(okHttpClient: OkHttpClient): Boolean {
+            val request = Request.Builder()
+                .url("${ApiRoutesCore.TOKEN_URL}/check")
+                .get()
+                .build()
+
+            return okHttpClient.newCall(request).await().isSuccessful
         }
     }
 }
