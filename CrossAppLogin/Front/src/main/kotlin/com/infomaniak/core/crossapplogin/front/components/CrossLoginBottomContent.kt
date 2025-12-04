@@ -214,6 +214,8 @@ private fun AccountsBottomSheetDialog(
     customization: CrossLoginCustomization,
     close: () -> Unit,
 ) {
+    if (accounts().isEmpty()) close()
+
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
 
