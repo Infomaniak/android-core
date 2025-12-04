@@ -47,7 +47,7 @@ object ApiController {
         if (AuthConfiguration.accessType == null) formBuilder.addFormDataPart("duration", "infinite")
 
         val request = Request.Builder()
-            .url("$LOGIN_ENDPOINT_URL/token")
+            .url(ApiRoutesCore.TOKEN_URL)
             .post(formBuilder.build())
             .build()
 

@@ -19,8 +19,11 @@ package com.infomaniak.core.auth.api
 
 import com.infomaniak.core.network.INFOMANIAK_API
 import com.infomaniak.core.network.INFOMANIAK_API_V1
+import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 
 object ApiRoutesCore {
+
+    val TOKEN_URL = "$LOGIN_ENDPOINT_URL/token"
 
     fun getUserProfile(): String {
         // TODO: Create a module for all the URLs?

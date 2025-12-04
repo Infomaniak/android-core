@@ -23,7 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
 import com.infomaniak.core.auth.api.ApiRepositoryCore
-import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.auth.api.ApiRoutesCore.TOKEN_URL
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.completableScope
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus.*
@@ -78,7 +78,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
         coroutineScope = viewModelScope,
-        tokenRetrievalUrl = "$LOGIN_ENDPOINT_URL/token",
+        tokenRetrievalUrl = TOKEN_URL,
         hostAppPackageName = applicationId,
         clientId = clientId,
         userAgent = HttpUtils.getUserAgent,
@@ -193,13 +193,12 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
         val customTokenHttpClient = baseOkHttpClient.addInterceptor(CustomTokenInterceptor(token)).build()
 
-        when (ApiRepositoryCore.getUserProfile(customTokenHttpClient).data) {
-            is User -> {
-                // Put the just checked token first. Will speed up later derivation attempts.
-                val tokens = setOf(token) + account.tokens
-                AccountCheckResult.Valid(account.copy(tokens = tokens))
-            }
-            else -> AccountCheckResult.Issue.Other
+        if (ApiRepositoryCore.checkTokenValidity(customTokenHttpClient)) {
+            // Put the just checked token first. Will speed up later derivation attempts.
+            val tokens = setOf(token) + account.tokens
+            AccountCheckResult.Valid(account.copy(tokens = tokens))
+        } else {
+            AccountCheckResult.Issue.Other
         }
     }.cancellable().getOrElse { exception ->
         when (exception) {
