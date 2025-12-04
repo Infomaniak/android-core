@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/AddAccount.kt">
+        <error line="52" column="14" source="standard:function-naming" />
+        <error line="97" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/BottomSheetItem.kt">
+        <error line="54" column="14" source="standard:function-naming" />
+        <error line="98" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginAvatar.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="43" column="14" source="standard:function-naming" />
+        <error line="65" column="19" source="standard:property-naming" />
+        <error line="72" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/MultipleAccounts.kt">
+        <error line="43" column="14" source="standard:function-naming" />
+        <error line="73" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/PrimaryButton.kt">
+        <error line="36" column="14" source="standard:function-naming" />
+        <error line="57" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/SelectedAccountsButton.kt">
+        <error line="53" column="14" source="standard:function-naming" />
+        <error line="93" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/SingleAccount.kt">
+        <error line="46" column="14" source="standard:function-naming" />
+        <error line="81" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/ThreeAccountsView.kt">
+        <error line="40" column="14" source="standard:function-naming" />
+        <error line="75" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/TwoAccountsView.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="36" column="14" source="standard:function-naming" />
+        <error line="69" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/data/CrossLoginCustomization.kt">
+        <error line="26" column="5" source="standard:class-signature" />
+        <error line="27" column="5" source="standard:class-signature" />
+        <error line="27" column="32" source="standard:class-signature" />
+        <error line="42" column="19" source="standard:parameter-list-spacing" />
+        <error line="42" column="19" source="standard:paren-spacing" />
+        <error line="43" column="32" source="standard:function-expression-body" />
+        <error line="55" column="25" source="standard:function-expression-body" />
+        <error line="68" column="19" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/icons/AddUser.kt">
+        <error line="119" column="13" source="standard:backing-property-naming" />
+        <error line="123" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/icons/Checkmark.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="66" column="13" source="standard:backing-property-naming" />
+        <error line="70" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/icons/Chevron.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="70" column="13" source="standard:backing-property-naming" />
+        <error line="74" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/theme/Dimens.kt">
+        <error line="29" column="5" source="standard:spacing-between-declarations-with-comments" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/utils/Extensions.kt">
+        <error line="24" column="74" source="standard:function-expression-body" />
+        <error line="28" column="76" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/views/CrossLoginListAccountsView.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="43" column="5" source="standard:class-signature" />
+        <error line="44" column="5" source="standard:class-signature" />
+        <error line="45" column="5" source="standard:class-signature" />
+        <error line="45" column="26" source="standard:class-signature" />
+        <error line="46" column="5" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/views/CrossLoginSelectAccountsView.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/views/components/CrossLoginListAccounts.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="55" column="5" source="standard:function-naming" />
+        <error line="124" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/crossapplogin/front/views/components/CrossLoginSelectAccounts.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="41" column="5" source="standard:function-naming" />
+        <error line="64" column="13" source="standard:function-naming" />
+    </file>
+</baseline>
