@@ -16,29 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.infomaniak.core.auth.utils
+package com.infomaniak.core.auth.extensions
 
-import android.content.Context
-import com.infomaniak.core.auth.extensions.getInfomaniakLogin
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.cancellable
-import com.infomaniak.core.network.networking.DefaultHttpClientProvider
+import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.sentry.SentryLog
+import com.infomaniak.lib.login.InfomaniakLogin
 
-object LogoutUtils {
-
-    private val TAG = LogoutUtils::class.java.simpleName
-
-    suspend fun logoutToken(appContext: Context, user: User, applicationId: String, clientId: String) {
-        runCatching {
-            appContext.getInfomaniakLogin(applicationId, clientId).deleteToken(
-                okHttpClient = DefaultHttpClientProvider.okHttpClient,
-                token = user.apiToken,
-            )?.let { errorStatus ->
-                SentryLog.i(TAG, "API response error: $errorStatus")
-            }
-        }.cancellable().onFailure { exception ->
-            SentryLog.e(TAG, "Failure on logoutToken ", exception)
-        }
+suspend fun InfomaniakLogin.logoutToken(user: User) = runCatching {
+    deleteToken(
+        okHttpClient = HttpClient.okHttpClient,
+        token = user.apiToken,
+    )?.let { errorStatus ->
+        SentryLog.i("Logout", "API response error: $errorStatus")
     }
+}.cancellable().onFailure { exception ->
+    SentryLog.e("Logout", "Failure on logoutToken ", exception)
 }
