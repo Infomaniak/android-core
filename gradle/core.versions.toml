@@ -9,7 +9,7 @@ appcompat = "1.7.1"
 biometricKtx = "1.2.0-alpha05"
 coil = "3.3.0"
 coil2 = "2.7.0" # Coil2 is used in old Legacy modules only
-composeBom = "2025.11.01"
+composeBom = "2025.12.00"
 concurrentFuturesKtx = "1.3.0"
 constraintLayout = "2.2.1"
 coordinatorLayout = "1.3.0"
@@ -22,13 +22,13 @@ integrity = "1.6.0"
 #noinspection NewerVersionAvailable
 junit = "4.13" # Don't update this because it breaks tests
 junitAndroidx = "1.3.0"
-kotest = "6.0.5"
+kotest = "6.0.7"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerialization = "1.9.0"
 kotlin = "2.2.0" # Keep the same version as the one in Realm-Kotlin
 ksp = "2.2.0-2.0.2" # Keep the same version as the one in Realm-Kotlin
 ktlintPlugin = "14.0.1"
-ktor = "3.3.2"
+ktor = "3.3.3"
 lifecycleRuntimeKtx = "2.10.0"
 lottie = "6.7.1"
 material = "1.13.0"
@@ -45,7 +45,7 @@ sentry = "8.27.1"
 sentryPlugin = "5.12.2"
 splitties = "3.0.0"
 stethoOkhttp3 = "1.6.0"
-swipeRefreshLayout = "1.1.0"
+swipeRefreshLayout = "1.2.0"
 workManager = "2.11.0"
 
 [libraries]
