@@ -61,6 +61,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -333,6 +334,7 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
 
     BasicButton(
         modifier = modifier
+            .testTag("button_next_onboarding")
             .height(buttonHeight)
             .width(buttonWidth),
         onClick = onClick,
@@ -362,7 +364,7 @@ private fun ConnectionButton(
         shape = primaryButtonType.shape,
         isLoginButtonLoading = isLoginButtonLoading,
         onClick = onClick,
-        modifier = modifier.height(primaryButtonType.height),
+        modifier = modifier.height(primaryButtonType.height).testTag("button_login_onboarding"),
     )
 }
 
