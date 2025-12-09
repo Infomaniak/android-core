@@ -27,6 +27,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.infomaniak.core.sentry.SentryLog
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -42,7 +43,9 @@ class AppReviewSettingsRepository(private val context: Context) {
     internal var appReviewThreshold = DEFAULT_APP_REVIEW_THRESHOLD
     internal var maxAppReviewThreshold = appReviewThreshold * 10
 
-    fun <T> flowOf(key: Preferences.Key<T>) = context.dataStore.data.map { it[key] ?: (getInitialValue(key) as T) }
+    fun <T> flowOf(key: Preferences.Key<T>) = context.dataStore.data
+        .map { it[key] ?: (getInitialValue(key) as T) }
+        .distinctUntilChanged()
 
     suspend fun <T> getValue(key: Preferences.Key<T>) = runCatching {
         flowOf(key).first()
