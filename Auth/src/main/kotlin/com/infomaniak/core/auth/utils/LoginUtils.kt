@@ -19,9 +19,15 @@ package com.infomaniak.core.auth.utils
 
 import android.content.Context
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import com.infomaniak.core.auth.TokenAuthenticator.Companion.changeAccessToken
 import com.infomaniak.core.auth.UserExistenceChecker
 import com.infomaniak.core.auth.api.ApiRepositoryCore
@@ -39,8 +45,42 @@ import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
 import com.infomaniak.lib.login.InfomaniakLogin.ErrorStatus
 import com.infomaniak.lib.login.InfomaniakLogin.TokenResult
+import kotlinx.coroutines.launch
 
 object LoginUtils {
+    @Composable
+    fun rememberLoginFlowController(
+        infomaniakLogin: InfomaniakLogin,
+        userExistenceChecker: UserExistenceChecker,
+        onLoginResult: (UserLoginResult?) -> Unit,
+    ): LoginFlowController {
+        val scope = rememberCoroutineScope()
+        val context = LocalContext.current
+
+        val loginLauncher = rememberLauncherForActivityResult(StartActivityForResult()) { result ->
+            scope.launch {
+                val userLoginResult = getLoginResultAfterWebView(
+                    result = result,
+                    context = context,
+                    infomaniakLogin = infomaniakLogin,
+                    userExistenceChecker = userExistenceChecker,
+                )
+
+                onLoginResult(userLoginResult)
+            }
+        }
+
+        val accountCreationLauncher = rememberLauncherForActivityResult(StartActivityForResult()) { result ->
+            when (val result = getAccountCreationResult(result, infomaniakLogin, loginLauncher)) {
+                AccountCreationResult.Success -> Unit
+                AccountCreationResult.Canceled -> onLoginResult(null)
+                is AccountCreationResult.Failure -> onLoginResult(UserLoginResult.Failure(result.errorMessage))
+            }
+        }
+
+        return remember { LoginFlowController(loginLauncher, accountCreationLauncher, infomaniakLogin) }
+    }
+
     /**
      * Logs the user based on the ActivityResult of our login WebView.
      *
@@ -171,4 +211,23 @@ private suspend fun authenticateUser(apiToken: ApiToken, userExistenceChecker: U
 
 private fun getErrorResponse(error: InternalTranslatedErrorCode): ApiResponse<Unit> {
     return ApiResponse(result = ApiResponseStatus.ERROR, error = error.toApiError())
+}
+
+class LoginFlowController(
+    private val loginLauncher: ActivityResultLauncher<Intent>,
+    private val accountCreationLauncher: ActivityResultLauncher<Intent>,
+    private val infomaniakLogin: InfomaniakLogin,
+) {
+    fun login() {
+        infomaniakLogin.startWebViewLogin(loginLauncher)
+    }
+
+    fun createAccount(createAccountUrl: String, successHost: String, cancelHost: String) {
+        infomaniakLogin.startCreateAccountWebView(
+            resultLauncher = accountCreationLauncher,
+            createAccountUrl = createAccountUrl,
+            successHost = successHost,
+            cancelHost = cancelHost,
+        )
+    }
 }
