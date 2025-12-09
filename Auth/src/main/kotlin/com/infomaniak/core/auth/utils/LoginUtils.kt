@@ -18,7 +18,9 @@
 package com.infomaniak.core.auth.utils
 
 import android.content.Context
+import android.content.Intent
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.core.auth.TokenAuthenticator.Companion.changeAccessToken
 import com.infomaniak.core.auth.UserExistenceChecker
@@ -26,8 +28,6 @@ import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.models.AuthCodeResult
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.models.UserResult
-import com.infomaniak.core.auth.utils.LoginUtils.getLoginResultAfterWebView
-import com.infomaniak.core.auth.utils.LoginUtils.getLoginResultsAfterCrossApp
 import com.infomaniak.core.cancellable
 import com.infomaniak.core.network.api.ApiController.toApiError
 import com.infomaniak.core.network.api.InternalTranslatedErrorCode
@@ -87,6 +87,26 @@ object LoginUtils {
         when (result) {
             is UserResult.Success -> UserLoginResult.Success(result.user)
             is UserResult.Failure -> UserLoginResult.Failure(context.getString(result.apiResponse.translateError()))
+        }
+    }
+
+    /**
+     * Automatically logs in the user using [loginResultLauncher] after a successful account creation or return an error result.
+     */
+    fun getAccountCreationResult(
+        result: ActivityResult,
+        infomaniakLogin: InfomaniakLogin,
+        loginResultLauncher: ActivityResultLauncher<Intent>,
+    ): AccountCreationResult {
+        if (result.resultCode != AppCompatActivity.RESULT_OK) return AccountCreationResult.Canceled
+
+        val translatedError = result.data?.getStringExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG)
+        return when {
+            translatedError.isNullOrBlank() -> {
+                infomaniakLogin.startWebViewLogin(resultLauncher = loginResultLauncher, removeCookies = false)
+                AccountCreationResult.Success
+            }
+            else -> AccountCreationResult.Failure(translatedError)
         }
     }
 }
