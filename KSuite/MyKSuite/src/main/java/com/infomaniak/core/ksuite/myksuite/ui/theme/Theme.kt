@@ -38,7 +38,7 @@ internal val LocalMyKSuiteColors: ProvidableCompositionLocal<MyKSuiteColors> = s
  * This theme should be used in any XML View's wrapper class, as it uses the XML material attributes
  */
 @Composable
-internal fun MyKSuiteXMLTheme(content: @Composable () -> Unit) {
+fun MyKSuiteXMLTheme(content: @Composable () -> Unit) {
     MaterialThemeFromXml {
         MyKSuiteTheme(content = content)
     }
