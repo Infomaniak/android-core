@@ -28,8 +28,8 @@ abstract class BaseInAppReviewManager(private val activity: ComponentActivity) :
         countdownBehavior: Behavior = Behavior.LifecycleBased,
         appReviewThreshold: Int? = null,
         maxAppReviewThreshold: Int? = null,
-        onUserWantToReview: (() -> Unit)?,
-        onUserWantToGiveFeedback: (() -> Unit)?
+        onUserWantToReview: (() -> Unit)? = null,
+        onUserWantToGiveFeedback: (() -> Unit)? = null
     ) = Unit
 
     open fun onUserWantsToReview() = Unit
