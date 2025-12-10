@@ -26,8 +26,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Core"
-
 include(
     ":AppIntegrity",
     ":AppVersionChecker",
