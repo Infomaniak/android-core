@@ -54,6 +54,7 @@ include(
     ":Onboarding",
     ":RecyclerView",
     ":Sentry",
+    ":SharedValues",
     ":Thumbnails",
     ":Ui:Compose:BasicButton",
     ":Ui:Compose:Basics",
