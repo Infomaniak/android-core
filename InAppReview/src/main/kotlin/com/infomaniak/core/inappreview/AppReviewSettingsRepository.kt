@@ -68,7 +68,9 @@ class AppReviewSettingsRepository(private val context: Context) {
         }
     }
 
-    suspend fun clear() = context.dataStore.edit(MutablePreferences::clear)
+    suspend fun clear() {
+        context.dataStore.edit(MutablePreferences::clear)
+    }
 
     suspend fun resetReviewSettings() {
         setValue(APP_REVIEW_THRESHOLD_KEY, maxAppReviewThreshold)

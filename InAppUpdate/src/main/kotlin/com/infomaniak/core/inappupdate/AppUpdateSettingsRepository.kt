@@ -27,6 +27,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.infomaniak.core.sentry.SentryLog
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -39,7 +40,9 @@ private val Context.dataStore by preferencesDataStore(
 @Suppress("UNCHECKED_CAST")
 class AppUpdateSettingsRepository(private val context: Context) {
 
-    fun <T> flowOf(key: Preferences.Key<T>) = context.dataStore.data.map { it[key] ?: (getDefaultValue(key) as T) }
+    fun <T> flowOf(key: Preferences.Key<T>) = context.dataStore.data
+        .map { it[key] ?: (getDefaultValue(key) as T) }
+        .distinctUntilChanged()
 
     suspend fun <T> getValue(key: Preferences.Key<T>) = runCatching {
         flowOf(key).first()

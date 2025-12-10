@@ -47,11 +47,11 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     protected var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
     protected var onFDroidResult: ((Boolean) -> Unit)? = null
 
-    private val storesSettingsRepository = AppUpdateSettingsRepository(activity)
+    private val appUpdateSettingsRepository = AppUpdateSettingsRepository(activity)
 
     var isUpdateBottomSheetShown = false
 
-    val canInstallUpdate = storesSettingsRepository
+    val canInstallUpdate = appUpdateSettingsRepository
         .flowOf(HAS_APP_UPDATE_DOWNLOADED_KEY).distinctUntilChanged()
 
     val isUpdateRequired = flow {
@@ -110,22 +110,22 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
 
     //region Repository
     fun <T> set(key: Preferences.Key<T>, value: T) = activity.lifecycleScope.launch(Dispatchers.IO) {
-        storesSettingsRepository.setValue(key, value)
+        appUpdateSettingsRepository.setValue(key, value)
     }
 
-    fun resetUpdateSettings() = activity.lifecycleScope.launch(Dispatchers.IO) { storesSettingsRepository.resetUpdateSettings() }
+    fun resetUpdateSettings() = activity.lifecycleScope.launch(Dispatchers.IO) { appUpdateSettingsRepository.resetUpdateSettings() }
 
     fun decrementAppUpdateLaunches() = activity.lifecycleScope.launch(Dispatchers.IO) {
-        val appUpdateLaunches = storesSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY)
+        val appUpdateLaunches = appUpdateSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY)
         set(APP_UPDATE_LAUNCHES_KEY, appUpdateLaunches - 1)
     }
 
     fun shouldCheckUpdate(checkUpdateCallback: () -> Unit) = activity.lifecycleScope.launch(Dispatchers.IO) {
-        if (storesSettingsRepository.getValue(IS_USER_WANTING_UPDATES_KEY) ||
-            storesSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY) <= 0
+        if (appUpdateSettingsRepository.getValue(IS_USER_WANTING_UPDATES_KEY) ||
+            appUpdateSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY) <= 0
         ) {
             checkUpdateCallback()
-            storesSettingsRepository.setValue(APP_UPDATE_LAUNCHES_KEY, DEFAULT_APP_UPDATE_LAUNCHES)
+            appUpdateSettingsRepository.setValue(APP_UPDATE_LAUNCHES_KEY, DEFAULT_APP_UPDATE_LAUNCHES)
         }
     }
     //endregion
