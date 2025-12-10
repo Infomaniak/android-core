@@ -36,6 +36,7 @@ include(
     ":Coil",
     ":CrossAppLogin:Back",
     ":CrossAppLogin:Front",
+    ":DotLottie",
     ":FileTypes",
     ":FragmentNavigation",
     ":InAppReview",
