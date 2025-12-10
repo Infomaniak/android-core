@@ -42,6 +42,7 @@ include(
     ":InAppStore",
     ":InAppUpdate",
     ":KSuite",
+    ":Ktor",
     ":KSuite:KSuitePro",
     ":KSuite:MyKSuite",
     ":Matomo",
