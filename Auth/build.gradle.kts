@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
+    alias(core.plugins.compose.compiler)
     kotlin("plugin.parcelize")
     kotlin("plugin.serialization")
     alias(core.plugins.ksp)
@@ -37,6 +38,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        compose = true
     }
 
     kotlinOptions {
@@ -48,6 +50,10 @@ dependencies {
     implementation(project(":Core"))
     implementation(project(":Core:Network"))
     implementation(project(":Core:Sentry"))
+
+    implementation(platform(core.compose.bom))
+    implementation(core.compose.runtime)
+    implementation(core.activity.compose)
 
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)
