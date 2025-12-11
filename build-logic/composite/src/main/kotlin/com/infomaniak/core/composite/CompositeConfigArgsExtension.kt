@@ -26,7 +26,7 @@ open class CompositeConfigArgsExtension {
     var coreRootPath = "Core"
 
     companion object Companion {
-        internal const val EXTENSION_NAME: String = "CompositeConfigArgsExtension"
+        internal const val EXTENSION_NAME: String = "coreCompositeConfig"
     }
 }
 
