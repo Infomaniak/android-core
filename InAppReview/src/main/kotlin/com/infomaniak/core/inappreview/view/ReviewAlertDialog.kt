@@ -23,7 +23,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.infomaniak.core.inappreview.databinding.AlertDialogReviewBinding
-import kotlin.let
 
 class ReviewAlertDialog(
     private val activityContext: Context,

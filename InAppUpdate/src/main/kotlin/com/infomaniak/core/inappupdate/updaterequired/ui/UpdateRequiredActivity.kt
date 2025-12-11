@@ -33,7 +33,6 @@ import com.infomaniak.core.inappupdate.databinding.ActivityUpdateRequiredBinding
 import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.legacy.stores.updaterequired.UpdateRequiredActivityArgs
 import com.infomaniak.core.ui.showToast
-import kotlin.getValue
 import kotlin.system.exitProcess
 import androidx.appcompat.R as RAndroid
 
