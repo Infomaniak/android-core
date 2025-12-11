@@ -18,7 +18,7 @@ class CoreCompositePlugin : Plugin<Settings> {
                             "If you have renamed the Core folder, please update the `coreRootPath` property in your `settings.gradle` file " +
                             "within the `coreCompositeConfig` block. \nExample of usage: \n\n" +
                             "coreCompositeConfig {\n" +
-                            "    coreRootPath = \"CoreInf\"\n" +
+                            "    coreRootPath = \"../CoreInf\"\n" +
                             "}"
                 )
             }
