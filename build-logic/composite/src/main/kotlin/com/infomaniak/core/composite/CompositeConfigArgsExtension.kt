@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.composite
 
+import com.infomaniak.core.composite.CompositeConfigArgsExtension.Companion.EXTENSION_NAME
 import org.gradle.api.Action
 import org.gradle.api.initialization.Settings
 import org.gradle.api.plugins.ExtensionAware
@@ -26,8 +27,8 @@ open class CompositeConfigArgsExtension {
 
     companion object Companion {
         internal const val EXTENSION_NAME: String = "CompositeConfigArgsExtension"
-
-        fun Settings.coreCompositeConfig(configure: Action<CompositeConfigArgsExtension>): Unit =
-            (this as ExtensionAware).extensions.configure(EXTENSION_NAME, configure)
     }
 }
+
+fun Settings.coreCompositeConfig(configure: Action<CompositeConfigArgsExtension>): Unit =
+    (this as ExtensionAware).extensions.configure(EXTENSION_NAME, configure)
