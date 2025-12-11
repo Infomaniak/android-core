@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
 }
@@ -55,16 +55,16 @@ android {
 }
 
 dependencies {
-    api(project(":Core:TwoFactorAuth:Back"))
+    api(project(":TwoFactorAuth:Back"))
 
-    implementation(project(":Core"))
-    implementation(project(":Core:Avatar"))
-    implementation(project(":Core:Coil"))
-    implementation(project(":Core:Ui:Compose:BasicButton"))
-    implementation(project(":Core:Ui:Compose:Basics"))
-    implementation(project(":Core:Ui:Compose:Margin"))
+    implementation(project(":"))
+    implementation(project(":Avatar"))
+    implementation(project(":Coil"))
+    implementation(project(":Ui:Compose:BasicButton"))
+    implementation(project(":Ui:Compose:Basics"))
+    implementation(project(":Ui:Compose:Margin"))
     implementation(project(":Network"))
-    implementation(project(":Core:Notifications"))
+    implementation(project(":Notifications"))
 
     implementation(core.androidx.core.ktx)
 
