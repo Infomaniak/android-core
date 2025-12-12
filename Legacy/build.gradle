@@ -1,9 +1,11 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlinx-serialization'
-apply plugin: 'com.google.devtools.ksp'
-alias(core.plugins.navigation.safeargs)
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlinx-serialization'
+    id 'com.google.devtools.ksp'
+    alias(core.plugins.navigation.safeargs)
+}
 
 rootProject.ext {
     legacyCompileSdk = 35
@@ -41,7 +43,14 @@ android {
 }
 
 dependencies {
-    implementation project(":Network") // To access API URL
+    // To access API URL
+    def networkProject = findProject(":Network")
+    if (networkProject != null) {
+        implementation(networkProject)
+    } else {
+        // New Core via composite build: will be substituted to the included build project
+        implementation("com.infomaniak.core:Network")
+    }
 
     api core.kotlinx.coroutines.android
     api core.kotlinx.coroutines.test
