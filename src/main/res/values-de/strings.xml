@@ -25,6 +25,7 @@
     <string name="buttonRetry">Wiederholen</string>
     <string name="buttonSave">Speichern</string>
     <string name="buttonYes">Ja</string>
+    <string name="crossAppLoginIntegrityError">Kontenabruf nicht verfügbar</string>
     <string name="errorDownload">Fehler beim Download</string>
     <string name="errorDownloadInsufficientSpace">Download nicht möglich: Unzureichender Speicherplatz</string>
     <string name="reviewAlertTitle">Mögen Sie %s?</string>

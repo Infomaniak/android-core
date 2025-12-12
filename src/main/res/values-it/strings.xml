@@ -25,6 +25,7 @@
     <string name="buttonRetry">Riprova</string>
     <string name="buttonSave">Salva</string>
     <string name="buttonYes">Sì</string>
+    <string name="crossAppLoginIntegrityError">Recupero dei conti non disponibile</string>
     <string name="errorDownload">Errore durante il download</string>
     <string name="errorDownloadInsufficientSpace">Impossibile scaricare: spazio insufficiente</string>
     <string name="reviewAlertTitle">Ti piace %s?</string>
