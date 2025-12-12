@@ -7,27 +7,70 @@ import org.gradle.kotlin.dsl.create
 import java.io.File
 
 /**
- * Gradle Settings plugin that wires the local **Core** project as a composite build and substitutes
- * any dependency from the `com.infomaniak.core` group with the corresponding included project.
+ * Gradle **Settings** plugin that wires the local **Core** project as a composite build and
+ * dynamically substitutes any dependency from the `com.infomaniak.core` group with the
+ * corresponding included project.
  *
  * ## Core dependencies (dynamic mapping)
- * Core dependencies are resolved dynamically. To reference a Core module, use:
+ *
+ * Core dependencies are resolved dynamically through dependency substitution.
+ * To reference a Core module, use:
+ *
  * `com.infomaniak.core:Module.Name`
  *
- * To depend on the **Core** module itself, use:
+ * To depend on the **Core** root module itself, use:
+ *
  * `com.infomaniak.core:Core`
  *
  * The `:` separators from the Core project path must be written using **dots** in the artifact name:
- * - `:TwoFactorAuth:Front` → `com.infomaniak.core:TwoFactorAuth.Front`
  *
- * Dots are also used for sub-modules:
+ * - `:TwoFactorAuth:Front` → `com.infomaniak.core:TwoFactorAuth.Front`
  * - `:ModuleA:ModuleB:ModuleC` → `com.infomaniak.core:ModuleA.ModuleB.ModuleC`
  *
+ * ---
+ *
+ * ## Legacy module support
+ *
+ * The plugin also supports the **Legacy** module located inside the Core repository.
+ *
+ * To enable it, simply declare the module in the host project's `settings.gradle(.kts)`:
+ *
+ * ```kotlin
+ * include(":Legacy")
+ * ```
+ *
+ * When declared, the plugin automatically remaps the `:Legacy` project to:
+ *
+ * `${coreRootPath}/Legacy`
+ *
+ * This allows the Legacy module to be used as a regular Gradle project:
+ *
+ * ```kotlin
+ * dependencies {
+ *     implementation(project(":Legacy"))
+ * }
+ * ```
+ *
+ * This approach keeps backward compatibility with the historical Legacy module
+ * while allowing Core to be consumed through a composite build.
+ *
+ * ---
+ *
  * ## Custom Core root path
- * You can change the relative path to the Core directory by setting [coreRootPath].
+ *
+ * You can change the relative path to the Core directory by setting [coreRootPath](com.infomaniak.core.composite.CompositeConfigArgsExtension.coreRootPath).
+ *
  * Default value is `"Core"`.
  *
- * See: [com.infomaniak.core.composite.CompositeConfigArgsExtension.coreRootPath]
+ * Example:
+ *
+ * ```kotlin
+ * coreCompositeConfig {
+ *     coreRootPath = "../CoreInf"
+ * }
+ * ```
+ *
+ * @see com.infomaniak.core.composite.CompositeConfigArgsExtension.coreRootPath
  */
 class CoreCompositePlugin : Plugin<Settings> {
 
