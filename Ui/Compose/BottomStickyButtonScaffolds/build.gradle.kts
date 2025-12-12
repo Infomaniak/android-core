@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 /*
- * Infomaniak SwissTransfer - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2025-2025 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
