@@ -266,7 +266,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         val messageResId = when (issue) {
             is Issue.AppIntegrityCheckFailed -> {
                 shouldReport = false
-                R.string.crossAppLoginIntegrityError
+                RCore.string.crossAppLoginIntegrityError
             }
             is Issue.ErrorResponse -> {
                 shouldReport = issue.response.code !in 500..599
