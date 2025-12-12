@@ -18,9 +18,13 @@
 package com.infomaniak.core.inappupdate
 
 import androidx.activity.ComponentActivity
+import androidx.annotation.StyleRes
 import androidx.datastore.preferences.core.Preferences
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryAppVersion
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
@@ -29,6 +33,8 @@ import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.APP
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.DEFAULT_APP_UPDATE_LAUNCHES
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.IS_USER_WANTING_UPDATES_KEY
+import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
+import com.infomaniak.core.inappupdate.updaterequired.ui.UpdateRequiredActivity.Companion.startUpdateRequiredActivity
 import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionName
 import com.infomaniak.core.network.networking.HttpClient
@@ -113,7 +119,8 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
         appUpdateSettingsRepository.setValue(key, value)
     }
 
-    fun resetUpdateSettings() = activity.lifecycleScope.launch(Dispatchers.IO) { appUpdateSettingsRepository.resetUpdateSettings() }
+    fun resetUpdateSettings() =
+        activity.lifecycleScope.launch(Dispatchers.IO) { appUpdateSettingsRepository.resetUpdateSettings() }
 
     fun decrementAppUpdateLaunches() = activity.lifecycleScope.launch(Dispatchers.IO) {
         val appUpdateLaunches = appUpdateSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY)
@@ -129,4 +136,28 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
         }
     }
     //endregion
+
+    companion object {
+        fun FragmentActivity.checkUpdateIsRequired(
+            manager: InAppUpdateManager,
+            applicationId: String,
+            applicationVersionCode: Int,
+            @StyleRes theme: Int
+        ) {
+            lifecycleScope.launch {
+                manager.isUpdateRequired
+                    .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                    .collect { isUpdateRequired ->
+                        if (isUpdateRequired) {
+                            startUpdateRequiredActivity(
+                                context = this@checkUpdateIsRequired,
+                                appId = applicationId,
+                                versionCode = applicationVersionCode,
+                                appTheme = theme
+                            )
+                        }
+                    }
+            }
+        }
+    }
 }
