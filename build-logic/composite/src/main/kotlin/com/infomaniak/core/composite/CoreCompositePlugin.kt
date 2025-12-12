@@ -2,6 +2,7 @@ package com.infomaniak.core.composite
 
 import org.gradle.api.Plugin
 import org.gradle.api.artifacts.component.ModuleComponentSelector
+import org.gradle.api.initialization.ProjectDescriptor
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.create
 import java.io.File
@@ -110,6 +111,27 @@ class CoreCompositePlugin : Plugin<Settings> {
             }
 
             target.project(":Legacy").projectDir = File("${compositeArgs.coreRootPath}/Legacy")
+
+            remapLegacyProjects(listOf(target.project(":Legacy")), compositeArgs.coreRootPath)
         }
     }
+
+    private tailrec fun remapLegacyProjects(remaining: List<ProjectDescriptor>, coreRootPath: String) {
+        if (remaining.isEmpty()) return
+
+        val current = remaining.first()
+        val rest = remaining.drop(1)
+
+        if (current.path != ":Legacy") {
+            val relativePath = current.path
+                .removePrefix(":Legacy:")
+                .replace(":", "/")
+
+            current.projectDir = File("$coreRootPath/Legacy/$relativePath")
+        }
+
+        remapLegacyProjects(rest + current.children, coreRootPath)
+    }
+
+
 }
