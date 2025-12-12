@@ -9,6 +9,7 @@ import java.io.File
 class CoreCompositePlugin : Plugin<Settings> {
     override fun apply(target: Settings) {
         val compositeArgs = target.extensions.create<CompositeConfigArgsExtension>(CompositeConfigArgsExtension.EXTENSION_NAME)
+        val alreadyLogged = mutableSetOf<String>()
 
         target.gradle.settingsEvaluated {
             val coreFile = File(target.settingsDir, compositeArgs.coreRootPath)
@@ -30,7 +31,10 @@ class CoreCompositePlugin : Plugin<Settings> {
                         if (req is ModuleComponentSelector && req.group == "com.infomaniak.core") {
                             val artifact = req.module
                             val projectPath = if (artifact == "Core") ":" else ":${artifact.replace('.', ':')}"
-                            println("Substituting $req -> project($projectPath)")
+
+                            if (alreadyLogged.add(req.toString())) {
+                                println("Substituting $req -> project($projectPath)")
+                            }
 
                             useTarget(project(projectPath))
                         }
