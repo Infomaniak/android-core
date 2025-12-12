@@ -54,6 +54,10 @@ dependencies {
     implementation(core.compose.runtime)
     implementation(core.activity.compose)
 
+    implementation(platform(core.compose.bom))
+    implementation(core.compose.runtime)
+    implementation(core.activity.compose)
+
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)
     implementation(core.gson)

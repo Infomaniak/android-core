@@ -30,7 +30,6 @@ import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.Account
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
 import com.infomaniak.core.mapSync
-import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import com.infomaniak.core.network.networking.HttpClient.addCache
 import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
@@ -97,6 +96,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         }
     }
 
+    private val isCrossAppLoginEnabledFlow = MutableStateFlow(true)
+
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
         // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
@@ -113,9 +114,15 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             context = hostActivity,
             coroutineScope = this + Dispatchers.Default
         )
-        if (singleSelection) launch { keepSingleSelection() }
-        _availableAccounts.emitAll(crossAppLogin.accountsFromOtherApps(hostActivity.lifecycle))
-        awaitCancellation() // Should never be reached because the accountsFromOtherApps Flow should be infinite.
+        isCrossAppLoginEnabledFlow.collectLatest { isEnabled ->
+            if (!isEnabled) {
+                _availableAccounts.value = emptyList()
+                return@collectLatest
+            }
+            if (singleSelection) launch { keepSingleSelection() }
+            _availableAccounts.emitAll(crossAppLogin.accountsFromOtherApps(hostActivity.lifecycle))
+        }
+        awaitCancellation() // Can't be reached because isCrossAppLoginEnabledFlow is a SharedFlow.
     }
 
     suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {
@@ -123,6 +130,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
         val tokens = mutableListOf<ApiToken>()
         val errorMessageIds = mutableListOf<Int>()
+        var hadATerminalIssue = false
 
         selectedAccounts.forEach { account ->
             when (val result = tokenGenerator.attemptDerivingOneOfTheseTokens(account.tokens)) {
@@ -131,9 +139,15 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                     tokens.add(result.value)
                 }
                 is Xor.Second -> {
+                    hadATerminalIssue = hadATerminalIssue || result.value !is Issue.NetworkIssue
                     errorMessageIds.add(getTokenDerivationIssueErrorMessage(account, issue = result.value))
                 }
             }
+        }
+
+        val shouldDisableCrossAppLogin = hadATerminalIssue && tokens.isEmpty()
+        if (shouldDisableCrossAppLogin) {
+            isCrossAppLoginEnabledFlow.value = false
         }
 
         return LoginResult(tokens, errorMessageIds)
