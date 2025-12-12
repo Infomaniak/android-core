@@ -23,6 +23,18 @@ import org.gradle.api.initialization.Settings
 import org.gradle.api.plugins.ExtensionAware
 
 open class CompositeConfigArgsExtension {
+
+    /**
+     * Relative path to the **Core** project root.
+     *
+     * Default value is `"Core"`.
+     *
+     * Example:
+     * - `"../Core"`
+     *
+     * This path is used to include the Core project as a composite build and to
+     * dynamically substitute `com.infomaniak.core` dependencies with local projects.
+     */
     var coreRootPath = "Core"
 
     companion object Companion {
