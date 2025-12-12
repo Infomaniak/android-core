@@ -2,6 +2,7 @@ package com.infomaniak.core.composite
 
 import org.gradle.api.Plugin
 import org.gradle.api.artifacts.component.ModuleComponentSelector
+import org.gradle.api.initialization.ConfigurableIncludedBuild
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.create
 import java.io.File
@@ -92,30 +93,30 @@ class CoreCompositePlugin : Plugin<Settings> {
             }
 
             target.includeBuild(compositeArgs.coreRootPath) {
-                dependencySubstitution {
-                    all {
-                        val req = requested
-                        if (req is ModuleComponentSelector && req.group == "com.infomaniak.core") {
-                            val artifact = req.module
-                            val projectPath = if (artifact == "Core") ":" else ":${artifact.replace('.', ':')}"
                 // Support for :Core:Legacy
                 // Rename include build name to avoid a Gradle name collision with an existing ':Core' project in the main build
                 name = "${compositeArgs.coreRootPath}Included"
 
-                            if (alreadyLogged.add(req.toString())) {
-                                println("Substituting $req -> project($projectPath)")
-                            }
-
-                            useTarget(project(projectPath))
-                        }
-                    }
-                }
+                configureCoreDependencySubstitution(alreadyLogged)
             }
         }
     }
 
+    private fun ConfigurableIncludedBuild.configureCoreDependencySubstitution(alreadyLogged: MutableSet<String>) {
+        dependencySubstitution {
+            all {
+                val req = requested
+                if (req is ModuleComponentSelector && req.group == "com.infomaniak.core") {
+                    val artifact = req.module
+                    val projectPath = if (artifact == "Core") ":" else ":${artifact.replace('.', ':')}"
 
+                    if (alreadyLogged.add(req.toString())) {
+                        println("Substituting $req -> project($projectPath)")
+                    }
 
+                    useTarget(project(projectPath))
+                }
+            }
         }
     }
 }
