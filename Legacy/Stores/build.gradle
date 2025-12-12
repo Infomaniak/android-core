@@ -1,6 +1,8 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-alias(core.plugins.navigation.safeargs)
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    alias(core.plugins.navigation.safeargs)
+}
 
 def legacyCompileSdk = rootProject.ext["legacyCompileSdk"]
 def legacyMinSdk = rootProject.ext["legacyMinSdk"]
@@ -31,9 +33,23 @@ android {
 }
 
 dependencies {
-    implementation project(":Core:AppVersionChecker")
+    def appVersionCheckerProject = findProject(":AppVersionChecker")
+    if (appVersionCheckerProject == null) {
+        implementation("com.infomaniak.core:AppVersionChecker")
+    } else {
+        implementation(appVersionCheckerProject)
+    }
+
+    // To access API URL
+    def networkProject = findProject(":Network")
+    if (networkProject != null) {
+        implementation(networkProject)
+    } else {
+        // New Core via composite build: will be substituted to the included build project
+        implementation("com.infomaniak.core:Network")
+    }
+
     implementation project(':Core:Legacy')
-    implementation project(":Network") // To access API URL
 
     api core.androidx.datastore.preferences
 
