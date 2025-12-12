@@ -30,6 +30,7 @@ import java.io.File
  * See: [com.infomaniak.core.composite.CompositeConfigArgsExtension.coreRootPath]
  */
 class CoreCompositePlugin : Plugin<Settings> {
+
     override fun apply(target: Settings) {
         val compositeArgs = target.extensions.create<CompositeConfigArgsExtension>(CompositeConfigArgsExtension.EXTENSION_NAME)
         val alreadyLogged = mutableSetOf<String>()
@@ -64,6 +65,8 @@ class CoreCompositePlugin : Plugin<Settings> {
                     }
                 }
             }
+
+            target.project(":Legacy").projectDir = File("${compositeArgs.coreRootPath}/Legacy")
         }
     }
 }
