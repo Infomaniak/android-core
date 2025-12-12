@@ -3,6 +3,7 @@ plugins {
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
     kotlin("plugin.parcelize")
+    alias(core.plugins.kotlin.serialization)
     alias(core.plugins.navigation.safeargs)
 }
 

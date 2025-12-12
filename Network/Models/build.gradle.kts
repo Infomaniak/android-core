@@ -2,6 +2,7 @@ plugins {
     alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     kotlin("plugin.parcelize")
+    alias(core.plugins.kotlin.serialization)
 }
 
 val coreCompileSdk: Int by rootProject.extra

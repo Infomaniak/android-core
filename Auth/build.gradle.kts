@@ -4,6 +4,7 @@ plugins {
     alias(core.plugins.compose.compiler)
     kotlin("plugin.parcelize")
     alias(core.plugins.ksp)
+    alias(core.plugins.kotlin.serialization)
 }
 
 val coreCompileSdk: Int by rootProject.extra

@@ -4,6 +4,7 @@ plugins {
     alias(core.plugins.compose.compiler)
     alias(core.plugins.ksp)
     kotlin("plugin.parcelize")
+    alias(core.plugins.kotlin.serialization)
     alias(core.plugins.navigation.safeargs)
 }
 
