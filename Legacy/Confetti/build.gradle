@@ -23,6 +23,6 @@ android {
     kotlinOptions { jvmTarget = javaVersion }
 
     dependencies {
-        implementation project(':Legacy')
+        implementation project(':Core:Legacy')
     }
 }
