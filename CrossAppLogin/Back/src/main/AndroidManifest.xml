@@ -21,6 +21,7 @@
         <intent>
             <action android:name="com.infomaniak.crossapp.login"/>
         </intent>
+        <package android:name="app.grapheneos.info"/>
     </queries>
 
 </manifest>
