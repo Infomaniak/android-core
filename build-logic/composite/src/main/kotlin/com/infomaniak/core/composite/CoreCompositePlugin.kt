@@ -37,7 +37,7 @@ import java.io.File
  * To enable it, simply declare the module in the host project's `settings.gradle(.kts)`:
  *
  * ```kotlin
- * include(":Legacy")
+ * include(":Core:Legacy")
  * ```
  *
  * When declared, the plugin automatically remaps the `:Legacy` project to:
@@ -48,7 +48,7 @@ import java.io.File
  *
  * ```kotlin
  * dependencies {
- *     implementation(project(":Legacy"))
+ *     implementation(project(":Core:Legacy"))
  * }
  * ```
  *
@@ -67,7 +67,7 @@ import java.io.File
  *
  * ```kotlin
  * coreCompositeConfig {
- *     coreRootPath = "../CoreInf"
+ *     coreRootPath = "../Core"
  * }
  * ```
  *
@@ -87,7 +87,7 @@ class CoreCompositePlugin : Plugin<Settings> {
                             "If you have renamed the Core folder, please update the `coreRootPath` property in your `settings.gradle` file " +
                             "within the `coreCompositeConfig` block. \nExample of usage: \n\n" +
                             "coreCompositeConfig {\n" +
-                            "    coreRootPath = \"../CoreInf\"\n" +
+                            "    coreRootPath = \"../Core\"\n" +
                             "}"
                 )
             }

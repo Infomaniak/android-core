@@ -86,20 +86,14 @@ The composite plugin also supports the **Legacy** module located inside Core.
 In `settings.gradle.kts` of the host project:
 
 ```kotlin
-include(":Legacy")
-```
-
-The plugin automatically maps:
-
-```
-:Legacy → Core/Legacy
+include(":Core:Legacy")
 ```
 
 ### Use Legacy
 
 ```kotlin
 dependencies {
-    implementation(project(":Legacy"))
+    implementation(project(":Core:Legacy"))
 }
 ```
 
