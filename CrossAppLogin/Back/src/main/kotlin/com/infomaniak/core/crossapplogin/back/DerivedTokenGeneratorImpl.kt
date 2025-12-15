@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.crossapplogin.back
 
+import android.content.pm.PackageManager
 import com.infomaniak.core.DynamicLazyMap
 import com.infomaniak.core.Xor
 import com.infomaniak.core.appintegrity.AppIntegrityManager
@@ -78,7 +79,16 @@ internal class DerivedTokenGeneratorImpl(
         }.last()
     }
 
-    override suspend fun checkIfAppIntegrityCouldSucceed() = runCatching {
+    override suspend fun checkIfAppIntegrityCouldSucceed(): Boolean = runCatching {
+
+        val isRunningGrapheneOS = try {
+            appCtx.packageManager.getPackageInfo("app.grapheneos.info", PackageManager.MATCH_DISABLED_COMPONENTS)
+            true
+        } catch (_: PackageManager.NameNotFoundException) {
+            false
+        }
+        if (isRunningGrapheneOS) return false
+
         // Be sure the length is between 16 and 500 char so the computed nonce sent to AppIntegrity will have a correct size
         val dummyChallenge = "Dummy challenge to know if AppIntegrity can be reached"
         appIntegrityManager.requestClassicIntegrityVerdictToken(dummyChallenge)
