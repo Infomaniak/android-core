@@ -198,8 +198,10 @@ object ApiController {
                 bodyResponse = response.bodyAsStringOrNull() ?: ""
                 return when {
                     response.code >= 500 -> {
-                        Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
-                            scope.setExtra("bodyResponse", bodyResponse)
+                        if (response.code != 503) {
+                            Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
+                                scope.setExtra("bodyResponse", bodyResponse)
+                            }
                         }
                         createErrorResponse(
                             InternalTranslatedErrorCode.UnknownError,
@@ -262,8 +264,10 @@ object ApiController {
                 bodyResponse = response.body?.string() ?: ""
                 return when {
                     response.code >= 500 -> {
-                        Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
-                            scope.setExtra("bodyResponse", bodyResponse)
+                        if (response.code != 503) {
+                            Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
+                                scope.setExtra("bodyResponse", bodyResponse)
+                            }
                         }
                         createErrorResponse(
                             InternalTranslatedErrorCode.UnknownError,
