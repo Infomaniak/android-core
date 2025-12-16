@@ -144,8 +144,10 @@ object ApiController {
                 bodyResponse = response.bodyAsStringOrNull() ?: ""
                 return when {
                     response.code >= 500 -> {
-                        Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
-                            scope.setExtra("bodyResponse", bodyResponse)
+                        if (response.code != 503) {
+                            Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
+                                scope.setExtra("bodyResponse", bodyResponse)
+                            }
                         }
                         createErrorResponse(
                             InternalTranslatedErrorCode.UnknownError,
@@ -205,11 +207,13 @@ object ApiController {
             val request = createRequest(url, method, requestBody)
 
             okHttpClient.newCall(request).execute().use { response ->
-                bodyResponse = response.body?.string() ?: ""
+                bodyResponse = response.body.string()
                 return when {
                     response.code >= 500 -> {
-                        Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
-                            scope.setExtra("bodyResponse", bodyResponse)
+                        if (response.code != 503) {
+                            Sentry.captureMessage("An API error ${response.code} occurred", SentryLevel.ERROR) { scope ->
+                                scope.setExtra("bodyResponse", bodyResponse)
+                            }
                         }
                         createErrorResponse(
                             InternalTranslatedErrorCode.UnknownError,
