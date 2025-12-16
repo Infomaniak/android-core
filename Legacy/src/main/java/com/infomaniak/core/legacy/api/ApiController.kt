@@ -261,7 +261,7 @@ object ApiController {
             val request = createRequest(url, method, requestBody)
 
             okHttpClient.newCall(request).execute().use { response ->
-                bodyResponse = response.body?.string() ?: ""
+                bodyResponse = response.body.string()
                 return when {
                     response.code >= 500 -> {
                         if (response.code != 503) {
