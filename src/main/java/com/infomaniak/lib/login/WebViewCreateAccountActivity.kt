@@ -31,9 +31,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.CANCEL_HOST_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.CREATE_ACCOUNT_URL_TAG
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.HEADERS_TAG
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.IGNORE_FIRST_CANCEL_URL_TAG
+import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
 import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
 import com.infomaniak.lib.login.ext.handleEdgeToEdge
+import kotlinx.serialization.json.Json
 import java.util.MissingFormatArgumentException
 
 class WebViewCreateAccountActivity : AppCompatActivity() {
@@ -49,6 +53,17 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
     private val cancelUrl: String by lazy {
         intent.getStringExtra(CANCEL_HOST_TAG) ?: throw MissingFormatArgumentException(CANCEL_HOST_TAG)
     }
+    private val removeCookies: Boolean by lazy {
+        intent.getBooleanExtra(REMOVE_COOKIES_TAG, true)
+    }
+    private val headers: Map<String, String> by lazy {
+        intent.getStringExtra(HEADERS_TAG)?.let {
+            Json.decodeFromString<Map<String, String>>(it)
+        } ?: mapOf()
+    }
+    private val ignoreFirstCancelUrl: Boolean by lazy {
+        intent.getBooleanExtra(IGNORE_FIRST_CANCEL_URL_TAG, false)
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +71,8 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        WebViewUtils.flushAllCookies()
+        if (removeCookies) WebViewUtils.flushAllCookies()
+
         binding.handleEdgeToEdge()
 
         binding.toolbar.title = getString(R.string.create_account)
@@ -64,7 +80,7 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
             settings.javaScriptEnabled = true
             webViewClient = RegisterWebViewClient()
             webChromeClient = ProgressWebChromeClient(binding.progressBar)
-            loadUrl(createAccountUrl)
+            loadUrl(createAccountUrl, headers)
         }
     }
 
@@ -92,18 +108,22 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url
-            when (url.host) {
-                successUrl -> successResult()
-                cancelUrl -> {
-                    openUrl(url.toString())
-                    cancelResult()
+            val host = url.host
+            when(host) {
+               successUrl -> {
+                    successResult()
                 }
-                else -> {
+                cancelUrl if ignoreFirstCancelUrl -> {
+                    intent.putExtra(IGNORE_FIRST_CANCEL_URL_TAG, false)
                     if (isInfomaniakUrl(url.toString())) {
-                        view.loadUrl(url.toString())
+                        view.loadUrl(url.toString(), headers)
                     } else {
                         openUrl(url.toString())
                     }
+                }
+                else -> {
+                    openUrl(url.toString())
+                    cancelResult()
                 }
             }
             return true

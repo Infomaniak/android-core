@@ -110,11 +110,17 @@ class InfomaniakLogin(
         createAccountUrl: String,
         successHost: String,
         cancelHost: String,
+        headers: Map<String, String> = mapOf(),
+        removeCookies: Boolean = true,
+        ignoreFirstCancelUrl: Boolean = false,
     ) {
         val intent = Intent(context, WebViewCreateAccountActivity::class.java).apply {
             putExtra(CREATE_ACCOUNT_URL_TAG, createAccountUrl)
             putExtra(SUCCESS_HOST_TAG, successHost)
             putExtra(CANCEL_HOST_TAG, cancelHost)
+            putExtra(HEADERS_TAG, Json.encodeToString(headers))
+            putExtra(REMOVE_COOKIES_TAG, removeCookies)
+            putExtra(IGNORE_FIRST_CANCEL_URL_TAG, ignoreFirstCancelUrl)
         }
         resultLauncher.launch(intent)
     }
@@ -408,6 +414,8 @@ class InfomaniakLogin(
         const val CANCEL_HOST_TAG = "cancel_url"
         const val CREATE_ACCOUNT_URL_TAG = "create_account_url"
         const val SUCCESS_HOST_TAG = "success_url"
+        const val HEADERS_TAG = "headers"
+        const val IGNORE_FIRST_CANCEL_URL_TAG = "ignore_first_cancel_url"
 
         const val WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED = "net::ERR_INTERNET_DISCONNECTED"
         const val WEBVIEW_ERROR_CODE_CONNECTION_REFUSED = "net::ERR_CONNECTION_REFUSED"
