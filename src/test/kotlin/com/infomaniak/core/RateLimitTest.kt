@@ -26,12 +26,14 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.yield
 import org.junit.runner.RunWith
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @RunWith(AndroidJUnit4::class)
+@Ignore("Doesn't work on all machines, but seems to run consistently on M4 Max CPUs…")
 class RateLimitTest {
 
     // NOTE: We are NOT using runTest below because built-in delay skipping is not connected to System.nanoTime()

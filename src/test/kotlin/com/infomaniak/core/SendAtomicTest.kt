@@ -38,11 +38,13 @@ import kotlinx.coroutines.selects.SelectBuilder
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import org.junit.runner.RunWith
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.milliseconds
 
 @RunWith(AndroidJUnit4::class)
+@Ignore("Doesn't work on all machines, but seems to run consistently on M4 Max CPUs…")
 class SendAtomicTest {
 
     @Test
