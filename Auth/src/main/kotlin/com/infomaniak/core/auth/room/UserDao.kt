@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.infomaniak.core.auth.models.user.User
@@ -54,6 +55,9 @@ interface UserDao {
 
     @Query("SELECT * FROM user WHERE firstname LIKE (:firstName) AND lastname LIKE (:lastName) LIMIT 1")
     suspend fun findByName(firstName: String, lastName: String): User?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(user: User)
 
     @Insert
     suspend fun insert(user: User)
