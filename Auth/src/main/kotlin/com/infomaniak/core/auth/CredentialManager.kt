@@ -20,7 +20,6 @@ package com.infomaniak.core.auth
 import androidx.collection.ArrayMap
 import androidx.lifecycle.LiveData
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.network.networking.HttpClientConfig
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.sync.Mutex
@@ -38,26 +37,13 @@ abstract class CredentialManager : UserExistenceChecker {
     override suspend fun isUserAlreadyPresent(userId: Int): Boolean = getUserById(userId) != null
 
     //region User
-    protected abstract var userDatabase: UserDatabase
-    abstract var currentUserId: Int
-    abstract var currentUser: User?
-
     /**
      * Get users, and their informations / tokens in a JSON format
      */
-    fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().getAll()
-
-    fun getAllUsersCount(): Int = userDatabase.userDao().count()
-
-    suspend fun setUserToken(user: User?, apiToken: ApiToken) {
-        user?.let {
-            it.apiToken = apiToken
-            userDatabase.userDao().update(it)
-            if (currentUserId == it.id) currentUser = it
-        }
-    }
-
-    suspend fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
+    abstract fun getAllUsers(): LiveData<List<User>>
+    abstract fun getAllUsersCount(): Int
+    abstract suspend fun setUserToken(user: User?, apiToken: ApiToken)
+    abstract suspend fun getUserById(id: Int): User?
     //endregion
 
     //region HttpClient
