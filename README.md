@@ -4,7 +4,6 @@ Infomaniak Core is a modular Android library used across multiple projects.
 It can be consumed locally using **Gradle Composite Builds**, enabling fast development
 without publishing artifacts, while still supporting the historical **Legacy** module.
 
-
 ## Overview
 
 This repository contains:
@@ -20,8 +19,8 @@ com.infomaniak.core.composite.CoreCompositePlugin
 ```
 
 📘 For advanced configuration and exact dependency mapping rules,
-**refer to the KDoc of `CoreCompositePlugin`.**
-
+**refer to the KDoc
+of [CoreCompositePlugin](build-logic/composite/src/main/kotlin/com/infomaniak/core/composite/CoreCompositePlugin.kt).**
 
 ## Installation (Composite Build – recommended)
 
@@ -41,7 +40,6 @@ pluginManagement {
 > [!IMPORTANT]
 > The Core composite plugin is provided by Core’s build logic.
 
-
 ### 2️⃣ Apply the Core composite plugin
 
 ```kotlin
@@ -56,7 +54,6 @@ Once applied:
 * All `com.infomaniak.core:*` dependencies are automatically substituted
 * Core modules are resolved as **local Gradle projects**
 
-
 ## Using Core modules
 
 Core modules are declared using **Maven coordinates**, but resolved locally.
@@ -69,8 +66,7 @@ dependencies {
 ```
 
 📘 The full mapping logic (module name → project path) is documented in the
-**KDoc of `com.infomaniak.core.composite.CoreCompositePlugin`**.
-
+**KDoc of [com.infomaniak.core.composite.CoreCompositePlugin](build-logic/composite/src/main/kotlin/com/infomaniak/core/composite/CoreCompositePlugin.kt)**.
 
 ## Legacy module support (build-time)
 
@@ -94,13 +90,12 @@ dependencies {
 
 📘 All Legacy-related rules and behavior are documented in the plugin KDoc.
 
-
 ## Legacy runtime initialization
 
 Init the `InfomaniakCore` object in `MainApplication` and configure it like this :
 
 ```kt
-        InfomaniakCore.init(
+InfomaniakCore.init(
     this,
     BuildConfig.VERSION_NAME,
     BuildConfig.API_APP_TOKEN,
@@ -120,7 +115,6 @@ val request = Request.Builder()
     .build()
 ```
 
-
 ## What does Core contain?
 
 * Infomaniak base colors
@@ -129,11 +123,11 @@ val request = Request.Builder()
 * HTTP-related helpers and utilities
 * Modular features exposed via Core submodules
 
-
 ## Documentation
 
 * **Core composite integration**:
-  `com.infomaniak.core.composite.CoreCompositePlugin` (KDoc)
+  [com.infomaniak.core.composite.CoreCompositePlugin](build-logic/composite/src/main/kotlin/com/infomaniak/core/composite/CoreCompositePlugin.kt)
+  (KDoc)
 
 This class documents:
 
@@ -141,7 +135,6 @@ This class documents:
 * Module name mapping
 * Custom Core root paths
 * Legacy integration behavior
-
 
 ## License
 
