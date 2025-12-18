@@ -37,8 +37,8 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
 
     private val appReviewSettingsRepository = AppReviewSettingsRepository(activity)
 
-    private val appReviewCountdown = appReviewSettingsRepository.flowOf(APP_REVIEW_THRESHOLD_KEY)
-    private val alreadyGaveReview = appReviewSettingsRepository.flowOf(ALREADY_GAVE_REVIEW_KEY)
+    private val appReviewCountdown = appReviewSettingsRepository.flowFor(APP_REVIEW_THRESHOLD_KEY)
+    private val alreadyGaveReview = appReviewSettingsRepository.flowFor(ALREADY_GAVE_REVIEW_KEY)
 
     private var onUserWantsToReview: (() -> Unit)? = null
     private var onUserWantsToGiveFeedback: (() -> Unit)? = null

@@ -58,7 +58,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     var isUpdateBottomSheetShown = false
 
     val canInstallUpdate = appUpdateSettingsRepository
-        .flowOf(HAS_APP_UPDATE_DOWNLOADED_KEY).distinctUntilChanged()
+        .flowFor(HAS_APP_UPDATE_DOWNLOADED_KEY).distinctUntilChanged()
 
     val isUpdateRequired = flow {
         val projectionFields = listOf(

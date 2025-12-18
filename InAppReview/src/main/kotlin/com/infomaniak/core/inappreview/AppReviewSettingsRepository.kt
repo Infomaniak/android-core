@@ -43,12 +43,12 @@ class AppReviewSettingsRepository(private val context: Context) {
     internal var appReviewThreshold = DEFAULT_APP_REVIEW_THRESHOLD
     internal var maxAppReviewThreshold = appReviewThreshold * 10
 
-    fun <T> flowOf(key: Preferences.Key<T>) = context.dataStore.data
+    fun <T> flowFor(key: Preferences.Key<T>) = context.dataStore.data
         .map { it[key] ?: (getInitialValue(key) as T) }
         .distinctUntilChanged()
 
     suspend fun <T> getValue(key: Preferences.Key<T>) = runCatching {
-        flowOf(key).first()
+        flowFor(key).first()
     }.getOrElse { exception ->
         SentryLog.e(TAG, "Error while trying to get value from DataStore for key : $key", exception)
         getInitialValue(key) as T
