@@ -42,6 +42,7 @@ pluginManagement {
 
 ### 2️⃣ Apply the Core composite plugin
 
+In `settings.gradle.kts`:
 ```kotlin
 plugins {
     id("com.infomaniak.core.composite")
@@ -104,7 +105,7 @@ InfomaniakCore.init(
 )
 ```
 
-You'll be able to call the method `getHeaders()` everywhere in your app, as long as you've initiated the InfomaniakCore library in
+You'll be able to call the method `getHeaders()` everywhere in your app, as long as you've initialized the InfomaniakCore library in
 `MainApplication`. Like this example :
 
 ```kt
@@ -117,11 +118,10 @@ val request = Request.Builder()
 
 ## What does Core contain?
 
+* Modules with shared code (extensions, helpers, features, etc.)
 * Infomaniak base colors
-* Shared and reusable strings
+* Common string resources
 * Data models
-* HTTP-related helpers and utilities
-* Modular features exposed via Core submodules
 
 ## Documentation
 
