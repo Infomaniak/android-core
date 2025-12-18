@@ -44,13 +44,8 @@ android {
 
 dependencies {
     // To access API URL
-    def networkProject = findProject(":Network")
-    if (networkProject != null) {
-        implementation(networkProject)
-    } else {
-        // New Core via composite build: will be substituted to the included build project
-        implementation("com.infomaniak.core:Network")
-    }
+    // New Core via composite build: will be substituted to the included build project
+    implementation("com.infomaniak.core:Network")
 
     api core.kotlinx.coroutines.android
     api core.kotlinx.coroutines.test

@@ -33,21 +33,10 @@ android {
 }
 
 dependencies {
-    def appVersionCheckerProject = findProject(":AppVersionChecker")
-    if (appVersionCheckerProject == null) {
-        implementation("com.infomaniak.core:AppVersionChecker")
-    } else {
-        implementation(appVersionCheckerProject)
-    }
-
+    implementation("com.infomaniak.core:AppVersionChecker")
     // To access API URL
-    def networkProject = findProject(":Network")
-    if (networkProject != null) {
-        implementation(networkProject)
-    } else {
-        // New Core via composite build: will be substituted to the included build project
-        implementation("com.infomaniak.core:Network")
-    }
+    // New Core via composite build: will be substituted to the included build project
+    implementation("com.infomaniak.core:Network")
 
     implementation project(':Core:Legacy')
 
