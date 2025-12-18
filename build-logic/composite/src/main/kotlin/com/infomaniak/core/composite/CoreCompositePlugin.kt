@@ -19,14 +19,14 @@ import java.io.File
  *
  * `com.infomaniak.core:Module.Name`
  *
- * To depend on the **Core** root module itself, use:
+ * To depend on the **Core** root module itself, use a dependency notation like this:
  *
  * `com.infomaniak.core:Core`
  *
  * The `:` separators from the Core project path must be written using **dots** in the artifact name:
  *
- * - `:TwoFactorAuth:Front` → `com.infomaniak.core:TwoFactorAuth.Front`
- * - `:ModuleA:ModuleB:ModuleC` → `com.infomaniak.core:ModuleA.ModuleB.ModuleC`
+ * - `project(":TwoFactorAuth:Front")` → `"com.infomaniak.core:TwoFactorAuth.Front"`
+ * - `project(":ModuleA:ModuleB:ModuleC")` → `"com.infomaniak.core:ModuleA.ModuleB.ModuleC"`
  *
  * ---
  *
@@ -63,7 +63,7 @@ import java.io.File
  *
  * Default value is `"Core"`.
  *
- * Example:
+ * Example (in `settings.gradle.kts`):
  *
  * ```kotlin
  * coreCompositeConfig {
