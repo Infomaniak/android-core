@@ -4,7 +4,6 @@ Infomaniak Core is a modular Android library used across multiple projects.
 It can be consumed locally using **Gradle Composite Builds**, enabling fast development
 without publishing artifacts, while still supporting the historical **Legacy** module.
 
----
 
 ## Overview
 
@@ -23,7 +22,6 @@ com.infomaniak.core.composite.CoreCompositePlugin
 📘 For advanced configuration and exact dependency mapping rules,
 **refer to the KDoc of `CoreCompositePlugin`.**
 
----
 
 ## Installation (Composite Build – recommended)
 
@@ -40,10 +38,9 @@ pluginManagement {
 }
 ```
 
-> ⚠️ Mandatory
+> [!IMPORTANT]
 > The Core composite plugin is provided by Core’s build logic.
 
----
 
 ### 2️⃣ Apply the Core composite plugin
 
@@ -59,7 +56,6 @@ Once applied:
 * All `com.infomaniak.core:*` dependencies are automatically substituted
 * Core modules are resolved as **local Gradle projects**
 
----
 
 ## Using Core modules
 
@@ -75,7 +71,6 @@ dependencies {
 📘 The full mapping logic (module name → project path) is documented in the
 **KDoc of `com.infomaniak.core.composite.CoreCompositePlugin`**.
 
----
 
 ## Legacy module support (build-time)
 
@@ -99,7 +94,6 @@ dependencies {
 
 📘 All Legacy-related rules and behavior are documented in the plugin KDoc.
 
----
 
 ## Legacy runtime initialization
 
@@ -126,7 +120,6 @@ val request = Request.Builder()
     .build()
 ```
 
----
 
 ## What does Core contain?
 
@@ -136,7 +129,6 @@ val request = Request.Builder()
 * HTTP-related helpers and utilities
 * Modular features exposed via Core submodules
 
----
 
 ## Documentation
 
@@ -150,7 +142,6 @@ This class documents:
 * Custom Core root paths
 * Legacy integration behavior
 
----
 
 ## License
 

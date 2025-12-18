@@ -77,7 +77,6 @@ class CoreCompositePlugin : Plugin<Settings> {
 
     override fun apply(target: Settings) {
         val compositeArgs = target.extensions.create<CompositeConfigArgsExtension>(CompositeConfigArgsExtension.EXTENSION_NAME)
-        val alreadyLogged = mutableSetOf<String>()
 
         target.gradle.settingsEvaluated {
             val coreFile = File(target.settingsDir, compositeArgs.coreRootPath)
@@ -97,12 +96,13 @@ class CoreCompositePlugin : Plugin<Settings> {
                 // Rename include build name to avoid a Gradle name collision with an existing ':Core' project in the main build
                 name = "${compositeArgs.coreRootPath}Included"
 
-                configureCoreDependencySubstitution(alreadyLogged)
+                configureCoreDependencySubstitution()
             }
         }
     }
 
-    private fun ConfigurableIncludedBuild.configureCoreDependencySubstitution(alreadyLogged: MutableSet<String>) {
+    private fun ConfigurableIncludedBuild.configureCoreDependencySubstitution() {
+        val alreadyLogged = mutableSetOf<String>()
         dependencySubstitution {
             all {
                 val req = requested
