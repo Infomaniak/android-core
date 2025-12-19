@@ -53,7 +53,6 @@ dependencies {
     implementation(project(":Core"))
     implementation(project(":Core:WebView"))
     implementation(project(":Core:Sentry"))
-    implementation(project(":Core:Ui:View"))
 
     implementation(core.play.review)
     implementation(core.play.review.ktx)

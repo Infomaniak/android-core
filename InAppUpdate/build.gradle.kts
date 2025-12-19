@@ -59,6 +59,7 @@ dependencies {
     implementation(project(":Core:Network"))
     implementation(project(":Core:Sentry"))
 
+    implementation(core.androidx.concurrent.futures.ktx)
     implementation(core.androidx.datastore.preferences)
     implementation(core.appcompat)
     implementation(core.androidx.work.runtime)
@@ -67,12 +68,10 @@ dependencies {
     implementation(core.app.update)
     implementation(core.app.update.ktx)
 
-    implementation(core.navigation.fragment.ktx)
-    implementation(core.navigation.ui.ktx)
-
     implementation(core.material)
 
-    implementation(core.androidx.concurrent.futures.ktx)
+    implementation(core.navigation.fragment.ktx)
+    implementation(core.navigation.ui.ktx)
 
     implementation(core.okhttp)
 
