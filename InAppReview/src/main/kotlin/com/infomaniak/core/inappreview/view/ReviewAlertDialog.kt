@@ -26,8 +26,8 @@ import com.infomaniak.core.inappreview.databinding.AlertDialogReviewBinding
 
 class ReviewAlertDialog(
     private val activityContext: Context,
-    customThemeRes: Int?,
-    customTitleStyle: Int,
+    reviewDialogTheme: Int?,
+    reviewDialogTitleStyle: Int,
     reviewAlertDialogData: ReviewAlertDialogData,
 ) {
 
@@ -35,13 +35,13 @@ class ReviewAlertDialog(
     private val alertDialog: AlertDialog
 
     init {
-        val builder: MaterialAlertDialogBuilder = customThemeRes?.let { theme ->
+        val builder: MaterialAlertDialogBuilder = reviewDialogTheme?.let { theme ->
             MaterialAlertDialogBuilder(activityContext, theme)
         } ?: MaterialAlertDialogBuilder(activityContext)
 
         with(reviewAlertDialogData) {
             viewBinding.dialogTitle.text = title
-            viewBinding.dialogTitle.setTextAppearance(customTitleStyle)
+            viewBinding.dialogTitle.setTextAppearance(reviewDialogTitleStyle)
 
             alertDialog = builder
                 .setView(viewBinding.root)
@@ -56,21 +56,11 @@ class ReviewAlertDialog(
         alertDialog.show()
     }
 
-    companion object {
-        fun showAppReviewDialog(
-            activity: FragmentActivity,
-            reviewDialogTheme: Int,
-            reviewDialogTitleStyle: Int,
-            reviewAlertDialogData: ReviewAlertDialogData
-        ) {
-            ReviewAlertDialog(
-                activityContext = activity,
-                customThemeRes = reviewDialogTheme,
-                customTitleStyle = reviewDialogTitleStyle,
-                reviewAlertDialogData = reviewAlertDialogData
-            ).show()
-        }
+    fun dismiss() {
+        alertDialog.dismiss()
     }
+
+    enum class DialogAction { Positive, Negative, Dismiss; }
 }
 
 data class ReviewAlertDialogData(
