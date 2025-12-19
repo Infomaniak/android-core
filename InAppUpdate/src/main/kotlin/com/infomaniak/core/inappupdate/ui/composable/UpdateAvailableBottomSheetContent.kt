@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.inappupdate.updaterequired.ui.composable
+package com.infomaniak.core.inappupdate.ui.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
