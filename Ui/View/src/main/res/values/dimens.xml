@@ -16,6 +16,9 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <dimen name="marginLarge">48dp</dimen>
     <dimen name="marginStandard">24dp</dimen>
     <dimen name="marginStandardMedium">16dp</dimen>
+    <dimen name="marginStandardSmall">8dp</dimen>
+    <dimen name="marginStandardVerySmall">4dp</dimen>
 </resources>
