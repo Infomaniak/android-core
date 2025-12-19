@@ -2,8 +2,8 @@ plugins {
     id("com.android.library")
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
+    alias(core.plugins.navigation.safeargs)
     kotlin("plugin.serialization")
-
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -45,16 +45,21 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        viewBinding = true
     }
 }
 
 dependencies {
     implementation(project(":Core"))
     implementation(project(":Core:AppVersionChecker"))
+    implementation(project(":Core:Ui"))
+    implementation(project(":Core:Ui:Compose:BottomStickyButtonScaffolds"))
     implementation(project(":Core:Ui:Compose:Margin"))
+    implementation(project(":Core:Ui:View"))
     implementation(project(":Core:Network"))
     implementation(project(":Core:Sentry"))
 
+    implementation(core.androidx.concurrent.futures.ktx)
     implementation(core.androidx.datastore.preferences)
     implementation(core.appcompat)
     implementation(core.androidx.work.runtime)
@@ -63,7 +68,10 @@ dependencies {
     implementation(core.app.update)
     implementation(core.app.update.ktx)
 
-    implementation(core.androidx.concurrent.futures.ktx)
+    implementation(core.material)
+
+    implementation(core.navigation.fragment.ktx)
+    implementation(core.navigation.ui.ktx)
 
     implementation(core.okhttp)
 
@@ -75,4 +83,5 @@ dependencies {
     implementation(core.compose.ui)
     implementation(core.compose.ui.tooling.preview)
     implementation(core.androidx.adaptive)
+    implementation(core.activity.compose)
 }

@@ -20,7 +20,7 @@ package com.infomaniak.core.extensions
 import splitties.init.appCtx
 import kotlin.LazyThreadSafetyMode.NONE
 
-internal val appName: String by lazy(NONE) {
+val appName: String by lazy(NONE) {
     packageManager.getApplicationLabel(applicationInfo).toString()
 }
 

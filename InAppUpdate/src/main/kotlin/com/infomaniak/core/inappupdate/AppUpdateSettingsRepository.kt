@@ -19,6 +19,7 @@ package com.infomaniak.core.inappupdate
 
 import android.content.Context
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -26,6 +27,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.infomaniak.core.sentry.SentryLog
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -38,10 +40,12 @@ private val Context.dataStore by preferencesDataStore(
 @Suppress("UNCHECKED_CAST")
 class AppUpdateSettingsRepository(private val context: Context) {
 
-    fun <T> flowOf(key: Preferences.Key<T>) = context.dataStore.data.map { it[key] ?: (getDefaultValue(key) as T) }
+    fun <T> flowFor(key: Preferences.Key<T>) = context.dataStore.data
+        .map { it[key] ?: (getDefaultValue(key) as T) }
+        .distinctUntilChanged()
 
     suspend fun <T> getValue(key: Preferences.Key<T>) = runCatching {
-        flowOf(key).first()
+        flowFor(key).first()
     }.getOrElse { exception ->
         SentryLog.e(TAG, "Error while trying to get value from DataStore for key : $key", exception)
         getDefaultValue(key) as T
@@ -60,6 +64,10 @@ class AppUpdateSettingsRepository(private val context: Context) {
         }.onFailure { exception ->
             SentryLog.e(TAG, "Error while trying to set value into DataStore for key : $key", exception)
         }
+    }
+
+    suspend fun clear() {
+        context.dataStore.edit(MutablePreferences::clear)
     }
 
     suspend fun resetUpdateSettings() {

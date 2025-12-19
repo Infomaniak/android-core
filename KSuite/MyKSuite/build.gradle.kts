@@ -5,7 +5,7 @@ plugins {
     alias(core.plugins.ksp)
     kotlin("plugin.parcelize")
     kotlin("plugin.serialization")
-    id("androidx.navigation.safeargs.kotlin")
+    alias(core.plugins.navigation.safeargs)
 }
 
 val coreCompileSdk: Int by rootProject.extra
