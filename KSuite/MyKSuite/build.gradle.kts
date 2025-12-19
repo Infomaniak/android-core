@@ -59,11 +59,11 @@ dependencies {
     implementation(project(":"))
     implementation(project(":Avatar"))
     implementation(project(":Coil"))
+    implementation(project(":KSuite"))
+    implementation(project(":Network")) // To access API URL
     implementation(project(":Ui:Compose:Basics"))
     implementation(project(":Ui:Compose:Margin"))
     implementation(project(":Ui:Compose:MaterialThemeFromXml"))
-    implementation(project(":KSuite"))
-    implementation(project(":Network")) // To access API URL
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)

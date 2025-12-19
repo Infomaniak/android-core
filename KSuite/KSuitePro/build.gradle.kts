@@ -51,10 +51,10 @@ android {
 dependencies {
 
     implementation(project(":"))
+    implementation(project(":KSuite"))
     implementation(project(":Ui:Compose:Basics"))
     implementation(project(":Ui:Compose:Margin"))
     implementation(project(":Ui:Compose:MaterialThemeFromXml"))
-    implementation(project(":KSuite"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)

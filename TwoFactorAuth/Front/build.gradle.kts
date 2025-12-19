@@ -60,11 +60,11 @@ dependencies {
     implementation(project(":"))
     implementation(project(":Avatar"))
     implementation(project(":Coil"))
+    implementation(project(":Network"))
+    implementation(project(":Notifications"))
     implementation(project(":Ui:Compose:BasicButton"))
     implementation(project(":Ui:Compose:Basics"))
     implementation(project(":Ui:Compose:Margin"))
-    implementation(project(":Network"))
-    implementation(project(":Notifications"))
 
     implementation(core.androidx.core.ktx)
 

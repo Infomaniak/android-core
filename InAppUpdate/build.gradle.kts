@@ -50,9 +50,9 @@ android {
 dependencies {
     implementation(project(":"))
     implementation(project(":AppVersionChecker"))
-    implementation(project(":Ui:Compose:Margin"))
     implementation(project(":Network"))
     implementation(project(":Sentry"))
+    implementation(project(":Ui:Compose:Margin"))
 
     implementation(core.androidx.datastore.preferences)
     implementation(core.appcompat)

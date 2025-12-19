@@ -47,8 +47,8 @@ android {
 
 dependencies {
     implementation(project(":"))
-    implementation(project(":WebView"))
     implementation(project(":Sentry"))
+    implementation(project(":WebView"))
 
     implementation(core.play.review)
     implementation(core.play.review.ktx)
