@@ -20,7 +20,6 @@ package com.infomaniak.core.inappreview.view
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.infomaniak.core.inappreview.databinding.AlertDialogReviewBinding
 

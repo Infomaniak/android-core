@@ -119,8 +119,9 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
         appUpdateSettingsRepository.setValue(key, value)
     }
 
-    fun resetUpdateSettings() =
-        activity.lifecycleScope.launch(Dispatchers.IO) { appUpdateSettingsRepository.resetUpdateSettings() }
+    fun resetUpdateSettings() = activity.lifecycleScope.launch(Dispatchers.IO) {
+        appUpdateSettingsRepository.resetUpdateSettings()
+    }
 
     fun decrementAppUpdateLaunches() = activity.lifecycleScope.launch(Dispatchers.IO) {
         val appUpdateLaunches = appUpdateSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY)
