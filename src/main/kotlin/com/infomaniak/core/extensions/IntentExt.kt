@@ -18,5 +18,12 @@
 package com.infomaniak.core.extensions
 
 import android.content.Intent
+import android.os.Build.VERSION.SDK_INT
+import java.io.Serializable
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
+
+inline fun <reified T : Serializable> Intent.serializableExtra(key: String): T? = when {
+    SDK_INT >= 33 -> getSerializableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
+}
