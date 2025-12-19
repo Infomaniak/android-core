@@ -43,7 +43,7 @@ class ReviewAlertDialog(
             viewBinding.dialogTitle.setTextAppearance(reviewDialogTitleStyle)
 
             alertDialog = builder
-                .setView(viewBinding.root)
+                .setCustomTitle(viewBinding.root)
                 .setPositiveButton(positiveText) { _, _ -> onPositiveButtonClicked() }
                 .setNegativeButton(negativeText) { _, _ -> onNegativeButtonClicked() }
                 .setOnDismissListener { onDismiss() }
