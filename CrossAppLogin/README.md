@@ -26,7 +26,7 @@ NOTE: this change needs to be integrated into all the production apps, **ideally
 Add this dependency in the host app's Gradle build file:
 
 ```kotlin
-implementation(project(":Core:CrossAppLogin:Front"))
+implementation("com.infomaniak.core:CrossAppLogin.Front")
 ```
 
 ### 4. Ensure cross-app device id will be synced
