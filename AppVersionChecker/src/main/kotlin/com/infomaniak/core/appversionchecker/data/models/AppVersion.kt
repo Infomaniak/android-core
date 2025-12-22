@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.appversionchecker.data.models
 
+import android.os.Build
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -60,7 +61,7 @@ data class AppVersion(
         Internal("internal"),
     }
 
-    fun mustRequireUpdate(currentVersion: String): Boolean = runCatching {
+    fun mustRequireUpdate(currentVersion: String, channelFilter: VersionChannel): Boolean = runCatching {
         if (minimalAcceptedVersion == null) {
             SentryLog.d(TAG, "min_version field is empty. Don't forget to use AppVersion.ProjectionFields.MinVersion")
             return false
@@ -70,7 +71,8 @@ data class AppVersion(
         val minimalAcceptedVersionNumbers = minimalAcceptedVersion.toVersionNumbers()
 
         return isMinimalVersionValid(minimalAcceptedVersionNumbers) &&
-                currentVersionNumbers.compareVersionTo(minimalAcceptedVersionNumbers) < 0
+                currentVersionNumbers.compareVersionTo(minimalAcceptedVersionNumbers) < 0 &&
+                isCurrentOsCompatibleWith(channelFilter)
     }.getOrElse { exception ->
         SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking", exception) { scope ->
             scope.setExtra("Version from API", minimalAcceptedVersion)
@@ -89,13 +91,29 @@ data class AppVersion(
             return false
         }
 
-        return currentVersionNumbers.compareVersionTo(publishedVersionNumber) < 0
-    } .getOrElse { exception ->
+        return currentVersionNumbers.compareVersionTo(publishedVersionNumber) < 0 && isCurrentOsCompatibleWith(channelFilter)
+    }.getOrElse { exception ->
         SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking $channelFilter version", exception) { scope ->
             scope.setExtra("Version from API", publishedVersions?.first { it.type == channelFilter.value }?.tag)
             scope.setExtra("Current Version", currentVersion)
         }
         
+        return false
+    }
+
+    fun isCurrentOsCompatibleWith(channelFilter: VersionChannel): Boolean = runCatching {
+        val buildMinOsVersion = publishedVersions?.first { it.type == channelFilter.value }?.buildMinOsVersion?.toInt()
+
+        if (buildMinOsVersion == null) {
+            SentryLog.d(TAG, "buildMinOsVersion for $channelFilter is null. Verify that the publishedVersions object is present in the response.")
+            return false
+        }
+        return buildMinOsVersion <= Build.VERSION.SDK_INT
+    }.getOrElse { exception ->
+        SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking $channelFilter build minimum os version", exception) { scope ->
+            scope.setExtra("Version from API", publishedVersions?.first { it.type == channelFilter.value }?.tag)
+        }
+
         return false
     }
 
