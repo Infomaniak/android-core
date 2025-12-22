@@ -33,8 +33,8 @@ import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.APP
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.DEFAULT_APP_UPDATE_LAUNCHES
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.IS_USER_WANTING_UPDATES_KEY
-import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.inappupdate.ui.UpdateRequiredActivity.Companion.startUpdateRequiredActivity
+import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionName
 import com.infomaniak.core.network.networking.HttpClient
@@ -63,6 +63,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     val isUpdateRequired = flow {
         val projectionFields = listOf(
             AppVersion.ProjectionFields.MinVersion,
+            AppVersion.ProjectionFields.PublishedVersionMinOs,
             AppVersion.ProjectionFields.PublishedVersionsTag
         )
         val apiResponse = ApiRepositoryAppVersion.getAppVersion(
@@ -73,7 +74,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
             okHttpClient = HttpClient.okHttpClient
         )
 
-        emit(apiResponse.data?.mustRequireUpdate(appVersionName) == true)
+        emit(apiResponse.data?.mustRequireUpdate(appVersionName, AppVersion.VersionChannel.Production) == true)
     }.stateIn(
         scope = activity.lifecycleScope,
         started = SharingStarted.Eagerly,
