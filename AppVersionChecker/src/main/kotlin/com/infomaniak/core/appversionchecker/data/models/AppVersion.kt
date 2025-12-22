@@ -17,7 +17,7 @@
  */
 package com.infomaniak.core.appversionchecker.data.models
 
-import android.os.Build
+import com.infomaniak.core.appversionchecker.utils.AndroidSdkVersionProvider
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -37,7 +37,6 @@ data class AppVersion(
     @SerialName("published_versions")
     val publishedVersions: List<AppPublishedVersion>? = null,
 ) {
-
     enum class Store(val apiValue: String) {
         PLAY_STORE("google-play-store"),
         FDROID("f-droid")
@@ -118,7 +117,7 @@ data class AppVersion(
             )
             return false
         }
-        return buildMinOsVersion <= Build.VERSION.SDK_INT
+        return buildMinOsVersion <= AndroidSdkVersionProvider.sdkInt
     }.getOrElse { exception ->
         SentryLog.e(
             tag = TAG,
