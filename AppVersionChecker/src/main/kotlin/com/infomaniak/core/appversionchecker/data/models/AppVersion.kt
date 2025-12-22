@@ -75,7 +75,7 @@ data class AppVersion(
                 isCurrentOsCompatibleWith(channelFilter)
     }.getOrElse { exception ->
         SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking", exception) { scope ->
-            scope.setExtra("Version from API", minimalAcceptedVersion)
+            scope.setExtra("Minimal version from API", minimalAcceptedVersion)
             scope.setExtra("Current Version", currentVersion)
         }
 
@@ -94,7 +94,7 @@ data class AppVersion(
         return currentVersionNumbers.compareVersionTo(publishedVersionNumber) < 0 && isCurrentOsCompatibleWith(channelFilter)
     }.getOrElse { exception ->
         SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking $channelFilter version", exception) { scope ->
-            scope.setExtra("Version from API", publishedVersions?.first { it.type == channelFilter.value }?.tag)
+            scope.setExtra("Published version from API", publishedVersions?.first { it.type == channelFilter.value }?.tag)
             scope.setExtra("Current Version", currentVersion)
         }
         
@@ -111,7 +111,7 @@ data class AppVersion(
         return buildMinOsVersion <= Build.VERSION.SDK_INT
     }.getOrElse { exception ->
         SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking $channelFilter build minimum os version", exception) { scope ->
-            scope.setExtra("Version from API", publishedVersions?.first { it.type == channelFilter.value }?.tag)
+            scope.setExtra("Published version from API", publishedVersions?.first { it.type == channelFilter.value }?.tag)
         }
 
         return false
