@@ -184,7 +184,7 @@ class InAppUpdateManager(
 
     private fun observeAppUpdateDownload() {
         onInAppUpdateUiChange?.let { updateUiCallback ->
-            activity.lifecycleScope.launch(Dispatchers.IO) {
+            activity.lifecycleScope.launch {
                 canInstallUpdate.collect(updateUiCallback)
             }
         }
