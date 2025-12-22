@@ -87,17 +87,24 @@ data class AppVersion(
         val publishedVersionNumber = publishedVersions?.first { it.type == channelFilter.value }?.tag?.toVersionNumbers()
 
         if (publishedVersionNumber == null) {
-            SentryLog.d(TAG, "buildVersion for $channelFilter is null. Verify that the publishedVersions object is present in the response.")
+            SentryLog.d(
+                tag = TAG,
+                msg = "buildVersion for $channelFilter is null. Verify that the publishedVersions object is present."
+            )
             return false
         }
 
         return currentVersionNumbers.compareVersionTo(publishedVersionNumber) < 0 && isCurrentOsCompatibleWith(channelFilter)
     }.getOrElse { exception ->
-        SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking $channelFilter version", exception) { scope ->
+        SentryLog.e(
+            tag = TAG,
+            msg = exception.message ?: "Exception occurred during app checking $channelFilter version",
+            throwable = exception
+        ) { scope ->
             scope.setExtra("Published version from API", publishedVersions?.first { it.type == channelFilter.value }?.tag)
             scope.setExtra("Current Version", currentVersion)
         }
-        
+
         return false
     }
 
@@ -105,12 +112,19 @@ data class AppVersion(
         val buildMinOsVersion = publishedVersions?.first { it.type == channelFilter.value }?.buildMinOsVersion?.toInt()
 
         if (buildMinOsVersion == null) {
-            SentryLog.d(TAG, "buildMinOsVersion for $channelFilter is null. Verify that the publishedVersions object is present in the response.")
+            SentryLog.d(
+                tag = TAG,
+                msg = "buildMinOsVersion for $channelFilter is null. Verify that the publishedVersions object is present."
+            )
             return false
         }
         return buildMinOsVersion <= Build.VERSION.SDK_INT
     }.getOrElse { exception ->
-        SentryLog.e(TAG, exception.message ?: "Exception occurred during app checking $channelFilter build minimum os version", exception) { scope ->
+        SentryLog.e(
+            tag = TAG,
+            msg = exception.message ?: "Exception occurred during app checking $channelFilter build minimum os version",
+            throwable = exception
+        ) { scope ->
             scope.setExtra("Published version from API", publishedVersions?.first { it.type == channelFilter.value }?.tag)
         }
 
