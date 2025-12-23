@@ -55,8 +55,9 @@ dependencies {
     implementation(project(":Core:Sentry"))
     implementation(project(":Core:Ui:View"))
 
-    implementation(core.play.review)
-    implementation(core.play.review.ktx)
+    "standardImplementation"(core.play.review)
+    "standardImplementation"(core.play.review.ktx)
+
     implementation(core.material)
     implementation(core.androidx.datastore.preferences)
     implementation(core.appcompat)
