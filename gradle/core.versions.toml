@@ -70,8 +70,6 @@ androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workManager" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
 androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "workManager" }
-app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
-app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "appcompat" }
 biometric-ktx = { module = "androidx.biometric:biometric-ktx", version.ref = "biometricKtx" }
@@ -124,6 +122,8 @@ navigation-compose = { module = "androidx.navigation:navigation-compose", versio
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+play-app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
+play-app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
 progress-button = { module = "com.github.razir.progressbutton:progressbutton", version.ref = "progressButton" }

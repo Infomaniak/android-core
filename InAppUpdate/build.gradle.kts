@@ -65,8 +65,8 @@ dependencies {
     implementation(core.androidx.work.runtime)
     implementation(core.kotlinx.serialization.json)
 
-    implementation(core.app.update)
-    implementation(core.app.update.ktx)
+    "standardImplementation"(core.play.app.update)
+    "standardImplementation"(core.play.app.update.ktx)
 
     implementation(core.material)
 
