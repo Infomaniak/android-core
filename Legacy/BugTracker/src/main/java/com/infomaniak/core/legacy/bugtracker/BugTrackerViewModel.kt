@@ -21,11 +21,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryAppVersion
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
-import com.infomaniak.core.legacy.networking.HttpClient
-import com.infomaniak.core.legacy.networking.HttpUtils
-import com.infomaniak.core.legacy.networking.ManualAuthorizationRequired
 import com.infomaniak.core.legacy.utils.SingleLiveEvent
 import com.infomaniak.core.legacy.utils.await
+import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.HttpUtils
+import com.infomaniak.core.network.networking.ManualAuthorizationRequired
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -88,7 +88,7 @@ class BugTrackerViewModel : ViewModel() {
             store = store,
             projectionFields = projectionFields,
             channelFilter = channelFilter,
-            okHttpClient = HttpClient.okHttpClientNoTokenInterceptor
+            okHttpClient = HttpClient.okHttpClient
         )
 
         emit(apiResponse.data?.updateIsAvailable(appVersion, channelFilter) ?: false)
