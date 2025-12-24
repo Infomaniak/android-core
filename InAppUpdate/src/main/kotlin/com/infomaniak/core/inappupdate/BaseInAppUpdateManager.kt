@@ -18,9 +18,13 @@
 package com.infomaniak.core.inappupdate
 
 import androidx.activity.ComponentActivity
+import androidx.annotation.StyleRes
 import androidx.datastore.preferences.core.Preferences
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryAppVersion
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
@@ -29,6 +33,8 @@ import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.APP
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.DEFAULT_APP_UPDATE_LAUNCHES
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.HAS_APP_UPDATE_DOWNLOADED_KEY
 import com.infomaniak.core.inappupdate.AppUpdateSettingsRepository.Companion.IS_USER_WANTING_UPDATES_KEY
+import com.infomaniak.core.inappupdate.ui.UpdateRequiredActivity.Companion.startUpdateRequiredActivity
+import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionName
 import com.infomaniak.core.network.networking.HttpClient
@@ -47,16 +53,17 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
     protected var onInAppUpdateUiChange: ((Boolean) -> Unit)? = null
     protected var onFDroidResult: ((Boolean) -> Unit)? = null
 
-    private val storesSettingsRepository = AppUpdateSettingsRepository(activity)
+    private val appUpdateSettingsRepository = AppUpdateSettingsRepository(activity)
 
     var isUpdateBottomSheetShown = false
 
-    val canInstallUpdate = storesSettingsRepository
-        .flowOf(HAS_APP_UPDATE_DOWNLOADED_KEY).distinctUntilChanged()
+    val canInstallUpdate = appUpdateSettingsRepository
+        .flowFor(HAS_APP_UPDATE_DOWNLOADED_KEY).distinctUntilChanged()
 
     val isUpdateRequired = flow {
         val projectionFields = listOf(
             AppVersion.ProjectionFields.MinVersion,
+            AppVersion.ProjectionFields.PublishedVersionMinOs,
             AppVersion.ProjectionFields.PublishedVersionsTag
         )
         val apiResponse = ApiRepositoryAppVersion.getAppVersion(
@@ -67,7 +74,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
             okHttpClient = HttpClient.okHttpClient
         )
 
-        emit(apiResponse.data?.mustRequireUpdate(appVersionName) == true)
+        emit(apiResponse.data?.mustRequireUpdate(appVersionName, AppVersion.VersionChannel.Production) == true)
     }.stateIn(
         scope = activity.lifecycleScope,
         started = SharingStarted.Eagerly,
@@ -76,7 +83,6 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
 
     open fun installDownloadedUpdate() = Unit
 
-    // TODO: What about the F-Droid variant?
     open fun requireUpdate(onFailure: ((Exception) -> Unit)? = null) = activity.goToAppStore()
 
     open fun init(
@@ -111,23 +117,49 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
 
     //region Repository
     fun <T> set(key: Preferences.Key<T>, value: T) = activity.lifecycleScope.launch(Dispatchers.IO) {
-        storesSettingsRepository.setValue(key, value)
+        appUpdateSettingsRepository.setValue(key, value)
     }
 
-    fun resetUpdateSettings() = activity.lifecycleScope.launch(Dispatchers.IO) { storesSettingsRepository.resetUpdateSettings() }
+    fun resetUpdateSettings() = activity.lifecycleScope.launch(Dispatchers.IO) {
+        appUpdateSettingsRepository.resetUpdateSettings()
+    }
 
     fun decrementAppUpdateLaunches() = activity.lifecycleScope.launch(Dispatchers.IO) {
-        val appUpdateLaunches = storesSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY)
+        val appUpdateLaunches = appUpdateSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY)
         set(APP_UPDATE_LAUNCHES_KEY, appUpdateLaunches - 1)
     }
 
     fun shouldCheckUpdate(checkUpdateCallback: () -> Unit) = activity.lifecycleScope.launch(Dispatchers.IO) {
-        if (storesSettingsRepository.getValue(IS_USER_WANTING_UPDATES_KEY) ||
-            storesSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY) <= 0
+        if (appUpdateSettingsRepository.getValue(IS_USER_WANTING_UPDATES_KEY) ||
+            appUpdateSettingsRepository.getValue(APP_UPDATE_LAUNCHES_KEY) <= 0
         ) {
             checkUpdateCallback()
-            storesSettingsRepository.setValue(APP_UPDATE_LAUNCHES_KEY, DEFAULT_APP_UPDATE_LAUNCHES)
+            appUpdateSettingsRepository.setValue(APP_UPDATE_LAUNCHES_KEY, DEFAULT_APP_UPDATE_LAUNCHES)
         }
     }
     //endregion
+
+    companion object {
+        fun FragmentActivity.checkUpdateIsRequired(
+            manager: InAppUpdateManager,
+            applicationId: String,
+            applicationVersionCode: Int,
+            @StyleRes theme: Int
+        ) {
+            lifecycleScope.launch {
+                manager.isUpdateRequired
+                    .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                    .collect { isUpdateRequired ->
+                        if (isUpdateRequired) {
+                            startUpdateRequiredActivity(
+                                context = this@checkUpdateIsRequired,
+                                appId = applicationId,
+                                versionCode = applicationVersionCode,
+                                appTheme = theme
+                            )
+                        }
+                    }
+            }
+        }
+    }
 }

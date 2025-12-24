@@ -29,7 +29,7 @@ Add this dependency in the host app's Gradle build file:
 implementation("com.infomaniak.core:CrossAppLogin.Front")
 ```
 
-### 4. Ensure cross-app device id will be synced
+### 3. Ensure cross-app device id (+ device info) will be synced
 
 First, create the `DeviceInfoUpdateWorker` class. It needs to subclass `AbstractDeviceInfoUpdateWorker`.
 
@@ -55,7 +55,50 @@ someAppProcessLongCoroutineScope.launch {
 }
 ```
 
-### 3. Configure the server
+Finally, just before a user is added, and just when one is about to be removed from storage, make sure the associated data file for the device gets cleaned up, by calling `resetForUser(userId)` on `DeviceInfoUpdateManager`.
+
+#### Complete example:
+
+```kotlin
+open class MainApplication : Application() {
+    
+    // ...
+
+    override fun onCreate() {
+        super<Application>.onCreate()
+        // ...
+        // Register DeviceInfoUpdateManager
+        userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
+        someAppProcessLongCoroutineScope.launch {
+            // As specified above.
+            DeviceInfoUpdateManager.scheduleWorkerOnDeviceInfoUpdate<DeviceInfoUpdateWorker>()
+        }
+        // ...
+    }
+    
+    companion object {
+        @JvmStatic // Will allow putting more items (i.e. Google/Firebase services dependent ones)
+        var userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList()
+            protected set
+    }
+}
+
+suspend fun addUser(user: User) { // Wherever the user adding code is.
+    // ...
+    val userId = user.id.toLong()
+    MainApplication.userDataCleanableList.forEach { it.resetForUser(userId) }
+    // Save the user in the storage
+}
+
+suspend fun removeUser(context: Context, user: User) { // Wherever the user removal code is.
+    val userId = user.id.toLong()
+    MainApplication.userDataCleanableList.forEach { it.resetForUser(userId) }
+    // Delete the user from storage
+    // ...
+}
+```
+
+### 4. Configure the server
 
 Create the `CrossAppLoginService` class. It must subclass `BaseCrossAppLoginService`.
 
@@ -82,7 +125,7 @@ Then, declare it in the `AndroidManifest.xml` file, inside the `<application>` `
 </service>
 ```
 
-### 4. Configure the client
+### 5. Configure the client
 
 Create the `CrossAppLoginViewModel` class. It must subclass `BaseCrossAppLoginViewModel`.
 
@@ -101,7 +144,7 @@ Then, integrate the UI as such:
    2. Launch a coroutine (once, in the scope of this login UI) that will call `activateUpdates(…)` with the host Activity.
 4. Implement the login logic for the host app (see the `handleLogin` function in kDrive).
 
-### 5. Register for Play Integrity on the backend
+### 6. Register for Play Integrity on the backend
 
 On the Google Cloud console, there's a place to enable Play Integrity for a new app,
 and there, you can download a file that contains data that needs to be put in the backend.

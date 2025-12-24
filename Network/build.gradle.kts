@@ -49,4 +49,5 @@ dependencies {
     implementation(core.okhttp)
     implementation(core.splitties.toast)
     implementation(core.stetho.okhttp3)
+    implementation(core.splitties.systemservices)
 }

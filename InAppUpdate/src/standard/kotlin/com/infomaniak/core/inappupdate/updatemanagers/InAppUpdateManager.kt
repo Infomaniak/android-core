@@ -55,7 +55,7 @@ class InAppUpdateManager(
     private val activity: ComponentActivity,
 ) : BaseInAppUpdateManager(activity) {
 
-    override val store: AppVersion.Store = AppVersion.Store.PLAY_STORE
+    override val store: AppVersion.Store get() = AppVersion.Store.PLAY_STORE
     override val appUpdateTag: String = APP_UPDATE_TAG
 
     private val appUpdateManager = AppUpdateManagerFactory.create(activity)
@@ -184,7 +184,7 @@ class InAppUpdateManager(
 
     private fun observeAppUpdateDownload() {
         onInAppUpdateUiChange?.let { updateUiCallback ->
-            activity.lifecycleScope.launch(Dispatchers.IO) {
+            activity.lifecycleScope.launch {
                 canInstallUpdate.collect(updateUiCallback)
             }
         }

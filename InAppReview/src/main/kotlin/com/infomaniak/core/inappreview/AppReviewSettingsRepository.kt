@@ -27,6 +27,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.infomaniak.core.sentry.SentryLog
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -42,10 +43,12 @@ class AppReviewSettingsRepository(private val context: Context) {
     internal var appReviewThreshold = DEFAULT_APP_REVIEW_THRESHOLD
     internal var maxAppReviewThreshold = appReviewThreshold * 10
 
-    fun <T> flowOf(key: Preferences.Key<T>) = context.dataStore.data.map { it[key] ?: (getInitialValue(key) as T) }
+    fun <T> flowFor(key: Preferences.Key<T>) = context.dataStore.data
+        .map { it[key] ?: (getInitialValue(key) as T) }
+        .distinctUntilChanged()
 
     suspend fun <T> getValue(key: Preferences.Key<T>) = runCatching {
-        flowOf(key).first()
+        flowFor(key).first()
     }.getOrElse { exception ->
         SentryLog.e(TAG, "Error while trying to get value from DataStore for key : $key", exception)
         getInitialValue(key) as T
@@ -65,7 +68,9 @@ class AppReviewSettingsRepository(private val context: Context) {
         }
     }
 
-    suspend fun clear() = context.dataStore.edit(MutablePreferences::clear)
+    suspend fun clear() {
+        context.dataStore.edit(MutablePreferences::clear)
+    }
 
     suspend fun resetReviewSettings() {
         setValue(APP_REVIEW_THRESHOLD_KEY, maxAppReviewThreshold)

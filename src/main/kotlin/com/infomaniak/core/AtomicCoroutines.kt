@@ -17,10 +17,11 @@
  */
 package com.infomaniak.core
 
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.job
 import kotlinx.coroutines.selects.SelectBuilder
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
@@ -38,7 +39,7 @@ suspend inline fun <R> trySelectAtomically(
     // a secondary select clause below, even though cancellation is blocked
     // using `withContext(NonCancellable)`.
     // The atomic behavior of `select` allows us to get the desired behavior.
-    val cancellationSignal = launch { awaitCancellation() }
+    val cancellationSignal = Job(parent = currentCoroutineContext().job)
     withContext(NonCancellable) {
         select {
             builder() // We need to be biased towards this/these clause(s), so it comes first.

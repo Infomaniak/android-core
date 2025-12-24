@@ -63,11 +63,19 @@ fun <T> Flow<T>.rateLimit(minInterval: Duration): Flow<T> = channelFlow {
     }
 }.buffer(Channel.RENDEZVOUS)
 
-fun <T> Flow<T>.rateLimit(minInterval: Duration, elementsBeforeLimit: Int): Flow<T> = channelFlow {
+fun <T> Flow<T>.rateLimit(minInterval: Duration, elementsBeforeLimit: Int): Flow<T> {
+    return rateLimit(minInterval, elementsBeforeLimit) { SystemClock.elapsedRealtimeNanos() }
+}
+
+internal inline fun <T> Flow<T>.rateLimit(
+    minInterval: Duration,
+    elementsBeforeLimit: Int,
+    crossinline getNanoTime: () -> Long
+): Flow<T> = channelFlow {
     var lastLimitReachedElapsedNanos = 0L
     var elementsCountSinceLastRateLimit = 0
     collectLatest { newValue ->
-        val nanosSinceLastEmit = SystemClock.elapsedRealtimeNanos() - lastLimitReachedElapsedNanos
+        val nanosSinceLastEmit = getNanoTime() - lastLimitReachedElapsedNanos
         val timeSinceLastEmit = nanosSinceLastEmit.nanoseconds
         val timeToWait = minInterval - timeSinceLastEmit.coerceAtMost(minInterval)
         delay(timeToWait)
@@ -79,7 +87,7 @@ fun <T> Flow<T>.rateLimit(minInterval: Duration, elementsBeforeLimit: Int): Flow
         sendAtomic(newValue)
         elementsCountSinceLastRateLimit++
         if (elementsCountSinceLastRateLimit >= elementsBeforeLimit) {
-            lastLimitReachedElapsedNanos = SystemClock.elapsedRealtimeNanos()
+            lastLimitReachedElapsedNanos = getNanoTime()
             elementsCountSinceLastRateLimit = 0
         }
     }
