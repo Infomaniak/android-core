@@ -111,7 +111,7 @@ class CoreCompositePlugin : Plugin<Settings> {
             target.includeBuild(compositeArgs.coreRootPath) {
                 // Support for :Core:Legacy
                 // Rename include build name to avoid a Gradle name collision with an existing ':Core' project in the main build
-                name = "${compositeArgs.coreRootPath}Included"
+                name = "${compositeArgs.coreRootPath}Ik"
 
                 configureCoreDependencySubstitution()
             }
