@@ -1,13 +1,5 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
-buildscript {
-    dependencies {
-        // Required for modules that use safeargs plugin.
-        // TODO: We can check if those modules really need this plugin
-        classpath(core.navigation.safeargs)
-    }
-}
-
 plugins {
     alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
