@@ -123,9 +123,14 @@ class CoreCompositePlugin : Plugin<Settings> {
     private fun ensureCoreLocalProperties(target: Settings, coreRootDir: File) {
         val rootLocalProps = target.settingsDir.resolve("local.properties")
         val coreLocalProps = coreRootDir.resolve("local.properties")
+        val androidSdkEnv = System.getenv("ANDROID_SDK_ROOT") ?: System.getenv("ANDROID_HOME")
+
         when {
             coreLocalProps.exists() -> {
                 // OK: Core already configured
+            }
+            !androidSdkEnv.isNullOrBlank() -> {
+                println("ℹ️ Android SDK found via environment variable (ANDROID_SDK_ROOT / ANDROID_HOME)")
             }
             rootLocalProps.exists() -> {
                 println("ℹ️ Copying local.properties to Core (first setup)")
@@ -136,11 +141,13 @@ class CoreCompositePlugin : Plugin<Settings> {
                     """
                 Missing Android SDK configuration for Core.
 
-                The Core build is included as a composite build and requires its own
-                local.properties file.
+                The Core build is included as a composite build and requires access
+                to the Android SDK.
 
-                Please copy the local.properties file from the project root
-                into the Core directory, or create one manually with sdk.dir configured.
+                Please do ONE of the following:
+                - Define ANDROID_SDK_ROOT (or ANDROID_HOME) in your environment
+                - Create a local.properties file in the Core directory
+                - Copy the local.properties file from the project root into Core
                 """.trimIndent()
                 )
             }
