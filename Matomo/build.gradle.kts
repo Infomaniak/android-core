@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
 }
 
@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Network")) // To access API URL
+    implementation(project(":Network")) // To access API URL
 
     api(core.matomo)
     implementation(core.splitties.appctx)

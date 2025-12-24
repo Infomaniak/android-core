@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
 }
 
@@ -40,8 +40,8 @@ android {
 }
 
 dependencies {
-    api(project(":Core:Network:Models"))
-    implementation(project(":Core:Sentry"))
+    api(project(":Network:Models"))
+    implementation(project(":Sentry"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)
