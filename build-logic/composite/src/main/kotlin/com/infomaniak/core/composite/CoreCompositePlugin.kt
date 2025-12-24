@@ -96,8 +96,8 @@ class CoreCompositePlugin : Plugin<Settings> {
         val compositeArgs = target.extensions.create<CompositeConfigArgsExtension>(CompositeConfigArgsExtension.EXTENSION_NAME)
 
         target.gradle.settingsEvaluated {
-            val coreFile = File(target.settingsDir, compositeArgs.coreRootPath)
-            if (coreFile.exists().not()) {
+            val coreRootDir = target.settingsDir.resolve(compositeArgs.coreRootPath)
+            if (coreRootDir.exists().not()) {
                 error(
                     "The Core module directory '${compositeArgs.coreRootPath}' does not exist. \n" +
                             "If you have renamed the Core folder, please update the `coreRootPath` property in your `settings.gradle` file " +
@@ -108,12 +108,41 @@ class CoreCompositePlugin : Plugin<Settings> {
                 )
             }
 
+            ensureCoreLocalProperties(target, coreRootDir)
+
             target.includeBuild(compositeArgs.coreRootPath) {
                 // Support for :Core:Legacy
                 // Rename include build name to avoid a Gradle name collision with an existing ':Core' project in the main build
                 name = "${compositeArgs.coreRootPath}Ik"
 
                 configureCoreDependencySubstitution()
+            }
+        }
+    }
+
+    private fun ensureCoreLocalProperties(target: Settings, coreRootDir: File) {
+        val rootLocalProps = target.settingsDir.resolve("local.properties")
+        val coreLocalProps = coreRootDir.resolve("local.properties")
+        when {
+            coreLocalProps.exists() -> {
+                // OK: Core already configured
+            }
+            rootLocalProps.exists() -> {
+                println("ℹ️ Copying local.properties to Core (first setup)")
+                rootLocalProps.copyTo(coreLocalProps, overwrite = false)
+            }
+            else -> {
+                error(
+                    """
+                Missing Android SDK configuration for Core.
+
+                The Core build is included as a composite build and requires its own
+                local.properties file.
+
+                Please copy the local.properties file from the project root
+                into the Core directory, or create one manually with sdk.dir configured.
+                """.trimIndent()
+                )
             }
         }
     }
