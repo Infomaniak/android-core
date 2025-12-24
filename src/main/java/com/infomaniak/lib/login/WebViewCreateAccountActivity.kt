@@ -109,8 +109,8 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url
             val host = url.host
-            when(host) {
-               successUrl -> {
+            when (host) {
+                successUrl -> {
                     successResult()
                 }
                 cancelUrl if ignoreFirstCancelUrl -> {
@@ -119,11 +119,11 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
                         view.loadUrl(url.toString(), headers)
                     } else {
                         openUrl(url.toString())
+                        cancelResult()
                     }
                 }
                 else -> {
                     openUrl(url.toString())
-                    cancelResult()
                 }
             }
             return true
