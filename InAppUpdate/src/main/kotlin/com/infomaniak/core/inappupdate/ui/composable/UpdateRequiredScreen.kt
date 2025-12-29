@@ -49,7 +49,7 @@ fun UpdateRequiredScreen(
     illustration: Painter,
     titleTextStyle: TextStyle,
     descriptionTextStyle: TextStyle,
-    installUpdateButton: @Composable() () -> Unit,
+    installUpdateButton: @Composable () -> Unit,
 ) {
     Scaffold(
         bottomBar = {
