@@ -41,8 +41,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.window.core.layout.WindowSizeClass
-import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.inappupdate.R
+import com.infomaniak.core.ui.compose.margin.Margin
 
 @Composable
 fun UpdateRequiredScreen(
@@ -67,30 +67,17 @@ fun UpdateRequiredScreen(
         val windowWidthIsCompact = !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
 
         if (windowWidthIsCompact) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+            UpdateRequiredContent(
+                topContent = {
+                    Image(painter = illustration, contentDescription = null)
+                    Spacer(modifier = Modifier.height(Margin.Huge))
+                },
                 modifier = Modifier
                     .padding(scaffoldPadding)
                     .fillMaxSize(),
-            ) {
-                Image(painter = illustration, contentDescription = null)
-
-                Spacer(modifier = Modifier.height(Margin.Huge))
-
-                Text(
-                    style = titleTextStyle,
-                    text = stringResource(R.string.updateAppTitle),
-                )
-
-                Spacer(modifier = Modifier.height(Margin.Huge))
-
-                Text(
-                    style = descriptionTextStyle,
-                    textAlign = TextAlign.Center,
-                    text = stringResource(R.string.updateRequiredDescription)
-                )
-            }
+                titleTextStyle = titleTextStyle,
+                descriptionTextStyle = descriptionTextStyle
+            )
         } else {
             val rememberScrollState = rememberScrollState()
 
@@ -101,27 +88,43 @@ fun UpdateRequiredScreen(
             ) {
                 Image(painter = illustration, contentDescription = null)
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
+                UpdateRequiredContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .verticalScroll(rememberScrollState)
-                ) {
-                    Text(
-                        style = titleTextStyle,
-                        text = stringResource(R.string.updateAppTitle),
-                    )
-
-                    Spacer(modifier = Modifier.height(Margin.Huge))
-
-                    Text(
-                        style = descriptionTextStyle,
-                        textAlign = TextAlign.Center,
-                        text = stringResource(R.string.updateRequiredDescription)
-                    )
-                }
+                        .verticalScroll(rememberScrollState),
+                    titleTextStyle = titleTextStyle,
+                    descriptionTextStyle = descriptionTextStyle
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun UpdateRequiredContent(
+    topContent: @Composable () -> Unit = {},
+    modifier: Modifier,
+    titleTextStyle: TextStyle,
+    descriptionTextStyle: TextStyle
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+    ) {
+        topContent()
+
+        Text(
+            style = titleTextStyle,
+            text = stringResource(R.string.updateAppTitle),
+        )
+
+        Spacer(modifier = Modifier.height(Margin.Huge))
+
+        Text(
+            style = descriptionTextStyle,
+            textAlign = TextAlign.Center,
+            text = stringResource(R.string.updateRequiredDescription)
+        )
     }
 }
