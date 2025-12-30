@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 /*
  * Infomaniak Core - Android
  * Copyright (C) 2025 Infomaniak Network SA
@@ -41,4 +43,11 @@ android {
     kotlinOptions {
         jvmTarget = javaVersion.toString()
     }
+}
+
+dependencies {
+    implementation(project(":Sentry"))
+
+    implementation(core.material)
+    implementation(core.progress.button)
 }
