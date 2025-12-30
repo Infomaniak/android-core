@@ -36,7 +36,7 @@ dependencies {
     implementation project(':Core:Legacy')
 
     implementation("com.infomaniak.core:Ui")
-    implementation("com.infomaniak.core:Ui:View")
+    implementation("com.infomaniak.core:Ui.View")
 }
 
 // Workaround for Gradle/AGP strict task dependency validation.
