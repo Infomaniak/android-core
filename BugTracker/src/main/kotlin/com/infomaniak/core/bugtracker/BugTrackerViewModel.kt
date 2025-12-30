@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.legacy.bugtracker
+package com.infomaniak.core.bugtracker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.legacy.bugtracker
+package com.infomaniak.core.bugtracker
 
 import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.infomaniak.core.legacy.bugtracker.databinding.ItemBugTrackerFileBinding
+import com.infomaniak.core.bugtracker.databinding.ItemBugTrackerFileBinding
 
 class BugTrackerFileAdapter(
     private val onFileDeleted: () -> Unit

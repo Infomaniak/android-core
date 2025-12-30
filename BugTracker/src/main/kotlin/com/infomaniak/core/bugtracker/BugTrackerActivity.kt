@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.legacy.bugtracker
+package com.infomaniak.core.bugtracker
 
 import android.net.Uri
 import android.os.Build
@@ -36,7 +36,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
-import com.infomaniak.core.legacy.bugtracker.databinding.ActivityBugTrackerBinding
+import com.infomaniak.core.bugtracker.databinding.ActivityBugTrackerBinding
+import com.infomaniak.core.bugtracker.BugTrackerActivityArgs
 import com.infomaniak.core.legacy.utils.FilePicker
 import com.infomaniak.core.legacy.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.core.legacy.utils.getFileNameAndSize
