@@ -64,6 +64,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
         val projectionFields = listOf(
             AppVersion.ProjectionFields.MinVersion,
             AppVersion.ProjectionFields.PublishedVersionMinOs,
+            AppVersion.ProjectionFields.PublishedVersionType,
             AppVersion.ProjectionFields.PublishedVersionsTag
         )
         val apiResponse = ApiRepositoryAppVersion.getAppVersion(
