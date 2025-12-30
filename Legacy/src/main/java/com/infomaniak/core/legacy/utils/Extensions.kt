@@ -126,6 +126,7 @@ fun MaterialButton.initProgress(lifecycle: LifecycleOwner? = null, color: Int? =
     params?.let(::attachTextChangeAnimator) ?: attachTextChangeAnimator()
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun MaterialButton.showProgressCatching(color: Int? = null) {
     isClickable = false
     // showProgress stores references to views which crashes when the view is freed
@@ -137,12 +138,14 @@ fun MaterialButton.showProgressCatching(color: Int? = null) {
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun MaterialButton.hideProgressCatching(@StringRes text: Int) {
     isClickable = true
     // hideProgress stores references to views which crashes when the view is freed
     runCatching { hideProgress(text) }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun MaterialButton.hideProgressCatching(text: String) {
     isClickable = true
     // hideProgress stores references to views which crashes when the view is freed
