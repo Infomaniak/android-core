@@ -36,5 +36,5 @@ dependencies {
     implementation project(':Core:Legacy')
 
     implementation("com.infomaniak.core:Ui")
-    implementation("com.infomaniak.core:Ui:View")
+    implementation("com.infomaniak.core:Ui.View")
 }
