@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
 }
 
@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core"))
+    implementation(project(":"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)

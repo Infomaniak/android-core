@@ -43,7 +43,9 @@ android {
 }
 
 dependencies {
-    implementation project(":Core:Network") // To access API URL
+    // To access API URL
+    // New Core via composite build: will be substituted to the included build project
+    implementation("com.infomaniak.core:Network")
 
     api core.kotlinx.coroutines.android
     api core.kotlinx.coroutines.test

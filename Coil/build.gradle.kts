@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
 }
 
@@ -43,9 +43,9 @@ android {
 }
 
 dependencies {
-    api(project(":Core:Auth"))
-    implementation(project(":Core:Avatar"))
-    implementation(project(":Core:Network"))
+    api(project(":Auth"))
+    implementation(project(":Avatar"))
+    implementation(project(":Network"))
 
     api(core.coil)
     api(core.coil.network.okhttp)
