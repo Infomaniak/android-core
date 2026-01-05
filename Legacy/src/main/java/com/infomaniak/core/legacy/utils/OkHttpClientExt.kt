@@ -31,6 +31,7 @@ import kotlin.coroutines.resumeWithException
  * Suspend extension that allows suspend [Call.enqueue]
  * @return [Response] or throw exception
  */
+@Deprecated("Use the method exposed through the Core:Network module")
 suspend fun Call.await() = suspendCancellableCoroutine { continuation ->
 
     enqueue(object : Callback {
@@ -50,4 +51,5 @@ suspend fun Call.await() = suspendCancellableCoroutine { continuation ->
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Network module")
 suspend fun Response.bodyAsStringOrNull(): String? = Dispatchers.IO { body?.string() }
