@@ -19,6 +19,10 @@ package com.infomaniak.core.ui.view
 
 import android.graphics.Color
 import androidx.annotation.StringRes
+import androidx.lifecycle.LifecycleOwner
+import com.github.razir.progressbutton.TextChangeAnimatorParams
+import com.github.razir.progressbutton.attachTextChangeAnimator
+import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.google.android.material.button.MaterialButton
@@ -48,4 +52,19 @@ fun MaterialButton.hideProgressCatching(text: String) {
     runCatching { hideProgress(text) }.onFailure { throwable ->
         SentryLog.w("hideProgress", "An error has occurred when hideProgress", throwable)
     }
+}
+
+fun MaterialButton.initProgress(lifecycle: LifecycleOwner? = null, color: Int? = null) {
+    lifecycle?.bindProgressButton(button = this)
+
+    val params = color?.let {
+        TextChangeAnimatorParams().apply {
+            useCurrentTextColor = false
+            textColor = color
+            fadeInMills = 0L
+            fadeOutMills = 0L
+        }
+    }
+
+    params?.let(::attachTextChangeAnimator) ?: attachTextChangeAnimator()
 }
