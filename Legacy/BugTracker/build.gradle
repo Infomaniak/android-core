@@ -25,8 +25,8 @@ android {
 }
 
 dependencies {
-    implementation project(":Core:Auth")
     implementation project(":Core:AppVersionChecker")
+    implementation project(":Core:Auth")
     implementation project(':Core:Legacy')
     implementation project(":Core:Network") // To access API URL
 }
