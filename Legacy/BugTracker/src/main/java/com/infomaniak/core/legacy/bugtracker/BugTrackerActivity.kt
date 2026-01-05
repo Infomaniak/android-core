@@ -139,13 +139,15 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private fun ActivityBugTrackerBinding.observeBugReportResult() {
-        bugTrackerViewModel.bugReportResult.observe(this@BugTrackerActivity) { isSuccessful ->
-            if (isSuccessful) {
-                showToast(R.string.bugTrackerFormSubmitSuccess)
-                finish()
-            } else {
-                submitButton.hideProgressCatching(R.string.bugTrackerSubmit)
-                showSnackbar(R.string.bugTrackerFormSubmitError)
+        lifecycleScope.launch {
+            bugTrackerViewModel.bugReportResultFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collect { isSuccessful ->
+                if (isSuccessful) {
+                    showToast(R.string.bugTrackerFormSubmitSuccess)
+                    finish()
+                } else {
+                    submitButton.hideProgressCatching(R.string.bugTrackerSubmit)
+                    showSnackbar(R.string.bugTrackerFormSubmitError)
+                }
             }
         }
     }
