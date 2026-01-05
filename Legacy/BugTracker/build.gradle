@@ -28,6 +28,7 @@ android {
 
 dependencies {
     implementation("com.infomaniak.core:AppVersionChecker")
+	implementation("com.infomaniak.core:Auth")
     // To access API URL
     // New Core via composite build: will be substituted to the included build project
     implementation("com.infomaniak.core:Network")
