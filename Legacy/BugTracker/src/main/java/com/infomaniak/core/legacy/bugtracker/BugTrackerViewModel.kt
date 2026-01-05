@@ -35,6 +35,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import com.infomaniak.core.auth.networking.HttpClient as HttpClientWithToken
 
 class BugTrackerViewModel : ViewModel() {
     val files = mutableListOf<BugTrackerActivity.BugTrackerFile>()
@@ -62,7 +63,12 @@ class BugTrackerViewModel : ViewModel() {
                 .post(multipartBody)
                 .build()
 
-            isSuccessful = HttpClient.okHttpClientLongTimeout.newBuilder().build().newCall(request).await().isSuccessful
+            isSuccessful = HttpClientWithToken.okHttpClientLongTimeoutWithTokenInterceptor
+                .newBuilder()
+                .build()
+                .newCall(request)
+                .await()
+                .isSuccessful
         }.onFailure { exception ->
             if (exception is CancellationException) throw exception
             exception.printStackTrace()
