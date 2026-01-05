@@ -110,6 +110,7 @@ fun Context.showToast(title: Int, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, title, duration).show()
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun MaterialButton.initProgress(lifecycle: LifecycleOwner? = null, color: Int? = null) {
 
     lifecycle?.bindProgressButton(button = this)

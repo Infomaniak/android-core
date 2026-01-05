@@ -40,9 +40,9 @@ import com.infomaniak.core.legacy.bugtracker.databinding.ActivityBugTrackerBindi
 import com.infomaniak.core.legacy.utils.FilePicker
 import com.infomaniak.core.legacy.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.core.legacy.utils.getFileNameAndSize
-import com.infomaniak.core.legacy.utils.initProgress
 import com.infomaniak.core.ui.showToast
 import com.infomaniak.core.ui.view.hideProgressCatching
+import com.infomaniak.core.ui.view.initProgress
 import com.infomaniak.core.ui.view.setMargins
 import com.infomaniak.core.ui.view.showProgressCatching
 import kotlinx.coroutines.launch
