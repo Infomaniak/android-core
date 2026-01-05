@@ -251,6 +251,7 @@ fun Dialog.showKeyboard() {
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
     (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
         setMargins(
@@ -263,6 +264,7 @@ fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bot
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun View.setMarginsRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
     (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
         start?.let { marginStart = it }
@@ -273,6 +275,7 @@ fun View.setMarginsRelative(start: Int? = null, top: Int? = null, end: Int? = nu
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun View.setPaddingRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
     (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
         setPaddingRelative(
