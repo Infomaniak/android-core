@@ -103,15 +103,21 @@ fun DownloadManager.downloadStatusFlow(
 
         override fun onChange(selfChange: Boolean) {
             launch(Dispatchers.IO) {
-                query(query).use {
-                    val currentStatus = it.extractDownloadStatus()
+                query(query).use { cursor: Cursor? ->
+                    val currentStatus = cursor.extractDownloadStatus()
                     trySend(currentStatus)
                 }
             }
         }
     }
     Dispatchers.IO {
-        query(query).use {
+        val cursor: Cursor? = query(query)
+        if (cursor == null) {
+            trySend(null)
+            close()
+            awaitCancellation()
+        }
+        cursor.use {
             it.registerContentObserver(contentObserver)
             val currentStatus = it.extractDownloadStatus()
             trySend(currentStatus)
@@ -137,7 +143,8 @@ suspend fun DownloadManager.uriFor(id: UniqueDownloadId): Uri? {
     return Dispatchers.IO { getUriForDownloadedFile(id.value) }
 }
 
-private fun Cursor.extractDownloadStatus(): DownloadStatus? {
+private fun Cursor?.extractDownloadStatus(): DownloadStatus? {
+    if (this == null) return null // Android 14 Redmi Note 13 can have query return a null value.
     if (moveToFirst().not()) return null
     return buildStatus(
         statusInt = getInt(getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)),
