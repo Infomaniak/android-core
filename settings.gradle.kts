@@ -37,6 +37,7 @@ include(
     ":CrossAppLogin:Back",
     ":CrossAppLogin:Front",
     ":DotLottie",
+    ":File",
     ":FileTypes",
     ":FragmentNavigation",
     ":InAppReview",
