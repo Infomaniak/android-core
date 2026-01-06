@@ -31,11 +31,11 @@ internal class InputStreamCounter(
 
     inline fun fileSizeFor(
         uri: Uri,
-        onTotalBytesUpdate: (skippedBytes: Int, totalBytes: Long) -> Unit,
+        onChunkRead: (countedBytes: Int, totalBytes: Long) -> Unit,
     ): Long? {
         return fileSizeFor(
             stream = appCtx.contentResolver.openInputStream(uri)?.buffered(sharedByteArrayForCountingBytes.size) ?: return null,
-            onTotalBytesUpdate = onTotalBytesUpdate,
+            onChunkRead = onChunkRead,
         )
     }
 
@@ -45,7 +45,7 @@ internal class InputStreamCounter(
      */
     inline fun fileSizeFor(
         stream: InputStream,
-        onTotalBytesUpdate: (skippedBytes: Int, totalBytes: Long) -> Unit,
+        onChunkRead: (countedBytes: Int, totalBytes: Long) -> Unit,
     ): Long = stream.use { stream ->
         var totalBytes = 0L
         while (true) {
@@ -53,10 +53,10 @@ internal class InputStreamCounter(
             // "This method may skip more bytes than what are remaining in the backing file."
             // (from https://docs.oracle.com/javase/8/docs/api/java/io/FileInputStream.html#skip-long-)
             // That's why we're using read instead.
-            val skippedBytes = stream.read(sharedByteArrayForCountingBytes)
-            if (skippedBytes == -1) break
-            totalBytes += skippedBytes
-            onTotalBytesUpdate(skippedBytes, totalBytes)
+            val countedBytes = stream.read(sharedByteArrayForCountingBytes)
+            if (countedBytes == -1) break
+            totalBytes += countedBytes
+            onChunkRead(countedBytes, totalBytes)
         }
         totalBytes
     }
