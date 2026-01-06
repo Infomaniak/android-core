@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.file
 
-import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -26,9 +25,14 @@ import androidx.core.database.getStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.invoke
+import kotlinx.coroutines.yield
 import splitties.init.appCtx
 import java.net.URLDecoder
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
 
 suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
     runCatching {
@@ -91,7 +95,7 @@ suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
                 val fileSize = runCatching {
                     cursor.getFileSize()
                 }.getOrElse {
-                    uri.calculateFileSize(contentResolver)
+                    uri.measureFileSize()
                 } ?: throw Exception("Cannot calculate size")
 
                 fileName to fileSize
@@ -116,19 +120,25 @@ suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
  * Calculates the size of a file from a Uri.
  * @return The file size in bytes, or null if there is an error during the calculation.
  */
-private fun Uri.calculateFileSize(contentResolver: ContentResolver): Long? {
+private suspend fun Uri.measureFileSize(): Long? {
     return runCatching {
-        contentResolver.openInputStream(this)?.use { inputStream ->
-            var currentSize: Int
-            val byteArray = ByteArray(8_192) // 8 Ko
-            var fileSize = 0L
-            while (inputStream.read(byteArray).also { currentSize = it } != -1) {
-                fileSize += currentSize
+        val yieldInterval = 1.seconds
+        var lastYield = TimeSource.Monotonic.markNow()
+        counter.fileSizeFor(
+            uri = this@measureFileSize,
+            onTotalBytesUpdate = { _, _ ->
+                if (lastYield.elapsedNow() >= yieldInterval) {
+                    lastYield = TimeSource.Monotonic.markNow()
+                    yield()
+                } else {
+                    currentCoroutineContext().ensureActive()
+                }
             }
-            fileSize
-        }
+        )
     }.getOrNull()
 }
+
+private val counter = InputStreamCounter()
 
 
 private const val TAG = "FileInfo"
