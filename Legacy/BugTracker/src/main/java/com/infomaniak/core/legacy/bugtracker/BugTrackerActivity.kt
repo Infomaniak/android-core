@@ -62,7 +62,8 @@ class BugTrackerActivity : AppCompatActivity() {
     private val fileAdapter = BugTrackerFileAdapter { updateFileTotalSize() }
     var type = DEFAULT_REPORT_TYPE
 
-    private val filePickerActivityResult: ActivityResultLauncher<String> = this.registerForActivityResult(ActivityResultContracts.GetMultipleContents(), ::addFiles)
+    private val filePickerActivityResult: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.GetMultipleContents(), ::addFiles)
 
     private fun updateFileTotalSize() = with(binding) {
         if (bugTrackerViewModel.files.count() <= 1) {
