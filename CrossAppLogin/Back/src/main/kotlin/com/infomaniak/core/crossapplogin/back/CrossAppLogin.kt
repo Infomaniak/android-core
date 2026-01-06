@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,8 +53,7 @@ sealed class CrossAppLogin {
      * If the id is ever updated, it will be emitted in this shared flow.
      */
     @ExperimentalUuidApi
-    @PublishedApi
-    internal abstract val sharedDeviceIdFlow: SharedFlow<Uuid>
+    abstract val sharedDeviceIdFlow: SharedFlow<Uuid>
 
     @ExperimentalUuidApi
     internal abstract val sharedDeviceIdManager: SharedDeviceIdManager
