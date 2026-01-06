@@ -38,8 +38,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
+import com.infomaniak.core.file.getFileNameAndSize
 import com.infomaniak.core.legacy.bugtracker.databinding.ActivityBugTrackerBinding
-import com.infomaniak.core.legacy.utils.getFileNameAndSize
 import com.infomaniak.core.ui.showToast
 import com.infomaniak.core.ui.view.SnackbarUtils.showSnackbar
 import com.infomaniak.core.ui.view.hideProgressCatching

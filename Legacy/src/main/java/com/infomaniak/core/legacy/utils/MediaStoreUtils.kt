@@ -39,6 +39,7 @@ fun Cursor.getFileName(uri: Uri): String {
 
 fun Cursor.getFileSize() = getLong(getColumnIndexOrThrow(OpenableColumns.SIZE))
 
+@Deprecated("Use the method function through the Core:File module")
 fun Context.getFileNameAndSize(uri: Uri): Pair<String, Long>? {
     return runCatching {
         contentResolver.query(uri, null, null, null, null)?.use { cursor ->
