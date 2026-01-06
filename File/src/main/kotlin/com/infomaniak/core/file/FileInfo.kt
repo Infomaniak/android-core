@@ -82,8 +82,8 @@ private fun Cursor.getFileSize(): Long {
     } ?: -1
 }
 
-fun getFileNameAndSize(uri: Uri): Pair<String, Long>? {
-    return runCatching {
+suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
+    runCatching {
         val contentResolver = appCtx.contentResolver
         contentResolver.query(uri, displayNameProjection + sizeProjection, null, null, null)?.use { cursor ->
             if (cursor.moveToFirst()) {
@@ -116,7 +116,7 @@ fun getFileNameAndSize(uri: Uri): Pair<String, Long>? {
  * Calculates the size of a file from a Uri.
  * @return The file size in bytes, or null if there is an error during the calculation.
  */
-fun Uri.calculateFileSize(contentResolver: ContentResolver): Long? {
+private fun Uri.calculateFileSize(contentResolver: ContentResolver): Long? {
     return runCatching {
         contentResolver.openInputStream(this)?.use { inputStream ->
             var currentSize: Int
