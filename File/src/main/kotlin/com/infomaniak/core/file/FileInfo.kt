@@ -126,7 +126,7 @@ private suspend fun Uri.measureFileSize(): Long? {
         var lastYield = TimeSource.Monotonic.markNow()
         counter.fileSizeFor(
             uri = this@measureFileSize,
-            onTotalBytesUpdate = { _, _ ->
+            onChunkRead = { _, _ ->
                 if (lastYield.elapsedNow() >= yieldInterval) {
                     lastYield = TimeSource.Monotonic.markNow()
                     yield()
