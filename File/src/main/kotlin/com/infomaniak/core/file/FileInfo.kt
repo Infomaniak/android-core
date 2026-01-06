@@ -55,7 +55,7 @@ private fun Cursor.getFileName(): String? {
     }
 }
 
-private suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
+suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
     runCatching {
         appCtx.contentResolver.query(
             /* uri = */ uri,
