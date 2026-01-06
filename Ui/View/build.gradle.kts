@@ -46,6 +46,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":"))
     implementation(project(":Sentry"))
 
     implementation(core.material)

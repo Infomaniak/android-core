@@ -38,9 +38,9 @@ import androidx.navigation.navArgs
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.legacy.bugtracker.databinding.ActivityBugTrackerBinding
 import com.infomaniak.core.legacy.utils.FilePicker
-import com.infomaniak.core.legacy.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.core.legacy.utils.getFileNameAndSize
 import com.infomaniak.core.ui.showToast
+import com.infomaniak.core.ui.view.SnackbarUtils.showSnackbar
 import com.infomaniak.core.ui.view.hideProgressCatching
 import com.infomaniak.core.ui.view.initProgress
 import com.infomaniak.core.ui.view.setMargins

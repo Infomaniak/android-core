@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,23 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.legacy.utils
+package com.infomaniak.core.ui.view
 
 import android.app.Activity
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import com.infomaniak.core.legacy.R
+import com.infomaniak.core.R as RCore
 
-@Deprecated("Use the method exposed through the Core:Ui:View module")
 object SnackbarUtils {
 
     @JvmStatic
     fun Fragment.showSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) {
         activity?.showSnackbar(
@@ -46,7 +45,7 @@ object SnackbarUtils {
     fun Fragment.showSnackbar(
         title: String,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) {
         activity?.showSnackbar(
@@ -61,7 +60,7 @@ object SnackbarUtils {
     fun Activity.showSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) {
         showSnackbar(
@@ -77,7 +76,7 @@ object SnackbarUtils {
     fun Activity.showSnackbar(
         title: String,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) {
         showSnackbar(
@@ -93,7 +92,7 @@ object SnackbarUtils {
     fun Activity.showIndefiniteSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) = showSnackbar(
         view = window.decorView.findViewById(android.R.id.content),
@@ -110,7 +109,7 @@ object SnackbarUtils {
         @StringRes title: Int,
         anchor: View? = null,
         length: Int = Snackbar.LENGTH_LONG,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) = showSnackbar(
         view = view,
@@ -126,7 +125,7 @@ object SnackbarUtils {
         view: View,
         title: String,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = R.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
         length: Int = Snackbar.LENGTH_LONG,
         onActionClicked: (() -> Unit)? = null,
     ) = Snackbar.make(view, title, length).apply {
