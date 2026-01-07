@@ -17,17 +17,12 @@
  */
 package com.infomaniak.core.bugtracker
 
-import android.app.Activity
-import android.content.ContextWrapper
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.text.format.Formatter
-import android.view.View
 import android.webkit.MimeTypeMap
-import android.widget.AutoCompleteTextView
-import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -43,6 +38,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
+import com.infomaniak.core.bugtracker.databinding.ActivityBugTrackerBinding
 import com.infomaniak.core.file.getFileNameAndSize
 import com.infomaniak.core.ui.showToast
 import com.infomaniak.core.ui.view.SnackbarUtils.showSnackbar
@@ -59,7 +55,7 @@ class BugTrackerActivity : AppCompatActivity() {
     private fun WindowInsetsCompat.systemBars() = getInsets(WindowInsetsCompat.Type.systemBars())
     private fun WindowInsetsCompat.safeArea() = Insets.max(systemBars(), cutout())
 
-    private val binding: ActivityBugTrackerBinding by lazy { ActivityBugTrackerBinding.inflate(Activity.getLayoutInflater) }
+    private val binding: ActivityBugTrackerBinding by lazy { ActivityBugTrackerBinding.inflate(layoutInflater) }
     private val bugTrackerViewModel: BugTrackerViewModel by viewModels()
     private val navigationArgs: BugTrackerActivityArgs by navArgs()
 
@@ -79,7 +75,7 @@ class BugTrackerActivity : AppCompatActivity() {
         } else {
             val filesSize = bugTrackerViewModel.files.sumOf { it.size }
             totalSize.apply {
-                TextView.setText = Formatter.formatShortFileSize(this@BugTrackerActivity, filesSize)
+                text = Formatter.formatShortFileSize(this@BugTrackerActivity, filesSize)
                 isVisible = true
             }
         }
@@ -95,23 +91,20 @@ class BugTrackerActivity : AppCompatActivity() {
 
         setContentView(root)
 
-        toolbar.setNavigationOnClickListener { Activity.finish() }
+        toolbar.setNavigationOnClickListener { finish() }
 
         addFilesButton.setOnClickListener { filePickerActivityResult.launch("*/*") }
 
         typeField.apply {
-            AutoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
+            setOnItemClickListener { _, _, position, _ ->
                 type = ReportType.entries[position]
             }
 
-            AutoCompleteTextView.setText(
-                AutoCompleteTextView.getAdapter.getItem(ReportType.entries.indexOf(DEFAULT_REPORT_TYPE)) as String,
-                false
-            )
+            setText(adapter.getItem(ReportType.entries.indexOf(DEFAULT_REPORT_TYPE)) as String, false)
         }
 
         priorityField.apply {
-            AutoCompleteTextView.setText(AutoCompleteTextView.getAdapter.getItem(DEFAULT_PRIORITY_TYPE) as String, false)
+            setText(adapter.getItem(DEFAULT_PRIORITY_TYPE) as String, false)
         }
 
         fileRecyclerView.adapter = fileAdapter
@@ -120,7 +113,7 @@ class BugTrackerActivity : AppCompatActivity() {
 
         submitButton.apply {
             initProgress(this@BugTrackerActivity)
-            View.setOnClickListener {
+            setOnClickListener {
                 if (bugTrackerViewModel.files.sumOf { it.size } >= FILE_SIZE_32_MB) {
                     showSnackbar(R.string.bugTrackerFileTooBig)
                 } else if (descriptionTextInput.text.isNullOrBlank() || subjectTextInput.text.isNullOrBlank()) {
@@ -157,7 +150,7 @@ class BugTrackerActivity : AppCompatActivity() {
             bugTrackerViewModel.bugReportResultFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collect { isSuccessful ->
                 if (isSuccessful) {
                     showToast(R.string.bugTrackerFormSubmitSuccess)
-                    Activity.finish()
+                    finish()
                 } else {
                     submitButton.hideProgressCatching(R.string.bugTrackerSubmit)
                     showSnackbar(R.string.bugTrackerFormSubmitError)
@@ -190,8 +183,8 @@ class BugTrackerActivity : AppCompatActivity() {
     private suspend fun getFileFromUri(uri: Uri): BugTrackerFile? {
         val (fileName, fileSize) = getFileNameAndSize(uri) ?: return null
         val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
-        val mimeType = ContextWrapper.getContentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        val bytes = ContextWrapper.getContentResolver.openInputStream(uri).use { it?.readBytes() }
+        val mimeType = contentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val bytes = contentResolver.openInputStream(uri).use { it?.readBytes() }
 
         return bytes?.let { BugTrackerFile(fileName, fileSize, uri, mimeType, it) }
     }
