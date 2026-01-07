@@ -42,12 +42,18 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
     }
+
     kotlinOptions {
         jvmTarget = javaVersion.toString()
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 }
 

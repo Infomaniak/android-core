@@ -22,8 +22,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.infomaniak.core.legacy.bugtracker.databinding.ItemBugTrackerFileBinding
-import kotlin.collections.count
+import com.infomaniak.core.bugtracker.databinding.ItemBugTrackerFileBinding
 
 class BugTrackerFileAdapter(
     private val onFileDeleted: () -> Unit
