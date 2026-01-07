@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2022-2024 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="bugTrackerAddFiles">Add files</string>
+    <string name="bugTrackerAppNotUpToDate">WARNING: YOUR APPLICATION IS NOT UP TO DATE.</string>
+    <string name="bugTrackerDescription">Description</string>
+    <string name="bugTrackerFilesTitle">FILES</string>
+    <string name="bugTrackerFileTooBig">Images are too heavy (max 32 MB)</string>
+    <string name="bugTrackerFormSubmitError">The bug report could not be sent</string>
+    <string name="bugTrackerFormSubmitSuccess">Bug report sent</string>
+    <string name="bugTrackerHint">You can add files (32 MB maximum) to help understand your bug better.</string>
+    <string name="bugTrackerMissingFields">The subject and description must be filled in</string>
+    <string name="bugTrackerPriority">Priority</string>
+    <string name="bugTrackerSubject">Subject</string>
+    <string name="bugTrackerSubmit">Submit</string>
+    <string name="bugTrackerTitle">Bug tracker</string>
+    <string name="bugTrackerType">Type</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">A file could not be imported</item>
+        <item quantity="other">%d files could not be imported</item>
+    </plurals>
+
+    <string-array name="bugTrackerTypeArray">
+        <item name="item1">Bug</item>
+        <item name="item2">Feature</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriorityArray">
+        <item name="item1">Low</item>
+        <item name="item2">Normal</item>
+        <item name="item3">High</item>
+        <item name="item4">Urgent</item>
+        <item name="item5">Immediate</item>
+    </string-array>
+</resources>
