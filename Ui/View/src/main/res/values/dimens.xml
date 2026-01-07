@@ -16,6 +16,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <dimen name="appBarHeight">110dp</dimen>
     <dimen name="marginLarge">48dp</dimen>
     <dimen name="marginStandard">24dp</dimen>
     <dimen name="marginStandardMedium">16dp</dimen>
