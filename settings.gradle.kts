@@ -32,6 +32,7 @@ include(
     ":AppVersionChecker",
     ":Auth",
     ":Avatar",
+    ":BugTracker",
     ":Coil",
     ":Common",
     ":CrossAppLogin:Back",
