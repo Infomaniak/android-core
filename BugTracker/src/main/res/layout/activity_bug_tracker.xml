@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2022-2024 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BugTrackerActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/appBarHeight">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:windowBackground"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:title="@string/bugTrackerTitle">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIconTint="?colorAccent" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/marginStandard">
+
+            <com.infomaniak.core.legacy.views.EndIconTextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/bugTrackerType">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/typeField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorPrimaryContainer"
+                    android:inputType="none"
+                    app:simpleItems="@array/bugTrackerTypeArray" />
+
+            </com.infomaniak.core.legacy.views.EndIconTextInputLayout>
+
+            <com.infomaniak.core.legacy.views.EndIconTextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/bugTrackerPriority"
+                app:boxCornerRadiusTopEnd="0dp"
+                app:boxCornerRadiusTopStart="0dp">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/priorityField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorPrimaryContainer"
+                    android:inputType="none"
+                    app:simpleItems="@array/bugTrackerPriorityArray" />
+
+            </com.infomaniak.core.legacy.views.EndIconTextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/subjectField"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/bugTrackerSubject"
+                app:boxCornerRadiusTopEnd="0dp"
+                app:boxCornerRadiusTopStart="0dp"
+                app:prefixText="[Android] : ">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/subjectTextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorPrimaryContainer" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/descriptionField"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/bugTrackerDescription"
+                app:boxCornerRadiusBottomEnd="4dp"
+                app:boxCornerRadiusBottomStart="4dp"
+                app:boxCornerRadiusTopEnd="0dp"
+                app:boxCornerRadiusTopStart="0dp"
+                app:boxStrokeWidth="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/descriptionTextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorPrimaryContainer"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/missingFieldsError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginStandardVerySmall"
+                android:text="@string/bugTrackerMissingFields"
+                android:textColor="?attr/colorError"
+                android:visibility="gone" />
+
+            <TextView
+                style="@style/TextAppearance.Material3.HeadlineSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginStandard"
+                android:text="@string/bugTrackerFilesTitle" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fileRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginStandard"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_bug_tracker_file" />
+
+            <TextView
+                android:id="@+id/totalSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimaryContainer"
+                android:gravity="end"
+                android:padding="@dimen/marginStandardSmall"
+                tools:text="48 Ko" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addFilesButton"
+                style="@style/Widget.Material3.Button.TonalButton.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/colorPrimaryContainer"
+                android:gravity="center_vertical"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minHeight="40dp"
+                android:text="@string/bugTrackerAddFiles"
+                android:textColor="@color/title"
+                app:cornerRadius="0dp"
+                app:icon="@android:drawable/stat_sys_upload_done"
+                app:iconTint="@color/title" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bugTrackerHint"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/appNotUpToDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginStandard"
+                android:gravity="center"
+                android:text="@string/bugTrackerAppNotUpToDate"
+                android:textColor="@color/red_error"
+                android:textSize="20sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submitButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginStandard"
+                android:text="@string/bugTrackerSubmit" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
