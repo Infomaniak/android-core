@@ -66,8 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorPrimaryContainer"
-                    android:inputType="none"
-                    app:simpleItems="@array/bugTrackerTypeArray" />
+                    android:inputType="none" />
 
             </com.infomaniak.core.ui.view.layout.EndIconTextInputLayout>
 
@@ -84,8 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorPrimaryContainer"
-                    android:inputType="none"
-                    app:simpleItems="@array/bugTrackerPriorityArray" />
+                    android:inputType="none" />
 
             </com.infomaniak.core.ui.view.layout.EndIconTextInputLayout>
 

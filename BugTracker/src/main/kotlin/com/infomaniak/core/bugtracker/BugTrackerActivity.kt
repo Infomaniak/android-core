@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.bugtracker
 
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -99,11 +100,12 @@ class BugTrackerActivity : AppCompatActivity() {
             setOnItemClickListener { _, _, position, _ ->
                 type = ReportType.entries[position]
             }
-
+            setSimpleItems(BugTrackerType.toArrayString(resources))
             setText(adapter.getItem(ReportType.entries.indexOf(DEFAULT_REPORT_TYPE)) as String, false)
         }
 
         priorityField.apply {
+            setSimpleItems(BugTrackerPriority.toArrayString(resources))
             setText(adapter.getItem(DEFAULT_PRIORITY_TYPE) as String, false)
         }
 
@@ -199,7 +201,7 @@ class BugTrackerActivity : AppCompatActivity() {
         val subject = subjectField.prefixText.toString() + subjectTextInput.text.toString()
         val description = descriptionTextInput.text.toString()
         val priorityLabel = "Priorité: " + priorityField.text.toString()
-        val priorityValue = (resources.getStringArray(R.array.bugTrackerPriorityArray).indexOf(priorityLabel) + 1).toString()
+        val priorityValue = (BugTrackerPriority.toArrayString(resources).indexOf(priorityLabel) + 1).toString()
 
         val extraProject = navigationArgs.projectName
         val extraRoute = "undefined"
@@ -255,6 +257,32 @@ class BugTrackerActivity : AppCompatActivity() {
         BUGS("bugs"),
         FEATURES("features")
     }
+
+    enum class BugTrackerType(val resourceId: Int) {
+        Bug(R.string.bugTrackerTypeBug),
+        Feature(R.string.bugTrackerTypeFeature);
+
+        companion object {
+            fun toArrayString(resources: Resources): Array<String> {
+                return BugTrackerType.entries.map { resources.getString(it.resourceId) }.toTypedArray()
+            }
+        }
+    }
+
+    enum class BugTrackerPriority(val resourceId: Int) {
+        Low(R.string.bugTrackerPriorityLow),
+        Normal(R.string.bugTrackerPriorityNormal),
+        High(R.string.bugTrackerPriorityHigh),
+        Urgent(R.string.bugTrackerPriorityUrgent),
+        Immediate(R.string.bugTrackerPriorityImmediate);
+
+        companion object {
+            fun toArrayString(resources: Resources): Array<String> {
+                return BugTrackerPriority.entries.map { resources.getString(it.resourceId) }.toTypedArray()
+            }
+        }
+    }
+
 
     private companion object {
 
