@@ -19,33 +19,6 @@
     <string name="bugTrackerAddFiles">Dateien hinzufügen</string>
     <string name="bugTrackerAppNotUpToDate">ACHTUNG: IHRE ANWENDUNG IST NICHT AUF DEM NEUESTEN STAND.</string>
     <string name="bugTrackerDescription">Beschreibung</string>
-    <string name="bugTrackerFilesTitle">DATEIEN</string>
     <string name="bugTrackerFileTooBig">Bilder zu gross (max. 32 MB)</string>
-    <string name="bugTrackerFormSubmitError">Der Fehlerbericht konnte nicht gesendet werden</string>
-    <string name="bugTrackerFormSubmitSuccess">Fehlerbericht gesendet</string>
-    <string name="bugTrackerHint">Sie können Dateien (maximal 32 MB) hinzufügen, die helfen, Ihren Bug besser zu verstehen.</string>
-    <string name="bugTrackerMissingFields">Das Thema und die Beschreibung müssen ausgefüllt werden</string>
-    <string name="bugTrackerPriority">Priorität</string>
-    <string name="bugTrackerSubject">Betreff</string>
-    <string name="bugTrackerSubmit">Einreichen</string>
-    <string name="bugTrackerTitle">Bug Tracker</string>
-    <string name="bugTrackerType">Typ</string>
-    <plurals name="bugTrackerUploadError">
-        <item quantity="one">Eine Datei konnte nicht importiert werden</item>
-        <item quantity="other">%d Dateien konnten nicht importiert werden</item>
-    </plurals>
-
-    <string-array name="bugTrackerTypeArray">
-        <item name="item1">Fehler</item>
-        <item name="item2">Verbesserungsvorschläge</item>
-    </string-array>
-
-    <string-array name="bugTrackerPriorityArray">
-        <item name="item1">Niedrig</item>
-        <item name="item2">Normal</item>
-        <item name="item3">Hoch</item>
-        <item name="item4">Dringend</item>
-        <item name="item5">Unmittelbar</item>
-    </string-array>
-
+    <string name="bugTrackerFilesTitle">FICHIERS</string>
 </resources>
