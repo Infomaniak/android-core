@@ -411,6 +411,7 @@ fun <T> List<T>.isContentEqual(other: List<T>, predicate: (T, T) -> Boolean): Bo
 
 operator fun Regex.contains(input: String) = containsMatchIn(input)
 
+@Deprecated("Use the method function through the Core:Ui:View module")
 fun AttributeSet.getAttributes(
     context: Context,
     @StyleableRes styleableResource: IntArray,
