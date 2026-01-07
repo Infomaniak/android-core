@@ -21,4 +21,24 @@
     <string name="bugTrackerDescription">Beschreibung</string>
     <string name="bugTrackerFileTooBig">Bilder zu gross (max. 32 MB)</string>
     <string name="bugTrackerFilesTitle">FICHIERS</string>
+    <string name="bugTrackerFormSubmitError">Der Fehlerbericht konnte nicht gesendet werden</string>
+    <string name="bugTrackerFormSubmitSuccess">Fehlerbericht gesendet</string>
+    <string name="bugTrackerHint">Sie können Dateien (maximal 32 MB) hinzufügen, die helfen, Ihren Bug besser zu verstehen.</string>
+    <string name="bugTrackerMissingFields">Das Thema und die Beschreibung müssen ausgefüllt werden</string>
+    <string name="bugTrackerPriority">Priorität</string>
+    <string name="bugTrackerPriorityHigh">Hoch</string>
+    <string name="bugTrackerPriorityImmediate">Unmittelbar</string>
+    <string name="bugTrackerPriorityLow">Niedrig</string>
+    <string name="bugTrackerPriorityNormal">Normal</string>
+    <string name="bugTrackerPriorityUrgent">Urgent</string>
+    <string name="bugTrackerSubject">Betreff</string>
+    <string name="bugTrackerSubmit">Einreichen</string>
+    <string name="bugTrackerTitle">Bug Tracker</string>
+    <string name="bugTrackerType">Typ</string>
+    <string name="bugTrackerTypeBug">Fehler</string>
+    <string name="bugTrackerTypeFeature">Verbesserungsvorschläge</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Eine Datei konnte nicht importiert werden</item>
+        <item quantity="other">%d Dateien konnten nicht importiert werden</item>
+    </plurals>
 </resources>
