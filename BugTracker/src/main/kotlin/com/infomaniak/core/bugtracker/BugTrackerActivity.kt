@@ -41,11 +41,11 @@ import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.bugtracker.databinding.ActivityBugTrackerBinding
 import com.infomaniak.core.file.getFileNameAndSize
 import com.infomaniak.core.ui.showToast
-import com.infomaniak.core.ui.view.SnackbarUtils.showSnackbar
-import com.infomaniak.core.ui.view.hideProgressCatching
-import com.infomaniak.core.ui.view.initProgress
-import com.infomaniak.core.ui.view.setMargins
-import com.infomaniak.core.ui.view.showProgressCatching
+import com.infomaniak.core.ui.view.extension.hideProgressCatching
+import com.infomaniak.core.ui.view.extension.initProgress
+import com.infomaniak.core.ui.view.extension.setMargins
+import com.infomaniak.core.ui.view.extension.showProgressCatching
+import com.infomaniak.core.ui.view.utils.SnackbarUtils.showSnackbar
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
