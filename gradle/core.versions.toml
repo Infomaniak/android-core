@@ -183,6 +183,7 @@ stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
