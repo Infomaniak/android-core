@@ -54,7 +54,7 @@ dependencies {
     api(core.kotlinx.coroutines.core)
     api(core.okhttp)
 
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":Network"))
     implementation(project(":Notifications"))
     implementation(project(":Sentry"))

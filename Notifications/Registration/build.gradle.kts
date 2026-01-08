@@ -55,7 +55,7 @@ dependencies {
     api(core.androidx.work.runtime.ktx)
     api(core.okhttp)
 
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":Auth"))
     implementation(project(":Network:Ktor"))
     implementation(project(":Sentry"))

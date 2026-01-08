@@ -56,7 +56,7 @@ android {
 
 dependencies {
 
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":Avatar"))
     implementation(project(":Coil"))
     implementation(project(":KSuite"))
