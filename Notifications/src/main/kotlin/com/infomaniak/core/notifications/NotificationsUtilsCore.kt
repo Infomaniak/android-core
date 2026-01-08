@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.ColorInt
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.infomaniak.core.extensions.hasPermission
-import com.infomaniak.core.extensions.hasPermissions
+import com.infomaniak.core.common.extensions.hasPermission
+import com.infomaniak.core.common.extensions.hasPermissions
 import splitties.init.appCtx
 
 fun buildNotificationChannel(
