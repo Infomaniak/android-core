@@ -148,6 +148,7 @@ sealed class KSuiteApp(
     internal val features: List<MyKSuiteUpgradeFeatures>,
     internal val buttonStyle: ButtonType,
 ) {
+    // Cannot use 'open' val because of https://youtrack.jetbrains.com/issue/KT-38958
     abstract val titleRes: Int
     abstract val descriptionRes: Int
     abstract val detailsRes: Int
