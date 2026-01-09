@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.infomaniak.core.ui.compose.basics.Dimens
-import com.infomaniak.core.ui.compose.basics.Typography
-import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.R
 import com.infomaniak.core.crossapplogin.front.components.AddAccount
@@ -51,7 +48,10 @@ import com.infomaniak.core.crossapplogin.front.components.PrimaryButton
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
-import com.infomaniak.core.R as RCore
+import com.infomaniak.core.ui.compose.basics.Dimens
+import com.infomaniak.core.ui.compose.basics.Typography
+import com.infomaniak.core.ui.compose.margin.Margin
+import com.infomaniak.core.common.R as RCore
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

@@ -67,6 +67,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.avatar.components.Avatar
 import com.infomaniak.core.common.extensions.openUrl
+import com.infomaniak.core.common.utils.FORMAT_DATE_SIMPLE
+import com.infomaniak.core.common.utils.format
 import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.components.MyKSuiteChip
 import com.infomaniak.core.ksuite.myksuite.ui.components.MyKSuitePrimaryButton
@@ -87,8 +89,6 @@ import com.infomaniak.core.ksuite.ui.components.kSuiteGradient
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.margin.Margin
-import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
-import com.infomaniak.core.utils.format
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens as KSuiteDimens

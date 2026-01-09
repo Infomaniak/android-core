@@ -26,8 +26,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.ktx.messaging
 import com.infomaniak.core.auth.room.UserDatabase
-import com.infomaniak.core.cancellable
 import com.infomaniak.core.common.AssociatedUserDataCleanable
+import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
