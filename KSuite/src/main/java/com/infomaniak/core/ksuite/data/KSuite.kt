@@ -40,6 +40,9 @@ sealed interface KSuite : Parcelable {
         data object Enterprise : Pro
     }
 
-    fun isFreeTier(): Boolean = this is Perso.Free || this is Pro.Free
+    @Parcelize
+    data object StarterPack : KSuite // Legacy mail offer
+
+    fun isFreeTier(): Boolean = this is Perso.Free || this is Pro.Free || this is StarterPack
     fun isProUpgradable(): Boolean = this is Pro && this !is Pro.Enterprise
 }

@@ -24,6 +24,8 @@ object MatomoKSuite {
     const val CATEGORY_MY_KSUITE_UPGRADE_BOTTOM_SHEET = "myKSuiteUpgradeBottomSheet"
     const val CATEGORY_KSUITE_PRO = "kSuitePro"
     const val CATEGORY_KSUITE_PRO_BOTTOM_SHEET = "kSuiteProUpgradeBottomSheet"
+    const val CATEGORY_MAIL_PREMIUM = "mailPremium"
+    const val CATEGORY_MAIL_PREMIUM_BOTTOM_SHEET = "mailPremiumUpgradeBottomSheet"
     //endregion
 
     //region Names
