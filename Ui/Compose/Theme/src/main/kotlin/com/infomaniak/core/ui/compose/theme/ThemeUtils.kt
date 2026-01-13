@@ -21,9 +21,12 @@ import android.app.UiModeManager
 import android.content.Context
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import com.google.android.material.color.ColorContrast.isContrastAvailable
+
+val LocalIsThemeDarkMode = staticCompositionLocalOf { false }
 
 @Composable
 fun selectSchemeForContrast(
