@@ -18,7 +18,6 @@
 package com.infomaniak.core.ui.compose.theme
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.vector.ImageVector
 
 interface ThemedImage {
