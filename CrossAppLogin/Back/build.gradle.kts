@@ -51,7 +51,7 @@ dependencies {
     api(core.kotlinx.serialization.protobuf)
     api(core.androidx.work.runtime)
 
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":AppIntegrity"))
     implementation(project(":Auth"))
     implementation(project(":Network:Ktor"))

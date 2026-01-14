@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":Sentry"))
     implementation(project(":Ui:View"))
     implementation(project(":WebView"))

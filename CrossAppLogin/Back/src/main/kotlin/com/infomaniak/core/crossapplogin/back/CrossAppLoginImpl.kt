@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,11 +25,11 @@ import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
 import androidx.lifecycle.Lifecycle
-import com.infomaniak.core.android.service.OnBindingIssue
-import com.infomaniak.core.android.service.OnServiceDisconnectionBehavior
-import com.infomaniak.core.android.service.withBoundService
 import com.infomaniak.core.auth.room.UserDatabase
-import com.infomaniak.core.cancellable
+import com.infomaniak.core.common.cancellable
+import com.infomaniak.core.common.service.OnBindingIssue
+import com.infomaniak.core.common.service.OnServiceDisconnectionBehavior
+import com.infomaniak.core.common.service.withBoundService
 import com.infomaniak.core.crossapplogin.back.internal.ChannelMessageHandler
 import com.infomaniak.core.crossapplogin.back.internal.DisposableMessage
 import com.infomaniak.core.crossapplogin.back.internal.certificates.AppCertificateChecker

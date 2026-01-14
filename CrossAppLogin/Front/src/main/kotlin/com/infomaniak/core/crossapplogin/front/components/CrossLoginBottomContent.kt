@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025-2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -89,7 +89,7 @@ import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.coroutines.launch
-import com.infomaniak.core.R as RCore
+import com.infomaniak.core.common.R as RCore
 
 private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
 private val FAB_SIZE = 64.dp
@@ -175,7 +175,12 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
                             onAccountsSelectionClicked = { showAccountsBottomSheet = true },
                             animatedButtonModifier = animatedButtonModifier,
-                            noCrossAppLoginAccountsContent = { noCrossAppLoginAccountsContent(animatedButtonModifier, customization) }
+                            noCrossAppLoginAccountsContent = {
+                                noCrossAppLoginAccountsContent(
+                                    animatedButtonModifier,
+                                    customization
+                                )
+                            }
                         )
                     } else {
                         ButtonNext(
@@ -364,7 +369,9 @@ private fun ConnectionButton(
         shape = primaryButtonType.shape,
         isLoginButtonLoading = isLoginButtonLoading,
         onClick = onClick,
-        modifier = modifier.height(primaryButtonType.height).testTag("button_login_onboarding"),
+        modifier = modifier
+            .height(primaryButtonType.height)
+            .testTag("button_login_onboarding"),
     )
 }
 

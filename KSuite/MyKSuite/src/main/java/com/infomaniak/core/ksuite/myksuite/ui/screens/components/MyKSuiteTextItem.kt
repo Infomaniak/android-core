@@ -34,8 +34,8 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
-import com.infomaniak.core.utils.format
+import com.infomaniak.core.common.utils.FORMAT_DATE_SIMPLE
+import com.infomaniak.core.common.utils.format
 import java.util.Date
 
 @Composable

@@ -101,7 +101,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 import kotlin.uuid.ExperimentalUuidApi
-import com.infomaniak.core.R as RCore
+import com.infomaniak.core.common.R as RCore
 import com.infomaniak.core.twofactorauth.back.R as RBack
 
 @Composable

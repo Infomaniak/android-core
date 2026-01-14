@@ -55,7 +55,7 @@ android {
 
 dependencies {
 
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":Sentry"))
 
     "standardImplementation"(core.integrity)

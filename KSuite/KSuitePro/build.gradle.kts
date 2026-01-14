@@ -50,7 +50,7 @@ android {
 
 dependencies {
 
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":KSuite"))
     implementation(project(":Ui:Compose:Basics"))
     implementation(project(":Ui:Compose:Margin"))

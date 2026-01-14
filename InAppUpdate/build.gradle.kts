@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":AppVersionChecker"))
     implementation(project(":Network"))
     implementation(project(":Sentry"))

@@ -57,7 +57,7 @@ android {
 dependencies {
     api(project(":TwoFactorAuth:Back"))
 
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":Avatar"))
     implementation(project(":Coil"))
     implementation(project(":Network"))
