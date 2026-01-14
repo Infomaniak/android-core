@@ -24,7 +24,6 @@ import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
@@ -173,7 +172,7 @@ class DynamicLazyMapTest {
     private suspend fun testSizeMatchesUsedElements(numberOfElements: Int) = coroutineScope {
         val map = DynamicLazyMap<String, Boolean>(coroutineScope = this, createElement = { Random.nextBoolean() })
         val keys = buildSet(numberOfElements) { repeat(numberOfElements) { add("$it") } }
-        val usedElements by StateFlow::value
+        val usedElements by map.usedElementsCount::value
 
         // Test with useElements
         assertEquals(expected = 0, actual = usedElements)

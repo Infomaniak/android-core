@@ -21,7 +21,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
@@ -45,8 +44,8 @@ class DynamicLazyMapCacheTest {
                     key.toString()
                 }
             )
-            val cacheSize by StateFlow::value
-            val totalElements by StateFlow::value
+            val cacheSize by map.cachedElementsCount::value
+            val totalElements by map.totalElementsCount::value
             createElementCallCount shouldBe 0
             totalElements shouldBe 0
             coroutineScope {
@@ -142,9 +141,9 @@ class DynamicLazyMapCacheTest {
                 key.toString()
             }
         )
-        val cacheSize by StateFlow::value
-        val usedElements by StateFlow::value
-        val totalElements by StateFlow::value
+        val cacheSize by map.cachedElementsCount::value
+        val usedElements by map.usedElementsCount::value
+        val totalElements by map.totalElementsCount::value
 
         // Test multiple concurrent calls to useElement
         coroutineScope {

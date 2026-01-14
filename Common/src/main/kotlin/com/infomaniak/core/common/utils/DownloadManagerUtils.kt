@@ -76,7 +76,7 @@ object DownloadManagerUtils {
 
     private fun Request.addHeaders(userAgent: String, extraHeaders: Iterable<Pair<String, String>>) {
         addRequestHeader("Accept-Encoding", "gzip")
-        addRequestHeader("App-Version", "Android ${appVersionName}")
+        addRequestHeader("App-Version", "Android $appVersionName")
         addRequestHeader("User-Agent", userAgent)
         extraHeaders.forEach { (key, value) -> addRequestHeader(key, value) }
     }
