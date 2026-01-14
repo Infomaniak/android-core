@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,13 +30,13 @@ import com.infomaniak.core.ksuite.myksuite.ui.screens.KSuiteApp
 import com.infomaniak.core.ksuite.myksuite.ui.screens.MyKSuiteUpgradeBottomSheet
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteXMLTheme
 import com.infomaniak.core.ksuite.myksuite.ui.utils.MyKSuiteUiUtils.DEEPLINK_BASE
-import com.infomaniak.core.utils.enumValueOfOrNull
+import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
 
     private val kSuiteApp by lazy {
-        arguments?.getString(K_SUITE_APP_KEY)?.let { app -> enumValueOfOrNull<KSuiteApp>(app) }
+        arguments?.getString(K_SUITE_APP_KEY)?.let { app -> Json.decodeFromString<KSuiteApp>(app) }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -60,6 +60,6 @@ class MyKSuiteUpgradeBottomSheetDialog : BottomSheetDialogFragment() {
     companion object {
         private const val K_SUITE_APP_KEY = "kSuiteApp" // Must kept the same value as the deepLink's in `my_ksuite_navigation`
 
-        internal fun getDeeplink(app: KSuiteApp) = "$DEEPLINK_BASE/myKSuiteUpgradeBottomSheet/${app.name}"
+        internal fun getDeeplink(app: KSuiteApp) = "$DEEPLINK_BASE/myKSuiteUpgradeBottomSheet/${Json.encodeToString(app)}"
     }
 }

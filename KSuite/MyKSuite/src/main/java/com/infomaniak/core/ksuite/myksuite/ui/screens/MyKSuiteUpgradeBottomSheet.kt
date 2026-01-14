@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package com.infomaniak.core.ksuite.myksuite.ui.screens
 
 import android.content.res.Configuration
 import android.os.Build.VERSION
-import android.os.Parcelable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,15 +47,15 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogWindowProvider
-import com.infomaniak.core.ui.compose.basics.ButtonType
-import com.infomaniak.core.ui.compose.basics.Typography
-import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.components.MyKSuitePrimaryButton
 import com.infomaniak.core.ksuite.myksuite.ui.screens.components.UpgradeFeature
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
-import kotlinx.parcelize.Parcelize
+import com.infomaniak.core.ui.compose.basics.ButtonType
+import com.infomaniak.core.ui.compose.basics.Typography
+import com.infomaniak.core.ui.compose.margin.Margin
+import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,14 +89,14 @@ private fun UpgradeBottomSheetContent(app: KSuiteApp, onButtonClicked: () -> Uni
 
         val paddedModifier = Modifier.padding(horizontal = Margin.Large)
         Image(
-            imageVector = ImageVector.vectorResource(R.drawable.illu_banner),
-            contentScale = ContentScale.FillWidth,
+            imageVector = ImageVector.vectorResource(app.bannerRes),
+            contentScale = if (app.isBannerStyle) ContentScale.FillWidth else ContentScale.None,
             contentDescription = null,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = if (app.isBannerStyle) Modifier.fillMaxWidth() else Modifier.padding(bottom = Margin.Huge),
         )
         Text(
             modifier = paddedModifier,
-            text = stringResource(R.string.myKSuiteUpgradeTitle),
+            text = stringResource(app.titleRes),
             textAlign = TextAlign.Center,
             style = Typography.h2,
             color = localColors.primaryTextColor,
@@ -105,7 +104,7 @@ private fun UpgradeBottomSheetContent(app: KSuiteApp, onButtonClicked: () -> Uni
         Spacer(Modifier.height(Margin.Medium))
         Text(
             modifier = paddedModifier,
-            text = stringResource(R.string.myKSuiteUpgradeDescription),
+            text = stringResource(app.descriptionRes),
             style = Typography.bodyRegular,
             color = localColors.secondaryTextColor,
         )
@@ -114,7 +113,7 @@ private fun UpgradeBottomSheetContent(app: KSuiteApp, onButtonClicked: () -> Uni
         Spacer(Modifier.height(Margin.Large))
         Text(
             modifier = paddedModifier,
-            text = stringResource(R.string.myKSuiteUpgradeDetails),
+            text = stringResource(app.detailsRes),
             style = Typography.bodyRegular,
             color = localColors.secondaryTextColor,
         )
@@ -144,19 +143,41 @@ private fun UpgradeFeatures(app: KSuiteApp, modifier: Modifier) {
     }
 }
 
-@Parcelize
-enum class KSuiteApp(
+@Serializable
+sealed class KSuiteApp(
     internal val features: List<MyKSuiteUpgradeFeatures>,
     internal val buttonStyle: ButtonType,
-) : Parcelable {
-    Mail(
+) {
+    // Cannot use 'open' val because of https://youtrack.jetbrains.com/issue/KT-38958
+    abstract val titleRes: Int
+    abstract val descriptionRes: Int
+    abstract val detailsRes: Int
+    abstract val bannerRes: Int
+    abstract val isBannerStyle: Boolean
+
+    @Serializable
+    data class Mail(
+        override val titleRes: Int = R.string.myKSuiteUpgradeTitle,
+        override val descriptionRes: Int = R.string.myKSuiteUpgradeDescription,
+        override val detailsRes: Int = R.string.myKSuiteUpgradeDetails,
+        override val bannerRes: Int = R.drawable.illu_banner,
+        override val isBannerStyle: Boolean = true
+    ) : KSuiteApp(
         features = listOf(MyKSuiteUpgradeFeatures.MailUnlimitedFeature, MyKSuiteUpgradeFeatures.MailOtherFeature),
         buttonStyle = ButtonType.Mail,
-    ),
-    Drive(
+    )
+
+    @Serializable
+    data object Drive : KSuiteApp(
         features = listOf(MyKSuiteUpgradeFeatures.DriveStorageFeature, MyKSuiteUpgradeFeatures.DriveDropboxFeature),
         buttonStyle = ButtonType.Drive,
-    ),
+    ) {
+        override val titleRes = R.string.myKSuiteUpgradeTitle
+        override val descriptionRes = R.string.myKSuiteUpgradeDescription
+        override val detailsRes = R.string.myKSuiteUpgradeDetails
+        override val bannerRes = R.drawable.illu_banner
+        override val isBannerStyle = true
+    }
 }
 
 @Preview(name = "(1) Light")
@@ -165,7 +186,7 @@ enum class KSuiteApp(
 private fun Preview() {
     MyKSuiteTheme {
         Surface {
-            UpgradeBottomSheetContent(app = KSuiteApp.Mail, onButtonClicked = {})
+            UpgradeBottomSheetContent(app = KSuiteApp.Mail(), onButtonClicked = {})
         }
     }
 }
