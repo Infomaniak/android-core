@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.invoke
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
@@ -75,7 +76,7 @@ internal class CrossAppLoginImpl(
     private val ipcIssuesManager: IpcIssuesManager = IpcIssuesManagerImpl
 
     @ExperimentalSerializationApi
-    override fun accountsFromOtherApps(hostLifecycle: Lifecycle): Flow<List<ExternalAccount>> = channelFlow {
+    override fun accountsFromOtherApps(hostLifecycle: Lifecycle): Flow<AccountsFromOtherApps> = channelFlow {
 
         val isStartedFlow = hostLifecycle.currentStateFlow.map { it.isAtLeast(Lifecycle.State.STARTED) }.stateIn(this)
 
@@ -94,7 +95,7 @@ internal class CrossAppLoginImpl(
 
         targetPackageNames.collectLatest { packages ->
             if (packages.isEmpty()) {
-                send(emptyList())
+                send(AccountsFromOtherApps(emptyList()))
                 return@collectLatest
             }
 
@@ -106,17 +107,31 @@ internal class CrossAppLoginImpl(
                 // Lazy start to not send an empty list before the first available responds.
                 val alreadyConnectedEmailsUpdatingJob = launch(start = CoroutineStart.LAZY) {
                     alreadyConnectedEmailsFlow.collect { alreadyConnectedEmails ->
-                        send(accountsFlow.updateAndGet { it.withAccounts(emptyList(), alreadyConnectedEmails) })
+                        val accountsFromOtherApps = AccountsFromOtherApps(
+                            accounts = accountsFlow.updateAndGet { it.withAccounts(emptyList(), alreadyConnectedEmails) },
+                            allAppsChecked = false
+                        )
+                        send(accountsFromOtherApps)
                     }
                 }
 
-                packages.forEach { targetPackage ->
+                packages.map { targetPackage ->
                     launch {
                         val accounts = retrieveAccountsFromApp(targetPackage)
-                        send(accountsFlow.updateAndGet { it.withAccounts(accounts, alreadyConnectedEmailsFlow.value) })
+                        val accountsFromOtherApps = AccountsFromOtherApps(
+                            accounts = accountsFlow.updateAndGet { it.withAccounts(accounts, alreadyConnectedEmailsFlow.value) },
+                            allAppsChecked = false
+                        )
+                        send(accountsFromOtherApps)
                         alreadyConnectedEmailsUpdatingJob.start() // At least one app responded, we can now have this job run.
                     }
-                }
+                }.joinAll()
+                alreadyConnectedEmailsUpdatingJob.join()
+                val finalAccountsFromOtherApps = AccountsFromOtherApps(
+                    accounts = accountsFlow.value,
+                    allAppsChecked = true
+                )
+                send(finalAccountsFromOtherApps)
             }
         }
     }.flowOn(Dispatchers.Default).conflate()
