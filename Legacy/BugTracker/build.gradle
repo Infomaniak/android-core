@@ -36,6 +36,15 @@ dependencies {
     implementation project(':Core:Legacy')
 }
 
+// Workaround for Gradle/AGP strict task dependency validation.
+// Since Core is now included as a composite build while Legacy is still part of the main build,
+// LintModelWriterTask may read outputs from :Core:prepareLintJarForPublish without an explicit
+// dependency, which causes CI failures with Gradle 8+.
+//
+// This enforces the correct task execution order and keeps the build deterministic.
+//
+// TODO[AGP9-Core]: Remove this workaround once Legacy is migrated to the new Core,
+//  or re-evaluate after upgrading to AGP 9 if Legacy is still in use.
 tasks.matching { it.name == "generateDebugLintModel" }.configureEach {
     dependsOn(":Core:prepareLintJarForPublish")
 }
