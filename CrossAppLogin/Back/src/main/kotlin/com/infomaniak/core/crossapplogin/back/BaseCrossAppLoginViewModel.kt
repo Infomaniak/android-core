@@ -42,6 +42,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -59,13 +60,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
 import okhttp3.OkHttpClient
+import kotlin.time.Duration.Companion.seconds
 import com.infomaniak.core.common.R as RCore
 import com.infomaniak.core.network.R as RCoreNetwork
 
 abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
 
-    private val _availableAccounts = MutableStateFlow<List<ExternalAccount>?>(null)
-    val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow().mapSync { it ?: emptyList() }
+    private val _availableAccounts = MutableStateFlow<CrossAppLogin.AccountsFromOtherApps?>(null)
+    val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow().mapSync {
+        it?.accounts ?: emptyList()
+    }
+
     val skippedAccountIds = MutableStateFlow(emptySet<Long>())
 
     val accountsCheckingState: StateFlow<AccountsCheckingState> = accountsCheckingStateFlow().stateIn(
@@ -101,7 +106,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
         // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
         if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) {
-            _availableAccounts.emit(emptyList())
+            _availableAccounts.emit(CrossAppLogin.AccountsFromOtherApps.none())
             awaitCancellation()
         }
 
@@ -115,7 +120,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         )
         isCrossAppLoginEnabledFlow.collectLatest { isEnabled ->
             if (!isEnabled) {
-                _availableAccounts.value = emptyList()
+                _availableAccounts.value = CrossAppLogin.AccountsFromOtherApps.none()
                 return@collectLatest
             }
             if (singleSelection) launch { keepSingleSelection() }
@@ -157,10 +162,15 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         val stateFlow = MutableStateFlow(AccountsCheckingState(status = Checking))
         send(stateFlow.value)
 
-        _availableAccounts.collectLatest { accounts ->
+        _availableAccounts.collectLatest { accountsFromOtherApps ->
+            val accounts = accountsFromOtherApps?.accounts
             when {
                 accounts == null -> return@collectLatest send(AccountsCheckingState(status = Checking))
-                accounts.isEmpty() -> return@collectLatest send(AccountsCheckingState(status = UpToDate))
+                accounts.isEmpty() -> {
+                    // Set the up-to-date status only if one app responds significantly slower than the one that replied before.
+                    if (accountsFromOtherApps.waitingForMoreApps) delay(1.seconds)
+                    return@collectLatest send(AccountsCheckingState(status = UpToDate))
+                }
             }
 
             val errorIfAny = MutableStateFlow<Error?>(null)
