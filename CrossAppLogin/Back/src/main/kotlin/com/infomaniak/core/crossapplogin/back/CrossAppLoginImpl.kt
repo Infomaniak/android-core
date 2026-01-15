@@ -129,10 +129,7 @@ internal class CrossAppLoginImpl(
                     }
                 }.joinAll()
                 waitingForMoreApps = false
-                val finalAccountsFromOtherApps = AccountsFromOtherApps(
-                    accounts = accountsFlow.value,
-                    waitingForMoreApps = false
-                )
+                val finalAccountsFromOtherApps = AccountsFromOtherApps(accounts = accountsFlow.value, waitingForMoreApps = false)
                 send(finalAccountsFromOtherApps)
             }
         }
