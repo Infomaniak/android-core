@@ -168,7 +168,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
                 accounts == null -> return@collectLatest send(AccountsCheckingState(status = Checking))
                 accounts.isEmpty() -> {
                     // Set the up-to-date status only if one app responds significantly slower than the one that replied before.
-                    if (accountsFromOtherApps.waitingForMoreApps) delay(2.seconds)
+                    if (accountsFromOtherApps.waitingForMoreApps) delay(1.seconds)
                     return@collectLatest send(AccountsCheckingState(status = UpToDate))
                 }
             }
