@@ -61,6 +61,7 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
 import splitties.init.appCtx
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -95,7 +96,7 @@ internal class CrossAppLoginImpl(
 
         targetPackageNames.collectLatest { packages ->
             if (packages.isEmpty()) {
-                send(AccountsFromOtherApps(emptyList()))
+                send(AccountsFromOtherApps.none())
                 return@collectLatest
             }
 
@@ -103,13 +104,14 @@ internal class CrossAppLoginImpl(
                 if (isStarted.not()) return@collectLatest
 
                 val accountsFlow = MutableStateFlow(emptyList<ExternalAccount>())
+                var waitingForMoreApps = true
 
                 // Lazy start to not send an empty list before the first available responds.
                 val alreadyConnectedEmailsUpdatingJob = launch(start = CoroutineStart.LAZY) {
                     alreadyConnectedEmailsFlow.collect { alreadyConnectedEmails ->
                         val accountsFromOtherApps = AccountsFromOtherApps(
                             accounts = accountsFlow.updateAndGet { it.withAccounts(emptyList(), alreadyConnectedEmails) },
-                            allAppsChecked = false
+                            waitingForMoreApps = waitingForMoreApps
                         )
                         send(accountsFromOtherApps)
                     }
@@ -120,16 +122,16 @@ internal class CrossAppLoginImpl(
                         val accounts = retrieveAccountsFromApp(targetPackage)
                         val accountsFromOtherApps = AccountsFromOtherApps(
                             accounts = accountsFlow.updateAndGet { it.withAccounts(accounts, alreadyConnectedEmailsFlow.value) },
-                            allAppsChecked = false
+                            waitingForMoreApps = true
                         )
                         send(accountsFromOtherApps)
                         alreadyConnectedEmailsUpdatingJob.start() // At least one app responded, we can now have this job run.
                     }
                 }.joinAll()
-                alreadyConnectedEmailsUpdatingJob.join()
+                waitingForMoreApps = false
                 val finalAccountsFromOtherApps = AccountsFromOtherApps(
                     accounts = accountsFlow.value,
-                    allAppsChecked = true
+                    waitingForMoreApps = false
                 )
                 send(finalAccountsFromOtherApps)
             }

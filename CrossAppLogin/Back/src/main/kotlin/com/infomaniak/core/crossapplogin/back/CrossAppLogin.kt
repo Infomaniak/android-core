@@ -47,8 +47,12 @@ sealed class CrossAppLogin {
 
     internal data class AccountsFromOtherApps(
         val accounts: List<ExternalAccount>,
-        val allAppsChecked: Boolean = true,
-    )
+        val waitingForMoreApps: Boolean,
+    ) {
+        companion object {
+            fun none() = AccountsFromOtherApps(emptyList(), waitingForMoreApps = false)
+        }
+    }
 
     /**
      * Gives an id for this device, that is shared across all our apps.

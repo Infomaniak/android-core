@@ -106,7 +106,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
         // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
         if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) {
-            _availableAccounts.emit(CrossAppLogin.AccountsFromOtherApps(emptyList()))
+            _availableAccounts.emit(CrossAppLogin.AccountsFromOtherApps.none())
             awaitCancellation()
         }
 
@@ -120,7 +120,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         )
         isCrossAppLoginEnabledFlow.collectLatest { isEnabled ->
             if (!isEnabled) {
-                _availableAccounts.value = CrossAppLogin.AccountsFromOtherApps(emptyList())
+                _availableAccounts.value = CrossAppLogin.AccountsFromOtherApps.none()
                 return@collectLatest
             }
             if (singleSelection) launch { keepSingleSelection() }
@@ -167,10 +167,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
             when {
                 accounts == null -> return@collectLatest send(AccountsCheckingState(status = Checking))
                 accounts.isEmpty() -> {
-                    val allAppsChecked = accountsFromOtherApps.allAppsChecked
-                    if (!allAppsChecked) {
-                        delay(2.seconds) // Give 2 more seconds for another app to possibly return accounts
-                    }
+                    // Set the up-to-date status only if one app responds significantly slower than the one that replied before.
+                    if (accountsFromOtherApps.waitingForMoreApps) delay(2.seconds)
                     return@collectLatest send(AccountsCheckingState(status = UpToDate))
                 }
             }
