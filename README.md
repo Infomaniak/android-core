@@ -61,7 +61,7 @@ Core modules are declared using **Maven coordinates**, but resolved locally.
 
 ```kotlin
 dependencies {
-    implementation("com.infomaniak.core:Core")
+    implementation("com.infomaniak.core:Common")
     implementation("com.infomaniak.core:TwoFactorAuth.Front")
 }
 ```
