@@ -38,7 +38,7 @@ import java.io.File
  *
  * To depend on the **Core** root module itself, use a dependency notation like this:
  *
- * `com.infomaniak.core:Core`
+ * `com.infomaniak.core:Common`
  *
  * The `:` separators from the Core project path must be written using **dots** in the artifact name:
  *
@@ -161,7 +161,7 @@ class CoreCompositePlugin : Plugin<Settings> {
                 val req = requested
                 if (req is ModuleComponentSelector && req.group == "com.infomaniak.core") {
                     val artifact = req.module
-                    val projectPath = if (artifact == "Core") ":" else ":${artifact.replace('.', ':')}"
+                    val projectPath = if (artifact == "Core") ":Common" else ":${artifact.replace('.', ':')}"
 
                     if (alreadyLogged.add(req.toString())) {
                         println("Substituting $req -> project($projectPath)")
