@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
 }
@@ -48,7 +48,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Ui:Compose:Margin"))
+    implementation(project(":Ui:Compose:Margin"))
 
     implementation(platform(core.compose.bom))
     implementation(core.compose.material3)

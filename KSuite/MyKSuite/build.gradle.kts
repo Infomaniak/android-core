@@ -1,15 +1,15 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
     alias(core.plugins.ksp)
     kotlin("plugin.parcelize")
-    kotlin("plugin.serialization")
+    alias(core.plugins.kotlin.serialization)
     alias(core.plugins.navigation.safeargs)
 }
 
 val coreCompileSdk: Int by rootProject.extra
-val legacyMinSdk: Int by rootProject.extra
+val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
@@ -18,7 +18,7 @@ android {
     compileSdk = coreCompileSdk
 
     defaultConfig {
-        minSdk = legacyMinSdk
+        minSdk = coreMinSdk
 
         consumerProguardFiles("consumer-rules.pro")
 
@@ -56,14 +56,14 @@ android {
 
 dependencies {
 
-    implementation(project(":Core"))
-    implementation(project(":Core:Avatar"))
-    implementation(project(":Core:Coil"))
-    implementation(project(":Core:Ui:Compose:Basics"))
-    implementation(project(":Core:Ui:Compose:Margin"))
-    implementation(project(":Core:Ui:Compose:MaterialThemeFromXml"))
-    implementation(project(":Core:KSuite"))
-    implementation(project(":Core:Network")) // To access API URL
+    implementation(project(":Common"))
+    implementation(project(":Avatar"))
+    implementation(project(":Coil"))
+    implementation(project(":KSuite"))
+    implementation(project(":Network")) // To access API URL
+    implementation(project(":Ui:Compose:Basics"))
+    implementation(project(":Ui:Compose:Margin"))
+    implementation(project(":Ui:Compose:MaterialThemeFromXml"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.material)

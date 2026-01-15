@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
-    kotlin("plugin.serialization")
+    alias(core.plugins.kotlin.serialization)
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -55,8 +55,8 @@ android {
 
 dependencies {
 
-    implementation(project(":Core:Sentry"))
-    implementation(project(":Core"))
+    implementation(project(":Common"))
+    implementation(project(":Sentry"))
 
     "standardImplementation"(core.integrity)
     implementation(core.ktor.client.core)

@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.platform.LocalResources
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.infomaniak.core.isStartedFlow
-import com.infomaniak.core.time.timeToNextMinute
+import com.infomaniak.core.common.isStartedFlow
+import com.infomaniak.core.common.time.timeToNextMinute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import splitties.coroutines.repeatWhileActive

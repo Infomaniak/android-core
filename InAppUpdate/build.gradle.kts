@@ -1,9 +1,9 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
     alias(core.plugins.navigation.safeargs)
-    kotlin("plugin.serialization")
+    alias(core.plugins.kotlin.serialization)
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -50,14 +50,14 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core"))
-    implementation(project(":Core:AppVersionChecker"))
-    implementation(project(":Core:Ui"))
-    implementation(project(":Core:Ui:Compose:BottomStickyButtonScaffolds"))
-    implementation(project(":Core:Ui:Compose:Margin"))
-    implementation(project(":Core:Ui:View"))
-    implementation(project(":Core:Network"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":Common"))
+    implementation(project(":AppVersionChecker"))
+    implementation(project(":Network"))
+    implementation(project(":Sentry"))
+    implementation(project(":Ui"))
+    implementation(project(":Ui:Compose:BottomStickyButtonScaffolds"))
+    implementation(project(":Ui:Compose:Margin"))
+    implementation(project(":Ui:View"))
 
     implementation(core.androidx.concurrent.futures.ktx)
     implementation(core.androidx.datastore.preferences)

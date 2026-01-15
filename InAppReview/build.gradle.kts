@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
 }
 
@@ -50,10 +50,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core"))
-    implementation(project(":Core:WebView"))
-    implementation(project(":Core:Sentry"))
-    implementation(project(":Core:Ui:View"))
+    implementation(project(":Common"))
+    implementation(project(":Sentry"))
+    implementation(project(":Ui:View"))
+    implementation(project(":WebView"))
 
     "standardImplementation"(core.play.review)
     "standardImplementation"(core.play.review.ktx)

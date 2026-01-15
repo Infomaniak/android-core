@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
-    kotlin("plugin.serialization")
+    alias(core.plugins.kotlin.serialization)
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Ui:Compose:MaterialThemeFromXml"))
+    implementation(project(":Ui:Compose:MaterialThemeFromXml"))
 
     implementation(platform(core.compose.bom))
     implementation(core.compose.ui)

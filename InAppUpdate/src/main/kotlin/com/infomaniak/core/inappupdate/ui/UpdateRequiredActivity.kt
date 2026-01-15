@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
-import com.infomaniak.core.extensions.clearStack
-import com.infomaniak.core.extensions.goToAppStore
+import com.infomaniak.core.common.extensions.clearStack
+import com.infomaniak.core.common.extensions.goToAppStore
 import com.infomaniak.core.inappupdate.R
 import com.infomaniak.core.inappupdate.databinding.ActivityUpdateRequiredBinding
 import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager

@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
  */
 package com.infomaniak.core.crossapplogin.back
 
-import com.infomaniak.core.Xor
 import com.infomaniak.core.appintegrity.exceptions.IntegrityException
+import com.infomaniak.core.common.Xor
 import com.infomaniak.lib.login.ApiToken
 import okhttp3.Response
 

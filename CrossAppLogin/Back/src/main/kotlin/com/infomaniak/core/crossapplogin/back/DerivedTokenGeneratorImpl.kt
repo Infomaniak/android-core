@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +18,15 @@
 package com.infomaniak.core.crossapplogin.back
 
 import android.content.pm.PackageManager
-import com.infomaniak.core.DynamicLazyMap
-import com.infomaniak.core.Xor
 import com.infomaniak.core.appintegrity.AppIntegrityManager
 import com.infomaniak.core.appintegrity.AppIntegrityManager.Companion.APP_INTEGRITY_MANAGER_TAG
 import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.FDroidUnsupportedIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
-import com.infomaniak.core.cancellable
+import com.infomaniak.core.common.DynamicLazyMap
+import com.infomaniak.core.common.Xor
+import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.network.api.ApiController
 import com.infomaniak.core.network.utils.await

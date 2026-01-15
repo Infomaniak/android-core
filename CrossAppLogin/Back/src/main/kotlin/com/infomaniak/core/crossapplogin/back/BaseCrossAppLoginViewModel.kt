@@ -20,16 +20,16 @@ package com.infomaniak.core.crossapplogin.back
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infomaniak.core.DynamicLazyMap
-import com.infomaniak.core.Xor
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.api.ApiRoutesCore.TOKEN_URL
-import com.infomaniak.core.cancellable
-import com.infomaniak.core.completableScope
+import com.infomaniak.core.common.DynamicLazyMap
+import com.infomaniak.core.common.Xor
+import com.infomaniak.core.common.cancellable
+import com.infomaniak.core.common.completableScope
+import com.infomaniak.core.common.mapSync
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus.*
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
-import com.infomaniak.core.mapSync
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import com.infomaniak.core.network.networking.HttpClient.addCache
 import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
@@ -61,7 +61,7 @@ import kotlinx.coroutines.plus
 import kotlinx.serialization.ExperimentalSerializationApi
 import okhttp3.OkHttpClient
 import kotlin.time.Duration.Companion.seconds
-import com.infomaniak.core.R as RCore
+import com.infomaniak.core.common.R as RCore
 import com.infomaniak.core.network.R as RCoreNetwork
 
 abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {

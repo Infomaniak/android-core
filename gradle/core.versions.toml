@@ -1,6 +1,7 @@
 [versions]
 activityCompose = "1.10.1" # TODO: Update to 1.11.0 or later after we bump compileSdk to 36
 adaptive = "1.2.0"
+agp = "8.13.0" # Delete this to-do on agp 9+ after searching and checking the project for the following: TODO[AGP9
 androidLogin = "3.1.9"
 androidxCollection = "1.5.0"
 androidxCore = "1.16.0" # TODO: Update to 1.17.0 or later after we bump compileSdk to 36
@@ -120,6 +121,7 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 matomo = { module = "com.github.matomo-org:matomo-sdk-android", version.ref = "matomo" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
+navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 play-app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
@@ -156,8 +158,10 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 
 [plugins]
-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "kotlin-parcelize" }

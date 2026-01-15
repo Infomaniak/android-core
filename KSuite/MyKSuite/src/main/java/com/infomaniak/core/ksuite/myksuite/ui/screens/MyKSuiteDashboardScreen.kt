@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,10 +66,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.avatar.components.Avatar
-import com.infomaniak.core.ui.compose.basics.Dimens
-import com.infomaniak.core.ui.compose.basics.Typography
-import com.infomaniak.core.ui.compose.margin.Margin
-import com.infomaniak.core.extensions.openUrl
+import com.infomaniak.core.common.extensions.openUrl
+import com.infomaniak.core.common.utils.FORMAT_DATE_SIMPLE
+import com.infomaniak.core.common.utils.format
 import com.infomaniak.core.ksuite.myksuite.R
 import com.infomaniak.core.ksuite.myksuite.ui.components.MyKSuiteChip
 import com.infomaniak.core.ksuite.myksuite.ui.components.MyKSuitePrimaryButton
@@ -87,8 +86,9 @@ import com.infomaniak.core.ksuite.myksuite.ui.screens.components.UpgradeFeature
 import com.infomaniak.core.ksuite.myksuite.ui.theme.LocalMyKSuiteColors
 import com.infomaniak.core.ksuite.myksuite.ui.theme.MyKSuiteTheme
 import com.infomaniak.core.ksuite.ui.components.kSuiteGradient
-import com.infomaniak.core.utils.FORMAT_DATE_SIMPLE
-import com.infomaniak.core.utils.format
+import com.infomaniak.core.ui.compose.basics.Dimens
+import com.infomaniak.core.ui.compose.basics.Typography
+import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens as KSuiteDimens
