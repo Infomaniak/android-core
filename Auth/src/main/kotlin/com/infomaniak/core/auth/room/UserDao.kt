@@ -52,6 +52,9 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE id LIKE (:id) LIMIT 1")
     suspend fun findById(id: Int): User?
 
+    @Query("SELECT * FROM user WHERE id LIKE (:id) LIMIT 1")
+    suspend fun findByIdFlow(id: Int): Flow<User?>
+
     @Query("SELECT * FROM user WHERE firstname LIKE (:firstName) AND lastname LIKE (:lastName) LIMIT 1")
     suspend fun findByName(firstName: String, lastName: String): User?
 
