@@ -19,6 +19,7 @@
 
 package com.infomaniak.core.auth.room
 
+import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
@@ -63,8 +64,10 @@ abstract class UserDatabase internal constructor() : RoomDatabase() {
         fun getDatabase(): UserDatabase = instance
 
         @PublishedApi
-        internal val instance = Room.databaseBuilder<UserDatabase>(
-            context = appCtx,
+        internal val instance = instantiateDataBase(appCtx)
+
+        fun instantiateDataBase(context: Context): UserDatabase = Room.databaseBuilder<UserDatabase>(
+            context = context,
             name = "user_database"
         ).apply {
             enableMultiInstanceInvalidation()
