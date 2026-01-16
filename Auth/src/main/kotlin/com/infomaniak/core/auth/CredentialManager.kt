@@ -39,8 +39,8 @@ abstract class CredentialManager : UserExistenceChecker {
 
     //region User
     protected abstract val userDatabase: UserDatabase
-    abstract var currentUserId: Int
-    abstract var currentUser: User?
+    abstract val currentUserId: Int
+    abstract val currentUser: User?
 
     /**
      * Get users, and their informations / tokens in a JSON format
@@ -53,7 +53,8 @@ abstract class CredentialManager : UserExistenceChecker {
         user?.let {
             it.apiToken = apiToken
             userDatabase.userDao().update(it)
-            if (currentUserId == it.id) currentUser = it
+            // TODO: Fix thanks to currentUser being a Flow
+            // if (currentUserId == it.id) currentUser = it
         }
     }
 
