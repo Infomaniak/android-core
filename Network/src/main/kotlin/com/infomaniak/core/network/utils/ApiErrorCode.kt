@@ -31,7 +31,14 @@ interface ErrorCodeTranslated {
 data class ApiErrorCode(override val code: String, @StringRes override val translateRes: Int) : ErrorCodeTranslated {
     companion object {
         @StringRes
-        fun <T> ApiResponse<T>.translateError(): Int = formatError().translateRes
+        fun <T> ApiResponse<T>.translateError(defaultMessage: Int? = null): Int {
+            val error = formatError()
+            return if (error == InternalTranslatedErrorCode.UnknownError && defaultMessage != null) {
+                defaultMessage
+            } else {
+                error.translateRes
+            }
+        }
 
         fun <T> ApiResponse<T>.formatError(): ErrorCodeTranslated {
             val errorCode = error?.code
