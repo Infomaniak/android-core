@@ -19,37 +19,46 @@ package com.infomaniak.core.auth
 
 import android.content.Context
 import androidx.annotation.CallSuper
-import com.infomaniak.core.AssociatedUserDataCleanable
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.AssociatedUserDataCleanable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 
-// TODO: Find the name we always use
 private const val NO_USER = -1
 
 abstract class AccountUtilsCommon(
-    private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     context: Context,
+    private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(), // TODO: Needs dependency on Core:Common
 ) : CredentialManager() {
-    override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context)
+    final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context)
 
-    abstract val currentUserIdFlow: StateFlow<Int?>
-    abstract val currentUserFlow: StateFlow<User?> = currentUserIdFlow.map {
-        getUserById()
+    abstract val currentUserIdFlow: Flow<Int?>
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentUserFlow: Flow<User?> = currentUserIdFlow.flatMapLatest { userId ->
+        userId?.let { getUserFlowById(it) } ?: flow { null }
     }
 
-    override val currentUser: User? get() = currentUserFlow.value
-    override val currentUserId: Int get() = currentUserIdFlow.value ?: NO_USER
+    @Deprecated("Use currentUserFlow instead")
+    final override val currentUser: User? get() = null
+
+    @Deprecated("Use currentUserIdFlow instead")
+    final override val currentUserId: Int get() = NO_USER
 
     @CallSuper
-    open suspend fun addUser() {
-        userDatabase
+    open suspend fun addUser(user: User) {
+        val userId = user.id.toLong()
+        userDataCleanableList.forEach { it.resetForUser(userId) }
+        userDatabase.userDao().insert(user)
     }
 
     @CallSuper
-    open suspend fun removeUser() {
-
+    open suspend fun removeUser(user: User) { // TODO: Only take a user id as input. Nothing else is needed
+        val userId = user.id.toLong()
+        userDataCleanableList.forEach { it.resetForUser(userId) }
+        userDatabase.userDao().delete(user)
     }
 }
