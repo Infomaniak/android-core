@@ -23,6 +23,7 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.network.networking.HttpClientConfig
 import com.infomaniak.lib.login.ApiToken
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import okhttp3.Cache
@@ -32,6 +33,9 @@ import java.util.concurrent.TimeUnit
 
 /**
  * CredentialManager interface : Implement the essential methods to get Users and their Credentials to pass
+ *
+ * It's now recommended to use [AccountUtilsCommon] or [PersistedUserIdAccountUtils] instead. These classes do not support
+ * [currentUserId] and [currentUser] anymore.
  */
 abstract class CredentialManager : UserExistenceChecker {
 
@@ -59,6 +63,7 @@ abstract class CredentialManager : UserExistenceChecker {
     }
 
     suspend fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
+    suspend fun getUserFlowById(id: Int): Flow<User?> = userDatabase.userDao().findByIdFlow(id)
     //endregion
 
     //region HttpClient

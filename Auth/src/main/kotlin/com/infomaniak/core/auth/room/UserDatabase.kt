@@ -56,6 +56,7 @@ import splitties.init.appCtx
 abstract class UserDatabase internal constructor() : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+    abstract fun currentUserIdDao(): CurrentUserIdDao
 
     companion object {
 
