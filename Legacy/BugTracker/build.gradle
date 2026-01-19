@@ -32,6 +32,7 @@ dependencies {
     // To access API URL
     // New Core via composite build: will be substituted to the included build project
     implementation("com.infomaniak.core:Network")
+    implementation("com.infomaniak.core:File")
 
     implementation project(':Core:Legacy')
 
