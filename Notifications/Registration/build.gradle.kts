@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
-    kotlin("plugin.serialization")
+    alias(core.plugins.kotlin.serialization)
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -55,10 +55,10 @@ dependencies {
     api(core.androidx.work.runtime.ktx)
     api(core.okhttp)
 
-    implementation(project(":Core"))
-    implementation(project(":Core:Auth"))
-    implementation(project(":Core:Network:Ktor"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":Common"))
+    implementation(project(":Auth"))
+    implementation(project(":Network:Ktor"))
+    implementation(project(":Sentry"))
 
     implementation(core.firebase.messaging.ktx)
     implementation(core.androidx.core.ktx)

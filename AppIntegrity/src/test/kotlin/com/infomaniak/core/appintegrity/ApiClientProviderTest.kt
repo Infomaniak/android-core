@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2024-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ package com.infomaniak.core.appintegrity
 
 import com.infomaniak.core.appintegrity.exceptions.UnknownException
 import com.infomaniak.core.appintegrity.models.ApiResponse
-import com.infomaniak.core.cancellable
+import com.infomaniak.core.common.cancellable
 import io.ktor.client.call.body
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond

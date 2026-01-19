@@ -1,6 +1,8 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'androidx.navigation.safeargs.kotlin'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    alias(core.plugins.navigation.safeargs)
+}
 
 def legacyCompileSdk = rootProject.ext["legacyCompileSdk"]
 def legacyMinSdk = rootProject.ext["legacyMinSdk"]

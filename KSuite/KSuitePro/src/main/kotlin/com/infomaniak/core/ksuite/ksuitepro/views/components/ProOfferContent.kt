@@ -59,7 +59,7 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ksuite.data.KSuite
 import com.infomaniak.core.ksuite.ksuitepro.R
 import com.infomaniak.core.ksuite.ksuitepro.data.ProFeature
-import com.infomaniak.core.R as RCore
+import com.infomaniak.core.common.R as RCore
 
 @Composable
 fun ProOfferContent(

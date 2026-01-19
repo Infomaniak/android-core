@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import com.infomaniak.core.extensions.appName
+import com.infomaniak.core.common.extensions.appName
 import com.infomaniak.core.inappupdate.R
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.DoubleStackedButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin

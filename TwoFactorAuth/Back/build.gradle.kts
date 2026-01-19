@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
-    kotlin("plugin.serialization")
+    alias(core.plugins.kotlin.serialization)
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -54,10 +54,10 @@ dependencies {
     api(core.kotlinx.coroutines.core)
     api(core.okhttp)
 
-    implementation(project(":Core"))
-    implementation(project(":Core:Network"))
-    implementation(project(":Core:Notifications"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":Common"))
+    implementation(project(":Network"))
+    implementation(project(":Notifications"))
+    implementation(project(":Sentry"))
 
     implementation(core.androidx.core.ktx)
     implementation(core.androidx.lifecycle.process)

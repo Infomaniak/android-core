@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@ package com.infomaniak.core.crossapplogin.back.internal.deviceinfo
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.core.util.AtomicFile
-import com.infomaniak.core.AssociatedUserDataCleanable
-import com.infomaniak.core.allConcurrent
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.AssociatedUserDataCleanable
+import com.infomaniak.core.common.allConcurrent
+import com.infomaniak.core.common.extensions.write
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin
-import com.infomaniak.core.extensions.write
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.collectLatest

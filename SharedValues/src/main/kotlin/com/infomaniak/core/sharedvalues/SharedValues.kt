@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2025 Infomaniak Network SA
+ * Copyright (C) 2023-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ package com.infomaniak.core.sharedvalues
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.infomaniak.core.utils.enumValueOfOrNull
+import com.infomaniak.core.common.utils.enumValueOfOrNull
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.properties.ReadWriteProperty

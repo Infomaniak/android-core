@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.compose.compiler)
     kotlin("plugin.parcelize")
-    kotlin("plugin.serialization")
     alias(core.plugins.ksp)
+    alias(core.plugins.kotlin.serialization)
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -47,9 +47,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core"))
-    implementation(project(":Core:Network"))
-    implementation(project(":Core:Sentry"))
+    implementation(project(":Common"))
+    implementation(project(":Network"))
+    implementation(project(":Sentry"))
 
     implementation(platform(core.compose.bom))
     implementation(core.compose.runtime)

@@ -38,7 +38,7 @@ abstract class CredentialManager : UserExistenceChecker {
     override suspend fun isUserAlreadyPresent(userId: Int): Boolean = getUserById(userId) != null
 
     //region User
-    protected abstract var userDatabase: UserDatabase
+    protected abstract val userDatabase: UserDatabase
     abstract var currentUserId: Int
     abstract var currentUser: User?
 

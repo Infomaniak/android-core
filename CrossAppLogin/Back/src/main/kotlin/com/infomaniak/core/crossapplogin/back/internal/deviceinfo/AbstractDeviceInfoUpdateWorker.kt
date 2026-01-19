@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,11 +32,11 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.await
-import com.infomaniak.core.DynamicLazyMap
+import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.auth.api.ApiRoutesCore
 import com.infomaniak.core.auth.room.UserDatabase
-import com.infomaniak.core.autoCancelScope
-import com.infomaniak.core.cancellable
+import com.infomaniak.core.common.autoCancelScope
+import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfo.Type
 import com.infomaniak.core.sentry.SentryLog

@@ -22,9 +22,9 @@ package com.infomaniak.core.twofactorauth.back
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.eventFlow
-import com.infomaniak.core.Xor
-import com.infomaniak.core.emitFirstsUntilSecond
-import com.infomaniak.core.rateLimit
+import com.infomaniak.core.common.Xor
+import com.infomaniak.core.common.emitFirstsUntilSecond
+import com.infomaniak.core.common.rateLimit
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge

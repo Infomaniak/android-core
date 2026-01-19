@@ -43,7 +43,16 @@ sealed class CrossAppLogin {
      * Must return selected accounts **last** (account(s) currently selected in other apps).
      */
     @ExperimentalSerializationApi
-    abstract fun accountsFromOtherApps(hostLifecycle: Lifecycle): Flow<List<ExternalAccount>>
+    internal abstract fun accountsFromOtherApps(hostLifecycle: Lifecycle): Flow<AccountsFromOtherApps>
+
+    internal data class AccountsFromOtherApps(
+        val accounts: List<ExternalAccount>,
+        val waitingForMoreApps: Boolean,
+    ) {
+        companion object {
+            fun none() = AccountsFromOtherApps(emptyList(), waitingForMoreApps = false)
+        }
+    }
 
     /**
      * Gives an id for this device, that is shared across all our apps.

@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
 }
 
@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":Core:Network:Models"))
+    implementation(project(":Network:Models"))
 
     api(core.sentry.android)
     api(core.sentry.okhttp)

@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 plugins {
-    id("com.android.library")
+    alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
-    kotlin("plugin.serialization")
+    alias(core.plugins.kotlin.serialization)
 }
 
 val coreCompileSdk: Int by rootProject.extra
@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    api(project(":Core:TwoFactorAuth:Back"))
+    api(project(":TwoFactorAuth:Back"))
 
-    implementation(project(":Core:Auth"))
+    implementation(project(":Auth"))
 }
