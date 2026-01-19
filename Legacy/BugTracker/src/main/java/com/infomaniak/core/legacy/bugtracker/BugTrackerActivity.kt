@@ -23,6 +23,8 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.text.format.Formatter
 import android.webkit.MimeTypeMap
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
@@ -37,7 +39,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.legacy.bugtracker.databinding.ActivityBugTrackerBinding
-import com.infomaniak.core.legacy.utils.FilePicker
 import com.infomaniak.core.legacy.utils.getFileNameAndSize
 import com.infomaniak.core.ui.showToast
 import com.infomaniak.core.ui.view.SnackbarUtils.showSnackbar
@@ -60,6 +61,9 @@ class BugTrackerActivity : AppCompatActivity() {
 
     private val fileAdapter = BugTrackerFileAdapter { updateFileTotalSize() }
     var type = DEFAULT_REPORT_TYPE
+
+    private val filePickerActivityResult: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.GetMultipleContents(), ::addFiles)
 
     private fun updateFileTotalSize() = with(binding) {
         if (bugTrackerViewModel.files.count() <= 1) {
@@ -85,8 +89,7 @@ class BugTrackerActivity : AppCompatActivity() {
 
         toolbar.setNavigationOnClickListener { finish() }
 
-        val filePicker = FilePicker(activity = this@BugTrackerActivity).apply { initCallback(::addFiles) }
-        addFilesButton.setOnClickListener { filePicker.open() }
+        addFilesButton.setOnClickListener { filePickerActivityResult.launch("*/*") }
 
         typeField.apply {
             setOnItemClickListener { _, _, position, _ ->
