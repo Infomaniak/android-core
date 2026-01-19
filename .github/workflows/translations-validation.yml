@@ -46,6 +46,9 @@ jobs:
           auth:
             global:
               project_root: "${PR_PATH}/Auth"
+          bugtracker:
+            global:
+              project_root: "${PR_PATH}/BugTracker"
           in_app_update:
             global:
               project_root: "${PR_PATH}/InAppUpdate"
@@ -71,6 +74,12 @@ jobs:
         run: |
           source ink_utils/venv/bin/activate
           python ink_utils/main.py project auth
+          python ink_utils/main.py loco --check --verbose
+
+      - name: Run Ink validation for bugtracker module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project bugtracker
           python ink_utils/main.py loco --check --verbose
 
       - name: Run Ink validation for in app update module
