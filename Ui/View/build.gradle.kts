@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.implementation
-
 /*
  * Infomaniak Core - Android
  * Copyright (C) 2025 Infomaniak Network SA
@@ -46,7 +44,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":"))
+    implementation(project(":Common"))
     implementation(project(":Sentry"))
 
     implementation(core.material)
