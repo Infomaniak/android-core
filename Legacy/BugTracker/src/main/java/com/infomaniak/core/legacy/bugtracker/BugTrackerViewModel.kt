@@ -21,14 +21,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryAppVersion
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
-import com.infomaniak.core.legacy.utils.SingleLiveEvent
-import com.infomaniak.core.legacy.utils.await
 import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.networking.ManualAuthorizationRequired
+import com.infomaniak.core.network.utils.await
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -39,7 +39,7 @@ import com.infomaniak.core.auth.networking.HttpClient as HttpClientWithToken
 
 class BugTrackerViewModel : ViewModel() {
     val files = mutableListOf<BugTrackerActivity.BugTrackerFile>()
-    val bugReportResult = SingleLiveEvent<Boolean>()
+    val bugReportResultFlow = MutableSharedFlow<Boolean>()
 
     fun sendBugReport(formBuilder: MultipartBody.Builder) = viewModelScope.launch(Dispatchers.IO) {
         files.forEachIndexed { index, file ->
@@ -50,7 +50,7 @@ class BugTrackerViewModel : ViewModel() {
             )
         }
 
-        bugReportResult.postValue(apiSendBugReport(formBuilder.build()))
+        bugReportResultFlow.emit(apiSendBugReport(formBuilder.build()))
     }
 
     private suspend fun apiSendBugReport(multipartBody: MultipartBody): Boolean {

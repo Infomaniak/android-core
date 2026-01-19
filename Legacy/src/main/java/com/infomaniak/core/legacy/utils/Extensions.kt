@@ -110,6 +110,7 @@ fun Context.showToast(title: Int, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, title, duration).show()
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun MaterialButton.initProgress(lifecycle: LifecycleOwner? = null, color: Int? = null) {
 
     lifecycle?.bindProgressButton(button = this)
@@ -126,6 +127,7 @@ fun MaterialButton.initProgress(lifecycle: LifecycleOwner? = null, color: Int? =
     params?.let(::attachTextChangeAnimator) ?: attachTextChangeAnimator()
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun MaterialButton.showProgressCatching(color: Int? = null) {
     isClickable = false
     // showProgress stores references to views which crashes when the view is freed
@@ -137,12 +139,14 @@ fun MaterialButton.showProgressCatching(color: Int? = null) {
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun MaterialButton.hideProgressCatching(@StringRes text: Int) {
     isClickable = true
     // hideProgress stores references to views which crashes when the view is freed
     runCatching { hideProgress(text) }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun MaterialButton.hideProgressCatching(text: String) {
     isClickable = true
     // hideProgress stores references to views which crashes when the view is freed
@@ -248,6 +252,7 @@ fun Dialog.showKeyboard() {
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
     (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
         setMargins(
@@ -260,6 +265,7 @@ fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bot
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun View.setMarginsRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
     (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
         start?.let { marginStart = it }
@@ -270,6 +276,7 @@ fun View.setMarginsRelative(start: Int? = null, top: Int? = null, end: Int? = nu
     }
 }
 
+@Deprecated("Use the method exposed through the Core:Ui:View module")
 fun View.setPaddingRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
     (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
         setPaddingRelative(
