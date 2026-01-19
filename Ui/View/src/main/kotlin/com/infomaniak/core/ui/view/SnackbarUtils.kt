@@ -22,7 +22,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import com.infomaniak.core.R as RCore
+import com.infomaniak.core.common.R as RCommonCore
 
 object SnackbarUtils {
 
@@ -30,7 +30,7 @@ object SnackbarUtils {
     fun Fragment.showSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCommonCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) {
         activity?.showSnackbar(
@@ -45,7 +45,7 @@ object SnackbarUtils {
     fun Fragment.showSnackbar(
         title: String,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCommonCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) {
         activity?.showSnackbar(
@@ -60,7 +60,7 @@ object SnackbarUtils {
     fun Activity.showSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCommonCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) {
         showSnackbar(
@@ -76,7 +76,7 @@ object SnackbarUtils {
     fun Activity.showSnackbar(
         title: String,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCommonCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) {
         showSnackbar(
@@ -92,7 +92,7 @@ object SnackbarUtils {
     fun Activity.showIndefiniteSnackbar(
         @StringRes title: Int,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCommonCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) = showSnackbar(
         view = window.decorView.findViewById(android.R.id.content),
@@ -109,7 +109,7 @@ object SnackbarUtils {
         @StringRes title: Int,
         anchor: View? = null,
         length: Int = Snackbar.LENGTH_LONG,
-        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCommonCore.string.buttonCancel,
         onActionClicked: (() -> Unit)? = null,
     ) = showSnackbar(
         view = view,
@@ -125,7 +125,7 @@ object SnackbarUtils {
         view: View,
         title: String,
         anchor: View? = null,
-        @StringRes actionButtonTitle: Int = RCore.string.buttonCancel,
+        @StringRes actionButtonTitle: Int = RCommonCore.string.buttonCancel,
         length: Int = Snackbar.LENGTH_LONG,
         onActionClicked: (() -> Unit)? = null,
     ) = Snackbar.make(view, title, length).apply {
