@@ -42,3 +42,11 @@ android {
         jvmTarget = javaVersion.toString()
     }
 }
+
+dependencies {
+    implementation(project(":Common"))
+    implementation(project(":Sentry"))
+
+    implementation(core.material)
+    implementation(core.progress.button)
+}

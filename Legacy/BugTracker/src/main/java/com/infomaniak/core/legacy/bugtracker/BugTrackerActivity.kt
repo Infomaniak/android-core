@@ -38,13 +38,13 @@ import androidx.navigation.navArgs
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
 import com.infomaniak.core.legacy.bugtracker.databinding.ActivityBugTrackerBinding
 import com.infomaniak.core.legacy.utils.FilePicker
-import com.infomaniak.core.legacy.utils.SnackbarUtils.showSnackbar
 import com.infomaniak.core.legacy.utils.getFileNameAndSize
-import com.infomaniak.core.legacy.utils.hideProgressCatching
-import com.infomaniak.core.legacy.utils.initProgress
-import com.infomaniak.core.legacy.utils.setMargins
-import com.infomaniak.core.legacy.utils.showProgressCatching
-import com.infomaniak.core.legacy.utils.showToast
+import com.infomaniak.core.ui.showToast
+import com.infomaniak.core.ui.view.SnackbarUtils.showSnackbar
+import com.infomaniak.core.ui.view.hideProgressCatching
+import com.infomaniak.core.ui.view.initProgress
+import com.infomaniak.core.ui.view.setMargins
+import com.infomaniak.core.ui.view.showProgressCatching
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
@@ -139,13 +139,15 @@ class BugTrackerActivity : AppCompatActivity() {
     }
 
     private fun ActivityBugTrackerBinding.observeBugReportResult() {
-        bugTrackerViewModel.bugReportResult.observe(this@BugTrackerActivity) { isSuccessful ->
-            if (isSuccessful) {
-                showToast(R.string.bugTrackerFormSubmitSuccess)
-                finish()
-            } else {
-                submitButton.hideProgressCatching(R.string.bugTrackerSubmit)
-                showSnackbar(R.string.bugTrackerFormSubmitError)
+        lifecycleScope.launch {
+            bugTrackerViewModel.bugReportResultFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collect { isSuccessful ->
+                if (isSuccessful) {
+                    showToast(R.string.bugTrackerFormSubmitSuccess)
+                    finish()
+                } else {
+                    submitButton.hideProgressCatching(R.string.bugTrackerSubmit)
+                    showSnackbar(R.string.bugTrackerFormSubmitError)
+                }
             }
         }
     }
