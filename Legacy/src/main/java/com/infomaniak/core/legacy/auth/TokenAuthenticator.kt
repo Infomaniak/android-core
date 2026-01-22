@@ -47,7 +47,7 @@ class TokenAuthenticator(
             } else {
                 mutex.withLock {
                     val request = response.request
-                    val apiCallBearer = request.header("Authorization")?.replaceFirst("Bearer ", "")
+                    val apiCallBearer = request.header("Authorization")?.substringAfter("Bearer ")
                     val isAlreadyRefreshed = userApiToken.accessToken != apiCallBearer
 
                     return@runBlocking when {
