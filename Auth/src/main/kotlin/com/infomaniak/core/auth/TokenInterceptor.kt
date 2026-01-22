@@ -41,7 +41,7 @@ class TokenInterceptor(
             tokenInterceptorListener.getApiToken()
         }?.let { apiToken ->
             val authorization = request.header("Authorization")
-            if (apiToken.accessToken != authorization?.replaceFirst("Bearer ", "")) {
+            if (apiToken.accessToken != authorization?.substringAfter("Bearer ")) {
                 request = changeAccessToken(request, apiToken)
             }
         } ?: return userLoggedOutResponse(chain)
