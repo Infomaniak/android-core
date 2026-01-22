@@ -120,27 +120,23 @@ suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
  * Calculates the size of a file from a Uri.
  * @return The file size in bytes, or null if there is an error during the calculation.
  */
-private suspend fun Uri.measureFileSize(): Long? {
-    return runCatching {
-        val yieldInterval = 1.seconds
-        var lastYield = TimeSource.Monotonic.markNow()
-        counter.fileSizeFor(
-            uri = this@measureFileSize,
-            onChunkRead = { _, _ ->
-                if (lastYield.elapsedNow() >= yieldInterval) {
-                    lastYield = TimeSource.Monotonic.markNow()
-                    yield()
-                } else {
-                    currentCoroutineContext().ensureActive()
-                }
+private suspend fun Uri.measureFileSize(): Long? = runCatching {
+    val yieldInterval = 1.seconds
+    var lastYield = TimeSource.Monotonic.markNow()
+    counter.fileSizeFor(
+        uri = this@measureFileSize,
+        onChunkRead = { _, _ ->
+            if (lastYield.elapsedNow() >= yieldInterval) {
+                lastYield = TimeSource.Monotonic.markNow()
+                yield()
+            } else {
+                currentCoroutineContext().ensureActive()
             }
-        )
-    }.getOrNull()
-}
+        }
+    )
+}.getOrNull()
 
 private val counter = InputStreamCounter()
-
-
 private const val TAG = "FileInfo"
 
 private val displayNameProjection = arrayOf(OpenableColumns.DISPLAY_NAME)
