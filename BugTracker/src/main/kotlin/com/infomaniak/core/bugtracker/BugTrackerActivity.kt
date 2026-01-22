@@ -65,9 +65,7 @@ class BugTrackerActivity : AppCompatActivity() {
 
     private val filePickerActivityResult: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
-            lifecycleScope.launch {
-                addFiles(uris)
-            }
+            lifecycleScope.launch { addFiles(uris) }
         }
 
     private fun updateFileTotalSize() = with(binding) {
