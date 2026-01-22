@@ -22,6 +22,7 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
+import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.sentry.SentryLog
 import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +50,7 @@ suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
                 cursor.getFileName()
             } else null
         }
-    }.onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }.getOrNull()
+    }.cancellable().onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }.getOrNull()
 }
 
 private fun Cursor.getFileName(): String? {
@@ -74,7 +75,7 @@ suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
                 cursor.getFileSize()
             } else -1L
         } ?: -1L
-    }.onFailure { t ->
+    }.cancellable().onFailure { t ->
         SentryLog.e(TAG, "Failed to read the size for uri: $uri", t)
     }.getOrElse { -1L }
 }
@@ -106,7 +107,7 @@ suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
                 null
             }
         }
-    }.getOrElse { exception ->
+    }.cancellable().getOrElse { exception ->
         uri.path?.substringBeforeLast("/")?.let { providerName ->
             Sentry.captureException(exception) { scope ->
                 scope.setExtra("uri", providerName)
@@ -134,7 +135,7 @@ private suspend fun Uri.measureFileSize(): Long? = runCatching {
             }
         }
     )
-}.getOrNull()
+}.cancellable().getOrNull()
 
 private val counter = InputStreamCounter()
 private const val TAG = "FileInfo"

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
@@ -28,12 +30,16 @@ android {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
     }
-    kotlinOptions {
-        jvmTarget = javaVersion.toString()
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
+        }
     }
 }
 
 dependencies {
+    implementation(project(":Common"))
     implementation(project(":Sentry"))
 
     implementation(core.androidx.core.ktx)
