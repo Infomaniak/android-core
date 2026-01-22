@@ -33,7 +33,7 @@
     <string name="bugTrackerPriorityUrgent">Urgente</string>
     <string name="bugTrackerSubject">Asunto</string>
     <string name="bugTrackerSubmit">Enviar</string>
-    <string name="bugTrackerTitle">Tracciamento dei bug</string>
+    <string name="bugTrackerTitle">Rastreador de errores</string>
     <string name="bugTrackerType">Tipo</string>
     <string name="bugTrackerTypeBug">Bug</string>
     <string name="bugTrackerTypeFeature">Mejora</string>
