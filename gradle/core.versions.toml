@@ -102,6 +102,24 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hil
 hilt-androidx-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltAndroidx" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltAndroidx" }
 hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltAndroidx" }
+infomaniak-core-appintegrity = { module = "com.infomaniak.core:AppIntegrity" }
+infomaniak-core-auth = { module = "com.infomaniak.core:Auth" }
+infomaniak-core-common = { module = "com.infomaniak.core:Common" }
+infomaniak-core-filetypes = { module = "com.infomaniak.core:FileTypes" }
+infomaniak-core-inappreview = { module = "com.infomaniak.core:InAppReview" }
+infomaniak-core-inappupdate = { module = "com.infomaniak.core:InAppUpdate" }
+infomaniak-core-matomo = { module = "com.infomaniak.core:Matomo" }
+infomaniak-core-network = { module = "com.infomaniak.core:Network" }
+infomaniak-core-notifications = { module = "com.infomaniak.core:Notifications" }
+infomaniak-core-onboarding = { module = "com.infomaniak.core:Onboarding" }
+infomaniak-core-sentry = { module = "com.infomaniak.core:Sentry" }
+infomaniak-core-thumbnails = { module = "com.infomaniak.core:Thumbnails" }
+infomaniak-core-ui-compose-basicbutton = { module = "com.infomaniak.core:Ui.Compose.BasicButton" }
+infomaniak-core-ui-compose-basics = { module = "com.infomaniak.core:Ui.Compose.Basics" }
+infomaniak-core-ui-compose-bottomstickybuttonscaffolds = { module = "com.infomaniak.core:Ui.Compose.BottomStickyButtonScaffolds" }
+infomaniak-core-ui-compose-margin = { module = "com.infomaniak.core:Ui.Compose.Margin" }
+infomaniak-core-ui-compose-preview = { module = "com.infomaniak.core:Ui.Compose.Preview" }
+infomaniak-core-ui-compose-theme = { module = "com.infomaniak.core:Ui.Compose.Theme" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }

@@ -57,12 +57,12 @@ Once applied:
 
 ## Using Core modules
 
-Core modules are declared using **Maven coordinates**, but resolved locally.
+Core modules are declared using **Maven coordinates**, but resolved locally. These maven coordinates can be found inside [core.versions.toml](gradle/core.versions.toml).
 
 ```kotlin
 dependencies {
-    implementation("com.infomaniak.core:Common")
-    implementation("com.infomaniak.core:TwoFactorAuth.Front")
+    implementation(core.infomaniak.core.common)
+    implementation(core.infomaniak.core.twofactorauth.front)
 }
 ```
 
@@ -152,4 +152,3 @@ This class documents:
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
