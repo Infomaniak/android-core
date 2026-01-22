@@ -283,9 +283,7 @@ class BugTrackerActivity : AppCompatActivity() {
         }
     }
 
-
     private companion object {
-
         val DEFAULT_REPORT_TYPE = ReportType.BUGS
         const val DEFAULT_PRIORITY_TYPE = 1
 

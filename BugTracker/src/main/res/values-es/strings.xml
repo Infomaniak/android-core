@@ -28,11 +28,11 @@
     <string name="bugTrackerPriority">Prioridad</string>
     <string name="bugTrackerPriorityHigh">Alto</string>
     <string name="bugTrackerPriorityImmediate">Inmediato</string>
-    <string name="bugTrackerPriorityLow">Basso</string>
+    <string name="bugTrackerPriorityLow">Bajo</string>
     <string name="bugTrackerPriorityNormal">Normal</string>
     <string name="bugTrackerPriorityUrgent">Urgente</string>
-    <string name="bugTrackerSubject">Oggetto</string>
-    <string name="bugTrackerSubmit">Inviare</string>
+    <string name="bugTrackerSubject">Asunto</string>
+    <string name="bugTrackerSubmit">Enviar</string>
     <string name="bugTrackerTitle">Tracciamento dei bug</string>
     <string name="bugTrackerType">Tipo</string>
     <string name="bugTrackerTypeBug">Bug</string>
