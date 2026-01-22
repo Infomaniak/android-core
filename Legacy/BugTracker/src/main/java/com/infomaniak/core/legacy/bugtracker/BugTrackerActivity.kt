@@ -38,8 +38,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
+import com.infomaniak.core.file.getFileNameAndSize
 import com.infomaniak.core.legacy.bugtracker.databinding.ActivityBugTrackerBinding
-import com.infomaniak.core.legacy.utils.getFileNameAndSize
 import com.infomaniak.core.ui.showToast
 import com.infomaniak.core.ui.view.SnackbarUtils.showSnackbar
 import com.infomaniak.core.ui.view.hideProgressCatching
@@ -63,7 +63,9 @@ class BugTrackerActivity : AppCompatActivity() {
     var type = DEFAULT_REPORT_TYPE
 
     private val filePickerActivityResult: ActivityResultLauncher<String> =
-        registerForActivityResult(ActivityResultContracts.GetMultipleContents(), ::addFiles)
+        registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+            lifecycleScope.launch { addFiles(uris) }
+        }
 
     private fun updateFileTotalSize() = with(binding) {
         if (bugTrackerViewModel.files.count() <= 1) {
@@ -155,7 +157,7 @@ class BugTrackerActivity : AppCompatActivity() {
         }
     }
 
-    private fun addFiles(uris: List<Uri>) {
+    private suspend fun addFiles(uris: List<Uri>) {
         val newFiles = mutableListOf<BugTrackerFile>()
         var errorCount = 0
 
@@ -176,7 +178,7 @@ class BugTrackerActivity : AppCompatActivity() {
         updateFileTotalSize()
     }
 
-    private fun getFileFromUri(uri: Uri): BugTrackerFile? {
+    private suspend fun getFileFromUri(uri: Uri): BugTrackerFile? {
         val (fileName, fileSize) = getFileNameAndSize(uri) ?: return null
         val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).lowercase()
         val mimeType = contentResolver.getType(uri) ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
