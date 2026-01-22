@@ -17,6 +17,22 @@
   -->
 
 <resources>
+    <!-- Text -->
+    <color name="title">@color/orca</color>
+    <color name="primaryText">@color/elephant</color>
+    <color name="secondaryText">@color/shark</color>
+
+    <!-- Context / errors -->
+    <color name="green_success_transparent">#E656BF62</color>
+    <color name="red_error_transparent">#E6FE644E</color>
+    <color name="orange_warning_transparent">#E6FFB700</color>
+    <color name="green_success">#56BF62</color>
+    <color name="red_error">#FB472E</color>
+    <color name="orange_warning">#FFB700</color>
+    <color name="staff_infomaniak">#8A2BE2</color>
+    <color name="blue_general">#0098FF</color>
+    <color name="devs">#FF00FF</color>
+
     <!-- Grey tones from UI/UX -->
     <color name="black">#000000</color>
     <color name="bat">#1A1A1A</color>

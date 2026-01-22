@@ -1,6 +1,6 @@
 /*
- * Infomaniak Core - Android
- * Copyright (C) 2023-2025 Infomaniak Network SA
+ * Infomaniak Mail - Android
+ * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.legacy.views
+package com.infomaniak.core.ui.view.layout
 
 import android.content.Context
 import android.util.AttributeSet
@@ -23,11 +23,10 @@ import androidx.core.view.setPadding
 import com.google.android.material.R
 import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.textfield.TextInputLayout
-import com.infomaniak.core.legacy.utils.getAttributes
-import com.infomaniak.core.legacy.R as RCore
+import com.infomaniak.core.ui.view.extension.getAttributes
+import com.infomaniak.core.ui.view.R as RView
 
 // TODO: Waiting https://github.com/material-components/material-components-android/issues/366 (icon padding issue)
-@Deprecated("Use the method function through the Core:Ui:View module")
 class EndIconTextInputLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -35,10 +34,10 @@ class EndIconTextInputLayout @JvmOverloads constructor(
 ) : TextInputLayout(context, attrs, defStyleAttr) {
 
     init {
-        attrs?.getAttributes(context, RCore.styleable.EndIconTextInputLayout) {
+        attrs?.getAttributes(context, RView.styleable.EndIconTextInputLayout) {
             val padding = getDimensionPixelSize(
-                RCore.styleable.EndIconTextInputLayout_endIconPadding,
-                resources.getDimensionPixelSize(RCore.dimen.marginStandardMedium),
+                RView.styleable.EndIconTextInputLayout_endIconPadding,
+                resources.getDimensionPixelSize(RView.dimen.marginStandardMedium),
             )
             findViewById<CheckableImageButton>(R.id.text_input_end_icon)?.setPadding(padding)
             findViewById<CheckableImageButton>(R.id.text_input_error_icon)?.setPadding(padding)

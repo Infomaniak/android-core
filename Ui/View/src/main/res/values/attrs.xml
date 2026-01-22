@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
-  ~ Copyright (C) 2025 Infomaniak Network SA
+  ~ Copyright (C) 2022-2024 Infomaniak Network SA
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -16,10 +16,9 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
-    <dimen name="appBarHeight">110dp</dimen>
-    <dimen name="marginLarge">48dp</dimen>
-    <dimen name="marginStandard">24dp</dimen>
-    <dimen name="marginStandardMedium">16dp</dimen>
-    <dimen name="marginStandardSmall">8dp</dimen>
-    <dimen name="marginStandardVerySmall">4dp</dimen>
+
+    <declare-styleable name="EndIconTextInputLayout">
+        <attr name="endIconPadding" format="dimension" />
+    </declare-styleable>
+
 </resources>
