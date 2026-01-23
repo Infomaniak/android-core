@@ -25,7 +25,5 @@ const val CURRENT_USER_ID_UNIQUE_KEY = "CURRENT_USER_ID_UNIQUE_KEY"
 @Entity
 data class CurrentUserId(
     val id: Int?,
-) {
-    @PrimaryKey
-    private val uniqueKey: String = CURRENT_USER_ID_UNIQUE_KEY
-}
+    @PrimaryKey val uniqueKey: String = CURRENT_USER_ID_UNIQUE_KEY,
+)

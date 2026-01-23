@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CurrentUserIdDao {
     @Query("SELECT id FROM CurrentUserId LIMIT 1")
-    fun getCurrentUserId(): Flow<Int?>
+    fun getCurrentUserIdFlow(): Flow<Int?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setCurrentUserId(currentUserId: CurrentUserId)
