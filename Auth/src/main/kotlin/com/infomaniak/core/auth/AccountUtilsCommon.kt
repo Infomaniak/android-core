@@ -25,21 +25,23 @@ import com.infomaniak.core.common.AssociatedUserDataCleanable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 private const val NO_USER = -1
 
 abstract class AccountUtilsCommon(
     context: Context,
-    private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(), // TODO: Needs dependency on Core:Common
+    private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
 ) : CredentialManager() {
     final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context)
 
     abstract val currentUserIdFlow: Flow<Int?>
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val currentUserFlow: Flow<User?> = currentUserIdFlow.flatMapLatest { userId ->
-        userId?.let { getUserFlowById(it) } ?: flow { null }
+    val currentUserFlow: Flow<User?> by lazy {
+        currentUserIdFlow.flatMapLatest { userId ->
+            userId?.let { getUserFlowById(it) } ?: flowOf(null)
+        }
     }
 
     @Deprecated("Use currentUserFlow instead")

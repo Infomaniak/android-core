@@ -20,14 +20,18 @@ package com.infomaniak.core.auth
 import android.content.Context
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.common.AssociatedUserDataCleanable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 /**
  * A version of [AccountUtilsCommon] that automatically stores the current user id inside of room as well
  */
-abstract class PersistedUserIdAccountUtils(context: Context) : AccountUtilsCommon(context) {
-    override val currentUserIdFlow: Flow<Int?> = userDatabase.currentUserIdDao().getCurrentUserId()
+abstract class PersistedUserIdAccountUtils(
+    context: Context,
+    userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
+) : AccountUtilsCommon(context, userDataCleanableList) {
+    override val currentUserIdFlow: Flow<Int?> = userDatabase.currentUserIdDao().getCurrentUserIdFlow()
 
     override suspend fun addUser(user: User) {
         super.addUser(user)
@@ -37,7 +41,7 @@ abstract class PersistedUserIdAccountUtils(context: Context) : AccountUtilsCommo
     override suspend fun removeUser(user: User) {
         super.removeUser(user)
         val currentUserIdDao = userDatabase.currentUserIdDao()
-        if (currentUserIdDao.getCurrentUserId().first() == user.id) {
+        if (currentUserIdDao.getCurrentUserIdFlow().first() == user.id) {
             currentUserIdDao.clearCurrentUserId()
         }
     }

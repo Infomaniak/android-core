@@ -63,7 +63,7 @@ abstract class CredentialManager : UserExistenceChecker {
     }
 
     suspend fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
-    suspend fun getUserFlowById(id: Int): Flow<User?> = userDatabase.userDao().findByIdFlow(id)
+    fun getUserFlowById(id: Int): Flow<User?> = userDatabase.userDao().findByIdFlow(id)
     //endregion
 
     //region HttpClient
