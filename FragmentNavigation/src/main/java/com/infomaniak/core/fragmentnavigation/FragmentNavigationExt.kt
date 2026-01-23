@@ -76,3 +76,46 @@ fun Activity.safelyNavigate(
         navController.navigate(resId, args, navOptions, navigatorExtras)
     }
 }
+
+fun Fragment.animatedNavigation(directions: NavDirections, navOptions: NavOptions) {
+    findNavController().navigate(directions, navOptions)
+}
+
+fun Fragment.animatedNavigation(@IdRes resId: Int, args: Bundle? = null, navOptions: NavOptions) {
+    findNavController().navigate(resId, args, navOptions)
+}
+
+fun NavController.animatedNavigation(directions: NavDirections, navOptions: NavOptions) {
+    navigate(directions, navOptions)
+}
+
+fun NavController.animatedNavigation(@IdRes resId: Int, args: Bundle, navOptions: NavOptions) {
+    navigate(resId, args, navOptions)
+}
+
+fun Fragment.safelyAnimatedNavigation(directions: NavDirections, currentClassName: String? = null, navOptions: NavOptions) {
+    if (isAtInitialDestination(currentClassName)) findNavController().navigate(directions, navOptions)
+}
+
+fun Fragment.safelyAnimatedNavigation(
+    @IdRes resId: Int,
+    args: Bundle? = null,
+    currentClassName: String? = null,
+    navOptions: NavOptions
+) {
+    if (isAtInitialDestination(currentClassName)) findNavController().navigate(resId, args, navOptions)
+}
+
+fun NavController.safelyAnimatedNavigation(directions: NavDirections, currentClassName: String, navOptions: NavOptions) {
+    if (isAtInitialDestination(currentClassName)) navigate(directions, navOptions)
+}
+
+fun NavController.safelyAnimatedNavigation(
+    @IdRes resId: Int,
+    args: Bundle? = null,
+    currentClassName: String,
+    navOptions: NavOptions
+) {
+    if (isAtInitialDestination(currentClassName)) navigate(resId, args, navOptions)
+}
+
