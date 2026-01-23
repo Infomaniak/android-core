@@ -28,6 +28,7 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.OrganizationAccount
 import com.infomaniak.core.auth.models.user.Email
 import com.infomaniak.core.auth.models.user.Phone
@@ -36,7 +37,7 @@ import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices
 import splitties.init.appCtx
 
 @Database(
-    entities = [User::class],
+    entities = [User::class, CurrentUserId::class],
     autoMigrations = [
         AutoMigration(
             from = 1, to = 2,
@@ -48,8 +49,9 @@ import splitties.init.appCtx
         ),
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
+        AutoMigration(from = 5, to = 6),
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 @TypeConverters(UserConverter::class)
