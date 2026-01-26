@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth
 
 import android.content.Context
+import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.common.AssociatedUserDataCleanable
@@ -40,9 +41,34 @@ abstract class PersistedUserIdAccountUtils(
 
     override suspend fun removeUser(user: User) {
         super.removeUser(user)
+        removeCurrentUserIdIfSelected(user.id)
+    }
+
+    suspend fun removeUserAndSwitchToNext(user: User) {
+        super.removeUser(user)
+
+        getNextUserId()?.let { nextUserId ->
+            switchUser(nextUserId)
+        } ?: run {
+            removeCurrentUserIdIfSelected(user.id)
+        }
+    }
+
+    /**
+     * Switches the currently selected user. If the given [userId] does not exist in the user table, this method does nothing.
+     */
+    @CallSuper
+    open suspend fun switchUser(userId: Int) {
+        if (userDatabase.userDao().findById(userId) == null) return
+        userDatabase.currentUserIdDao().setCurrentUserId(CurrentUserId(userId))
+    }
+
+    private suspend fun removeCurrentUserIdIfSelected(userId: Int) {
         val currentUserIdDao = userDatabase.currentUserIdDao()
-        if (currentUserIdDao.getCurrentUserIdFlow().first() == user.id) {
+        if (currentUserIdDao.getCurrentUserIdFlow().first() == userId) {
             currentUserIdDao.clearCurrentUserId()
         }
     }
+
+    private suspend fun getNextUserId(): Int? = userDatabase.userDao().getFirst()?.id
 }
