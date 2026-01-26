@@ -17,8 +17,7 @@
   -->
 <resources>
     <string name="androidMyKSuiteDashboardSubscriptionButton">Gestionar mi oferta</string>
-    <string name="androidMyKSuiteDashboardSubscriptionLabel">Para gestionar o cancelar su suscripción, inicie una sesión en la interfaz web de kSuite.</string>
-    <string name="buttonClose">Cerrar</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">Para gestionar o cancelar su suscripción, inicie sesión en la interfaz web de kSuite.</string>
     <string name="myKSuiteDashboardDataUnlimited">Sin límites</string>
     <string name="myKSuiteDashboardFreeMailLabel">Una dirección de correo electrónico gratuita de por vida</string>
     <string name="myKSuiteDashboardFreeTrialButton">Prueba gratuita</string>
@@ -40,7 +39,6 @@
     <string name="myKSuiteUpgradeDriveLabel">1 ó 6 TB para sus fotos, documentos y archivos</string>
     <string name="myKSuiteUpgradeDropboxLabel">Cajas de depósito, edición PDF…</string>
     <string name="myKSuiteUpgradeLabel">Y aún más.</string>
-    <string name="myKSuiteUpgradePdfEditionLabel">Edición en PDF</string>
     <string name="myKSuiteUpgradeRedirectLabel">Redirecciones, recordatorios personalizados…</string>
     <string name="myKSuiteUpgradeTitle">Dé más espacio a sus ideas</string>
     <string name="myKSuiteUpgradeUnlimitedMailLabel">Almacenamiento y envío ilimitados de correo electrónico</string>
