@@ -17,6 +17,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+//        mavenLocal() // Only used when we want to use a local version of a library (./gradlew publishToMavenLocal)
         maven { url = uri("https://jitpack.io") }
     }
 
