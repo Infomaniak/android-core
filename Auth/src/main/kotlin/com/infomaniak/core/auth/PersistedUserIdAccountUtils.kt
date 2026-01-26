@@ -41,7 +41,6 @@ abstract class PersistedUserIdAccountUtils(
     override val currentUserIdFlow: Flow<Int?> = userDatabase
         .currentUserIdDao()
         .getCurrentUserIdFlow()
-        .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     override suspend fun addUser(user: User) {
         super.addUser(user)
