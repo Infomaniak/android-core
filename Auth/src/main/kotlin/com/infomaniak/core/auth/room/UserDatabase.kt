@@ -69,13 +69,18 @@ abstract class UserDatabase internal constructor() : RoomDatabase() {
         @PublishedApi
         internal val instance = instantiateDataBase(appCtx)
 
-        fun instantiateDataBase(context: Context): UserDatabase = Room.databaseBuilder<UserDatabase>(
-            context = context,
-            name = "user_database"
-        ).apply {
-            enableMultiInstanceInvalidation()
-            fallbackToDestructiveMigration(dropAllTables = true)
-        }.build()
+        fun instantiateDataBase(context: Context, inMemory: Boolean = false): UserDatabase {
+            val databaseBuilder: Builder<UserDatabase> = if (inMemory) {
+                Room.inMemoryDatabaseBuilder(context)
+            } else {
+                Room.databaseBuilder(context = context, name = "user_database")
+            }
+
+            return databaseBuilder.apply {
+                enableMultiInstanceInvalidation()
+                fallbackToDestructiveMigration(dropAllTables = true)
+            }.build()
+        }
     }
 }
 
