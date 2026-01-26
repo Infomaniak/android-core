@@ -29,6 +29,7 @@ import kotlinx.coroutines.sync.withLock
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import org.jetbrains.annotations.TestOnly
 import java.util.concurrent.TimeUnit
 
 /**
@@ -42,7 +43,8 @@ abstract class CredentialManager : UserExistenceChecker {
     override suspend fun isUserAlreadyPresent(userId: Int): Boolean = getUserById(userId) != null
 
     //region User
-    protected abstract val userDatabase: UserDatabase
+    @get:TestOnly
+    abstract val userDatabase: UserDatabase
     abstract val currentUserId: Int
     abstract val currentUser: User?
 

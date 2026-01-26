@@ -35,8 +35,9 @@ import kotlinx.coroutines.flow.shareIn
 abstract class PersistedUserIdAccountUtils(
     context: Context,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    inMemory: Boolean = false,
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
-) : AccountUtilsCommon(context, coroutineScope, userDataCleanableList) {
+) : AccountUtilsCommon(context, coroutineScope, inMemory, userDataCleanableList) {
     override val currentUserIdFlow: Flow<Int?> = userDatabase
         .currentUserIdDao()
         .getCurrentUserIdFlow()
