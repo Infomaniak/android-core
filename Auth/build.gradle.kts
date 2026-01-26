@@ -68,4 +68,10 @@ dependencies {
     implementation(core.room.ktx)
     api(core.room.runtime)
     ksp(core.room.compiler)
+
+    // Test
+    testImplementation(core.junit)
+    testImplementation(core.androidx.test.core)
+    testImplementation(core.kotlinx.coroutines.test)
+    testImplementation(core.robolectric)
 }
