@@ -26,10 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.shareIn
 
 private const val NO_USER = -1
 
@@ -46,9 +44,9 @@ abstract class AccountUtilsCommon(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentUserFlow: Flow<User?> by lazy {
-        currentUserIdFlow
-            .flatMapLatest { userId -> userId?.let { getUserFlowById(it) } ?: flowOf(null) }
-            .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+        currentUserIdFlow.flatMapLatest { userId ->
+            userId?.let { getUserFlowById(it) } ?: flowOf(null)
+        }
     }
 
     @Deprecated("Use currentUserFlow instead")
