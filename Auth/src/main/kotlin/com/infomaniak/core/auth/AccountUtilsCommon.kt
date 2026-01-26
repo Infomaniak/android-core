@@ -22,26 +22,32 @@ import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.shareIn
 
 private const val NO_USER = -1
 
 abstract class AccountUtilsCommon(
     context: Context,
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
 ) : CredentialManager() {
     final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context)
 
+    // TODO: See if this can be private
     abstract val currentUserIdFlow: Flow<Int?>
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentUserFlow: Flow<User?> by lazy {
-        currentUserIdFlow.flatMapLatest { userId ->
-            userId?.let { getUserFlowById(it) } ?: flowOf(null)
-        }
+        currentUserIdFlow
+            .flatMapLatest { userId -> userId?.let { getUserFlowById(it) } ?: flowOf(null) }
+            .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
     }
 
     @Deprecated("Use currentUserFlow instead")
