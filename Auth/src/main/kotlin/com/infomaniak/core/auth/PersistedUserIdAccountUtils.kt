@@ -22,17 +22,25 @@ import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.common.AssociatedUserDataCleanable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.shareIn
 
 /**
  * A version of [AccountUtilsCommon] that automatically stores the current user id inside of room as well
  */
 abstract class PersistedUserIdAccountUtils(
     context: Context,
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
-) : AccountUtilsCommon(context, userDataCleanableList) {
-    override val currentUserIdFlow: Flow<Int?> = userDatabase.currentUserIdDao().getCurrentUserIdFlow()
+) : AccountUtilsCommon(context, coroutineScope, userDataCleanableList) {
+    override val currentUserIdFlow: Flow<Int?> = userDatabase
+        .currentUserIdDao()
+        .getCurrentUserIdFlow()
+        .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     override suspend fun addUser(user: User) {
         super.addUser(user)
