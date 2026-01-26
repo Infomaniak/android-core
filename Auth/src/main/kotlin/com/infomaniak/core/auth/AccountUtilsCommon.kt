@@ -36,9 +36,10 @@ private const val NO_USER = -1
 abstract class AccountUtilsCommon(
     context: Context,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    inMemory: Boolean = false,
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
 ) : CredentialManager() {
-    final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context)
+    final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context, inMemory)
 
     // TODO: See if this can be private
     abstract val currentUserIdFlow: Flow<Int?>
