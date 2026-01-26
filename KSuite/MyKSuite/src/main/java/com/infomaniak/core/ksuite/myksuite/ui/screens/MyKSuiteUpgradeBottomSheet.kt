@@ -56,6 +56,7 @@ import com.infomaniak.core.ui.compose.basics.ButtonType
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.serialization.Serializable
+import com.infomaniak.core.common.R as RCore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,7 +121,7 @@ private fun UpgradeBottomSheetContent(app: KSuiteApp, onButtonClicked: () -> Uni
         Spacer(Modifier.height(Margin.Huge))
         MyKSuitePrimaryButton(
             modifier = paddedModifier.fillMaxWidth(),
-            text = stringResource(R.string.buttonClose),
+            text = stringResource(RCore.string.buttonClose),
             shape = app.buttonStyle.shape,
             onClick = onButtonClicked,
         )
