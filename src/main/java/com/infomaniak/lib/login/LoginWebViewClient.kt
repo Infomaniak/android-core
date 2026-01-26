@@ -23,7 +23,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
 import android.webkit.SslErrorHandler
-import android.webkit.URLUtil.isValidUrl
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -81,7 +80,7 @@ open class LoginWebViewClient(
 
     override fun onReceivedHttpError(view: WebView, request: WebResourceRequest, errorResponse: WebResourceResponse) {
         if (request.shouldFinishOnError()) errorResult(HTTP_ERROR_CODE)
-        InfomaniakLogin.sentryCallback?.invoke("${request.url} ${request.method} ${errorResponse.statusCode}")
+        InfomaniakLogin.sentryCallback?.invoke("${request.url} ${request.method} ${errorResponse.statusCode}", emptyMap())
     }
 
     private fun WebResourceRequest.shouldFinishOnError(): Boolean = isForMainFrame && isValidUrl(this.url.toString())
@@ -135,7 +134,10 @@ open class LoginWebViewClient(
             WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED -> getString(R.string.connection_error)
 
             ERROR_ACCESS_DENIED -> getString(R.string.access_denied)
-            else -> getString(R.string.an_error_has_occurred)
+            else -> {
+                InfomaniakLogin.sentryCallback?.invoke("Unknow error during Login", mapOf("ErrorCode" to errorCode))
+                getString(R.string.an_error_has_occurred)
+            }
         }
     }
 }
