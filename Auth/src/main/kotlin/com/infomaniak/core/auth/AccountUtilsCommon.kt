@@ -22,8 +22,6 @@ import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -33,9 +31,8 @@ private const val NO_USER = -1
 
 abstract class AccountUtilsCommon(
     context: Context,
-    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-    inMemory: Boolean = false,
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
+    inMemory: Boolean = false,
 ) : CredentialManager() {
     final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context, inMemory)
 
