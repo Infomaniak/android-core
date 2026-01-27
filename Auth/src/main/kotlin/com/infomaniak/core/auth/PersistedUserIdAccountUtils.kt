@@ -22,8 +22,6 @@ import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.common.AssociatedUserDataCleanable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
@@ -32,10 +30,9 @@ import kotlinx.coroutines.flow.first
  */
 abstract class PersistedUserIdAccountUtils(
     context: Context,
-    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-    inMemory: Boolean = false,
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
-) : AccountUtilsCommon(context, coroutineScope, inMemory, userDataCleanableList) {
+    inMemory: Boolean = false,
+) : AccountUtilsCommon(context, userDataCleanableList, inMemory) {
     override val currentUserIdFlow: Flow<Int?> = userDatabase
         .currentUserIdDao()
         .getCurrentUserIdFlow()
