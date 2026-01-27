@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.user.User
@@ -37,6 +38,9 @@ abstract class PersistedUserIdAccountUtils(
         .currentUserIdDao()
         .getCurrentUserIdFlow()
 
+    /**
+     * @throws SQLiteConstraintException when adding a user with a primary key that already exists
+     */
     override suspend fun addUser(user: User) {
         super.addUser(user)
         userDatabase.currentUserIdDao().setCurrentUserId(CurrentUserId(user.id))
