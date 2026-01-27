@@ -30,18 +30,10 @@ abstract class AccountUtilsCommon(
     context: Context,
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     inMemory: Boolean = false,
-) : CredentialManager() {
+) : BaseCredentialManager() {
     final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context, inMemory)
 
     val allUsers = userDatabase.userDao().allUsers
-
-    @Deprecated("Use currentUserFlow instead")
-    final override var currentUser: User?
-        get() = null
-        set(value) {}
-
-    @Deprecated("Use currentUserIdFlow instead")
-    final override val currentUserId: Int get() = NO_USER
 
     /**
      * @throws SQLiteConstraintException when adding a user with a primary key that already exists

@@ -17,133 +17,25 @@
  */
 package com.infomaniak.core.auth
 
-import androidx.collection.ArrayMap
-import androidx.lifecycle.LiveData
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.room.UserDatabase
-import com.infomaniak.core.network.networking.HttpClientConfig
 import com.infomaniak.lib.login.ApiToken
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import okhttp3.Cache
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import org.jetbrains.annotations.TestOnly
-import java.util.concurrent.TimeUnit
 
 /**
- * CredentialManager interface : Implement the essential methods to get Users and their Credentials to pass
+ * CredentialManager interface: Adds a currentUserId and currentUser management layer to [BaseCredentialManager]
  *
- * It's now recommended to use [AbstractUserIdAccountUtils] or [PersistedUserIdAccountUtils] instead. These classes do not support
- * [currentUserId] and [currentUser] anymore.
+ * It's now recommended to use [AbstractUserIdAccountUtils] or [PersistedUserIdAccountUtils] instead as they factorize much more
+ * code and have safer current user management logic.
  */
-abstract class CredentialManager : UserExistenceChecker {
+abstract class CredentialManager : BaseCredentialManager() {
 
     override suspend fun isUserAlreadyPresent(userId: Int): Boolean = getUserById(userId) != null
 
-    //region User
-    @get:TestOnly
-    abstract val userDatabase: UserDatabase
     abstract val currentUserId: Int
     abstract var currentUser: User?
 
-    /**
-     * Get users, and their informations / tokens in a JSON format
-     */
-    fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().getAll()
-
-    fun getAllUsersCount(): Int = userDatabase.userDao().count()
-
-    suspend fun setUserToken(user: User?, apiToken: ApiToken) {
-        user?.let {
-            it.apiToken = apiToken
-            userDatabase.userDao().update(it)
-            if (currentUserId == it.id) currentUser = it
-        }
-    }
-
-    suspend fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
-    fun getUserFlowById(id: Int): Flow<User?> = userDatabase.userDao().findByIdFlow(id)
-    //endregion
-
-    //region HttpClient
-    var onRefreshTokenError: ((user: User) -> Unit)? = null
-
-    private val mutex = Mutex()
-    private val httpClientMap: ArrayMap<Pair<Int, Long?>, OkHttpClient> = ArrayMap()
-
-    val defaultTokenAuthenticatorFactory: (TokenInterceptorListener) -> TokenAuthenticator = { tokenInterceptorListener ->
-        TokenAuthenticator(tokenInterceptorListener)
-    }
-
-    val defaultTokenInterceptorFactory: (TokenInterceptorListener) -> TokenInterceptor = { tokenInterceptorListener ->
-        TokenInterceptor(tokenInterceptorListener)
-    }
-
-    suspend fun getHttpClient(
-        userId: Int,
-        timeout: Long? = null,
-        getAuthenticator: ((TokenInterceptorListener) -> TokenAuthenticator)? = defaultTokenAuthenticatorFactory,
-        getInterceptor: (TokenInterceptorListener) -> Interceptor = defaultTokenInterceptorFactory,
-    ): OkHttpClient {
-        mutex.withLock {
-            var httpClient = httpClientMap[Pair(userId, timeout)]
-            if (httpClient == null) {
-                httpClient = getHttpClientUser(userId, timeout, getAuthenticator, getInterceptor)
-                httpClientMap[Pair(userId, timeout)] = httpClient
-            }
-            return httpClient
-        }
-    }
-
-    private suspend fun getHttpClientUser(
-        userId: Int,
-        timeout: Long?,
-        getAuthenticator: ((TokenInterceptorListener) -> TokenAuthenticator)?,
-        getInterceptor: (TokenInterceptorListener) -> Interceptor
-    ): OkHttpClient {
-        return OkHttpClient.Builder().apply {
-            timeout?.let {
-                // NEVER set `callTimeout` to a too low value, because it would break users on slow connexions.
-                // Think hours or minutes for uploads, and tens of seconds for other calls.
-                readTimeout(timeout, TimeUnit.SECONDS)
-                writeTimeout(timeout, TimeUnit.SECONDS)
-                connectTimeout(timeout, TimeUnit.SECONDS)
-            }
-
-            val tokenInterceptorListener = getDefaultTokenInterceptorListener(userId)
-
-            HttpClientConfig.apply { cacheDir?.let { cache(Cache(it, CACHE_SIZE_BYTES)) } }
-            addInterceptor(getInterceptor(tokenInterceptorListener))
-            getAuthenticator?.let { tokenAuthenticator ->
-                authenticator(tokenAuthenticator(tokenInterceptorListener))
-            }
-
-            HttpClientConfig.addCommonInterceptors(this) // Needs to be added last
-        }.run {
-            build()
-        }
-    }
-
-    private suspend fun getDefaultTokenInterceptorListener(userId: Int): TokenInterceptorListener {
-        var user = getUserById(userId)
-        return object : TokenInterceptorListener {
-            override suspend fun onRefreshTokenSuccess(apiToken: ApiToken) {
-                setUserToken(user, apiToken)
-            }
-
-            override suspend fun onRefreshTokenError() {
-                user?.let { onRefreshTokenError?.invoke(it) }
-            }
-
-            override suspend fun getApiToken(): ApiToken? {
-                user = getUserById(userId)
-                return user?.apiToken
-            }
-
-            override fun getCurrentUserId() = null
-        }
+    final override suspend fun setUserToken(user: User?, apiToken: ApiToken) {
+        super.setUserToken(user, apiToken)
+        user?.let { if (currentUserId == it.id) currentUser = it }
     }
     //endregion
 }
