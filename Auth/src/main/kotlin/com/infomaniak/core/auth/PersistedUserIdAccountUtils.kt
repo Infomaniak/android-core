@@ -47,7 +47,11 @@ abstract class PersistedUserIdAccountUtils(
         removeCurrentUserIdIfSelected(userId)
     }
 
-    suspend fun removeUserAndSwitchToNext(userId: Int) {
+    /**
+     * @param userId The user id to remove from the list of connected users
+     */
+    @CallSuper
+    open suspend fun removeUserAndSwitchToNext(userId: Int) {
         super.removeUser(userId)
 
         getNextUserId()?.let { nextUserId ->
