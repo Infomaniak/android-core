@@ -6,33 +6,14 @@
  */
 package com.infomaniak.core.auth
 
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
-import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.models.user.preferences.Country
-import com.infomaniak.core.auth.models.user.preferences.Language
-import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
-import com.infomaniak.core.auth.models.user.preferences.Preferences
-import com.infomaniak.lib.login.ApiToken
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import splitties.init.injectAsAppCtx
 
-@RunWith(RobolectricTestRunner::class)
-class PersistedUserIdAccountUtilsTest {
-
-    private lateinit var context: Context
-
-    @Before
-    fun setup() {
-        context = ApplicationProvider.getApplicationContext()
-        context.injectAsAppCtx()
-    }
+class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
 
     @Test
     fun addUser_selectsTheLastAddedUser() = runTest {
@@ -104,33 +85,11 @@ class PersistedUserIdAccountUtilsTest {
         }
     }
 
+    // TODO: Test currentUser
+
     private inline fun withAccountUtils(block: PersistedUserIdAccountUtils.() -> Unit) {
         val persistedUserIdAccountUtils = object : PersistedUserIdAccountUtils(context, inMemory = true) {}
         block(persistedUserIdAccountUtils)
         persistedUserIdAccountUtils.userDatabase.close()
     }
-}
-
-private fun userOf(id: Int): User {
-    val dummyOrganization = OrganizationPreference(1234, 0L)
-    val dummyLanguage = Language("", "", "")
-    val dummyCountry = Country("", false)
-    val dummyPreferences = Preferences(null, dummyOrganization, dummyLanguage, dummyCountry, null)
-    val dummyApiToken = ApiToken("", null, "", 0, id, null, null)
-
-    return User(
-        id,
-        displayName = "",
-        firstname = "",
-        lastname = "",
-        email = "",
-        avatar = null,
-        login = "",
-        isStaff = false,
-        preferences = dummyPreferences,
-        phones = null,
-        emails = null,
-        apiToken = dummyApiToken,
-        organizations = ArrayList(),
-    )
 }
