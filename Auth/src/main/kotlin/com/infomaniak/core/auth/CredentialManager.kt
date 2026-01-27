@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit
 /**
  * CredentialManager interface : Implement the essential methods to get Users and their Credentials to pass
  *
- * It's now recommended to use [AccountUtilsCommon] or [PersistedUserIdAccountUtils] instead. These classes do not support
+ * It's now recommended to use [AbstractUserIdAccountUtils] or [PersistedUserIdAccountUtils] instead. These classes do not support
  * [currentUserId] and [currentUser] anymore.
  */
 abstract class CredentialManager : UserExistenceChecker {
