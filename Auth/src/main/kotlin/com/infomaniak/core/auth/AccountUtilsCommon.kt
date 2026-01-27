@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
@@ -42,6 +43,9 @@ abstract class AccountUtilsCommon(
     @Deprecated("Use currentUserIdFlow instead")
     final override val currentUserId: Int get() = NO_USER
 
+    /**
+     * @throws SQLiteConstraintException when adding a user with a primary key that already exists
+     */
     @CallSuper
     open suspend fun addUser(user: User) {
         val userId = user.id.toLong()
