@@ -46,7 +46,7 @@ abstract class CredentialManager : UserExistenceChecker {
     @get:TestOnly
     abstract val userDatabase: UserDatabase
     abstract val currentUserId: Int
-    abstract val currentUser: User?
+    abstract var currentUser: User?
 
     /**
      * Get users, and their informations / tokens in a JSON format
@@ -59,8 +59,7 @@ abstract class CredentialManager : UserExistenceChecker {
         user?.let {
             it.apiToken = apiToken
             userDatabase.userDao().update(it)
-            // TODO: Fix thanks to currentUser being a Flow
-            // if (currentUserId == it.id) currentUser = it
+            if (currentUserId == it.id) currentUser = it
         }
     }
 
