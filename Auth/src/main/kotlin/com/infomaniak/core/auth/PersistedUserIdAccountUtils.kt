@@ -25,9 +25,7 @@ import com.infomaniak.core.common.AssociatedUserDataCleanable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.shareIn
 
 /**
  * A version of [AccountUtilsCommon] that automatically stores the current user id inside of room as well
@@ -47,18 +45,18 @@ abstract class PersistedUserIdAccountUtils(
         userDatabase.currentUserIdDao().setCurrentUserId(CurrentUserId(user.id))
     }
 
-    override suspend fun removeUser(user: User) {
-        super.removeUser(user)
-        removeCurrentUserIdIfSelected(user.id)
+    override suspend fun removeUser(userId: Int) {
+        super.removeUser(userId)
+        removeCurrentUserIdIfSelected(userId)
     }
 
-    suspend fun removeUserAndSwitchToNext(user: User) {
-        super.removeUser(user)
+    suspend fun removeUserAndSwitchToNext(userId: Int) {
+        super.removeUser(userId)
 
         getNextUserId()?.let { nextUserId ->
             switchUser(nextUserId)
         } ?: run {
-            removeCurrentUserIdIfSelected(user.id)
+            removeCurrentUserIdIfSelected(userId)
         }
     }
 
