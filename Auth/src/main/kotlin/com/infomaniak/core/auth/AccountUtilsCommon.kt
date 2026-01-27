@@ -24,8 +24,6 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 
-private const val NO_USER = -1
-
 abstract class AccountUtilsCommon(
     context: Context,
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
