@@ -38,8 +38,7 @@ abstract class AccountUtilsCommon(
      */
     @CallSuper
     open suspend fun addUser(user: User) {
-        val userId = user.id.toLong()
-        userDataCleanableList.forEach { it.resetForUser(userId) }
+        userDataCleanableList.forEach { it.resetForUser(user.id.toLong()) }
         userDatabase.userDao().insert(user)
     }
 
