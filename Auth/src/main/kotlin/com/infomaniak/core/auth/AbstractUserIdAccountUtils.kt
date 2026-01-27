@@ -18,40 +18,25 @@
 package com.infomaniak.core.auth
 
 import android.content.Context
-import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
-private const val NO_USER = -1
-
-abstract class AccountUtilsCommon(
+abstract class AbstractUserIdAccountUtils(
     context: Context,
-    private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
+    userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     inMemory: Boolean = false,
-) : CredentialManager() {
-    final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context, inMemory)
+) : AccountUtilsCommon(context, userDataCleanableList, inMemory) {
+    // TODO: See if this can be private
+    abstract val currentUserIdFlow: Flow<Int?>
 
-    @Deprecated("Use currentUserFlow instead")
-    final override val currentUser: User? get() = null
-
-    @Deprecated("Use currentUserIdFlow instead")
-    final override val currentUserId: Int get() = NO_USER
-
-    @CallSuper
-    open suspend fun addUser(user: User) {
-        val userId = user.id.toLong()
-        userDataCleanableList.forEach { it.resetForUser(userId) }
-        userDatabase.userDao().insert(user)
-    }
-
-    @CallSuper
-    open suspend fun removeUser(userId: Int) {
-        userDataCleanableList.forEach { it.resetForUser(userId.toLong()) }
-        userDatabase.userDao().deleteUserById(userId)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentUserFlow: Flow<User?> by lazy {
+        currentUserIdFlow.flatMapLatest { userId ->
+            userId?.let { getUserFlowById(it) } ?: flowOf(null)
+        }
     }
 }
