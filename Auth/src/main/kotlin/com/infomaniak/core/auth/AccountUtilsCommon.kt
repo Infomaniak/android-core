@@ -35,7 +35,9 @@ abstract class AccountUtilsCommon(
     val allUsers = userDatabase.userDao().allUsers
 
     @Deprecated("Use currentUserFlow instead")
-    final override val currentUser: User? get() = null
+    final override var currentUser: User?
+        get() = null
+        set(value) {}
 
     @Deprecated("Use currentUserIdFlow instead")
     final override val currentUserId: Int get() = NO_USER
