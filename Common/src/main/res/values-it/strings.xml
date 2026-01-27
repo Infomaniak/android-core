@@ -29,6 +29,10 @@
     <string name="crossAppLoginIntegrityError">Recupero dei conti non disponibile</string>
     <string name="errorDownload">Errore durante il download</string>
     <string name="errorDownloadInsufficientSpace">Impossibile scaricare: spazio insufficiente</string>
+    <plurals name="myAccount">
+        <item quantity="one">Il mio account</item>
+        <item quantity="other">I miei account</item>
+    </plurals>
     <string name="reviewAlertTitle">Ti piace %s?</string>
     <string name="trackingAuthorizeTracking">Autorizza il tracciamento</string>
     <string name="trackingManagementDescription">In Infomaniak, i vostri dati non sono mai merce di scambio. Utilizziamo solo strumenti interni, ospitati e controllati da noi stessi, per garantire la qualità e lo sviluppo delle nostre applicazioni.\n\nQuesti dati tecnici sono riservati, archiviati sui nostri server in Svizzera, accessibili solo ai nostri team di sviluppo e non vengono mai condivisi con terzi. Il codice sorgente delle nostre applicazioni può essere verificato, garantendo una trasparenza totale.</string>
