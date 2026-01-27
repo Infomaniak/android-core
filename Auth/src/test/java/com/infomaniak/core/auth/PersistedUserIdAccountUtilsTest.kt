@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
 class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
 
@@ -22,6 +20,7 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
             addUser(userOf(id = 2))
 
             Assert.assertEquals(2, currentUserIdFlow.first())
+            Assert.assertEquals(2, currentUserFlow.first()?.id)
         }
     }
 
@@ -30,9 +29,11 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
         withAccountUtils {
             addUser(userOf(id = 1))
             Assert.assertEquals(1, currentUserIdFlow.first())
+            Assert.assertEquals(1, currentUserFlow.first()?.id)
 
             removeUser(1)
-            Assert.assertEquals(null, currentUserIdFlow.first())
+            Assert.assertNull(currentUserIdFlow.first())
+            Assert.assertNull(currentUserFlow.first())
         }
     }
 
@@ -43,6 +44,7 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
             addUser(userOf(id = 2))
             removeUserAndSwitchToNext(2)
             Assert.assertEquals(1, currentUserIdFlow.first())
+            Assert.assertEquals(1, currentUserFlow.first()?.id)
         }
     }
 
@@ -51,27 +53,66 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
         withAccountUtils {
             addUser(userOf(id = 1))
             removeUserAndSwitchToNext(1)
-            Assert.assertEquals(null, currentUserIdFlow.first())
+            Assert.assertNull(currentUserIdFlow.first())
+            Assert.assertNull(currentUserFlow.first())
         }
     }
 
     @Test
-    fun switchUser_correctlySelectsExistingAccounts() = runTest {
+    fun switchUser_correctlySwitchToExistingAccounts() = runTest {
         withAccountUtils {
             addUser(userOf(id = 1))
             addUser(userOf(id = 2))
             switchUser(1)
             Assert.assertEquals(1, currentUserIdFlow.first())
+            Assert.assertEquals(1, currentUserFlow.first()?.id)
         }
     }
 
     @Test
-    fun switchUser_doesNothingWhenSelectingAccountsThatDontExist() = runTest {
+    fun removeUserAndSwitchToNext_switchesCorrectly() = runTest {
+        withAccountUtils {
+            // Add in specific order: 1, 2, 3
+            addUser(userOf(id = 1))
+            addUser(userOf(id = 2))
+            addUser(userOf(id = 3))
+
+            // Current is 3. Remove 3, should select 1
+            removeUserAndSwitchToNext(3)
+            Assert.assertEquals(1, currentUserIdFlow.first())
+            Assert.assertEquals(1, currentUserFlow.first()?.id)
+
+            // Remove 1, should select 2
+            removeUserAndSwitchToNext(1)
+            Assert.assertEquals(2, currentUserIdFlow.first())
+            Assert.assertEquals(2, currentUserFlow.first()?.id)
+
+            // Remove 2, should unselect
+            removeUserAndSwitchToNext(2)
+            Assert.assertNull(currentUserIdFlow.first())
+            Assert.assertNull(currentUserFlow.first())
+        }
+    }
+
+    @Test
+    fun switchUser_doesNothingWhenSwitchingToAccountsThatDontExist() = runTest {
         withAccountUtils {
             addUser(userOf(id = 1))
             addUser(userOf(id = 2))
-            switchUser(3)
+            switchUser(999)
             Assert.assertEquals(2, currentUserIdFlow.first())
+            Assert.assertEquals(2, currentUserFlow.first()?.id)
+        }
+    }
+
+    @Test
+    fun switchUser_doesNothingWhenSwitchingToCurrentAccount() = runTest {
+        withAccountUtils {
+            addUser(userOf(id = 1))
+            addUser(userOf(id = 2))
+            switchUser(2)
+            Assert.assertEquals(2, currentUserIdFlow.first())
+            Assert.assertEquals(2, currentUserFlow.first()?.id)
         }
     }
 
@@ -85,7 +126,29 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
         }
     }
 
-    // TODO: Test currentUser
+    @Test
+    fun currentUserIdFlow_isNullInitially() = runTest {
+        withAccountUtils {
+            Assert.assertNull(currentUserIdFlow.first())
+        }
+    }
+
+    @Test
+    fun currentUserFlow_canBeReadMultipleTimesInARow() = runTest {
+        withAccountUtils {
+            addUser(userOf(id = 1))
+
+            Assert.assertEquals(1, currentUserFlow.first()?.id)
+            Assert.assertEquals(1, currentUserFlow.first()?.id)
+        }
+    }
+
+    @Test
+    fun currentUserFlow_isNullInitially() = runTest {
+        withAccountUtils {
+            Assert.assertNull(currentUserFlow.first())
+        }
+    }
 
     private inline fun withAccountUtils(block: PersistedUserIdAccountUtils.() -> Unit) {
         val persistedUserIdAccountUtils = object : PersistedUserIdAccountUtils(context, inMemory = true) {}
