@@ -22,10 +22,6 @@ import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 
 private const val NO_USER = -1
 
@@ -35,6 +31,8 @@ abstract class AccountUtilsCommon(
     inMemory: Boolean = false,
 ) : CredentialManager() {
     final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context, inMemory)
+
+    val allUsers = userDatabase.userDao().allUsers
 
     @Deprecated("Use currentUserFlow instead")
     final override val currentUser: User? get() = null
