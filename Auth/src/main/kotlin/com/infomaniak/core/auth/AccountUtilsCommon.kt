@@ -63,9 +63,8 @@ abstract class AccountUtilsCommon(
     }
 
     @CallSuper
-    open suspend fun removeUser(user: User) { // TODO: Only take a user id as input. Nothing else is needed
-        val userId = user.id.toLong()
-        userDataCleanableList.forEach { it.resetForUser(userId) }
-        userDatabase.userDao().delete(user)
+    open suspend fun removeUser(userId: Int) {
+        userDataCleanableList.forEach { it.resetForUser(userId.toLong()) }
+        userDatabase.userDao().deleteUserById(userId)
     }
 }
