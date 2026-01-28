@@ -31,9 +31,15 @@ abstract class AbstractUserIdAccountUtils(
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     userDatabase: UserDatabase,
 ) : AccountUtilsCommon(appContext, userDataCleanableList, userDatabase) {
-    // TODO: See if this can be private
+
+    /**
+     * If you need a live [User] instead of just its id, use [currentUserFlow]
+     */
     abstract val currentUserIdFlow: Flow<Int?>
 
+    /**
+     * If you only need the user id, use [currentUserIdFlow] instead
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentUserFlow: Flow<User?> by lazy {
         currentUserIdFlow.flatMapLatest { userId ->
