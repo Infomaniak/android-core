@@ -17,25 +17,34 @@
  */
 package com.infomaniak.core.auth
 
+import androidx.lifecycle.LiveData
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.lib.login.ApiToken
+import kotlinx.coroutines.flow.Flow
 
 /**
- * CredentialManager interface: Adds a currentUserId and currentUser management layer to [BaseCredentialManager]
+ * CredentialManager: Adds a currentUserId and currentUser management layer to [BaseCredentialManager]
  *
  * It's now recommended to use [AbstractUserIdAccountUtils] or [PersistedUserIdAccountUtils] instead as they factorize much more
  * code and have safer current user management logic.
  */
 abstract class CredentialManager : BaseCredentialManager() {
 
-    override suspend fun isUserAlreadyPresent(userId: Int): Boolean = getUserById(userId) != null
-
     abstract val currentUserId: Int
     abstract var currentUser: User?
+
+    /**
+     * Get users, and their informations / tokens in a JSON format
+     */
+    fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().getAll()
+
+    fun getAllUsersCount(): Int = userDatabase.userDao().count()
 
     final override suspend fun setUserToken(user: User?, apiToken: ApiToken) {
         super.setUserToken(user, apiToken)
         user?.let { if (currentUserId == it.id) currentUser = it }
     }
-    //endregion
+
+    suspend fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
 }
