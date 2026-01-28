@@ -34,23 +34,13 @@ import org.jetbrains.annotations.TestOnly
 import java.util.concurrent.TimeUnit
 
 /**
- * BaseCredentialManager interface: Implement the essential methods to get Users and their Credentials to pass
+ * BaseCredentialManager: Implement the essential methods to get Users and their Credentials to pass
  */
 abstract class BaseCredentialManager : UserExistenceChecker {
 
     override suspend fun isUserAlreadyPresent(userId: Int): Boolean = getUserById(userId) != null
 
     //region User
-    @get:TestOnly
-    abstract val userDatabase: UserDatabase
-
-    /**
-     * Get users, and their informations / tokens in a JSON format
-     */
-    fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().getAll()
-
-    fun getAllUsersCount(): Int = userDatabase.userDao().count()
-
     @CallSuper
     open suspend fun setUserToken(user: User?, apiToken: ApiToken) {
         user?.let {
@@ -58,9 +48,6 @@ abstract class BaseCredentialManager : UserExistenceChecker {
             userDatabase.userDao().update(it)
         }
     }
-
-    suspend fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
-    fun getUserFlowById(id: Int): Flow<User?> = userDatabase.userDao().findByIdFlow(id)
     //endregion
 
     //region HttpClient
