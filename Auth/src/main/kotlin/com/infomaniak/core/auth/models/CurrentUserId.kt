@@ -1,5 +1,5 @@
 /*
- * Infomaniak SwissTransfer - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ package com.infomaniak.core.auth.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-const val CURRENT_USER_ID_UNIQUE_KEY = "CURRENT_USER_ID_UNIQUE_KEY"
+private const val CURRENT_USER_ID_UNIQUE_KEY = "CURRENT_USER_ID_UNIQUE_KEY"
 
 @Entity
 data class CurrentUserId(
