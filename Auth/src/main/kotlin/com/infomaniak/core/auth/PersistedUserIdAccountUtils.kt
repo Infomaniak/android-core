@@ -22,6 +22,7 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -30,10 +31,10 @@ import kotlinx.coroutines.flow.first
  * A version of [AbstractUserIdAccountUtils] that automatically stores the current user id inside of room as well
  */
 abstract class PersistedUserIdAccountUtils(
-    context: Context,
+    appContext: Context,
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
-    inMemory: Boolean = false,
-) : AbstractUserIdAccountUtils(context, userDataCleanableList, inMemory) {
+    userDatabase: UserDatabase,
+) : AbstractUserIdAccountUtils(appContext, userDataCleanableList, userDatabase) {
     override val currentUserIdFlow: Flow<Int?> = userDatabase
         .currentUserIdDao()
         .getCurrentUserIdFlow()

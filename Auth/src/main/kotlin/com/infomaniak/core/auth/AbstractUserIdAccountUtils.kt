@@ -19,6 +19,7 @@ package com.infomaniak.core.auth
 
 import android.content.Context
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -26,17 +27,17 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
 abstract class AbstractUserIdAccountUtils(
-    context: Context,
+    appContext: Context,
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
-    inMemory: Boolean = false,
-) : AccountUtilsCommon(context, userDataCleanableList, inMemory) {
+    userDatabase: UserDatabase,
+) : AccountUtilsCommon(appContext, userDataCleanableList, userDatabase) {
     // TODO: See if this can be private
     abstract val currentUserIdFlow: Flow<Int?>
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentUserFlow: Flow<User?> by lazy {
         currentUserIdFlow.flatMapLatest { userId ->
-            userId?.let { getUserFlowById(it) } ?: flowOf(null)
+            userId?.let { userDatabase.userDao().findByIdFlow(it) } ?: flowOf(null)
         }
     }
 }

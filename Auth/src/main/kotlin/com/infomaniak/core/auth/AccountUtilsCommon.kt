@@ -25,12 +25,10 @@ import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 
 abstract class AccountUtilsCommon(
-    context: Context,
+    appContext: Context,
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
-    inMemory: Boolean = false,
+    override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
 ) : BaseCredentialManager() {
-    final override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(context, inMemory)
-
     val allUsers = userDatabase.userDao().allUsers
 
     /**

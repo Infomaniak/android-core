@@ -19,9 +19,7 @@ package com.infomaniak.core.auth
 
 import androidx.lifecycle.LiveData
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.lib.login.ApiToken
-import kotlinx.coroutines.flow.Flow
 
 /**
  * CredentialManager: Adds a currentUserId and currentUser management layer to [BaseCredentialManager]

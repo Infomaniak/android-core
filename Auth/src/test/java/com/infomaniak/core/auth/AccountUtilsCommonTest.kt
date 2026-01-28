@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth
 
 import android.database.sqlite.SQLiteConstraintException
+import com.infomaniak.core.auth.room.UserDatabase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -66,8 +67,9 @@ class AccountUtilsCommonTest : BaseAccountUtilsTest() {
     }
 
     private inline fun withAccountUtils(block: AccountUtilsCommon.() -> Unit) {
-        val persistedUserIdAccountUtils = object : AccountUtilsCommon(context, inMemory = true) {}
+        val userDatabase = UserDatabase.instantiateDataBase(context, true)
+        val persistedUserIdAccountUtils = object : AccountUtilsCommon(context, userDatabase = userDatabase) {}
         block(persistedUserIdAccountUtils)
-        persistedUserIdAccountUtils.userDatabase.close()
+        userDatabase.close()
     }
 }
