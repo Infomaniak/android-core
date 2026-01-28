@@ -127,6 +127,9 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
         }
     }
 
+    /**
+     * Verifies that the last persisted state can be collected repeatedly, even after it has already been emitted once.
+     */
     @Test
     fun currentUserIdFlow_canBeReadMultipleTimesInARow() = runTest {
         withAccountUtils {
@@ -144,6 +147,9 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
         }
     }
 
+    /**
+     * Verifies that the last persisted state can be collected repeatedly, even after it has already been emitted once.
+     */
     @Test
     fun currentUserFlow_canBeReadMultipleTimesInARow() = runTest {
         withAccountUtils {
