@@ -24,8 +24,8 @@ import com.infomaniak.lib.login.ApiToken
 /**
  * CredentialManager: Adds a currentUserId and currentUser management layer to [BaseCredentialManager]
  *
- * It's now recommended to use [AbstractUserIdAccountUtils] or [PersistedUserIdAccountUtils] instead as they factorize much more
- * code and have safer current user management logic.
+ * It's now recommended to use [AccountUtilsCommon], [AbstractCurrentUserAccountUtils] or [PersistedCurrentUserAccountUtils]
+ * instead as they factorize much more code and have safer current user management logic.
  */
 abstract class CredentialManager : BaseCredentialManager() {
 

@@ -168,9 +168,9 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
         }
     }
 
-    private inline fun withAccountUtils(block: PersistedUserIdAccountUtils.() -> Unit) {
+    private inline fun withAccountUtils(block: PersistedCurrentUserAccountUtils.() -> Unit) {
         val userDatabase = UserDatabase.instantiateDataBase(context, true)
-        val persistedUserIdAccountUtils = object : PersistedUserIdAccountUtils(context, userDatabase = userDatabase) {}
+        val persistedUserIdAccountUtils = object : PersistedCurrentUserAccountUtils(context, userDatabase = userDatabase) {}
         block(persistedUserIdAccountUtils)
         userDatabase.close()
     }
