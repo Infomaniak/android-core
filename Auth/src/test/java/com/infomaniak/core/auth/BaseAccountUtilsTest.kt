@@ -25,7 +25,6 @@ import com.infomaniak.core.auth.models.user.preferences.Language
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
 import com.infomaniak.core.auth.models.user.preferences.Preferences
 import com.infomaniak.lib.login.ApiToken
-import org.junit.Before
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import splitties.init.injectAsAppCtx
@@ -33,11 +32,9 @@ import splitties.init.injectAsAppCtx
 @RunWith(RobolectricTestRunner::class)
 abstract class BaseAccountUtilsTest {
 
-    protected lateinit var context: Context
+    protected var context: Context = ApplicationProvider.getApplicationContext()
 
-    @Before
-    fun setup() {
-        context = ApplicationProvider.getApplicationContext()
+    init {
         context.injectAsAppCtx()
     }
 
