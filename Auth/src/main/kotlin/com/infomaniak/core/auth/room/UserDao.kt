@@ -38,6 +38,13 @@ interface UserDao {
     fun getAllSync(): List<User>
 
     @Query("SELECT COUNT(id) FROM user")
+    suspend fun userCount(): Int
+
+    @Deprecated(
+        message = "This method is blocking use the suspend alternative insteady",
+        replaceWith = ReplaceWith("userCount()"),
+    )
+    @Query("SELECT COUNT(id) FROM user")
     fun count(): Int
 
     @Query("SELECT * FROM user LIMIT 1")
