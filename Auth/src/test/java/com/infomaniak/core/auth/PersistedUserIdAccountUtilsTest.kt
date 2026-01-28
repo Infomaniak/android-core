@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.auth
 
+import com.infomaniak.core.auth.room.UserDatabase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -168,8 +169,9 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
     }
 
     private inline fun withAccountUtils(block: PersistedUserIdAccountUtils.() -> Unit) {
-        val persistedUserIdAccountUtils = object : PersistedUserIdAccountUtils(context, inMemory = true) {}
+        val userDatabase = UserDatabase.instantiateDataBase(context, true)
+        val persistedUserIdAccountUtils = object : PersistedUserIdAccountUtils(context, userDatabase = userDatabase) {}
         block(persistedUserIdAccountUtils)
-        persistedUserIdAccountUtils.userDatabase.close()
+        userDatabase.close()
     }
 }

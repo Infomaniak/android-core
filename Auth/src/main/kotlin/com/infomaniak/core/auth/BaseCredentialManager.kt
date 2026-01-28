@@ -38,7 +38,9 @@ import java.util.concurrent.TimeUnit
  */
 abstract class BaseCredentialManager : UserExistenceChecker {
 
-    override suspend fun isUserAlreadyPresent(userId: Int): Boolean = getUserById(userId) != null
+    protected abstract val userDatabase: UserDatabase
+
+    override suspend fun isUserAlreadyPresent(userId: Int): Boolean = userDatabase.userDao().findById(userId) != null
 
     //region User
     @CallSuper
@@ -110,7 +112,7 @@ abstract class BaseCredentialManager : UserExistenceChecker {
     }
 
     private suspend fun getDefaultTokenInterceptorListener(userId: Int): TokenInterceptorListener {
-        var user = getUserById(userId)
+        var user = userDatabase.userDao().findById(userId)
         return object : TokenInterceptorListener {
             override suspend fun onRefreshTokenSuccess(apiToken: ApiToken) {
                 setUserToken(user, apiToken)
@@ -121,7 +123,7 @@ abstract class BaseCredentialManager : UserExistenceChecker {
             }
 
             override suspend fun getApiToken(): ApiToken? {
-                user = getUserById(userId)
+                user = userDatabase.userDao().findById(userId)
                 return user?.apiToken
             }
 
