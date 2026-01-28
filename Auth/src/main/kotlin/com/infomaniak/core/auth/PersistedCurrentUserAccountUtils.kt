@@ -28,13 +28,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 /**
- * A version of [AbstractUserIdAccountUtils] that automatically stores the current user id inside of room as well
+ * A version of [AbstractCurrentUserAccountUtils] that automatically stores the current user id inside of room as well
  */
-abstract class PersistedUserIdAccountUtils(
+abstract class PersistedCurrentUserAccountUtils(
     appContext: Context,
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     userDatabase: UserDatabase,
-) : AbstractUserIdAccountUtils(appContext, userDataCleanableList, userDatabase) {
+) : AbstractCurrentUserAccountUtils(appContext, userDataCleanableList, userDatabase) {
     override val currentUserIdFlow: Flow<Int?> = userDatabase
         .currentUserIdDao()
         .getCurrentUserIdFlow()

@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
-abstract class AbstractUserIdAccountUtils(
+abstract class AbstractCurrentUserAccountUtils(
     appContext: Context,
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     userDatabase: UserDatabase,
