@@ -19,18 +19,15 @@ package com.infomaniak.core.auth
 
 import androidx.annotation.CallSuper
 import androidx.collection.ArrayMap
-import androidx.lifecycle.LiveData
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.network.networking.HttpClientConfig
 import com.infomaniak.lib.login.ApiToken
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import org.jetbrains.annotations.TestOnly
 import java.util.concurrent.TimeUnit
 
 /**
@@ -41,6 +38,11 @@ abstract class BaseCredentialManager : UserExistenceChecker {
     protected abstract val userDatabase: UserDatabase
 
     override suspend fun isUserAlreadyPresent(userId: Int): Boolean = userDatabase.userDao().findById(userId) != null
+
+    //region Helper
+    protected fun userDao() = userDatabase.userDao()
+    protected fun currentUserIdDao() = userDatabase.currentUserIdDao()
+    //endregion
 
     //region User
     @CallSuper
