@@ -29,7 +29,7 @@ open class AccountUtilsCommon(
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
 ) : BaseCredentialManager() {
-    val allUsers = userDao().allUsers
+    val allUsers = userDao.allUsers
 
     /**
      * @throws SQLiteConstraintException when adding a user with a primary key that already exists
@@ -37,12 +37,12 @@ open class AccountUtilsCommon(
     @CallSuper
     open suspend fun addUser(user: User) {
         userDataCleanableList.forEach { it.resetForUser(user.id.toLong()) }
-        userDao().insert(user)
+        userDao.insert(user)
     }
 
     @CallSuper
     open suspend fun removeUser(userId: Int) {
         userDataCleanableList.forEach { it.resetForUser(userId.toLong()) }
-        userDao().deleteUserById(userId)
+        userDao.deleteUserById(userId)
     }
 }
