@@ -40,8 +40,8 @@ abstract class BaseCredentialManager : UserExistenceChecker {
     override suspend fun isUserAlreadyPresent(userId: Int): Boolean = userDatabase.userDao().findById(userId) != null
 
     //region Helper
-    protected fun userDao() = userDatabase.userDao()
-    protected fun currentUserIdDao() = userDatabase.currentUserIdDao()
+    protected val userDao = userDatabase.userDao()
+    protected val currentUserIdDao = userDatabase.currentUserIdDao()
     //endregion
 
     //region User
