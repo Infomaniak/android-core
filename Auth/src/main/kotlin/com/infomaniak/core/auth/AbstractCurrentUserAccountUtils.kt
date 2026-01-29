@@ -26,11 +26,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
+/**
+ * Extends [UserAccountUtils] by introducing the concept of a current user.
+ *
+ * How the current user ID is stored is left to the caller. If you do not have any specific storage requirements, use
+ * [PersistedCurrentUserAccountUtils], which persists the current user using Room.
+ */
 abstract class AbstractCurrentUserAccountUtils(
     appContext: Context,
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
-) : AccountUtilsCommon(appContext, userDataCleanableList, userDatabase) {
+) : UserAccountUtils(appContext, userDataCleanableList, userDatabase) {
 
     /**
      * If you need a live [User] instead of just its id, use [currentUserFlow]
