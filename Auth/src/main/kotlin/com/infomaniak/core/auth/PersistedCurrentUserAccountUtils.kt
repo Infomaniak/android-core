@@ -40,6 +40,8 @@ abstract class PersistedCurrentUserAccountUtils(
         .getCurrentUserIdFlow()
 
     /**
+     * Adds a new user to the list of all users and automatically selects it as the current user.
+     *
      * @throws SQLiteConstraintException when adding a user with a primary key that already exists
      */
     override suspend fun addUser(user: User) {
@@ -47,6 +49,10 @@ abstract class PersistedCurrentUserAccountUtils(
         userDatabase.currentUserIdDao().setCurrentUserId(CurrentUserId(user.id))
     }
 
+    /**
+     * Removes definitively a user from the list of all users and deselects it if it was the current user. The better approach is
+     * probably to use [removeUserAndSwitchToNext] instead to not have zero selected user when there are other connected users.
+     */
     override suspend fun removeUser(userId: Int) {
         super.removeUser(userId)
         removeCurrentUserIdIfSelected(userId)
