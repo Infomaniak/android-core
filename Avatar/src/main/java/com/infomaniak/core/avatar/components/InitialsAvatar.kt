@@ -56,8 +56,7 @@ internal fun InitialsAvatar(avatarType: AvatarType.WithInitials) {
             contentAlignment = Alignment.Center,
         ) {
             BasicText(
-                modifier = Modifier
-                    .wrapContentSize(align = Alignment.Center),
+                modifier = Modifier.wrapContentSize(align = Alignment.Center),
                 text = avatarType.initials,
                 color = ColorProducer { avatarType.colors.contentColor },
                 autoSize = TextAutoSize.StepBased(8.sp, stepSize = 2.sp),
