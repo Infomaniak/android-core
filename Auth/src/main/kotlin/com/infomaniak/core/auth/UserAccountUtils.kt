@@ -24,7 +24,12 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 
-open class AccountUtilsCommon(
+/**
+ * This class factorises the addition, removal and listing of users inside of a [UserDatabase].
+ *
+ * If you need to manage the concept of a current user then use [PersistedCurrentUserAccountUtils] instead.
+ */
+open class UserAccountUtils(
     appContext: Context,
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
