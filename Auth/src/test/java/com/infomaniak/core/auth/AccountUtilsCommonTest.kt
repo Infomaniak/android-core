@@ -66,9 +66,9 @@ class AccountUtilsCommonTest : BaseAccountUtilsTest() {
         }
     }
 
-    private inline fun withAccountUtils(block: AccountUtilsCommon.() -> Unit) {
+    private inline fun withAccountUtils(block: UserAccountUtils.() -> Unit) {
         val userDatabase = UserDatabase.instantiateDataBase(context, true)
-        val persistedUserIdAccountUtils = object : AccountUtilsCommon(context, userDatabase = userDatabase) {}
+        val persistedUserIdAccountUtils = object : UserAccountUtils(context, userDatabase = userDatabase) {}
         block(persistedUserIdAccountUtils)
         userDatabase.close()
     }

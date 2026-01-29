@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 /**
- * A version of [AbstractCurrentUserAccountUtils] that automatically stores the current user id inside of room as well
+ * A version of [AbstractCurrentUserAccountUtils] that automatically stores the current user ID inside of Room.
  */
 open class PersistedCurrentUserAccountUtils(
     appContext: Context,
