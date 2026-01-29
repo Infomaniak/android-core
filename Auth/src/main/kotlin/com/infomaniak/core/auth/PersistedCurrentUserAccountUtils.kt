@@ -46,7 +46,7 @@ abstract class PersistedCurrentUserAccountUtils(
      */
     override suspend fun addUser(user: User) {
         super.addUser(user)
-        userDatabase.currentUserIdDao().setCurrentUserId(CurrentUserId(user.id))
+        switchUser(user.id)
     }
 
     /**
