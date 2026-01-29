@@ -43,7 +43,7 @@ abstract class AbstractCurrentUserAccountUtils(
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentUserFlow: Flow<User?> by lazy {
         currentUserIdFlow.flatMapLatest { userId ->
-            userId?.let { userDatabase.userDao().findByIdFlow(it) } ?: flowOf(null)
+            userId?.let { userDao().findByIdFlow(it) } ?: flowOf(null)
         }
     }
 }
