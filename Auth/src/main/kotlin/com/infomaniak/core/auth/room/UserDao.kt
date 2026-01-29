@@ -41,7 +41,7 @@ interface UserDao {
     suspend fun userCount(): Int
 
     @Deprecated(
-        message = "This method is blocking use the suspend alternative insteady",
+        message = "This method is blocking use the suspend alternative instead",
         replaceWith = ReplaceWith("userCount()"),
     )
     @Query("SELECT COUNT(id) FROM user")
