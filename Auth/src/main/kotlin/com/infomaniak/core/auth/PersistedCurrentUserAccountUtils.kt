@@ -35,9 +35,7 @@ open class PersistedCurrentUserAccountUtils(
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
 ) : AbstractCurrentUserAccountUtils(appContext, userDataCleanableList, userDatabase) {
-    override val currentUserIdFlow: Flow<Int?> = userDatabase
-        .currentUserIdDao()
-        .getCurrentUserIdFlow()
+    override val currentUserIdFlow: Flow<Int?> = currentUserIdDao().getCurrentUserIdFlow()
 
     /**
      * Adds a new user to the list of all users and automatically selects it as the current user.
@@ -77,16 +75,15 @@ open class PersistedCurrentUserAccountUtils(
      */
     @CallSuper
     open suspend fun switchUser(userId: Int) {
-        if (userDatabase.userDao().findById(userId) == null) return
-        userDatabase.currentUserIdDao().setCurrentUserId(CurrentUserId(userId))
+        if (userDao().findById(userId) == null) return
+        currentUserIdDao().setCurrentUserId(CurrentUserId(userId))
     }
 
     private suspend fun removeCurrentUserIdIfSelected(userId: Int) {
-        val currentUserIdDao = userDatabase.currentUserIdDao()
-        if (currentUserIdDao.getCurrentUserIdFlow().first() == userId) {
-            currentUserIdDao.clearCurrentUserId()
+        if (currentUserIdDao().getCurrentUserIdFlow().first() == userId) {
+            currentUserIdDao().clearCurrentUserId()
         }
     }
 
-    private suspend fun getNextUserId(): Int? = userDatabase.userDao().getFirst()?.id
+    private suspend fun getNextUserId(): Int? = userDao().getFirst()?.id
 }
