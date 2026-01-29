@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.first
 /**
  * A version of [AbstractCurrentUserAccountUtils] that automatically stores the current user id inside of room as well
  */
-abstract class PersistedCurrentUserAccountUtils(
+open class PersistedCurrentUserAccountUtils(
     appContext: Context,
     userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),

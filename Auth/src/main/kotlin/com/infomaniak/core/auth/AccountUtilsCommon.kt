@@ -24,7 +24,7 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 
-abstract class AccountUtilsCommon(
+open class AccountUtilsCommon(
     appContext: Context,
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
