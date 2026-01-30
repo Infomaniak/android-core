@@ -48,25 +48,18 @@ open class PersistedCurrentUserAccountUtils(
     }
 
     /**
-     * Removes definitively a user from the list of all users and deselects it if it was the current user. The better approach is
-     * probably to use [removeUserAndSwitchToNext] instead to not have zero selected user when there are other connected users.
+     * Removes definitively a user from the list of all users and if it was the current user, it will automatically switch to
+     * another user in the list when available.
      */
     override suspend fun removeUser(userId: Int) {
         super.removeUser(userId)
-        removeCurrentUserIdIfSelected(userId)
-    }
 
-    /**
-     * @param userId The user id to remove from the list of connected users
-     */
-    @CallSuper
-    open suspend fun removeUserAndSwitchToNext(userId: Int) {
-        super.removeUser(userId)
-
-        getNextUserId()?.let { nextUserId ->
-            switchUser(nextUserId)
-        } ?: run {
-            removeCurrentUserIdIfSelected(userId)
+        if (currentUserIdDao.getCurrentUserIdFlow().first() == userId) {
+            getNextUserId()?.let { nextUserId ->
+                switchUser(nextUserId)
+            } ?: run {
+                currentUserIdDao.clearCurrentUserId()
+            }
         }
     }
 
@@ -77,12 +70,6 @@ open class PersistedCurrentUserAccountUtils(
     open suspend fun switchUser(userId: Int) {
         if (userDao.findById(userId) == null) return
         currentUserIdDao.setCurrentUserId(CurrentUserId(userId))
-    }
-
-    private suspend fun removeCurrentUserIdIfSelected(userId: Int) {
-        if (currentUserIdDao.getCurrentUserIdFlow().first() == userId) {
-            currentUserIdDao.clearCurrentUserId()
-        }
     }
 
     private suspend fun getNextUserId(): Int? = userDao.getFirst()?.id
