@@ -25,8 +25,10 @@ import com.infomaniak.lib.login.ApiToken
  * CredentialManager: Adds a currentUserId and currentUser management layer to [BaseCredentialManager]
  *
  * It's now recommended to use [UserAccountUtils], [AbstractCurrentUserAccountUtils] or [PersistedCurrentUserAccountUtils]
- * instead as they factorize much more code and have safer current user management logic.
+ * instead as they factorize much more code and have safer current user management logic. Also, CredentialManager uses some
+ * blocking methods which is fixed in the alternative classes.
  */
+@Deprecated("It's recommended to use UserAccountUtils, AbstractCurrentUserAccountUtils or PersistedCurrentUserAccountUtils")
 abstract class CredentialManager : BaseCredentialManager() {
 
     abstract val currentUserId: Int
