@@ -33,5 +33,5 @@ interface CurrentUserIdDao {
     suspend fun setCurrentUserId(currentUserId: CurrentUserId)
 
     @Query("DELETE FROM CurrentUserId")
-    suspend fun clearCurrentUserId()
+    suspend fun deleteCurrentUserId()
 }

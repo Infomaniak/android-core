@@ -18,11 +18,14 @@
 package com.infomaniak.core.auth
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
+import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
@@ -52,4 +55,51 @@ abstract class AbstractCurrentUserAccountUtils(
             userId?.let { userDao.findByIdFlow(it) } ?: flowOf(null)
         }
     }
+
+    /**
+     * Update the currentUserIdFlow with the new [userId]
+     */
+    abstract suspend fun setCurrentUserId(userId: Int)
+
+    /**
+     * Update the currentUserIdFlow to null
+     */
+    abstract suspend fun setCurrentUserIdToNull()
+
+    /**
+     * Adds a new user to the list of all users and automatically selects it as the current user.
+     *
+     * @throws SQLiteConstraintException when adding a user with a primary key that already exists
+     */
+    override suspend fun addUser(user: User) {
+        super.addUser(user)
+        switchUser(user.id)
+    }
+
+    /**
+     * Removes definitively a user from the list of all users and if it was the current user, it will automatically switch to
+     * another user in the list when available.
+     */
+    override suspend fun removeUser(userId: Int) {
+        super.removeUser(userId)
+
+        if (currentUserIdFlow.first() == userId) {
+            getNextUserId()?.let { nextUserId ->
+                switchUser(nextUserId)
+            } ?: run {
+                setCurrentUserIdToNull()
+            }
+        }
+    }
+
+    /**
+     * Switches the currently selected user. If the given [userId] does not exist in the user table, this method does nothing.
+     */
+    @CallSuper
+    open suspend fun switchUser(userId: Int) {
+        if (userDao.findById(userId) == null) return
+        setCurrentUserId(userId)
+    }
+
+    private suspend fun getNextUserId(): Int? = userDao.getFirst()?.id
 }
