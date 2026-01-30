@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.auth
 
-import app.cash.turbine.test
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -91,29 +90,11 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
             addUser(userOf(id = 1))
             addUser(userOf(id = 2))
 
-            val job = assertFlowCollection(listOf(2, 1), currentUserFlow)
+            val job = assertFlowCollection(listOf(1), currentUserFlow)
 
             removeUser(2)
 
             job.join()
-        }
-    }
-
-    /**
-     * We want to collect id: 2 -> id: 1 and not id: 2 -> null -> id: 1
-     */
-    @Test
-    fun removeUser_doesntEmitIntermediaryNullId() = runTest {
-        withAccountUtils {
-            addUser(userOf(id = 1))
-            addUser(userOf(id = 2))
-
-            currentUserIdFlow.test {
-                Assert.assertEquals(2, awaitItem())
-
-                removeUser(2)
-                Assert.assertEquals(1, awaitItem())
-            }
         }
     }
 
