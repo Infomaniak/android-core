@@ -61,6 +61,21 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
     }
 
     @Test
+    fun removeUser_doesntSwitchUserWhenUserRemovedUserIsNotTheCurrent() = runTest {
+        withAccountUtils {
+            addUser(userOf(id = 1))
+            addUser(userOf(id = 2))
+            addUser(userOf(id = 3))
+
+            switchUser(2)
+
+            removeUser(3)
+            Assert.assertEquals(2, currentUserIdFlow.first())
+            Assert.assertEquals(2, currentUserFlow.first()?.id)
+        }
+    }
+
+    @Test
     fun switchUser_correctlySwitchToExistingAccounts() = runTest {
         withAccountUtils {
             addUser(userOf(id = 1))
