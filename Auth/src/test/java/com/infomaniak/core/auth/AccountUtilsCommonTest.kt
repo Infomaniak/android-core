@@ -33,7 +33,7 @@ class AccountUtilsCommonTest : BaseAccountUtilsTest() {
             addUser(userOf(id = 2))
             addUser(userOf(id = 3))
 
-            Assert.assertEquals(listOf(1, 2, 3), allUsers.first().map { it.id })
+            Assert.assertEquals(listOf(1, 2, 3), users.first().map { it.id })
         }
     }
 
@@ -54,7 +54,7 @@ class AccountUtilsCommonTest : BaseAccountUtilsTest() {
 
             removeUser(3)
             removeUser(1)
-            Assert.assertEquals(listOf(2), allUsers.first().map { it.id })
+            Assert.assertEquals(listOf(2), users.first().map { it.id })
         }
     }
 
@@ -62,7 +62,7 @@ class AccountUtilsCommonTest : BaseAccountUtilsTest() {
     fun addUser_removingNonExistentUserDoesNothing() = runTest {
         withAccountUtils {
             removeUser(1)
-            Assert.assertEquals(emptyList<Int>(), allUsers.first().map { it.id })
+            Assert.assertEquals(emptyList<Int>(), users.first().map { it.id })
         }
     }
 

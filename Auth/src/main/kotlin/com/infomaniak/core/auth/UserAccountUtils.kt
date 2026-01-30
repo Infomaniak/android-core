@@ -34,7 +34,7 @@ open class UserAccountUtils(
     private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
     override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
 ) : BaseCredentialManager() {
-    val allUsers = userDao.allUsers
+    val users = userDao.allUsers
 
     /**
      * @throws SQLiteConstraintException when adding a user with a primary key that already exists
