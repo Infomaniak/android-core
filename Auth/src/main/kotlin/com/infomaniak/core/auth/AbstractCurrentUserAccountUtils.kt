@@ -20,6 +20,7 @@ package com.infomaniak.core.auth
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import androidx.annotation.CallSuper
+import androidx.room.withTransaction
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
@@ -67,8 +68,10 @@ abstract class AbstractCurrentUserAccountUtils(
      * @throws SQLiteConstraintException when adding a user with a primary key that already exists
      */
     override suspend fun addUser(user: User) {
-        super.addUser(user)
-        switchUser(user.id)
+        userDatabase.withTransaction {
+            super.addUser(user)
+            switchUser(user.id)
+        }
     }
 
     /**
@@ -76,8 +79,10 @@ abstract class AbstractCurrentUserAccountUtils(
      * another user in the list when available.
      */
     override suspend fun removeUser(userId: Int) {
-        if (currentUserIdFlow.first() == userId) switchUser(getNextUserId(userId))
-        super.removeUser(userId)
+        userDatabase.withTransaction {
+            if (currentUserIdFlow.first() == userId) switchUser(getNextUserId(userId))
+            super.removeUser(userId)
+        }
     }
 
     /**
