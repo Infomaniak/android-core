@@ -59,12 +59,7 @@ abstract class AbstractCurrentUserAccountUtils(
     /**
      * Update the currentUserIdFlow with the new [userId]
      */
-    abstract suspend fun setCurrentUserId(userId: Int)
-
-    /**
-     * Update the currentUserIdFlow to null
-     */
-    abstract suspend fun setCurrentUserIdToNull()
+    abstract suspend fun setCurrentUserId(userId: Int?)
 
     /**
      * Adds a new user to the list of all users and automatically selects it as the current user.
@@ -81,25 +76,29 @@ abstract class AbstractCurrentUserAccountUtils(
      * another user in the list when available.
      */
     override suspend fun removeUser(userId: Int) {
+        if (currentUserIdFlow.first() == userId) switchUser(getNextUserId(userId))
         super.removeUser(userId)
+    }
 
-        if (currentUserIdFlow.first() == userId) {
-            getNextUserId()?.let { nextUserId ->
-                switchUser(nextUserId)
-            } ?: run {
-                setCurrentUserIdToNull()
-            }
+    /**
+     * Switches the current user. This method will always suspend until [currentUserFlow] and [currentUserIdFlow] has had time to
+     * be updated.
+     */
+    @CallSuper
+    open suspend fun switchUser(userId: Int?) {
+        when (userId) {
+            null -> setCurrentUserId(null)
+            else -> switchUser(userId)
         }
     }
 
     /**
      * Switches the currently selected user. If the given [userId] does not exist in the user table, this method does nothing.
      */
-    @CallSuper
-    open suspend fun switchUser(userId: Int) {
+    private suspend fun switchUser(userId: Int) {
         if (userDao.findById(userId) == null) return
         setCurrentUserId(userId)
     }
 
-    private suspend fun getNextUserId(): Int? = userDao.getFirst()?.id
+    private suspend fun getNextUserId(excludedId: Int): Int? = userDao.getFirstExcluding(excludedId)?.id
 }

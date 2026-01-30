@@ -17,8 +17,15 @@
  */
 package com.infomaniak.core.auth
 
+import app.cash.turbine.test
+import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
@@ -72,6 +79,41 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
             removeUser(3)
             Assert.assertEquals(2, currentUserIdFlow.first())
             Assert.assertEquals(2, currentUserFlow.first()?.id)
+        }
+    }
+
+    /**
+     * We want to collect id: 2 -> id: 1 and not id: 2 -> null -> id: 1
+     */
+    @Test
+    fun removeUser_doesntEmitIntermediateNullUser() = runTest {
+        withAccountUtils {
+            addUser(userOf(id = 1))
+            addUser(userOf(id = 2))
+
+            val job = assertFlowCollection(listOf(2, 1), currentUserFlow)
+
+            removeUser(2)
+
+            job.join()
+        }
+    }
+
+    /**
+     * We want to collect id: 2 -> id: 1 and not id: 2 -> null -> id: 1
+     */
+    @Test
+    fun removeUser_doesntEmitIntermediaryNullId() = runTest {
+        withAccountUtils {
+            addUser(userOf(id = 1))
+            addUser(userOf(id = 2))
+
+            currentUserIdFlow.test {
+                Assert.assertEquals(2, awaitItem())
+
+                removeUser(2)
+                Assert.assertEquals(1, awaitItem())
+            }
         }
     }
 
@@ -179,7 +221,23 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
     private inline fun withAccountUtils(block: PersistedCurrentUserAccountUtils.() -> Unit) {
         val userDatabase = UserDatabase.instantiateDataBase(context, true)
         val persistedUserIdAccountUtils = object : PersistedCurrentUserAccountUtils(context, userDatabase = userDatabase) {}
-        block(persistedUserIdAccountUtils)
+        val result = runCatching {
+            block(persistedUserIdAccountUtils)
+        }
         userDatabase.close()
+        result.getOrThrow()
+    }
+}
+
+private fun CoroutineScope.assertFlowCollection(expectedValues: List<Any>, flow: Flow<User?>): Job {
+    val mutableExpectedValues = expectedValues.toMutableList()
+
+    return launch {
+        flow.collect {
+            val cursor = mutableExpectedValues.removeFirst()
+            Assert.assertEquals(cursor, it?.id)
+
+            if (mutableExpectedValues.isEmpty()) cancel()
+        }
     }
 }

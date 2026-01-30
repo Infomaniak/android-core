@@ -33,11 +33,10 @@ open class PersistedCurrentUserAccountUtils(
 ) : AbstractCurrentUserAccountUtils(appContext, userDataCleanableList, userDatabase) {
     override val currentUserIdFlow: Flow<Int?> = currentUserIdDao.getCurrentUserIdFlow()
 
-    override suspend fun setCurrentUserId(userId: Int) {
-        currentUserIdDao.setCurrentUserId(CurrentUserId(userId))
-    }
-
-    override suspend fun setCurrentUserIdToNull() {
-        currentUserIdDao.deleteCurrentUserId()
+    override suspend fun setCurrentUserId(userId: Int?) {
+        when (userId) {
+            null -> currentUserIdDao.deleteCurrentUserId()
+            else -> currentUserIdDao.setCurrentUserId(CurrentUserId(userId))
+        }
     }
 }
