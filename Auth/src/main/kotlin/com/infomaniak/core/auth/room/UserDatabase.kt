@@ -19,6 +19,7 @@
 
 package com.infomaniak.core.auth.room
 
+import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
@@ -27,6 +28,7 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.OrganizationAccount
 import com.infomaniak.core.auth.models.user.Email
 import com.infomaniak.core.auth.models.user.Phone
@@ -35,7 +37,7 @@ import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices
 import splitties.init.appCtx
 
 @Database(
-    entities = [User::class],
+    entities = [User::class, CurrentUserId::class],
     autoMigrations = [
         AutoMigration(
             from = 1, to = 2,
@@ -47,14 +49,16 @@ import splitties.init.appCtx
         ),
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
+        AutoMigration(from = 5, to = 6),
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 @TypeConverters(UserConverter::class)
 abstract class UserDatabase internal constructor() : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+    abstract fun currentUserIdDao(): CurrentUserIdDao
 
     companion object {
 
@@ -63,13 +67,20 @@ abstract class UserDatabase internal constructor() : RoomDatabase() {
         fun getDatabase(): UserDatabase = instance
 
         @PublishedApi
-        internal val instance = Room.databaseBuilder<UserDatabase>(
-            context = appCtx,
-            name = "user_database"
-        ).apply {
-            enableMultiInstanceInvalidation()
-            fallbackToDestructiveMigration(dropAllTables = true)
-        }.build()
+        internal val instance = instantiateDataBase(appCtx)
+
+        fun instantiateDataBase(context: Context, inMemory: Boolean = false): UserDatabase {
+            val databaseBuilder: Builder<UserDatabase> = if (inMemory) {
+                Room.inMemoryDatabaseBuilder(context)
+            } else {
+                Room.databaseBuilder(context = context, name = "user_database")
+            }
+
+            return databaseBuilder.apply {
+                enableMultiInstanceInvalidation()
+                fallbackToDestructiveMigration(dropAllTables = true)
+            }.build()
+        }
     }
 }
 
