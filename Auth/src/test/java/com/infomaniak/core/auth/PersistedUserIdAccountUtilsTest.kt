@@ -37,7 +37,7 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun removeUser_unselectsTheCurrentAccount() = runTest {
+    fun removeUser_setsCurrentUserToNullWhenThereAreNoMoreAccounts() = runTest {
         withAccountUtils {
             addUser(userOf(id = 1))
             Assert.assertEquals(1, currentUserIdFlow.first())
@@ -50,23 +50,13 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun removeUserAndSwitchToNext_selectsTheNextUserCorrectly() = runTest {
+    fun removeUser_selectsTheNextUserWhenThereAreOtherAccounts() = runTest {
         withAccountUtils {
             addUser(userOf(id = 1))
             addUser(userOf(id = 2))
-            removeUserAndSwitchToNext(2)
+            removeUser(2)
             Assert.assertEquals(1, currentUserIdFlow.first())
             Assert.assertEquals(1, currentUserFlow.first()?.id)
-        }
-    }
-
-    @Test
-    fun removeUserAndSwitchToNext_unselectsCompletelyWhenRemovingLastUser() = runTest {
-        withAccountUtils {
-            addUser(userOf(id = 1))
-            removeUserAndSwitchToNext(1)
-            Assert.assertNull(currentUserIdFlow.first())
-            Assert.assertNull(currentUserFlow.first())
         }
     }
 
@@ -81,8 +71,11 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
         }
     }
 
+    /**
+     * Ensures we don't change the order without noticing
+     */
     @Test
-    fun removeUserAndSwitchToNext_switchesCorrectly() = runTest {
+    fun removeUser_switchesInTheCorrectOrder() = runTest {
         withAccountUtils {
             // Add in specific order: 1, 2, 3
             addUser(userOf(id = 1))
@@ -90,17 +83,17 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
             addUser(userOf(id = 3))
 
             // Current is 3. Remove 3, should select 1
-            removeUserAndSwitchToNext(3)
+            removeUser(3)
             Assert.assertEquals(1, currentUserIdFlow.first())
             Assert.assertEquals(1, currentUserFlow.first()?.id)
 
             // Remove 1, should select 2
-            removeUserAndSwitchToNext(1)
+            removeUser(1)
             Assert.assertEquals(2, currentUserIdFlow.first())
             Assert.assertEquals(2, currentUserFlow.first()?.id)
 
             // Remove 2, should unselect
-            removeUserAndSwitchToNext(2)
+            removeUser(2)
             Assert.assertNull(currentUserIdFlow.first())
             Assert.assertNull(currentUserFlow.first())
         }
