@@ -215,7 +215,7 @@ private fun CoroutineScope.assertFlowCollection(expectedValues: List<Any>, flow:
 
     return launch {
         flow.collect {
-            val cursor = mutableExpectedValues.removeFirst()
+            val cursor = mutableExpectedValues.removeAt(0)
             Assert.assertEquals(cursor, it?.id)
 
             if (mutableExpectedValues.isEmpty()) cancel()
