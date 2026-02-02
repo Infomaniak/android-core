@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth
 
 import android.database.sqlite.SQLiteConstraintException
+import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -46,7 +47,17 @@ class AccountUtilsCommonTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun addUser_removesUsersCorrectly() = runTest {
+    fun addUser_removingAllUsersGivesEmptyUserList() = runTest {
+        withAccountUtils {
+            addUser(userOf(id = 1))
+
+            removeUser(1)
+            Assert.assertEquals(emptyList<User>(), users.first())
+        }
+    }
+
+    @Test
+    fun addUser_removingUsersKeepsConnectedUsers() = runTest {
         withAccountUtils {
             addUser(userOf(id = 1))
             addUser(userOf(id = 2))
