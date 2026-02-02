@@ -80,8 +80,8 @@ abstract class AbstractCurrentUserAccountUtils(
      */
     override suspend fun removeUser(userId: Int) {
         userDatabase.withTransaction {
-            if (currentUserIdFlow.first() == userId) switchUser(getNextUserId(userId))
             super.removeUser(userId)
+            if (currentUserIdFlow.first() == userId) switchUser(getNextUserId())
         }
     }
 
@@ -105,5 +105,5 @@ abstract class AbstractCurrentUserAccountUtils(
         setCurrentUserId(userId)
     }
 
-    private suspend fun getNextUserId(excludedId: Int): Int? = userDao.getFirstExcluding(excludedId)?.id
+    private suspend fun getNextUserId(): Int? = userDao.getFirst()?.id
 }
