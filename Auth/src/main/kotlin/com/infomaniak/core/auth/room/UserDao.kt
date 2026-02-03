@@ -38,6 +38,13 @@ interface UserDao {
     fun getAllSync(): List<User>
 
     @Query("SELECT COUNT(id) FROM user")
+    suspend fun userCount(): Int
+
+    @Deprecated(
+        message = "This method is blocking use the suspend alternative instead",
+        replaceWith = ReplaceWith("userCount()"),
+    )
+    @Query("SELECT COUNT(id) FROM user")
     fun count(): Int
 
     @Query("SELECT * FROM user LIMIT 1")
@@ -52,6 +59,9 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE id LIKE (:id) LIMIT 1")
     suspend fun findById(id: Int): User?
 
+    @Query("SELECT * FROM user WHERE id LIKE (:id) LIMIT 1")
+    fun findByIdFlow(id: Int): Flow<User?>
+
     @Query("SELECT * FROM user WHERE firstname LIKE (:firstName) AND lastname LIKE (:lastName) LIMIT 1")
     suspend fun findByName(firstName: String, lastName: String): User?
 
@@ -63,4 +73,8 @@ interface UserDao {
 
     @Delete
     suspend fun delete(user: User)
+
+    @Query("DELETE FROM user WHERE id = :userId")
+    suspend fun deleteUserById(userId: Int)
+
 }
