@@ -57,7 +57,7 @@ class AccountUtilsCommonTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun addUser_removingUsersKeepsConnectedUsers() = runTest {
+    fun addUser_removingUsersKeepsOtherUsers() = runTest {
         withAccountUtils {
             addUser(userOf(id = 1))
             addUser(userOf(id = 2))
