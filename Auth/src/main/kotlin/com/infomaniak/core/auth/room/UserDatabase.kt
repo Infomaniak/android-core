@@ -34,6 +34,7 @@ import com.infomaniak.core.auth.models.user.Email
 import com.infomaniak.core.auth.models.user.Phone
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices
+import com.infomaniak.core.sentry.SentryLog
 import splitties.init.appCtx
 
 @Database(
@@ -128,7 +129,16 @@ class UserConverter {
     }
 
     @TypeConverter
-    fun toPhones(json: String?): ArrayList<Phone>? {
+    fun toPhones(json: String?): ArrayList<Phone>? = runCatching {
         return gson.fromJson(json, phonesType)
+    }.getOrElse { exception ->
+        SentryLog.e(TAG, "NPE during database property deserialization", exception) { scope ->
+            scope.setExtra("json", json)
+        }
+        null
+    }
+
+    companion object {
+        const val TAG = "UserDatabase"
     }
 }
