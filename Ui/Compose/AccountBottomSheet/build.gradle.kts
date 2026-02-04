@@ -48,9 +48,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":Auth"))
+    implementation(project(":Avatar"))
+    implementation(project(":Common"))
     implementation(project(":Ui:Compose:Basics"))
     implementation(project(":Ui:Compose:Margin"))
-    
+    implementation(project(":Ui:Compose:Preview"))
+
     implementation(platform(core.compose.bom))
     implementation(core.compose.material3)
     implementation(core.compose.ui)
