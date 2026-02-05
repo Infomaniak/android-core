@@ -40,6 +40,9 @@ jobs:
         run: |
           PR_PATH=$(pwd)
           cat <<EOF > ink_utils/settings.yml
+          account_bottom_sheet:
+            global:
+              project_root: "${PR_PATH}/Ui/Compose/AccountBottomSheet"
           cross_app_login:
             global:
               project_root: "${PR_PATH}/CrossAppLogin/Front"
@@ -61,6 +64,12 @@ jobs:
           EOF
 
       # App specific steps
+      - name: Run Ink validation for account bottom sheet module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project account_bottom_sheet
+          python ink_utils/main.py loco --check --verbose
+
       - name: Run Ink validation for cross app login module
         run: |
           source ink_utils/venv/bin/activate

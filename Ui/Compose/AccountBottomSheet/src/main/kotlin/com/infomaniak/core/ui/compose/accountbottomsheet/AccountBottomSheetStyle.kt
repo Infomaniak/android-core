@@ -23,6 +23,8 @@ import androidx.compose.ui.text.TextStyle
 data class AccountBottomSheetStyle(
     val nameTextStyle: TextStyle,
     val emailTextStyle: TextStyle,
+    val actionButtonTextStyle: TextStyle,
     val nameColor: Color,
     val emailColor: Color,
+    val actionButtonTextColor: Color,
 )
