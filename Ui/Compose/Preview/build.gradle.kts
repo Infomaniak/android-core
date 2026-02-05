@@ -48,6 +48,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":Auth"))
+
     implementation(platform(core.compose.bom))
     implementation(core.compose.ui.tooling.preview)
 }
