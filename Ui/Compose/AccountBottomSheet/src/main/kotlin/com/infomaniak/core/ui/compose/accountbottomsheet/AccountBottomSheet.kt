@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.ButtonDefaults.ContentPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -86,7 +87,7 @@ fun AccountBottomSheet(
         title = pluralStringResource(RCore.plurals.myAccount, accounts.count()),
     ) {
         Spacer(modifier = Modifier.height(Margin.Medium))
-        LazyColumn {
+        LazyColumn(modifier = Modifier.selectableGroup()) {
             items(accounts, key = { it.id }) { user ->
                 Account(
                     user = user,

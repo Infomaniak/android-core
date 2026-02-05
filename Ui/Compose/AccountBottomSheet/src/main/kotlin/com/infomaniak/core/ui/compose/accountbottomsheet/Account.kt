@@ -22,7 +22,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -64,10 +64,9 @@ internal fun Account(
 ) {
     Row(
         modifier = modifier
-            // TODO: Use selectable for mutually exclusive
-            .toggleable(
-                value = selected,
-                onValueChange = { onAccountClick(user) },
+            .selectable(
+                selected = selected,
+                onClick = { onAccountClick(user) },
                 role = Role.Button,
             )
             .padding(horizontal = Margin.Medium, vertical = Margin.Mini),
