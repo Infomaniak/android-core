@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,17 @@
  */
 package com.infomaniak.core.avatar
 
-import android.content.Context
-import androidx.annotation.ArrayRes
-import androidx.annotation.ColorInt
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-@ColorInt
-fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
-    val arrayResource = array ?: R.array.organizationColors
-    val colors = resources.getIntArray(arrayResource)
-    val colorIndex = Math.floorMod(id, colors.count())
-    val organizationColor = colors[colorIndex]
-
-    return organizationColor
+val LocalAvatarColors = staticCompositionLocalOf<AvatarColors> {
+    AvatarColors(
+        containerColors = listOf(Color(0xFF30ABFF), Color(0xFF3CB572), Color(0xFFED2C6E)),
+        contentColor = Color(0xFFFFFFFF),
+    )
 }
 
-fun getBackgroundColorResBasedOnId(id: Int, colors: List<Color>): Color {
-    val colorIndex = Math.floorMod(id, colors.count())
-    val organizationColor = colors[colorIndex]
-
-    return organizationColor
-}
+data class AvatarColors(
+    val containerColors: List<Color>, // The colorful background behind the initials
+    val contentColor: Color, // The color of the initials drawn on top of the colored background
+)
