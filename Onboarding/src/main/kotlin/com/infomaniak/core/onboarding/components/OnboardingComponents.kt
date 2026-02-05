@@ -122,6 +122,7 @@ object OnboardingComponents {
         source: OnboardingLottieSource,
         isCurrentPageVisible: () -> Boolean,
         themeId: @Composable () -> String?,
+        modifier: Modifier = Modifier,
     ) {
         val controller = remember { DotLottieController() }
 
@@ -133,6 +134,7 @@ object OnboardingComponents {
             source = source.toDotLottieSource(),
             themeId = themeId(),
             controller = controller,
+            modifier = modifier,
         )
     }
 
