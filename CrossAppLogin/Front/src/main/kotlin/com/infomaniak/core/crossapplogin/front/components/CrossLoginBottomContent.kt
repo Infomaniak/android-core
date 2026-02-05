@@ -200,7 +200,10 @@ fun OnboardingComponents.CrossLoginBottomContent(
             skippedIds = skippedIds,
             isSingleSelection = isSingleSelection,
             isCheckingComplete = isCheckingUpToDate,
-            onUseAnotherAccountClicked = onUseAnotherAccountClicked,
+            onUseAnotherAccountClicked = {
+                showAccountsBottomSheet = false
+                onUseAnotherAccountClicked()
+            },
             onSaveSkippedAccounts = onSaveSkippedAccounts,
             customization = customization,
             close = { showAccountsBottomSheet = false },
