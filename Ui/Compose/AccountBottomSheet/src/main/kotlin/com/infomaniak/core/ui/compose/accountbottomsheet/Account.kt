@@ -34,9 +34,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -47,13 +49,18 @@ import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.previewparameter.UserListPreviewParameterProvider
 
+internal val AVATAR_SIZE = 40.dp
+
 @Composable
 internal fun Account(
     user: User,
     selected: Boolean,
     onAccountClick: (User) -> Unit,
     modifier: Modifier = Modifier,
-    style: AccountBottomSheetStyle = AccountBottomSheetDefaults.style(),
+    nameTextStyle: TextStyle = AccountBottomSheetDefaults.style().nameTextStyle,
+    nameColor: Color = AccountBottomSheetDefaults.style().nameColor,
+    emailTextStyle: TextStyle = AccountBottomSheetDefaults.style().emailTextStyle,
+    emailColor: Color = AccountBottomSheetDefaults.style().emailColor,
 ) {
     Row(
         modifier = modifier
@@ -67,11 +74,11 @@ internal fun Account(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Margin.Mini)
     ) {
-        Avatar(AvatarType.fromUser(user), modifier = Modifier.size(40.dp))
+        Avatar(AvatarType.fromUser(user), modifier = Modifier.size(AVATAR_SIZE))
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(user.displayName ?: "", style = style.nameTextStyle, color = style.nameColor)
-            Text(user.email, style = style.emailTextStyle, color = style.emailColor)
+            Text(user.displayName ?: "", style = nameTextStyle, color = nameColor)
+            Text(user.email, style = emailTextStyle, color = emailColor)
         }
 
         if (selected) {
