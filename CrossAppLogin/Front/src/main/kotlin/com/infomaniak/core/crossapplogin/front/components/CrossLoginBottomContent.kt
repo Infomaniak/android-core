@@ -87,6 +87,7 @@ import com.infomaniak.core.ui.compose.basics.ButtonStyle
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.basics.bottomsheet.ThemedBottomSheetScaffold
+import com.infomaniak.core.ui.compose.basics.bottomsheet.dismissGracefully
 import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.coroutines.launch
 import com.infomaniak.core.common.R as RCore
@@ -248,7 +249,7 @@ private fun AccountsBottomSheetDialog(
             onAnotherAccountClicked = onUseAnotherAccountClicked,
             onSaveClicked = {
                 onSaveSkippedAccounts(localSkipped)
-                scope.launch { sheetState.hide() }.invokeOnCompletion { close() }
+                sheetState.dismissGracefully(scope, onDismissRequest = { close() })
             },
             customization = customization,
         )
