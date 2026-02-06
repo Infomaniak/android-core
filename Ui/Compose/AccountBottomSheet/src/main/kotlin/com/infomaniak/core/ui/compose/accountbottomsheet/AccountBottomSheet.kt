@@ -59,7 +59,7 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.previewparameter.UserListPreviewParameterProvider
 import com.infomaniak.core.common.R as RCore
 
-// To correctly align to button horizontally, set its default content padding to 0 horizontally. Take from ButtonDefaults.TextButtonContentPadding
+// To correctly align to button horizontally, set its horizontal content padding to 0. Taken from ButtonDefaults.TextButtonContentPadding
 private val ACTION_BUTTON_CONTENT_PADDING = PaddingValues(
     start = 0.dp,
     top = ContentPadding.calculateTopPadding(),
