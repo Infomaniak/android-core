@@ -137,7 +137,7 @@ private fun ActionButton(
                 .fillMaxWidth()
                 .padding(horizontal = Margin.Medium),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             val iconSize = Dimens.iconSize
             Icon(
@@ -184,7 +184,8 @@ private fun Preview(@PreviewParameter(UserListPreviewParameterProvider::class) u
     MaterialTheme {
         Surface {
             AccountBottomSheet(
-                onDismissRequest = {}, accounts = users,
+                onDismissRequest = {},
+                accounts = users,
                 selectedUserId = users.first().id,
                 onAccountClicked = {},
                 onAddAccount = {},
