@@ -154,13 +154,18 @@ private fun ActionButton(
 }
 
 object AccountBottomSheetDefaults {
+    val nameTextStyle = Typography.bodyMedium
+    val emailTextStyle = Typography.bodyRegular
+    val nameColor @Composable get() = MaterialTheme.colorScheme.onSurface
+    val emailColor @Composable get() = MaterialTheme.colorScheme.outline
+
     @Composable
     fun style(
-        nameTextStyle: TextStyle = Typography.bodyMedium,
-        emailTextStyle: TextStyle = Typography.bodyRegular,
+        nameTextStyle: TextStyle = AccountBottomSheetDefaults.nameTextStyle,
+        emailTextStyle: TextStyle = AccountBottomSheetDefaults.emailTextStyle,
         actionButtonTextStyle: TextStyle = Typography.bodyRegular,
-        nameColor: Color = MaterialTheme.colorScheme.onSurface,
-        emailColor: Color = MaterialTheme.colorScheme.outline,
+        nameColor: Color = AccountBottomSheetDefaults.nameColor,
+        emailColor: Color = AccountBottomSheetDefaults.emailColor,
         actionButtonTextColor: Color = MaterialTheme.colorScheme.onSurface,
     ): AccountBottomSheetStyle = AccountBottomSheetStyle(
         nameTextStyle = nameTextStyle,

@@ -57,10 +57,10 @@ internal fun Account(
     selected: Boolean,
     onAccountClick: (User) -> Unit,
     modifier: Modifier = Modifier,
-    nameTextStyle: TextStyle = AccountBottomSheetDefaults.style().nameTextStyle,
-    nameColor: Color = AccountBottomSheetDefaults.style().nameColor,
-    emailTextStyle: TextStyle = AccountBottomSheetDefaults.style().emailTextStyle,
-    emailColor: Color = AccountBottomSheetDefaults.style().emailColor,
+    nameTextStyle: TextStyle = AccountBottomSheetDefaults.nameTextStyle,
+    nameColor: Color = AccountBottomSheetDefaults.nameColor,
+    emailTextStyle: TextStyle = AccountBottomSheetDefaults.emailTextStyle,
+    emailColor: Color = AccountBottomSheetDefaults.emailColor,
 ) {
     Row(
         modifier = modifier
@@ -71,7 +71,7 @@ internal fun Account(
             )
             .padding(horizontal = Margin.Medium, vertical = Margin.Mini),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Margin.Mini)
+        horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
     ) {
         Avatar(AvatarType.fromUser(user), modifier = Modifier.size(AVATAR_SIZE))
 
