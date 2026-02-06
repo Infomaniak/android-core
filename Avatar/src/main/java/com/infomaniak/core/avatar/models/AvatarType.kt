@@ -18,7 +18,13 @@
 package com.infomaniak.core.avatar.models
 
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.avatar.LocalAvatarColors
+import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 
 sealed interface AvatarType {
 
@@ -53,6 +59,25 @@ sealed interface AvatarType {
             } else {
                 WithInitials.Url(avatarUrlData.url, avatarUrlData.imageLoader, initials, colors)
             }
+        }
+
+        /**
+         * Automatically returns the appropriate AvatarType to display the provided [user]. The style in which the avatar is going
+         * to be displayed depends on the theme provided through [LocalAvatarColors].
+         */
+        @Composable
+        fun fromUser(user: User): WithInitials {
+            val context = LocalContext.current
+            val avatarColors = LocalAvatarColors.current
+
+            return getUrlOrInitials(
+                avatarUrlData = user.avatar?.let { AvatarUrlData(it, SingletonImageLoader.get(context)) },
+                initials = user.getInitials(),
+                colors = AvatarColors(
+                    containerColor = getBackgroundColorResBasedOnId(user.id, avatarColors.containerColors),
+                    contentColor = avatarColors.contentColor,
+                ),
+            )
         }
     }
 }
