@@ -41,7 +41,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.avatar.components.Avatar
 import com.infomaniak.core.avatar.models.AvatarType
@@ -49,7 +48,7 @@ import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.previewparameter.UserListPreviewParameterProvider
 
-internal val AVATAR_SIZE = 40.dp
+internal val AVATAR_SIZE = Dimens.bigAvatarSize
 
 @Composable
 internal fun Account(
