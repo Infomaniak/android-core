@@ -25,16 +25,12 @@ import androidx.compose.ui.graphics.Color
 @ColorInt
 fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
     val arrayResource = array ?: R.array.organizationColors
-    val colors = resources.getIntArray(arrayResource)
-    val colorIndex = Math.floorMod(id, colors.count())
-    val organizationColor = colors[colorIndex]
-
-    return organizationColor
+    val colors = resources.getIntArray(arrayResource).toList()
+    return chooseColorForId(id, colors)
 }
 
 fun getBackgroundColorResBasedOnId(id: Int, colors: List<Color>): Color {
-    val colorIndex = Math.floorMod(id, colors.count())
-    val organizationColor = colors[colorIndex]
-
-    return organizationColor
+    return chooseColorForId(id, colors)
 }
+
+private fun <T> chooseColorForId(id: Int, items: List<T>): T = items[Math.floorMod(id, items.size)]
