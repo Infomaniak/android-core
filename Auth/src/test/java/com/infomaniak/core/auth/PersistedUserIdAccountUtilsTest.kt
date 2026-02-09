@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.auth
 
-import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -90,7 +89,7 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
             addUser(userOf(id = 1))
             addUser(userOf(id = 2))
 
-            val job = assertFlowCollection(listOf(1), currentUserFlow)
+            val job = assertFlowCollection(listOf(1), currentUserFlow, transform = { it?.id })
 
             removeUser(2)
 
@@ -159,6 +158,22 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
         }
     }
 
+    @Test
+    fun switchUser_collectOnlyOnceWhenSwitchingToCurrentAccount() = runTest {
+        withAccountUtils {
+            addUser(userOf(id = 1))
+            addUser(userOf(id = 2))
+
+            val job = assertFlowCollection(listOf(2, 1), currentUserIdFlow)
+
+            switchUser(2)
+            switchUser(2)
+            switchUser(1)
+
+            job.join()
+        }
+    }
+
     /**
      * Verifies that the last persisted state can be collected repeatedly, even after it has already been emitted once.
      */
@@ -210,13 +225,17 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
     }
 }
 
-private fun CoroutineScope.assertFlowCollection(expectedValues: List<Any>, flow: Flow<User?>): Job {
+private fun <T> CoroutineScope.assertFlowCollection(
+    expectedValues: List<Any>,
+    flow: Flow<T?>,
+    transform: (T?) -> Any? = { it },
+): Job {
     val mutableExpectedValues = expectedValues.toMutableList()
 
     return launch {
         flow.collect {
             val cursor = mutableExpectedValues.removeAt(0)
-            Assert.assertEquals(cursor, it?.id)
+            Assert.assertEquals(cursor, transform(it))
 
             if (mutableExpectedValues.isEmpty()) cancel()
         }
