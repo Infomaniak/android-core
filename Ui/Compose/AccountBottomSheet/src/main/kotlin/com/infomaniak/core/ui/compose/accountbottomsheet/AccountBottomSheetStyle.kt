@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.avatar
+package com.infomaniak.core.ui.compose.accountbottomsheet
 
-import android.content.Context
-import androidx.annotation.ArrayRes
-import androidx.annotation.ColorInt
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 
-@ColorInt
-fun Context.getBackgroundColorResBasedOnId(id: Int, @ArrayRes array: Int? = null): Int {
-    val arrayResource = array ?: R.array.organizationColors
-    val colors = resources.getIntArray(arrayResource).toList()
-    return chooseColorForId(id, colors)
-}
-
-fun getBackgroundColorResBasedOnId(id: Int, colors: List<Color>): Color {
-    return chooseColorForId(id, colors)
-}
-
-private fun <T> chooseColorForId(id: Int, items: List<T>): T = items[Math.floorMod(id, items.size)]
+data class AccountBottomSheetStyle(
+    val nameTextStyle: TextStyle,
+    val emailTextStyle: TextStyle,
+    val actionButtonTextStyle: TextStyle,
+    val nameColor: Color,
+    val emailColor: Color,
+    val actionButtonTextColor: Color,
+)

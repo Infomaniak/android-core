@@ -118,6 +118,7 @@ infomaniak-core-onboarding = { module = "com.infomaniak.core:Onboarding" }
 infomaniak-core-sentry = { module = "com.infomaniak.core:Sentry" }
 infomaniak-core-sharedvalues = { module = "com.infomaniak.core:SharedValues" }
 infomaniak-core-thumbnails = { module = "com.infomaniak.core:Thumbnails" }
+infomaniak-core-ui-compose-accountbottomsheet = { module = "com.infomaniak.core:Ui.Compose.AccountBottomSheet" }
 infomaniak-core-ui-compose-basicbutton = { module = "com.infomaniak.core:Ui.Compose.BasicButton" }
 infomaniak-core-ui-compose-basics = { module = "com.infomaniak.core:Ui.Compose.Basics" }
 infomaniak-core-ui-compose-bottomstickybuttonscaffolds = { module = "com.infomaniak.core:Ui.Compose.BottomStickyButtonScaffolds" }

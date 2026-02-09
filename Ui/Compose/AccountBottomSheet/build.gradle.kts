@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
-    namespace = "com.infomaniak.core.ui.compose.preview"
+    namespace = "com.infomaniak.core.ui.compose.accountbottomsheet"
     compileSdk = coreCompileSdk
 
     defaultConfig {
@@ -49,7 +49,15 @@ android {
 
 dependencies {
     implementation(project(":Auth"))
+    implementation(project(":Avatar"))
+    implementation(project(":Common"))
+    implementation(project(":Ui:Compose:Basics"))
+    implementation(project(":Ui:Compose:Margin"))
+    implementation(project(":Ui:Compose:Preview"))
 
     implementation(platform(core.compose.bom))
+    implementation(core.compose.material3)
+    implementation(core.compose.ui)
     implementation(core.compose.ui.tooling.preview)
+    debugImplementation(core.compose.ui.tooling)
 }

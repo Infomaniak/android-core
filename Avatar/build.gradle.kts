@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":Auth"))
     implementation(project(":Ui:Compose:Margin"))
 
     implementation(platform(core.compose.bom))

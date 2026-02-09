@@ -60,6 +60,7 @@ include(
     ":TwoFactorAuth:Back",
     ":TwoFactorAuth:Back:WithUserDb",
     ":TwoFactorAuth:Front",
+    ":Ui:Compose:AccountBottomSheet",
     ":Ui:Compose:BasicButton",
     ":Ui:Compose:Basics",
     ":Ui:Compose:BottomStickyButtonScaffolds",
