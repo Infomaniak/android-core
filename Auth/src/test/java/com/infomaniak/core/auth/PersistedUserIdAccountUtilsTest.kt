@@ -164,13 +164,15 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
             addUser(userOf(id = 1))
             addUser(userOf(id = 2))
 
-            val job = assertFlowCollection(listOf(2, 1), currentUserIdFlow)
+            val idJob = assertFlowCollection(listOf(2, 1), currentUserIdFlow)
+            val userJob = assertFlowCollection(listOf(2, 1), currentUserFlow, transform = { it?.id })
 
             switchUser(2)
             switchUser(2)
             switchUser(1)
 
-            job.join()
+            idJob.join()
+            userJob.join()
         }
     }
 
