@@ -86,14 +86,13 @@ abstract class AbstractCurrentUserAccountUtils(
     }
 
     /**
-     * Switches the current user. This method will always suspend until [currentUserFlow] and [currentUserIdFlow] has had time to
-     * be updated.
+     * Switches the current user. If the [userId] is already the currently selected user id, this method does nothing.
      */
     @CallSuper
     open suspend fun switchUser(userId: Int?) {
         when (userId) {
             null -> setCurrentUserId(null)
-            else -> switchUser(userId)
+            else -> if (currentUserIdFlow.first() != userId) switchUser(userId)
         }
     }
 
