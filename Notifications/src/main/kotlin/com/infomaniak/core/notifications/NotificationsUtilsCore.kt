@@ -90,7 +90,7 @@ fun Context.buildNotification(
 
 @SuppressLint("MissingPermission")
 @Deprecated(
-    "Use the version with the NotificationCompat.Builder to prevent build notification " +
+    "Use the version with the NotificationCompat.Builder to prevent building the notification " +
             "if the app don't have the permission to show it"
 )
 fun NotificationManagerCompat.notifyCompat(context: Context, notificationId: Int, build: Notification) {
@@ -101,7 +101,7 @@ fun NotificationManagerCompat.notifyCompat(context: Context, notificationId: Int
 
 @SuppressLint("MissingPermission")
 @Deprecated(
-    "Use the version with the NotificationCompat.Builder to prevent build notification " +
+    "Use the version with the NotificationCompat.Builder to prevent building the notification " +
             "if the app don't have the permission to show it"
 )
 fun NotificationManagerCompat.notifyCompat(
