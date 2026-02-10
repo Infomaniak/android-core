@@ -89,6 +89,10 @@ fun Context.buildNotification(
 }
 
 @SuppressLint("MissingPermission")
+@Deprecated(
+    "Use the version with the NotificationCompat.Builder to prevent building the notification " +
+            "if the app don't have the permission to show it"
+)
 fun NotificationManagerCompat.notifyCompat(context: Context, notificationId: Int, build: Notification) {
     if (SDK_INT < 33 || context.hasPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))) {
         notify(notificationId, build)
@@ -96,6 +100,10 @@ fun NotificationManagerCompat.notifyCompat(context: Context, notificationId: Int
 }
 
 @SuppressLint("MissingPermission")
+@Deprecated(
+    "Use the version with the NotificationCompat.Builder to prevent building the notification " +
+            "if the app don't have the permission to show it"
+)
 fun NotificationManagerCompat.notifyCompat(
     tag: String,
     notificationId: Int,
@@ -103,6 +111,12 @@ fun NotificationManagerCompat.notifyCompat(
 ) {
     if (SDK_INT < 33 || appCtx.hasPermission(Manifest.permission.POST_NOTIFICATIONS)) {
         notify(tag, notificationId, notification)
+    }
+}
+
+fun NotificationManagerCompat.notifyCompat(notificationId: Int, builder: NotificationCompat.Builder, tag: String? = null) {
+    if (areNotificationsEnabled()) {
+        notify(tag, notificationId, builder.build())
     }
 }
 

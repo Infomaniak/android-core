@@ -82,6 +82,12 @@ abstract class NotificationUtilsCore {
     }
 
     @SuppressLint("MissingPermission")
+
+    @Deprecated(
+        "Use non legacy NotificationManagerCompat.notifyCompat() from NotificationsUtilsCore file " +
+                "Use the version with the NotificationCompat.Builder to prevent building the notification " +
+                "if the app don't have the permission to show it. "
+    )
     fun NotificationManagerCompat.notifyCompat(context: Context, notificationId: Int, build: Notification) {
         if (SDK_INT >= 33) {
             if (context.hasPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))) {
