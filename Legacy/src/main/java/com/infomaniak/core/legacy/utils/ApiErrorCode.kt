@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2025 Infomaniak Network SA
+ * Copyright (C) 2023-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,17 +22,21 @@ import com.infomaniak.core.legacy.InfomaniakCore
 import com.infomaniak.core.legacy.api.InternalTranslatedErrorCode
 import com.infomaniak.core.legacy.models.ApiResponse
 
+@Deprecated("Use the one from core.network.utils in Core:Network module")
 interface ErrorCodeTranslated {
     val code: String
     @get:StringRes
     val translateRes: Int
 }
 
+@Deprecated("Use the one from core.network.utils in Core:Network module")
 data class ApiErrorCode(override val code: String, @StringRes override val translateRes: Int) : ErrorCodeTranslated {
     companion object {
+        @Deprecated("Use the one from core.network.utils in Core:Network module")
         @StringRes
         fun <T> ApiResponse<T>.translateError(): Int = formatError().translateRes
 
+        @Deprecated("Use the one from core.network.utils in Core:Network module")
         fun <T> ApiResponse<T>.formatError(): ErrorCodeTranslated {
             val errorCode = error?.code
             return if (errorCode == null) {

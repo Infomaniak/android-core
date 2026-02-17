@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ object InfomaniakCore {
     lateinit var clientId: String
     var credentialManager: CredentialManager? = null
     var customHeaders: MutableMap<String, String>? = null
+
+    @Deprecated("Use the one from core.network.NetworkConfiguration in Core:Network module")
     var apiErrorCodes: List<ErrorCodeTranslated>? = null
     var accessType: AccessType? = AccessType.OFFLINE
 
