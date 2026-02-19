@@ -40,6 +40,7 @@ matomo = "4.3.4"
 mockk = "1.14.6"
 navigation = "2.9.6"
 okhttp = "5.3.2"
+okio = "3.16.2"
 playReview = "2.0.2"
 progressButton = "2.1.0"
 recyclerView = "1.4.0"
@@ -165,6 +166,7 @@ navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-kt
 navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 play-app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
 play-app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
