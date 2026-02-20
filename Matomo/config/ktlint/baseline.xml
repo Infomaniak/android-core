@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/matomo/Matomo.kt">
+        <error line="34" column="33" source="standard:function-expression-body" />
+        <error line="38" column="1" source="standard:no-blank-line-before-rbrace" />
+        <error line="96" column="55" source="standard:function-expression-body" />
+    </file>
+</baseline>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/java/com/infomaniak/lib/confetti/ConfettiManager.kt">
+        <error line="48" column="5" source="standard:spacing-between-declarations-with-comments" />
+        <error line="58" column="5" source="standard:spacing-between-declarations-with-comments" />
+    </file>
+    <file name="src/main/java/com/infomaniak/lib/confetti/ConfettiView.kt">
+        <error line="35" column="69" source="standard:class-signature" />
+        <error line="35" column="91" source="standard:class-signature" />
+    </file>
+    <file name="src/main/java/com/infomaniak/lib/confetti/confetto/Confetto.kt">
+        <error line="130" column="68" source="standard:function-expression-body" />
+        <error line="411" column="116" source="standard:function-expression-body" />
+        <error line="432" column="17" source="standard:function-expression-body" />
+        <error line="486" column="25" source="standard:wrapping" />
+        <error line="487" column="1" source="standard:indent" />
+        <error line="487" column="77" source="standard:wrapping" />
+    </file>
+</baseline>

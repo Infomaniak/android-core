@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/java/com/infomaniak/core/network/models/ApiError.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/network/models/ApiResponse.kt">
+        <error line="41" column="1" source="standard:indent" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/network/models/ApiResponseStatus.kt">
+        <error line="45" column="12" source="standard:no-semi" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/network/models/ResponseHeaders.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="30" column="5" source="standard:spacing-between-declarations-with-comments" />
+        <error line="39" column="83" source="standard:function-expression-body" />
+    </file>
+</baseline>

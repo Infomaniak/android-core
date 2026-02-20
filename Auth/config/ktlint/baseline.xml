@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="build.gradle.kts">
+        <error line="28" column="1" source="standard:no-blank-line-before-rbrace" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/AccessTokenUsageInterceptor.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/CredentialManager.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/TokenAuthenticator.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="33" column="5" source="standard:class-signature" />
+        <error line="33" column="67" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/TokenInterceptor.kt">
+        <error line="34" column="5" source="standard:class-signature" />
+        <error line="34" column="67" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/api/ApiRoutesCore.kt">
+        <error line="30" column="34" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/models/user/Email.kt">
+        <error line="25" column="5" source="standard:class-signature" />
+        <error line="25" column="23" source="standard:class-signature" />
+        <error line="26" column="22" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/models/user/Phone.kt">
+        <error line="25" column="5" source="standard:class-signature" />
+        <error line="25" column="23" source="standard:class-signature" />
+        <error line="26" column="22" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/models/user/preferences/Country.kt">
+        <error line="33" column="27" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/models/user/preferences/Language.kt">
+        <error line="35" column="27" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/models/user/preferences/TimeZone.kt">
+        <error line="28" column="27" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/auth/room/UserDatabase.kt">
+        <error line="41" column="23" source="standard:argument-list-wrapping" />
+        <error line="45" column="23" source="standard:argument-list-wrapping" />
+        <error line="55" column="51" source="standard:colon-spacing" />
+        <error line="85" column="73" source="standard:function-expression-body" />
+        <error line="90" column="63" source="standard:function-expression-body" />
+        <error line="95" column="57" source="standard:function-expression-body" />
+        <error line="100" column="52" source="standard:function-expression-body" />
+        <error line="105" column="91" source="standard:function-expression-body" />
+        <error line="110" column="78" source="standard:function-expression-body" />
+        <error line="115" column="57" source="standard:function-expression-body" />
+        <error line="120" column="52" source="standard:function-expression-body" />
+    </file>
+</baseline>
