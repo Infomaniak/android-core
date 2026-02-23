@@ -31,6 +31,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -72,14 +73,14 @@ class NetworkAvailability(private val ioDispatcher: CoroutineDispatcher = Dispat
             }
         }
 
-        launch(ioDispatcher) {
+        launch {
             send(getInitialNetworkAvailability(connectivityManager))
         }
 
         registerNetworkCallback(connectivityManager, callback, ::send)
 
         awaitClose { unregisterNetworkCallback(connectivityManager, callback) }
-    }.conflate()
+    }.conflate().flowOn(ioDispatcher) // IPC with ConnectivityManager is technically blocking I/O.
 
     private suspend fun registerNetworkCallback(
         connectivityManager: ConnectivityManager,
