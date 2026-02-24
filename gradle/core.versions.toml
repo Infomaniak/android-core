@@ -140,6 +140,7 @@ infomaniak-core-ui-compose-margin = { module = "com.infomaniak.core:Ui.Compose.M
 infomaniak-core-ui-compose-materialthemefromxml = { module = "com.infomaniak.core:Ui.Compose.MaterialThemeFromXml" }
 infomaniak-core-ui-compose-preview = { module = "com.infomaniak.core:Ui.Compose.Preview" }
 infomaniak-core-ui-compose-theme = { module = "com.infomaniak.core:Ui.Compose.Theme" }
+infomaniak-core-ui-view = { module = "com.infomaniak.core:Ui.View" }
 infomaniak-core-ui-view-edgetoedge = { module = "com.infomaniak.core:Ui.View.EdgeToEdge" }
 infomaniak-core-webview = { module = "com.infomaniak.core:WebView" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
