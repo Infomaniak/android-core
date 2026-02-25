@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--TODO-->
+<resources>
+    <string name="bugTrackerAddFiles">Dodaj pliki</string>
+    <string name="bugTrackerAppNotUpToDate">OSTRZEŻENIE: TWOJA APLIKACJA NIE JEST AKTUALNA.</string>
+    <string name="bugTrackerDescription">Opis</string>
+    <string name="bugTrackerFileTooBig">Zdjęcia są zbyt duże (max 32 MB)</string>
+    <string name="bugTrackerFilesTitle">PLIKI</string>
+    <string name="bugTrackerFormSubmitError">Nie udało się wysłać raportu o błędzie</string>
+    <string name="bugTrackerFormSubmitSuccess">Raport o błędzie wysłany</string>
+    <string name="bugTrackerHint">Możesz dodać pliki (maksymalnie 32 MB), aby lepiej wyjaśnić błąd.</string>
+    <string name="bugTrackerMissingFields">Temat i opis muszą zostać wypełnione</string>
+    <string name="bugTrackerPriority">Priorytet</string>
+    <string name="bugTrackerSubject">Temat</string>
+    <string name="bugTrackerSubmit">Wyślij</string>
+    <string name="bugTrackerTitle">Śledzenie błędów</string>
+    <string name="bugTrackerType">Typ</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Nie udało się zaimportować pliku</item>
+        <item quantity="few">Nie udało się zaimportować %d plików</item>
+        <item quantity="many">Nie udało się zaimportować %d plików</item>
+        <item quantity="other">Nie udało się zaimportować %d plików</item>
+    </plurals>
+
+    <string-array name="bugTrackerTypeArray">
+        <item name="item1">Błąd</item>
+        <item name="item2">Funkcja</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriorityArray">
+        <item name="item1">Niski</item>
+        <item name="item2">Normalny</item>
+        <item name="item3">Wysoki</item>
+        <item name="item4">Pilny</item>
+        <item name="item5">Natychmiastowy</item>
+    </string-array>
+</resources>

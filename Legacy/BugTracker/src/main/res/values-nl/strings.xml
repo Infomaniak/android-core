@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="bugTrackerAddFiles">Bestanden toevoegen</string>
+    <string name="bugTrackerAppNotUpToDate">WAARSCHUWING: UW TOEPASSING IS NIET UP-TO-DATE.</string>
+    <string name="bugTrackerDescription">Beschrijving</string>
+    <string name="bugTrackerFileTooBig">Afbeeldingen zijn te zwaar (max. 32 MB)</string>
+    <string name="bugTrackerFilesTitle">BESTANDEN</string>
+    <string name="bugTrackerFormSubmitError">Het bugrapport kon niet worden verzonden</string>
+    <string name="bugTrackerFormSubmitSuccess">Bugrapport verzonden</string>
+    <string name="bugTrackerHint">U kunt bestanden toevoegen (maximaal 32 MB) om uw bug beter te begrijpen.</string>
+    <string name="bugTrackerMissingFields">Het onderwerp en de beschrijving moeten worden ingevuld</string>
+    <string name="bugTrackerPriority">Prioriteit</string>
+    <string name="bugTrackerSubject">Onderwerp</string>
+    <string name="bugTrackerSubmit">Indienen</string>
+    <string name="bugTrackerTitle">Bugtracker</string>
+    <string name="bugTrackerType">Type</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Een bestand kon niet worden geïmporteerd</item>
+        <item quantity="other">%d bestanden konden niet worden geïmporteerd</item>
+    </plurals>
+
+    <string-array name="bugTrackerTypeArray">
+        <item name="item1">Bug</item>
+        <item name="item2">Functie</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriorityArray">
+        <item name="item1">Laag</item>
+        <item name="item2">Normaal</item>
+        <item name="item3">Hoog</item>
+        <item name="item4">Dringend</item>
+        <item name="item5">Onmiddellijk</item>
+    </string-array>
+</resources>

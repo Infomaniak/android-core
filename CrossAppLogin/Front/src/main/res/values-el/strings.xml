@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <plurals name="buttonContinueWithAccounts">
+        <item quantity="one">Συνέχεια με αυτόν τον λογαριασμό</item>
+        <item quantity="other">Συνέχεια με αυτούς τους λογαριασμούς</item>
+    </plurals>
+    <string name="buttonCreateAccount">Δημιουργία λογαριασμού</string>
+    <string name="buttonLogin">Σύνδεση</string>
+    <string name="buttonStart">Έναρξη</string>
+    <string name="buttonUseOtherAccount">Χρήση άλλου λογαριασμού</string>
+    <string name="crossAppLoginAccountsLoaderTitle">Ανάκτηση λογαριασμών σας…</string>
+    <string name="selectAccountPanelTitle">Επιλέξτε έναν ή πολλούς λογαριασμούς</string>
+    <string name="selectSingleAccountPanelTitle">Επιλέξτε έναν λογαριασμό</string>
+    <plurals name="selectedAccountCountLabel">
+        <item quantity="one">%d λογαριασμός επιλεγμένος</item>
+        <item quantity="other">%d λογαριασμοί επιλεγμένοι</item>
+    </plurals>
+</resources>

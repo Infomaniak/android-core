@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><!--TODO-->
+<resources>
+    <string name="bugTrackerAddFiles">Lägg till filer</string>
+    <string name="bugTrackerAppNotUpToDate">VARNING: DIN APPLIKATION ÄR INTE UPPDATERAD.</string>
+    <string name="bugTrackerDescription">Beskrivning</string>
+    <string name="bugTrackerFileTooBig">Bilderna är för stora (max 32 MB)</string>
+    <string name="bugTrackerFilesTitle">FILER</string>
+    <string name="bugTrackerFormSubmitError">Felrapporten kunde inte skickas</string>
+    <string name="bugTrackerFormSubmitSuccess">Felrapport skickad</string>
+    <string name="bugTrackerHint">Du kan lägga till filer (max 32 MB) för att hjälpa till att förstå felet bättre.</string>
+    <string name="bugTrackerMissingFields">Ämne och beskrivning måste fyllas i</string>
+    <string name="bugTrackerPriority">Prioritet</string>
+    <string name="bugTrackerSubject">Ämne</string>
+    <string name="bugTrackerSubmit">Skicka</string>
+    <string name="bugTrackerTitle">Felspårare</string>
+    <string name="bugTrackerType">Typ</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">En fil kunde inte importeras</item>
+        <item quantity="other">%d filer kunde inte importeras</item>
+    </plurals>
+
+    <string-array name="bugTrackerTypeArray">
+        <item name="item1">Fel</item>
+        <item name="item2">Funktion</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriorityArray">
+        <item name="item1">Låg</item>
+        <item name="item2">Normal</item>
+        <item name="item3">Hög</item>
+        <item name="item4">Brådskande</item>
+        <item name="item5">Omedelbar</item>
+    </string-array>
+</resources>

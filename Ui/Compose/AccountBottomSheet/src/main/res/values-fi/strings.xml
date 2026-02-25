@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="buttonAddAccount">Lisää tili</string>
+    <string name="buttonLoginOut">Kirjaudu ulos</string>
+</resources>

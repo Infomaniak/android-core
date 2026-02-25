@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <plurals name="buttonContinueWithAccounts">
+        <item quantity="one">Doorgaan met dit account</item>
+        <item quantity="other">Doorgaan met deze accounts</item>
+    </plurals>
+    <string name="buttonCreateAccount">Een account aanmaken</string>
+    <string name="buttonLogin">Inloggen</string>
+    <string name="buttonStart">Starten</string>
+    <string name="buttonUseOtherAccount">Een ander account gebruiken</string>
+    <string name="crossAppLoginAccountsLoaderTitle">Uw accounts ophalen…</string>
+    <string name="selectAccountPanelTitle">Selecteer een of meerdere accounts</string>
+    <string name="selectSingleAccountPanelTitle">Selecteer een account</string>
+    <plurals name="selectedAccountCountLabel">
+        <item quantity="one">%d account geselecteerd</item>
+        <item quantity="other">%d accounts geselecteerd</item>
+    </plurals>
+</resources>

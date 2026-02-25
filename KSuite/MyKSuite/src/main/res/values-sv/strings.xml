@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="androidMyKSuiteDashboardSubscriptionButton">Hantera mitt erbjudande</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">För att hantera eller avbryta din prenumeration, logga in på kSuite webbgränssnittet.</string>
+    <string name="myKSuiteDashboardDataUnlimited">Obegränsat</string>
+    <string name="myKSuiteDashboardFreeMailLabel">En gratis e-postadress för livet</string>
+    <string name="myKSuiteDashboardFreeTrialButton">Starta din kostnadsfria provperiod</string>
+    <string name="myKSuiteDashboardFreeTrialDescription">Få mer funktionalitet och lagring med my kSuite+</string>
+    <string name="myKSuiteDashboardFreeTrialTitle">30 dagar gratis</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Anpassa otillgängliga tider för påminnelser och schemalagda utskick</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Begränsade dagliga utskick</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Lagring för Mail och kDrive</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Begränsad funktionalitet</string>
+    <string name="myKSuiteDashboardPaymentMethod">Betalningsmetod</string>
+    <string name="myKSuiteDashboardTitle">Min prenumeration</string>
+    <string name="myKSuiteDashboardTrialPeriod">Provperiod</string>
+    <string name="myKSuiteDashboardUntil">Till %s</string>
+    <string name="myKSuiteManageSubscriptionButton">Hantera mitt erbjudande</string>
+    <string name="myKSuiteManageSubscriptionDescription">För att hantera eller avbryta din prenumeration, logga in på kSuite webbgränssnittet</string>
+    <string name="myKSuiteUpgradeBenefitsTitle">DINA FÖRDELAR</string>
+    <string name="myKSuiteUpgradeDescription">Mer utrymme, fler möjligheter och mer flexibilitet för att göra vad du älskar.</string>
+    <string name="myKSuiteUpgradeDetails">För att dra nytta av my kSuite+, ändra ditt erbjudande från ditt webbgränssnitt.</string>
+    <string name="myKSuiteUpgradeDriveLabel">1 eller 6 TB för dina foton, dokument och filer</string>
+    <string name="myKSuiteUpgradeDropboxLabel">Dropboxar, PDF-redigering…</string>
+    <string name="myKSuiteUpgradeLabel">Och ännu mer!</string>
+    <string name="myKSuiteUpgradeRedirectLabel">Omdirigeringar, anpassade påminnelser…</string>
+    <string name="myKSuiteUpgradeTitle">Ge dina idéer mer utrymme</string>
+    <string name="myKSuiteUpgradeUnlimitedMailLabel">Obegränsad e-postlagring och utskick</string>
+</resources>

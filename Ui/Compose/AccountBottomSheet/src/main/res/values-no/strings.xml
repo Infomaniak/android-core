@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="buttonAddAccount">Legg til en konto</string>
+    <string name="buttonLoginOut">Logg ut</string>
+</resources>

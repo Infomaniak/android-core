@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="errorAppIntegrity">Enheten din er ikke gjenkjent som trygg</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><!--TODO-->
+<resources>
+    <string name="bugTrackerAddFiles">Lisää tiedostoja</string>
+    <string name="bugTrackerAppNotUpToDate">VAROITUS: SOVELLUKSESI EI OLE AJANTASAINEN.</string>
+    <string name="bugTrackerDescription">Kuvaus</string>
+    <string name="bugTrackerFileTooBig">Kuvat ovat liian suuria (enintään 32 Mt)</string>
+    <string name="bugTrackerFilesTitle">TIEDOSTOT</string>
+    <string name="bugTrackerFormSubmitError">Virheraporttia ei voitu lähettää</string>
+    <string name="bugTrackerFormSubmitSuccess">Virheraportti lähetetty</string>
+    <string name="bugTrackerHint">Voit lisätä tiedostoja (enintään 32 Mt) virheen selvittämiseksi.</string>
+    <string name="bugTrackerMissingFields">Otsikko ja kuvaus on täytettävä</string>
+    <string name="bugTrackerPriority">Prioriteetti</string>
+    <string name="bugTrackerSubject">Otsikko</string>
+    <string name="bugTrackerSubmit">Lähetä</string>
+    <string name="bugTrackerTitle">Virheenjäljitys</string>
+    <string name="bugTrackerType">Tyyppi</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Tiedostoa ei voitu tuoda</item>
+        <item quantity="other">%d tiedostoa ei voitu tuoda</item>
+    </plurals>
+
+    <string-array name="bugTrackerTypeArray">
+        <item name="item1">Virhe</item>
+        <item name="item2">Ominaisuus</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriorityArray">
+        <item name="item1">Matala</item>
+        <item name="item2">Normaali</item>
+        <item name="item3">Korkea</item>
+        <item name="item4">Kiireellinen</item>
+        <item name="item5">Välittömästi</item>
+    </string-array>
+</resources>

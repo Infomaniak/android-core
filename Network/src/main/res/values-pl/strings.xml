@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="anErrorHasOccurred">Wystąpił błąd</string>
+    <string name="connectionError">Problem z połączeniem internetowym</string>
+    <string name="errorUserAlreadyPresent">Błąd, użytkownik już istnieje</string>
+    <string name="noConnection">Brak połączenia</string>
+    <string name="serverError">Błąd serwera</string>
+</resources>

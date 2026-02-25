@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="androidMyKSuiteDashboardSubscriptionButton">Hallitse tilaustani</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">Voit hallita tai perua tilauksesi kirjautumalla kSuite-verkkokäyttöliittymään.</string>
+    <string name="myKSuiteDashboardDataUnlimited">Rajoittamaton</string>
+    <string name="myKSuiteDashboardFreeMailLabel">Ilmainen sähköpostiosoite eliniäksi</string>
+    <string name="myKSuiteDashboardFreeTrialButton">Aloita ilmainen kokeilu</string>
+    <string name="myKSuiteDashboardFreeTrialDescription">Saa lisää toimintoja ja tallennustilaa my kSuite+:lla</string>
+    <string name="myKSuiteDashboardFreeTrialTitle">30 päivää ilmaiseksi</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Mukauta saatavilla olevia aikoja muistutuksille ja ajastetuille lähetyksille</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Rajoitetut päivittäiset lähetykset</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Tallennustila Mailille ja kDrivelle</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Rajoitetut toiminnot</string>
+    <string name="myKSuiteDashboardPaymentMethod">Maksutapa</string>
+    <string name="myKSuiteDashboardTitle">Tilaukseni</string>
+    <string name="myKSuiteDashboardTrialPeriod">Kokeilujakso</string>
+    <string name="myKSuiteDashboardUntil">%s asti</string>
+    <string name="myKSuiteManageSubscriptionButton">Hallitse tilaustani</string>
+    <string name="myKSuiteManageSubscriptionDescription">Voit hallita tai perua tilauksesi kirjautumalla kSuite-verkkokäyttöliittymään</string>
+    <string name="myKSuiteUpgradeBenefitsTitle">ETUSI</string>
+    <string name="myKSuiteUpgradeDescription">Enemmän tilaa, enemmän mahdollisuuksia ja enemmän joustavuutta siihen, mitä rakastat.</string>
+    <string name="myKSuiteUpgradeDetails">Mukauta tarjousta saadaksesi my kSuite+:n verkkokäyttöliittymästäsi.</string>
+    <string name="myKSuiteUpgradeDriveLabel">1 tai 6 TB valokuvillesi, asiakirjoillesi ja tiedostoillesi</string>
+    <string name="myKSuiteUpgradeDropboxLabel">Pudotuslaatikot, PDF-muokkaus…</string>
+    <string name="myKSuiteUpgradeLabel">Ja vielä enemmän!</string>
+    <string name="myKSuiteUpgradeRedirectLabel">Uudelleenohjaukset, mukautetut muistutukset…</string>
+    <string name="myKSuiteUpgradeTitle">Anna ideoillesi enemmän tilaa</string>
+    <string name="myKSuiteUpgradeUnlimitedMailLabel">Rajoittamaton sähköpostitallennus ja lähetys</string>
+</resources>

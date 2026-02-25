@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="buttonAddAccount">Adicionar uma conta</string>
+    <string name="buttonLoginOut">Terminar sessão</string>
+</resources>

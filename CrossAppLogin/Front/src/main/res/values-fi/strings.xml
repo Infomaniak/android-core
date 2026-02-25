@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <plurals name="buttonContinueWithAccounts">
+        <item quantity="one">Jatka tällä tilillä</item>
+        <item quantity="other">Jatka näillä tileillä</item>
+    </plurals>
+    <string name="buttonCreateAccount">Luo tili</string>
+    <string name="buttonLogin">Kirjaudu</string>
+    <string name="buttonStart">Aloita</string>
+    <string name="buttonUseOtherAccount">Käytä toista tiliä</string>
+    <string name="crossAppLoginAccountsLoaderTitle">Noudetaan tilejäsi…</string>
+    <string name="selectAccountPanelTitle">Valitse yksi tai useampi tili</string>
+    <string name="selectSingleAccountPanelTitle">Valitse yksi tili</string>
+    <plurals name="selectedAccountCountLabel">
+        <item quantity="one">%d tili valittu</item>
+        <item quantity="other">%d tiliä valittu</item>
+    </plurals>
+</resources>

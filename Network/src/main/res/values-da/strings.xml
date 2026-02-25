@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="anErrorHasOccurred">Der er opstået en fejl</string>
+    <string name="connectionError">Internetforbindelsesproblem</string>
+    <string name="errorUserAlreadyPresent">Fejl, bruger allerede til stede</string>
+    <string name="noConnection">Ingen forbindelse</string>
+    <string name="serverError">Serverfejl</string>
+</resources>

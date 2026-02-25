@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
+    <plurals name="buttonContinueWithAccounts">
+        <item quantity="one">Continuar com esta conta</item>
+        <item quantity="other">Continuar com estas contas</item>
+    </plurals>
+    <string name="buttonCreateAccount">Criar uma conta</string>
+    <string name="buttonLogin">Iniciar sessão</string>
+    <string name="buttonStart">Começar</string>
+    <string name="buttonUseOtherAccount">Usar outra conta</string>
+    <string name="crossAppLoginAccountsLoaderTitle">A obter as suas contas…</string>
+    <string name="selectAccountPanelTitle">Selecione uma ou várias contas</string>
+    <string name="selectSingleAccountPanelTitle">Selecione uma conta</string>
+    <plurals name="selectedAccountCountLabel">
+        <item quantity="one">%d conta selecionada</item>
+        <item quantity="other">%d contas selecionadas</item>
+    </plurals>
+</resources>

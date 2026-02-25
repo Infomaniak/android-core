@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="anErrorHasOccurred">Tapahtui virhe</string>
+    <string name="connectionError">Internet-yhteysongelma</string>
+    <string name="errorUserAlreadyPresent">Virhe, käyttäjä on jo läsnä</string>
+    <string name="noConnection">Ei yhteyttä</string>
+    <string name="serverError">Palvelinvirhe</string>
+</resources>

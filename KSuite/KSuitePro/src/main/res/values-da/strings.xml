@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="kSuiteBusinessKChatLabel">kChat: delte kanaler, ubegrænset integration med andre applikationer</string>
+    <string name="kSuiteBusinessKDriveLabel">kDrive: indholdssøgning, udvidet versionshistorik</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Microsoft Office Online-integration</string>
+    <string name="kSuiteBusinessMicrosoftLabelBold">Microsoft Office Online</string>
+    <string name="kSuiteBusinessOfferDescription">Optimer dine udvekslinger og strukturér samarbejdet i hele din organisation.</string>
+    <string name="kSuiteBusinessOfferTitle">Få mere impact og kontrol med virksomhedstilbuddet</string>
+    <string name="kSuiteBusinessSecurityLabel">Sikkerhed: SSO-login, PC-backup osv.</string>
+    <string name="kSuiteBusinessSecurityLabelBold">Sikkerhed</string>
+    <string name="kSuiteBusinessStorageLabel">3 TB per kDrive og kChat cloud storage bruger</string>
+    <string name="kSuiteBusinessStorageLabelBold">3 TB</string>
+    <string name="kSuiteEnterpriseFunctionalityLabel">Avancerede funktioner: Premium Support, Custom Brand osv.</string>
+    <string name="kSuiteEnterpriseFunctionalityLabelBold">Avancerede funktioner</string>
+    <string name="kSuiteEnterpriseKChatLabel">kChat: 200 eksterne brugere, op til 1000 offentlige/private kanaler</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: 365 dages filversionsopbevaring</string>
+    <string name="kSuiteEnterpriseOfferDescription">Et sikkert samarbejdsmiljø for selv de mest krævende teams.</string>
+    <string name="kSuiteEnterpriseOfferTitle">Sikr, centralisér, kontrollér med Enterprise-tilbuddet</string>
+    <string name="kSuiteEnterpriseStorageLabel">6 TB per kDrive og kChat cloud storage bruger</string>
+    <string name="kSuiteEnterpriseStorageLabelBold">6 TB</string>
+    <string name="kSuiteGetProDescription">Skab og samarbejd uden grænser</string>
+    <string name="kSuiteGetProTitle">Få kSuite</string>
+    <string name="kSuiteKChatLabelBold">kChat</string>
+    <string name="kSuiteKDriveLabelBold">kDrive</string>
+    <string name="kSuiteMoreLabel">Og meget, meget mere!</string>
+    <string name="kSuiteStandardEuriaLabel">Euria: video-transcription, billedoprettelse osv.</string>
+    <string name="kSuiteStandardEuriaLabelBold">Euria</string>
+    <string name="kSuiteStandardKChatLabel">kChat: ubegrænset beskedhistorik, flere kanaler osv.</string>
+    <string name="kSuiteStandardMailLabel">Mail: ubegrænset mailopbevaring, planlagte afsendelser osv.</string>
+    <string name="kSuiteStandardMailLabelBold">Mail</string>
+    <string name="kSuiteStandardOfferDescription">Giv dit team de vigtigste værktøjer til effektivt samarbejde i dagligdagen.</string>
+    <string name="kSuiteStandardOfferTitle">Skrid op i gear med standardtilbuddet</string>
+    <string name="kSuiteStandardStorageLabel">50 GB per kDrive og kChat cloud storage bruger</string>
+    <string name="kSuiteStandardStorageLabelBold">50 GB</string>
+    <string name="kSuiteUpgradeButton">UDVIKL</string>
+    <string name="kSuiteUpgradeDetails">For at opgradere dit tilbud skal du bruge webgrænsefladen.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Kontakt din administrator for at opgradere dit tilbud.</string>
+</resources>

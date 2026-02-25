@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="anErrorHasOccurred">Παρουσιάστηκε σφάλμα</string>
+    <string name="connectionError">Πρόβλημα σύνδεσης στο διαδίκτυο</string>
+    <string name="errorUserAlreadyPresent">Σφάλμα, ο χρήστης υπάρχει ήδη</string>
+    <string name="noConnection">Καμία σύνδεση</string>
+    <string name="serverError">Σφάλμα διακομιστή</string>
+</resources>

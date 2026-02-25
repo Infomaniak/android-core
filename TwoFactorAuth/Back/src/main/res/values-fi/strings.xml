@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="buttonApprove">Hyväksy</string>
+    <string name="buttonDeny">Hylkää</string>
+    <string name="buttonEditPassword">Muokkaa salasanaa</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Tämä pyyntö on jo käsitelty</string>
+    <string name="twoFactorAuthCheckOriginDescription">Et aloittanut tätä toimintoa?\nTarkista aktiiviset laitteesi ja katkaise yhteydet tunnistamattomiin laitteisiin.</string>
+    <string name="twoFactorAuthConfirmationDescription">Tämän kirjautumisyrityksen vahvistaminen sallii kyseisen laitteen käyttää Infomaniak-tiliäsi</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Olet kieltäytynyt kirjautumisyrityksestä. Turvataksesi tilisi, vaihda salasanasi.\n\nJos olet tämän yrityksen lähde, yritä kirjautua uudelleen.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Yhteys hylätty</string>
+    <string name="twoFactorAuthDeviceLabel">Laite</string>
+    <string name="twoFactorAuthExpiredErrorDescription">Vahvistusaika on päättynyt.\nYritä uudelleen</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Tämä kirjautumispyyntö on vanhentunut</string>
+    <string name="twoFactorAuthGenericErrorDescription">Toimintoa ei voitu suorittaa loppuun.\nYritä uudelleen.</string>
+    <string name="twoFactorAuthJustNowLabel">Juuri nyt</string>
+    <string name="twoFactorAuthLocationLabel">Sijainti</string>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Toimintoa ei voitu suorittaa loppuun.\nTarkista yhteytesi ja yritä uudelleen.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Ei verkkoyhteyttä</string>
+    <string name="twoFactorAuthNotificationApproval">Vahvista kirjautuminen</string>
+    <string name="twoFactorAuthNotificationChannelDescription">Kaksivaiheisen tunnistautumisen vahvistus</string>
+    <string name="twoFactorAuthNotificationChannelName">Kirjautumisen vahvistus</string>
+    <string name="twoFactorAuthTryingToLogInTitle">Yritätkö kirjautua sisään?</string>
+    <string name="twoFactorAuthWhenLabel">Milloin</string>
+</resources>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="kSuiteBusinessKChatLabel">kChat: współdzielone kanały, nieograniczona integracja z innymi aplikacjami</string>
+    <string name="kSuiteBusinessKDriveLabel">kDrive: wyszukiwanie treści, rozszerzona historia wersji</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Integracja Microsoft Office Online</string>
+    <string name="kSuiteBusinessMicrosoftLabelBold">Microsoft Office Online</string>
+    <string name="kSuiteBusinessOfferDescription">Optymalizuj wymianę informacji i strukturyzuj współpracę w całej organizacji.</string>
+    <string name="kSuiteBusinessOfferTitle">Zyskaj wpływ i kontrolę z ofertą biznesową</string>
+    <string name="kSuiteBusinessSecurityLabel">Bezpieczeństwo: logowanie SSO, kopie zapasowe PC, itp.</string>
+    <string name="kSuiteBusinessSecurityLabelBold">Bezpieczeństwo</string>
+    <string name="kSuiteBusinessStorageLabel">3 TB na użytkownika w przechowywaniu w chmurze kDrive i kChat</string>
+    <string name="kSuiteBusinessStorageLabelBold">3 TB</string>
+    <string name="kSuiteEnterpriseFunctionalityLabel">Zaawansowane funkcje: Premium Support, Niestandardowa Marka, itp.</string>
+    <string name="kSuiteEnterpriseFunctionalityLabelBold">Zaawansowane funkcje</string>
+    <string name="kSuiteEnterpriseKChatLabel">kChat: 200 użytkowników zewnętrznych, do 1000 kanałów publicznych/prywatnych</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: 365-dniowe przechowywanie wersji plików</string>
+    <string name="kSuiteEnterpriseOfferDescription">Bezpieczne środowisko współpracy nawet dla najbardziej wymagających zespołów.</string>
+    <string name="kSuiteEnterpriseOfferTitle">Zabezpiecz, scentralizuj, kontroluj z ofertą Enterprise</string>
+    <string name="kSuiteEnterpriseStorageLabel">6 TB na użytkownika w przechowywaniu w chmurze kDrive i kChat</string>
+    <string name="kSuiteEnterpriseStorageLabelBold">6 TB</string>
+    <string name="kSuiteGetProDescription">Twórz i współpracuj bez ograniczeń</string>
+    <string name="kSuiteGetProTitle">Uzyskaj kSuite</string>
+    <string name="kSuiteKChatLabelBold">kChat</string>
+    <string name="kSuiteKDriveLabelBold">kDrive</string>
+    <string name="kSuiteMoreLabel">I wiele, wiele więcej!</string>
+    <string name="kSuiteStandardEuriaLabel">Euria: transkrypcje wideo, tworzenie obrazów, itp.</string>
+    <string name="kSuiteStandardEuriaLabelBold">Euria</string>
+    <string name="kSuiteStandardKChatLabel">kChat: nieograniczona historia wiadomości, więcej kanałów, itp.</string>
+    <string name="kSuiteStandardMailLabel">Mail: nieograniczona przestrzeń pocztowa, zaplanowane wysyłki, itp.</string>
+    <string name="kSuiteStandardMailLabelBold">Mail</string>
+    <string name="kSuiteStandardOfferDescription">Daj swojemu zespołowi niezbędne narzędzia do efektywnej codziennej współpracy.</string>
+    <string name="kSuiteStandardOfferTitle">Przejdź na wyższy poziom z ofertą standardową</string>
+    <string name="kSuiteStandardStorageLabel">50 GB na użytkownika w przechowywaniu w chmurze kDrive i kChat</string>
+    <string name="kSuiteStandardStorageLabelBold">50 GB</string>
+    <string name="kSuiteUpgradeButton">EWOLUUJ</string>
+    <string name="kSuiteUpgradeDetails">Aby uaktualnić ofertę, użyj interfejsu internetowego.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Skontaktuj się z administratorem, aby uaktualnić ofertę.</string>
+</resources>

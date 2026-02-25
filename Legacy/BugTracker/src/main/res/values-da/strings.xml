@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="bugTrackerAddFiles">Tilføj filer</string>
+    <string name="bugTrackerAppNotUpToDate">ADVARSEL: DIN APPLIKATION ER IKKE OPdateret.</string>
+    <string name="bugTrackerDescription">Beskrivelse</string>
+    <string name="bugTrackerFileTooBig">Billeder er for tunge (maks. 32 MB)</string>
+    <string name="bugTrackerFilesTitle">FILER</string>
+    <string name="bugTrackerFormSubmitError">Fejlrapporteringen kunne ikke sendes</string>
+    <string name="bugTrackerFormSubmitSuccess">Fejlrapportering sendt</string>
+    <string name="bugTrackerHint">Du kan tilføje filer (maksimalt 32 MB) for at hjælpe med at forstå din fejl bedre.</string>
+    <string name="bugTrackerMissingFields">Emnet og beskrivelsen skal udfyldes</string>
+    <string name="bugTrackerPriority">Prioritet</string>
+    <string name="bugTrackerSubject">Emne</string>
+    <string name="bugTrackerSubmit">Indsend</string>
+    <string name="bugTrackerTitle">Fejltracker</string>
+    <string name="bugTrackerType">Type</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">En fil kunne ikke importeres</item>
+        <item quantity="other">%d filer kunne ikke importeres</item>
+    </plurals>
+
+    <string-array name="bugTrackerTypeArray">
+        <item name="item1">Fejl</item>
+        <item name="item2">Funktion</item>
+    </string-array>
+
+    <string-array name="bugTrackerPriorityArray">
+        <item name="item1">Lav</item>
+        <item name="item2">Normal</item>
+        <item name="item3">Høj</item>
+        <item name="item4">Haster</item>
+        <item name="item5">Omgående</item>
+    </string-array>
+</resources>

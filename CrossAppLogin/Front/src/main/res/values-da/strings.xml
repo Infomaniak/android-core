@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <plurals name="buttonContinueWithAccounts">
+        <item quantity="one">Fortsæt med denne konto</item>
+        <item quantity="other">Fortsæt med disse konti</item>
+    </plurals>
+    <string name="buttonCreateAccount">Opret en konto</string>
+    <string name="buttonLogin">Log ind</string>
+    <string name="buttonStart">Start</string>
+    <string name="buttonUseOtherAccount">Brug en anden konto</string>
+    <string name="crossAppLoginAccountsLoaderTitle">Henter dine konti…</string>
+    <string name="selectAccountPanelTitle">Vælg en eller flere konti</string>
+    <string name="selectSingleAccountPanelTitle">Vælg en konto</string>
+    <plurals name="selectedAccountCountLabel">
+        <item quantity="one">%d konto valgt</item>
+        <item quantity="other">%d konti valgt</item>
+    </plurals>
+</resources>

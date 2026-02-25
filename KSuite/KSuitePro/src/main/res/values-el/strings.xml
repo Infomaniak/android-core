@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="kSuiteBusinessKChatLabel">kChat: κοινά κανάλια, απεριόριστη ενσωμάτωση με άλλες εφαρμογές</string>
+    <string name="kSuiteBusinessKDriveLabel">kDrive: αναζήτηση περιεχομένου, εκτεταμένο ιστορικό εκδόσεων</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Ενσωμάτωση Microsoft Office Online</string>
+    <string name="kSuiteBusinessMicrosoftLabelBold">Microsoft Office Online</string>
+    <string name="kSuiteBusinessOfferDescription">Βελτιστοποιήστε τις επικοινωνίες σας και δομήστε τη συνεργασία σε ολόκληρο τον οργανισμό σας.</string>
+    <string name="kSuiteBusinessOfferTitle">Αποκτήστε αντίκτυπο και έλεγχο με την προσφορά για επαγγελματίες</string>
+    <string name="kSuiteBusinessSecurityLabel">Ασφάλεια: σύνδεση SSO, αντίγραφο ασφαλείας PC κ.λπ.</string>
+    <string name="kSuiteBusinessSecurityLabelBold">Ασφάλεια</string>
+    <string name="kSuiteBusinessStorageLabel">3 TB υπηρεσία αποθήκευσης cloud ανά χρήστη στο kDrive και kChat</string>
+    <string name="kSuiteBusinessStorageLabelBold">3 TB</string>
+    <string name="kSuiteEnterpriseFunctionalityLabel">Προηγμένες λειτουργίες: Premium Υποστήριξη, Εταιρική Εικόνα Μάρκας κ.λπ.</string>
+    <string name="kSuiteEnterpriseFunctionalityLabelBold">Προηγμένες λειτουργίες</string>
+    <string name="kSuiteEnterpriseKChatLabel">kChat: 200 εξωτερικοί χρήστες, έως και 1000 δημόσια/ιδιωτικά κανάλια</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: διατήρηση εκδόσεων αρχείων για 365 ημέρες</string>
+    <string name="kSuiteEnterpriseOfferDescription">Ένα ασφαλές περιβάλλον συνεργασίας ακόμα και για τις πιο απαιτητικές ομάδες.</string>
+    <string name="kSuiteEnterpriseOfferTitle">Ασφαλίστε, κεντροποιήστε, ελέγξτε με την προσφορά Enterprise</string>
+    <string name="kSuiteEnterpriseStorageLabel">6 TB υπηρεσία αποθήκευσης cloud ανά χρήστη στο kDrive και kChat</string>
+    <string name="kSuiteEnterpriseStorageLabelBold">6 TB</string>
+    <string name="kSuiteGetProDescription">Δημιουργήστε και συνεργαστείτε χωρίς όρια</string>
+    <string name="kSuiteGetProTitle">Αποκτήστε το kSuite</string>
+    <string name="kSuiteKChatLabelBold">kChat</string>
+    <string name="kSuiteKDriveLabelBold">kDrive</string>
+    <string name="kSuiteMoreLabel">Και πολλά, πολλά περισσότερα!</string>
+    <string name="kSuiteStandardEuriaLabel">Euria: μεταγραφή βίντεο, δημιουργία εικόνας κ.λπ.</string>
+    <string name="kSuiteStandardEuriaLabelBold">Euria</string>
+    <string name="kSuiteStandardKChatLabel">kChat: απεριόριστο ιστορικό μηνυμάτων, περισσότερα κανάλια κ.λπ.</string>
+    <string name="kSuiteStandardMailLabel">Mail: απεριόριστος αποθηκευτικός χώρος αλληλογραφίας, προγραμματισμένες αποστολές κ.λπ.</string>
+    <string name="kSuiteStandardMailLabelBold">Mail</string>
+    <string name="kSuiteStandardOfferDescription">Δώστε στην ομάδα σας τα απαραίτητα εργαλεία για αποτελεσματική καθημερινή συνεργασία.</string>
+    <string name="kSuiteStandardOfferTitle">Ανεβάστε επίπεδο με την τυπική προσφορά</string>
+    <string name="kSuiteStandardStorageLabel">50 GB υπηρεσία αποθήκευσης cloud ανά χρήστη στο kDrive και kChat</string>
+    <string name="kSuiteStandardStorageLabelBold">50 GB</string>
+    <string name="kSuiteUpgradeButton">ΕΞΕΛΙΧΘΕΙΤΕ</string>
+    <string name="kSuiteUpgradeDetails">Για να αναβαθμίσετε την προσφορά σας, χρησιμοποιήστε τη διαδικτυακή διεπαφή.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Επικοινωνήστε με τον διαχειριστή σας για να αναβαθμίσετε την προσφορά σας.</string>
+</resources>

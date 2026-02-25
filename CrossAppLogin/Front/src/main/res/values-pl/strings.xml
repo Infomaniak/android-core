@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <plurals name="buttonContinueWithAccounts">
+        <item quantity="one">Kontynuuj z tym kontem</item>
+        <item quantity="few">Kontynuuj z tymi kontami</item>
+        <item quantity="many">Kontynuuj z tymi kontami</item>
+        <item quantity="other">Kontynuuj z tymi kontami</item>
+    </plurals>
+    <string name="buttonCreateAccount">Utwórz konto</string>
+    <string name="buttonLogin">Zaloguj</string>
+    <string name="buttonStart">Start</string>
+    <string name="buttonUseOtherAccount">Użyj innego konta</string>
+    <string name="crossAppLoginAccountsLoaderTitle">Pobieranie kont…</string>
+    <string name="selectAccountPanelTitle">Wybierz jedno lub wiele kont</string>
+    <string name="selectSingleAccountPanelTitle">Wybierz jedno konto</string>
+    <plurals name="selectedAccountCountLabel">
+        <item quantity="one">Wybrano %d konto</item>
+        <item quantity="few">Wybrano %d konta</item>
+        <item quantity="many">Wybrano %d kont</item>
+        <item quantity="other">Wybrano %d kont</item>
+    </plurals>
+</resources>
