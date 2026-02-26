@@ -46,9 +46,6 @@ jobs:
           cross_app_login:
             global:
               project_root: "${PR_PATH}/CrossAppLogin/Front"
-          auth:
-            global:
-              project_root: "${PR_PATH}/Auth"
           bugtracker:
             global:
               project_root: "${PR_PATH}/BugTracker"
@@ -77,12 +74,6 @@ jobs:
         run: |
           source ink_utils/venv/bin/activate
           python ink_utils/main.py project cross_app_login
-          python ink_utils/main.py loco --check --verbose
-
-      - name: Run Ink validation for auth module
-        run: |
-          source ink_utils/venv/bin/activate
-          python ink_utils/main.py project auth
           python ink_utils/main.py loco --check --verbose
 
       - name: Run Ink validation for bugtracker module
