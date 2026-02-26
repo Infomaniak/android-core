@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import androidx.annotation.StringRes
 import com.infomaniak.core.legacy.R
 import com.infomaniak.core.legacy.utils.ErrorCodeTranslated
 
+@Deprecated("Use the one from core.network.utils in Core:Network module")
 enum class InternalTranslatedErrorCode(
     override val code: String,
     @StringRes override val translateRes: Int,

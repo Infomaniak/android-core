@@ -2,7 +2,7 @@
 activityCompose = "1.10.1" # TODO: Update to 1.11.0 or later after we bump compileSdk to 36
 adaptive = "1.2.0"
 agp = "8.13.0" # Delete this to-do on agp 9+ after searching and checking the project for the following: TODO[AGP9
-androidLogin = "3.1.9"
+androidLogin = "3.1.11"
 androidxCollection = "1.5.0"
 androidxCore = "1.16.0" # TODO: Update to 1.17.0 or later after we bump compileSdk to 36
 appUpdateVersion = "2.1.0"
@@ -15,8 +15,10 @@ concurrentFuturesKtx = "1.3.0"
 constraintLayout = "2.2.1"
 coordinatorLayout = "1.3.0"
 coreKtx = "1.7.0"
+coreSplashscreen = "1.2.0"
 datastorePreferences = "1.2.0"
 dotlottie = "0.12.2"
+espressoCore = "3.7.0"
 firebaseMessaging = "24.1.2"
 gson = "2.13.2"
 hiltAndroid = "2.57.2"
@@ -39,6 +41,7 @@ matomo = "4.3.4"
 mockk = "1.14.6"
 navigation = "2.9.6"
 okhttp = "5.3.2"
+okio = "3.16.2"
 playReview = "2.0.2"
 progressButton = "2.1.0"
 recyclerView = "1.4.0"
@@ -62,7 +65,9 @@ androidx-collection = { module = "androidx.collection:collection", version.ref =
 androidx-concurrent-futures-ktx = { module = "androidx.concurrent:concurrent-futures-ktx", version.ref = "concurrentFuturesKtx" }
 androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycleRuntimeKtx" }
@@ -104,30 +109,50 @@ hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", ve
 hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltAndroidx" }
 infomaniak-core-appintegrity = { module = "com.infomaniak.core:AppIntegrity" }
 infomaniak-core-auth = { module = "com.infomaniak.core:Auth" }
+infomaniak-core-avatar = { module = "com.infomaniak.core:Avatar" }
+infomaniak-core-coil = { module = "com.infomaniak.core:Coil" }
 infomaniak-core-common = { module = "com.infomaniak.core:Common" }
+infomaniak-core-crossapplogin = { module = "com.infomaniak.core:CrossAppLogin.Front" }
 infomaniak-core-crossapplogin-back = { module = "com.infomaniak.core:CrossAppLogin.Back" }
 infomaniak-core-crossapplogin-front = { module = "com.infomaniak.core:CrossAppLogin.Front" }
 infomaniak-core-filetypes = { module = "com.infomaniak.core:FileTypes" }
+infomaniak-core-fragmentnavigation = { module = "com.infomaniak.core:FragmentNavigation" }
 infomaniak-core-inappreview = { module = "com.infomaniak.core:InAppReview" }
 infomaniak-core-inappupdate = { module = "com.infomaniak.core:InAppUpdate" }
+infomaniak-core-ksuite = { module = "com.infomaniak.core:KSuite" }
+infomaniak-core-ksuite-myksuite = { module = "com.infomaniak.core:KSuite.MyKSuite" }
+infomaniak-core-ksuite-pro = { module = "com.infomaniak.core:KSuite.KSuitePro" }
+infomaniak-core-ktor = { module = "com.infomaniak.core:Ktor" }
 infomaniak-core-matomo = { module = "com.infomaniak.core:Matomo" }
 infomaniak-core-network = { module = "com.infomaniak.core:Network" }
 infomaniak-core-notifications = { module = "com.infomaniak.core:Notifications" }
 infomaniak-core-onboarding = { module = "com.infomaniak.core:Onboarding" }
+infomaniak-core-recyclerview = { module = "com.infomaniak.core:RecyclerView" }
 infomaniak-core-sentry = { module = "com.infomaniak.core:Sentry" }
+infomaniak-core-sharedvalues = { module = "com.infomaniak.core:SharedValues" }
 infomaniak-core-thumbnails = { module = "com.infomaniak.core:Thumbnails" }
+infomaniak-core-twofactorauth-back = { module = "com.infomaniak.core:TwoFactorAuth.Back.WithUserDb" }
+infomaniak-core-twofactorauth-front = { module = "com.infomaniak.core:TwoFactorAuth.Front" }
+infomaniak-core-ui = { module = "com.infomaniak.core:Ui" }
+infomaniak-core-ui-compose-accountbottomsheet = { module = "com.infomaniak.core:Ui.Compose.AccountBottomSheet" }
 infomaniak-core-ui-compose-basicbutton = { module = "com.infomaniak.core:Ui.Compose.BasicButton" }
 infomaniak-core-ui-compose-basics = { module = "com.infomaniak.core:Ui.Compose.Basics" }
 infomaniak-core-ui-compose-bottomstickybuttonscaffolds = { module = "com.infomaniak.core:Ui.Compose.BottomStickyButtonScaffolds" }
 infomaniak-core-ui-compose-margin = { module = "com.infomaniak.core:Ui.Compose.Margin" }
+infomaniak-core-ui-compose-materialthemefromxml = { module = "com.infomaniak.core:Ui.Compose.MaterialThemeFromXml" }
 infomaniak-core-ui-compose-preview = { module = "com.infomaniak.core:Ui.Compose.Preview" }
 infomaniak-core-ui-compose-theme = { module = "com.infomaniak.core:Ui.Compose.Theme" }
+infomaniak-core-ui-view = { module = "com.infomaniak.core:Ui.View" }
+infomaniak-core-ui-view-edgetoedge = { module = "com.infomaniak.core:Ui.View.EdgeToEdge" }
+infomaniak-core-webview = { module = "com.infomaniak.core:WebView" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinxSerialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinxSerialization" }
 ktor-client-content-negociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -145,6 +170,7 @@ navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-kt
 navigation-safeargs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 play-app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateVersion" }
 play-app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }

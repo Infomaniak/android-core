@@ -18,7 +18,6 @@
 <resources>
     <string name="androidMyKSuiteDashboardSubscriptionButton">Gestisci la mia offerta</string>
     <string name="androidMyKSuiteDashboardSubscriptionLabel">Per gestire o annullare l’abbonamento, accedere all’interfaccia web di kSuite.</string>
-    <string name="buttonClose">Chiudere</string>
     <string name="myKSuiteDashboardDataUnlimited">Illimitato</string>
     <string name="myKSuiteDashboardFreeMailLabel">Un indirizzo e-mail gratuito a vita</string>
     <string name="myKSuiteDashboardFreeTrialButton">Inizia la prova gratuita</string>
@@ -37,10 +36,9 @@
     <string name="myKSuiteUpgradeBenefitsTitle">I VOSTRI BENEFICI</string>
     <string name="myKSuiteUpgradeDescription">Più spazio, più possibilità e più flessibilità per fare ciò che amate.</string>
     <string name="myKSuiteUpgradeDetails">Per beneficiare della my kSuite+, modificate la vostra offerta dalla vostra interfaccia web.</string>
-    <string name="myKSuiteUpgradeDriveLabel">1 TB per foto, documenti e file</string>
+    <string name="myKSuiteUpgradeDriveLabel">1 o 6 TB per foto, documenti e file</string>
     <string name="myKSuiteUpgradeDropboxLabel">Cassette di deposito, edizione PDF…</string>
     <string name="myKSuiteUpgradeLabel">E anche di più!</string>
-    <string name="myKSuiteUpgradePdfEditionLabel">Edizione PDF</string>
     <string name="myKSuiteUpgradeRedirectLabel">Reindirizzamenti, promemoria personalizzati…</string>
     <string name="myKSuiteUpgradeTitle">Date più spazio alle vostre idee</string>
     <string name="myKSuiteUpgradeUnlimitedMailLabel">Archiviazione e invio illimitato di e-mail</string>

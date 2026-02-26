@@ -25,6 +25,7 @@ import android.os.IBinder
 import android.os.Message
 import android.os.Messenger
 import android.os.Process
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.core.crossapplogin.back.internal.ChannelMessageHandler
@@ -40,6 +41,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
@@ -56,7 +58,9 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int?>) : LifecycleService() {
+abstract class BaseCrossAppLoginService(protected open val selectedUserIdFlow: Flow<Int?>) : LifecycleService() {
+
+    constructor() : this(selectedUserIdFlow = emptyFlow())
 
     private val incomingMessagesChannel = Channel<DisposableMessage>(capacity = Channel.UNLIMITED)
     private val messagesHandler = ChannelMessageHandler(incomingMessagesChannel)
@@ -68,8 +72,11 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
     private val syncSharedDeviceIdRequests = Channel<ByteArray>(capacity = Channel.UNLIMITED)
 
     init {
-        lifecycleScope.launch { handleIncomingMessages() }
-        lifecycleScope.launch { handleSignedInAccountsRequests() }
+        lifecycleScope.launch {
+            lifecycle.currentStateFlow.first { it.isAtLeast(Lifecycle.State.STARTED) }
+            launch { handleIncomingMessages() }
+            handleSignedInAccountsRequests(selectedUserIdFlow)
+        }
     }
 
     final override fun onBind(intent: Intent): IBinder? {
@@ -113,7 +120,7 @@ abstract class BaseCrossAppLoginService(private val selectedUserIdFlow: Flow<Int
         }.collect()
     }
 
-    private suspend fun handleSignedInAccountsRequests() = Dispatchers.Default {
+    private suspend fun handleSignedInAccountsRequests(selectedUserIdFlow: Flow<Int?>) = Dispatchers.Default {
         val accountsDataFlow: SharedFlow<ByteArray> = localAccountsFlow(selectedUserIdFlow)
             .map { ProtoBuf.Default.encodeToByteArray(it) }
             .shareIn(this, SharingStarted.Eagerly, replay = 1)

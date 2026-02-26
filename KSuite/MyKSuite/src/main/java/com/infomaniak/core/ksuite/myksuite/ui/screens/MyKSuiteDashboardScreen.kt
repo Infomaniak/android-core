@@ -91,6 +91,7 @@ import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.parcelize.Parcelize
 import java.util.Date
+import com.infomaniak.core.common.R as RCore
 import com.infomaniak.core.ksuite.myksuite.ui.theme.Dimens as KSuiteDimens
 
 @Composable
@@ -152,7 +153,7 @@ private fun TopAppBar(onClose: () -> Unit) {
             IconButton(onClick = onClose) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_cross_thick),
-                    contentDescription = stringResource(R.string.buttonClose),
+                    contentDescription = stringResource(RCore.string.buttonClose),
                 )
             }
         },

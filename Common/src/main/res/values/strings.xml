@@ -29,6 +29,10 @@
     <string name="crossAppLoginIntegrityError">Accounts retrieval unavailable</string>
     <string name="errorDownload">Download error</string>
     <string name="errorDownloadInsufficientSpace">Cannot download: Insufficient space</string>
+    <plurals name="myAccount">
+        <item quantity="one">My account</item>
+        <item quantity="other">My accounts</item>
+    </plurals>
     <string name="reviewAlertTitle">Do you like %s?</string>
     <string name="trackingAuthorizeTracking">Authorize tracking</string>
     <string name="trackingManagementDescription">At Infomaniak, your data is never a bargaining chip. We only use in-house tools, hosted and controlled by ourselves, to guarantee the quality and evolution of our applications.\n\nThis technical data is confidential, stored on our own servers in Switzerland, accessible only to our development teams, and never shared with third parties. Application source code can be verified, guaranteeing total transparency.</string>
