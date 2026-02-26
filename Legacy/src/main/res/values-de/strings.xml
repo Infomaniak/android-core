@@ -40,10 +40,6 @@
     <string name="openWith">Öffnen mit</string>
     <string name="serverError">Server-Fehler</string>
     <string name="startButton">Start</string>
-    <string name="typeAdmin">Administrator</string>
-    <string name="typeClient">Kunde</string>
-    <string name="typeNormal">Mitarbeiter</string>
-    <string name="typeOwner">Gesetzlich Verantwortlicher</string>
     <string name="updateAppTitle">Aktualisierung erforderlich</string>
     <string name="updateAvailableDescription">Mit Blick auf ein optimales %s-Benutzererlebnis empfehlen wir Ihnen, Ihre Anwendung zu aktualisieren.</string>
     <string name="updateAvailableTitle">Aktualisierung verfügbar!</string>

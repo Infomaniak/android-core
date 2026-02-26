@@ -40,10 +40,6 @@
     <string name="noConnection">Sin conexión</string>
     <string name="serverError">Error del servidor</string>
     <string name="startButton">Empezar</string>
-    <string name="typeAdmin">Administrador</string>
-    <string name="typeClient">Cliente</string>
-    <string name="typeNormal">Colaborador</string>
-    <string name="typeOwner">Responsable legal</string>
     <string name="updateAppTitle">Es necesario actualizar</string>
     <string name="updateAvailableDescription">Para disfrutar de una experiencia óptima de %s, te aconsejamos que actualices tu aplicación.</string>
     <string name="updateAvailableTitle">¡Actualización disponible!</string>

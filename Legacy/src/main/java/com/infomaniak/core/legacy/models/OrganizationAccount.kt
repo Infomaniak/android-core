@@ -52,12 +52,5 @@ data class OrganizationAccount(
 
         @SerializedName("client")
         CLIENT;
-
-        fun translate(context: Context) = when (this) {
-            OWNER -> context.getString(R.string.typeOwner)
-            ADMIN -> context.getString(R.string.typeAdmin)
-            NORMAL -> context.getString(R.string.typeNormal)
-            CLIENT -> context.getString(R.string.typeClient)
-        }
     }
 }
