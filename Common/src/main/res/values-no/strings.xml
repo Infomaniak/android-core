@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="anErrorHasOccurred">En feil har oppstått</string>
+    <string name="applicationSourceCode">Se kildekode</string>
+    <string name="buttonCancel">Avbryt</string>
+    <string name="buttonClose">Lukk</string>
+    <string name="buttonLater">Senere</string>
+    <string name="buttonNext">Neste</string>
+    <string name="buttonNo">Nei</string>
+    <string name="buttonRetry">Prøv igjen</string>
+    <string name="buttonSave">Lagre</string>
+    <string name="buttonYes">Ja</string>
+    <string name="crossAppLoginIntegrityError">Henting av kontoer utilgjengelig</string>
+    <string name="errorDownload">Nedlastingsfeil</string>
+    <string name="errorDownloadInsufficientSpace">Kan ikke laste ned: Utilstrekkelig plass</string>
+    <plurals name="myAccount">
+        <item quantity="one">Min konto</item>
+        <item quantity="other">Mine kontoer</item>
+    </plurals>
+    <string name="reviewAlertTitle">Liker du %s?</string>
+    <string name="trackingAuthorizeTracking">Autoriser sporing</string>
+    <string name="trackingManagementDescription">Hos Infomaniak er dataene dine aldri et forhandlingsobjekt. Vi bruker bare interne verktøy, driftet og kontrollert av oss selv, for å garantere kvaliteten og utviklingen av applikasjonene våre.\n\nDisse tekniske dataene er konfidensielle, lagret på våre egne servere i Sveits, kun tilgjengelig for utviklingsteamene våre, og aldri delt med tredjeparter. Applikasjonskildekoden kan verifiseres, noe som garanterer total åpenhet.</string>
+    <string name="trackingManagementTitle">Dataadministrasjon</string>
+    <string name="trackingMatomoDescription">Matomo er et analyseverktøy driftet og administrert eksklusivt av Infomaniak for å forstå hvordan applikasjonen brukes.\n\nVed å studere disse dataene, er teamet vårt i stand til å kontinuerlig forbedre applikasjonens grensesnitt.</string>
+    <string name="trackingMatomoTitle">Matomo</string>
+    <string name="trackingSentryDescription">Sentry er et verktøy driftet og administrert eksklusivt av Infomaniak for å overvåke applikasjonens stabilitet i sanntid og automatisk rapportere eventuelle tekniske feil til utviklerne våre.\n\nDisse dataene gjør det mulig for teamet vårt å raskt rette og optimalisere applikasjonen, noe som resulterer i en bedre brukeropplevelse for deg.</string>
+    <string name="trackingSentryTitle">Sentry</string>
+</resources>

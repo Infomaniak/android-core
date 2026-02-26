@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
+    <string name="anErrorHasOccurred">Ocorreu um erro</string>
+    <string name="applicationSourceCode">Ver código-fonte</string>
+    <string name="buttonCancel">Cancelar</string>
+    <string name="buttonClose">Fechar</string>
+    <string name="buttonLater">Mais tarde</string>
+    <string name="buttonNext">Seguinte</string>
+    <string name="buttonNo">Não</string>
+    <string name="buttonRetry">Tentar novamente</string>
+    <string name="buttonSave">Guardar</string>
+    <string name="buttonYes">Sim</string>
+    <string name="crossAppLoginIntegrityError">Recuperação de contas indisponível</string>
+    <string name="errorDownload">Erro de descarregamento</string>
+    <string name="errorDownloadInsufficientSpace">Não é possível descarregar: Espaço insuficiente</string>
+    <plurals name="myAccount">
+        <item quantity="one">A minha conta</item>
+        <item quantity="other">As minhas contas</item>
+    </plurals>
+    <string name="reviewAlertTitle">Gosta do %s?</string>
+    <string name="trackingAuthorizeTracking">Autorizar rastreamento</string>
+    <string name="trackingManagementDescription">Na Infomaniak, os seus dados nunca são moeda de troca. Apenas utilizamos ferramentas internas, alojadas e controladas por nós, para garantir a qualidade e evolução das nossas aplicações.\n\nEstes dados técnicos são confidenciais, armazenados nos nossos próprios servidores na Suíça, acessíveis apenas às nossas equipas de desenvolvimento, e nunca partilhados com terceiros. O código-fonte da aplicação pode ser verificado, garantindo total transparência.</string>
+    <string name="trackingManagementTitle">Gestão de dados</string>
+    <string name="trackingMatomoDescription">O Matomo é uma ferramenta de análise alojada e gerida exclusivamente pela Infomaniak para compreender como a aplicação é utilizada.\n\nAo estudar estes dados, a nossa equipa é capaz de melhorar continuamente a interface da aplicação.</string>
+    <string name="trackingMatomoTitle">Matomo</string>
+    <string name="trackingSentryDescription">O Sentry é uma ferramenta alojada e gerida exclusivamente pela Infomaniak para monitorizar a estabilidade da aplicação em tempo real e reportar automaticamente quaisquer erros técnicos aos nossos programadores.\n\nEstes dados permitem à nossa equipa corrigir e otimizar rapidamente a aplicação, resultando numa melhor experiência de utilização para si.</string>
+    <string name="trackingSentryTitle">Sentry</string>
+</resources>

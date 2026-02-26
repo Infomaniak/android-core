@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="anErrorHasOccurred">Tapahtui virhe</string>
+    <string name="applicationSourceCode">Näytä lähdekoodi</string>
+    <string name="buttonCancel">Peruuta</string>
+    <string name="buttonClose">Sulje</string>
+    <string name="buttonLater">Myöhemmin</string>
+    <string name="buttonNext">Seuraava</string>
+    <string name="buttonNo">Ei</string>
+    <string name="buttonRetry">Yritä uudelleen</string>
+    <string name="buttonSave">Tallenna</string>
+    <string name="buttonYes">Kyllä</string>
+    <string name="crossAppLoginIntegrityError">Tilien nouto ei ole käytettävissä</string>
+    <string name="errorDownload">Latausvirhe</string>
+    <string name="errorDownloadInsufficientSpace">Ei voida ladata: Tilaa ei ole riittävästi</string>
+    <plurals name="myAccount">
+        <item quantity="one">Tilini</item>
+        <item quantity="other">Tilini</item>
+    </plurals>
+    <string name="reviewAlertTitle">Pidätkö %s:stä?</string>
+    <string name="trackingAuthorizeTracking">Salli seuranta</string>
+    <string name="trackingManagementDescription">Infomaniakilla tietosi eivät ole koskaan kauppatavaraa. Käytämme vain omia työkalujamme, jotka ovat isännöity ja hallittu itse, sovellustemme laadun ja kehityksen takaamiseksi.\n\nNämä tekniset tiedot ovat luottamuksellisia, tallennettu omille palvelimillemme Sveitsissä, käytettävissä vain kehitystiimeillemme, eikä niitä koskaan jaeta kolmansille osapuolille. Sovelluksen lähdekoodi on tarkistettavissa, mikä takaa täydellisen läpinäkyvyyden.</string>
+    <string name="trackingManagementTitle">Tietojen hallinta</string>
+    <string name="trackingMatomoDescription">Matomo on analyysityökalu, jota Infomaniak isännöi ja hallinnoi yksinomaan sovelluksen käytön ymmärtämiseksi.\n\nTutkimalla näitä tietoja tiimimme pystyy jatkuvasti parantamaan sovelluksen käyttöliittymää.</string>
+    <string name="trackingMatomoTitle">Matomo</string>
+    <string name="trackingSentryDescription">Sentry on työkalu, jota Infomaniak isännöi ja hallinnoi yksinomaan seuratakseen sovelluksen vakavuutta reaaliajassa ja raportoidakseen automaattisesti teknisistä virheistä kehittäjillemme.\n\nNämä tiedot mahdollistavat tiimimme nopean korjauksen ja optimoinnin, mikä johtaa parempaan käyttäjäkokemukseen sinulle.</string>
+    <string name="trackingSentryTitle">Sentry</string>
+</resources>

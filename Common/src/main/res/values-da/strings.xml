@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="anErrorHasOccurred">Der er opstået en fejl</string>
+    <string name="applicationSourceCode">Se kildekode</string>
+    <string name="buttonCancel">Annuller</string>
+    <string name="buttonClose">Luk</string>
+    <string name="buttonLater">Senere</string>
+    <string name="buttonNext">Næste</string>
+    <string name="buttonNo">Nej</string>
+    <string name="buttonRetry">Prøv igen</string>
+    <string name="buttonSave">Gem</string>
+    <string name="buttonYes">Ja</string>
+    <string name="crossAppLoginIntegrityError">Kontihentning utilgængelig</string>
+    <string name="errorDownload">Downloadfejl</string>
+    <string name="errorDownloadInsufficientSpace">Kan ikke downloade: Utilstrækkelig plads</string>
+    <plurals name="myAccount">
+        <item quantity="one">Min konto</item>
+        <item quantity="other">Mine konti</item>
+    </plurals>
+    <string name="reviewAlertTitle">Kan du lide %s?</string>
+    <string name="trackingAuthorizeTracking">Autoriser sporing</string>
+    <string name="trackingManagementDescription">Hos Infomaniak er dine data aldrig en forhandlingsvare. Vi bruger kun interne værktøjer, hostet og kontrolleret af os selv, for at garantere kvaliteten og udviklingen af vores applikationer.\n\nDisse tekniske data er fortrolige, gemt på vores egne servere i Schweiz, kun tilgængelige for vores udviklingsteams og aldrig delt med tredjeparter. Applikationskildekoden kan verificeres, hvilket garanterer total gennemsigtighed.</string>
+    <string name="trackingManagementTitle">Datahåndtering</string>
+    <string name="trackingMatomoDescription">Matomo er et analyseværktøj hostet og administreret udelukkende af Infomaniak for at forstå, hvordan applikationen bruges.\n\nVed at studere disse data kan vores team kontinuerligt forbedre applikationens grænseflade.</string>
+    <string name="trackingMatomoTitle">Matomo</string>
+    <string name="trackingSentryDescription">Sentry er et værktøj hostet og administreret udelukkende af Infomaniak til at overvåge applikationens stabilitet i realtid og automatisk rapportere tekniske fejl til vores udviklere.\n\nDisse data gør det muligt for vores team hurtigt at rette og optimere applikationen, hvilket resulterer i en bedre brugeroplevelse for dig.</string>
+    <string name="trackingSentryTitle">Sentry</string>
+</resources>
