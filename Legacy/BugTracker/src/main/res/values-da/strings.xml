@@ -17,7 +17,7 @@
   -->
 <resources>
     <string name="bugTrackerAddFiles">Tilføj filer</string>
-    <string name="bugTrackerAppNotUpToDate">ADVARSEL: DIN APPLIKATION ER IKKE OPdateret.</string>
+    <string name="bugTrackerAppNotUpToDate">ADVARSEL: DIN APPLIKATION ER IKKE OPDATERET.</string>
     <string name="bugTrackerDescription">Beskrivelse</string>
     <string name="bugTrackerFileTooBig">Billeder er for tunge (maks. 32 MB)</string>
     <string name="bugTrackerFilesTitle">FILER</string>
