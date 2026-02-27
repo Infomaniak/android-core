@@ -110,6 +110,7 @@ hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltAndroidx" }
 infomaniak-core-appintegrity = { module = "com.infomaniak.core:AppIntegrity" }
 infomaniak-core-auth = { module = "com.infomaniak.core:Auth" }
 infomaniak-core-avatar = { module = "com.infomaniak.core:Avatar" }
+infomaniak-core-bugtracker = { module = "com.infomaniak.core:BugTracker" }
 infomaniak-core-coil = { module = "com.infomaniak.core:Coil" }
 infomaniak-core-common = { module = "com.infomaniak.core:Common" }
 infomaniak-core-crossapplogin = { module = "com.infomaniak.core:CrossAppLogin.Front" }
