@@ -58,11 +58,6 @@ abstract class AbstractCurrentUserAccountUtils(
     }
 
     /**
-     * Update the currentUserIdFlow with the new [userId]
-     */
-    abstract suspend fun setCurrentUserId(userId: Int?)
-
-    /**
      * Adds a new user to the list of all users and automatically selects it as the current user.
      *
      * @throws SQLiteConstraintException when adding a user with a primary key that already exists
@@ -103,6 +98,11 @@ abstract class AbstractCurrentUserAccountUtils(
         if (userDao.findById(userId) == null) return
         setCurrentUserId(userId)
     }
+
+    /**
+     * Update the currentUserIdFlow with the new [userId]
+     */
+    protected abstract suspend fun setCurrentUserId(userId: Int?)
 
     private suspend fun getNextUserId(): Int? = userDao.getFirst()?.id
 }
