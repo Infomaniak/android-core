@@ -108,6 +108,7 @@ hilt-androidx-compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltAndroidx" }
 hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltAndroidx" }
 infomaniak-core-appintegrity = { module = "com.infomaniak.core:AppIntegrity" }
+infomaniak-core-appversionchecker = { module = "com.infomaniak.core:AppVersionChecker" }
 infomaniak-core-auth = { module = "com.infomaniak.core:Auth" }
 infomaniak-core-avatar = { module = "com.infomaniak.core:Avatar" }
 infomaniak-core-bugtracker = { module = "com.infomaniak.core:BugTracker" }
@@ -115,8 +116,11 @@ infomaniak-core-coil = { module = "com.infomaniak.core:Coil" }
 infomaniak-core-common = { module = "com.infomaniak.core:Common" }
 infomaniak-core-crossapplogin = { module = "com.infomaniak.core:CrossAppLogin.Front" }
 infomaniak-core-crossapplogin-back = { module = "com.infomaniak.core:CrossAppLogin.Back" }
+infomaniak-core-twofactorauth-back-withuserdb = { module = "com.infomaniak.core:TwoFactorAuth.Back.WithUserDb" }
 infomaniak-core-crossapplogin-front = { module = "com.infomaniak.core:CrossAppLogin.Front" }
+infomaniak-core-dotlottie = { module = "com.infomaniak.core:DotLottie" }
 infomaniak-core-filetypes = { module = "com.infomaniak.core:FileTypes" }
+infomaniak-core-file = { module = "com.infomaniak.core:File" }
 infomaniak-core-fragmentnavigation = { module = "com.infomaniak.core:FragmentNavigation" }
 infomaniak-core-inappreview = { module = "com.infomaniak.core:InAppReview" }
 infomaniak-core-inappupdate = { module = "com.infomaniak.core:InAppUpdate" }
@@ -127,6 +131,7 @@ infomaniak-core-ktor = { module = "com.infomaniak.core:Ktor" }
 infomaniak-core-matomo = { module = "com.infomaniak.core:Matomo" }
 infomaniak-core-network = { module = "com.infomaniak.core:Network" }
 infomaniak-core-notifications = { module = "com.infomaniak.core:Notifications" }
+infomaniak-core-notifications-registration = { module = "com.infomaniak.core:Notifications.Registration" }
 infomaniak-core-onboarding = { module = "com.infomaniak.core:Onboarding" }
 infomaniak-core-recyclerview = { module = "com.infomaniak.core:RecyclerView" }
 infomaniak-core-sentry = { module = "com.infomaniak.core:Sentry" }
