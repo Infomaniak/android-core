@@ -108,6 +108,7 @@ hilt-androidx-compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltAndroidx" }
 hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltAndroidx" }
 infomaniak-core-appintegrity = { module = "com.infomaniak.core:AppIntegrity" }
+infomaniak-core-applock = { module = "com.infomaniak.core:AppLock" }
 infomaniak-core-auth = { module = "com.infomaniak.core:Auth" }
 infomaniak-core-avatar = { module = "com.infomaniak.core:Avatar" }
 infomaniak-core-bugtracker = { module = "com.infomaniak.core:BugTracker" }
