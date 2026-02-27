@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="buttonApprove">Goedkeuren</string>
+    <string name="buttonDeny">Weigeren</string>
+    <string name="buttonEditPassword">Wachtwoord bewerken</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Dit verzoek is al verwerkt</string>
+    <string name="twoFactorAuthCheckOriginDescription">Heeft u deze actie niet geïnitieerd?\nControleer uw actieve apparaten en verbind de apparaten die u niet herkent.</string>
+    <string name="twoFactorAuthConfirmationDescription">Door deze inlogpoging te bevestigen, geeft u dat apparaat toegang tot uw Infomaniak-account</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">U heeft een inlogpoging geweigerd. Om uw account te beveiligen, wijzigt u uw wachtwoord.\n\nAls u de bron bent van deze poging, probeer dan opnieuw in te loggen.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Verbinding geweigerd</string>
+    <string name="twoFactorAuthDeviceLabel">Apparaat</string>
+    <string name="twoFactorAuthExpiredErrorDescription">De bevestigingsperiode is afgelopen.\nProbeer het opnieuw</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Dit inlogverzoek is verlopen</string>
+    <string name="twoFactorAuthGenericErrorDescription">Kan de bewerking niet voltooien.\nProbeer het opnieuw.</string>
+    <string name="twoFactorAuthJustNowLabel">Zojuist</string>
+    <string name="twoFactorAuthLocationLabel">Locatie</string>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Kan de bewerking niet voltooien.\nControleer uw verbinding en probeer het opnieuw.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Geen netwerkverbinding</string>
+    <string name="twoFactorAuthNotificationApproval">Inloggen bevestigen</string>
+    <string name="twoFactorAuthNotificationChannelDescription">2-factor authenticatie bevestiging</string>
+    <string name="twoFactorAuthNotificationChannelName">Inlogbevestiging</string>
+    <string name="twoFactorAuthTryingToLogInTitle">Probeert u in te loggen?</string>
+    <string name="twoFactorAuthWhenLabel">Wanneer</string>
+</resources>

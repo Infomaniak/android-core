@@ -40,10 +40,6 @@
     <string name="openWith">Apri con</string>
     <string name="serverError">Errore del server</string>
     <string name="startButton">Avvia</string>
-    <string name="typeAdmin">Amministratore</string>
-    <string name="typeClient">Cliente</string>
-    <string name="typeNormal">Collaboratore</string>
-    <string name="typeOwner">Responsabile giuridico</string>
     <string name="updateAppTitle">Aggiornamento necessario</string>
     <string name="updateAvailableDescription">Per vivere la migliore esperienza con %s, ti consigliamo di aggiornare la tua applicazione.</string>
     <string name="updateAvailableTitle">Aggiornamento disponibile!</string>

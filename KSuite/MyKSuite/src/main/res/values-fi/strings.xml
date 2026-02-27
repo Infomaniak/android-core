@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="androidMyKSuiteDashboardSubscriptionButton">Hallitse tilaustani</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">Voit hallita tai perua tilauksesi kirjautumalla kSuite-verkkokäyttöliittymään.</string>
+    <string name="myKSuiteDashboardDataUnlimited">Rajoittamaton</string>
+    <string name="myKSuiteDashboardFreeMailLabel">Ilmainen sähköpostiosoite eliniäksi</string>
+    <string name="myKSuiteDashboardFreeTrialButton">Aloita ilmainen kokeilu</string>
+    <string name="myKSuiteDashboardFreeTrialDescription">Saa lisää toimintoja ja tallennustilaa my kSuite+:lla</string>
+    <string name="myKSuiteDashboardFreeTrialTitle">30 päivää ilmaiseksi</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Mukauta saatavilla olevia aikoja muistutuksille ja ajastetuille lähetyksille</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Rajoitetut päivittäiset lähetykset</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Tallennustila Mailille ja kDrivelle</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Rajoitetut toiminnot</string>
+    <string name="myKSuiteDashboardPaymentMethod">Maksutapa</string>
+    <string name="myKSuiteDashboardTitle">Tilaukseni</string>
+    <string name="myKSuiteDashboardTrialPeriod">Kokeilujakso</string>
+    <string name="myKSuiteDashboardUntil">%s asti</string>
+    <string name="myKSuiteManageSubscriptionButton">Hallitse tilaustani</string>
+    <string name="myKSuiteManageSubscriptionDescription">Voit hallita tai perua tilauksesi kirjautumalla kSuite-verkkokäyttöliittymään</string>
+    <string name="myKSuiteUpgradeBenefitsTitle">ETUSI</string>
+    <string name="myKSuiteUpgradeDescription">Enemmän tilaa, enemmän mahdollisuuksia ja enemmän joustavuutta siihen, mitä rakastat.</string>
+    <string name="myKSuiteUpgradeDetails">Mukauta tarjousta saadaksesi my kSuite+:n verkkokäyttöliittymästäsi.</string>
+    <string name="myKSuiteUpgradeDriveLabel">1 tai 6 TB valokuvillesi, asiakirjoillesi ja tiedostoillesi</string>
+    <string name="myKSuiteUpgradeDropboxLabel">Pudotuslaatikot, PDF-muokkaus…</string>
+    <string name="myKSuiteUpgradeLabel">Ja vielä enemmän!</string>
+    <string name="myKSuiteUpgradeRedirectLabel">Uudelleenohjaukset, mukautetut muistutukset…</string>
+    <string name="myKSuiteUpgradeTitle">Anna ideoillesi enemmän tilaa</string>
+    <string name="myKSuiteUpgradeUnlimitedMailLabel">Rajoittamaton sähköpostitallennus ja lähetys</string>
+</resources>

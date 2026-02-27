@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="bugTrackerAddFiles">Lägg till filer</string>
+    <string name="bugTrackerAppNotUpToDate">VARNING: DIN APPLIKATION ÄR INTE UPPDATERAD.</string>
+    <string name="bugTrackerDescription">Beskrivning</string>
+    <string name="bugTrackerFileTooBig">Bilderna är för stora (max 32 MB)</string>
+    <string name="bugTrackerFilesTitle">FILER</string>
+    <string name="bugTrackerFormSubmitError">Felrapporten kunde inte skickas</string>
+    <string name="bugTrackerFormSubmitSuccess">Felrapport skickad</string>
+    <string name="bugTrackerHint">Du kan lägga till filer (max 32 MB) för att hjälpa till att förstå felet bättre.</string>
+    <string name="bugTrackerMissingFields">Ämne och beskrivning måste fyllas i</string>
+    <string name="bugTrackerPriority">Prioritet</string>
+    <string name="bugTrackerPriorityHigh">Hög</string>
+    <string name="bugTrackerPriorityImmediate">Omedelbar</string>
+    <string name="bugTrackerPriorityLow">Låg</string>
+    <string name="bugTrackerPriorityNormal">Normal</string>
+    <string name="bugTrackerPriorityUrgent">Brådskande</string>
+    <string name="bugTrackerSubject">Ämne</string>
+    <string name="bugTrackerSubmit">Skicka</string>
+    <string name="bugTrackerTitle">Felspårare</string>
+    <string name="bugTrackerType">Typ</string>
+    <string name="bugTrackerTypeBug">Fel</string>
+    <string name="bugTrackerTypeFeature">Funktion</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">En fil kunde inte importeras</item>
+        <item quantity="other">%d filer kunde inte importeras</item>
+    </plurals>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
+    <plurals name="buttonContinueWithAccounts">
+        <item quantity="one">Continuar com esta conta</item>
+        <item quantity="other">Continuar com estas contas</item>
+    </plurals>
+    <string name="buttonCreateAccount">Criar uma conta</string>
+    <string name="buttonLogin">Iniciar sessão</string>
+    <string name="buttonStart">Começar</string>
+    <string name="buttonUseOtherAccount">Usar outra conta</string>
+    <string name="crossAppLoginAccountsLoaderTitle">A obter as suas contas…</string>
+    <string name="selectAccountPanelTitle">Selecione uma ou várias contas</string>
+    <string name="selectSingleAccountPanelTitle">Selecione uma conta</string>
+    <plurals name="selectedAccountCountLabel">
+        <item quantity="one">%d conta selecionada</item>
+        <item quantity="other">%d contas selecionadas</item>
+    </plurals>
+</resources>

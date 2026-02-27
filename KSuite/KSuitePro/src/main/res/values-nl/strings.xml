@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="kSuiteBusinessKChatLabel">kChat: gedeelde kanalen, onbeperkte integratie met andere applicaties</string>
+    <string name="kSuiteBusinessKDriveLabel">kDrive: inhoudsopzoeking, uitgebreide versiegeschiedenis</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Microsoft Office Online-integratie</string>
+    <string name="kSuiteBusinessMicrosoftLabelBold">Microsoft Office Online</string>
+    <string name="kSuiteBusinessOfferDescription">Optimaliseer uw uitwisselingen en structureer de samenwerking binnen uw hele organisatie.</string>
+    <string name="kSuiteBusinessOfferTitle">Krijg meer impact en controle met de zakelijke aanbieding</string>
+    <string name="kSuiteBusinessSecurityLabel">Beveiliging: SSO-login, pc-back-up, enz.</string>
+    <string name="kSuiteBusinessSecurityLabelBold">Beveiliging</string>
+    <string name="kSuiteBusinessStorageLabel">3 TB per gebruiker voor cloudopslag in kDrive en kChat</string>
+    <string name="kSuiteBusinessStorageLabelBold">3 TB</string>
+    <string name="kSuiteEnterpriseFunctionalityLabel">Geavanceerde functies: Premium Support, Aangepaste Huisstijl, enz.</string>
+    <string name="kSuiteEnterpriseFunctionalityLabelBold">Geavanceerde functies</string>
+    <string name="kSuiteEnterpriseKChatLabel">kChat: 200 externe gebruikers, tot 1000 openbare/privé-kanalen</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: 365 dagen bewaren van bestandsversies</string>
+    <string name="kSuiteEnterpriseOfferDescription">Een veilige samenwerkingsomgeving voor zelfs de meest veeleisende teams.</string>
+    <string name="kSuiteEnterpriseOfferTitle">Beveilig, centraliseer, controleer met de Enterprise-aanbieding</string>
+    <string name="kSuiteEnterpriseStorageLabel">6 TB per gebruiker voor cloudopslag in kDrive en kChat</string>
+    <string name="kSuiteEnterpriseStorageLabelBold">6 TB</string>
+    <string name="kSuiteGetProDescription">Creëer en werk samen zonder limieten</string>
+    <string name="kSuiteGetProTitle">kSuite verkrijgen</string>
+    <string name="kSuiteKChatLabelBold">kChat</string>
+    <string name="kSuiteKDriveLabelBold">kDrive</string>
+    <string name="kSuiteMoreLabel">En nog veel, veel meer!</string>
+    <string name="kSuiteStandardEuriaLabel">Euria: videotranscriptie, beeldcreatie, enz.</string>
+    <string name="kSuiteStandardEuriaLabelBold">Euria</string>
+    <string name="kSuiteStandardKChatLabel">kChat: onbeperkte berichtengeschiedenis, meer kanalen, enz.</string>
+    <string name="kSuiteStandardMailLabel">Mail: onbeperkte e-mailopslag, geplande verzendingen, enz.</string>
+    <string name="kSuiteStandardMailLabelBold">Mail</string>
+    <string name="kSuiteStandardOfferDescription">Geef uw team de essentiële tools om dagelijks effectief samen te werken.</string>
+    <string name="kSuiteStandardOfferTitle">Schakel een versnelling hoger met de standaard aanbieding</string>
+    <string name="kSuiteStandardStorageLabel">50 GB per gebruiker voor cloudopslag in kDrive en kChat</string>
+    <string name="kSuiteStandardStorageLabelBold">50 GB</string>
+    <string name="kSuiteUpgradeButton">EVOLUEREN</string>
+    <string name="kSuiteUpgradeDetails">Om uw aanbieding te upgraden, gebruikt u de webinterface.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Neem contact op met uw beheerder om uw aanbieding te upgraden.</string>
+</resources>

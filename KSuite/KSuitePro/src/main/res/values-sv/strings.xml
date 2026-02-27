@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="kSuiteBusinessKChatLabel">kChat: delade kanaler, obegränsad integration med andra applikationer</string>
+    <string name="kSuiteBusinessKDriveLabel">kDrive: innehållssökning, utökad versionshistorik</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Integration med Microsoft Office Online</string>
+    <string name="kSuiteBusinessMicrosoftLabelBold">Microsoft Office Online</string>
+    <string name="kSuiteBusinessOfferDescription">Optimera dina utbyten och strukturera samarbete i hela din organisation.</string>
+    <string name="kSuiteBusinessOfferTitle">Få större inverkan och kontroll med företagserbjudandet</string>
+    <string name="kSuiteBusinessSecurityLabel">Säkerhet: SSO-inloggning, PC-säkerhetskopiering, etc.</string>
+    <string name="kSuiteBusinessSecurityLabelBold">Säkerhet</string>
+    <string name="kSuiteBusinessStorageLabel">3 TB per kDrive och kChat molnlagringsanvändare</string>
+    <string name="kSuiteBusinessStorageLabelBold">3 TB</string>
+    <string name="kSuiteEnterpriseFunctionalityLabel">Avancerade funktioner: Premium Support, Anpassat Varumärke, etc.</string>
+    <string name="kSuiteEnterpriseFunctionalityLabelBold">Avancerade funktioner</string>
+    <string name="kSuiteEnterpriseKChatLabel">kChat: 200 externa användare, upp till 1000 offentliga/privata kanaler</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: 365-dagars filversionsbevarande</string>
+    <string name="kSuiteEnterpriseOfferDescription">En säker samarbetsmiljö för även de mest krävande teamen.</string>
+    <string name="kSuiteEnterpriseOfferTitle">Säkra, centralisera, kontrollera med Enterprise-erbjudandet</string>
+    <string name="kSuiteEnterpriseStorageLabel">6 TB per kDrive och kChat molnlagringsanvändare</string>
+    <string name="kSuiteEnterpriseStorageLabelBold">6 TB</string>
+    <string name="kSuiteGetProDescription">Skapa och samarbeta utan gränser</string>
+    <string name="kSuiteGetProTitle">Skaffa kSuite</string>
+    <string name="kSuiteKChatLabelBold">kChat</string>
+    <string name="kSuiteKDriveLabelBold">kDrive</string>
+    <string name="kSuiteMoreLabel">Och mycket, mycket mer!</string>
+    <string name="kSuiteStandardEuriaLabel">Euria: videotranskription, bildskapande, etc.</string>
+    <string name="kSuiteStandardEuriaLabelBold">Euria</string>
+    <string name="kSuiteStandardKChatLabel">kChat: obegränsad meddelandehistorik, fler kanaler, etc.</string>
+    <string name="kSuiteStandardMailLabel">Mail: obegränsad e-postlagring, schemalagda utskick, etc.</string>
+    <string name="kSuiteStandardMailLabelBold">Mail</string>
+    <string name="kSuiteStandardOfferDescription">Ge ditt team de nödvändiga verktygen för att samarbeta effektivt dagligen.</string>
+    <string name="kSuiteStandardOfferTitle">Gå upp ett växel med standarderbjudandet</string>
+    <string name="kSuiteStandardStorageLabel">50 GB per kDrive och kChat molnlagringsanvändare</string>
+    <string name="kSuiteStandardStorageLabelBold">50 GB</string>
+    <string name="kSuiteUpgradeButton">UTVECKLA</string>
+    <string name="kSuiteUpgradeDetails">För att uppgradera ditt erbjudande, använd webbgränssnittet.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Kontakta din administratör för att uppgradera ditt erbjudande.</string>
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="androidMyKSuiteDashboardSubscriptionButton">Zarządzaj moją ofertą</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">Aby zarządzać lub anulować subskrypcję, zaloguj się do interfejsu internetowego kSuite.</string>
+    <string name="myKSuiteDashboardDataUnlimited">Nieograniczone</string>
+    <string name="myKSuiteDashboardFreeMailLabel">Darmowy adres e-mail na całe życie</string>
+    <string name="myKSuiteDashboardFreeTrialButton">Rozpocznij bezpłatny okres próbny</string>
+    <string name="myKSuiteDashboardFreeTrialDescription">Uzyskaj więcej funkcjonalności i przestrzeni dyskowej z my kSuite+</string>
+    <string name="myKSuiteDashboardFreeTrialTitle">30 dni za darmo</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Dostosuj niedostępne godziny dla przypomnień i zaplanowanych wysyłek</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Ograniczone dzienne wysyłki</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Przestrzeń dla Mail i kDrive</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Ograniczone funkcjonalności</string>
+    <string name="myKSuiteDashboardPaymentMethod">Metoda płatności</string>
+    <string name="myKSuiteDashboardTitle">Moja subskrypcja</string>
+    <string name="myKSuiteDashboardTrialPeriod">Okres próbny</string>
+    <string name="myKSuiteDashboardUntil">Do %s</string>
+    <string name="myKSuiteManageSubscriptionButton">Zarządzaj moją ofertą</string>
+    <string name="myKSuiteManageSubscriptionDescription">Aby zarządzać lub anulować subskrypcję, zaloguj się do interfejsu internetowego kSuite</string>
+    <string name="myKSuiteUpgradeBenefitsTitle">TWOJE KORZYŚCI</string>
+    <string name="myKSuiteUpgradeDescription">Więcej przestrzeni, więcej możliwości i więcej elastyczności, aby robić to, co kochasz.</string>
+    <string name="myKSuiteUpgradeDetails">Aby skorzystać z my kSuite+, zmień ofertę w interfejsie internetowym.</string>
+    <string name="myKSuiteUpgradeDriveLabel">1 lub 6 TB na Twoje zdjęcia, dokumenty i pliki</string>
+    <string name="myKSuiteUpgradeDropboxLabel">Skrzynki odbiorcze, edycja PDF…</string>
+    <string name="myKSuiteUpgradeLabel">I jeszcze więcej!</string>
+    <string name="myKSuiteUpgradeRedirectLabel">Przekierowania, dostosowane przypomnienia…</string>
+    <string name="myKSuiteUpgradeTitle">Daj więcej przestrzeni swoim pomysłom</string>
+    <string name="myKSuiteUpgradeUnlimitedMailLabel">Nieograniczona przestrzeń pocztowa i wysyłanie</string>
+</resources>

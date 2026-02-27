@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="kSuiteBusinessKChatLabel">kChat: delte kanaler, ubegrenset integrasjon med andre applikasjoner</string>
+    <string name="kSuiteBusinessKDriveLabel">kDrive: innholdssøk, utvidet versjonshistorikk</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Microsoft Office Online-integrasjon</string>
+    <string name="kSuiteBusinessMicrosoftLabelBold">Microsoft Office Online</string>
+    <string name="kSuiteBusinessOfferDescription">Optimaliser dine utvekslinger og strukturer samarbeidet i hele organisasjonen din.</string>
+    <string name="kSuiteBusinessOfferTitle">Få innflytelse og kontroll med bedriftstilbudet</string>
+    <string name="kSuiteBusinessSecurityLabel">Sikkerhet: SSO-pålogging, PC-sikkerhetskopi, etc.</string>
+    <string name="kSuiteBusinessSecurityLabelBold">Sikkerhet</string>
+    <string name="kSuiteBusinessStorageLabel">3 TB per kDrive- og kChat-sky lagringsbruker</string>
+    <string name="kSuiteBusinessStorageLabelBold">3 TB</string>
+    <string name="kSuiteEnterpriseFunctionalityLabel">Avanserte funksjoner: Premium Support, Egendefinert merkevare, etc.</string>
+    <string name="kSuiteEnterpriseFunctionalityLabelBold">Avanserte funksjoner</string>
+    <string name="kSuiteEnterpriseKChatLabel">kChat: 200 eksterne brukere, opptil 1000 offentlige/private kanaler</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: 365-dagers oppbevaring av filversjoner</string>
+    <string name="kSuiteEnterpriseOfferDescription">Et sikkert samarbeidsmiljø selv for de mest krevende teamene.</string>
+    <string name="kSuiteEnterpriseOfferTitle">Sikre, sentraliser, kontroller med Enterprise-tilbudet</string>
+    <string name="kSuiteEnterpriseStorageLabel">6 TB per kDrive- og kChat-sky lagringsbruker</string>
+    <string name="kSuiteEnterpriseStorageLabelBold">6 TB</string>
+    <string name="kSuiteGetProDescription">Opprett og samarbeid uten grenser</string>
+    <string name="kSuiteGetProTitle">Få kSuite</string>
+    <string name="kSuiteKChatLabelBold">kChat</string>
+    <string name="kSuiteKDriveLabelBold">kDrive</string>
+    <string name="kSuiteMoreLabel">Og mye, mye mer!</string>
+    <string name="kSuiteStandardEuriaLabel">Euria: video transkripsjon, bildeopprettelse, etc.</string>
+    <string name="kSuiteStandardEuriaLabelBold">Euria</string>
+    <string name="kSuiteStandardKChatLabel">kChat: ubegrenset meldingshistorikk, flere kanaler, etc.</string>
+    <string name="kSuiteStandardMailLabel">Mail: ubegrenset e-postlagring, planlagte sendinger, etc.</string>
+    <string name="kSuiteStandardMailLabelBold">Mail</string>
+    <string name="kSuiteStandardOfferDescription">Gi teamet ditt de essensielle verktøyene for å samarbeide effektivt daglig.</string>
+    <string name="kSuiteStandardOfferTitle">Skift gir med standardtilbudet</string>
+    <string name="kSuiteStandardStorageLabel">50 GB per kDrive- og kChat-sky lagringsbruker</string>
+    <string name="kSuiteStandardStorageLabelBold">50 GB</string>
+    <string name="kSuiteUpgradeButton">UTVIKLE</string>
+    <string name="kSuiteUpgradeDetails">For å oppgradere tilbudet ditt, bruk webgrensesnittet.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Kontakt administratoren din for å oppgradere tilbudet ditt.</string>
+</resources>

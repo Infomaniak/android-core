@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="anErrorHasOccurred">Ett fel har inträffat</string>
+    <string name="applicationSourceCode">Se källkod</string>
+    <string name="buttonCancel">Avbryt</string>
+    <string name="buttonClose">Stäng</string>
+    <string name="buttonLater">Senare</string>
+    <string name="buttonNext">Nästa</string>
+    <string name="buttonNo">Nej</string>
+    <string name="buttonRetry">Försök igen</string>
+    <string name="buttonSave">Spara</string>
+    <string name="buttonYes">Ja</string>
+    <string name="crossAppLoginIntegrityError">Kontohämtning otillgänglig</string>
+    <string name="errorDownload">Nedladdningsfel</string>
+    <string name="errorDownloadInsufficientSpace">Kan inte ladda ner: Otillräckligt utrymme</string>
+    <plurals name="myAccount">
+        <item quantity="one">Mitt konto</item>
+        <item quantity="other">Mina konton</item>
+    </plurals>
+    <string name="reviewAlertTitle">Gillar du %s?</string>
+    <string name="trackingAuthorizeTracking">Tillåt spårning</string>
+    <string name="trackingManagementDescription">På Infomaniak är dina data aldrig ett förhandlingsmedel. Vi använder endast egna verktyg, värdlagrade och kontrollerade av oss själva, för att garantera kvaliteten och utvecklingen av våra applikationer.\n\nDenna tekniska data är konfidentiell, lagrad på våra egna servrar i Schweiz, endast tillgänglig för våra utvecklingsteam, och delas aldrig med tredje parter. Applikationskällkoden kan verifieras, vilket garanterar total transparens.</string>
+    <string name="trackingManagementTitle">Datahantering</string>
+    <string name="trackingMatomoDescription">Matomo är ett analysverktyg värdlagrat och hanterat uteslutande av Infomaniak för att förstå hur applikationen används.\n\nGenom att studera denna data kan vårt team kontinuerligt förbättra applikationens gränssnitt.</string>
+    <string name="trackingMatomoTitle">Matomo</string>
+    <string name="trackingSentryDescription">Sentry är ett verktyg värdlagrat och hanterat uteslutande av Infomaniak för att övervaka applikationens stabilitet i realtid och automatiskt rapportera eventuella tekniska fel till våra utvecklare.\n\nDenna data gör det möjligt för vårt team att snabbt korrigera och optimera applikationen, vilket ger dig en bättre användarupplevelse.</string>
+    <string name="trackingSentryTitle">Sentry</string>
+</resources>

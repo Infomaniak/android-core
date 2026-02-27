@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Infomaniak Core - Android
   ~ Copyright (C) 2025 Infomaniak Network SA
@@ -34,8 +34,8 @@
     <string name="twoFactorAuthNoNetworkErrorDescription">Impossibile completare l’operazione.\nControllare la connessione e riprovare.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">Nessuna rete</string>
     <string name="twoFactorAuthNotificationApproval">Confermare l’accesso</string>
-    <string name="twoFactorAuthNotificationChannelDescription">Conferma dell\'autenticazione a 2 fattori</string>
-    <string name="twoFactorAuthNotificationChannelName">Conferma dell\'accesso</string>
+    <string name="twoFactorAuthNotificationChannelDescription">Conferma dell’autenticazione a 2 fattori</string>
+    <string name="twoFactorAuthNotificationChannelName">Conferma dell’accesso</string>
     <string name="twoFactorAuthTryingToLogInTitle">Stai cercando di accedere?</string>
     <string name="twoFactorAuthWhenLabel">Quando</string>
 </resources>

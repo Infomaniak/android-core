@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="buttonApprove">Godkend</string>
+    <string name="buttonDeny">Afvis</string>
+    <string name="buttonEditPassword">Rediger adgangskode</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Denne anmodning er allerede blevet behandlet</string>
+    <string name="twoFactorAuthCheckOriginDescription">Du startede ikke denne handling?\nKontrollér dine aktive enheder, og afbryd forbindelsen til dem, du ikke genkender.</string>
+    <string name="twoFactorAuthConfirmationDescription">Bekræftelse af dette loginforsøg vil give den enhed adgang til din Infomaniak-konto</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Du har afvist et loginforsøk. For at sikre din konto skal du ændre din adgangskode.\n\nHvis du er kilden til dette forsøg, skal du prøve at logge ind igen.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Forbindelse afvist</string>
+    <string name="twoFactorAuthDeviceLabel">Enhed</string>
+    <string name="twoFactorAuthExpiredErrorDescription">Bekræftelsesperioden er udløbet.\nPrøv igen</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Dette loginforsøg er udløbet</string>
+    <string name="twoFactorAuthGenericErrorDescription">Kunne ikke gennemføre handlingen.\nPrøv igen.</string>
+    <string name="twoFactorAuthJustNowLabel">Lige nu</string>
+    <string name="twoFactorAuthLocationLabel">Placering</string>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Kunne ikke gennemføre handlingen.\nKontrollér din forbindelse og prøv igen.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Ingen netværksforbindelse</string>
+    <string name="twoFactorAuthNotificationApproval">Bekræft login</string>
+    <string name="twoFactorAuthNotificationChannelDescription">2-faktor autentificeringsbekræftelse</string>
+    <string name="twoFactorAuthNotificationChannelName">Loginbekræftelse</string>
+    <string name="twoFactorAuthTryingToLogInTitle">Prøver du at logge ind?</string>
+    <string name="twoFactorAuthWhenLabel">Hvornår</string>
+</resources>

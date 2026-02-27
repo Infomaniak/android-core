@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Infomaniak Core - Android
   ~ Copyright (C) 2025 Infomaniak Network SA
@@ -34,7 +34,7 @@
     <string name="twoFactorAuthNoNetworkErrorDescription">Impossible de terminer l’opération.\nVérifiez votre connexion et réessayez.</string>
     <string name="twoFactorAuthNoNetworkErrorTitle">Pas de connexion internet</string>
     <string name="twoFactorAuthNotificationApproval">Confirmer la connexion</string>
-    <string name="twoFactorAuthNotificationChannelDescription">Confirmation de l\'authentification à 2 facteurs</string>
+    <string name="twoFactorAuthNotificationChannelDescription">Confirmation de l’authentification à 2 facteurs</string>
     <string name="twoFactorAuthNotificationChannelName">Confirmation de la connexion</string>
     <string name="twoFactorAuthTryingToLogInTitle">Êtes-vous en train d’essayer de vous connecter ?</string>
     <string name="twoFactorAuthWhenLabel">Quand</string>

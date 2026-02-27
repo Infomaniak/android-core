@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="buttonApprove">Zatwierdź</string>
+    <string name="buttonDeny">Odmów</string>
+    <string name="buttonEditPassword">Edytuj hasło</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">To żądanie zostało już przetworzone</string>
+    <string name="twoFactorAuthCheckOriginDescription">Nie rozpocząłeś tej akcji?\nSprawdź aktywne urządzenia i rozłącz te, których nie rozpoznajesz.</string>
+    <string name="twoFactorAuthConfirmationDescription">Potwierdzenie tej próby logowania pozwoli temu urządzeniu uzyskać dostęp do Twojego konta Infomaniak</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Odrzuciłeś próbę logowania. Aby zabezpieczyć konto, zmień hasło.\n\nJeśli jesteś źródłem tej próby, spróbuj zalogować się ponownie.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Połączenie odrzucone</string>
+    <string name="twoFactorAuthDeviceLabel">Urządzenie</string>
+    <string name="twoFactorAuthExpiredErrorDescription">Okres potwierdzenia zakończył się.\nSpróbuj ponownie</string>
+    <string name="twoFactorAuthExpiredErrorTitle">To żądanie logowania wygasło</string>
+    <string name="twoFactorAuthGenericErrorDescription">Nie można ukończyć operacji.\nSpróbuj ponownie.</string>
+    <string name="twoFactorAuthJustNowLabel">Właśnie teraz</string>
+    <string name="twoFactorAuthLocationLabel">Lokalizacja</string>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Nie można ukończyć operacji.\nSprawdź połączenie i spróbuj ponownie.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Brak połączenia z siecią</string>
+    <string name="twoFactorAuthNotificationApproval">Potwierdź logowanie</string>
+    <string name="twoFactorAuthNotificationChannelDescription">Potwierdzenie uwierzytelniania dwuskładnikowego</string>
+    <string name="twoFactorAuthNotificationChannelName">Potwierdzenie logowania</string>
+    <string name="twoFactorAuthTryingToLogInTitle">Czy próbujesz się zalogować?</string>
+    <string name="twoFactorAuthWhenLabel">Kiedy</string>
+</resources>

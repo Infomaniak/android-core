@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="androidMyKSuiteDashboardSubscriptionButton">Διαχείριση προσφοράς</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">Για να διαχειριστείτε ή να ακυρώσετε τη συνδρομή σας, συνδεθείτε στη διαδικτυακή διεπαφή του kSuite.</string>
+    <string name="myKSuiteDashboardDataUnlimited">Απεριόριστο</string>
+    <string name="myKSuiteDashboardFreeMailLabel">Μια δωρεάν διεύθυνση email για πάντα</string>
+    <string name="myKSuiteDashboardFreeTrialButton">Έναρξη της δοκιμής σας</string>
+    <string name="myKSuiteDashboardFreeTrialDescription">Αποκτήστε περισσότερες λειτουργίες και αποθηκευτικό χώρο με το my kSuite+</string>
+    <string name="myKSuiteDashboardFreeTrialTitle">30 ημέρες δωρεάν</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Προσαρμογή μη διαθέσιμων ωρών για υπενθυμίσεις και προγραμματισμένες αποστολές</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Περιορισμένες ημερήσιες αποστολές</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Αποθηκευτικός χώρος για Mail και kDrive</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Περιορισμένες λειτουργίες</string>
+    <string name="myKSuiteDashboardPaymentMethod">Τρόπος πληρωμής</string>
+    <string name="myKSuiteDashboardTitle">Η συνδρομή μου</string>
+    <string name="myKSuiteDashboardTrialPeriod">Δοκιμαστική περίοδος</string>
+    <string name="myKSuiteDashboardUntil">Μέχρι %s</string>
+    <string name="myKSuiteManageSubscriptionButton">Διαχείριση προσφοράς</string>
+    <string name="myKSuiteManageSubscriptionDescription">Για να διαχειριστείτε ή να ακυρώσετε τη συνδρομή σας, συνδεθείτε στη διαδικτυακή διεπαφή του kSuite</string>
+    <string name="myKSuiteUpgradeBenefitsTitle">ΤΑ ΟΦΕΛΗ ΣΑΣ</string>
+    <string name="myKSuiteUpgradeDescription">Περισσότερος χώρος, περισσότερες δυνατότητες και περισσότερη ευελιξία για να κάνετε αυτό που αγαπάτε.</string>
+    <string name="myKSuiteUpgradeDetails">Για να επωφεληθείτε από το my kSuite+, τροποποιήστε την προσφορά σας από τη διαδικτυακή σας διεπαφή.</string>
+    <string name="myKSuiteUpgradeDriveLabel">1 ή 6 TB για τις φωτογραφίες, τα έγγραφα και τα αρχεία σας</string>
+    <string name="myKSuiteUpgradeDropboxLabel">Dropboxes, επεξεργασία PDF…</string>
+    <string name="myKSuiteUpgradeLabel">Και πολλά περισσότερα!</string>
+    <string name="myKSuiteUpgradeRedirectLabel">Ανακατευθύνσεις, εξατομικευμένες υπενθυμίσεις…</string>
+    <string name="myKSuiteUpgradeTitle">Δώστε περισσότερο χώρο στις ιδέες σας</string>
+    <string name="myKSuiteUpgradeUnlimitedMailLabel">Απεριόριστος αποθηκευτικός χώρος email και αποστολές</string>
+</resources>

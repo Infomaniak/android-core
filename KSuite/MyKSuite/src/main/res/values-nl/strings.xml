@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="androidMyKSuiteDashboardSubscriptionButton">Mijn aanbieding beheren</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">Om uw abonnement te beheren of op te zeggen, logt u in op de kSuite-webinterface.</string>
+    <string name="myKSuiteDashboardDataUnlimited">Onbeperkt</string>
+    <string name="myKSuiteDashboardFreeMailLabel">Een gratis e-mailadres voor het leven</string>
+    <string name="myKSuiteDashboardFreeTrialButton">Begin uw gratis proefperiode</string>
+    <string name="myKSuiteDashboardFreeTrialDescription">Krijg meer functionaliteit en opslagruimte met mijn kSuite+</string>
+    <string name="myKSuiteDashboardFreeTrialTitle">30 dagen gratis</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Pas niet-beschikbare tijden aan voor herinneringen en geplande verzendingen</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Beperkt dagelijkse verzendingen</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Opslag voor Mail en kDrive</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Beperkte functionaliteit</string>
+    <string name="myKSuiteDashboardPaymentMethod">Betaalmethode</string>
+    <string name="myKSuiteDashboardTitle">Mijn abonnement</string>
+    <string name="myKSuiteDashboardTrialPeriod">Proefperiode</string>
+    <string name="myKSuiteDashboardUntil">Tot %s</string>
+    <string name="myKSuiteManageSubscriptionButton">Mijn aanbieding beheren</string>
+    <string name="myKSuiteManageSubscriptionDescription">Om uw abonnement te beheren of op te zeggen, logt u in op de kSuite-webinterface</string>
+    <string name="myKSuiteUpgradeBenefitsTitle">UW VOORDELEN</string>
+    <string name="myKSuiteUpgradeDescription">Meer ruimte, meer mogelijkheden en meer flexibiliteit om te doen wat u graag doet.</string>
+    <string name="myKSuiteUpgradeDetails">Om te profiteren van mijn kSuite+, wijzigt u uw aanbieding via uw webinterface.</string>
+    <string name="myKSuiteUpgradeDriveLabel">1 of 6 TB voor uw foto’s, documenten en bestanden</string>
+    <string name="myKSuiteUpgradeDropboxLabel">Dropboxes, PDF-bewerking…</string>
+    <string name="myKSuiteUpgradeLabel">En nog meer!</string>
+    <string name="myKSuiteUpgradeRedirectLabel">Doorverwijzingen, aangepaste herinneringen…</string>
+    <string name="myKSuiteUpgradeTitle">Geef uw ideeën meer ruimte</string>
+    <string name="myKSuiteUpgradeUnlimitedMailLabel">Onbeperkte e-mailopslag en -verzending</string>
+</resources>

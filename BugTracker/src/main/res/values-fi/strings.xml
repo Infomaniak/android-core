@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="bugTrackerAddFiles">Lisää tiedostoja</string>
+    <string name="bugTrackerAppNotUpToDate">VAROITUS: SOVELLUKSESI EI OLE AJANTASAINEN.</string>
+    <string name="bugTrackerDescription">Kuvaus</string>
+    <string name="bugTrackerFileTooBig">Kuvat ovat liian suuria (enintään 32 Mt)</string>
+    <string name="bugTrackerFilesTitle">TIEDOSTOT</string>
+    <string name="bugTrackerFormSubmitError">Virheraporttia ei voitu lähettää</string>
+    <string name="bugTrackerFormSubmitSuccess">Virheraportti lähetetty</string>
+    <string name="bugTrackerHint">Voit lisätä tiedostoja (enintään 32 Mt) virheen selvittämiseksi.</string>
+    <string name="bugTrackerMissingFields">Otsikko ja kuvaus on täytettävä</string>
+    <string name="bugTrackerPriority">Prioriteetti</string>
+    <string name="bugTrackerPriorityHigh">Korkea</string>
+    <string name="bugTrackerPriorityImmediate">Välittömästi</string>
+    <string name="bugTrackerPriorityLow">Matala</string>
+    <string name="bugTrackerPriorityNormal">Normaali</string>
+    <string name="bugTrackerPriorityUrgent">Kiireellinen</string>
+    <string name="bugTrackerSubject">Otsikko</string>
+    <string name="bugTrackerSubmit">Lähetä</string>
+    <string name="bugTrackerTitle">Virheenjäljitys</string>
+    <string name="bugTrackerType">Tyyppi</string>
+    <string name="bugTrackerTypeBug">Virhe</string>
+    <string name="bugTrackerTypeFeature">Ominaisuus</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Tiedostoa ei voitu tuoda</item>
+        <item quantity="other">%d tiedostoa ei voitu tuoda</item>
+    </plurals>
+</resources>
