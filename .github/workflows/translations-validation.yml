@@ -46,9 +46,6 @@ jobs:
           common:
             global:
               project_root: "${PR_PATH}/Common"
-          bug_tracker:
-            global:
-              project_root: "${PR_PATH}/Legacy/BugTracker"
           2fa_back:
             global:
               project_root: "${PR_PATH}/TwoFactorAuth/Back"
@@ -86,12 +83,6 @@ jobs:
         run: |
           source ink_utils/venv/bin/activate
           python ink_utils/main.py project common
-          python ink_utils/main.py loco --check --verbose
-
-      - name: Run Ink validation for bug tracker module
-        run: |
-          source ink_utils/venv/bin/activate
-          python ink_utils/main.py project bug_tracker
           python ink_utils/main.py loco --check --verbose
 
       - name: Run Ink validation for 2fa back module

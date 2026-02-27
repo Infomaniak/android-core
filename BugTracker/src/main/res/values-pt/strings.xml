@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
   ~ Copyright (C) 2026 Infomaniak Network SA
   ~
@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="bugTrackerAddFiles">Adicionar ficheiros</string>
     <string name="bugTrackerAppNotUpToDate">ATENÇÃO: A SUA APLICAÇÃO NÃO ESTÁ ATUALIZADA.</string>
     <string name="bugTrackerDescription">Descrição</string>
@@ -26,25 +26,19 @@
     <string name="bugTrackerHint">Pode adicionar ficheiros (máximo 32 MB) para ajudar a compreender melhor o seu erro.</string>
     <string name="bugTrackerMissingFields">O assunto e a descrição devem ser preenchidos</string>
     <string name="bugTrackerPriority">Prioridade</string>
+    <string name="bugTrackerPriorityHigh">Alta</string>
+    <string name="bugTrackerPriorityImmediate">Imediata</string>
+    <string name="bugTrackerPriorityLow">Baixa</string>
+    <string name="bugTrackerPriorityNormal">Normal</string>
+    <string name="bugTrackerPriorityUrgent">Urgente</string>
     <string name="bugTrackerSubject">Assunto</string>
     <string name="bugTrackerSubmit">Submeter</string>
     <string name="bugTrackerTitle">Bug tracker</string>
     <string name="bugTrackerType">Tipo</string>
+    <string name="bugTrackerTypeBug">Bug</string>
+    <string name="bugTrackerTypeFeature">Funcionalidade</string>
     <plurals name="bugTrackerUploadError">
         <item quantity="one">Um ficheiro não pôde ser importado</item>
         <item quantity="other">%d ficheiros não puderam ser importados</item>
     </plurals>
-
-    <string-array name="bugTrackerTypeArray">
-        <item name="item1">Bug</item>
-        <item name="item2">Funcionalidade</item>
-    </string-array>
-
-    <string-array name="bugTrackerPriorityArray">
-        <item name="item1">Baixa</item>
-        <item name="item2">Normal</item>
-        <item name="item3">Alta</item>
-        <item name="item4">Urgente</item>
-        <item name="item5">Imediata</item>
-    </string-array>
 </resources>

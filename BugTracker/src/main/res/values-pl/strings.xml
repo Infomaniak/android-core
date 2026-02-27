@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
   ~ Copyright (C) 2026 Infomaniak Network SA
   ~
@@ -26,27 +26,21 @@
     <string name="bugTrackerHint">Możesz dodać pliki (maksymalnie 32 MB), aby lepiej wyjaśnić błąd.</string>
     <string name="bugTrackerMissingFields">Temat i opis muszą zostać wypełnione</string>
     <string name="bugTrackerPriority">Priorytet</string>
+    <string name="bugTrackerPriorityHigh">Wysoki</string>
+    <string name="bugTrackerPriorityImmediate">Natychmiastowy</string>
+    <string name="bugTrackerPriorityLow">Niski</string>
+    <string name="bugTrackerPriorityNormal">Normalny</string>
+    <string name="bugTrackerPriorityUrgent">Pilny</string>
     <string name="bugTrackerSubject">Temat</string>
     <string name="bugTrackerSubmit">Wyślij</string>
     <string name="bugTrackerTitle">Śledzenie błędów</string>
     <string name="bugTrackerType">Typ</string>
+    <string name="bugTrackerTypeBug">Błąd</string>
+    <string name="bugTrackerTypeFeature">Funkcja</string>
     <plurals name="bugTrackerUploadError">
         <item quantity="one">Nie udało się zaimportować pliku</item>
         <item quantity="few">Nie udało się zaimportować %d plików</item>
         <item quantity="many">Nie udało się zaimportować %d plików</item>
         <item quantity="other">Nie udało się zaimportować %d plików</item>
     </plurals>
-
-    <string-array name="bugTrackerTypeArray">
-        <item name="item1">Błąd</item>
-        <item name="item2">Funkcja</item>
-    </string-array>
-
-    <string-array name="bugTrackerPriorityArray">
-        <item name="item1">Niski</item>
-        <item name="item2">Normalny</item>
-        <item name="item3">Wysoki</item>
-        <item name="item4">Pilny</item>
-        <item name="item5">Natychmiastowy</item>
-    </string-array>
 </resources>

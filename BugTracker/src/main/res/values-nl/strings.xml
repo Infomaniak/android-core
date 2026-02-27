@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
   ~ Copyright (C) 2026 Infomaniak Network SA
   ~
@@ -26,25 +26,19 @@
     <string name="bugTrackerHint">U kunt bestanden toevoegen (maximaal 32 MB) om uw bug beter te begrijpen.</string>
     <string name="bugTrackerMissingFields">Het onderwerp en de beschrijving moeten worden ingevuld</string>
     <string name="bugTrackerPriority">Prioriteit</string>
+    <string name="bugTrackerPriorityHigh">Hoog</string>
+    <string name="bugTrackerPriorityImmediate">Onmiddellijk</string>
+    <string name="bugTrackerPriorityLow">Laag</string>
+    <string name="bugTrackerPriorityNormal">Normaal</string>
+    <string name="bugTrackerPriorityUrgent">Dringend</string>
     <string name="bugTrackerSubject">Onderwerp</string>
     <string name="bugTrackerSubmit">Indienen</string>
     <string name="bugTrackerTitle">Bugtracker</string>
     <string name="bugTrackerType">Type</string>
+    <string name="bugTrackerTypeBug">Bug</string>
+    <string name="bugTrackerTypeFeature">Functie</string>
     <plurals name="bugTrackerUploadError">
         <item quantity="one">Een bestand kon niet worden geïmporteerd</item>
         <item quantity="other">%d bestanden konden niet worden geïmporteerd</item>
     </plurals>
-
-    <string-array name="bugTrackerTypeArray">
-        <item name="item1">Bug</item>
-        <item name="item2">Functie</item>
-    </string-array>
-
-    <string-array name="bugTrackerPriorityArray">
-        <item name="item1">Laag</item>
-        <item name="item2">Normaal</item>
-        <item name="item3">Hoog</item>
-        <item name="item4">Dringend</item>
-        <item name="item5">Onmiddellijk</item>
-    </string-array>
 </resources>

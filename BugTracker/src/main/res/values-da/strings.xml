@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
   ~ Copyright (C) 2026 Infomaniak Network SA
   ~
@@ -16,35 +16,29 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
-    <string name="bugTrackerAddFiles">Legg til filer</string>
-    <string name="bugTrackerAppNotUpToDate">ADVARSEL: APPEN DIN ER IKKE OPPDATERT.</string>
+    <string name="bugTrackerAddFiles">Tilføj filer</string>
+    <string name="bugTrackerAppNotUpToDate">ADVARSEL: DIN APPLIKATION ER IKKE OPDATERET.</string>
     <string name="bugTrackerDescription">Beskrivelse</string>
-    <string name="bugTrackerFileTooBig">Bildene er for tunge (maks 32 MB)</string>
+    <string name="bugTrackerFileTooBig">Billeder er for tunge (maks. 32 MB)</string>
     <string name="bugTrackerFilesTitle">FILER</string>
-    <string name="bugTrackerFormSubmitError">Feilrapporten kunne ikke sendes</string>
-    <string name="bugTrackerFormSubmitSuccess">Feilrapport sendt</string>
-    <string name="bugTrackerHint">Du kan legge til filer (maksimum 32 MB) for å hjelpe til med å forstå feilen bedre.</string>
-    <string name="bugTrackerMissingFields">Emnet og beskrivelsen må fylles ut</string>
+    <string name="bugTrackerFormSubmitError">Fejlrapporteringen kunne ikke sendes</string>
+    <string name="bugTrackerFormSubmitSuccess">Fejlrapportering sendt</string>
+    <string name="bugTrackerHint">Du kan tilføje filer (maksimalt 32 MB) for at hjælpe med at forstå din fejl bedre.</string>
+    <string name="bugTrackerMissingFields">Emnet og beskrivelsen skal udfyldes</string>
     <string name="bugTrackerPriority">Prioritet</string>
+    <string name="bugTrackerPriorityHigh">Høj</string>
+    <string name="bugTrackerPriorityImmediate">Omgående</string>
+    <string name="bugTrackerPriorityLow">Lav</string>
+    <string name="bugTrackerPriorityNormal">Normal</string>
+    <string name="bugTrackerPriorityUrgent">Haster</string>
     <string name="bugTrackerSubject">Emne</string>
-    <string name="bugTrackerSubmit">Send inn</string>
-    <string name="bugTrackerTitle">Feilsporing</string>
+    <string name="bugTrackerSubmit">Indsend</string>
+    <string name="bugTrackerTitle">Fejltracker</string>
     <string name="bugTrackerType">Type</string>
+    <string name="bugTrackerTypeBug">Fejl</string>
+    <string name="bugTrackerTypeFeature">Funktion</string>
     <plurals name="bugTrackerUploadError">
         <item quantity="one">En fil kunne ikke importeres</item>
         <item quantity="other">%d filer kunne ikke importeres</item>
     </plurals>
-
-    <string-array name="bugTrackerTypeArray">
-        <item name="item1">Feil</item>
-        <item name="item2">Funksjon</item>
-    </string-array>
-
-    <string-array name="bugTrackerPriorityArray">
-        <item name="item1">Lav</item>
-        <item name="item2">Normal</item>
-        <item name="item3">Høy</item>
-        <item name="item4">Haster</item>
-        <item name="item5">Umiddelbar</item>
-    </string-array>
 </resources>

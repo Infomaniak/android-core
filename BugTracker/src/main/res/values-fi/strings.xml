@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
   ~ Copyright (C) 2026 Infomaniak Network SA
   ~
@@ -26,25 +26,19 @@
     <string name="bugTrackerHint">Voit lisätä tiedostoja (enintään 32 Mt) virheen selvittämiseksi.</string>
     <string name="bugTrackerMissingFields">Otsikko ja kuvaus on täytettävä</string>
     <string name="bugTrackerPriority">Prioriteetti</string>
+    <string name="bugTrackerPriorityHigh">Korkea</string>
+    <string name="bugTrackerPriorityImmediate">Välittömästi</string>
+    <string name="bugTrackerPriorityLow">Matala</string>
+    <string name="bugTrackerPriorityNormal">Normaali</string>
+    <string name="bugTrackerPriorityUrgent">Kiireellinen</string>
     <string name="bugTrackerSubject">Otsikko</string>
     <string name="bugTrackerSubmit">Lähetä</string>
     <string name="bugTrackerTitle">Virheenjäljitys</string>
     <string name="bugTrackerType">Tyyppi</string>
+    <string name="bugTrackerTypeBug">Virhe</string>
+    <string name="bugTrackerTypeFeature">Ominaisuus</string>
     <plurals name="bugTrackerUploadError">
         <item quantity="one">Tiedostoa ei voitu tuoda</item>
         <item quantity="other">%d tiedostoa ei voitu tuoda</item>
     </plurals>
-
-    <string-array name="bugTrackerTypeArray">
-        <item name="item1">Virhe</item>
-        <item name="item2">Ominaisuus</item>
-    </string-array>
-
-    <string-array name="bugTrackerPriorityArray">
-        <item name="item1">Matala</item>
-        <item name="item2">Normaali</item>
-        <item name="item3">Korkea</item>
-        <item name="item4">Kiireellinen</item>
-        <item name="item5">Välittömästi</item>
-    </string-array>
 </resources>
