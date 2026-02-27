@@ -191,6 +191,7 @@ splitties-coroutines = { module = "com.louiscad.splitties:splitties-coroutines",
 splitties-intents = { module = "com.louiscad.splitties:splitties-intents", version.ref = "splitties" }
 splitties-mainhandler = { module = "com.louiscad.splitties:splitties-mainhandler", version.ref = "splitties" }
 splitties-mainthread = { module = "com.louiscad.splitties:splitties-mainthread", version.ref = "splitties" }
+splitties-preferences = { module = "com.louiscad.splitties:splitties-preferences", version.ref = "splitties" }
 splitties-systemservices = { module = "com.louiscad.splitties:splitties-systemservices", version.ref = "splitties" }
 splitties-toast = { module = "com.louiscad.splitties:splitties-toast", version.ref = "splitties" }
 stetho-okhttp3 = { module = "com.facebook.stetho:stetho-okhttp3", version.ref = "stethoOkhttp3" }
