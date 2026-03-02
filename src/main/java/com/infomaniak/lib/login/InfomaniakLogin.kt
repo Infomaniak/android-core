@@ -8,7 +8,6 @@ import android.content.SharedPreferences
 import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.util.Base64
-import android.util.Log
 import android.webkit.URLUtil
 import androidx.activity.result.ActivityResultLauncher
 import androidx.browser.customtabs.CustomTabsClient
@@ -139,7 +138,7 @@ class InfomaniakLogin(
         try {
             context.unbindService(tabConnection!!)
         } catch (ignore: Exception) {
-            Log.e("kLogin error", "The login service cannot be unbinded")
+            sentryCallback?.invoke("kLogin error: The login service cannot be unbinded", emptyMap())
         }
     }
 
@@ -156,7 +155,7 @@ class InfomaniakLogin(
             context.startActivity(intent)
             true
         } catch (e: Exception) {
-            Log.e("kLogin error", "Unable to start")
+            sentryCallback?.invoke("kLogin error: Unable to start", mapOf("exception" to e.message.toString()))
             false
         }
     }
