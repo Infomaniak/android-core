@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="anErrorHasOccurred">Er is een fout opgetreden</string>
+    <string name="androidActivateButton">Activeren</string>
+    <string name="androidPermissionButton">Toestemming</string>
+    <string name="androidPermissionTitle">Toestemming vereist</string>
+    <string name="browserNotFound">Geen browser gevonden</string>
+    <string name="buttonYes">Ja</string>
+    <string name="buttonNo">Nee</string>
+    <string name="buttonCancel">Annuleren</string>
+    <string name="buttonLater">Later</string>
+    <string name="buttonUpdate">Bijwerken</string>
+    <string name="connect">Inloggen</string>
+    <string name="connectionError">Internetverbindingsprobleem</string>
+    <string name="errorDownload">Downloadfout</string>
+    <string name="errorDownloadInsufficientSpace">Kan niet downloaden: Onvoldoende ruimte</string>
+    <string name="errorFileNotFound">Er is een fout opgetreden bij het openen van het bestand</string>
+    <string name="errorNoSupportingAppFound">Dit bestand wordt niet ondersteund door een geïnstalleerde applicatie</string>
+    <string name="errorTitle">Fout</string>
+    <string name="errorTitleLabel">Er is een fout opgetreden</string>
+    <string name="errorUpdateInstall">Fout tijdens het installeren van de update</string>
+    <string name="errorUserAlreadyPresent">Fout, gebruiker is al aanwezig</string>
+    <string name="noConnection">Geen verbinding</string>
+    <string name="openWith">Openen met</string>
+    <string name="serverError">Serverfout</string>
+    <string name="startButton">Aan de slag</string>
+    <string name="updateAppTitle">Update vereist</string>
+    <string name="updateAvailableDescription">Om het beste uit %s te halen, raden we u aan uw applicatie bij te werken.</string>
+    <string name="updateAvailableTitle">Update beschikbaar!</string>
+    <string name="updateReadyTitle">Update klaar</string>
+</resources>

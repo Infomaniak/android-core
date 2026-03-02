@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="anErrorHasOccurred">Παρουσιάστηκε σφάλμα</string>
+    <string name="androidActivateButton">Ενεργοποίηση</string>
+    <string name="androidPermissionButton">Άδεια</string>
+    <string name="androidPermissionTitle">Απαιτείται άδεια</string>
+    <string name="browserNotFound">Δεν βρέθηκε πρόγραμμα περιήγησης</string>
+    <string name="buttonYes">Ναι</string>
+    <string name="buttonNo">Όχι</string>
+    <string name="buttonCancel">Ακύρωση</string>
+    <string name="buttonLater">Αργότερα</string>
+    <string name="buttonUpdate">Ενημέρωση</string>
+    <string name="connect">Σύνδεση</string>
+    <string name="connectionError">Πρόβλημα σύνδεσης στο διαδίκτυο</string>
+    <string name="errorDownload">Σφάλμα λήψης</string>
+    <string name="errorDownloadInsufficientSpace">Δεν είναι δυνατή η λήψη: Ανεπαρκής χώρος</string>
+    <string name="errorFileNotFound">Παρουσιάστηκε σφάλμα κατά το άνοιγμα του αρχείου</string>
+    <string name="errorNoSupportingAppFound">Το αρχείο δεν υποστηρίζεται από καμία εγκατεστημένη εφαρμογή</string>
+    <string name="errorTitle">Σφάλμα</string>
+    <string name="errorTitleLabel">Παρουσιάστηκε σφάλμα</string>
+    <string name="errorUpdateInstall">Σφάλμα κατά την εγκατάσταση της ενημέρωσης</string>
+    <string name="errorUserAlreadyPresent">Σφάλμα, ο χρήστης υπάρχει ήδη</string>
+    <string name="noConnection">Χωρίς σύνδεση</string>
+    <string name="openWith">Άνοιγμα με</string>
+    <string name="serverError">Σφάλμα διακομιστή</string>
+    <string name="startButton">Έναρξη</string>
+    <string name="updateAppTitle">Απαιτείται ενημέρωση</string>
+    <string name="updateAvailableDescription">Για να αξιοποιήσετε στο έπακρο το %s, σας συνιστούμε να ενημερώσετε την εφαρμογή σας.</string>
+    <string name="updateAvailableTitle">Διαθέσιμη ενημέρωση!</string>
+    <string name="updateReadyTitle">Ενημέρωση έτοιμη</string>
+</resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="anErrorHasOccurred">Der er opstået en fejl</string>
+    <string name="androidActivateButton">Aktiver</string>
+    <string name="androidPermissionButton">Tilladelse</string>
+    <string name="androidPermissionTitle">Tilladelse påkrævet</string>
+    <string name="browserNotFound">Ingen browser fundet</string>
+    <string name="buttonYes">Ja</string>
+    <string name="buttonNo">Nej</string>
+    <string name="buttonCancel">Annuller</string>
+    <string name="buttonLater">Senere</string>
+    <string name="buttonUpdate">Opdater</string>
+    <string name="connect">Log ind</string>
+    <string name="connectionError">Internetforbindelsesproblem</string>
+    <string name="errorDownload">Downloadfejl</string>
+    <string name="errorDownloadInsufficientSpace">Kan ikke downloade: Utilstrækkelig plads</string>
+    <string name="errorFileNotFound">Der opstod en fejl ved åbning af filen</string>
+    <string name="errorNoSupportingAppFound">Ingen installeret applikation understøtter denne fil</string>
+    <string name="errorTitle">Fejl</string>
+    <string name="errorTitleLabel">Der opstod en fejl</string>
+    <string name="errorUpdateInstall">Fejl under opdateringsinstallation</string>
+    <string name="errorUserAlreadyPresent">Fejl, bruger findes allerede</string>
+    <string name="noConnection">Ingen forbindelse</string>
+    <string name="openWith">Åben med</string>
+    <string name="serverError">Serverfejl</string>
+    <string name="startButton">Kom i gang</string>
+    <string name="updateAppTitle">Opdatering påkrævet</string>
+    <string name="updateAvailableDescription">For at få det bedste ud af %s anbefaler vi, at du opdaterer din applikation.</string>
+    <string name="updateAvailableTitle">Opdatering tilgængelig!</string>
+    <string name="updateReadyTitle">Opdatering klar</string>
+</resources>

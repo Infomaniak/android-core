@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="anErrorHasOccurred">Ocorreu um erro</string>
+    <string name="androidActivateButton">Ativar</string>
+    <string name="androidPermissionButton">Permissão</string>
+    <string name="androidPermissionTitle">Permissão necessária</string>
+    <string name="browserNotFound">Nenhum navegador encontrado</string>
+    <string name="buttonYes">Sim</string>
+    <string name="buttonNo">Não</string>
+    <string name="buttonCancel">Cancelar</string>
+    <string name="buttonLater">Mais tarde</string>
+    <string name="buttonUpdate">Atualizar</string>
+    <string name="connect">Iniciar sessão</string>
+    <string name="connectionError">Problema de ligação à internet</string>
+    <string name="errorDownload">Erro de descarregamento</string>
+    <string name="errorDownloadInsufficientSpace">Não é possível descarregar: Espaço insuficiente</string>
+    <string name="errorFileNotFound">Ocorreu um erro ao abrir o ficheiro</string>
+    <string name="errorNoSupportingAppFound">Nenhuma aplicação instalada suporta este ficheiro</string>
+    <string name="errorTitle">Erro</string>
+    <string name="errorTitleLabel">Ocorreu um erro</string>
+    <string name="errorUpdateInstall">Erro durante a instalação da atualização</string>
+    <string name="errorUserAlreadyPresent">Erro, utilizador já presente</string>
+    <string name="noConnection">Sem ligação</string>
+    <string name="openWith">Abrir com</string>
+    <string name="serverError">Erro do servidor</string>
+    <string name="startButton">Começar</string>
+    <string name="updateAppTitle">Atualização necessária</string>
+    <string name="updateAvailableDescription">Para uma melhor experiência do %s, recomendamos que atualize a sua aplicação.</string>
+    <string name="updateAvailableTitle">Atualização disponível!</string>
+    <string name="updateReadyTitle">Atualização pronta</string>
+</resources>
