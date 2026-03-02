@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2025 Infomaniak Network SA
+ * Copyright (C) 2023-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.legacy.applock
+package com.infomaniak.core.applock
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -23,7 +23,7 @@ import android.widget.CompoundButton
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import com.infomaniak.core.legacy.utils.getAppName
+import com.infomaniak.core.common.extensions.appName
 
 object Utils {
 
@@ -53,7 +53,7 @@ object Utils {
             })
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle(getAppName())
+            .setTitle(appName)
             .setAllowedAuthenticators(LockActivity.authenticators)
             .build()
 

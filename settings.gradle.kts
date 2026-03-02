@@ -30,6 +30,7 @@ dependencyResolutionManagement {
 
 include(
     ":AppIntegrity",
+    ":AppLock",
     ":AppVersionChecker",
     ":Auth",
     ":Avatar",

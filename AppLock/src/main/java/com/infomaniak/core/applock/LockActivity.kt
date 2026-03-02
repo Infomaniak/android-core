@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2025 Infomaniak Network SA
+ * Copyright (C) 2023-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.legacy.applock
+package com.infomaniak.core.applock
 
 import android.app.Activity
 import android.content.Intent
@@ -38,9 +38,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.eventFlow
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
-import com.infomaniak.core.legacy.applock.Utils.requestCredentials
-import com.infomaniak.core.legacy.applock.databinding.ActivityLockBinding
-import com.infomaniak.core.legacy.utils.getAppName
+import com.infomaniak.core.applock.Utils.requestCredentials
+import com.infomaniak.core.applock.databinding.ActivityLockBinding
+import com.infomaniak.core.common.extensions.appName
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -53,6 +53,7 @@ import splitties.init.appCtx
 import kotlin.system.exitProcess
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
+import android.R as RAndroid
 
 class LockActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLockBinding.inflate(layoutInflater) }
@@ -75,7 +76,7 @@ class LockActivity : AppCompatActivity() {
             if (navigationArgs.primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(navigationArgs.primaryColor)
             setOnClickListener { requestCredentials { onCredentialsSuccessful() } }
         }
-        imageViewTitle.contentDescription = getAppName()
+        imageViewTitle.contentDescription = appName
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -86,7 +87,7 @@ class LockActivity : AppCompatActivity() {
     // TODO: Fix deprecated
     override fun onPause() {
         super.onPause()
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        overridePendingTransition(RAndroid.anim.fade_in, RAndroid.anim.fade_out)
     }
 
     private fun onCredentialsSuccessful() = with(navigationArgs) {
