@@ -37,7 +37,7 @@ class InfomaniakLogin(
     private val clientID: String,
     private val appUID: String,
     private val accessType: AccessType? = AccessType.OFFLINE,
-    sentryCallback: ((message: String, extras: Map<String, String>) -> Unit)? = null
+    sentryCallback: ((message: String, extras: Map<String, String>) -> Unit)?
 ) {
 
     private var tabClient: CustomTabsClient? = null
