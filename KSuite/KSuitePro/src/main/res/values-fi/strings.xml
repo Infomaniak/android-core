@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="kSuiteBusinessKChatLabel">kChat: jaetut kanavat, rajoittamaton integraatio muiden sovellusten kanssa</string>
+    <string name="kSuiteBusinessKDriveLabel">kDrive: sisällön haku, laajennettu versiohistoria</string>
+    <string name="kSuiteBusinessMicrosoftLabel">Microsoft Office Online -integraatio</string>
+    <string name="kSuiteBusinessMicrosoftLabelBold">Microsoft Office Online</string>
+    <string name="kSuiteBusinessOfferDescription">Optimoi vaihtosi ja rakenna yhteistyötä koko organisaatiosi läpi.</string>
+    <string name="kSuiteBusinessOfferTitle">Hanki vaikutus ja hallinta yritystarjouksella</string>
+    <string name="kSuiteBusinessSecurityLabel">Turvallisuus: SSO-kirjautuminen, PC-varmuuskopio jne.</string>
+    <string name="kSuiteBusinessSecurityLabelBold">Turvallisuus</string>
+    <string name="kSuiteBusinessStorageLabel">3 TB kDrive- ja kChat-pilvitallennustilaa käyttäjää kohti</string>
+    <string name="kSuiteBusinessStorageLabelBold">3 TB</string>
+    <string name="kSuiteEnterpriseFunctionalityLabel">Edistyneet ominaisuudet: Premium-tuki, Mukautettu brändäys jne.</string>
+    <string name="kSuiteEnterpriseFunctionalityLabelBold">Edistyneet ominaisuudet</string>
+    <string name="kSuiteEnterpriseKChatLabel">kChat: 200 ulkoista käyttäjää, jopa 1000 julkista/yksityistä kanavaa</string>
+    <string name="kSuiteEnterpriseKDriveLabel">kDrive: 365 päivän tiedostoversioiden säilytys</string>
+    <string name="kSuiteEnterpriseOfferDescription">Turvallinen yhteistyöympäristö jopa vaativimmille tiimeille.</string>
+    <string name="kSuiteEnterpriseOfferTitle">Turvaa, keskitä, hallitse yritystarjouksella</string>
+    <string name="kSuiteEnterpriseStorageLabel">6 TB kDrive- ja kChat-pilvitallennustilaa käyttäjää kohti</string>
+    <string name="kSuiteEnterpriseStorageLabelBold">6 TB</string>
+    <string name="kSuiteGetProDescription">Luo ja tee yhteistyötä ilman rajoituksia</string>
+    <string name="kSuiteGetProTitle">Hanki kSuite</string>
+    <string name="kSuiteKChatLabelBold">kChat</string>
+    <string name="kSuiteKDriveLabelBold">kDrive</string>
+    <string name="kSuiteMoreLabel">Ja paljon, paljon muuta!</string>
+    <string name="kSuiteStandardEuriaLabel">Euria: videolähetysten litterointi, kuvien luominen jne.</string>
+    <string name="kSuiteStandardEuriaLabelBold">Euria</string>
+    <string name="kSuiteStandardKChatLabel">kChat: rajoittamaton viestihistoria, enemmän kanavia jne.</string>
+    <string name="kSuiteStandardMailLabel">Mail: rajoittamaton sähköpostitallennus, ajastetut lähetykset jne.</string>
+    <string name="kSuiteStandardMailLabelBold">Mail</string>
+    <string name="kSuiteStandardOfferDescription">Anna tiimillesi olennaiset työkalut tehokkaaseen päivittäiseen yhteistyöhön.</string>
+    <string name="kSuiteStandardOfferTitle">Siirry vaiheeseen standarditarjouksella</string>
+    <string name="kSuiteStandardStorageLabel">50 GB kDrive- ja kChat-pilvitallennustilaa käyttäjää kohti</string>
+    <string name="kSuiteStandardStorageLabelBold">50 GB</string>
+    <string name="kSuiteUpgradeButton">KEHITY</string>
+    <string name="kSuiteUpgradeDetails">Tarjouksen päivittämiseksi käytä verkkokäyttöliittymää.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Ota yhteyttä järjestelmänvalvojaasi tarjouksen päivittämiseksi.</string>
+</resources>

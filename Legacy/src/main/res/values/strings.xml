@@ -42,10 +42,6 @@
     <string name="openWith">Open with</string>
     <string name="serverError">Server Error</string>
     <string name="startButton">Get started</string>
-    <string name="typeAdmin">Administrator</string>
-    <string name="typeClient">Client</string>
-    <string name="typeNormal">Staff member</string>
-    <string name="typeOwner">Legally responsible</string>
     <string name="updateAppTitle">Update required</string>
     <string name="updateAvailableDescription">To get the best out of %s, we recommend you update your application.</string>
     <string name="updateAvailableTitle">Update available!</string>

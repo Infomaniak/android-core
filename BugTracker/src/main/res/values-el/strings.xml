@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="bugTrackerAddFiles">Προσθήκη αρχείων</string>
+    <string name="bugTrackerAppNotUpToDate">ΠΡΟΣΟΧΗ: Η ΕΦΑΡΜΟΓΗ ΣΑΣ ΔΕΝ ΕΧΕΙ ΕΝΗΜΕΡΩΘΕΙ.</string>
+    <string name="bugTrackerDescription">Περιγραφή</string>
+    <string name="bugTrackerFileTooBig">Οι εικόνες είναι πολύ μεγάλες (max 32 MB)</string>
+    <string name="bugTrackerFilesTitle">ΑΡΧΕΙΑ</string>
+    <string name="bugTrackerFormSubmitError">Η αναφορά σφάλματος δεν μπόρεσε να αποσταλεί</string>
+    <string name="bugTrackerFormSubmitSuccess">Η αναφορά σφάλματος απεστάλη</string>
+    <string name="bugTrackerHint">Μπορείτε να προσθέσετε αρχεία (32 MB μέγιστο) για να μας βοηθήσετε να κατανοήσουμε καλύτερα το σφάλμα σας.</string>
+    <string name="bugTrackerMissingFields">Το θέμα και η περιγραφή πρέπει να συμπληρωθούν</string>
+    <string name="bugTrackerPriority">Προτεραιότητα</string>
+    <string name="bugTrackerPriorityHigh">Υψηλή</string>
+    <string name="bugTrackerPriorityImmediate">Άμεση</string>
+    <string name="bugTrackerPriorityLow">Χαμηλή</string>
+    <string name="bugTrackerPriorityNormal">Κανονική</string>
+    <string name="bugTrackerPriorityUrgent">Επείγουσα</string>
+    <string name="bugTrackerSubject">Θέμα</string>
+    <string name="bugTrackerSubmit">Υποβολή</string>
+    <string name="bugTrackerTitle">Παρακολούθηση σφαλμάτων</string>
+    <string name="bugTrackerType">Τύπος</string>
+    <string name="bugTrackerTypeBug">Σφάλμα</string>
+    <string name="bugTrackerTypeFeature">Χαρακτηριστικό</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Ένα αρχείο δεν μπόρεσε να εισαχθεί</item>
+        <item quantity="other">%d αρχεία δεν μπόρεσαν να εισαχθούν</item>
+    </plurals>
+</resources>

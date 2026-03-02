@@ -40,15 +40,21 @@ jobs:
         run: |
           PR_PATH=$(pwd)
           cat <<EOF > ink_utils/settings.yml
+          app_integrity:
+            global:
+              project_root: "${PR_PATH}/AppIntegrity"
+          common:
+            global:
+              project_root: "${PR_PATH}/Common"
+          2fa_back:
+            global:
+              project_root: "${PR_PATH}/TwoFactorAuth/Back"
           account_bottom_sheet:
             global:
               project_root: "${PR_PATH}/Ui/Compose/AccountBottomSheet"
           cross_app_login:
             global:
               project_root: "${PR_PATH}/CrossAppLogin/Front"
-          auth:
-            global:
-              project_root: "${PR_PATH}/Auth"
           bugtracker:
             global:
               project_root: "${PR_PATH}/BugTracker"
@@ -67,6 +73,24 @@ jobs:
           EOF
 
       # App specific steps
+      - name: Run Ink validation for app integrity module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project app_integrity
+          python ink_utils/main.py loco --check --verbose
+
+      - name: Run Ink validation for common module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project common
+          python ink_utils/main.py loco --check --verbose
+
+      - name: Run Ink validation for 2fa back module
+        run: |
+          source ink_utils/venv/bin/activate
+          python ink_utils/main.py project 2fa_back
+          python ink_utils/main.py loco --check --verbose
+
       - name: Run Ink validation for account bottom sheet module
         run: |
           source ink_utils/venv/bin/activate
@@ -77,12 +101,6 @@ jobs:
         run: |
           source ink_utils/venv/bin/activate
           python ink_utils/main.py project cross_app_login
-          python ink_utils/main.py loco --check --verbose
-
-      - name: Run Ink validation for auth module
-        run: |
-          source ink_utils/venv/bin/activate
-          python ink_utils/main.py project auth
           python ink_utils/main.py loco --check --verbose
 
       - name: Run Ink validation for bugtracker module

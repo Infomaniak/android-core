@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="anErrorHasOccurred">Er is een fout opgetreden</string>
+    <string name="applicationSourceCode">Broncode bekijken</string>
+    <string name="buttonCancel">Annuleren</string>
+    <string name="buttonClose">Sluiten</string>
+    <string name="buttonLater">Later</string>
+    <string name="buttonNext">Volgende</string>
+    <string name="buttonNo">Nee</string>
+    <string name="buttonRetry">Opnieuw proberen</string>
+    <string name="buttonSave">Opslaan</string>
+    <string name="buttonYes">Ja</string>
+    <string name="crossAppLoginIntegrityError">Ophalen van accounts niet beschikbaar</string>
+    <string name="errorDownload">Downloadfout</string>
+    <string name="errorDownloadInsufficientSpace">Kan niet downloaden: Onvoldoende ruimte</string>
+    <plurals name="myAccount">
+        <item quantity="one">Mijn account</item>
+        <item quantity="other">Mijn accounts</item>
+    </plurals>
+    <string name="reviewAlertTitle">Vindt u %s leuk?</string>
+    <string name="trackingAuthorizeTracking">Tracking autoriseren</string>
+    <string name="trackingManagementDescription">Bij Infomaniak zijn uw gegevens nooit een ruilmiddel. We gebruiken alleen in-house tools, gehost en gecontroleerd door onszelf, om de kwaliteit en evolutie van onze applicaties te garanderen.\n\nDeze technische gegevens zijn vertrouwelijk, opgeslagen op onze eigen servers in Zwitserland, alleen toegankelijk voor onze ontwikkelteams, en nooit gedeeld met derden. De broncode van de applicatie kan worden geverifieerd, wat totale transparantie garandeert.</string>
+    <string name="trackingManagementTitle">Gegevensbeheer</string>
+    <string name="trackingMatomoDescription">Matomo is een analysetool gehost en exclusief beheerd door Infomaniak om te begrijpen hoe de applicatie wordt gebruikt.\n\nDoor deze gegevens te bestuderen, kan ons team de interface van de applicatie voortdurend verbeteren.</string>
+    <string name="trackingMatomoTitle">Matomo</string>
+    <string name="trackingSentryDescription">Sentry is een tool gehost en exclusief beheerd door Infomaniak om de stabiliteit van de applicatie in realtime te monitoren en eventuele technische fouten automatisch te rapporteren aan onze ontwikkelaars.\n\nMet deze gegevens kan ons team de applicatie snel corrigeren en optimaliseren, wat resulteert in een betere gebruikerservaring voor u.</string>
+    <string name="trackingSentryTitle">Sentry</string>
+</resources>

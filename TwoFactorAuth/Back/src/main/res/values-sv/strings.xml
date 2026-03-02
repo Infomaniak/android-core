@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="buttonApprove">Godkänn</string>
+    <string name="buttonDeny">Neka</string>
+    <string name="buttonEditPassword">Redigera lösenord</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Denna begäran har redan behandlats</string>
+    <string name="twoFactorAuthCheckOriginDescription">Påbörjade du inte denna åtgärd?\nKontrollera dina aktiva enheter och koppla bort de du inte känner igen.</string>
+    <string name="twoFactorAuthConfirmationDescription">Genom att bekräfta denna inloggningsförsök kommer den enheten att få åtkomst till ditt Infomaniak-konto</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Du har nekat en inloggningsförsök. För att säkra ditt konto, ändra ditt lösenord.\n\nOm du är källan till detta försök, försök att logga in igen.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Anslutning avvisad</string>
+    <string name="twoFactorAuthDeviceLabel">Enhet</string>
+    <string name="twoFactorAuthExpiredErrorDescription">Bekräftelseperioden har upphört.\nFörsök igen</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Denna inloggningsbegäran har upphört att gälla</string>
+    <string name="twoFactorAuthGenericErrorDescription">Kunde inte slutföra operationen.\nFörsök igen.</string>
+    <string name="twoFactorAuthJustNowLabel">Just nu</string>
+    <string name="twoFactorAuthLocationLabel">Plats</string>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Kunde inte slutföra operationen.\nKontrollera din anslutning och försök igen.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Ingen nätverksanslutning</string>
+    <string name="twoFactorAuthNotificationApproval">Bekräfta inloggning</string>
+    <string name="twoFactorAuthNotificationChannelDescription">2-faktorsautentisering bekräftelse</string>
+    <string name="twoFactorAuthNotificationChannelName">Inloggningsbekräftelse</string>
+    <string name="twoFactorAuthTryingToLogInTitle">Försöker du att logga in?</string>
+    <string name="twoFactorAuthWhenLabel">När</string>
+</resources>

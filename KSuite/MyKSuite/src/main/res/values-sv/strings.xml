@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="androidMyKSuiteDashboardSubscriptionButton">Hantera mitt erbjudande</string>
+    <string name="androidMyKSuiteDashboardSubscriptionLabel">För att hantera eller avbryta din prenumeration, logga in på kSuite webbgränssnittet.</string>
+    <string name="myKSuiteDashboardDataUnlimited">Obegränsat</string>
+    <string name="myKSuiteDashboardFreeMailLabel">En gratis e-postadress för livet</string>
+    <string name="myKSuiteDashboardFreeTrialButton">Starta din kostnadsfria provperiod</string>
+    <string name="myKSuiteDashboardFreeTrialDescription">Få mer funktionalitet och lagring med my kSuite+</string>
+    <string name="myKSuiteDashboardFreeTrialTitle">30 dagar gratis</string>
+    <string name="myKSuiteDashboardFunctionalityCustomReminders">Anpassa otillgängliga tider för påminnelser och schemalagda utskick</string>
+    <string name="myKSuiteDashboardFunctionalityLimit">Begränsade dagliga utskick</string>
+    <string name="myKSuiteDashboardFunctionalityMailAndDrive">Lagring för Mail och kDrive</string>
+    <string name="myKSuiteDashboardLimitedFunctionalityLabel">Begränsad funktionalitet</string>
+    <string name="myKSuiteDashboardPaymentMethod">Betalningsmetod</string>
+    <string name="myKSuiteDashboardTitle">Min prenumeration</string>
+    <string name="myKSuiteDashboardTrialPeriod">Provperiod</string>
+    <string name="myKSuiteDashboardUntil">Till %s</string>
+    <string name="myKSuiteManageSubscriptionButton">Hantera mitt erbjudande</string>
+    <string name="myKSuiteManageSubscriptionDescription">För att hantera eller avbryta din prenumeration, logga in på kSuite webbgränssnittet</string>
+    <string name="myKSuiteUpgradeBenefitsTitle">DINA FÖRDELAR</string>
+    <string name="myKSuiteUpgradeDescription">Mer utrymme, fler möjligheter och mer flexibilitet för att göra vad du älskar.</string>
+    <string name="myKSuiteUpgradeDetails">För att dra nytta av my kSuite+, ändra ditt erbjudande från ditt webbgränssnitt.</string>
+    <string name="myKSuiteUpgradeDriveLabel">1 eller 6 TB för dina foton, dokument och filer</string>
+    <string name="myKSuiteUpgradeDropboxLabel">Dropboxar, PDF-redigering…</string>
+    <string name="myKSuiteUpgradeLabel">Och ännu mer!</string>
+    <string name="myKSuiteUpgradeRedirectLabel">Omdirigeringar, anpassade påminnelser…</string>
+    <string name="myKSuiteUpgradeTitle">Ge dina idéer mer utrymme</string>
+    <string name="myKSuiteUpgradeUnlimitedMailLabel">Obegränsad e-postlagring och utskick</string>
+</resources>

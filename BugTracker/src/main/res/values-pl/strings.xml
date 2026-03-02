@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="bugTrackerAddFiles">Dodaj pliki</string>
+    <string name="bugTrackerAppNotUpToDate">OSTRZEŻENIE: TWOJA APLIKACJA NIE JEST AKTUALNA.</string>
+    <string name="bugTrackerDescription">Opis</string>
+    <string name="bugTrackerFileTooBig">Zdjęcia są zbyt duże (max 32 MB)</string>
+    <string name="bugTrackerFilesTitle">PLIKI</string>
+    <string name="bugTrackerFormSubmitError">Nie udało się wysłać raportu o błędzie</string>
+    <string name="bugTrackerFormSubmitSuccess">Raport o błędzie wysłany</string>
+    <string name="bugTrackerHint">Możesz dodać pliki (maksymalnie 32 MB), aby lepiej wyjaśnić błąd.</string>
+    <string name="bugTrackerMissingFields">Temat i opis muszą zostać wypełnione</string>
+    <string name="bugTrackerPriority">Priorytet</string>
+    <string name="bugTrackerPriorityHigh">Wysoki</string>
+    <string name="bugTrackerPriorityImmediate">Natychmiastowy</string>
+    <string name="bugTrackerPriorityLow">Niski</string>
+    <string name="bugTrackerPriorityNormal">Normalny</string>
+    <string name="bugTrackerPriorityUrgent">Pilny</string>
+    <string name="bugTrackerSubject">Temat</string>
+    <string name="bugTrackerSubmit">Wyślij</string>
+    <string name="bugTrackerTitle">Śledzenie błędów</string>
+    <string name="bugTrackerType">Typ</string>
+    <string name="bugTrackerTypeBug">Błąd</string>
+    <string name="bugTrackerTypeFeature">Funkcja</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Nie udało się zaimportować pliku</item>
+        <item quantity="few">Nie udało się zaimportować %d plików</item>
+        <item quantity="many">Nie udało się zaimportować %d plików</item>
+        <item quantity="other">Nie udało się zaimportować %d plików</item>
+    </plurals>
+</resources>

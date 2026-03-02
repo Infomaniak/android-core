@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="bugTrackerAddFiles">Bestanden toevoegen</string>
+    <string name="bugTrackerAppNotUpToDate">WAARSCHUWING: UW TOEPASSING IS NIET UP-TO-DATE.</string>
+    <string name="bugTrackerDescription">Beschrijving</string>
+    <string name="bugTrackerFileTooBig">Afbeeldingen zijn te zwaar (max. 32 MB)</string>
+    <string name="bugTrackerFilesTitle">BESTANDEN</string>
+    <string name="bugTrackerFormSubmitError">Het bugrapport kon niet worden verzonden</string>
+    <string name="bugTrackerFormSubmitSuccess">Bugrapport verzonden</string>
+    <string name="bugTrackerHint">U kunt bestanden toevoegen (maximaal 32 MB) om uw bug beter te begrijpen.</string>
+    <string name="bugTrackerMissingFields">Het onderwerp en de beschrijving moeten worden ingevuld</string>
+    <string name="bugTrackerPriority">Prioriteit</string>
+    <string name="bugTrackerPriorityHigh">Hoog</string>
+    <string name="bugTrackerPriorityImmediate">Onmiddellijk</string>
+    <string name="bugTrackerPriorityLow">Laag</string>
+    <string name="bugTrackerPriorityNormal">Normaal</string>
+    <string name="bugTrackerPriorityUrgent">Dringend</string>
+    <string name="bugTrackerSubject">Onderwerp</string>
+    <string name="bugTrackerSubmit">Indienen</string>
+    <string name="bugTrackerTitle">Bugtracker</string>
+    <string name="bugTrackerType">Type</string>
+    <string name="bugTrackerTypeBug">Bug</string>
+    <string name="bugTrackerTypeFeature">Functie</string>
+    <plurals name="bugTrackerUploadError">
+        <item quantity="one">Een bestand kon niet worden geïmporteerd</item>
+        <item quantity="other">%d bestanden konden niet worden geïmporteerd</item>
+    </plurals>
+</resources>

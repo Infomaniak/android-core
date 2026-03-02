@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Infomaniak Core - Android
   ~ Copyright (C) 2025 Infomaniak Network SA
   ~
@@ -50,5 +50,5 @@
     <string name="kSuiteStandardStorageLabelBold">50 Go</string>
     <string name="kSuiteUpgradeButton">ÉVOLUER</string>
     <string name="kSuiteUpgradeDetails">Pour faire évoluer votre offre, utilisez l’interface web.</string>
-    <string name="kSuiteUpgradeDetailsContactAdmin">Contacter votre administrateur pour faire évoluer votre offre.</string>
+    <string name="kSuiteUpgradeDetailsContactAdmin">Contactez votre administrateur pour faire évoluer votre offre.</string>
 </resources>

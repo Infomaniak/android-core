@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="buttonApprove">Godkjenn</string>
+    <string name="buttonDeny">Avslå</string>
+    <string name="buttonEditPassword">Rediger passord</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Denne forespørselen har allerede blitt behandlet</string>
+    <string name="twoFactorAuthCheckOriginDescription">Startet du ikke denne handlingen?\nSjekk dine aktive enheter, og koble fra de du ikke gjenkjenner.</string>
+    <string name="twoFactorAuthConfirmationDescription">Ved å bekrefte dette innloggingsforsøket vil du tillate at enheten får tilgang til Infomaniak-kontoen din</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Du har avslått et innloggingsforsøk. For å sikre kontoen din, endre passordet ditt.\n\nHvis du er kilden til dette forsøket, prøv å logge inn igjen.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Tilkobling avslått</string>
+    <string name="twoFactorAuthDeviceLabel">Enhet</string>
+    <string name="twoFactorAuthExpiredErrorDescription">Bekreftelsesperioden er avsluttet.\nVennligst prøv igjen</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Denne innloggingsforespørselen har utløpt</string>
+    <string name="twoFactorAuthGenericErrorDescription">Kan ikke fullføre operasjonen.\nVennligst prøv igjen.</string>
+    <string name="twoFactorAuthJustNowLabel">Akkurat nå</string>
+    <string name="twoFactorAuthLocationLabel">Sted</string>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Kan ikke fullføre operasjonen.\nSjekk tilkoblingen din og prøv igjen.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Ingen nettverkstilkobling</string>
+    <string name="twoFactorAuthNotificationApproval">Bekreft pålogging</string>
+    <string name="twoFactorAuthNotificationChannelDescription">2-faktor autentiseringsbekreftelse</string>
+    <string name="twoFactorAuthNotificationChannelName">Innloggingsbekreftelse</string>
+    <string name="twoFactorAuthTryingToLogInTitle">Prøver du å logge inn?</string>
+    <string name="twoFactorAuthWhenLabel">Når</string>
+</resources>

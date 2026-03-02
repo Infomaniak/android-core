@@ -17,10 +17,8 @@
  */
 package com.infomaniak.core.auth.models
 
-import android.content.Context
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.infomaniak.core.auth.R
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -52,12 +50,5 @@ data class OrganizationAccount(
 
         @SerializedName("client")
         CLIENT;
-
-        fun translate(context: Context) = when (this) {
-            OWNER -> context.getString(R.string.typeOwner)
-            ADMIN -> context.getString(R.string.typeAdmin)
-            NORMAL -> context.getString(R.string.typeNormal)
-            CLIENT -> context.getString(R.string.typeClient)
-        }
     }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="buttonApprove">Έγκριση</string>
+    <string name="buttonDeny">Απόρριψη</string>
+    <string name="buttonEditPassword">Επεξεργασία κωδικού πρόσβασης</string>
+    <string name="twoFactorAuthAlreadyProcessedErrorTitle">Αυτό το αίτημα έχει ήδη επεξεργαστεί</string>
+    <string name="twoFactorAuthCheckOriginDescription">Δεν ξεκινήσατε εσείς αυτήν την ενέργεια;\nΕλέγξτε τις ενεργές συσκευές σας και αποσυνδέστε αυτές που δεν αναγνωρίζετε.</string>
+    <string name="twoFactorAuthConfirmationDescription">Επιβεβαιώνοντας αυτήν την προσπάθεια σύνδεσης, θα επιτρέψετε σε αυτήν τη συσκευή να έχει πρόσβαση στον λογαριασμό σας Infomaniak</string>
+    <string name="twoFactorAuthConnectionRejectedDescription">Απορρίψατε μια προσπάθεια σύνδεσης. Για να ασφαλίσετε τον λογαριασμό σας, αλλάξτε τον κωδικό πρόσβασής σας.\n\nΑν είστε εσείς η πηγή αυτής της προσπάθειας, προσπαθήστε να συνδεθείτε ξανά.</string>
+    <string name="twoFactorAuthConnectionRejectedTitle">Σύνδεση απορρίφθηκε</string>
+    <string name="twoFactorAuthDeviceLabel">Συσκευή</string>
+    <string name="twoFactorAuthExpiredErrorDescription">Η περίοδος επιβεβαίωσης έληξε.\nΠαρακαλώ προσπαθήστε ξανά</string>
+    <string name="twoFactorAuthExpiredErrorTitle">Αυτό το αίτημα σύνδεσης έληξε</string>
+    <string name="twoFactorAuthGenericErrorDescription">Αδυναμία ολοκλήρωσης της λειτουργίας.\nΠαρακαλώ προσπαθήστε ξανά.</string>
+    <string name="twoFactorAuthJustNowLabel">Μόλις τώρα</string>
+    <string name="twoFactorAuthLocationLabel">Τοποθεσία</string>
+    <string name="twoFactorAuthNoNetworkErrorDescription">Αδυναμία ολοκλήρωσης της λειτουργίας.\nΕλέγξτε τη σύνδεσή σας και προσπαθήστε ξανά.</string>
+    <string name="twoFactorAuthNoNetworkErrorTitle">Καμία σύνδεση δικτύου</string>
+    <string name="twoFactorAuthNotificationApproval">Επιβεβαίωση σύνδεσης</string>
+    <string name="twoFactorAuthNotificationChannelDescription">Επιβεβαίωση ελέγχου ταυτότητας δύο παραγόντων</string>
+    <string name="twoFactorAuthNotificationChannelName">Επιβεβαίωση σύνδεσης</string>
+    <string name="twoFactorAuthTryingToLogInTitle">Προσπαθείτε να συνδεθείτε;</string>
+    <string name="twoFactorAuthWhenLabel">Πότε</string>
+</resources>
