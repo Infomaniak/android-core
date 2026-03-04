@@ -25,7 +25,7 @@ import com.infomaniak.core.applock.databinding.ActivityLockBinding
 import com.infomaniak.core.common.extensions.appName
 import kotlin.system.exitProcess
 
-abstract class AppLockViewActivity : BaseAppLockActivity() {
+open class AppLockViewActivity : BaseAppLockActivity() {
     private val binding by lazy { ActivityLockBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
@@ -38,11 +38,11 @@ abstract class AppLockViewActivity : BaseAppLockActivity() {
         }
 
         unLock.apply {
-            setBackgroundColor(primaryColor)
+            primaryColor?.let { setBackgroundColor(it) }
             setOnClickListener { requestCredentials { onCredentialsSuccessful() } }
         }
         imageViewTitle.contentDescription = appName
     }
 
-    abstract val primaryColor: Int
+    open val primaryColor: Int? = null
 }
