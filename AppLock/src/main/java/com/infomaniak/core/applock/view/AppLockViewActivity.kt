@@ -19,34 +19,30 @@ package com.infomaniak.core.applock.view
 
 import android.os.Bundle
 import androidx.activity.addCallback
-import androidx.navigation.navArgs
-import com.infomaniak.core.applock.BaseLockActivity
-import com.infomaniak.core.applock.Utils.requestCredentials
+import com.infomaniak.core.applock.AppLockHelper.requestCredentials
+import com.infomaniak.core.applock.BaseAppLockActivity
 import com.infomaniak.core.applock.databinding.ActivityLockBinding
 import com.infomaniak.core.common.extensions.appName
 import kotlin.system.exitProcess
 
-class LockViewActivity : BaseLockActivity() {
+abstract class AppLockViewActivity : BaseAppLockActivity() {
     private val binding by lazy { ActivityLockBinding.inflate(layoutInflater) }
-    private val navigationArgs: LockViewActivityArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         super.onCreate(savedInstanceState)
         setContentView(root)
 
-        onBackPressedDispatcher.addCallback(this@LockViewActivity) {
+        onBackPressedDispatcher.addCallback(this@AppLockViewActivity) {
             finishAffinity()
             exitProcess(0)
         }
 
         unLock.apply {
-            if (navigationArgs.primaryColor != UNDEFINED_PRIMARY_COLOR) setBackgroundColor(navigationArgs.primaryColor)
+            setBackgroundColor(primaryColor)
             setOnClickListener { requestCredentials { onCredentialsSuccessful() } }
         }
         imageViewTitle.contentDescription = appName
     }
 
-    companion object {
-        const val UNDEFINED_PRIMARY_COLOR = 0
-    }
+    abstract val primaryColor: Int
 }

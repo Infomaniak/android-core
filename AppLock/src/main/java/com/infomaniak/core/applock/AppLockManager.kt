@@ -17,29 +17,20 @@
  */
 package com.infomaniak.core.applock
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.SystemClock
 import android.util.Log
 import android.view.Display
-import android.widget.CompoundButton
 import androidx.activity.ComponentActivity
-import androidx.annotation.ColorInt
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
-import androidx.biometric.BiometricPrompt
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
 import androidx.lifecycle.Lifecycle.Event.ON_RESUME
 import androidx.lifecycle.eventFlow
 import androidx.lifecycle.lifecycleScope
-import com.infomaniak.core.applock.view.LockViewActivity.Companion.UNDEFINED_PRIMARY_COLOR
-import com.infomaniak.core.applock.view.LockViewActivityArgs
-import com.infomaniak.core.common.extensions.appName
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -52,65 +43,7 @@ import splitties.init.appCtx
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
-object Utils {
-
-    const val APP_LOCK_TAG = "App lock"
-
-    @SuppressLint("NewApi")
-    fun FragmentActivity.requestCredentials(onSuccess: () -> Unit) {
-        val biometricPrompt = BiometricPrompt(
-            this,
-            ContextCompat.getMainExecutor(this),
-            object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    super.onAuthenticationSucceeded(result)
-                    Log.i(APP_LOCK_TAG, "onAuthenticationSucceeded")
-                    onSuccess()
-                }
-
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    Log.i(APP_LOCK_TAG, "onAuthenticationFailed")
-                }
-
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    Log.i(APP_LOCK_TAG, "onAuthenticationError errorCode: $errorCode errString: $errString")
-                }
-            })
-
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle(appName)
-            .setAllowedAuthenticators(LockManager.authenticators)
-            .build()
-
-        biometricPrompt.authenticate(promptInfo)
-    }
-
-    fun FragmentActivity.silentlyReverseSwitch(switch: CompoundButton, onCredentialSuccessful: (Boolean) -> Unit) = with(switch) {
-        if (tag == null) {
-            silentClick()
-            requestCredentials {
-                silentClick() // Click that doesn't pass in listener
-                onCredentialSuccessful(isChecked)
-            }
-        }
-    }
-
-    fun FragmentActivity.silentlyReverseSwitch(isChecked: Boolean, onCredentialSuccessful: (Boolean) -> Unit) {
-        requestCredentials {
-            onCredentialSuccessful(isChecked)
-        }
-    }
-
-    private fun CompoundButton.silentClick() {
-        tag = true
-        performClick()
-        tag = null
-    }
-}
-
-object LockManager {
+object AppLockManager {
     val defaultAutoLockTimeout = 1.minutes
 
     private val biometricsManager = BiometricManager.from(appCtx)
@@ -144,17 +77,15 @@ object LockManager {
 
     fun scheduleLockIfNeeded(
         targetActivity: ComponentActivity,
-        lockActivityCls: Class<out BaseLockActivity>,
+        lockActivityCls: Class<out BaseAppLockActivity>,
         isAppLockEnabled: suspend () -> Boolean,
         autoLockTimeout: Duration = defaultAutoLockTimeout,
-        @ColorInt primaryColor: Int = UNDEFINED_PRIMARY_COLOR
     ) {
         targetActivity.lifecycleScope.launch {
             targetActivity.shouldEnableAppLockFlow(isAppLockEnabled).collectLatest { shouldLock ->
                 if (shouldLock) lockAppWhenNeeded(
                     targetActivity = targetActivity,
                     lockActivityCls = lockActivityCls,
-                    primaryColor = primaryColor,
                     autoLockTimeout = autoLockTimeout
                 )
             }
@@ -163,8 +94,7 @@ object LockManager {
 
     private suspend fun lockAppWhenNeeded(
         targetActivity: ComponentActivity,
-        lockActivityCls: Class<out BaseLockActivity>,
-        @ColorInt primaryColor: Int,
+        lockActivityCls: Class<out BaseAppLockActivity>,
         autoLockTimeout: Duration
     ) = targetActivity.lifecycle.eventFlow.buffer(Channel.UNLIMITED).collect { event ->
         when (event) {
@@ -172,7 +102,6 @@ object LockManager {
                 targetActivity = targetActivity,
                 lockActivityCls = lockActivityCls,
                 lastAppClosingTime = lastAppClosingTime,
-                primaryColor = primaryColor,
                 autoLockTimeout = autoLockTimeout
             )
             ON_PAUSE -> if (!isLocked) lastAppClosingTime = SystemClock.elapsedRealtime()
@@ -190,33 +119,25 @@ object LockManager {
 
     private fun lockIfNeeded(
         targetActivity: Activity,
-        lockActivityCls: Class<out BaseLockActivity>,
+        lockActivityCls: Class<out BaseAppLockActivity>,
         lastAppClosingTime: Long,
-        primaryColor: Int = UNDEFINED_PRIMARY_COLOR,
         autoLockTimeout: Duration
     ) {
         if (lockedByScreenTurnedOff) {
-            lockNow(targetActivity, lockActivityCls, primaryColor)
+            lockNow(targetActivity, lockActivityCls)
         } else {
             val now = SystemClock.elapsedRealtime()
             val timeoutExceeded = now > lastAppClosingTime + autoLockTimeout.inWholeMilliseconds
             if (timeoutExceeded) {
-                lockNow(targetActivity, lockActivityCls, primaryColor)
+                lockNow(targetActivity, lockActivityCls)
             }
         }
     }
 
-    private fun lockNow(originalActivity: Activity, lockActivityCls: Class<out BaseLockActivity>, primaryColor: Int) {
+    private fun lockNow(originalActivity: Activity, lockActivityCls: Class<out BaseAppLockActivity>) {
         Log.v("Jamy", "lockNow: ${lockActivityCls.name}")
-        Intent(originalActivity, lockActivityCls).apply {
-            val args = LockViewActivityArgs(
-                destinationClassName = originalActivity::class.java.name,
-                primaryColor = primaryColor,
-                shouldStartActivity = false,
-                destinationClassArgs = null
-            )
-            putExtras(args.toBundle())
-        }.also(originalActivity::startActivity)
+        val intent = Intent(originalActivity, lockActivityCls)
+        originalActivity.startActivity(intent)
         isLocked = true
     }
 

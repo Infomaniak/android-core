@@ -17,24 +17,27 @@
  */
 package com.infomaniak.core.applock
 
-import android.content.Intent
+import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
-import androidx.navigation.navArgs
-import com.infomaniak.core.applock.LockManager.unlock
-import com.infomaniak.core.applock.Utils.requestCredentials
-import com.infomaniak.core.applock.view.LockViewActivityArgs
+import com.infomaniak.core.applock.AppLockHelper.requestCredentials
+import com.infomaniak.core.applock.AppLockManager.unlock
 import android.R as RAndroid
 
-abstract class BaseLockActivity : FragmentActivity() {
+abstract class BaseAppLockActivity : FragmentActivity() {
     private val lockViewModel: LockViewModel by viewModels()
-    private val navigationArgs: LockViewActivityArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
+        if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
+
         if (lockViewModel.firstLaunch) {
             requestCredentials { onCredentialsSuccessful() }
         }
@@ -45,20 +48,21 @@ abstract class BaseLockActivity : FragmentActivity() {
         lockViewModel.firstLaunch = false
     }
 
-    // TODO: Fix deprecated
     override fun onPause() {
         super.onPause()
-        overridePendingTransition(RAndroid.anim.fade_in, RAndroid.anim.fade_out)
+        if (SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(
+                OVERRIDE_TRANSITION_OPEN, RAndroid.anim.fade_in, RAndroid.anim.fade_out
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(RAndroid.anim.fade_in, RAndroid.anim.fade_out)
+        }
     }
 
-    protected fun onCredentialsSuccessful() = with(navigationArgs) {
-        Log.i(Utils.APP_LOCK_TAG, "success")
+    protected fun onCredentialsSuccessful() {
+        Log.i(AppLockHelper.APP_LOCK_TAG, "success")
         unlock()
-        if (shouldStartActivity) {
-            Intent(this@BaseLockActivity, Class.forName(destinationClassName)).apply {
-                destinationClassArgs?.let(::putExtras)
-            }.also(::startActivity)
-        }
         finish()
     }
 

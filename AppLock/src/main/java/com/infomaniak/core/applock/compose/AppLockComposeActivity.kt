@@ -17,19 +17,14 @@
  */
 package com.infomaniak.core.applock.compose
 
-import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
-import com.infomaniak.core.applock.BaseLockActivity
+import com.infomaniak.core.applock.BaseAppLockActivity
 
-abstract class LockComposeActivity : BaseLockActivity() {
+abstract class AppLockComposeActivity : BaseAppLockActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        enableEdgeToEdge()
-        if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
 
         setContent {
             Content()
