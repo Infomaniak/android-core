@@ -41,6 +41,7 @@ fun SinglePaneScaffold(
     maxPaneWidth: Dp = LocalScaffoldTheme.current.singlePaneMaxWidth,
     containerColor: Color = MaterialTheme.colorScheme.background,
     topBar: @Composable () -> Unit = {},
+    floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
@@ -48,6 +49,7 @@ fun SinglePaneScaffold(
     Scaffold(
         modifier = modifier,
         topBar = topBar,
+        floatingActionButton = floatingActionButton,
         bottomBar = bottomBar,
         snackbarHost = snackbarHost,
         containerColor = containerColor,
