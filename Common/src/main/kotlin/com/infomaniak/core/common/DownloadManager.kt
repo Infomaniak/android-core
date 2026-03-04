@@ -75,6 +75,10 @@ sealed interface DownloadStatus {
     ) : DownloadStatus
 
     data object Complete : DownloadStatus
+
+    companion object {
+        fun DownloadStatus?.isFinished() = this is Complete || this is Failed
+    }
 }
 
 suspend fun DownloadManager.startDownloadingFile(request: DownloadManager.Request): UniqueDownloadId? {
