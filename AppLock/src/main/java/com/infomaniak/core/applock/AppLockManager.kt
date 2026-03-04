@@ -20,7 +20,6 @@ package com.infomaniak.core.applock
 import android.app.Activity
 import android.content.Intent
 import android.os.SystemClock
-import android.util.Log
 import android.view.Display
 import androidx.activity.ComponentActivity
 import androidx.biometric.BiometricManager
@@ -135,7 +134,6 @@ object AppLockManager {
     }
 
     private fun lockNow(originalActivity: Activity, lockActivityCls: Class<out BaseAppLockActivity>) {
-        Log.v("Jamy", "lockNow: ${lockActivityCls.name}")
         val intent = Intent(originalActivity, lockActivityCls)
         originalActivity.startActivity(intent)
         isLocked = true
