@@ -24,6 +24,10 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 
+/**
+ * Automatically adds the lint to all modules defined in the whole project and use Core/lint.xml as the single source of truth to
+ * configure the lints in every app.
+ */
 class ComposeLintPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.subprojects {
@@ -34,10 +38,7 @@ class ComposeLintPlugin : Plugin<Project> {
                     }
                 }
 
-                val coreVersionCatalog = extensions
-                    .getByType<VersionCatalogsExtension>()
-                    .named("core")
-
+                val coreVersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("core")
                 dependencies {
                     add("lintChecks", coreVersionCatalog.findLibrary("compose-lint-checks").get())
                 }
