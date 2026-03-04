@@ -21,6 +21,7 @@ import android.app.DownloadManager
 import android.app.DownloadManager.Request
 import android.content.Context
 import android.database.Cursor
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import androidx.core.net.toUri
@@ -35,15 +36,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 object DownloadManagerUtils {
+    private val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]|%")
 
-    fun withoutProblematicCharacters(originalName: String): String {
-        return originalName.replace(regexInvalidSystemChar, "_").replace('%', '_').let {
-            // fix IllegalArgumentException only on Android 10 if multi dot
-            if (SDK_INT == 29) it.replace(Regex("\\.{2,}"), ".") else it
-        }
-    }
+    fun withoutProblematicCharacters(name: String): String = name.sanitizeNameForDownload()
 
-    private val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]")
+    private fun String.sanitizeNameForDownload() = replace(regexInvalidSystemChar, "_").fixMultiDots()
+
+    private fun String.fixMultiDots() = apply { if (SDK_INT == Build.VERSION_CODES.Q) replace(Regex("\\.{2,}"), ".") }
 
     suspend fun requestFor(
         url: String,
