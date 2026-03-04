@@ -73,11 +73,20 @@ object DownloadManagerUtils {
         request.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
     }
 
-    private fun Request.addHeaders(userAgent: String, extraHeaders: Iterable<Pair<String, String>>) {
-        addRequestHeader("Accept-Encoding", "gzip")
-        addRequestHeader("App-Version", "Android $appVersionName")
-        addRequestHeader("User-Agent", userAgent)
-        extraHeaders.forEach { (key, value) -> addRequestHeader(key, value) }
+    private fun Request.addHeaders(
+        userAgent: String,
+        extraHeaders: Iterable<Pair<String, String>>
+    ): Request = addRequestHeader("Accept-Encoding", "gzip")
+        .addRequestHeader("App-Version", "Android $appVersionName")
+        .addRequestHeader("User-Agent", userAgent)
+        .addRequestHeaders(extraHeaders)
+
+    private fun Request.addRequestHeaders(headers: Iterable<Pair<String, String>>): Request = apply {
+        headers.forEach { addRequestHeader(pair = it) }
+    }
+
+    private fun Request.addRequestHeader(pair: Pair<String, String>): Request = with(pair) {
+        addRequestHeader(first, second)
     }
 
     @Deprecated("Use requestFor and extensions in DownloadManager.kt as SwissTransfer")
