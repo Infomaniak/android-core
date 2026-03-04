@@ -17,4 +17,5 @@
   -->
 <lint>
     <issue id="ComposeCompositionLocalUsage" severity="ignore" />
+    <issue id="ComposeModifierMissing" severity="warning" />
 </lint>
