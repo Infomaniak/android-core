@@ -12,4 +12,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "build-logic"
 
-include(":composite")
+include(
+    ":composite",
+    ":composeLint",
+)
