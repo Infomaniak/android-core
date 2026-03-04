@@ -47,7 +47,7 @@ object DownloadManagerUtils {
     suspend fun requestFor(
         url: String,
         nameWithoutProblematicChars: String,
-        mimeType: String?,
+        mimeType: String? = null,
         userAgent: String,
         extraHeaders: Iterable<Pair<String, String>> = emptySet(),
     ): Request = Request(url.toUri())
