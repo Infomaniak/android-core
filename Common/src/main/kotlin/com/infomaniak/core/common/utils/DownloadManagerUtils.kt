@@ -50,27 +50,27 @@ object DownloadManagerUtils {
         mimeType: String?,
         userAgent: String,
         extraHeaders: Iterable<Pair<String, String>> = emptySet(),
-    ): Request = Request(url.toUri()).also { request ->
-        request.setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
-        request.setTitle(nameWithoutProblematicChars)
-        request.setDescription(appName)
-        Dispatchers.IO {
-            try {
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
-            } catch (e: IllegalStateException) {
-                // The call above tries to create the directory if it doesn't exist,
-                // and throws an `IllegalStateException` if its attempt at creating the directory fails…
-                // but the reason it failed might because of a race condition,
-                // like the DownloadManager app creating it in parallel, just after the `exists()` check,
-                // and before the `mkdirs()` call tries to create the directory.
-                // That's why we try once more if that case happens.
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
-            }
-        }
-        request.setMimeType(mimeType)
-        request.addHeaders(userAgent, extraHeaders)
+    ): Request = Request(url.toUri())
+        .setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
+        .setTitle(nameWithoutProblematicChars)
+        .setDescription(appName)
+        .setPublicDownloadDirectoryDestination(nameWithoutProblematicChars)
+        .setMimeType(mimeType)
+        .addHeaders(userAgent, extraHeaders)
+        .setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
-        request.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+    private suspend fun Request.setPublicDownloadDirectoryDestination(nameWithoutProblematicChars: String) = Dispatchers.IO {
+        try {
+            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+        } catch (_: IllegalStateException) {
+            // The call above tries to create the directory if it doesn't exist,
+            // and throws an `IllegalStateException` if its attempt at creating the directory fails…
+            // but the reason it failed might because of a race condition,
+            // like the DownloadManager app creating it in parallel, just after the `exists()` check,
+            // and before the `mkdirs()` call tries to create the directory.
+            // That's why we try once more if that case happens.
+            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+        }
     }
 
     private fun Request.addHeaders(
