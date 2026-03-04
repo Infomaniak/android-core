@@ -53,3 +53,11 @@ android {
         }
     }
 }
+
+subprojects {
+    plugins.withId("com.android.base") {
+        dependencies {
+            lintChecks(core.compose.lint.checks)
+        }
+    }
+}
