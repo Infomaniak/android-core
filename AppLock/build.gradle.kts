@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
+    alias(core.plugins.compose.compiler)
     alias(core.plugins.navigation.safeargs)
 }
 
@@ -48,12 +49,19 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 }
 
 dependencies {
     implementation(project(":Common"))
     implementation(project(":Ui:View"))
+
+    implementation(platform(core.compose.bom))
+    implementation(core.compose.material3)
+    implementation(core.compose.runtime)
+    implementation(core.compose.ui.tooling)
+    implementation(core.activity.compose)
 
     implementation(core.appcompat)
     implementation(core.biometric.ktx)

@@ -23,7 +23,7 @@
 
     <activity
         android:id="@+id/lockActivity"
-        android:name="com.infomaniak.core.applock.LockActivity"
+        android:name="com.infomaniak.core.applock.view.LockViewActivity"
         android:label="activity_lock"
         tools:layout="@layout/activity_lock">
         <argument
