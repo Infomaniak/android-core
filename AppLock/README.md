@@ -12,12 +12,12 @@ implementation(project(":Core:AppLock"))
 
 ## 2. Global Configuration
 
-To enable automatic locking, you should call `AppLockManager.scheduleLockIfNeeded` in your main activity or a base activity.
+To enable automatic locking, you should call `AppLockManager.scheduleLockIfNeeded` in your main activity or a base activity. Your activity must inherit from `FragmentActivity`.
 
 ### Example in `MainActivity`:
 
 ```kotlin
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
