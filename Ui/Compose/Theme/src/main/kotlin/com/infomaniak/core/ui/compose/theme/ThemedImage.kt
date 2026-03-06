@@ -17,13 +17,23 @@
  */
 package com.infomaniak.core.ui.compose.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalInspectionMode
 
 interface ThemedImage {
     val light: ImageVector
     val dark: ImageVector
 
     @Composable
-    fun image(): ImageVector = if (LocalIsThemeDarkMode.current) dark else light
+    fun image(): ImageVector {
+        val isDark = if (LocalInspectionMode.current) {
+            isSystemInDarkTheme()
+        } else {
+            LocalIsThemeDarkMode.current
+        }
+
+        return if (isDark) dark else light
+    }
 }
