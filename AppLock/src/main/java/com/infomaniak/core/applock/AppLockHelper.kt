@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023-2026 Infomaniak Network SA
+ * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,8 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.infomaniak.core.common.extensions.appName
 
-object Utils {
-
+object AppLockHelper {
     const val APP_LOCK_TAG = "App lock"
 
     @SuppressLint("NewApi")
@@ -54,7 +53,7 @@ object Utils {
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(appName)
-            .setAllowedAuthenticators(LockActivity.authenticators)
+            .setAllowedAuthenticators(AppLockManager.authenticators)
             .build()
 
         biometricPrompt.authenticate(promptInfo)
