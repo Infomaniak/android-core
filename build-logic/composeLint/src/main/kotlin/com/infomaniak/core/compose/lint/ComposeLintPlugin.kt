@@ -35,6 +35,7 @@ class ComposeLintPlugin : Plugin<Project> {
                 extensions.configure<com.android.build.gradle.internal.dsl.BaseAppModuleExtension> {
                     lint {
                         lintConfig = rootProject.file("Core/lint.xml")
+                        baseline = file("lint-baseline.xml")
                     }
                 }
 
