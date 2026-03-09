@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun CrossLoginListAccounts("
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/views/components/CrossLoginListAccounts.kt"
+            line="58"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="    @SuppressLint(&quot;ModifierParameter&quot;) animatedButtonModifier: Modifier,"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginBottomContent.kt"
+            line="269"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, account: ExternalAccount, strokeColor: Color? = null] but should be [account: ExternalAccount, modifier: Modifier = Modifier, strokeColor: Color? = null].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun CrossLoginAvatar(modifier: Modifier = Modifier, account: ExternalAccount, strokeColor: Color? = null) {"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginAvatar.kt"
+            line="43"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [primaryButtonType: ButtonStyle, isLoginButtonLoading: () -> Boolean, modifier: Modifier = Modifier, text: String, onClick: () -> Unit] but should be [primaryButtonType: ButtonStyle, isLoginButtonLoading: () -> Boolean, text: String, modifier: Modifier = Modifier, onClick: () -> Unit].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="private fun ConnectionButton("
+        errorLine2="                            ^">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginBottomContent.kt"
+            line="364"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, text: String, customization: CrossLoginCustomization, onClick: () -> Unit] but should be [text: String, customization: CrossLoginCustomization, modifier: Modifier = Modifier, onClick: () -> Unit].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun PrimaryButton("
+        errorLine2="                          ^">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/PrimaryButton.kt"
+            line="37"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/BottomSheetItem.kt"
+            line="91"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginAvatar.kt"
+            line="72"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="    accounts: List&lt;ExternalAccount>,"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginBottomContent.kt"
+            line="261"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginBottomContent.kt"
+            line="484"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/views/components/CrossLoginListAccounts.kt"
+            line="136"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/views/components/CrossLoginSelectAccounts.kt"
+            line="68"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="    accounts: List&lt;ExternalAccount>,"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/MultipleAccounts.kt"
+            line="47"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/MultipleAccounts.kt"
+            line="80"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/SelectedAccountsButton.kt"
+            line="87"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/SingleAccount.kt"
+            line="93"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="    accounts: List&lt;ExternalAccount>,"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/ThreeAccountsView.kt"
+            line="40"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/ThreeAccountsView.kt"
+            line="74"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="    accounts: List&lt;ExternalAccount>,"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/TwoAccountsView.kt"
+            line="37"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableCollections"
+        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ExternalAccount> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `accounts: ImmutableList&lt;ExternalAccount>` or create an `@Immutable` wrapper for this class: `@Immutable data class AccountsList(val items: List&lt;ExternalAccount>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
+        errorLine1="private fun Preview(@PreviewParameter(AccountsPreviewParameter::class) accounts: List&lt;ExternalAccount>) {"
+        errorLine2="                                                                                 ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/TwoAccountsView.kt"
+            line="69"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="ComposeUnstableReceiver"
+        message="Instance composable functions on non-stable classes will always be recomposed. If possible, make the receiver type stable or refactor this function if that isn&apos;t possible. See https://slackhq.github.io/compose-lints/rules/#unstable-receivers for more information."
+        errorLine1="fun OnboardingComponents.CrossLoginBottomContent("
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginBottomContent.kt"
+            line="121"
+            column="5"/>
+    </issue>
+
+</issues>

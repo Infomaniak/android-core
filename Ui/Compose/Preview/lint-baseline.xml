@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="ComposePreviewNaming"
+        message="Preview annotations with 4 preview annotations should end with the `Previews` suffix.&#xA;See https://slackhq.github.io/compose-lints/rules/#naming-multipreview-annotations-properly for more information."
+        errorLine1="// Small window (ex: phone)"
+        errorLine2="^">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/ui/compose/preview/MultiplePreviews.kt"
+            line="23"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ComposePreviewNaming"
+        message="Preview annotations with 4 preview annotations should end with the `Previews` suffix.&#xA;See https://slackhq.github.io/compose-lints/rules/#naming-multipreview-annotations-properly for more information."
+        errorLine1="// Large window (ex: tablet)"
+        errorLine2="^">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/ui/compose/preview/MultiplePreviews.kt"
+            line="46"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ComposePreviewNaming"
+        message="Preview annotations with 2 preview annotations should end with the `Previews` suffix.&#xA;See https://slackhq.github.io/compose-lints/rules/#naming-multipreview-annotations-properly for more information."
+        errorLine1="// Small + Large (for Screens)"
+        errorLine2="^">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/ui/compose/preview/MultiplePreviews.kt"
+            line="71"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ComposePreviewNaming"
+        message="Preview annotations with 2 preview annotations should end with the `Previews` suffix.&#xA;See https://slackhq.github.io/compose-lints/rules/#naming-multipreview-annotations-properly for more information."
+        errorLine1="// Light + Dark (for Components)"
+        errorLine2="^">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/ui/compose/preview/MultiplePreviews.kt"
+            line="76"
+            column="1"/>
+    </issue>
+
+</issues>
