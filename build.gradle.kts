@@ -59,5 +59,11 @@ subprojects {
         dependencies {
             lintChecks(core.compose.lint.checks)
         }
+
+        android {
+            lint {
+                baseline = file("lint-baseline.xml")
+            }
+        }
     }
 }

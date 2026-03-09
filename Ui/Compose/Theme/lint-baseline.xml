@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="ComposeUnstableReceiver"
+        message="Instance composable functions on non-stable classes will always be recomposed. If possible, make the receiver type stable or refactor this function if that isn&apos;t possible. See https://slackhq.github.io/compose-lints/rules/#unstable-receivers for more information."
+        errorLine1="    fun image(): ImageVector = if (LocalIsThemeDarkMode.current) dark else light"
+        errorLine2="        ~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/ui/compose/theme/ThemedImage.kt"
+            line="28"
+            column="9"/>
+    </issue>
+
+</issues>
