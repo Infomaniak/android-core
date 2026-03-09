@@ -25,13 +25,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -50,48 +50,53 @@ import com.infomaniak.core.common.R as RCore
 @Composable
 fun PrivacyManagementHomeContent(
     header: @Composable () -> Unit,
-    brandReceiver: ImmutableList<BrandReceiver>,
+    trackerList: ImmutableList<Tracker>,
     modifier: Modifier = Modifier,
+    divider: @Composable () -> Unit = {},
+    trackerListSurface: @Composable ((@Composable () -> Unit)) -> Unit = { it() },
+    rightIcon: @Composable (() -> Unit) = {},
 ) {
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         header()
-        // Image(
-        //     imageVector = illustration,
-        //     contentDescription = null,
-        //     modifier = Modifier.padding(Margin.Medium),
-        // )
         Text(
             text = stringResource(RCore.string.trackingManagementDescription),
-            // style = SwissTransferTheme.typography.bodyRegular,
-            // color = SwissTransferTheme.colors.primaryTextColor,
             modifier = Modifier.padding(Margin.Medium),
         )
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Margin.Medium),
-            shape = RoundedCornerShape(24.dp),
-        ) {
-            Column {
-                brandReceiver.forEach { brand ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = Margin.Small, vertical = Margin.Medium),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Image(imageVector = brand.icon, contentDescription = null)
-                        Spacer(Modifier.width(Margin.Medium))
-                        Text(
-                            text = brand.brandName,
-                            // modifier = Modifier.padding(Margin.Medium),
-                        )
-                    }
-                }
+        Spacer(Modifier.height(Margin.Medium))
+        trackerListSurface {
+            TrackerList(trackerList, divider, rightIcon)
+        }
+    }
+}
+
+@Composable
+fun TrackerList(
+    trackerList: ImmutableList<Tracker>,
+    divider: @Composable () -> Unit,
+    rightIcon: @Composable (() -> Unit),
+) {
+    Column {
+        trackerList.forEachIndexed { index, tracker ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Margin.Small, vertical = Margin.Medium),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(imageVector = tracker.icon(), contentDescription = null)
+                Spacer(Modifier.width(Margin.Medium))
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = tracker.label
+                )
+                rightIcon()
+            }
+            if (index < trackerList.lastIndex) {
+                divider()
             }
         }
     }
@@ -104,7 +109,7 @@ fun PrivacyManagementHomeContentPreview() {
         Scaffold { padding ->
             PrivacyManagementHomeContent(
                 modifier = Modifier.padding(padding),
-                brandReceiver = persistentListOf(BrandReceiver.Sentry, BrandReceiver.Matomo),
+                trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo),
                 header = {
                     Box(
                         modifier = Modifier
@@ -113,7 +118,17 @@ fun PrivacyManagementHomeContentPreview() {
                     ) {
                         Text("Illustration")
                     }
-                }
+                },
+                divider = {
+                    HorizontalDivider()
+                },
+                rightIcon = {
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .background(Color.LightGray)
+                    )
+                },
             )
         }
     }

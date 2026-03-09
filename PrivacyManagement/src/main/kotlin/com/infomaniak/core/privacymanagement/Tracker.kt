@@ -23,20 +23,16 @@ import com.infomaniak.core.privacymanagement.icons.AppIcons
 import com.infomaniak.core.privacymanagement.icons.matomo.Matomo
 import com.infomaniak.core.privacymanagement.icons.sentry.Sentry
 
-enum class BrandReceiver {
-    Sentry,
-    Matomo;
-
-    val brandName: String
-        get() = when (this) {
-            Sentry -> "Sentry"
-            Matomo -> "Matomo"
-        }
-
-    @get:Composable
-    val icon: ImageVector
-        get() = when (this) {
-            Sentry -> AppIcons.Sentry.image()
-            Matomo -> AppIcons.Matomo.image()
-        }
+enum class Tracker(
+    val label: String,
+    val icon: @Composable () -> ImageVector
+) {
+    Sentry(
+        label = "Sentry",
+        icon = { AppIcons.Sentry.image() }
+    ),
+    Matomo(
+        label = "Matomo",
+        icon = { AppIcons.Matomo.image() }
+    ),
 }
