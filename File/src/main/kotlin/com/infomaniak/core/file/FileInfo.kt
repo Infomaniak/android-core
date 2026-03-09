@@ -19,6 +19,7 @@ package com.infomaniak.core.file
 
 import android.database.Cursor
 import android.net.Uri
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
@@ -31,25 +32,21 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.yield
 import splitties.init.appCtx
-import java.net.URLDecoder
+import java.time.format.DateTimeFormatter
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.time.TimeSource
+import kotlin.time.toJavaInstant
 
 suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
     runCatching {
         uri.retrieveAndUse(displayNameProjection) {
             if (moveToFirst()) {
-                getFileName()
+                getFileName(uri)
             } else null
         }
     }.cancellable().onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }.getOrNull()
-}
-
-private fun Cursor.getFileName(): String? {
-    return when (val nameColumnIndex = getColumnIndex(OpenableColumns.DISPLAY_NAME)) {
-        -1 -> null
-        else -> getStringOrNull(nameColumnIndex)
-    }
 }
 
 suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
@@ -75,7 +72,7 @@ suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
     runCatching {
         uri.retrieveAndUse(displayNameProjection + sizeProjection) {
             if (moveToFirst()) {
-                val fileName = getFileName() ?: URLDecoder.decode(uri.toString(), "UTF-8").substringAfterLast("/")
+                val fileName = getFileName(uri)
                 val fileSize = runCatching {
                     getFileSize()
                 }.getOrElse {
@@ -120,6 +117,52 @@ private suspend fun Uri.measureFileSize(): Long? = runCatching {
     )
 }.cancellable().getOrNull()
 
+fun Cursor.getFileName(uri: Uri): String {
+    return getStringFromColumns(fileNameColumns)
+        ?: getNameFromDate()?.also { warnSentryFileName(uri, fileNameColumns, availableColumns = columnNames) }
+        ?: uri.lastPathSegment?.also { warnSentryFileName(uri, allColumns, availableColumns = columnNames) }
+        ?: toString().also { alertSentryFileName(uri, allColumns, columnNames) }
+}
+
+private fun Cursor.getStringFromColumns(orderedColumnNames: List<String>): String? {
+    return orderedColumnNames.firstNotNullOfOrNull(::getColumnIndexOrNull)?.let(::getStringOrNull)
+}
+
+@OptIn(ExperimentalTime::class)
+private fun Cursor.getNameFromDate(): String? = getDate()?.toJavaInstant()?.let { simpleDateFormater.format(it) }
+
+@OptIn(ExperimentalTime::class)
+private fun Cursor.getDate(): Instant? {
+    return getColumnIndexOrNull(MediaStore.MediaColumns.DATE_ADDED)
+        ?.let(::getLongOrNull)
+        ?.let(Instant::fromEpochSeconds)
+}
+
+private fun Cursor.getColumnIndexOrNull(columnName: String) = getColumnIndex(columnName).takeUnless { it == -1 }
+
+private fun warnSentryFileName(uri: Uri, columns: List<String>, availableColumns: Array<String>) {
+    SentryLog.w(
+        tag = TAG,
+        msg = "GetFileName not went well",
+        throwable = FileNameException(uri, columns, availableColumns)
+    )
+}
+
+private fun alertSentryFileName(uri: Uri, allColumns: List<String>, columnNames: Array<String>) {
+    Sentry.captureException(FileNameException(uri, allColumns, columnNames, IllegalArgumentException("No path segment")))
+}
+
+private class FileNameException(
+    uri: Uri,
+    searchedColumns: List<String>,
+    availableColumns: Array<String>,
+    cause: Throwable? = null
+) : Throwable(
+    message = "No file name retrievable for uri $uri " +
+            "Columns searched $searchedColumns columns but available columns : ${availableColumns.toList()}",
+    cause = cause
+)
+
 /**
  * Queries the cursor for an Uri with [projection], and if found apply [block]
  */
@@ -140,3 +183,7 @@ private const val TAG = "FileInfo"
 
 private val displayNameProjection = arrayOf(OpenableColumns.DISPLAY_NAME)
 private val sizeProjection = arrayOf(OpenableColumns.SIZE)
+
+private val fileNameColumns by lazy { listOf(OpenableColumns.DISPLAY_NAME, "name") }
+private val allColumns by lazy { fileNameColumns + MediaStore.MediaColumns.DATE_ADDED }
+private val simpleDateFormater by lazy { DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss") }
