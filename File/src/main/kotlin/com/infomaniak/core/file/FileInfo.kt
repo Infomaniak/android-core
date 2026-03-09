@@ -37,17 +37,9 @@ import kotlin.time.TimeSource
 
 suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
     runCatching {
-        appCtx.contentResolver.query(
-            /* uri = */ uri,
-            // Not supplying a projection might lead to `NullPointerException` with message "Attempt to get length of null array"
-            // being thrown on some devices, despite what is written in the Javadoc, so we provide one.
-            /* projection = */ displayNameProjection,
-            /* selection = */ null,
-            /* selectionArgs = */ null,
-            /* sortOrder = */ null
-        )?.use { cursor: Cursor ->
-            if (cursor.moveToFirst()) {
-                cursor.getFileName()
+        uri.retrieveAndUse(displayNameProjection) {
+            if (moveToFirst()) {
+                getFileName()
             } else null
         }
     }.cancellable().onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }.getOrNull()
@@ -62,17 +54,9 @@ private fun Cursor.getFileName(): String? {
 
 suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
     runCatching {
-        appCtx.contentResolver.query(
-            /* uri = */ uri,
-            // Not supplying a projection might lead to `NullPointerException` with message "Attempt to get length of null array"
-            // being thrown on some devices, despite what is written in the Javadoc, so we provide one.
-            /* projection = */ sizeProjection,
-            /* selection = */ null,
-            /* selectionArgs = */ null,
-            /* sortOrder = */ null
-        )?.use { cursor: Cursor ->
-            if (cursor.moveToFirst()) {
-                cursor.getFileSize()
+        uri.retrieveAndUse(sizeProjection) {
+            if (moveToFirst()) {
+                getFileSize()
             } else -1L
         } ?: -1L
     }.cancellable().onFailure { t ->
@@ -89,12 +73,11 @@ private fun Cursor.getFileSize(): Long {
 
 suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
     runCatching {
-        val contentResolver = appCtx.contentResolver
-        contentResolver.query(uri, displayNameProjection + sizeProjection, null, null, null)?.use { cursor ->
-            if (cursor.moveToFirst()) {
-                val fileName = cursor.getFileName() ?: URLDecoder.decode(uri.toString(), "UTF-8").substringAfterLast("/")
+        uri.retrieveAndUse(displayNameProjection + sizeProjection) {
+            if (moveToFirst()) {
+                val fileName = getFileName() ?: URLDecoder.decode(uri.toString(), "UTF-8").substringAfterLast("/")
                 val fileSize = runCatching {
-                    cursor.getFileSize()
+                    getFileSize()
                 }.getOrElse {
                     uri.measureFileSize()
                 } ?: throw Exception("Cannot calculate size")
@@ -102,7 +85,7 @@ suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
                 fileName to fileSize
             } else {
                 Sentry.captureMessage("$appCtx has empty cursor") { scope ->
-                    scope.setExtra("available columns", cursor.columnNames.joinToString())
+                    scope.setExtra("available columns", columnNames.joinToString())
                 }
                 null
             }
@@ -136,6 +119,21 @@ private suspend fun Uri.measureFileSize(): Long? = runCatching {
         }
     )
 }.cancellable().getOrNull()
+
+/**
+ * Queries the cursor for an Uri with [projection], and if found apply [block]
+ */
+private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>, block: suspend Cursor.() -> R?): R? {
+    return appCtx.contentResolver.query(
+        /* uri = */ this,
+        // Not supplying a projection might lead to `NullPointerException` with message "Attempt to get length of null array"
+        // being thrown on some devices, despite what is written in the Javadoc, so we provide one.
+        /* projection = */ projection,
+        /* selection = */ null,
+        /* selectionArgs = */ null,
+        /* sortOrder = */ null
+    )?.use { block(it) }
+}
 
 private val counter = InputStreamCounter()
 private const val TAG = "FileInfo"
