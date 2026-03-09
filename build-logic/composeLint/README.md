@@ -22,4 +22,10 @@ plugins {
 }
 ```
 
+3. Generate the baseline file for each module so only new issues will be caught by the CI. (The baseline file definition for each
+   module is also specified inside our plugin)
+```
+./gradlew updateLintBaseline
+```
+
 And you're done!
