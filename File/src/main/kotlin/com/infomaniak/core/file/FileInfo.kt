@@ -42,9 +42,7 @@ import kotlin.time.toJavaInstant
 suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
     runCatching {
         uri.retrieveAndUse(displayNameProjection) {
-            if (moveToFirst()) {
-                getFileName(uri)
-            } else null
+            getFileName(uri)
         }
     }.cancellable().onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }.getOrNull()
 }
@@ -52,9 +50,7 @@ suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
 suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
     runCatching {
         uri.retrieveAndUse(sizeProjection) {
-            if (moveToFirst()) {
-                getFileSize()
-            } else -1L
+            getFileSize()
         } ?: -1L
     }.cancellable().onFailure { t ->
         SentryLog.e(TAG, "Failed to read the size for uri: $uri", t)
@@ -71,7 +67,6 @@ private fun Cursor.getFileSize(): Long {
 suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
     runCatching {
         uri.retrieveAndUse(displayNameProjection + sizeProjection) {
-            if (moveToFirst()) {
                 val fileName = getFileName(uri)
                 val fileSize = runCatching {
                     getFileSize()
@@ -80,12 +75,6 @@ suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
                 } ?: throw Exception("Cannot calculate size")
 
                 fileName to fileSize
-            } else {
-                Sentry.captureMessage("$appCtx has empty cursor") { scope ->
-                    scope.setExtra("available columns", columnNames.joinToString())
-                }
-                null
-            }
         }
     }.cancellable().getOrElse { exception ->
         uri.path?.substringBeforeLast("/")?.let { providerName ->
@@ -175,7 +164,16 @@ private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>, block: sus
         /* selection = */ null,
         /* selectionArgs = */ null,
         /* sortOrder = */ null
-    )?.use { block(it) }
+    )?.use {
+        if (it.moveToFirst()) {
+            block(it)
+        } else {
+            Sentry.captureMessage("$appCtx has empty cursor") { scope ->
+                scope.setExtra("available columns", it.columnNames.joinToString())
+            }
+            null
+        }
+    }
 }
 
 private val counter = InputStreamCounter()
