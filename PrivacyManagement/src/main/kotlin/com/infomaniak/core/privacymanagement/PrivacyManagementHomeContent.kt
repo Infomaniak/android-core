@@ -22,6 +22,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +31,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -38,22 +42,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.privacymanagement.theme.LocalPrivacyManagementTheme
+import com.infomaniak.core.privacymanagement.tracker.Tracker
 import com.infomaniak.core.ui.compose.margin.Margin
-import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import com.infomaniak.core.common.R as RCore
 
 @Composable
 fun PrivacyManagementHomeContent(
-    header: @Composable () -> Unit,
     trackerList: ImmutableList<Tracker>,
     modifier: Modifier = Modifier,
+    onTrackerClick: (Tracker) -> Unit,
+    header: @Composable () -> Unit = {},
     divider: @Composable () -> Unit = {},
-    trackerListSurface: @Composable ((@Composable () -> Unit)) -> Unit = { it() },
     rightIcon: @Composable (() -> Unit) = {},
 ) {
     Column(
@@ -66,34 +73,53 @@ fun PrivacyManagementHomeContent(
             modifier = Modifier.padding(Margin.Medium),
         )
         Spacer(Modifier.height(Margin.Medium))
-        trackerListSurface {
-            TrackerList(trackerList, divider, rightIcon)
-        }
+        TrackerList(
+            trackerList = trackerList,
+            divider = divider,
+            rightIcon = rightIcon,
+            onTrackerClick = onTrackerClick
+        )
     }
 }
 
 @Composable
-fun TrackerList(
+private fun TrackerList(
     trackerList: ImmutableList<Tracker>,
-    divider: @Composable () -> Unit,
-    rightIcon: @Composable (() -> Unit),
+    onTrackerClick: (Tracker) -> Unit,
+    divider: @Composable () -> Unit = {},
+    rightIcon: @Composable (() -> Unit) = {}
 ) {
-    Column {
+    val privacyManagementTheme = LocalPrivacyManagementTheme.current
+    Column(
+        modifier = Modifier
+            .padding(privacyManagementTheme.trackerContainerPadding)
+            .clip(privacyManagementTheme.trackerContainerShape)
+    ) {
         trackerList.forEachIndexed { index, tracker ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Margin.Small, vertical = Margin.Medium),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
+            Button(
+                onClick = { onTrackerClick(tracker) },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = privacyManagementTheme.trackerContainerContentColor,
+                    containerColor = privacyManagementTheme.trackerContainerColor,
+                ),
+                shape = RoundedCornerShape(0),
+                contentPadding = PaddingValues(0.dp)
             ) {
-                Image(imageVector = tracker.icon(), contentDescription = null)
-                Spacer(Modifier.width(Margin.Medium))
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = tracker.label
-                )
-                rightIcon()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = Margin.Medium, vertical = Margin.Medium),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(imageVector = tracker.icon(), contentDescription = null)
+                    Spacer(Modifier.width(Margin.Medium))
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = tracker.label
+                    )
+                    rightIcon()
+                }
             }
             if (index < trackerList.lastIndex) {
                 divider()
@@ -103,7 +129,7 @@ fun TrackerList(
 }
 
 @Composable
-@PreviewSmallWindow
+@Preview
 fun PrivacyManagementHomeContentPreview() {
     MaterialTheme {
         Scaffold { padding ->
@@ -129,6 +155,7 @@ fun PrivacyManagementHomeContentPreview() {
                             .background(Color.LightGray)
                     )
                 },
+                onTrackerClick = {}
             )
         }
     }

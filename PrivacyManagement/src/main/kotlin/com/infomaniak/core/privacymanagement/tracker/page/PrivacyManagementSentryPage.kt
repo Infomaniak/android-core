@@ -15,24 +15,5 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.privacymanagement
+package com.infomaniak.core.privacymanagement.tracker.page
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
-import com.infomaniak.core.privacymanagement.icons.AppIcons
-import com.infomaniak.core.privacymanagement.icons.matomo.Matomo
-import com.infomaniak.core.privacymanagement.icons.sentry.Sentry
-
-enum class Tracker(
-    val label: String,
-    val icon: @Composable () -> ImageVector
-) {
-    Sentry(
-        label = "Sentry",
-        icon = { AppIcons.Sentry.image() }
-    ),
-    Matomo(
-        label = "Matomo",
-        icon = { AppIcons.Matomo.image() }
-    ),
-}
