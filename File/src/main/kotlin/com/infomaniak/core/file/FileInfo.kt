@@ -41,7 +41,7 @@ import kotlin.time.toJavaInstant
 
 suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
     runCatching {
-        uri.retrieveAndUse(displayNameProjection) {
+        uri.retrieveAndUse(fileNameColumns) {
             getFileName(uri)
         }
     }.cancellable().onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }.getOrNull()
@@ -66,7 +66,6 @@ private fun Cursor.getFileSize(): Long {
 
 suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
     runCatching {
-        uri.retrieveAndUse(displayNameProjection + sizeProjection) {
                 val fileName = getFileName(uri)
                 val fileSize = runCatching {
                     getFileSize()
@@ -75,6 +74,7 @@ suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
                 } ?: throw Exception("Cannot calculate size")
 
                 fileName to fileSize
+        uri.retrieveAndUse(fileNameColumns + sizeProjection) {
         }
     }.cancellable().getOrElse { exception ->
         uri.path?.substringBeforeLast("/")?.let { providerName ->
@@ -109,11 +109,10 @@ private suspend fun Uri.measureFileSize(): Long? = runCatching {
 fun Cursor.getFileName(uri: Uri): String {
     return getStringFromColumns(fileNameColumns)
         ?: getNameFromDate()?.also { warnSentryFileName(uri, fileNameColumns, availableColumns = columnNames) }
-        ?: uri.lastPathSegment?.also { warnSentryFileName(uri, allColumns, availableColumns = columnNames) }
-        ?: toString().also { alertSentryFileName(uri, allColumns, columnNames) }
+        ?: toString().also { alertSentryFileName(uri, nameAndDateColumns, columnNames) }
 }
 
-private fun Cursor.getStringFromColumns(orderedColumnNames: List<String>): String? {
+private fun Cursor.getStringFromColumns(orderedColumnNames: Array<String>): String? {
     return orderedColumnNames.firstNotNullOfOrNull(::getColumnIndexOrNull)?.let(::getStringOrNull)
 }
 
@@ -129,7 +128,7 @@ private fun Cursor.getDate(): Instant? {
 
 private fun Cursor.getColumnIndexOrNull(columnName: String) = getColumnIndex(columnName).takeUnless { it == -1 }
 
-private fun warnSentryFileName(uri: Uri, columns: List<String>, availableColumns: Array<String>) {
+private fun warnSentryFileName(uri: Uri, columns: Array<String>, availableColumns: Array<String>) {
     SentryLog.w(
         tag = TAG,
         msg = "GetFileName not went well",
@@ -137,18 +136,18 @@ private fun warnSentryFileName(uri: Uri, columns: List<String>, availableColumns
     )
 }
 
-private fun alertSentryFileName(uri: Uri, allColumns: List<String>, columnNames: Array<String>) {
+private fun alertSentryFileName(uri: Uri, allColumns: Array<String>, columnNames: Array<String>) {
     Sentry.captureException(FileNameException(uri, allColumns, columnNames, IllegalArgumentException("No path segment")))
 }
 
 private class FileNameException(
     uri: Uri,
-    searchedColumns: List<String>,
+    searchedColumns: Array<String>,
     availableColumns: Array<String>,
     cause: Throwable? = null
 ) : Throwable(
     message = "No file name retrievable for uri $uri " +
-            "Columns searched $searchedColumns columns but available columns : ${availableColumns.toList()}",
+            "Columns searched ${searchedColumns.toList()} columns but available columns : ${availableColumns.toList()}",
     cause = cause
 )
 
@@ -178,10 +177,7 @@ private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>, block: sus
 
 private val counter = InputStreamCounter()
 private const val TAG = "FileInfo"
-
-private val displayNameProjection = arrayOf(OpenableColumns.DISPLAY_NAME)
-private val sizeProjection = arrayOf(OpenableColumns.SIZE)
-
-private val fileNameColumns by lazy { listOf(OpenableColumns.DISPLAY_NAME, "name") }
-private val allColumns by lazy { fileNameColumns + MediaStore.MediaColumns.DATE_ADDED }
+private val sizeProjection by lazy { arrayOf(OpenableColumns.SIZE) }
+private val fileNameColumns by lazy { arrayOf(OpenableColumns.DISPLAY_NAME, "name") }
+private val nameAndDateColumns by lazy { fileNameColumns + MediaStore.MediaColumns.DATE_ADDED }
 private val simpleDateFormater by lazy { DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss") }
