@@ -57,24 +57,10 @@ suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
     }.getOrElse { -1L }
 }
 
-private fun Cursor.getFileSize(): Long {
-    return when (val sizeColumnIndex = getColumnIndex(OpenableColumns.SIZE)) {
-        -1 -> -1L
-        else -> getLongOrNull(sizeColumnIndex)
-    } ?: -1
-}
-
 suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
     runCatching {
-                val fileName = getFileName(uri)
-                val fileSize = runCatching {
-                    getFileSize()
-                }.getOrElse {
-                    uri.measureFileSize()
-                } ?: throw Exception("Cannot calculate size")
-
-                fileName to fileSize
         uri.retrieveAndUse(fileNameColumns + sizeProjection) {
+            getFileName(uri) to getApproximativeFileSize(uri)
         }
     }.cancellable().getOrElse { exception ->
         uri.path?.substringBeforeLast("/")?.let { providerName ->
@@ -109,8 +95,32 @@ private suspend fun Uri.measureFileSize(): Long? = runCatching {
 fun Cursor.getFileName(uri: Uri): String {
     return getStringFromColumns(fileNameColumns)
         ?: getNameFromDate()?.also { warnSentryFileName(uri, fileNameColumns, availableColumns = columnNames) }
+        ?: uri.lastPathSegment?.also { warnSentryFileName(uri, nameAndDateColumns, availableColumns = columnNames) }
         ?: toString().also { alertSentryFileName(uri, nameAndDateColumns, columnNames) }
 }
+
+suspend fun Cursor.getApproximativeFileSize(uri: Uri): Long {
+    return uri.statSize()
+        ?: getFileSize()
+        ?: uri.measureFileSize()
+        ?: throw Exception("Cannot calculate size")
+}
+
+suspend fun Cursor.getPreciseFileSize(uri: Uri): Long? {
+    return uri.statSize()
+        ?: uri.measureFileSize()
+        ?: getFileSize()
+}
+
+private fun Uri.statSize(): Long? {
+    return runCatching {
+        appCtx.contentResolver.openFileDescriptor(this, "r")
+            ?.use { it.statSize }
+            ?.takeUnless { it == -1L }
+    }.getOrNull()
+}
+
+private fun Cursor.getFileSize(): Long? = getColumnIndexOrNull(OpenableColumns.SIZE)?.let(::getLongOrNull)
 
 private fun Cursor.getStringFromColumns(orderedColumnNames: Array<String>): String? {
     return orderedColumnNames.firstNotNullOfOrNull(::getColumnIndexOrNull)?.let(::getStringOrNull)
