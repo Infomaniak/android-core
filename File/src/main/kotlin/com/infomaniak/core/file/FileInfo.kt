@@ -41,7 +41,7 @@ import kotlin.time.toJavaInstant
 
 suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
     runCatching {
-        uri.retrieveAndUse(fileNameColumns) {
+        uri.retrieveAndUse {
             getFileName(uri)
         }
     }.cancellable().onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }.getOrNull()
@@ -59,7 +59,7 @@ suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
 
 suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
     runCatching {
-        uri.retrieveAndUse(fileNameColumns + sizeProjection) {
+        uri.retrieveAndUse {
             getFileName(uri) to getApproximativeFileSize(uri)
         }
     }.cancellable().getOrElse { exception ->
@@ -164,12 +164,12 @@ private class FileNameException(
 /**
  * Queries the cursor for an Uri with [projection], and if found apply [block]
  */
-private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>, block: suspend Cursor.() -> R?): R? {
+private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>? = null, block: suspend Cursor.() -> R?): R? {
     return appCtx.contentResolver.query(
         /* uri = */ this,
         // Not supplying a projection might lead to `NullPointerException` with message "Attempt to get length of null array"
         // being thrown on some devices, despite what is written in the Javadoc, so we provide one.
-        /* projection = */ projection,
+        /* projection = */ projection ?: emptyArray(),
         /* selection = */ null,
         /* selectionArgs = */ null,
         /* sortOrder = */ null
