@@ -116,7 +116,7 @@ private fun TrackerList(
                     Spacer(Modifier.width(Margin.Medium))
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = tracker.label
+                        text = stringResource(tracker.titleRes)
                     )
                     rightIcon()
                 }
@@ -130,7 +130,7 @@ private fun TrackerList(
 
 @Composable
 @Preview
-fun PrivacyManagementHomeContentPreview() {
+private fun PrivacyManagementHomeContentPreview() {
     MaterialTheme {
         Scaffold { padding ->
             PrivacyManagementHomeContent(
