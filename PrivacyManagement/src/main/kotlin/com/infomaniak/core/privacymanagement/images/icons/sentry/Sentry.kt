@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.privacymanagement.icons.matomo
+package com.infomaniak.core.privacymanagement.images.icons.sentry
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -23,17 +23,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.infomaniak.core.privacymanagement.icons.AppIcons
+import com.infomaniak.core.privacymanagement.images.AppImages
+import com.infomaniak.core.privacymanagement.images.AppImages.AppIcons
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 import com.infomaniak.core.ui.compose.theme.ThemedImage
 
-val AppIcons.Matomo: ThemedImage
-    get() = _matomo ?: object : ThemedImage {
-        override val light = AppIcons.MatomoLight
-        override val dark = AppIcons.MatomoDark
-    }.also { _matomo = it }
+val AppIcons.Sentry: ThemedImage
+    get() = _sentry ?: object : ThemedImage {
+        override val light = AppIcons.SentryLight
+        override val dark = AppIcons.SentryDark
+    }.also { _sentry = it }
 
-private var _matomo: ThemedImage? = null
+private var _sentry: ThemedImage? = null
 
 @PreviewLightAndDark
 @Composable
@@ -41,9 +42,9 @@ private fun Preview() {
     MaterialTheme {
         Box {
             Image(
-                imageVector = AppIcons.Matomo.image(),
+                imageVector = AppIcons.Sentry.image(),
                 contentDescription = null,
-                modifier = Modifier.size(AppIcons.previewSize),
+                modifier = Modifier.size(AppImages.previewSize),
             )
         }
     }
