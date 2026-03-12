@@ -55,6 +55,9 @@ android {
 
 dependencies {
     implementation(project(":Common"))
+    implementation(project(":Ui:Compose:Basics"))
+    implementation(project(":Ui:Compose:BottomStickyButtonScaffolds"))
+    implementation(project(":Ui:Compose:Margin"))
     implementation(project(":Ui:View"))
 
     implementation(platform(core.compose.bom))
