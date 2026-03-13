@@ -35,7 +35,7 @@ enum class Tracker(
     @StringRes val descriptionRes: Int,
 ) {
     Sentry(
-        titleRes = RCore.string.trackingMatomoTitle,
+        titleRes = RCore.string.trackingSentryTitle,
         icon = { AppIcons.Sentry.image() },
         iconWithLabel = { AppIllus.Sentry.image() },
         descriptionRes = RCore.string.trackingSentryDescription

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.privacymanagement
+package com.infomaniak.core.privacymanagement.screencontent
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -90,6 +90,7 @@ private fun TrackerList(
     rightIcon: @Composable (() -> Unit) = {}
 ) {
     val privacyManagementTheme = LocalPrivacyManagementTheme.current
+
     Column(
         modifier = Modifier
             .padding(privacyManagementTheme.trackerContainerPadding)
