@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="VectorRaster"
+        message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
+        errorLine1="    android:width=&quot;327dp&quot;"
+        errorLine2="                   ~~~~~">
+        <location
+            file="src/main/res/drawable-night/illu_update_required_example.xml"
+            line="19"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="VectorRaster"
+        message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
+        errorLine1="    android:width=&quot;327dp&quot;"
+        errorLine2="                   ~~~~~">
+        <location
+            file="src/main/res/drawable/illu_update_required_example.xml"
+            line="19"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun UpdateAvailableBottomSheetContent("
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/inappupdate/ui/composable/UpdateAvailableBottomSheetContent.kt"
+            line="40"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun UpdateRequiredScreen("
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/inappupdate/ui/composable/UpdateRequiredScreen.kt"
+            line="48"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="    modifier: Modifier,"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/inappupdate/ui/composable/UpdateRequiredScreen.kt"
+            line="106"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [topContent: @Composable () -> Unit = {}, modifier: Modifier, titleTextStyle: TextStyle, descriptionTextStyle: TextStyle] but should be [modifier: Modifier, titleTextStyle: TextStyle, descriptionTextStyle: TextStyle, topContent: @Composable () -> Unit = {}].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="private fun UpdateRequiredContent("
+        errorLine2="                                 ^">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/inappupdate/ui/composable/UpdateRequiredScreen.kt"
+            line="104"
+            column="34"/>
+    </issue>
+
+</issues>

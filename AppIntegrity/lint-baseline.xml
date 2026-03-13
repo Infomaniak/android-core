@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.13.0 is available: 9.1.0. (There is also a newer version of 8.13.𝑥 available, if upgrading to 9.1.0 is difficult: 8.13.2)"
+        errorLine1="agp = &quot;8.13.0&quot; # Delete this to-do on agp 9+ after searching and checking the project for the following: TODO[AGP9"
+        errorLine2="      ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="4"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.kotlin.multiplatform.library than 8.13.0 is available: 9.1.0. (There is also a newer version of 8.13.𝑥 available, if upgrading to 9.1.0 is difficult: 8.13.2)"
+        errorLine1="agp = &quot;8.13.0&quot; # Delete this to-do on agp 9+ after searching and checking the project for the following: TODO[AGP9"
+        errorLine2="      ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="4"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.library than 8.13.0 is available: 9.1.0. (There is also a newer version of 8.13.𝑥 available, if upgrading to 9.1.0 is difficult: 8.13.2)"
+        errorLine1="agp = &quot;8.13.0&quot; # Delete this to-do on agp 9+ after searching and checking the project for the following: TODO[AGP9"
+        errorLine2="      ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="4"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.tools.build:gradle than 8.13.0 is available: 9.1.0. (There is also a newer version of 8.13.𝑥 available, if upgrading to 9.1.0 is difficult: 8.13.2)"
+        errorLine1="agp = &quot;8.13.0&quot; # Delete this to-do on agp 9+ after searching and checking the project for the following: TODO[AGP9"
+        errorLine2="      ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="4"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of Gradle than 8.13 is available: 8.14.4"
+        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/wrapper/gradle-wrapper.properties"
+            line="3"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.10.1 is available: 1.12.4"
+        errorLine1="activityCompose = &quot;1.10.1&quot; # TODO: Update to 1.11.0 or later after we bump compileSdk to 36"
+        errorLine2="                  ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="2"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core than 1.16.0 is available: 1.17.0"
+        errorLine1="androidxCore = &quot;1.16.0&quot; # TODO: Update to 1.17.0 or later after we bump compileSdk to 36"
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="7"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core-ktx than 1.16.0 is available: 1.17.0"
+        errorLine1="androidxCore = &quot;1.16.0&quot; # TODO: Update to 1.17.0 or later after we bump compileSdk to 36"
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="7"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2025.12.00 is available: 2026.02.01"
+        errorLine1="composeBom = &quot;2025.12.00&quot;"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="13"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin:kotlin-stdlib than 2.2.0 is available: 2.3.10"
+        errorLine1="kotlin = &quot;2.2.0&quot; # Keep the same version as the one in Realm-Kotlin"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="34"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.devtools.ksp than 2.2.0-2.0.2 is available: 2.2.21-2.0.4"
+        errorLine1="ksp = &quot;2.2.0-2.0.2&quot; # Keep the same version as the one in Realm-Kotlin"
+        errorLine2="      ~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="35"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation.safeargs.kotlin than 2.9.6 is available: 2.9.7"
+        errorLine1="navigation = &quot;2.9.6&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="43"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-compose than 2.9.6 is available: 2.9.7"
+        errorLine1="navigation = &quot;2.9.6&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="43"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-fragment-ktx than 2.9.6 is available: 2.9.7"
+        errorLine1="navigation = &quot;2.9.6&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="43"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-safe-args-gradle-plugin than 2.9.6 is available: 2.9.7"
+        errorLine1="navigation = &quot;2.9.6&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="43"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-ui-ktx than 2.9.6 is available: 2.9.7"
+        errorLine1="navigation = &quot;2.9.6&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="43"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.work:work-runtime than 2.11.0 is available: 2.11.1"
+        errorLine1="workManager = &quot;2.11.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="57"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.work:work-runtime-ktx than 2.11.0 is available: 2.11.1"
+        errorLine1="workManager = &quot;2.11.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="57"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.work:work-testing than 2.11.0 is available: 2.11.1"
+        errorLine1="workManager = &quot;2.11.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="57"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.coil-kt.coil3:coil than 3.3.0 is available: 3.4.0"
+        errorLine1="coil = &quot;3.3.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="11"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.coil-kt.coil3:coil-compose than 3.3.0 is available: 3.4.0"
+        errorLine1="coil = &quot;3.3.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="11"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.coil-kt.coil3:coil-gif than 3.3.0 is available: 3.4.0"
+        errorLine1="coil = &quot;3.3.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="11"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.coil-kt.coil3:coil-network-okhttp than 3.3.0 is available: 3.4.0"
+        errorLine1="coil = &quot;3.3.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="11"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.coil-kt.coil3:coil-svg than 3.3.0 is available: 3.4.0"
+        errorLine1="coil = &quot;3.3.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="11"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.coil-kt.coil3:coil-video than 3.3.0 is available: 3.4.0"
+        errorLine1="coil = &quot;3.3.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="11"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger.hilt.android than 2.57.2 is available: 2.59.2"
+        errorLine1="hiltAndroid = &quot;2.57.2&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="25"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger:hilt-android than 2.57.2 is available: 2.59.2"
+        errorLine1="hiltAndroid = &quot;2.57.2&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="25"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger:hilt-compiler than 2.57.2 is available: 2.59.2"
+        errorLine1="hiltAndroid = &quot;2.57.2&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="25"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.kotest:kotest-assertions-core than 6.0.7 is available: 6.1.4"
+        errorLine1="kotest = &quot;6.0.7&quot;"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="31"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-serialization-cbor than 1.9.0 is available: 1.10.0"
+        errorLine1="kotlinxSerialization = &quot;1.9.0&quot;"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="33"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-serialization-core than 1.9.0 is available: 1.10.0"
+        errorLine1="kotlinxSerialization = &quot;1.9.0&quot;"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="33"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-serialization-json than 1.9.0 is available: 1.10.0"
+        errorLine1="kotlinxSerialization = &quot;1.9.0&quot;"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="33"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-serialization-protobuf than 1.9.0 is available: 1.10.0"
+        errorLine1="kotlinxSerialization = &quot;1.9.0&quot;"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="33"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.android than 2.2.0 is available: 2.3.10"
+        errorLine1="kotlin = &quot;2.2.0&quot; # Keep the same version as the one in Realm-Kotlin"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="34"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.kapt than 2.2.0 is available: 2.3.10"
+        errorLine1="kotlin = &quot;2.2.0&quot; # Keep the same version as the one in Realm-Kotlin"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="34"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.2.0 is available: 2.3.10"
+        errorLine1="kotlin = &quot;2.2.0&quot; # Keep the same version as the one in Realm-Kotlin"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="34"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.plugin.serialization than 2.2.0 is available: 2.3.10"
+        errorLine1="kotlin = &quot;2.2.0&quot; # Keep the same version as the one in Realm-Kotlin"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="34"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.ktor:ktor-client-content-negotiation than 3.3.3 is available: 3.4.1"
+        errorLine1="ktor = &quot;3.3.3&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="37"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.ktor:ktor-client-core than 3.3.3 is available: 3.4.1"
+        errorLine1="ktor = &quot;3.3.3&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="37"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.ktor:ktor-client-encoding than 3.3.3 is available: 3.4.1"
+        errorLine1="ktor = &quot;3.3.3&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="37"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.ktor:ktor-client-mock than 3.3.3 is available: 3.4.1"
+        errorLine1="ktor = &quot;3.3.3&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="37"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.ktor:ktor-client-okhttp than 3.3.3 is available: 3.4.1"
+        errorLine1="ktor = &quot;3.3.3&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="37"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.ktor:ktor-serialization-kotlinx-json than 3.3.3 is available: 3.4.1"
+        errorLine1="ktor = &quot;3.3.3&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="37"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.mockk:mockk-agent than 1.14.6 is available: 1.14.9"
+        errorLine1="mockk = &quot;1.14.6&quot;"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="42"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.mockk:mockk-android than 1.14.6 is available: 1.14.9"
+        errorLine1="mockk = &quot;1.14.6&quot;"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="42"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.squareup.okio:okio than 3.16.2 is available: 3.16.4"
+        errorLine1="okio = &quot;3.16.2&quot;"
+        errorLine2="       ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="45"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.sentry:sentry-android than 8.27.1 is available: 8.34.0"
+        errorLine1="sentry = &quot;8.27.1&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="52"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.sentry:sentry-android-fragment than 8.27.1 is available: 8.34.0"
+        errorLine1="sentry = &quot;8.27.1&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="52"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.sentry:sentry-okhttp than 8.27.1 is available: 8.34.0"
+        errorLine1="sentry = &quot;8.27.1&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="52"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.sentry.android.gradle than 5.12.2 is available: 6.1.0"
+        errorLine1="sentryPlugin = &quot;5.12.2&quot;"
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="53"
+            column="16"/>
+    </issue>
+
+</issues>
