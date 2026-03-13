@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -26,7 +25,6 @@ import com.infomaniak.core.applock.R
 import com.infomaniak.core.ui.compose.basics.ButtonStyle
 import com.infomaniak.core.ui.compose.basics.ButtonType
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
-import com.infomaniak.core.ui.compose.margin.Margin
 
 @Composable
 fun AppLockScaffold(
@@ -39,21 +37,9 @@ fun AppLockScaffold(
 ) {
     BottomStickyButtonScaffold(
         modifier = modifier,
-        topBar = { topBar() },
-        bottomButton = {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = buttonStyle.height)
-                    .padding(horizontal = Margin.Medium)
-                    .padding(bottom = Margin.Medium),
-                shape = buttonStyle.shape,
-                colors = buttonColors,
-                onClick = onUnlock,
-            ) {
-                Text(stringResource(R.string.buttonUnlock))
-            }
-        }) {
+        topBar = topBar,
+        bottomButton = { BottomButton(buttonStyle, buttonColors, onUnlock, modifier = it) }
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -62,6 +48,23 @@ fun AppLockScaffold(
             illustration()
             Text(stringResource(R.string.lockAppTitle))
         }
+    }
+}
+
+@Composable
+private fun BottomButton(
+    buttonStyle: ButtonStyle,
+    buttonColors: ButtonColors,
+    onUnlock: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        modifier = modifier.heightIn(min = buttonStyle.height),
+        shape = buttonStyle.shape,
+        colors = buttonColors,
+        onClick = onUnlock,
+    ) {
+        Text(stringResource(R.string.buttonUnlock))
     }
 }
 
