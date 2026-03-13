@@ -9,6 +9,10 @@ Add the following dependency to your `build.gradle.kts` file:
 ```kotlin
 implementation(project(":Core:AppLock"))
 ```
+or with a composite build
+```kotlin
+implementation(core.infomaniak.core.applock)
+```
 
 ## 2. Global Configuration
 

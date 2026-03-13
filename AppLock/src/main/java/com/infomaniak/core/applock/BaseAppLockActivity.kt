@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.applock
 
-import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.util.Log
@@ -50,9 +49,12 @@ abstract class BaseAppLockActivity : FragmentActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        if (SDK_INT >= 34) {
             overrideActivityTransition(
                 OVERRIDE_TRANSITION_OPEN, RAndroid.anim.fade_in, RAndroid.anim.fade_out
+            )
+            overrideActivityTransition(
+                OVERRIDE_TRANSITION_CLOSE, RAndroid.anim.fade_in, RAndroid.anim.fade_out
             )
         } else {
             @Suppress("DEPRECATION")

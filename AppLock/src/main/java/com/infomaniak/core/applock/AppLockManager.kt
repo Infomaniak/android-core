@@ -39,11 +39,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import splitties.init.appCtx
+import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 object AppLockManager {
-    val defaultAutoLockTimeout = 1.minutes
+    private val defaultAutoLockTimeout = 1.minutes
 
     private val biometricsManager = BiometricManager.from(appCtx)
     internal const val authenticators = BIOMETRIC_WEAK or DEVICE_CREDENTIAL
@@ -76,7 +77,7 @@ object AppLockManager {
 
     fun scheduleLockIfNeeded(
         targetActivity: ComponentActivity,
-        lockActivityCls: Class<out BaseAppLockActivity>,
+        lockActivityCls: KClass<out BaseAppLockActivity>,
         isAppLockEnabled: suspend () -> Boolean,
         autoLockTimeout: Duration = defaultAutoLockTimeout,
     ) {
@@ -93,7 +94,7 @@ object AppLockManager {
 
     private suspend fun lockAppWhenNeeded(
         targetActivity: ComponentActivity,
-        lockActivityCls: Class<out BaseAppLockActivity>,
+        lockActivityCls: KClass<out BaseAppLockActivity>,
         autoLockTimeout: Duration
     ) = targetActivity.lifecycle.eventFlow.buffer(Channel.UNLIMITED).collect { event ->
         when (event) {
@@ -118,7 +119,7 @@ object AppLockManager {
 
     private fun lockIfNeeded(
         targetActivity: Activity,
-        lockActivityCls: Class<out BaseAppLockActivity>,
+        lockActivityCls: KClass<out BaseAppLockActivity>,
         lastAppClosingTime: Long,
         autoLockTimeout: Duration
     ) {
@@ -133,8 +134,8 @@ object AppLockManager {
         }
     }
 
-    private fun lockNow(originalActivity: Activity, lockActivityCls: Class<out BaseAppLockActivity>) {
-        val intent = Intent(originalActivity, lockActivityCls)
+    private fun lockNow(originalActivity: Activity, lockActivityCls: KClass<out BaseAppLockActivity>) {
+        val intent = Intent(originalActivity, lockActivityCls.java)
         originalActivity.startActivity(intent)
         isLocked = true
     }
