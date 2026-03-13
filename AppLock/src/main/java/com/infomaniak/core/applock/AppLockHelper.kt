@@ -25,8 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.infomaniak.core.common.extensions.appName
 
-object Utils {
-
+object AppLockHelper {
     const val APP_LOCK_TAG = "App lock"
 
     @SuppressLint("NewApi")
@@ -54,7 +53,7 @@ object Utils {
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(appName)
-            .setAllowedAuthenticators(LockActivity.authenticators)
+            .setAllowedAuthenticators(AppLockManager.authenticators)
             .build()
 
         biometricPrompt.authenticate(promptInfo)
