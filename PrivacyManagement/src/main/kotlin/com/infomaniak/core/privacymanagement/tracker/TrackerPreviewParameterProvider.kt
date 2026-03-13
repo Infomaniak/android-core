@@ -1,5 +1,5 @@
 /*
- * Infomaniak SwissTransfer - Android
+ * Infomaniak Authenticator - Android
  * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,25 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.ui.compose.theme
+package com.infomaniak.core.privacymanagement.tracker
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 
-interface ThemedImage {
-    val light: ImageVector
-    val dark: ImageVector
-
-    @Composable
-    fun image(): ImageVector {
-        val isDark = if (LocalInspectionMode.current) {
-            isSystemInDarkTheme()
-        } else {
-            LocalIsThemeDarkMode.current
-        }
-
-        return if (isDark) dark else light
-    }
+class TrackerPreviewParameterProvider : PreviewParameterProvider<Tracker> {
+    override val values: Sequence<Tracker> = sequenceOf(
+        Tracker.Sentry,
+        Tracker.Matomo,
+    )
 }
