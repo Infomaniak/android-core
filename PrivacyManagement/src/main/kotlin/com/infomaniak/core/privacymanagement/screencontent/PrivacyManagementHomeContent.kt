@@ -87,7 +87,7 @@ private fun TrackerList(
     trackerList: ImmutableList<Tracker>,
     onTrackerClick: (Tracker) -> Unit,
     divider: @Composable () -> Unit = {},
-    rightIcon: @Composable (() -> Unit) = {}
+    rightIcon: @Composable () -> Unit = {}
 ) {
     val privacyManagementTheme = LocalPrivacyManagementTheme.current
 
