@@ -75,19 +75,22 @@ sealed interface DownloadStatus {
     ) : DownloadStatus
 
     data object Complete : DownloadStatus
+
+    companion object {
+        fun DownloadStatus?.isFinished() = this is Complete || this is Failed
+    }
 }
 
 suspend fun DownloadManager.startDownloadingFile(request: DownloadManager.Request): UniqueDownloadId? {
-    val uniqueDownloadId = Dispatchers.IO {
+    return Dispatchers.IO {
         try {
-            enqueue(request)
+            UniqueDownloadId(enqueue(request))
         } catch (_: NullPointerException) {
             // enqueue is supposed to return -1 in case the operation fails,
             // but on Xiaomi and Redmi devices, it throws NPEs instead…
-            -1L
+            null
         }
     }
-    return if (uniqueDownloadId == -1L) null else UniqueDownloadId(uniqueDownloadId)
 }
 
 fun DownloadManager.downloadStatusFlow(
