@@ -45,4 +45,15 @@
             column="27"/>
     </issue>
 
+    <issue
+        id="ComposeUnstableReceiver"
+        message="Instance composable functions on non-stable classes will always be recomposed. If possible, make the receiver type stable or refactor this function if that isn&apos;t possible. See https://slackhq.github.io/compose-lints/rules/#unstable-receivers for more information."
+        errorLine1="    abstract fun Content()"
+        errorLine2="                 ~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/applock/compose/AppLockComposeActivity.kt"
+            line="35"
+            column="18"/>
+    </issue>
+
 </issues>

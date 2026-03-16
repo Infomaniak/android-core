@@ -46,17 +46,6 @@
     </issue>
 
     <issue
-        id="AndroidGradlePluginVersion"
-        message="A newer version of Gradle than 8.13 is available: 8.14.4"
-        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/Documents/Android/android-authenticator/Core/gradle/wrapper/gradle-wrapper.properties"
-            line="3"
-            column="17"/>
-    </issue>
-
-    <issue
         id="GradleDependency"
         message="A newer version of androidx.activity:activity-compose than 1.10.1 is available: 1.12.4"
         errorLine1="activityCompose = &quot;1.10.1&quot; # TODO: Update to 1.11.0 or later after we bump compileSdk to 36"
@@ -69,7 +58,18 @@
 
     <issue
         id="GradleDependency"
-        message="A newer version of androidx.core:core than 1.16.0 is available: 1.17.0"
+        message="A newer version of androidx.collection:collection than 1.5.0 is available: 1.6.0"
+        errorLine1="androidxCollection = &quot;1.5.0&quot;"
+        errorLine2="                     ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="6"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core than 1.16.0 is available: 1.18.0"
         errorLine1="androidxCore = &quot;1.16.0&quot; # TODO: Update to 1.17.0 or later after we bump compileSdk to 36"
         errorLine2="               ~~~~~~~~">
         <location
@@ -80,7 +80,7 @@
 
     <issue
         id="GradleDependency"
-        message="A newer version of androidx.core:core-ktx than 1.16.0 is available: 1.17.0"
+        message="A newer version of androidx.core:core-ktx than 1.16.0 is available: 1.18.0"
         errorLine1="androidxCore = &quot;1.16.0&quot; # TODO: Update to 1.17.0 or later after we bump compileSdk to 36"
         errorLine2="               ~~~~~~~~">
         <location
@@ -98,6 +98,17 @@
             file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
             line="13"
             column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.datastore:datastore-preferences than 1.2.0 is available: 1.2.1"
+        errorLine1="datastorePreferences = &quot;1.2.0&quot;"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="20"
+            column="24"/>
     </issue>
 
     <issue
@@ -311,7 +322,7 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of io.kotest:kotest-assertions-core than 6.0.7 is available: 6.1.4"
+        message="A newer version of io.kotest:kotest-assertions-core than 6.0.7 is available: 6.1.7"
         errorLine1="kotest = &quot;6.0.7&quot;"
         errorLine2="         ~~~~~~~">
         <location
@@ -355,18 +366,7 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of org.jetbrains.kotlinx:kotlinx-serialization-protobuf than 1.9.0 is available: 1.10.0"
-        errorLine1="kotlinxSerialization = &quot;1.9.0&quot;"
-        errorLine2="                       ~~~~~~~">
-        <location
-            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
-            line="33"
-            column="24"/>
-    </issue>
-
-    <issue
-        id="NewerVersionAvailable"
-        message="A newer version of org.jetbrains.kotlin.android than 2.2.0 is available: 2.3.10"
+        message="A newer version of org.jetbrains.kotlin.android than 2.2.0 is available: 2.3.20"
         errorLine1="kotlin = &quot;2.2.0&quot; # Keep the same version as the one in Realm-Kotlin"
         errorLine2="         ~~~~~~~">
         <location
@@ -377,7 +377,7 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of org.jetbrains.kotlin.kapt than 2.2.0 is available: 2.3.10"
+        message="A newer version of org.jetbrains.kotlin.kapt than 2.2.0 is available: 2.3.20"
         errorLine1="kotlin = &quot;2.2.0&quot; # Keep the same version as the one in Realm-Kotlin"
         errorLine2="         ~~~~~~~">
         <location
@@ -388,7 +388,7 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.2.0 is available: 2.3.10"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.2.0 is available: 2.3.20"
         errorLine1="kotlin = &quot;2.2.0&quot; # Keep the same version as the one in Realm-Kotlin"
         errorLine2="         ~~~~~~~">
         <location
@@ -399,13 +399,24 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of org.jetbrains.kotlin.plugin.serialization than 2.2.0 is available: 2.3.10"
+        message="A newer version of org.jetbrains.kotlin.plugin.serialization than 2.2.0 is available: 2.3.20"
         errorLine1="kotlin = &quot;2.2.0&quot; # Keep the same version as the one in Realm-Kotlin"
         errorLine2="         ~~~~~~~">
         <location
             file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
             line="34"
             column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jlleitschuh.gradle.ktlint than 14.0.1 is available: 14.2.0"
+        errorLine1="ktlintPlugin = &quot;14.0.1&quot;"
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
+            line="36"
+            column="16"/>
     </issue>
 
     <issue
@@ -422,17 +433,6 @@
     <issue
         id="NewerVersionAvailable"
         message="A newer version of io.ktor:ktor-client-core than 3.3.3 is available: 3.4.1"
-        errorLine1="ktor = &quot;3.3.3&quot;"
-        errorLine2="       ~~~~~~~">
-        <location
-            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
-            line="37"
-            column="8"/>
-    </issue>
-
-    <issue
-        id="NewerVersionAvailable"
-        message="A newer version of io.ktor:ktor-client-encoding than 3.3.3 is available: 3.4.1"
         errorLine1="ktor = &quot;3.3.3&quot;"
         errorLine2="       ~~~~~~~">
         <location
@@ -465,17 +465,6 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of io.ktor:ktor-serialization-kotlinx-json than 3.3.3 is available: 3.4.1"
-        errorLine1="ktor = &quot;3.3.3&quot;"
-        errorLine2="       ~~~~~~~">
-        <location
-            file="$HOME/Documents/Android/android-authenticator/Core/gradle/core.versions.toml"
-            line="37"
-            column="8"/>
-    </issue>
-
-    <issue
-        id="NewerVersionAvailable"
         message="A newer version of io.mockk:mockk-agent than 1.14.6 is available: 1.14.9"
         errorLine1="mockk = &quot;1.14.6&quot;"
         errorLine2="        ~~~~~~~~">
@@ -498,7 +487,7 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of com.squareup.okio:okio than 3.16.2 is available: 3.16.4"
+        message="A newer version of com.squareup.okio:okio than 3.16.2 is available: 3.17.0"
         errorLine1="okio = &quot;3.16.2&quot;"
         errorLine2="       ~~~~~~~~">
         <location
@@ -509,7 +498,7 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of io.sentry:sentry-android than 8.27.1 is available: 8.34.0"
+        message="A newer version of io.sentry:sentry-android than 8.27.1 is available: 8.35.0"
         errorLine1="sentry = &quot;8.27.1&quot;"
         errorLine2="         ~~~~~~~~">
         <location
@@ -520,7 +509,7 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of io.sentry:sentry-android-fragment than 8.27.1 is available: 8.34.0"
+        message="A newer version of io.sentry:sentry-android-fragment than 8.27.1 is available: 8.35.0"
         errorLine1="sentry = &quot;8.27.1&quot;"
         errorLine2="         ~~~~~~~~">
         <location
@@ -531,7 +520,7 @@
 
     <issue
         id="NewerVersionAvailable"
-        message="A newer version of io.sentry:sentry-okhttp than 8.27.1 is available: 8.34.0"
+        message="A newer version of io.sentry:sentry-okhttp than 8.27.1 is available: 8.35.0"
         errorLine1="sentry = &quot;8.27.1&quot;"
         errorLine2="         ~~~~~~~~">
         <location
