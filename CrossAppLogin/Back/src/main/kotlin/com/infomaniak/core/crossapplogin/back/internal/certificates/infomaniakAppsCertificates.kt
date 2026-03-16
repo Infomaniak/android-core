@@ -46,4 +46,7 @@ internal val infomaniakAppsCertificates = AppSigningCertificates {
     this["com.infomaniak.chat"] = setOf(
         LazyCertificate { "47:21:4B:15:C3:40:D7:A8:86:0A:ED:FB:E3:3A:5B:41:ED:EE:33:47:0B:2B:15:0C:56:89:58:03:EC:F6:3C:32" },
     )
+    this["com.infomaniak.swisstransfer"] = setOf(
+        LazyCertificate { "06:C3:1B:0C:0B:45:7D:22:8C:19:31:16:6E:7D:02:34:BA:AA:ED:34:D1:67:AC:D1:F5:E6:64:92:3E:80:63:13" },
+    )
 }
