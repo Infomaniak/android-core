@@ -62,7 +62,7 @@ subprojects {
 
         android {
             lint {
-                baseline = file("lint-baseline.xml")
+                baseline = file("lint-baseline.xml") // Update the baseline for Core with `./gradlew -p Core updateLintBaseline`
             }
         }
     }
