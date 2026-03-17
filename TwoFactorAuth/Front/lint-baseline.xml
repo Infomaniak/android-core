@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="ComposeModifierComposed"
+        message="Modifier.composed { ... } is no longer recommended due to performance issues.&#xA;&#xA;You should use the Modifier.Node API instead, as it was designed from the ground up to be far more performant than composed modifiers.&#xA;&#xA;See https://slackhq.github.io/compose-lints/rules/#migrate-to-modifiernode for more information."
+        errorLine1="): Modifier = composed {"
+        errorLine2="              ^">
+        <location
+            file="src/main/kotlin/elements/LightSourceBehind.kt"
+            line="35"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierComposed"
+        message="Modifier.composed { ... } is no longer recommended due to performance issues.&#xA;&#xA;You should use the Modifier.Node API instead, as it was designed from the ground up to be far more performant than composed modifiers.&#xA;&#xA;See https://slackhq.github.io/compose-lints/rules/#migrate-to-modifiernode for more information."
+        errorLine1="private fun Modifier.virtualBorderTopLeftCorner(borderState: VirtualCardState): Modifier = composed {"
+        errorLine2="                                                                                           ^">
+        <location
+            file="src/main/kotlin/components/VirtualCard.kt"
+            line="153"
+            column="92"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierComposed"
+        message="Modifier.composed { ... } is no longer recommended due to performance issues.&#xA;&#xA;You should use the Modifier.Node API instead, as it was designed from the ground up to be far more performant than composed modifiers.&#xA;&#xA;See https://slackhq.github.io/compose-lints/rules/#migrate-to-modifiernode for more information."
+        errorLine1="private fun Modifier.virtualBorderBottomRightCorner(borderState: VirtualCardState): Modifier = composed {"
+        errorLine2="                                                                                               ^">
+        <location
+            file="src/main/kotlin/components/VirtualCard.kt"
+            line="158"
+            column="96"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, account: ConnectionAttemptInfo.TargetAccount, strokeColor: Color? = null] but should be [account: ConnectionAttemptInfo.TargetAccount, modifier: Modifier = Modifier, strokeColor: Color? = null].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun TwoFactorAuthAvatar("
+        errorLine2="                                ^">
+        <location
+            file="src/main/kotlin/components/TwoFactorAuthAvatar.kt"
+            line="40"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [shape: Shape = CardDefaults.shape, colors: CardColors = CardDefaults.outlinedCardColors(), elevation: CardElevation = CardDefaults.outlinedCardElevation(), border: BorderStroke?] but should be [border: BorderStroke?, shape: Shape = CardDefaults.shape, colors: CardColors = CardDefaults.outlinedCardColors(), elevation: CardElevation = CardDefaults.outlinedCardElevation()].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="private fun rememberVirtualCardState("
+        errorLine2="                                    ^">
+        <location
+            file="src/main/kotlin/components/VirtualCard.kt"
+            line="83"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="ComposePreviewPublic"
+        message="Composables annotated with @Preview that are used only for previewing the UI should not be public.See https://slackhq.github.io/compose-lints/rules/#preview-composables-should-not-be-public for more information."
+        errorLine1="@Preview"
+        errorLine2="^">
+        <location
+            file="src/main/kotlin/elements/ShieldK.kt"
+            line="32"
+            column="1"/>
+    </issue>
+
+</issues>

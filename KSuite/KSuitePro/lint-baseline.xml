@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="    modifier: Modifier,"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/ksuite/ksuitepro/views/components/ProOfferContent.kt"
+            line="139"
+            column="5"/>
+    </issue>
+
+</issues>

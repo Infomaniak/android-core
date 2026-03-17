@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="    @SuppressLint(&quot;ModifierParameter&quot;) animatedButtonModifier: Modifier,"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginBottomContent.kt"
+            line="269"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, account: ExternalAccount, strokeColor: Color? = null] but should be [account: ExternalAccount, modifier: Modifier = Modifier, strokeColor: Color? = null].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun CrossLoginAvatar(modifier: Modifier = Modifier, account: ExternalAccount, strokeColor: Color? = null) {"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginAvatar.kt"
+            line="43"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [primaryButtonType: ButtonStyle, isLoginButtonLoading: () -> Boolean, modifier: Modifier = Modifier, text: String, onClick: () -> Unit] but should be [primaryButtonType: ButtonStyle, isLoginButtonLoading: () -> Boolean, text: String, modifier: Modifier = Modifier, onClick: () -> Unit].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="private fun ConnectionButton("
+        errorLine2="                            ^">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/CrossLoginBottomContent.kt"
+            line="364"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, text: String, customization: CrossLoginCustomization, onClick: () -> Unit] but should be [text: String, customization: CrossLoginCustomization, modifier: Modifier = Modifier, onClick: () -> Unit].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun PrimaryButton("
+        errorLine2="                          ^">
+        <location
+            file="src/main/kotlin/com/infomaniak/core/crossapplogin/front/components/PrimaryButton.kt"
+            line="37"
+            column="27"/>
+    </issue>
+
+</issues>
