@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="    Card("
+        errorLine2="    ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="177"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="        Row("
+        errorLine2="        ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="184"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="        PaddedDivider(paddedModifier)"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="204"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="        ProductsStorageQuotas("
+        errorLine2="        ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="205"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="        PaddedDivider(paddedModifier)"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="210"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="                    LimitedFunctionalities("
+        errorLine2="                    ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="218"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="                MyKSuiteTextItem("
+        errorLine2="                ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="226"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="            InformationBlock("
+        errorLine2="            ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="233"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="    Row("
+        errorLine2="    ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/components/UpgradeFeature.kt"
+            line="58"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierReused"
+        message="Modifiers should only be used once and by the root level layout of a Composable. This is true even if appended to or with other modifiers e.g. modifier.fillMaxWidth().Use Modifier (with a capital &apos;M&apos;) to construct a new Modifier that you can pass to other composables.See https://slackhq.github.io/compose-lints/rules/#dont-re-use-modifiers for more information."
+        errorLine1="        Text("
+        errorLine2="        ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/components/UpgradeFeature.kt"
+            line="70"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="internal fun LimitedFunctionalities(modifier: Modifier, dailySendingLimit: () -> String) {"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/components/LimitedFunctionnalities.kt"
+            line="41"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="    @SuppressLint(&quot;ModifierParameter&quot;) paddedModifier: Modifier,"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="171"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="private fun PaddedDivider(modifier: Modifier) {"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="245"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="private fun AdvantagesCard(modifier: Modifier) {"
+        errorLine2="                           ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="301"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="private fun UpgradeFeatures(app: KSuiteApp, modifier: Modifier) {"
+        errorLine2="                                            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteUpgradeBottomSheet.kt"
+            line="133"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierWithoutDefault"
+        message="This @Composable function has a modifier parameter but it doesn&apos;t have a default value.See https://slackhq.github.io/compose-lints/rules/#modifiers-should-have-default-parameters for more information."
+        errorLine1="    modifier: Modifier,"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/components/ProductsStorageQuotas.kt"
+            line="46"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeMultipleContentEmitters"
+        message="Composable functions should only be emitting content into the composition from one source at their top level.&#xA;&#xA;See https://slackhq.github.io/compose-lints/rules/#do-not-emit-multiple-pieces-of-content for more information."
+        errorLine1="@Composable"
+        errorLine2="^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteDashboardScreen.kt"
+            line="244"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, text: String, buttonText: String, onClick: () -> Unit] but should be [text: String, buttonText: String, modifier: Modifier = Modifier, onClick: () -> Unit].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun InformationBlock(modifier: Modifier = Modifier, text: String, buttonText: String, onClick: () -> Unit) {"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/components/InformationBlock.kt"
+            line="45"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, @StringRes textRes: Int] but should be [@StringRes textRes: Int, modifier: Modifier = Modifier].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="private fun LimitedFunctionalityLabel(modifier: Modifier = Modifier, @StringRes textRes: Int) {"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/components/LimitedFunctionnalities.kt"
+            line="60"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, tier: MyKSuiteTier, @ColorInt backgroundColor: Int? = null] but should be [tier: MyKSuiteTier, modifier: Modifier = Modifier, @ColorInt backgroundColor: Int? = null].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="fun MyKSuiteChip(modifier: Modifier = Modifier, tier: MyKSuiteTier, @ColorInt backgroundColor: Int? = null) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/components/MyKSuiteChips.kt"
+            line="44"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, text: String, shape: Shape, onClick: () -> Unit] but should be [text: String, shape: Shape, modifier: Modifier = Modifier, onClick: () -> Unit].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun MyKSuitePrimaryButton("
+        errorLine2="                                  ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/components/MyKSuitePrimaryButton.kt"
+            line="40"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, title: String, value: String, valueStyle: TextStyle = Typography.bodyRegular] but should be [title: String, value: String, modifier: Modifier = Modifier, valueStyle: TextStyle = Typography.bodyRegular].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun MyKSuiteTextItem("
+        errorLine2="                             ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/components/MyKSuiteTextItem.kt"
+            line="42"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, app: KSuiteApp, sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), onDismissRequest: () -> Unit] but should be [app: KSuiteApp, modifier: Modifier = Modifier, sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), onDismissRequest: () -> Unit].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="fun MyKSuiteUpgradeBottomSheet("
+        errorLine2="                              ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/MyKSuiteUpgradeBottomSheet.kt"
+            line="63"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, text: String, icon: ImageVector, color: Color = Color.Unspecified, style: TextStyle, iconRightPadding: Dp = 0.dp, iconLine: Int = 0, iconTint: Color = Color.Black] but should be [text: String, icon: ImageVector, style: TextStyle, modifier: Modifier = Modifier, color: Color = Color.Unspecified, iconRightPadding: Dp = 0.dp, iconLine: Int = 0, iconTint: Color = Color.Black].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun TextWithIcon("
+        errorLine2="                         ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/components/TextWithIcon.kt"
+            line="49"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [ColumnScope, modifier: Modifier = Modifier, customFeature: MyKSuiteUpgradeFeatures, iconSize: Dp = Dimens.iconSize, textColor: Color = Color.Unspecified] but should be [ColumnScope, customFeature: MyKSuiteUpgradeFeatures, modifier: Modifier = Modifier, iconSize: Dp = Dimens.iconSize, textColor: Color = Color.Unspecified].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="internal fun ColumnScope.UpgradeFeature("
+        errorLine2="                                       ^">
+        <location
+            file="src/main/java/com/infomaniak/core/ksuite/myksuite/ui/screens/components/UpgradeFeature.kt"
+            line="51"
+            column="40"/>
+    </issue>
+
+</issues>
