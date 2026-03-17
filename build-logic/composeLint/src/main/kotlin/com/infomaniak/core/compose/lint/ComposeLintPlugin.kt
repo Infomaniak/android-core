@@ -21,10 +21,8 @@ import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
-import kotlin.jvm.java
 
 /**
  * Automatically adds the lint to all modules defined in the whole project and use Core/lint.xml as the single source of truth to
@@ -40,9 +38,14 @@ class ComposeLintPlugin : Plugin<Project> {
                 extensions.configure<CommonExtension<*, *, *, *, *, *>>("android") {
                     lint {
                         lintConfig = rootProject.file("Core/lint.xml")
+
                         // Update the baseline for all the subprojects with `./gradlew updateLintBaseline`
                         // For Core, update the baseline with `./gradlew -p Core updateLintBaseline`
                         baseline = file("lint-baseline.xml")
+
+                        // To updateLintBaseline correctly, temporarily uncomment this line to only include errors and not
+                        // warnings in the generated baseline
+                        // ignoreWarnings = true
                     }
                 }
 

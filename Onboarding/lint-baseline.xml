@@ -2,28 +2,6 @@
 <issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
 
     <issue
-        id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
-        errorLine1="    fun HighlightedTitleAndDescription("
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/kotlin/com/infomaniak/core/onboarding/components/OnboardingComponents.kt"
-            line="166"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
-        errorLine1="fun OnboardingScaffold("
-        errorLine2="    ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/kotlin/com/infomaniak/core/onboarding/OnboardingScaffold.kt"
-            line="56"
-            column="5"/>
-    </issue>
-
-    <issue
         id="ComposeParameterOrder"
         message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, template: String, argument: String, style: TextStyle, verticalPadding: Float = VERTICAL_PADDING, horizontalPadding: Float = HORIZONTAL_PADDING, angleDegrees: Double = ROTATION_ANGLE_DEGREE, highlightedColor: Color, isHighlighted: () -> Boolean] but should be [template: String, argument: String, style: TextStyle, highlightedColor: Color, modifier: Modifier = Modifier, verticalPadding: Float = VERTICAL_PADDING, horizontalPadding: Float = HORIZONTAL_PADDING, angleDegrees: Double = ROTATION_ANGLE_DEGREE, isHighlighted: () -> Boolean].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
         errorLine1="fun HighlightedText("
@@ -43,17 +21,6 @@
             file="src/main/kotlin/com/infomaniak/core/onboarding/HorizontalPagerIndicator.kt"
             line="44"
             column="29"/>
-    </issue>
-
-    <issue
-        id="ComposeUnstableCollections"
-        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;OnboardingPage> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `onboardingPages: ImmutableList&lt;OnboardingPage>` or create an `@Immutable` wrapper for this class: `@Immutable data class OnboardingPagesList(val items: List&lt;OnboardingPage>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
-        errorLine1="    onboardingPages: List&lt;OnboardingPage>,"
-        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/kotlin/com/infomaniak/core/onboarding/OnboardingScaffold.kt"
-            line="58"
-            column="22"/>
     </issue>
 
 </issues>

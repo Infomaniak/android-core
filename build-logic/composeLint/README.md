@@ -23,9 +23,18 @@ plugins {
 ```
 
 3. Generate the baseline file for each module so only new issues will be caught by the CI. (The baseline file definition for each
-   module is also specified inside our plugin)
+   module is also specified inside our plugin). And add `ignoreWarnings = true`
+   inside [ComposeLintPlugin.kt](src/main/kotlin/com/infomaniak/core/compose/lint/ComposeLintPlugin.kt) to only create a baseline
+   with errors and not with warnings which don't need to be inside the baseline.
+
 ```
 ./gradlew updateLintBaseline
+```
+
+or
+
+```
+./gradlew -p Core updateLintBaseline
 ```
 
 And you're done!
