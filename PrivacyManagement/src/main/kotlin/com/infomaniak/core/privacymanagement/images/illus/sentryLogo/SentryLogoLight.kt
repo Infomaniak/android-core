@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.privacymanagement.images.icons.sentry
+package com.infomaniak.core.privacymanagement.images.illus.sentryLogo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -32,10 +32,10 @@ import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.privacymanagement.images.AppImages
-import com.infomaniak.core.privacymanagement.images.AppImages.AppIcons
+import com.infomaniak.core.privacymanagement.images.Illus
 
-val AppIcons.SentryLight: ImageVector
+@Suppress("UnusedReceiverParameter")
+val Illus.SentryLogoLight: ImageVector
     get() {
 
         if (_sentryLight != null) return _sentryLight!!
@@ -123,9 +123,9 @@ private var _sentryLight: ImageVector? = null
 private fun Preview() {
     Box {
         Image(
-            imageVector = AppIcons.SentryLight,
+            imageVector = Illus.SentryLogoLight,
             contentDescription = null,
-            modifier = Modifier.size(AppImages.previewSize),
+            modifier = Modifier.size(Illus.previewSize),
         )
     }
 }

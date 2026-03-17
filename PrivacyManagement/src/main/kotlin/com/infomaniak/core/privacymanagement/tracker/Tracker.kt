@@ -20,12 +20,11 @@ package com.infomaniak.core.privacymanagement.tracker
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.infomaniak.core.privacymanagement.images.AppImages.AppIcons
-import com.infomaniak.core.privacymanagement.images.AppImages.AppIllus
-import com.infomaniak.core.privacymanagement.images.icons.matomo.Matomo
-import com.infomaniak.core.privacymanagement.images.icons.sentry.Sentry
-import com.infomaniak.core.privacymanagement.images.illus.matomo.Matomo
-import com.infomaniak.core.privacymanagement.images.illus.sentry.Sentry
+import com.infomaniak.core.privacymanagement.images.Illus
+import com.infomaniak.core.privacymanagement.images.illus.matomoLogo.MatomoLogo
+import com.infomaniak.core.privacymanagement.images.illus.sentryLogo.SentryLogo
+import com.infomaniak.core.privacymanagement.images.illus.matomoLogoLabel.MatomoLogoLabel
+import com.infomaniak.core.privacymanagement.images.illus.sentryLogoLabel.SentryLogoLabel
 import com.infomaniak.core.common.R as RCore
 
 enum class Tracker(
@@ -36,14 +35,14 @@ enum class Tracker(
 ) {
     Sentry(
         titleRes = RCore.string.trackingSentryTitle,
-        icon = { AppIcons.Sentry.image() },
-        iconWithLabel = { AppIllus.Sentry.image() },
+        icon = { Illus.SentryLogo.image() },
+        iconWithLabel = { Illus.SentryLogoLabel.image() },
         descriptionRes = RCore.string.trackingSentryDescription
     ),
     Matomo(
         titleRes = RCore.string.trackingMatomoTitle,
-        icon = { AppIcons.Matomo.image() },
-        iconWithLabel = { AppIllus.Matomo.image() },
+        icon = { Illus.MatomoLogo.image() },
+        iconWithLabel = { Illus.MatomoLogoLabel.image() },
         descriptionRes = RCore.string.trackingMatomoDescription
     ),
 }

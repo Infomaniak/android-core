@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.infomaniak.core.privacymanagement.images.illus.matomo
+package com.infomaniak.core.privacymanagement.images.illus.matomoLogoLabel
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -34,10 +34,10 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.privacymanagement.images.AppImages
-import com.infomaniak.core.privacymanagement.images.AppImages.AppIllus
+import com.infomaniak.core.privacymanagement.images.Illus
 
-val AppIllus.MatomoLight: ImageVector
+@Suppress("UnusedReceiverParameter")
+val Illus.MatomoLogoLabelLight: ImageVector
     get() {
 
         if (_matomoLight != null) return _matomoLight!!
@@ -385,9 +385,9 @@ private var _matomoLight: ImageVector? = null
 private fun Preview() {
     Box {
         Image(
-            imageVector = AppIllus.MatomoLight,
+            imageVector = Illus.MatomoLogoLabelLight,
             contentDescription = null,
-            modifier = Modifier.size(AppImages.previewSize),
+            modifier = Modifier.size(Illus.previewSize),
         )
     }
 }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.privacymanagement.images.icons.matomo
+package com.infomaniak.core.privacymanagement.images.illus.matomoLogo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -32,10 +32,10 @@ import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.privacymanagement.images.AppImages
-import com.infomaniak.core.privacymanagement.images.AppImages.AppIcons
+import com.infomaniak.core.privacymanagement.images.Illus
 
-val AppIcons.MatomoLight: ImageVector
+@Suppress("UnusedReceiverParameter")
+val Illus.MatomoLogoLight: ImageVector
     get() {
 
         if (_matomoLight != null) return _matomoLight!!
@@ -187,9 +187,9 @@ private var _matomoLight: ImageVector? = null
 private fun Preview() {
     Box {
         Image(
-            imageVector = AppIcons.MatomoLight,
+            imageVector = Illus.MatomoLogoLight,
             contentDescription = null,
-            modifier = Modifier.size(AppImages.previewSize),
+            modifier = Modifier.size(Illus.previewSize),
         )
     }
 }

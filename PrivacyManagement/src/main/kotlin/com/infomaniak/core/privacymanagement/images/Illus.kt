@@ -19,9 +19,6 @@ package com.infomaniak.core.privacymanagement.images
 
 import androidx.compose.ui.unit.dp
 
-object AppImages {
-    object AppIcons
-    object AppIllus
-    
+object Illus {
     val previewSize = 250.dp
 }
