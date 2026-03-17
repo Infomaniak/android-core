@@ -93,7 +93,7 @@ fun PrivacyManagementTrackerContent(
 
 @Composable
 @Preview
-fun PrivacyManagementTrackerContentPreview(
+private fun PrivacyManagementTrackerContentPreview(
     @PreviewParameter(TrackerPreviewParameterProvider::class) tracker: Tracker
 ) {
     MaterialTheme {

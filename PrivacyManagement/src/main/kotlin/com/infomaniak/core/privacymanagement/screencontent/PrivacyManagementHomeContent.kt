@@ -52,6 +52,7 @@ import com.infomaniak.core.privacymanagement.tracker.Tracker
 import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import com.infomaniak.core.common.R as RCore
 
 @Composable
@@ -65,6 +66,7 @@ fun PrivacyManagementHomeContent(
 ) {
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(Margin.Medium),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         header()
@@ -72,7 +74,6 @@ fun PrivacyManagementHomeContent(
             text = stringResource(RCore.string.trackingManagementDescription),
             modifier = Modifier.padding(Margin.Medium),
         )
-        Spacer(Modifier.height(Margin.Medium))
         TrackerList(
             trackerList = trackerList,
             divider = divider,
@@ -109,12 +110,11 @@ private fun TrackerList(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = Margin.Medium, vertical = Margin.Medium),
-                    horizontalArrangement = Arrangement.Start,
+                        .padding(Margin.Medium),
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Margin.Medium)
                 ) {
                     Image(imageVector = tracker.icon(), contentDescription = null)
-                    Spacer(Modifier.width(Margin.Medium))
                     Text(
                         modifier = Modifier.weight(1f),
                         text = stringResource(tracker.titleRes)
@@ -136,7 +136,7 @@ private fun PrivacyManagementHomeContentPreview() {
         Scaffold { padding ->
             PrivacyManagementHomeContent(
                 modifier = Modifier.padding(padding),
-                trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo),
+                trackerList = Tracker.entries.toPersistentList(),
                 header = {
                     Box(
                         modifier = Modifier
