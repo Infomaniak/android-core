@@ -30,18 +30,21 @@ import org.gradle.kotlin.dsl.getByType
  */
 class ComposeLintPlugin : Plugin<Project> {
     override fun apply(target: Project) {
+        val coreVersionCatalog = target.extensions.getByType<VersionCatalogsExtension>().named("core")
+        val lintLibrary = coreVersionCatalog.findLibrary("compose-lint-checks").get()
+
         target.subprojects {
             plugins.withId("com.android.base") {
                 extensions.configure<com.android.build.gradle.internal.dsl.BaseAppModuleExtension> {
                     lint {
                         lintConfig = rootProject.file("Core/lint.xml")
+                        // Update the baseline for all the subprojects with `./gradlew updateLintBaseline`
                         baseline = file("lint-baseline.xml")
                     }
                 }
 
-                val coreVersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("core")
                 dependencies {
-                    add("lintChecks", coreVersionCatalog.findLibrary("compose-lint-checks").get())
+                    add("lintChecks", lintLibrary)
                 }
             }
         }
