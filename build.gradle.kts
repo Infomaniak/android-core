@@ -5,6 +5,8 @@ plugins {
     alias(core.plugins.android.library)
     alias(core.plugins.kotlin.android)
     alias(core.plugins.ktlint)
+
+    id("com.infomaniak.core.compose.lint")
 }
 
 ktlint {
@@ -50,20 +52,6 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
-        }
-    }
-}
-
-subprojects {
-    plugins.withId("com.android.base") {
-        dependencies {
-            lintChecks(core.compose.lint.checks)
-        }
-
-        android {
-            lint {
-                baseline = file("lint-baseline.xml") // Update the baseline for Core with `./gradlew -p Core updateLintBaseline`
-            }
         }
     }
 }
