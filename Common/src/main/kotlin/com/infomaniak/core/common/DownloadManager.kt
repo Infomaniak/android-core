@@ -21,6 +21,8 @@ import android.app.DownloadManager
 import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
+import com.infomaniak.core.common.DownloadStatus.Complete
+import com.infomaniak.core.common.DownloadStatus.Failed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.Flow
@@ -75,10 +77,6 @@ sealed interface DownloadStatus {
     ) : DownloadStatus
 
     data object Complete : DownloadStatus
-
-    companion object {
-        fun DownloadStatus?.isFinished() = this is Complete || this is Failed
-    }
 }
 
 suspend fun DownloadManager.startDownloadingFile(request: DownloadManager.Request): UniqueDownloadId? {
@@ -141,6 +139,8 @@ suspend fun DownloadManager.uriFor(id: UniqueDownloadId): Uri? {
     return Dispatchers.IO { getUriForDownloadedFile(id.value) }
 }
 
+fun DownloadStatus?.isFinished() = this is Complete || this is Failed
+
 private fun Cursor?.extractDownloadStatus(): DownloadStatus? {
     if (this == null) return null // Android 14 Redmi Note 13 can have query return a null value.
     if (moveToFirst().not()) return null
@@ -164,22 +164,22 @@ private fun buildStatus(
     )
     DownloadManager.STATUS_PENDING -> DownloadStatus.Pending
     DownloadManager.STATUS_PAUSED -> DownloadStatus.Paused(reason = buildPausedReason(reason))
-    DownloadManager.STATUS_FAILED -> DownloadStatus.Failed(reason = buildFailureReason(statusInt = statusInt, reason = reason))
-    DownloadManager.STATUS_SUCCESSFUL -> DownloadStatus.Complete
+    DownloadManager.STATUS_FAILED -> Failed(reason = buildFailureReason(statusInt = statusInt, reason = reason))
+    DownloadManager.STATUS_SUCCESSFUL -> Complete
     else -> error("Unexpected download status: $statusInt reason: $reason")
 }
 
-private fun buildFailureReason(statusInt: Int, reason: Int): DownloadStatus.Failed.Reason = when (reason) {
-    DownloadManager.ERROR_INSUFFICIENT_SPACE -> DownloadStatus.Failed.LocalIssue.InsufficientSpace
-    DownloadManager.ERROR_DEVICE_NOT_FOUND -> DownloadStatus.Failed.LocalIssue.StorageDeviceNotFound
-    DownloadManager.ERROR_FILE_ERROR -> DownloadStatus.Failed.LocalIssue.FileError
-    DownloadManager.ERROR_CANNOT_RESUME -> DownloadStatus.Failed.Reason.CannotResume
-    DownloadManager.ERROR_HTTP_DATA_ERROR -> DownloadStatus.Failed.RemoteIssue.HttpDataError
-    DownloadManager.ERROR_TOO_MANY_REDIRECTS -> DownloadStatus.Failed.RemoteIssue.TooManyRedirects
-    DownloadManager.ERROR_FILE_ALREADY_EXISTS -> DownloadStatus.Failed.LocalIssue.FileAlreadyExists
-    DownloadManager.ERROR_UNHANDLED_HTTP_CODE -> DownloadStatus.Failed.RemoteIssue.UnhandledHttpCode
-    DownloadManager.ERROR_UNKNOWN -> DownloadStatus.Failed.Reason.UnknownError
-    else -> DownloadStatus.Failed.RemoteIssue.HttpError(statusCode = statusInt)
+private fun buildFailureReason(statusInt: Int, reason: Int): Failed.Reason = when (reason) {
+    DownloadManager.ERROR_INSUFFICIENT_SPACE -> Failed.LocalIssue.InsufficientSpace
+    DownloadManager.ERROR_DEVICE_NOT_FOUND -> Failed.LocalIssue.StorageDeviceNotFound
+    DownloadManager.ERROR_FILE_ERROR -> Failed.LocalIssue.FileError
+    DownloadManager.ERROR_CANNOT_RESUME -> Failed.Reason.CannotResume
+    DownloadManager.ERROR_HTTP_DATA_ERROR -> Failed.RemoteIssue.HttpDataError
+    DownloadManager.ERROR_TOO_MANY_REDIRECTS -> Failed.RemoteIssue.TooManyRedirects
+    DownloadManager.ERROR_FILE_ALREADY_EXISTS -> Failed.LocalIssue.FileAlreadyExists
+    DownloadManager.ERROR_UNHANDLED_HTTP_CODE -> Failed.RemoteIssue.UnhandledHttpCode
+    DownloadManager.ERROR_UNKNOWN -> Failed.Reason.UnknownError
+    else -> Failed.RemoteIssue.HttpError(statusCode = statusInt)
 }
 
 private fun buildPausedReason(reason: Int): DownloadStatus.Paused.Reason? = when (reason) {

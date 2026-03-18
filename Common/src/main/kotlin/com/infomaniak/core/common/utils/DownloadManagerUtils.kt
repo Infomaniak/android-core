@@ -23,13 +23,13 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import androidx.core.net.toUri
 import com.infomaniak.core.common.DownloadStatus
-import com.infomaniak.core.common.DownloadStatus.Companion.isFinished
 import com.infomaniak.core.common.DownloadStatus.Failed
 import com.infomaniak.core.common.DownloadStatus.Failed.LocalIssue
 import com.infomaniak.core.common.R
 import com.infomaniak.core.common.downloadStatusFlow
 import com.infomaniak.core.common.extensions.appName
 import com.infomaniak.core.common.extensions.appVersionName
+import com.infomaniak.core.common.isFinished
 import com.infomaniak.core.common.startDownloadingFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,7 +48,13 @@ object DownloadManagerUtils {
 
     private fun String.sanitizeNameForDownload() = replace(regexInvalidSystemChar, "_").fixMultiDots()
 
-    private fun String.fixMultiDots() = apply { if (SDK_INT == Build.VERSION_CODES.Q) replace(Regex("\\.{2,}"), ".") }
+    private fun String.fixMultiDots(): String {
+        return if (SDK_INT == Build.VERSION_CODES.Q) {
+            replace(Regex("\\.{2,}"), ".")
+        } else {
+            this
+        }
+    }
 
     suspend fun requestFor(
         url: String,
@@ -108,7 +114,10 @@ object DownloadManagerUtils {
                 extraHeaders = listOfNotNull(userBearerToken?.asAuthorizationHeader())
             )
             with(downloadManager) {
-                startDownloadingFile(request)?.let(::downloadStatusFlow)?.observeEnd(onError)
+                startDownloadingFile(request)
+                    ?.let(::downloadStatusFlow)
+                    ?.observeEnd(onError)
+                    ?: onError(R.string.errorDownload)
             }
         }
     }
