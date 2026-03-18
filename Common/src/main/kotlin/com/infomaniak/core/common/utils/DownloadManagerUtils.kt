@@ -88,11 +88,9 @@ object DownloadManagerUtils {
         .addRequestHeaders(extraHeaders)
 
     private fun Request.addRequestHeaders(headers: Iterable<Pair<String, String>>): Request = apply {
-        headers.forEach { addRequestHeader(pair = it) }
-    }
-
-    private fun Request.addRequestHeader(pair: Pair<String, String>): Request = with(pair) {
-        addRequestHeader(first, second)
+        headers.forEach { (header, value) ->
+            addRequestHeader(header, value)
+        }
     }
 
     fun launchDownload(
