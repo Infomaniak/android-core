@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.appversionchecker.data.api.ApiRepositoryAppVersion
 import com.infomaniak.core.appversionchecker.data.models.AppVersion
-import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.networking.ManualAuthorizationRequired
 import com.infomaniak.core.network.utils.await
@@ -35,7 +35,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import com.infomaniak.core.auth.networking.HttpClient as HttpClientWithToken
+import com.infomaniak.core.auth.networking.AuthHttpClientProvider as HttpClientWithToken
 
 class BugTrackerViewModel : ViewModel() {
     val files = mutableListOf<BugTrackerActivity.BugTrackerFile>()
@@ -63,7 +63,7 @@ class BugTrackerViewModel : ViewModel() {
                 .post(multipartBody)
                 .build()
 
-            isSuccessful = HttpClientWithToken.okHttpClientLongTimeoutWithTokenInterceptor
+            isSuccessful = HttpClientWithToken.authOkHttpClientLongTimeout
                 .newBuilder()
                 .build()
                 .newCall(request)
@@ -94,7 +94,7 @@ class BugTrackerViewModel : ViewModel() {
             store = store,
             projectionFields = projectionFields,
             channelFilter = channelFilter,
-            okHttpClient = HttpClient.okHttpClient
+            okHttpClient = DefaultHttpClientProvider.okHttpClient,
         )
 
         emit(apiResponse.data?.updateIsAvailable(appVersion, channelFilter) ?: false)
