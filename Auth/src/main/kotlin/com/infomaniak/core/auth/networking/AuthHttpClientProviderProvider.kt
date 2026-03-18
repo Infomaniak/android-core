@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.auth.networking
 
+import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.TokenAuthenticator
 import com.infomaniak.core.auth.TokenInterceptor
 import com.infomaniak.core.auth.TokenInterceptorListener
@@ -29,12 +30,12 @@ object AuthHttpClientProvider : BaseHttpClientProvider()
 
 abstract class BaseHttpClientProvider {
 
-    internal var tokenInterceptorListener: TokenInterceptorListener? = null
+    protected open var tokenInterceptorListener: TokenInterceptorListener? = null
 
     val authOkHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder().apply {
             addCache()
-            addTokenInterceptor(tokenInterceptorListener)
+            addTokenInterceptor(builder = this, tokenInterceptorListener)
             addCommonInterceptors()
         }.build()
     }
@@ -43,16 +44,21 @@ abstract class BaseHttpClientProvider {
         OkHttpClient.Builder()
             .apply {
                 addCache()
-                addTokenInterceptor(tokenInterceptorListener)
+                addTokenInterceptor(builder = this, tokenInterceptorListener)
                 addCommonInterceptors()
                 addCustomTimeout()
             }.build()
     }
 
-    protected open fun OkHttpClient.Builder.addTokenInterceptor(tokenInterceptorListener: TokenInterceptorListener?) {
+    @CallSuper
+    protected open fun addTokenInterceptor(builder: OkHttpClient.Builder, tokenInterceptorListener: TokenInterceptorListener?) {
         tokenInterceptorListener?.let { listener ->
-            addInterceptor(TokenInterceptor(listener))
-            authenticator(TokenAuthenticator(listener))
+            builder.addInterceptor(TokenInterceptor(listener))
+            builder.authenticator(TokenAuthenticator(listener))
         }
+    }
+
+    internal fun setTokenInterceptorListener(tokenInterceptorListener: TokenInterceptorListener?) {
+        this.tokenInterceptorListener = tokenInterceptorListener
     }
 }
