@@ -72,7 +72,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
             store = store,
             projectionFields = projectionFields,
             channelFilter = AppVersion.VersionChannel.Production,
-            okHttpClient = HttpClient.okHttpClient
+            okHttpClient = DefaultHttpClientProvider.okHttpClient,
         )
 
         emit(apiResponse.data?.mustRequireUpdate(appVersionName, AppVersion.VersionChannel.Production) == true)
