@@ -30,7 +30,6 @@ import com.infomaniak.core.webview.ui.components.WebView
 import kotlinx.serialization.json.Json
 
 class WebViewActivity : ComponentActivity() {
-    private val hostWhiteList by lazy { intent.getStringArrayListExtra(EXTRA_HOST_WHITE_LIST) ?: emptyList() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +39,7 @@ class WebViewActivity : ComponentActivity() {
         val url = intent.getStringExtra(EXTRA_URL)
         val domStorageEnabled = intent.getBooleanExtra(EXTRA_DOM_STORAGE_ENABLED, false)
 
-        if (url == null || isNotAuthorized(url)) {
+        if (url == null) {// should not happen anymore
             finish()
             return
         }
@@ -59,10 +58,6 @@ class WebViewActivity : ComponentActivity() {
         }
     }
 
-    private fun isNotAuthorized(url: String): Boolean = !url.toUri().isWhiteListed()
-
-    private fun Uri.isWhiteListed(): Boolean = hostWhiteList.isEmpty() || hostWhiteList.indexOfFirst { host == it } >= 0
-
     companion object {
         private const val EXTRA_URL = "EXTRA_URL"
         private const val EXTRA_HEADERS = "EXTRA_HEADERS"
@@ -74,24 +69,45 @@ class WebViewActivity : ComponentActivity() {
             context: Context,
             url: String,
             headers: Map<String, String>? = mapOf(),
-            hostWhiteList: ArrayList<String> = arrayListOf(),
+            hostWhiteList: Set<String> = emptySet(),
             urlToQuit: String? = null,
             domStorageEnabled: Boolean = false,
             activityResultLauncher: ActivityResultLauncher<Intent>? = null,
         ) {
-            val intent = Intent(context, WebViewActivity::class.java).apply {
-                putExtra(EXTRA_URL, url)
-                putStringArrayListExtra(EXTRA_HOST_WHITE_LIST, hostWhiteList)
-                putExtra(EXTRA_HEADERS, Json.encodeToString(headers))
-                putExtra(EXTRA_URL_TO_QUIT, urlToQuit)
-                putExtra(EXTRA_DOM_STORAGE_ENABLED, domStorageEnabled)
-            }
-
+            val intent = createIntent(context, url, headers, hostWhiteList, urlToQuit, domStorageEnabled) ?: return
             activityResultLauncher?.let {
                 activityResultLauncher.launch(intent)
             } ?: run {
                 context.startActivity(intent)
             }
+        }
+
+        private fun createIntent(
+            context: Context,
+            url: String,
+            headers: Map<String, String>? = mapOf(),
+            hostWhiteList: Set<String> = emptySet(),
+            urlToQuit: String? = null,
+            domStorageEnabled: Boolean = false,
+        ): Intent? {
+            return url.asValidatedUrl(hostWhiteList)?.let { validUrl ->
+                Intent(context, WebViewActivity::class.java).apply {
+                    putExtra(EXTRA_URL, validUrl)
+                    putExtra(EXTRA_HEADERS, Json.encodeToString(headers))
+                    putExtra(EXTRA_URL_TO_QUIT, urlToQuit)
+                    putExtra(EXTRA_DOM_STORAGE_ENABLED, domStorageEnabled)
+                }
+            }
+        }
+
+        private fun String.asValidatedUrl(hostWhiteList: Set<String>): String? {
+            return takeUnless { isEmpty() || isBlank() || !isAuthorizedUrl(hostWhiteList) }
+        }
+
+        private fun String.isAuthorizedUrl(hostWhiteList: Set<String>): Boolean = toUri().isWhiteListed(hostWhiteList)
+
+        private fun Uri.isWhiteListed(hostWhiteList: Set<String>): Boolean {
+            return hostWhiteList.isEmpty() || hostWhiteList.contains(host)
         }
     }
 }
