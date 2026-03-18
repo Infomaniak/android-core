@@ -119,13 +119,11 @@ object DownloadManagerUtils {
         filter { it.isFinished() }.first().checkFailure(onError)
     }
 
-    private suspend fun DownloadStatus?.checkFailure(onError: (Int) -> Unit) {
-        (this as? Failed)?.run {
-            withContext(Dispatchers.Main) {
-                when (reason) {
-                    LocalIssue.InsufficientSpace -> onError(R.string.errorDownloadInsufficientSpace)
-                    else -> onError(R.string.errorDownload)
-                }
+    private suspend fun DownloadStatus?.checkFailure(onError: (Int) -> Unit) = withContext(Dispatchers.Main) {
+        (this@checkFailure as? Failed)?.run {
+            when (reason) {
+                LocalIssue.InsufficientSpace -> onError(R.string.errorDownloadInsufficientSpace)
+                else -> onError(R.string.errorDownload)
             }
         }
     }
