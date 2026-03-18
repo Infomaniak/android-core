@@ -36,6 +36,6 @@ object AuthConfiguration {
     ) {
         this.clientId = clientId
         this.accessType = accessType
-        AuthHttpClientProvider.tokenInterceptorListener = tokenInterceptorListener
+        AuthHttpClientProvider.setTokenInterceptorListener(tokenInterceptorListener)
     }
 }
