@@ -20,8 +20,5 @@ package com.infomaniak.core.privacymanagement.tracker
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 
 class TrackerPreviewParameterProvider : PreviewParameterProvider<Tracker> {
-    override val values: Sequence<Tracker> = sequenceOf(
-        Tracker.Sentry,
-        Tracker.Matomo,
-    )
+    override val values: Sequence<Tracker> = Tracker.entries.asSequence()
 }

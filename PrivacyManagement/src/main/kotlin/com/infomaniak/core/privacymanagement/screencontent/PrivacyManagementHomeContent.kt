@@ -48,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.common.extensions.openUrl
 import com.infomaniak.core.privacymanagement.theme.LocalPrivacyManagementTheme
+import com.infomaniak.core.privacymanagement.theme.PrivacyManagementTheme
 import com.infomaniak.core.privacymanagement.tracker.Tracker
 import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.collections.immutable.ImmutableList
@@ -121,33 +122,43 @@ private fun TrackerList(
             .clip(privacyManagementTheme.trackerContainerShape)
     ) {
         trackerList.forEachIndexed { index, tracker ->
-            Button(
-                onClick = { onTrackerClick(tracker) },
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = privacyManagementTheme.trackerContainerContentColor,
-                    containerColor = privacyManagementTheme.trackerContainerColor,
-                ),
-                shape = RectangleShape,
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(Margin.Medium),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(Margin.Medium)
-                ) {
-                    Image(imageVector = tracker.icon(), contentDescription = null)
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(tracker.titleRes)
-                    )
-                    rightIcon()
-                }
-            }
+            TrackerSwitchButton(onTrackerClick, tracker, privacyManagementTheme, rightIcon)
             if (index < trackerList.lastIndex) {
                 divider()
             }
+        }
+    }
+}
+
+@Composable
+private fun TrackerSwitchButton(
+    onTrackerClick: (Tracker) -> Unit,
+    tracker: Tracker,
+    privacyManagementTheme: PrivacyManagementTheme,
+    rightIcon: @Composable (() -> Unit)
+) {
+    Button(
+        onClick = { onTrackerClick(tracker) },
+        colors = ButtonDefaults.buttonColors(
+            contentColor = privacyManagementTheme.trackerContainerContentColor,
+            containerColor = privacyManagementTheme.trackerContainerColor,
+        ),
+        shape = RectangleShape,
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Margin.Medium),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Margin.Medium)
+        ) {
+            Image(imageVector = tracker.icon(), contentDescription = null)
+            Text(
+                modifier = Modifier.weight(1f),
+                text = stringResource(tracker.titleRes)
+            )
+            rightIcon()
         }
     }
 }

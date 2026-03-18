@@ -24,7 +24,6 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -34,7 +33,6 @@ android {
     }
 
     buildFeatures {
-        buildConfig = true
         compose = true
     }
 

@@ -18,11 +18,11 @@
 package com.infomaniak.core.privacymanagement.screencontent
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.privacymanagement.theme.LocalPrivacyManagementTheme
+import com.infomaniak.core.privacymanagement.theme.PrivacyManagementTheme
 import com.infomaniak.core.privacymanagement.tracker.Tracker
 import com.infomaniak.core.privacymanagement.tracker.TrackerPreviewParameterProvider
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -56,37 +57,41 @@ fun PrivacyManagementTrackerContent(
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Margin.Medium),
     ) {
         Image(
             imageVector = tracker.iconWithLabel(),
             contentDescription = null,
-            modifier = Modifier.padding(Margin.Medium),
         )
-        Text(
-            text = stringResource(tracker.descriptionRes),
-            modifier = Modifier.padding(Margin.Medium),
-        )
-        Spacer(Modifier.height(Margin.Medium))
-        Button(
-            modifier = Modifier.padding(privacyManagementTheme.trackerContainerPadding),
-            onClick = { onTrackerSwitchClick(!isTrackerEnabled()) },
-            colors = ButtonDefaults.buttonColors(
-                contentColor = privacyManagementTheme.trackerContainerContentColor,
-                containerColor = privacyManagementTheme.trackerContainerColor,
-            ),
-            shape = privacyManagementTheme.trackerContainerShape
+        Text(text = stringResource(tracker.descriptionRes))
+        TrackerSwitchButton(privacyManagementTheme, onTrackerSwitchClick, isTrackerEnabled)
+    }
+}
+
+@Composable
+private fun TrackerSwitchButton(
+    privacyManagementTheme: PrivacyManagementTheme,
+    onTrackerSwitchClick: (Boolean) -> Unit,
+    isTrackerEnabled: () -> Boolean
+) {
+    Button(
+        onClick = { onTrackerSwitchClick(!isTrackerEnabled()) },
+        colors = ButtonDefaults.buttonColors(
+            contentColor = privacyManagementTheme.trackerContainerContentColor,
+            containerColor = privacyManagementTheme.trackerContainerColor,
+        ),
+        shape = privacyManagementTheme.trackerContainerShape
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(text = stringResource(RCore.string.trackingAuthorizeTracking),)
-                Spacer(Modifier.weight(1f))
-                Switch(
-                    checked = isTrackerEnabled(),
-                    onCheckedChange = { onTrackerSwitchClick(it) },
-                )
-            }
+            Text(text = stringResource(RCore.string.trackingAuthorizeTracking))
+            Spacer(Modifier.weight(1f))
+            Switch(
+                checked = isTrackerEnabled(),
+                onCheckedChange = { onTrackerSwitchClick(it) },
+            )
         }
     }
 }
