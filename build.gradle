@@ -18,6 +18,8 @@ android {
         minSdkVersion 24
         targetSdkVersion 35
 
+        consumerProguardFiles 'proguard-rules.pro'
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
