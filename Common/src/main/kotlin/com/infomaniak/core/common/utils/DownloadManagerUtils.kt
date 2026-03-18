@@ -42,7 +42,7 @@ import kotlinx.coroutines.withContext
 import splitties.systemservices.downloadManager
 
 object DownloadManagerUtils {
-    private val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]|%")
+    val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]|%")
 
     fun withoutProblematicCharacters(name: String): String = name.sanitizeNameForDownload()
 
