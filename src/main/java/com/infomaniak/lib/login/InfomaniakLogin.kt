@@ -308,8 +308,11 @@ class InfomaniakLogin(
 
             val response = okHttpClient.newCall(request).await()
             val bodyResponse = Dispatchers.IO { response.body?.string() }
+            val bodyResponse = Dispatchers.IO { response.body.string() }
 
             if (response.isSuccessful && bodyResponse != null) {
+
+            if (response.isSuccessful) {
                 val apiToken = json.decodeFromString<ApiToken>(bodyResponse)
 
                 // Set the token expiration date (with margin-delay)
@@ -338,9 +341,9 @@ class InfomaniakLogin(
                 .build()
 
             val response = okHttpClient.newCall(request).await()
-            val bodyResponse = Dispatchers.IO { response.body?.string() }
+            val bodyResponse = Dispatchers.IO { response.body.string() }
 
-            if (response.isSuccessful && bodyResponse != null) {
+            if (response.isSuccessful) {
                 val apiResponse = json.decodeFromString<ApiResponse>(bodyResponse)
                 if (apiResponse.result == "error") ErrorStatus.UNKNOWN else null
             } else {
