@@ -47,9 +47,9 @@ import com.infomaniak.core.common.R as RCore
 @Composable
 fun PrivacyManagementTrackerContent(
     tracker: Tracker,
-    modifier: Modifier = Modifier,
     isTrackerEnabled: () -> Boolean,
     onTrackerSwitchClick: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val privacyManagementTheme = LocalPrivacyManagementTheme.current
 

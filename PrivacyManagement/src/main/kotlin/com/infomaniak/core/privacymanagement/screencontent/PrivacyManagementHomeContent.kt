@@ -58,8 +58,8 @@ import com.infomaniak.core.common.R as RCore
 @Composable
 fun PrivacyManagementHomeContent(
     trackerList: ImmutableList<Tracker>,
-    modifier: Modifier = Modifier,
     onTrackerClick: (Tracker) -> Unit,
+    modifier: Modifier = Modifier,
     header: @Composable () -> Unit = {},
     divider: @Composable () -> Unit = {},
     rightIcon: @Composable (() -> Unit) = {},
