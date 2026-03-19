@@ -18,6 +18,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="anErrorHasOccurred">Une erreur est survenue</string>
     <string name="applicationSourceCode">Voir le code source</string>
+    <string name="browserNotFound">Aucun navigateur trouvé</string>
     <string name="buttonCancel">Annuler</string>
     <string name="buttonClose">Fermer</string>
     <string name="buttonLater">Plus tard</string>
@@ -34,6 +35,7 @@
         <item quantity="other">Mes comptes</item>
     </plurals>
     <string name="reviewAlertTitle">Vous aimez %s ?</string>
+    <string name="startActivityCantHandleAction">Aucune application n’a été trouvée pour gérer cette action</string>
     <string name="trackingAuthorizeTracking">Autoriser le suivi</string>
     <string name="trackingManagementDescription">Chez Infomaniak, vos données ne sont jamais une monnaie d’échange. Nous utilisons uniquement des outils internes, hébergés et maîtrisés par nos soins, pour garantir la qualité et l’évolution de nos applications.\n\nCes données techniques sont confidentielles, stockées sur nos propres serveurs en Suisse, accessibles uniquement à nos équipes de développement, et ne sont jamais partagées avec des tiers. Le code source des applications peut être vérifié, garantissant une transparence totale.</string>
     <string name="trackingManagementTitle">Gestion des données</string>

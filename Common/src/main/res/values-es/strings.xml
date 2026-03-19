@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">Se ha producido un error</string>
     <string name="applicationSourceCode">Ver código fuente</string>
+    <string name="browserNotFound">No se ha encontrado ningún navegador</string>
     <string name="buttonCancel">Cancelar</string>
     <string name="buttonClose">Cerrar</string>
     <string name="buttonLater">Más tarde</string>
@@ -34,6 +35,7 @@
         <item quantity="other">Mis cuentas</item>
     </plurals>
     <string name="reviewAlertTitle">¿Te gusta %s?</string>
+    <string name="startActivityCantHandleAction">No se ha encontrado ninguna aplicación que gestione esta acción</string>
     <string name="trackingAuthorizeTracking">Autorizar el seguimiento</string>
     <string name="trackingManagementDescription">En Infomaniak, sus datos nunca son moneda de cambio. Solo utilizamos herramientas internas, alojadas y controladas por nosotros mismos, para garantizar la calidad y el desarrollo de nuestras aplicaciones.\n\nEstos datos técnicos son confidenciales, se almacenan en nuestros propios servidores en Suiza, sólo son accesibles a nuestros equipos de desarrollo y nunca se comparten con terceros. El código fuente de nuestras aplicaciones puede verificarse, lo que garantiza una total transparencia.</string>
     <string name="trackingManagementTitle">Gestión de datos</string>

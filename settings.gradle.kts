@@ -56,6 +56,7 @@ include(
     ":Notifications",
     ":Notifications:Registration",
     ":Onboarding",
+    ":PrivacyManagement",
     ":RecyclerView",
     ":Sentry",
     ":SharedValues",
