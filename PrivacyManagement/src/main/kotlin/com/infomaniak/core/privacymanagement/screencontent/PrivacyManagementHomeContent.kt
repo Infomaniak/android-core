@@ -154,7 +154,10 @@ private fun TrackerSwitchButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Margin.Medium)
         ) {
-            Image(imageVector = tracker.icon(), contentDescription = null)
+            Image(
+                imageVector = tracker.icon(),
+                contentDescription = stringResource(tracker.titleRes),
+            )
             Text(
                 modifier = Modifier.weight(1f),
                 text = stringResource(tracker.titleRes)
