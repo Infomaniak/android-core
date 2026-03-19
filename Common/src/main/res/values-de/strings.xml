@@ -34,6 +34,7 @@
         <item quantity="other">Meine Konten</item>
     </plurals>
     <string name="reviewAlertTitle">Mögen Sie %s?</string>
+    <string name="startActivityCantHandleAction">Es wurde keine Anwendung gefunden, die diese Aktion bearbeitet</string>
     <string name="trackingAuthorizeTracking">Verfolgung genehmigen</string>
     <string name="trackingManagementDescription">Bei Infomaniak sind Ihre Daten niemals eine Währung. Wir verwenden ausschliesslich interne Tools, die von uns gehostet und kontrolliert werden, um die Qualität und die Weiterentwicklung unserer Anwendungen zu gewährleisten.\n\nDiese technischen Daten sind vertraulich, werden auf unseren eigenen Servern in der Schweiz gespeichert, sind nur für unsere Entwicklungsteams zugänglich und werden niemals an Dritte weitergegeben. Der Quellcode der Anwendungen kann überprüft werden, wodurch eine vollständige Transparenz gewährleistet wird.</string>
     <string name="trackingManagementTitle">Verwaltung der Daten</string>

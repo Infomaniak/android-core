@@ -34,6 +34,7 @@
         <item quantity="other">Mine kontoer</item>
     </plurals>
     <string name="reviewAlertTitle">Liker du %s?</string>
+    <string name="startActivityCantHandleAction">Ingen applikasjon funnet for å håndtere denne handlingen</string>
     <string name="trackingAuthorizeTracking">Autoriser sporing</string>
     <string name="trackingManagementDescription">Hos Infomaniak er dataene dine aldri et forhandlingsobjekt. Vi bruker bare interne verktøy, driftet og kontrollert av oss selv, for å garantere kvaliteten og utviklingen av applikasjonene våre.\n\nDisse tekniske dataene er konfidensielle, lagret på våre egne servere i Sveits, kun tilgjengelig for utviklingsteamene våre, og aldri delt med tredjeparter. Applikasjonskildekoden kan verifiseres, noe som garanterer total åpenhet.</string>
     <string name="trackingManagementTitle">Dataadministrasjon</string>

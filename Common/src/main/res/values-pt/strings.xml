@@ -34,6 +34,7 @@
         <item quantity="other">As minhas contas</item>
     </plurals>
     <string name="reviewAlertTitle">Gosta do %s?</string>
+    <string name="startActivityCantHandleAction">Nenhuma aplicação foi encontrada para realizar esta ação</string>
     <string name="trackingAuthorizeTracking">Autorizar rastreamento</string>
     <string name="trackingManagementDescription">Na Infomaniak, os seus dados nunca são moeda de troca. Apenas utilizamos ferramentas internas, alojadas e controladas por nós, para garantir a qualidade e evolução das nossas aplicações.\n\nEstes dados técnicos são confidenciais, armazenados nos nossos próprios servidores na Suíça, acessíveis apenas às nossas equipas de desenvolvimento, e nunca partilhados com terceiros. O código-fonte da aplicação pode ser verificado, garantindo total transparência.</string>
     <string name="trackingManagementTitle">Gestão de dados</string>
