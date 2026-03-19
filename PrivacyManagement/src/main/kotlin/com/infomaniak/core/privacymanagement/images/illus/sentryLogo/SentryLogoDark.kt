@@ -41,7 +41,7 @@ val Illus.SentryLogoDark: ImageVector
         if (_sentryLogoDark != null) return _sentryLogoDark!!
 
         _sentryLogoDark = Builder(
-            name = "SentryDark",
+            name = "SentryLogoDark",
             defaultWidth = 24.0.dp,
             defaultHeight = 24.0.dp,
             viewportWidth = 24.0f,

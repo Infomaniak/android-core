@@ -36,6 +36,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +49,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.common.extensions.openUrl
 import com.infomaniak.core.privacymanagement.theme.LocalPrivacyManagementTheme
-import com.infomaniak.core.privacymanagement.theme.PrivacyManagementTheme
 import com.infomaniak.core.privacymanagement.tracker.Tracker
 import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.collections.immutable.ImmutableList
@@ -61,6 +61,7 @@ fun PrivacyManagementHomeContent(
     trackerList: ImmutableList<Tracker>,
     onTrackerClick: (Tracker) -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     header: @Composable () -> Unit = {},
     divider: @Composable () -> Unit = {},
     rightIcon: @Composable (() -> Unit) = {},
@@ -68,13 +69,15 @@ fun PrivacyManagementHomeContent(
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(Margin.Medium),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        header()
-        Text(
-            text = stringResource(RCore.string.trackingManagementDescription),
-            modifier = Modifier.padding(horizontal = Margin.Medium),
-        )
+        Column(
+            modifier = Modifier.padding(contentPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Margin.Medium),
+        ) {
+            header()
+            Text(text = stringResource(RCore.string.trackingManagementDescription))
+        }
         SourceButton(sourceUrl)
         TrackerList(
             trackerList = trackerList,
@@ -89,17 +92,13 @@ fun PrivacyManagementHomeContent(
 private fun SourceButton(sourceUrl: String) {
     val context = LocalContext.current
 
-    Button(
-        modifier = Modifier.fillMaxWidth()
+    TextButton(
+        modifier = Modifier
+            .fillMaxWidth()
             .heightIn(min = 48.dp),
-        onClick = { if (sourceUrl.isNotBlank()) context.openUrl(sourceUrl) },
-        enabled = sourceUrl.isNotBlank(),
+        onClick = { context.openUrl(sourceUrl) },
         contentPadding = PaddingValues(horizontal = Margin.Medium),
         shape = RectangleShape,
-        colors = ButtonDefaults.buttonColors(
-            contentColor = MaterialTheme.colorScheme.primary,
-            containerColor = Color.Transparent,
-        ),
     ) {
         Text(
             text = stringResource(RCore.string.applicationSourceCode),
@@ -123,7 +122,11 @@ private fun TrackerList(
             .clip(privacyManagementTheme.trackerContainerShape)
     ) {
         trackerList.forEachIndexed { index, tracker ->
-            TrackerSwitchButton(onTrackerClick, tracker, privacyManagementTheme, rightIcon)
+            TrackerSwitchButton(
+                onClick = { onTrackerClick(tracker) },
+                tracker = tracker,
+                rightIcon = rightIcon
+            )
             if (index < trackerList.lastIndex) {
                 divider()
             }
@@ -133,13 +136,14 @@ private fun TrackerList(
 
 @Composable
 private fun TrackerSwitchButton(
-    onTrackerClick: (Tracker) -> Unit,
+    onClick: () -> Unit,
     tracker: Tracker,
-    privacyManagementTheme: PrivacyManagementTheme,
     rightIcon: @Composable (() -> Unit)
 ) {
+    val privacyManagementTheme = LocalPrivacyManagementTheme.current
+
     Button(
-        onClick = { onTrackerClick(tracker) },
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             contentColor = privacyManagementTheme.trackerContainerContentColor,
             containerColor = privacyManagementTheme.trackerContainerColor,
@@ -174,6 +178,7 @@ private fun PrivacyManagementHomeContentPreview() {
         Scaffold { padding ->
             PrivacyManagementHomeContent(
                 modifier = Modifier.padding(padding),
+                contentPadding = PaddingValues(horizontal = Margin.Medium),
                 sourceUrl = "",
                 trackerList = Tracker.entries.toPersistentList(),
                 header = {

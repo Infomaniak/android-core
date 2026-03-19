@@ -18,12 +18,10 @@
 package com.infomaniak.core.privacymanagement.theme
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.dp
 
 val LocalPrivacyManagementTheme = staticCompositionLocalOf {
     PrivacyManagementTheme(

@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.common.extensions
 
+import android.R.attr.duration
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -25,8 +26,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.provider.Settings
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import com.infomaniak.core.common.R
 
 tailrec fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
@@ -43,7 +47,19 @@ fun Context.hasPermission(permission: String): Boolean {
 }
 
 fun Context.openUrl(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+    safeStartActivity(Intent(Intent.ACTION_VIEW, url.toUri()), R.string.browserNotFound)
+}
+
+fun Context.safeStartActivity(
+    intent: Intent,
+    @StringRes title: Int = R.string.startActivityCantHandleAction,
+    duration: Int = Toast.LENGTH_LONG
+) {
+    runCatching {
+        startActivity(intent)
+    }.onFailure {
+        Toast.makeText(this, title, duration).show()
+    }
 }
 
 /**

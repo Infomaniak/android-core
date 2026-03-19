@@ -43,7 +43,7 @@ val Illus.MatomoLogoLabelLight: ImageVector
         if (_matomoLogoLabelLight != null) return _matomoLogoLabelLight!!
 
         _matomoLogoLabelLight = Builder(
-            name = "MatomoLight",
+            name = "MatomoLogoLabelLight",
             defaultWidth = 181.0.dp,
             defaultHeight = 32.0.dp,
             viewportWidth = 181.0f,
