@@ -92,7 +92,8 @@ private fun SourceButton(sourceUrl: String) {
     Button(
         modifier = Modifier.fillMaxWidth()
             .heightIn(min = 48.dp),
-        onClick = { context.openUrl(sourceUrl) },
+        onClick = { if (sourceUrl.isNotBlank()) context.openUrl(sourceUrl) },
+        enabled = sourceUrl.isNotBlank(),
         contentPadding = PaddingValues(horizontal = Margin.Medium),
         shape = RectangleShape,
         colors = ButtonDefaults.buttonColors(

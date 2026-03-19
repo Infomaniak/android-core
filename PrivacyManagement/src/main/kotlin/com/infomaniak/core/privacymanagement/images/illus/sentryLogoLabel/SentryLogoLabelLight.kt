@@ -39,9 +39,9 @@ import com.infomaniak.core.privacymanagement.images.Illus
 val Illus.SentryLogoLabelLight: ImageVector
     get() {
 
-        if (_sentryLight != null) return _sentryLight!!
+        if (_sentryLogoLabelLight != null) return _sentryLogoLabelLight!!
 
-        _sentryLight = Builder(
+        _sentryLogoLabelLight = Builder(
             name = "SentryLight",
             defaultWidth = 163.0.dp,
             defaultHeight = 36.0.dp,
@@ -49,8 +49,12 @@ val Illus.SentryLogoLabelLight: ImageVector
             viewportHeight = 36.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                fill = SolidColor(Color(0xFF000000)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero
             ) {
                 moveTo(24.23f, 2.07f)
@@ -176,10 +180,10 @@ val Illus.SentryLogoLabelLight: ImageVector
             }
         }.build()
 
-        return _sentryLight!!
+        return _sentryLogoLabelLight!!
     }
 
-private var _sentryLight: ImageVector? = null
+private var _sentryLogoLabelLight: ImageVector? = null
 
 @Preview
 @Composable

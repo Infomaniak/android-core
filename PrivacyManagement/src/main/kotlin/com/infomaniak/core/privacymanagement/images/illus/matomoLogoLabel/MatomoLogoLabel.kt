@@ -30,12 +30,12 @@ import com.infomaniak.core.ui.compose.theme.ThemedImage
 
 @Suppress("UnusedReceiverParameter")
 val Illus.MatomoLogoLabel: ThemedImage
-    get() = _matomo ?: object : ThemedImage {
+    get() = _matomoLogoLabel ?: object : ThemedImage {
         override val light = Illus.MatomoLogoLabelLight
         override val dark = Illus.MatomoLogoLabelDark
-    }.also { _matomo = it }
+    }.also { _matomoLogoLabel = it }
 
-private var _matomo: ThemedImage? = null
+private var _matomoLogoLabel: ThemedImage? = null
 
 @PreviewLightAndDark
 @Composable

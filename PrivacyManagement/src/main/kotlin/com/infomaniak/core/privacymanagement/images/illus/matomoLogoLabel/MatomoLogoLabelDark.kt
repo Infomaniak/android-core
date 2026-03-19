@@ -40,9 +40,9 @@ import com.infomaniak.core.privacymanagement.images.Illus
 val Illus.MatomoLogoLabelDark: ImageVector
     get() {
 
-        if (_matomoDark != null) return _matomoDark!!
+        if (_matomoLogoLabelDark != null) return _matomoLogoLabelDark!!
 
-        _matomoDark = Builder(
+        _matomoLogoLabelDark = Builder(
             name = "MatomoDark",
             defaultWidth = 181.0.dp,
             defaultHeight = 32.0.dp,
@@ -413,10 +413,10 @@ val Illus.MatomoLogoLabelDark: ImageVector
             }
         }.build()
 
-        return _matomoDark!!
+        return _matomoLogoLabelDark!!
     }
 
-private var _matomoDark: ImageVector? = null
+private var _matomoLogoLabelDark: ImageVector? = null
 
 @Preview
 @Composable

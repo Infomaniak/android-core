@@ -38,9 +38,9 @@ import com.infomaniak.core.privacymanagement.images.Illus
 val Illus.MatomoLogoLight: ImageVector
     get() {
 
-        if (_matomoLight != null) return _matomoLight!!
+        if (_matomoLogoLight != null) return _matomoLogoLight!!
 
-        _matomoLight = Builder(
+        _matomoLogoLight = Builder(
             name = "MatomoLight",
             defaultWidth = 24.0.dp,
             defaultHeight = 24.0.dp,
@@ -48,8 +48,12 @@ val Illus.MatomoLogoLight: ImageVector
             viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF95C748)), stroke = null, strokeLineWidth = 0.0f,
-                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                fill = SolidColor(Color(0xFF95C748)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero
             ) {
                 moveTo(23.42f, 13.465f)
@@ -66,8 +70,12 @@ val Illus.MatomoLogoLight: ImageVector
                 curveTo(24.074f, 15.14f, 23.912f, 14.219f, 23.432f, 13.456f)
             }
             path(
-                fill = SolidColor(Color(0xFF35BFC0)), stroke = null, strokeLineWidth = 0.0f,
-                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                fill = SolidColor(Color(0xFF35BFC0)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero
             ) {
                 moveTo(6.896f, 15.271f)
@@ -84,9 +92,13 @@ val Illus.MatomoLogoLight: ImageVector
                 close()
             }
             path(
-                fill = SolidColor(Color(0xFF3253A0)), stroke = null, strokeLineWidth =
-                    0.0f, strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter =
-                    4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0xFF3253A0)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero
             ) {
                 moveTo(19.596f, 8.647f)
                 curveTo(19.597f, 8.108f, 19.473f, 7.577f, 19.232f, 7.095f)
@@ -129,9 +141,13 @@ val Illus.MatomoLogoLight: ImageVector
                 close()
             }
             path(
-                fill = SolidColor(Color(0xFFF38334)), stroke = null, strokeLineWidth =
-                    0.0f, strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter =
-                    4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0xFFF38334)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero
             ) {
                 moveTo(19.581f, 8.647f)
                 curveTo(19.581f, 7.965f, 19.379f, 7.298f, 19.0f, 6.731f)
@@ -146,9 +162,13 @@ val Illus.MatomoLogoLight: ImageVector
                 curveTo(19.227f, 10.438f, 19.59f, 9.561f, 19.59f, 8.647f)
             }
             path(
-                fill = SolidColor(Color(0xFF3152A0)), stroke = null, strokeLineWidth =
-                    0.0f, strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter =
-                    4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0xFF3152A0)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero
             ) {
                 moveTo(16.143f, 12.095f)
                 curveTo(15.571f, 12.095f, 15.009f, 11.953f, 14.506f, 11.682f)
@@ -177,10 +197,10 @@ val Illus.MatomoLogoLight: ImageVector
             }
         }.build()
 
-        return _matomoLight!!
+        return _matomoLogoLight!!
     }
 
-private var _matomoLight: ImageVector? = null
+private var _matomoLogoLight: ImageVector? = null
 
 @Preview
 @Composable

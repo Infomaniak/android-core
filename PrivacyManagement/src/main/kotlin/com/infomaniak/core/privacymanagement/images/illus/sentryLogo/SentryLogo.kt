@@ -29,12 +29,12 @@ import com.infomaniak.core.ui.compose.theme.ThemedImage
 
 @Suppress("UnusedReceiverParameter")
 val Illus.SentryLogo: ThemedImage
-    get() = _sentry ?: object : ThemedImage {
+    get() = _sentryLogo ?: object : ThemedImage {
         override val light = Illus.SentryLogoLight
         override val dark = Illus.SentryLogoDark
-    }.also { _sentry = it }
+    }.also { _sentryLogo = it }
 
-private var _sentry: ThemedImage? = null
+private var _sentryLogo: ThemedImage? = null
 
 @PreviewLightAndDark
 @Composable
