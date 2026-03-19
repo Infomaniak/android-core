@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">Der er opstået en fejl</string>
     <string name="applicationSourceCode">Se kildekode</string>
+    <string name="browserNotFound">Ingen browser fundet</string>
     <string name="buttonCancel">Annuller</string>
     <string name="buttonClose">Luk</string>
     <string name="buttonLater">Senere</string>

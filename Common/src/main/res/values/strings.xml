@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">An error has occurred</string>
     <string name="applicationSourceCode">See source code</string>
+    <string name="browserNotFound">No browser found</string>
     <string name="buttonCancel">Cancel</string>
     <string name="buttonClose">Close</string>
     <string name="buttonLater">Later</string>

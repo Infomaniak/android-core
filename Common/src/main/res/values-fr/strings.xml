@@ -18,6 +18,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="anErrorHasOccurred">Une erreur est survenue</string>
     <string name="applicationSourceCode">Voir le code source</string>
+    <string name="browserNotFound">Aucun navigateur trouvé</string>
     <string name="buttonCancel">Annuler</string>
     <string name="buttonClose">Fermer</string>
     <string name="buttonLater">Plus tard</string>

@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">En feil har oppstått</string>
     <string name="applicationSourceCode">Se kildekode</string>
+    <string name="browserNotFound">Ingen nettleser funnet</string>
     <string name="buttonCancel">Avbryt</string>
     <string name="buttonClose">Lukk</string>
     <string name="buttonLater">Senere</string>

@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">Er is een fout opgetreden</string>
     <string name="applicationSourceCode">Broncode bekijken</string>
+    <string name="browserNotFound">Geen browser gevonden</string>
     <string name="buttonCancel">Annuleren</string>
     <string name="buttonClose">Sluiten</string>
     <string name="buttonLater">Later</string>

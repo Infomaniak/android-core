@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">Παρουσιάστηκε σφάλμα</string>
     <string name="applicationSourceCode">Προβολή πηγαίου κώδικα</string>
+    <string name="browserNotFound">Δεν βρέθηκε πρόγραμμα περιήγησης</string>
     <string name="buttonCancel">Ακύρωση</string>
     <string name="buttonClose">Κλείσιμο</string>
     <string name="buttonLater">Αργότερα</string>

@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">Tapahtui virhe</string>
     <string name="applicationSourceCode">Näytä lähdekoodi</string>
+    <string name="browserNotFound">Selainta ei löytynyt</string>
     <string name="buttonCancel">Peruuta</string>
     <string name="buttonClose">Sulje</string>
     <string name="buttonLater">Myöhemmin</string>

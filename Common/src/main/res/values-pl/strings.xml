@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">Wystąpił błąd</string>
     <string name="applicationSourceCode">Zobacz kod źródłowy</string>
+    <string name="browserNotFound">Nie znaleziono przeglądarki</string>
     <string name="buttonCancel">Anuluj</string>
     <string name="buttonClose">Zamknij</string>
     <string name="buttonLater">Później</string>
