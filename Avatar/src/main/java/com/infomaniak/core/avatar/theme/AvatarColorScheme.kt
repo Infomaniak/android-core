@@ -21,26 +21,26 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 // Avatars light
-val yellow_light = Color(0xFFFFC10A)
-val coral_light = Color(0xFFFF540B)
-val grass_light = Color(0xFF3EBF4D)
-val fougere_light = Color(0xFF009688)
-val cobalt_light = Color(0xFF006AB2)
-val jean_light = Color(0xFF2196F3)
-val tropical_light = Color(0xFF00BCD4)
-val mauve_light = Color(0xFFBA68C8)
-val prince_light = Color(0xFF673AB7)
+private val yellow_light = Color(0xFFFFC10A)
+private val coral_light = Color(0xFFFF540B)
+private val grass_light = Color(0xFF3EBF4D)
+private val fougere_light = Color(0xFF009688)
+private val cobalt_light = Color(0xFF006AB2)
+private val jean_light = Color(0xFF2196F3)
+private val tropical_light = Color(0xFF00BCD4)
+private val mauve_light = Color(0xFFBA68C8)
+private val prince_light = Color(0xFF673AB7)
 
 // Avatars dark
-val yellow_dark = Color(0xFFFFDF9E)
-val coral_dark = Color(0xFFFD9459)
-val grass_dark = Color(0xFF78D383)
-val fougere_dark = Color(0xFF00C7B3)
-val cobalt_dark = Color(0xFF0AB2F5)
-val jean_dark = Color(0xFF81C4F8)
-val tropical_dark = Color(0xFF86DEEA)
-val mauve_dark = Color(0xFFCC8FD6)
-val prince_dark = Color(0xFF956DDD)
+private val yellow_dark = Color(0xFFFFDF9E)
+private val coral_dark = Color(0xFFFD9459)
+private val grass_dark = Color(0xFF78D383)
+private val fougere_dark = Color(0xFF00C7B3)
+private val cobalt_dark = Color(0xFF0AB2F5)
+private val jean_dark = Color(0xFF81C4F8)
+private val tropical_dark = Color(0xFF86DEEA)
+private val mauve_dark = Color(0xFFCC8FD6)
+private val prince_dark = Color(0xFF956DDD)
 
 @Immutable
 class AvatarColorsScheme(
