@@ -29,12 +29,12 @@ class UserListPreviewParameterProvider : PreviewParameterProvider<List<User>> {
     override val values: Sequence<List<User>> = sequenceOf(usersPreviewData)
 }
 
-val usersPreviewData = listOf(
-    userOf(1, "Alice", "Doe"),
-    userOf(2, "Bob", "Collins"),
+private val usersPreviewData = listOf(
+    dummyUserOf(1, "Alice", "Doe"),
+    dummyUserOf(2, "Bob", "Collins"),
 )
 
-private fun userOf(id: Int, firstName: String, lastName: String): User {
+fun dummyUserOf(id: Int, firstName: String, lastName: String): User {
     val dummyOrganization = OrganizationPreference(1234, 0L)
     val dummyLanguage = Language("", "", "")
     val dummyCountry = Country("", false)
