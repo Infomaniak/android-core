@@ -29,7 +29,7 @@ class UserListPreviewParameterProvider : PreviewParameterProvider<List<User>> {
     override val values: Sequence<List<User>> = sequenceOf(usersPreviewData)
 }
 
-private val usersPreviewData = listOf(
+val usersPreviewData = listOf(
     userOf(1, "Alice", "Doe"),
     userOf(2, "Bob", "Collins"),
 )
