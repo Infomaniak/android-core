@@ -57,7 +57,7 @@ class AvatarColorsScheme(
     val colorList = listOf(yellow, coral, grass, fougere, cobalt, jean, tropical, mauve, prince)
 }
 
-val lightAvatarColorsScheme = AvatarColorsScheme(
+val LightAvatarColorsScheme = AvatarColorsScheme(
     yellow = yellow_light,
     coral = coral_light,
     grass = grass_light,
@@ -69,7 +69,7 @@ val lightAvatarColorsScheme = AvatarColorsScheme(
     prince = prince_light,
 )
 
-val darkAvatarColorsScheme = AvatarColorsScheme(
+val DarkAvatarColorsScheme = AvatarColorsScheme(
     yellow = yellow_dark,
     coral = coral_dark,
     grass = grass_dark,
