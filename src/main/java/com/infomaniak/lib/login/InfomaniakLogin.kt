@@ -307,10 +307,7 @@ class InfomaniakLogin(
                 .build()
 
             val response = okHttpClient.newCall(request).await()
-            val bodyResponse = Dispatchers.IO { response.body?.string() }
             val bodyResponse = Dispatchers.IO { response.body.string() }
-
-            if (response.isSuccessful && bodyResponse != null) {
 
             if (response.isSuccessful) {
                 val apiToken = json.decodeFromString<ApiToken>(bodyResponse)
@@ -322,7 +319,6 @@ class InfomaniakLogin(
             } else {
                 TokenResult.Error(handleErrorResponse(response.code, bodyResponse))
             }
-
         }.getOrElse { exception ->
             if (exception is CancellationException) throw exception
             return@getOrElse TokenResult.Error(getErrorStatusFromException(exception))
