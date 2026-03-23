@@ -127,7 +127,7 @@ private fun Cursor.getStringFromColumns(orderedColumnNames: Array<String>): Stri
 }
 
 @OptIn(ExperimentalTime::class)
-private fun Cursor.getNameFromDate(): String? = getDate()?.toJavaInstant()?.let { simpleDateFormater.format(it) }
+private fun Cursor.getNameFromDate(): String? = getDate()?.toJavaInstant()?.let(simpleDateFormater::format)
 
 @OptIn(ExperimentalTime::class)
 private fun Cursor.getDate(): Instant? {
@@ -141,25 +141,15 @@ private fun Cursor.getColumnIndexOrNull(columnName: String) = getColumnIndex(col
 private fun warnSentryFileName(uri: Uri, columns: Array<String>, availableColumns: Array<String>) {
     SentryLog.w(
         tag = TAG,
-        msg = "GetFileName not went well",
+        msg = "GetFileName didn't go well",
         throwable = FileNameException(uri, columns, availableColumns)
     )
 }
 
 private fun alertSentryFileName(uri: Uri, allColumns: Array<String>, columnNames: Array<String>) {
-    Sentry.captureException(FileNameException(uri, allColumns, columnNames, IllegalArgumentException("No path segment")))
+    val exception = FileNameException(uri, allColumns, columnNames, IllegalArgumentException("No path segment"))
+    SentryLog.e(TAG, "Error retrieving fileName in FileProvider", exception)
 }
-
-private class FileNameException(
-    uri: Uri,
-    searchedColumns: Array<String>,
-    availableColumns: Array<String>,
-    cause: Throwable? = null
-) : Throwable(
-    message = "No file name retrievable for uri $uri " +
-            "Columns searched ${searchedColumns.toList()} columns but available columns : ${availableColumns.toList()}",
-    cause = cause
-)
 
 /**
  * Queries the cursor for an Uri with [projection], and if found apply [block]
@@ -177,8 +167,10 @@ private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>? = null, bl
         if (it.moveToFirst()) {
             block(it)
         } else {
+            val columns = it.columnNames.joinToString()
+            SentryLog.i(TAG, "$appCtx has empty cursor available columns $columns")
             Sentry.captureMessage("$appCtx has empty cursor") { scope ->
-                scope.setExtra("available columns", it.columnNames.joinToString())
+                scope.setExtra("available columns", columns)
             }
             null
         }
@@ -191,3 +183,14 @@ private val sizeProjection by lazy { arrayOf(OpenableColumns.SIZE) }
 private val fileNameColumns by lazy { arrayOf(OpenableColumns.DISPLAY_NAME, "name") }
 private val nameAndDateColumns by lazy { fileNameColumns + MediaStore.MediaColumns.DATE_ADDED }
 private val simpleDateFormater by lazy { DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss") }
+
+private class FileNameException(
+    uri: Uri,
+    searchedColumns: Array<String>,
+    availableColumns: Array<String>,
+    cause: Throwable? = null
+) : Throwable(
+    message = "No file name retrievable for uri $uri " +
+            "Columns searched ${searchedColumns.toList()} columns but available columns : ${availableColumns.toList()}",
+    cause = cause
+)
