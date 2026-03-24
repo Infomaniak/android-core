@@ -61,7 +61,6 @@ class WebViewActivity : ComponentActivity() {
     companion object {
         private const val EXTRA_URL = "EXTRA_URL"
         private const val EXTRA_HEADERS = "EXTRA_HEADERS"
-        private const val EXTRA_HOST_WHITE_LIST = "EXTRA_HOST_WHITE_LIST"
         private const val EXTRA_URL_TO_QUIT = "EXTRA_URL_TO_QUIT"
         private const val EXTRA_DOM_STORAGE_ENABLED = "EXTRA_DOM_STORAGE_ENABLED"
 
