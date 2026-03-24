@@ -40,11 +40,10 @@ import kotlin.time.TimeSource
 import kotlin.time.toJavaInstant
 
 suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
-    runCatching {
-        uri.retrieveAndUse {
-            getFileName(uri)
-        }
-    }.cancellable().onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }.getOrNull()
+    runCatching { uri.retrieveAndUse(displayNameProjection) { getFileName(uri) } }
+        .cancellable()
+        .onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }
+        .getOrNull()
 }
 
 suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
@@ -54,13 +53,13 @@ suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
         } ?: -1L
     }.cancellable().onFailure { t ->
         SentryLog.e(TAG, "Failed to read the size for uri: $uri", t)
-    }.getOrElse { -1L }
+    }.getOrDefault(-1L)
 }
 
 suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
     runCatching {
-        uri.retrieveAndUse {
-            getFileName(uri) to getApproximativeFileSize(uri)
+        uri.retrieveAndUse(displayNameAndSizeProjection) {
+            getFileName(uri) to getEstimatedFileSize(uri)
         }
     }.cancellable().getOrElse { exception ->
         uri.path?.substringBeforeLast("/")?.let { providerName ->
@@ -93,10 +92,12 @@ private suspend fun Uri.measureFileSize(): Long? = runCatching {
 }.cancellable().getOrNull()
 
 fun Cursor.getFileName(uri: Uri): String {
-    return getStringFromColumns(fileNameColumns)
-        ?: getNameFromDate()?.also { warnSentryFileName(uri, fileNameColumns, availableColumns = columnNames) }
-        ?: uri.lastPathSegment?.also { warnSentryFileName(uri, nameAndDateColumns, availableColumns = columnNames) }
-        ?: toString().also { alertSentryFileName(uri, nameAndDateColumns, columnNames) }
+    return getDisplayName()
+        ?: getNameFromDate()?.also { warnSentryFileName(uri, displayNameProjection, availableColumns = columnNames) }
+        ?: uri.lastPathSegment?.also {
+            warnSentryFileName(uri, displayNameAndDateAddedProjection, availableColumns = columnNames)
+        }
+        ?: uri.toString().also { alertSentryFileName(uri, displayNameAndDateAddedProjection, columnNames) }
 }
 
 suspend fun Cursor.getApproximativeFileSize(uri: Uri): Long {
@@ -120,14 +121,12 @@ private fun Uri.statSize(): Long? {
     }.getOrNull()
 }
 
+private fun Cursor.getDisplayName(): String? = getColumnIndexOrNull(OpenableColumns.DISPLAY_NAME)?.let(::getStringOrNull)
+
 private fun Cursor.getFileSize(): Long? = getColumnIndexOrNull(OpenableColumns.SIZE)?.let(::getLongOrNull)
 
-private fun Cursor.getStringFromColumns(orderedColumnNames: Array<String>): String? {
-    return orderedColumnNames.firstNotNullOfOrNull(::getColumnIndexOrNull)?.let(::getStringOrNull)
-}
-
 @OptIn(ExperimentalTime::class)
-private fun Cursor.getNameFromDate(): String? = getDate()?.toJavaInstant()?.let(simpleDateFormater::format)
+private fun Cursor.getNameFromDate(): String? = getDate()?.toJavaInstant()?.let(simpleDateFormatter::format)
 
 @OptIn(ExperimentalTime::class)
 private fun Cursor.getDate(): Instant? {
@@ -154,12 +153,12 @@ private fun alertSentryFileName(uri: Uri, allColumns: Array<String>, columnNames
 /**
  * Queries the cursor for an Uri with [projection], and if found apply [block]
  */
-private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>? = null, block: suspend Cursor.() -> R?): R? {
+private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>, block: suspend Cursor.() -> R?): R? {
     return appCtx.contentResolver.query(
         /* uri = */ this,
         // Not supplying a projection might lead to `NullPointerException` with message "Attempt to get length of null array"
         // being thrown on some devices, despite what is written in the Javadoc, so we provide one.
-        /* projection = */ projection ?: emptyArray(),
+        /* projection = */ projection,
         /* selection = */ null,
         /* selectionArgs = */ null,
         /* sortOrder = */ null
@@ -180,9 +179,10 @@ private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>? = null, bl
 private val counter = InputStreamCounter()
 private const val TAG = "FileInfo"
 private val sizeProjection by lazy { arrayOf(OpenableColumns.SIZE) }
-private val fileNameColumns by lazy { arrayOf(OpenableColumns.DISPLAY_NAME, "name") }
-private val nameAndDateColumns by lazy { fileNameColumns + MediaStore.MediaColumns.DATE_ADDED }
-private val simpleDateFormater by lazy { DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss") }
+private val displayNameProjection by lazy { arrayOf(OpenableColumns.DISPLAY_NAME) }
+private val displayNameAndSizeProjection by lazy { displayNameProjection + sizeProjection }
+private val displayNameAndDateAddedProjection by lazy { displayNameProjection + MediaStore.MediaColumns.DATE_ADDED }
+private val simpleDateFormatter by lazy { DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss") }
 
 private class FileNameException(
     uri: Uri,
