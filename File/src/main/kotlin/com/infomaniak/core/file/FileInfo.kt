@@ -127,15 +127,7 @@ private fun Uri.statSize(): Long? {
 
 private fun Cursor.getDisplayName(): String? = getColumnIndexOrNull(OpenableColumns.DISPLAY_NAME)?.let(::getStringOrNull)
 
-
-
 private fun Cursor.getFileSize(): Long? = getLongOrNull(OpenableColumns.SIZE)
-
-@OptIn(ExperimentalTime::class)
-private fun Cursor.getDate(): Instant? {
-    return getColumnIndexOrNull(MediaStore.MediaColumns.DATE_ADDED)
-        ?.let(::getLongOrNull)
-        ?.let(Instant::fromEpochSeconds)
 
 private fun Cursor.getNameFromDate(): String? = getDateAdded()?.toInstant()?.let(simpleDateFormatter::format)
 
@@ -156,16 +148,12 @@ private fun Cursor.getDateTaken(): Date? = getDateFromMillisecond(DATE_TAKEN)
 private fun Cursor.getDateAdded(): Date? = getDateFromSecond(MediaStore.MediaColumns.DATE_ADDED)
 
 private fun Cursor.attemptExtractFromName(): Date? {
-    return getStringFromColumns(fileNameColumns)
+    return getDisplayName()
         ?.let { dateTimeRegex.find(it)?.groups[1]?.value }
         ?.let { runCatching { simpleDateFormatter.parse(it) }.getOrNull() }
 }
 
 fun Cursor.getLongOrNull(columnName: String): Long? = getColumnIndexOrNull(columnName)?.let(::getLongOrNull)
-
-private fun Cursor.getStringFromColumns(orderedColumnNames: Array<String>): String? {
-    return orderedColumnNames.firstNotNullOfOrNull(::getColumnIndexOrNull)?.let(::getStringOrNull)
-}
 
 private fun Cursor.getLastModified(): Date? = getDateFromMillisecond(DocumentsContract.Document.COLUMN_LAST_MODIFIED)
 
