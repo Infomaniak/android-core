@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">Er is een fout opgetreden</string>
     <string name="applicationSourceCode">Broncode bekijken</string>
+    <string name="browserNotFound">Geen browser gevonden</string>
     <string name="buttonCancel">Annuleren</string>
     <string name="buttonClose">Sluiten</string>
     <string name="buttonLater">Later</string>
@@ -34,6 +35,7 @@
         <item quantity="other">Mijn accounts</item>
     </plurals>
     <string name="reviewAlertTitle">Vindt u %s leuk?</string>
+    <string name="startActivityCantHandleAction">Geen applicatie gevonden om deze actie te verwerken</string>
     <string name="trackingAuthorizeTracking">Tracking autoriseren</string>
     <string name="trackingManagementDescription">Bij Infomaniak zijn uw gegevens nooit een ruilmiddel. We gebruiken alleen in-house tools, gehost en gecontroleerd door onszelf, om de kwaliteit en evolutie van onze applicaties te garanderen.\n\nDeze technische gegevens zijn vertrouwelijk, opgeslagen op onze eigen servers in Zwitserland, alleen toegankelijk voor onze ontwikkelteams, en nooit gedeeld met derden. De broncode van de applicatie kan worden geverifieerd, wat totale transparantie garandeert.</string>
     <string name="trackingManagementTitle">Gegevensbeheer</string>

@@ -25,7 +25,7 @@ import androidx.core.app.LocaleManagerCompat
 import androidx.core.os.LocaleListCompat
 import java.util.Locale
 
-private val acceptedLocale = arrayOf("en", "de", "es", "fr", "it")
+private val acceptedLocale = arrayOf("da", "de", "el", "en", "es", "fi", "fr", "it", "nb", "nl", "pl", "pt", "sv")
 private val defaultLocale = Locale.ENGLISH
 
 fun AppCompatActivity.setDefaultLocaleIfNeeded() {

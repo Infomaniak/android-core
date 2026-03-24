@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">Ett fel har inträffat</string>
     <string name="applicationSourceCode">Se källkod</string>
+    <string name="browserNotFound">Ingen webbläsare hittades</string>
     <string name="buttonCancel">Avbryt</string>
     <string name="buttonClose">Stäng</string>
     <string name="buttonLater">Senare</string>
@@ -34,6 +35,7 @@
         <item quantity="other">Mina konton</item>
     </plurals>
     <string name="reviewAlertTitle">Gillar du %s?</string>
+    <string name="startActivityCantHandleAction">Ingen applikation hittades för att hantera denna åtgärd</string>
     <string name="trackingAuthorizeTracking">Tillåt spårning</string>
     <string name="trackingManagementDescription">På Infomaniak är dina data aldrig ett förhandlingsmedel. Vi använder endast egna verktyg, värdlagrade och kontrollerade av oss själva, för att garantera kvaliteten och utvecklingen av våra applikationer.\n\nDenna tekniska data är konfidentiell, lagrad på våra egna servrar i Schweiz, endast tillgänglig för våra utvecklingsteam, och delas aldrig med tredje parter. Applikationskällkoden kan verifieras, vilket garanterar total transparens.</string>
     <string name="trackingManagementTitle">Datahantering</string>

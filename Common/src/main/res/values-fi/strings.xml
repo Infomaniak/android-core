@@ -18,6 +18,7 @@
 <resources>
     <string name="anErrorHasOccurred">Tapahtui virhe</string>
     <string name="applicationSourceCode">Näytä lähdekoodi</string>
+    <string name="browserNotFound">Selainta ei löytynyt</string>
     <string name="buttonCancel">Peruuta</string>
     <string name="buttonClose">Sulje</string>
     <string name="buttonLater">Myöhemmin</string>
@@ -34,6 +35,7 @@
         <item quantity="other">Tilini</item>
     </plurals>
     <string name="reviewAlertTitle">Pidätkö %s:stä?</string>
+    <string name="startActivityCantHandleAction">Tälle toiminnolle ei löytynyt sovellusta</string>
     <string name="trackingAuthorizeTracking">Salli seuranta</string>
     <string name="trackingManagementDescription">Infomaniakilla tietosi eivät ole koskaan kauppatavaraa. Käytämme vain omia työkalujamme, jotka ovat isännöity ja hallittu itse, sovellustemme laadun ja kehityksen takaamiseksi.\n\nNämä tekniset tiedot ovat luottamuksellisia, tallennettu omille palvelimillemme Sveitsissä, käytettävissä vain kehitystiimeillemme, eikä niitä koskaan jaeta kolmansille osapuolille. Sovelluksen lähdekoodi on tarkistettavissa, mikä takaa täydellisen läpinäkyvyyden.</string>
     <string name="trackingManagementTitle">Tietojen hallinta</string>
