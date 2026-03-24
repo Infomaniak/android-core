@@ -100,7 +100,7 @@ fun Cursor.getFileName(uri: Uri): String {
         ?: uri.toString().also { alertSentryFileName(uri, displayNameAndDateAddedProjection, columnNames) }
 }
 
-suspend fun Cursor.getApproximativeFileSize(uri: Uri): Long {
+suspend fun Cursor.getEstimatedFileSize(uri: Uri): Long {
     return uri.statSize()
         ?: getFileSize()
         ?: uri.measureFileSize()
