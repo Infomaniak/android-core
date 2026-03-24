@@ -17,118 +17,121 @@
  */
 package com.infomaniak.core.common.utils
 
-import android.app.DownloadManager
 import android.app.DownloadManager.Request
-import android.content.Context
-import android.database.Cursor
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import androidx.core.net.toUri
+import com.infomaniak.core.common.DownloadStatus
+import com.infomaniak.core.common.DownloadStatus.Failed
+import com.infomaniak.core.common.DownloadStatus.Failed.LocalIssue
 import com.infomaniak.core.common.R
+import com.infomaniak.core.common.downloadStatusFlow
 import com.infomaniak.core.common.extensions.appName
 import com.infomaniak.core.common.extensions.appVersionName
+import com.infomaniak.core.common.isFinished
+import com.infomaniak.core.common.startDownloadingFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import splitties.systemservices.downloadManager
 
 object DownloadManagerUtils {
+    val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]|%")
 
-    fun withoutProblematicCharacters(originalName: String): String {
-        return originalName.replace(regexInvalidSystemChar, "_").replace('%', '_').let {
-            // fix IllegalArgumentException only on Android 10 if multi dot
-            if (SDK_INT == 29) it.replace(Regex("\\.{2,}"), ".") else it
+    fun withoutProblematicCharacters(name: String): String = name.sanitizeNameForDownload()
+
+    private fun String.sanitizeNameForDownload() = replace(regexInvalidSystemChar, "_").fixMultiDots()
+
+    private fun String.fixMultiDots(): String {
+        return if (SDK_INT == Build.VERSION_CODES.Q) {
+            replace(Regex("\\.{2,}"), ".")
+        } else {
+            this
         }
     }
-
-    private val regexInvalidSystemChar = Regex("[\\\\/:*?\"<>|\\x7F]|[\\x00-\\x1f]")
 
     suspend fun requestFor(
         url: String,
         nameWithoutProblematicChars: String,
-        mimeType: String?,
+        mimeType: String? = null,
         userAgent: String,
         extraHeaders: Iterable<Pair<String, String>> = emptySet(),
-    ): Request = Request(url.toUri()).also { request ->
-        request.setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
-        request.setTitle(nameWithoutProblematicChars)
-        request.setDescription(appName)
-        Dispatchers.IO {
-            try {
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
-            } catch (e: IllegalStateException) {
-                // The call above tries to create the directory if it doesn't exist,
-                // and throws an `IllegalStateException` if its attempt at creating the directory fails…
-                // but the reason it failed might because of a race condition,
-                // like the DownloadManager app creating it in parallel, just after the `exists()` check,
-                // and before the `mkdirs()` call tries to create the directory.
-                // That's why we try once more if that case happens.
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
-            }
+    ): Request = Request(url.toUri())
+        .setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
+        .setTitle(nameWithoutProblematicChars)
+        .setDescription(appName)
+        .setPublicDownloadDirectoryDestination(nameWithoutProblematicChars)
+        .setMimeType(mimeType)
+        .addHeaders(userAgent, extraHeaders)
+        .setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+
+    private suspend fun Request.setPublicDownloadDirectoryDestination(nameWithoutProblematicChars: String) = Dispatchers.IO {
+        try {
+            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
+        } catch (_: IllegalStateException) {
+            // The call above tries to create the directory if it doesn't exist,
+            // and throws an `IllegalStateException` if its attempt at creating the directory fails…
+            // but the reason it failed might because of a race condition,
+            // like the DownloadManager app creating it in parallel, just after the `exists()` check,
+            // and before the `mkdirs()` call tries to create the directory.
+            // That's why we try once more if that case happens.
+            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nameWithoutProblematicChars)
         }
-        request.setMimeType(mimeType)
-        request.addHeaders(userAgent, extraHeaders)
-
-        request.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
     }
 
-    private fun Request.addHeaders(userAgent: String, extraHeaders: Iterable<Pair<String, String>>) {
-        addRequestHeader("Accept-Encoding", "gzip")
-        addRequestHeader("App-Version", "Android $appVersionName")
-        addRequestHeader("User-Agent", userAgent)
-        extraHeaders.forEach { (key, value) -> addRequestHeader(key, value) }
+    private fun Request.addHeaders(
+        userAgent: String,
+        extraHeaders: Iterable<Pair<String, String>>
+    ): Request = addRequestHeader("Accept-Encoding", "gzip")
+        .addRequestHeader("App-Version", "Android $appVersionName")
+        .addRequestHeader("User-Agent", userAgent)
+        .addRequestHeaders(extraHeaders)
+
+    private fun Request.addRequestHeaders(headers: Iterable<Pair<String, String>>): Request = apply {
+        headers.forEach { (header, value) ->
+            addRequestHeader(header, value)
+        }
     }
 
-    @Deprecated("Use requestFor and extensions in DownloadManager.kt as SwissTransfer")
-    fun scheduleDownload(
-        context: Context,
+    fun launchDownload(
         url: String,
         name: String,
+        userAgent: String,
         userBearerToken: String?,
-        extraHeaders: Iterable<Pair<String, String>> = emptySet(),
         onError: (Int) -> Unit
     ) {
-        val formattedName = name.replace(regexInvalidSystemChar, "_").replace("%", "_").let {
-            // fix IllegalArgumentException only on Android 10 if multi dot
-            if (SDK_INT == 29) it.replace(Regex("\\.{2,}"), ".") else it
-        }
-
-        Request(url.toUri()).apply {
-            setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
-            setTitle(formattedName)
-            setDescription(appName)
-            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, formattedName)
-            extraHeaders.forEach { (key, value) -> addRequestHeader(key, value) }
-            userBearerToken?.let { addRequestHeader("Authorization", "Bearer $it") }
-            setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-
-            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-            handleDownloadManagerErrors(downloadManager.enqueue(this), downloadManager, onError)
-        }
-    }
-
-    // Remove this once scheduleDownload is removed
-    private fun handleDownloadManagerErrors(downloadReference: Long, downloadManager: DownloadManager, onError: (Int) -> Unit) {
         CoroutineScope(Dispatchers.Default).launch {
-            delay(1_000L)
-            DownloadManager.Query().apply {
-                setFilterById(downloadReference)
-                downloadManager.query(this).use {
-                    if (it.moveToFirst()) withContext(Dispatchers.Main) { checkStatus(it, onError) }
-                }
+            val request = requestFor(
+                url = url,
+                nameWithoutProblematicChars = name.sanitizeNameForDownload(),
+                userAgent = userAgent,
+                extraHeaders = listOfNotNull(userBearerToken?.asAuthorizationHeader())
+            )
+            with(downloadManager) {
+                startDownloadingFile(request)
+                    ?.let(::downloadStatusFlow)
+                    ?.observeEnd(onError)
+                    ?: onError(R.string.errorDownload)
             }
         }
     }
 
-    // Remove this once scheduleDownload is removed
-    private fun checkStatus(cursor: Cursor, onError: (Int) -> Unit) {
-        val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
-        val reason = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON))
-        if (status == DownloadManager.STATUS_FAILED) {
+    private fun String.asAuthorizationHeader(): Pair<String, String> = "Authorization" to "Bearer $this"
+
+    private suspend fun Flow<DownloadStatus?>.observeEnd(onError: (Int) -> Unit) {
+        filter { it.isFinished() }.first().checkFailure(onError)
+    }
+
+    private suspend fun DownloadStatus?.checkFailure(onError: (Int) -> Unit) = withContext(Dispatchers.Main) {
+        (this@checkFailure as? Failed)?.run {
             when (reason) {
-                DownloadManager.ERROR_INSUFFICIENT_SPACE -> onError(R.string.errorDownloadInsufficientSpace)
+                LocalIssue.InsufficientSpace -> onError(R.string.errorDownloadInsufficientSpace)
                 else -> onError(R.string.errorDownload)
             }
         }
