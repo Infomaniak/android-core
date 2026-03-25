@@ -43,6 +43,17 @@ import kotlin.time.TimeSource
 
 val DATE_TAKEN: String = if (SDK_INT >= 29) MediaStore.MediaColumns.DATE_TAKEN else "datetaken"
 
+private val sizeProjection by lazy { arrayOf(OpenableColumns.SIZE) }
+private val displayNameProjection by lazy { arrayOf(OpenableColumns.DISPLAY_NAME) }
+private val displayNameAndSizeProjection by lazy { displayNameProjection + sizeProjection }
+private val displayNameAndDateAddedProjection by lazy { displayNameProjection + MediaStore.MediaColumns.DATE_ADDED }
+private val simpleDateFormatter by lazy { SimpleDateFormat(FORMAT_NEW_FILE, Locale.getDefault()) }
+private val dateTimeRegex by lazy { ".*${DATE_AND_TIME}(?:_\\d+)?\\..*".toRegex() }
+private val counter = InputStreamCounter()
+private const val TAG = "FileInfo"
+/* language=RegExp */
+private const val DATE_AND_TIME = "(\\d{8}_\\d{6})"
+
 suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
     runCatching { uri.retrieveAndUse(displayNameProjection) { getFileName(uri) } }
         .cancellable()
@@ -132,12 +143,10 @@ private fun Cursor.getFileSize(): Long? = getLongOrNull(OpenableColumns.SIZE)
 private fun Cursor.getNameFromDate(): String? = getDateAdded()?.toInstant()?.let(simpleDateFormatter::format)
 
 fun Cursor.getFileDatesWithFallback(lastModifiedDateFallback: Date? = null): Pair<Date?, Date> {
-    return getFileDates().let { (createdAt, modifiedAt) ->
-        createdAt to (modifiedAt ?: lastModifiedDateFallback ?: createdAt ?: Date())
-    }
+    val createdAt = getFileCreatedDate()
+    val modifiedAt = getFileUpdatedDate() ?: lastModifiedDateFallback ?: createdAt ?: Date()
+    return createdAt to modifiedAt
 }
-
-private fun Cursor.getFileDates(): Pair<Date?, Date?> = getFileCreatedDate() to getFileUpdatedDate()
 
 private fun Cursor.getFileCreatedDate(): Date? = getDateTaken() ?: getDateAdded() ?: attemptExtractFromName()
 
@@ -209,16 +218,6 @@ private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>, block: sus
         }
     }
 }
-
-private val counter = InputStreamCounter()
-private const val TAG = "FileInfo"
-private val sizeProjection by lazy { arrayOf(OpenableColumns.SIZE) }
-private val displayNameProjection by lazy { arrayOf(OpenableColumns.DISPLAY_NAME) }
-private val displayNameAndSizeProjection by lazy { displayNameProjection + sizeProjection }
-private val displayNameAndDateAddedProjection by lazy { displayNameProjection + MediaStore.MediaColumns.DATE_ADDED }
-private val simpleDateFormatter by lazy { SimpleDateFormat(FORMAT_NEW_FILE, Locale.getDefault()) }
-private const val DATE_AND_TIME = "(\\d{8}_\\d{6})" /*language=RegExp*/
-private val dateTimeRegex by lazy { ".*${DATE_AND_TIME}(?:_\\d+)?\\..*".toRegex() }
 
 private class FileNameException(
     uri: Uri,
