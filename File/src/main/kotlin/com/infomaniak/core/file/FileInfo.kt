@@ -148,7 +148,7 @@ fun Cursor.getFileDatesWithFallback(lastModifiedDateFallback: Date? = null): Pai
     return createdAt to modifiedAt
 }
 
-private fun Cursor.getFileCreatedDate(): Date? = getDateTaken() ?: getDateAdded() ?: attemptExtractFromName()
+private fun Cursor.getFileCreatedDate(): Date? = getDateTaken() ?: attemptExtractFromName() ?: getDateAdded()
 
 private fun Cursor.getFileUpdatedDate(): Date? = getLastModified() ?: getDateModified()
 
