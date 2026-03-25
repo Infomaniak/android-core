@@ -40,6 +40,8 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 /**
+ * **NOTE:** Instead of calling this constructor directly, you can use the [dynamicLazyMap] extension for [CoroutineScope].
+ *
  * Allows sharing and caching an element for a given key.
  *
  * It's similar to a read-only [Map], with these differences:

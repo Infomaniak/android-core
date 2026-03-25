@@ -29,6 +29,8 @@ import kotlinx.coroutines.flow.shareIn
 /**
  * Helper to create a [DynamicLazyMap] of [SharedFlow]s with a [Flow] factory.
  *
+ * It's equivalent to [dynamicLazyMapOfSharedFlow].
+ *
  * @see flowForKey
  */
 fun <K, E> DynamicLazyMap.Companion.sharedFlow(
@@ -50,4 +52,38 @@ fun <K, E> DynamicLazyMap<K, SharedFlow<E>>.flowForKey(key: K): Flow<E> = flow {
     useElement(key) { sharedFlow: SharedFlow<E> ->
         emitAll(sharedFlow)
     }
+}
+
+/**
+ * Creates a [DynamicLazyMap].
+ *
+ * @see DynamicLazyMap
+ */
+fun <K, E> CoroutineScope.dynamicLazyMap(
+    cacheManager: DynamicLazyMap.CacheManager<K, E>? = null,
+    createElement: CoroutineScope.(K) -> E
+): DynamicLazyMap<K, E> {
+    return DynamicLazyMap(
+        cacheManager = cacheManager,
+        coroutineScope = this,
+        createElement = createElement
+    )
+}
+
+/**
+ * Helper to create a [DynamicLazyMap] of [SharedFlow]s with a [Flow] factory.
+ *
+ * It's equivalent to [sharedFlow].
+ *
+ * @see flowForKey
+ */
+fun <K, E> CoroutineScope.dynamicLazyMapOfSharedFlow(
+    cacheManager: DynamicLazyMap.CacheManager<K, SharedFlow<E>>? = null,
+    createFlow: CoroutineScope.(K) -> Flow<E>,
+): DynamicLazyMap<K, SharedFlow<E>> {
+    return DynamicLazyMap.sharedFlow(
+        cacheManager = cacheManager,
+        coroutineScope = this,
+        createFlow = createFlow
+    )
 }
