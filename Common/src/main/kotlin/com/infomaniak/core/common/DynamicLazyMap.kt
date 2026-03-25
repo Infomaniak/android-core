@@ -70,7 +70,7 @@ class DynamicLazyMap<K, E>(
 
     companion object;
 
-    fun interface CacheManager<K, E> {
+    fun interface CacheManager<K, in E> {
         companion object;
 
         /**
@@ -88,7 +88,7 @@ class DynamicLazyMap<K, E>(
             usedElementsCount: Int,
         ): OnUnusedBehavior = OnUnusedBehavior(cacheUntilExpired = true, evictOldest = false)
 
-        suspend fun DynamicLazyMap<K, E>.waitForCacheExpiration(key: K, element: E)
+        suspend fun DynamicLazyMap<K, out E>.waitForCacheExpiration(key: K, element: E)
     }
 
     // We use an inline value class with bit flags to avoid the memory allocation overhead.

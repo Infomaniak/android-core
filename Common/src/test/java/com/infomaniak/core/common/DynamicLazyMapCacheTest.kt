@@ -123,7 +123,7 @@ class DynamicLazyMapCacheTest {
                 evictOldest = false
             )
 
-            override suspend fun DynamicLazyMap<Int, String>.waitForCacheExpiration(
+            override suspend fun DynamicLazyMap<Int, out String>.waitForCacheExpiration(
                 key: Int,
                 element: String
             ) = Unit

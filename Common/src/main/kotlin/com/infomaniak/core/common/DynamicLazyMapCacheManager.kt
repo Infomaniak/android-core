@@ -39,7 +39,7 @@ internal class DynamicLazyMapCacheManager<K, E>(
 ) : DynamicLazyMap.CacheManager<K, E>, CacheExpirationScope {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override suspend fun DynamicLazyMap<K, E>.waitForCacheExpiration(key: K, element: E) {
+    override suspend fun DynamicLazyMap<K, out E>.waitForCacheExpiration(key: K, element: E) {
         if (dynamicLazyMapAsync.isCompleted) {
             check(this === dynamicLazyMapAsync.getCompleted()) {
                 "A cacheManager instance should NOT be shared among multiple DynamicLazyMap instances"
@@ -53,7 +53,7 @@ internal class DynamicLazyMapCacheManager<K, E>(
         }
     }
 
-    private val dynamicLazyMapAsync = CompletableDeferred<DynamicLazyMap<K, E>>()
+    private val dynamicLazyMapAsync = CompletableDeferred<DynamicLazyMap<K, out E>>()
 
     private val unusedElements = ArrayDeque<Continuation<Unit>>()
     private val mutationLock = ReentrantLock()

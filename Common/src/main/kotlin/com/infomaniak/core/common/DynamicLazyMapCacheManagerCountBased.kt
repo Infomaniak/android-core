@@ -27,7 +27,7 @@ import splitties.experimental.ExperimentalSplittiesApi
 
 fun <K, E> DynamicLazyMap.CacheManager.Companion.maxElements(
     maxCacheSize: Int,
-    waitForElementExpiration: suspend DynamicLazyMap<K, E>.(key: K, element: E) -> Unit = { _, _ ->
+    waitForElementExpiration: suspend DynamicLazyMap<K, out E>.(key: K, element: E) -> Unit = { _, _ ->
         awaitCancellation()
     },
 ): DynamicLazyMap.CacheManager<K, E> = object : DynamicLazyMap.CacheManager<K, E> {
@@ -42,7 +42,7 @@ fun <K, E> DynamicLazyMap.CacheManager.Companion.maxElements(
         evictOldest = currentCacheSize >= maxCacheSize
     )
 
-    override suspend fun DynamicLazyMap<K, E>.waitForCacheExpiration(key: K, element: E) {
+    override suspend fun DynamicLazyMap<K, out E>.waitForCacheExpiration(key: K, element: E) {
         waitForElementExpiration(key, element)
     }
 }
