@@ -108,7 +108,7 @@ class TwoFactorAuthManager(
         async<TwoFactorAuth> { TwoFactorAuthImpl(getConnectedHttpClient(userId), userId) }
     }
 
-    private val perUserIdRefreshTrigger = coroutineScope.dynamicLazyMap(perUserIdCacheManager) { userId: Int ->
+    private val perUserIdRefreshTrigger = coroutineScope.dynamicLazyMap(perUserIdCacheManager) { _: Int ->
         MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     }
 
