@@ -115,8 +115,7 @@ object DownloadManagerUtils {
             )
             with(downloadManager) {
                 startDownloadingFile(request)
-                    ?.let(::downloadStatusFlow)
-                    ?.observeEnd(onError)
+                    ?.let { id -> downloadStatusFlow(id).observeEnd(onError) }
                     ?: onError(R.string.errorDownload)
             }
         }

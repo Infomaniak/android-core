@@ -88,7 +88,7 @@ sealed interface DownloadStatus {
 suspend fun DownloadManager.startDownloadingFile(request: DownloadManager.Request): UniqueDownloadId? {
     return Dispatchers.IO {
         try {
-            UniqueDownloadId(enqueue(request))
+            enqueue(request).takeUnless { it == -1L }?.let(::UniqueDownloadId)
         } catch (_: NullPointerException) {
             // enqueue is supposed to return -1 in case the operation fails,
             // but on Xiaomi and Redmi devices, it throws NPEs instead…
@@ -145,7 +145,7 @@ suspend fun DownloadManager.uriFor(id: UniqueDownloadId): Uri? {
     return Dispatchers.IO { getUriForDownloadedFile(id.value) }
 }
 
-fun DownloadStatus?.isFinished() = this is Complete || this is Failed
+fun DownloadStatus?.isFinished() = this == null || this is Complete || this is Failed
 
 private fun Cursor?.extractDownloadStatus(): DownloadStatus? {
     if (this == null) return null // Android 14 Redmi Note 13 can have query return a null value.
