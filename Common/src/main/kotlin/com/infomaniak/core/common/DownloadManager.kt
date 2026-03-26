@@ -145,7 +145,7 @@ suspend fun DownloadManager.uriFor(id: UniqueDownloadId): Uri? {
     return Dispatchers.IO { getUriForDownloadedFile(id.value) }
 }
 
-fun DownloadStatus?.isFinished() = this is Complete || this is Failed
+fun DownloadStatus?.isFinished() = this == null || this is Complete || this is Failed
 
 private fun Cursor?.extractDownloadStatus(): DownloadStatus? {
     if (this == null) return null // Android 14 Redmi Note 13 can have query return a null value.
