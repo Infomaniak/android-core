@@ -116,8 +116,8 @@ class TwoFactorAuthManager(
         flow {
             perUserIdTwoFactoAuth.useElement(userId) { twoFactorAuthAsync ->
                 val twoFactorAuth = twoFactorAuthAsync.await()
-                perUserIdRefreshTrigger.useElement(userId) {
-                    emitAll(it.mapLatest { twoFactorAuth to twoFactorAuth.tryGettingLatestChallenge() })
+                perUserIdRefreshTrigger.useElement(userId) { refreshTrigger ->
+                    emitAll(refreshTrigger.mapLatest { twoFactorAuth to twoFactorAuth.tryGettingLatestChallenge() })
                 }
             }
         }
