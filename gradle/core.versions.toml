@@ -21,6 +21,7 @@ datastorePreferences = "1.2.0"
 dotlottie = "0.12.2"
 espressoCore = "3.7.0"
 firebaseMessaging = "24.1.2"
+googleServices = "4.4.4"
 gson = "2.13.2"
 hiltAndroid = "2.57.2"
 hiltAndroidx = "1.3.0"
@@ -228,6 +229,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
