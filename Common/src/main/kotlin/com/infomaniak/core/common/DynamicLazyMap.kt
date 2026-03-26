@@ -40,6 +40,8 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 /**
+ * **NOTE:** Instead of calling this constructor directly, you can use the [dynamicLazyMap] extension for [CoroutineScope].
+ *
  * Allows sharing and caching an element for a given key.
  *
  * It's similar to a read-only [Map], with these differences:
@@ -68,7 +70,7 @@ class DynamicLazyMap<K, E>(
 
     companion object;
 
-    fun interface CacheManager<K, E> {
+    fun interface CacheManager<K, in E> {
         companion object;
 
         /**
@@ -86,7 +88,7 @@ class DynamicLazyMap<K, E>(
             usedElementsCount: Int,
         ): OnUnusedBehavior = OnUnusedBehavior(cacheUntilExpired = true, evictOldest = false)
 
-        suspend fun DynamicLazyMap<K, E>.waitForCacheExpiration(key: K, element: E)
+        suspend fun DynamicLazyMap<K, out E>.waitForCacheExpiration(key: K, element: E)
     }
 
     // We use an inline value class with bit flags to avoid the memory allocation overhead.

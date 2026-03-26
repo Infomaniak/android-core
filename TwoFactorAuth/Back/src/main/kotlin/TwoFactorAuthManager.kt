@@ -22,7 +22,10 @@ package com.infomaniak.core.twofactorauth.back
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.eventFlow
+import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.common.Xor
+import com.infomaniak.core.common.dynamicLazyMap
+import com.infomaniak.core.common.dynamicLazyMapOfSharedFlow
 import com.infomaniak.core.common.emitFirstsUntilSecond
 import com.infomaniak.core.common.rateLimit
 import com.infomaniak.core.sentry.SentryLog
@@ -35,24 +38,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -86,30 +89,70 @@ import kotlin.uuid.ExperimentalUuidApi
 class TwoFactorAuthManager(
     // The CoroutineScope (and its Job) is strongly referenced by shareIn and stateIn, so no need to keep a reference here.
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-    userIds: Flow<Set<Int>>,
+    private val userIds: Flow<Set<Int>>,
     private val getAccountInfo: suspend (userId: Int) -> ConnectionAttemptInfo.TargetAccount?,
     private val getConnectedHttpClient: suspend (userId: Int) -> OkHttpClient
 ) {
-    private val approvalChallengePushes = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     private val rateLimitedForegroundEvents = ProcessLifecycleOwner.get().lifecycle.eventFlow.filter {
         it == Lifecycle.Event.ON_START
     }.rateLimit(30.seconds, elementsBeforeLimit = 2)
 
-    private val refreshEvents = channelFlow {
-        launch { rateLimitedForegroundEvents.collect { send(Unit) } }
-        approvalChallengePushes.collect { send(Unit) }
-    }.conflate()
-
     private val actionedChallengesFlow = MutableStateFlow<Set<RemoteChallenge>>(emptySet())
+
+    private val perUserIdCacheManager = DynamicLazyMap.CacheManager<Int, Any?> { _, _ ->
+        delay(5.seconds) // Should be more than enough to keep the state between re-uses.
+    }
+
+    private val perUserIdTwoFactoAuth = coroutineScope.dynamicLazyMap(perUserIdCacheManager) { userId: Int ->
+        async<TwoFactorAuth> { TwoFactorAuthImpl(getConnectedHttpClient(userId), userId) }
+    }
+
+    private val perUserIdRefreshTrigger = coroutineScope.dynamicLazyMap(perUserIdCacheManager) { _: Int ->
+        MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    }
+
+    private val perUserIdLatestChallenge = coroutineScope.dynamicLazyMapOfSharedFlow(perUserIdCacheManager) { userId: Int ->
+        flow {
+            perUserIdTwoFactoAuth.useElement(userId) { twoFactorAuthAsync ->
+                val twoFactorAuth = twoFactorAuthAsync.await()
+                perUserIdRefreshTrigger.useElement(userId) { refreshTrigger ->
+                    emitAll(refreshTrigger.mapLatest { twoFactorAuth to twoFactorAuth.tryGettingLatestChallenge() })
+                }
+            }
+        }
+    }
+
+    private val allCurrentChallenges: Flow<Map<TwoFactorAuth, RemoteChallenge>> = userIds.transformLatest { userIds ->
+        perUserIdLatestChallenge.useElements(userIds) { mapOfFlows ->
+            val flow = combine(mapOfFlows.values) { pairs ->
+                pairs.asSequence().mapNotNull { (twoFactorAuth, challenge) ->
+                    twoFactorAuth to (challenge ?: return@mapNotNull null)
+                }.sortedBy { (_, challenge) ->
+                    challenge.createdAt
+                }.toMap()
+            }
+            emitAll(flow)
+        }
+    }
+
+    init {
+        coroutineScope.launch {
+            userIds.collectLatest { userIds ->
+                perUserIdRefreshTrigger.useElements(userIds) { triggers ->
+                    rateLimitedForegroundEvents.collect { _ ->
+                        triggers.values.forEach { trigger -> trigger.tryEmit(Unit) }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * We don't want to bring back any challenges that have been actioned, and are being sent to the backend,
-     * or have been fully handled since the most recent call to [attemptGettingAllCurrentChallenges].
+     * or have been fully handled since the most recent refresh to [allCurrentChallenges].
      */
-    private val firstUnactionedChallenge: StateFlow<Pair<TwoFactorAuth, RemoteChallenge>?> = refreshEvents.map {
-        attemptGettingAllCurrentChallenges()
-    }.flatMapLatest { challengesMap ->
+    private val firstUnactionedChallenge: StateFlow<Pair<TwoFactorAuth, RemoteChallenge>?> = allCurrentChallenges.flatMapLatest { challengesMap ->
         actionedChallengesFlow.map { actionedChallenges ->
             challengesMap.firstNotNullOfOrNull { (auth, challenge) ->
                 challenge.takeIf { it !in actionedChallenges }?.let { auth to challenge }
@@ -144,7 +187,7 @@ class TwoFactorAuthManager(
     ) {
         val userId = remoteMessageData["user_id"]?.toLongOrNull().also {
             if (it == null) SentryLog.e(TAG, "User id missing, or not an integer")
-        }
+        } ?: return
         val timeToLive = remoteMessageTimeToLiveSeconds.let {
             when (it) {
                 0 -> 5.minutes // 0 if not set (see FCM RemoteMessage.ttl), fallback to a hardcoded value in this case.
@@ -156,8 +199,12 @@ class TwoFactorAuthManager(
         onApprovalChallengePushed(userId, expirationTimeInMillis)
     }
 
-    private fun onApprovalChallengePushed(userId: Long?, expirationTimeInMillis: Long) {
-        approvalChallengePushes.tryEmit(Unit)
+    fun refreshChallengeNow(userId: Long) {
+        perUserIdRefreshTrigger.useElement(userId.toInt()) { it.tryEmit(Unit) }
+    }
+
+    private fun onApprovalChallengePushed(userId: Long, expirationTimeInMillis: Long) {
+        refreshChallengeNow(userId)
         TwoFactorAuthNotifications.postIncomingChallengeNotification(
             userId = userId,
             expirationTimeInMillis = expirationTimeInMillis
@@ -174,20 +221,6 @@ class TwoFactorAuthManager(
             executeChallengeAction(actionData)
         }
     }.stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
-
-    private val allUsersTwoFactorAuth: Flow<List<TwoFactorAuth>> = userIds.mapLatest { userIds ->
-        userIds.map { id -> TwoFactorAuthImpl(getConnectedHttpClient(id), id) }
-    }.shareIn(coroutineScope, SharingStarted.Lazily, replay = 1)
-
-    private suspend fun attemptGettingAllCurrentChallenges(): Map<TwoFactorAuth, RemoteChallenge> = flow {
-        val currentUsersTwoFactorAuth = allUsersTwoFactorAuth.first()
-        currentUsersTwoFactorAuth.forEach { twoFactorAuth ->
-            val challenge = twoFactorAuth.tryGettingLatestChallenge() ?: return@forEach
-            emit(twoFactorAuth to challenge)
-        }
-    }.toList().sortedBy { (_, challenge) ->
-        challenge.createdAt
-    }.toMap()
 
     private companion object {
         private const val TAG = "TwoFactorAuthManager"
