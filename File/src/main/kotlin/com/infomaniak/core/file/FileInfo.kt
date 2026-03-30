@@ -194,28 +194,26 @@ private fun alertSentryFileName(uri: Uri, allColumns: Array<String>, columnNames
 }
 
 /**
- * Queries the cursor for an Uri with [projection], and if found apply [block]
+ * Queries the cursor for an Uri with [projection], and if found apply [block].
+ * Can throw a NullPointerException with message "Attempt to get length of null array" on some devices,
+ * despite what is written in the Javadoc, so we provide one, so there is a runCatching to catch it
  */
-private suspend fun <R> Uri.retrieveAndUse(projection: Array<String>, block: suspend Cursor.() -> R?): R? {
-    return appCtx.contentResolver.query(
-        /* uri = */ this,
-        // Not supplying a projection might lead to `NullPointerException` with message "Attempt to get length of null array"
-        // being thrown on some devices, despite what is written in the Javadoc, so we provide one.
-        /* projection = */ projection,
-        /* selection = */ null,
-        /* selectionArgs = */ null,
-        /* sortOrder = */ null
-    )?.use {
-        if (it.moveToFirst()) {
-            block(it)
+suspend fun <R> Uri.retrieveAndUse(projection: Array<String>? = null, block: suspend Cursor.() -> R?): R? = runCatching {
+    appCtx.contentResolver.query(this, projection, null, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            block(cursor)
         } else {
-            val columns = it.columnNames.joinToString()
-            SentryLog.i(TAG, "$appCtx has empty cursor available columns $columns")
-            Sentry.captureMessage("$appCtx has empty cursor") { scope ->
-                scope.setExtra("available columns", columns)
-            }
+            cursor.logProjectionFailure()
             null
         }
+    }
+}.cancellable().getOrNull()
+
+private fun Cursor.logProjectionFailure() {
+    val columns = columnNames.joinToString()
+    SentryLog.i(TAG, "$appCtx has empty cursor available columns $columns")
+    Sentry.captureMessage("$appCtx has empty cursor") { scope ->
+        scope.setExtra("available columns", columns)
     }
 }
 
