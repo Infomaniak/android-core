@@ -23,6 +23,7 @@ android {
         namespace = "com.infomaniak.core.auth"
         minSdk = coreMinSdk
 
+        consumerProguardFile("proguard-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
