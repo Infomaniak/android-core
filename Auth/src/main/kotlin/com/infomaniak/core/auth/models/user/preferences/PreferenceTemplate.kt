@@ -18,7 +18,9 @@
 package com.infomaniak.core.auth.models.user.preferences
 
 import androidx.room.ColumnInfo
+import kotlinx.serialization.Serializable
 
+@Serializable
 abstract class PreferenceTemplate(
     @ColumnInfo(defaultValue = "0")
     var id: Int = 0,

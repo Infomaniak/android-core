@@ -21,15 +21,18 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class Language(
-    @SerializedName("short_name")
+    @SerializedName("short_name") @SerialName("short_name")
     @ColumnInfo(defaultValue = "")
     var shortName: String,
     @ColumnInfo(defaultValue = "")
     var locale: String,
-    @SerializedName("short_locale")
+    @SerializedName("short_locale") @SerialName("short_locale")
     @ColumnInfo(defaultValue = "")
     var shortLocale: String,
 ) : PreferenceTemplate(), Parcelable

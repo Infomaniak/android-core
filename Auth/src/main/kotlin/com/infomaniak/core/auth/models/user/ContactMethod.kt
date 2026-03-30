@@ -18,10 +18,13 @@
 package com.infomaniak.core.auth.models.user
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 abstract class ContactMethod(
     val id: Int = 0,
-    @SerializedName("created_at")
+    @SerializedName("created_at") @SerialName("created_at")
     val createdAt: Long = 0,
     val reminder: Boolean = false,
     val checked: Boolean = false,

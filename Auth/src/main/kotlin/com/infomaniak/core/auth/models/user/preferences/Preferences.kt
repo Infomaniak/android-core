@@ -22,18 +22,21 @@ import androidx.room.Embedded
 import com.google.gson.annotations.SerializedName
 import com.infomaniak.core.auth.models.user.preferences.security.Security
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class Preferences(
     @Embedded(prefix = "security_")
-    var security: Security?,
+    var security: Security? = null,
     @Embedded(prefix = "organizationPreference_")
-    @SerializedName("account")
+    @SerializedName("account") @SerialName("account")
     var organizationPreference: OrganizationPreference,
     @Embedded(prefix = "language_")
     var language: Language,
     @Embedded(prefix = "country_")
     var country: Country,
     @Embedded(prefix = "timezone_")
-    var timezone: TimeZone?,
+    var timezone: TimeZone? = null,
 ) : Parcelable
