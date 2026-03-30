@@ -54,36 +54,12 @@ private const val TAG = "FileInfo"
 /* language=RegExp */
 private const val DATE_AND_TIME = "(\\d{8}_\\d{6})"
 
-suspend fun fileNameFor(uri: Uri): String? = Dispatchers.IO {
-    runCatching { uri.retrieveAndUse(displayNameProjection) { getFileName(uri) } }
-        .cancellable()
-        .onFailure { t -> SentryLog.e(TAG, "Failed to read the display name for uri: $uri", t) }
-        .getOrNull()
-}
+suspend fun fileNameFor(uri: Uri): String? = uri.retrieveAndUse(displayNameProjection) { getFileName(uri) }
 
-suspend fun fileSizeFor(uri: Uri): Long = Dispatchers.IO {
-    runCatching {
-        uri.retrieveAndUse(sizeProjection) {
-            getFileSize()
-        } ?: -1L
-    }.cancellable().onFailure { t ->
-        SentryLog.e(TAG, "Failed to read the size for uri: $uri", t)
-    }.getOrDefault(-1L)
-}
+suspend fun fileSizeFor(uri: Uri): Long = uri.retrieveAndUse(sizeProjection) { getFileSize() } ?: -1L
 
-suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = Dispatchers.IO {
-    runCatching {
-        uri.retrieveAndUse(displayNameAndSizeProjection) {
-            getFileName(uri) to getEstimatedFileSize(uri)
-        }
-    }.cancellable().getOrElse { exception ->
-        uri.path?.substringBeforeLast("/")?.let { providerName ->
-            Sentry.captureException(exception) { scope ->
-                scope.setExtra("uri", providerName)
-            }
-        }
-        null
-    }
+suspend fun getFileNameAndSize(uri: Uri): Pair<String, Long>? = uri.retrieveAndUse(displayNameAndSizeProjection) {
+    getFileName(uri) to getEstimatedFileSize(uri)
 }
 
 /**
@@ -199,20 +175,23 @@ private fun alertSentryFileName(uri: Uri, allColumns: Array<String>, columnNames
  * despite what is written in the Javadoc, so we provide one, so there is a runCatching to catch it
  */
 suspend fun <R> Uri.retrieveAndUse(projection: Array<String>? = null, block: suspend Cursor.() -> R?): R? = runCatching {
-    appCtx.contentResolver.query(this, projection, null, null, null)?.use { cursor ->
-        if (cursor.moveToFirst()) {
-            block(cursor)
-        } else {
-            cursor.logProjectionFailure()
-            null
+    Dispatchers.IO {
+        appCtx.contentResolver.query(this@retrieveAndUse, projection, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                block(cursor)
+            } else {
+                cursor.logProjectionFailure(uri = this@retrieveAndUse)
+                null
+            }
         }
     }
 }.cancellable().getOrNull()
 
-private fun Cursor.logProjectionFailure() {
+private fun Cursor.logProjectionFailure(uri: Uri) {
     val columns = columnNames.joinToString()
     SentryLog.i(TAG, "$appCtx has empty cursor available columns $columns")
     Sentry.captureMessage("$appCtx has empty cursor") { scope ->
+        scope.setExtra("uri", uri.toString())
         scope.setExtra("available columns", columns)
     }
 }
