@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import java.time.format.FormatStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
 
 const val FORMAT_DATE_CLEAR_FULL_MONTH = "EEEE d MMMM yyyy"
 const val FORMAT_DATE_CLEAR_MONTH = "dd MMM yyyy"
@@ -230,3 +231,10 @@ fun Date.isThisMonth(): Boolean = Date().let { now -> year() == now.year() && mo
 
 fun Date.isThisYear(): Boolean = Date().let { now -> year() == now.year() }
 //endregion
+
+/**
+ * Get seconds of a date, not optimal but more meaningful than multiply divide by 1000
+ */
+val Date.inWholeSeconds: Long get() = time.milliseconds.inWholeSeconds
+
+fun Date?.inWholeSeconds(default: Long = 0L): Long = this?.run { inWholeSeconds } ?: default
