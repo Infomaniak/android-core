@@ -2,7 +2,7 @@
 activityCompose = "1.10.1" # TODO: Update to 1.11.0 or later after we bump compileSdk to 36
 adaptive = "1.2.0"
 agp = "8.13.0" # Delete this to-do on agp 9+ after searching and checking the project for the following: TODO[AGP9
-androidLogin = "3.1.11"
+androidLogin = "3.1.14"
 androidxCollection = "1.5.0"
 androidxCore = "1.16.0" # TODO: Update to 1.17.0 or later after we bump compileSdk to 36
 appUpdateVersion = "2.1.0"
@@ -137,6 +137,7 @@ infomaniak-core-ksuite-pro = { module = "com.infomaniak.core:KSuite.KSuitePro" }
 infomaniak-core-ktor = { module = "com.infomaniak.core:Ktor" }
 infomaniak-core-matomo = { module = "com.infomaniak.core:Matomo" }
 infomaniak-core-network = { module = "com.infomaniak.core:Network" }
+infomaniak-core-network-ktor = { module = "com.infomaniak.core:Network.Ktor" }
 infomaniak-core-notifications = { module = "com.infomaniak.core:Notifications" }
 infomaniak-core-notifications-registration = { module = "com.infomaniak.core:Notifications.Registration" }
 infomaniak-core-onboarding = { module = "com.infomaniak.core:Onboarding" }
