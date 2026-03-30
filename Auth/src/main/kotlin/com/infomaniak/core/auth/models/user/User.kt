@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ data class User(
     val login: String,
     @ColumnInfo(defaultValue = "false")
     @SerializedName("is_staff") @SerialName("is_staff")
-    val isStaff: Boolean,
+    val isStaff: Boolean = false,
     @Embedded(prefix = "preferences_")
     val preferences: Preferences,
     val phones: ArrayList<Phone>? = null,
