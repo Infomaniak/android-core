@@ -20,7 +20,10 @@ package com.infomaniak.core.auth.models.user.preferences
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class TimeZone(
     @ColumnInfo(defaultValue = "")

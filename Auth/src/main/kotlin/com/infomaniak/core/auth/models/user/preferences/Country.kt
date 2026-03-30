@@ -21,13 +21,16 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class Country(
-    @SerializedName("short_name")
+    @SerializedName("short_name") @SerialName("short_name")
     @ColumnInfo(defaultValue = "")
     var shortName: String,
-    @SerializedName("is_enabled")
+    @SerializedName("is_enabled") @SerialName("is_enabled")
     @ColumnInfo(defaultValue = "false")
     var isEnabled: Boolean,
 ) : PreferenceTemplate(), Parcelable

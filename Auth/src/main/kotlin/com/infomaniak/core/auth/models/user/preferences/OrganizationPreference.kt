@@ -21,13 +21,16 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class OrganizationPreference(
-    @SerializedName("current_account_id")
+    @SerializedName("current_account_id") @SerialName("current_account_id")
     @ColumnInfo(defaultValue = "0")
     var currentOrganizationId: Int,
-    @SerializedName("last_login_at")
+    @SerializedName("last_login_at") @SerialName("last_login_at")
     @ColumnInfo(defaultValue = "0")
     var lastLoginAt: Long,
 ) : Parcelable

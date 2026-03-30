@@ -21,47 +21,50 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class Security(
     @ColumnInfo(defaultValue = "0")
     var score: Int,
-    @SerializedName("has_recovery_email")
+    @SerializedName("has_recovery_email") @SerialName("has_recovery_email")
     @ColumnInfo(defaultValue = "false")
     var hasRecoveryEmail: Boolean,
-    @SerializedName("has_valid_phone")
+    @SerializedName("has_valid_phone") @SerialName("has_valid_phone")
     @ColumnInfo(defaultValue = "false")
     var hasValidPhone: Boolean,
-    @SerializedName("email_validated_at")
+    @SerializedName("email_validated_at") @SerialName("email_validated_at")
     @ColumnInfo(defaultValue = "0")
     var emailValidatedAt: Long,
     @ColumnInfo(defaultValue = "false")
     var otp: Boolean,
     @ColumnInfo(defaultValue = "false")
     var sms: Boolean,
-    @SerializedName("sms_phone")
+    @SerializedName("sms_phone") @SerialName("sms_phone")
     @ColumnInfo(defaultValue = "")
     var smsPhone: String,
     @ColumnInfo(defaultValue = "false")
     var yubikey: Boolean,
-    @SerializedName("infomaniak_application")
+    @SerializedName("infomaniak_application") @SerialName("infomaniak_application")
     @ColumnInfo(defaultValue = "false")
     var infomaniakApplication: Boolean,
-    @SerializedName("double_auth")
+    @SerializedName("double_auth") @SerialName("double_auth")
     @ColumnInfo(defaultValue = "false")
     var doubleAuth: Boolean,
-    @SerializedName("remaining_rescue_code")
+    @SerializedName("remaining_rescue_code") @SerialName("remaining_rescue_code")
     @ColumnInfo(defaultValue = "0")
     var remainingRescueCode: Int,
-    @SerializedName("last_login_at")
+    @SerializedName("last_login_at") @SerialName("last_login_at")
     @ColumnInfo(defaultValue = "0")
     var lastLoginAt: Long,
-    @SerializedName("date_last_changed_password")
+    @SerializedName("date_last_changed_password") @SerialName("date_last_changed_password")
     @ColumnInfo(defaultValue = "0")
     var dateLastChangedPassword: Long,
-    @SerializedName("double_auth_method")
+    @SerializedName("double_auth_method") @SerialName("double_auth_method")
     @ColumnInfo(defaultValue = "")
     var doubleAuthMethod: String,
-    @SerializedName("auth_devices")
+    @SerializedName("auth_devices") @SerialName("auth_devices")
     var authDevices: ArrayList<AuthDevices>?,
 ) : Parcelable

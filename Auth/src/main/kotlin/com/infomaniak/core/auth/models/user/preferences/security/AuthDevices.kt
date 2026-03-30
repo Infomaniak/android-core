@@ -20,22 +20,25 @@ package com.infomaniak.core.auth.models.user.preferences.security
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class AuthDevices(
     var id: Int,
     var name: String,
-    @SerializedName("last_connexion")
+    @SerializedName("last_connexion") @SerialName("last_connexion")
     var lastConnexion: Long,
-    @SerializedName("user_agent")
+    @SerializedName("user_agent") @SerialName("user_agent")
     var userAgent: String,
-    @SerializedName("user_ip")
+    @SerializedName("user_ip") @SerialName("user_ip")
     var userIp: String,
     var device: String,
-    @SerializedName("created_at")
+    @SerializedName("created_at") @SerialName("created_at")
     var createdAt: Long,
-    @SerializedName("updated_at")
+    @SerializedName("updated_at") @SerialName("updated_at")
     var updatedAt: Long,
-    @SerializedName("deleted_at")
+    @SerializedName("deleted_at") @SerialName("deleted_at")
     var deletedAt: Long?,
 ) : Parcelable

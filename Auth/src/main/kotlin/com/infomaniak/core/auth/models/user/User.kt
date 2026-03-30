@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,35 +28,41 @@ import com.infomaniak.core.auth.models.OrganizationAccount
 import com.infomaniak.core.auth.models.user.preferences.Preferences
 import com.infomaniak.lib.login.ApiToken
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 @Parcelize
 @Entity
 data class User(
     @PrimaryKey val id: Int,
-    @SerializedName("display_name")
+    @SerializedName("display_name") @SerialName("display_name")
     val displayName: String?,
-    @SerializedName("first_name")
+    @SerializedName("first_name") @SerialName("first_name")
     val firstname: String,
-    @SerializedName("last_name")
+    @SerializedName("last_name") @SerialName("last_name")
     val lastname: String,
     val email: String,
     val avatar: String?,
     val login: String,
     @ColumnInfo(defaultValue = "false")
-    @SerializedName("is_staff")
-    val isStaff: Boolean,
+    @SerializedName("is_staff") @SerialName("is_staff")
+    val isStaff: Boolean = false,
     @Embedded(prefix = "preferences_")
     val preferences: Preferences,
-    val phones: ArrayList<Phone>?,
-    val emails: ArrayList<Email>?,
+    val phones: ArrayList<Phone>? = null,
+    val emails: ArrayList<Email>? = null,
 
     /**
      * Local
      */
     @Embedded
-    var apiToken: ApiToken,
-    var organizations: ArrayList<OrganizationAccount>
+    @Transient
+    var apiToken: ApiToken = ApiToken(accessToken = "", tokenType = "", userId = 0),
+    @Transient
+    var organizations: ArrayList<OrganizationAccount> = arrayListOf(),
 
-) : Parcelable {
+    ) : Parcelable {
     fun getInitials() = "${firstname.firstOrEmpty().uppercase()}${lastname.firstOrEmpty().uppercase()}"
 }
