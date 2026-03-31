@@ -2,7 +2,8 @@
 
 ## Package Identity
 
-Modular Android library consumed via Gradle composite builds. Provides shared authentication, networking, UI components, and utilities across Infomaniak apps. Designed for JDK 17+, minSdk 27, compiled SDK 35.
+Modular Android library consumed via Gradle composite builds. Provides shared authentication, networking, UI components, and
+utilities across Infomaniak apps. Designed for JDK 17+, minSdk 27, compiled SDK 35.
 
 ## Setup & Development
 
@@ -24,29 +25,33 @@ Modular Android library consumed via Gradle composite builds. Provides shared au
 ## Module Categories
 
 ### Authentication & Security
+
 - **Auth**: OAuth2 flow, account management, token storage
-  - Key: `Auth/src/main/java/com/infomaniak/core/auth/`
-  - Example: `AuthTokenRepository.kt` for token handling
+    - Key: `Auth/src/main/java/com/infomaniak/core/auth/`
+    - Example: `AuthTokenRepository.kt` for token handling
 - **TwoFactorAuth**: 2FA verification UI (Front) and backend (Back)
 - **AppIntegrity**: App attestation and integrity checks
 
 ### Networking
+
 - **Network**: Ktor HTTP client with interceptors
-  - Key: `Network/Ktor/src/main/`
-  - Models: `Network/Models/src/main/`
+    - Key: `Network/Ktor/src/main/`
+    - Models: `Network/Models/src/main/`
 - **Ktor**: Low-level Ktor extensions
 
 ### UI Components
+
 - **Ui:Compose**: Modern Compose components
-  - Theme: `Ui/Compose/Theme/src/main/`
-  - Components: `Ui/Compose/BottomStickyButtonScaffolds/`, `Basics/`
+    - Theme: `Ui/Compose/Theme/src/main/`
+    - Components: `Ui/Compose/BottomStickyButtonScaffolds/`, `Basics/`
 - **Ui:View**: Legacy XML components (SharedViews, EdgeToEdge)
 - **CrossAppLogin**: Cross-application authentication
 
 ### Utilities & Features
+
 - **Common**: Shared extensions, formatters, utilities
-  - HTTP: `HttpClientProvider.kt` for Ktor client setup
-  - Formatters: `FormatterFileSize.kt`, date formatters
+    - HTTP: `HttpClientProvider.kt` for Ktor client setup
+    - Formatters: `FormatterFileSize.kt`, date formatters
 - **Coil**: Image loading configuration
 - **Matomo**: Analytics tracking
 - **Sentry**: Error reporting
@@ -54,14 +59,15 @@ Modular Android library consumed via Gradle composite builds. Provides shared au
 - **Stores**: In-app review and update support
 
 ### Legacy Support
+
 - **Legacy**: Backward compatibility module
-  - Use: `implementation(project(":Core:Legacy"))`
-  - Init in Application: `InfomaniakCore.init(...)`
+    - Use: `implementation(project(":Core:Legacy"))`
+    - Init in Application: `InfomaniakCore.init(...)`
 
 ## Patterns & Conventions
 
 - **Module naming**: Descriptive, PascalCase (e.g., `AppVersionChecker`, `TwoFactorAuth`)
-- **Composite build**: Consume via Maven coordinates `core.infomaniak.core.<module>`
+- **Composite build**: Consume via Maven coordinates `com.infomaniak.core:<module>`
 - **Ktlint**: Version 1.7.1, Android mode enabled
 - **No main**: Libraries have no Application class
 
@@ -74,6 +80,7 @@ Modular Android library consumed via Gradle composite builds. Provides shared au
 ## JIT Index
 
 ### Find module implementations
+
 ```bash
 # Auth utilities
 rg -n "AuthToken|AccountManager" Core/Auth/
@@ -89,6 +96,7 @@ rg -n "fun|suspend" Core/Common/src/main/java/com/infomaniak/core/common/
 ```
 
 ### Test file locations
+
 ```bash
 # Unit tests per module
 rg -n "@Test" Core/*/src/test/
