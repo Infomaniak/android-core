@@ -6,7 +6,7 @@ plugins {
     alias(core.plugins.kotlin.android)
     alias(core.plugins.ktlint)
 
-    id("com.infomaniak.core.compose.lint")
+    alias(core.plugins.compose.lint)
 }
 
 ktlint {

@@ -18,7 +18,7 @@ pluginManagement {
 
 ```kts
 plugins {
-    id("com.infomaniak.core.compose.lint")
+    alias(core.plugins.compose.lint)
 }
 ```
 
