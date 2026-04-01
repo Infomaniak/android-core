@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
@@ -86,4 +87,11 @@ fun <K, E> CoroutineScope.dynamicLazyMapOfSharedFlow(
         coroutineScope = this,
         createFlow = createFlow
     )
+}
+
+inline fun <K, reified E, R> DynamicLazyMap<K, SharedFlow<E>>.combineFor(
+    keys: Set<K>,
+    crossinline transform: suspend (Array<E>) -> R
+): Flow<R> = flow {
+    useElements(keys) { emitAll(combine(it.values, transform)) }
 }
