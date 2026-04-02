@@ -27,6 +27,7 @@ import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.dynamicLazyMap
 import com.infomaniak.core.common.dynamicLazyMapOfSharedFlow
 import com.infomaniak.core.common.emitFirstsUntilSecond
+import com.infomaniak.core.common.combineFor
 import com.infomaniak.core.common.rateLimit
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
@@ -47,7 +48,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
@@ -123,16 +123,13 @@ class TwoFactorAuthManager(
         }
     }
 
-    private val allCurrentChallenges: Flow<Map<TwoFactorAuth, RemoteChallenge>> = userIds.transformLatest { userIds ->
-        perUserIdLatestChallenge.useElements(userIds) { mapOfFlows ->
-            val flow = combine(mapOfFlows.values) { pairs ->
-                pairs.asSequence().mapNotNull { (twoFactorAuth, challenge) ->
-                    twoFactorAuth to (challenge ?: return@mapNotNull null)
-                }.sortedBy { (_, challenge) ->
-                    challenge.createdAt
-                }.toMap()
-            }
-            emitAll(flow)
+    private val allCurrentChallenges: Flow<Map<TwoFactorAuth, RemoteChallenge>> = userIds.flatMapLatest { userIds ->
+        perUserIdLatestChallenge.combineFor(userIds) { pairs ->
+            pairs.asSequence().mapNotNull { (twoFactorAuth, challenge) ->
+                twoFactorAuth to (challenge ?: return@mapNotNull null)
+            }.sortedBy { (_, challenge) ->
+                challenge.createdAt
+            }.toMap()
         }
     }
 
