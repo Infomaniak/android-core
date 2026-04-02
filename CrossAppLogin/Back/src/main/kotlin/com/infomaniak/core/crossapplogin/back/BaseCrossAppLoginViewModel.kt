@@ -22,10 +22,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.api.ApiRoutesCore.TOKEN_URL
-import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.common.completableScope
+import com.infomaniak.core.common.dynamicLazyMap
 import com.infomaniak.core.common.mapSync
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus.*
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
@@ -87,9 +87,8 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         userAgent = HttpUtils.getUserAgent,
     )
 
-    private val accountCheckStatuses = DynamicLazyMap<ExternalAccount, _>(
+    private val accountCheckStatuses = viewModelScope.dynamicLazyMap<ExternalAccount, _>(
         cacheManager = { _, _ -> awaitCancellation() },
-        coroutineScope = viewModelScope,
         createElement = { account -> async { getFirstValidTokenOrError(account) } },
     )
 
