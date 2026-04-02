@@ -24,9 +24,9 @@ import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.FDroidUnsupportedIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
-import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
+import com.infomaniak.core.common.dynamicLazyMap
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.network.api.ApiController
 import com.infomaniak.core.network.utils.await
@@ -58,14 +58,13 @@ internal class DerivedTokenGeneratorImpl(
 
     private val appIntegrityManager = AppIntegrityManager(appCtx, userAgent)
 
-    private val attestationTokensForUrls = DynamicLazyMap<String, Deferred<Xor<String, Issue>>>(
+    private val attestationTokensForUrls = coroutineScope.dynamicLazyMap<String, Deferred<Xor<String, Issue>>>(
         cacheManager = { _, asyncResult ->
             // TODO: Cache tokens again (forever only if possible) once they can be reused,
             //  by uncommenting, the line below, and possibly replacing awaitCancellation() if reuse is limited in time.
             // if (asyncResult.await() is Xor.First) awaitCancellation()
             // Skip cache if unsuccessful.
         },
-        coroutineScope = coroutineScope
     ) { targetUrl -> async { attemptFetchNewAttestationToken(targetUrl) } }
 
     override suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue> {

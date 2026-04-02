@@ -18,8 +18,8 @@
 package com.infomaniak.core.crossapplogin.front.previews
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingState
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
 
 class AccountsCheckingStatePreviewParameter : PreviewParameterProvider<AccountsCheckingState> {
     override val values: Sequence<AccountsCheckingState> = sequenceOf(accounts)

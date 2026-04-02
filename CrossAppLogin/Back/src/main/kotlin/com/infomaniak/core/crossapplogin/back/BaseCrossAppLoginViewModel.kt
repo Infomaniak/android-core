@@ -22,12 +22,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.api.ApiRoutesCore.TOKEN_URL
-import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.common.completableScope
+import com.infomaniak.core.common.dynamicLazyMap
 import com.infomaniak.core.common.mapSync
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus.*
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingState
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus.*
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.LoginResult
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
 import com.infomaniak.core.network.models.exceptions.NetworkException
@@ -38,6 +41,7 @@ import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.lib.login.ApiToken
 import io.sentry.IScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
@@ -64,32 +68,76 @@ import kotlin.time.Duration.Companion.seconds
 import com.infomaniak.core.common.R as RCore
 import com.infomaniak.core.network.R as RCoreNetwork
 
-abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: String) : ViewModel() {
+abstract class BaseCrossAppLoginViewModel(
+    applicationId: String,
+    clientId: String,
+) : ViewModel(), CrossAppLoginFacade {
+
+    // We can't extend 2 classes, and we can't use implementation by delegation, hence the following.
+
+    //region Delegating implementation.
+    private val delegate = CrossAppLoginFacadeImpl(applicationId, clientId, viewModelScope)
+
+    @CrossAppLoginFacade.UncheckedTokens
+    override val availableAccounts: StateFlow<List<ExternalAccount>> get() = delegate.availableAccounts
+    override val skippedAccountIds: MutableStateFlow<Set<Long>> get() = delegate.skippedAccountIds
+    override val accountsCheckingState: StateFlow<AccountsCheckingState> get() = delegate.accountsCheckingState
+
+    override suspend fun activateUpdates(
+        hostActivity: ComponentActivity,
+        singleSelection: Boolean
+    ): Nothing = delegate.activateUpdates(hostActivity, singleSelection)
+
+    override suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {
+        return delegate.attemptLogin(selectedAccounts)
+    }
+    //endregion
+
+    companion object {
+        @Deprecated(
+            message = "Moved",
+            replaceWith = ReplaceWith(
+                "filterSelectedAccounts",
+                "import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.Companion.filterSelectedAccounts"
+            )
+        )
+        fun List<ExternalAccount>.filterSelectedAccounts(skippedIds: Set<Long>): List<ExternalAccount> {
+            return with(CrossAppLoginFacade) { filterSelectedAccounts(skippedIds) }
+        }
+    }
+}
+
+internal class CrossAppLoginFacadeImpl(
+    applicationId: String,
+    clientId: String,
+    scope: CoroutineScope,
+) : CrossAppLoginFacade {
 
     private val _availableAccounts = MutableStateFlow<CrossAppLogin.AccountsFromOtherApps?>(null)
-    val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow().mapSync {
+
+    @CrossAppLoginFacade.UncheckedTokens
+    override val availableAccounts: StateFlow<List<ExternalAccount>> = _availableAccounts.asStateFlow().mapSync {
         it?.accounts ?: emptyList()
     }
 
-    val skippedAccountIds = MutableStateFlow(emptySet<Long>())
+    override val skippedAccountIds = MutableStateFlow(emptySet<Long>())
 
-    val accountsCheckingState: StateFlow<AccountsCheckingState> = accountsCheckingStateFlow().stateIn(
-        scope = viewModelScope,
+    override val accountsCheckingState: StateFlow<AccountsCheckingState> = accountsCheckingStateFlow().stateIn(
+        scope = scope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = AccountsCheckingState(status = Checking)
     )
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
-        coroutineScope = viewModelScope,
+        coroutineScope = scope,
         tokenRetrievalUrl = TOKEN_URL,
         hostAppPackageName = applicationId,
         clientId = clientId,
         userAgent = HttpUtils.getUserAgent,
     )
 
-    private val accountCheckStatuses = DynamicLazyMap<ExternalAccount, _>(
+    private val accountCheckStatuses = scope.dynamicLazyMap<ExternalAccount, _>(
         cacheManager = { _, _ -> awaitCancellation() },
-        coroutineScope = viewModelScope,
         createElement = { account -> async { getFirstValidTokenOrError(account) } },
     )
 
@@ -103,7 +151,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
     private val isCrossAppLoginEnabledFlow = MutableStateFlow(true)
 
     @OptIn(ExperimentalSerializationApi::class)
-    suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean = false): Nothing = coroutineScope {
+    override suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean): Nothing = coroutineScope {
         // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
         if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) {
             _availableAccounts.emit(CrossAppLogin.AccountsFromOtherApps.none())
@@ -129,7 +177,7 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         awaitCancellation() // Can't be reached because isCrossAppLoginEnabledFlow is a SharedFlow.
     }
 
-    suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {
+    override suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {
         val tokenGenerator = derivedTokenGenerator
 
         val tokens = mutableListOf<ApiToken>()
@@ -314,22 +362,6 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
         setExtra("details", details)
     }
 
-    data class LoginResult(val tokens: List<ApiToken>, val errorMessageIds: List<Int>)
-
-    data class AccountsCheckingState(
-        val status: AccountsCheckingStatus,
-        val checkedAccounts: List<ExternalAccount> = emptyList(),
-    )
-
-    sealed interface AccountsCheckingStatus {
-        data object Checking : AccountsCheckingStatus
-        data object UpToDate : AccountsCheckingStatus
-        sealed class Error : AccountsCheckingStatus {
-            data object Network : Error()
-            data object Unknown : Error()
-        }
-    }
-
     private sealed interface AccountCheckResult {
         data class Valid(val account: ExternalAccount) : AccountCheckResult
         sealed interface Issue : AccountCheckResult {
@@ -340,9 +372,5 @@ abstract class BaseCrossAppLoginViewModel(applicationId: String, clientId: Strin
 
     companion object {
         private val TAG = BaseCrossAppLoginViewModel::class.java.simpleName
-
-        fun List<ExternalAccount>.filterSelectedAccounts(skippedIds: Set<Long>): List<ExternalAccount> {
-            return if (isNotEmpty()) filter { it.id !in skippedIds } else this
-        }
     }
 }
