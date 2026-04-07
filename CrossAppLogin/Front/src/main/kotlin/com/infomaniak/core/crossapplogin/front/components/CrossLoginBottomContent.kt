@@ -286,7 +286,7 @@ private fun LoginPage(
             )
 
             ConnectionButton(
-                primaryButtonType = customization.buttonStyle,
+                style = customization.buttonStyle,
                 isLoginButtonLoading = isLoginButtonLoading,
                 modifier = animatedButtonModifier,
                 text = pluralStringResource(R.plurals.buttonContinueWithAccounts, accounts.size - skippedIds().size),
@@ -363,7 +363,7 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun ConnectionButton(
-    primaryButtonType: ButtonStyle,
+    style: ButtonStyle,
     isLoginButtonLoading: () -> Boolean,
     text: String,
     onClick: () -> Unit,
@@ -371,11 +371,11 @@ private fun ConnectionButton(
 ) {
     ButtonExpanded(
         text = text,
-        shape = primaryButtonType.shape,
+        shape = style.shape,
         isLoginButtonLoading = isLoginButtonLoading,
         onClick = onClick,
         modifier = modifier
-            .height(primaryButtonType.height)
+            .height(style.height)
             .testTag("button_login_onboarding"),
     )
 }
@@ -461,7 +461,7 @@ object NoCrossAppLoginAccountsContent {
         isSignUpButtonLoading: () -> Boolean = { false },
     ): @Composable (Modifier, CrossLoginCustomization) -> Unit = { modifier, customization ->
         ConnectionButton(
-            primaryButtonType = customization.buttonStyle,
+            style = customization.buttonStyle,
             isLoginButtonLoading = isLoginButtonLoading,
             modifier = modifier,
             text = stringResource(R.string.buttonLogin),
