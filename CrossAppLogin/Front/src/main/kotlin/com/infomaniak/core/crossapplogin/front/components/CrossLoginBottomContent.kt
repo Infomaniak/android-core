@@ -372,7 +372,7 @@ private fun ConnectionButton(
     ButtonExpanded(
         text = text,
         shape = style.shape,
-        isLoginButtonLoading = isLoginButtonLoading,
+        isLoading = isLoginButtonLoading,
         onClick = onClick,
         modifier = modifier
             .height(style.height)
@@ -385,10 +385,10 @@ private fun ConnectionButton(
 private fun ButtonExpanded(
     text: String,
     shape: Shape,
-    isLoginButtonLoading: () -> Boolean,
+    isLoading: () -> Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
-    onClick: () -> Unit,
 ) {
     var visibility by rememberSaveable { mutableFloatStateOf(0f) }
 
@@ -406,7 +406,7 @@ private fun ButtonExpanded(
         shape = shape,
         colors = colors,
         contentPadding = PaddingValues(),
-        showIndeterminateProgress = isLoginButtonLoading,
+        showIndeterminateProgress = isLoading,
         indeterminateProgressDelay = BasicButtonDelay.Delayed,
     ) {
         Box(contentAlignment = Alignment.Center) {
@@ -430,7 +430,7 @@ private fun AccountCreationButton(
         stringResource(R.string.buttonCreateAccount),
         shape = style.shape,
         colors = ButtonDefaults.textButtonColors(),
-        isLoginButtonLoading = isSignUpButtonLoading,
+        isLoading = isSignUpButtonLoading,
         onClick = onClick,
         modifier = modifier
             .height(style.height)
@@ -486,7 +486,7 @@ object NoCrossAppLoginAccountsContent {
         ButtonExpanded(
             text = stringResource(R.string.buttonStart),
             shape = customization.buttonStyle.shape,
-            isLoginButtonLoading = { false },
+            isLoading = { false },
             onClick = { onStartClicked() },
             modifier = modifier.height(customization.buttonStyle.height),
         )
