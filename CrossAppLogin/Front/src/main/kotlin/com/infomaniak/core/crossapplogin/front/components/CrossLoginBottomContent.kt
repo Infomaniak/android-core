@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -364,9 +365,9 @@ private fun ButtonNext(onClick: () -> Unit, shape: Shape, modifier: Modifier = M
 private fun ConnectionButton(
     primaryButtonType: ButtonStyle,
     isLoginButtonLoading: () -> Boolean,
-    modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     ButtonExpanded(
         text = text,
@@ -385,8 +386,9 @@ private fun ButtonExpanded(
     text: String,
     shape: Shape,
     isLoginButtonLoading: () -> Boolean,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    onClick: () -> Unit,
 ) {
     var visibility by rememberSaveable { mutableFloatStateOf(0f) }
 
@@ -402,6 +404,7 @@ private fun ButtonExpanded(
         modifier = modifier.width(400.dp),
         onClick = onClick,
         shape = shape,
+        colors = colors,
         contentPadding = PaddingValues(),
         showIndeterminateProgress = isLoginButtonLoading,
         indeterminateProgressDelay = BasicButtonDelay.Delayed,
@@ -417,16 +420,22 @@ private fun ButtonExpanded(
 }
 
 @Composable
-private fun AccountCreationButton(isSignUpButtonLoading: () -> Boolean, onClick: () -> Unit) {
-    BasicButton(
-        modifier = Modifier.height(48.dp),
-        onClick = onClick,
+private fun AccountCreationButton(
+    style: ButtonStyle,
+    isSignUpButtonLoading: () -> Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    ButtonExpanded(
+        stringResource(R.string.buttonCreateAccount),
+        shape = style.shape,
         colors = ButtonDefaults.textButtonColors(),
-        showIndeterminateProgress = isSignUpButtonLoading,
-        indeterminateProgressDelay = BasicButtonDelay.Delayed,
-    ) {
-        Text(stringResource(R.string.buttonCreateAccount), style = Typography.bodyMedium)
-    }
+        isLoginButtonLoading = isSignUpButtonLoading,
+        onClick = onClick,
+        modifier = modifier
+            .height(style.height)
+            .testTag("button_create_account_onboarding"),
+    )
 }
 
 object CrossLoginBottomContentDefaults {
@@ -458,7 +467,12 @@ object NoCrossAppLoginAccountsContent {
             text = stringResource(R.string.buttonLogin),
             onClick = onLogin,
         )
-        AccountCreationButton(isSignUpButtonLoading, onCreateAccount)
+        AccountCreationButton(
+            primaryButtonType = customization.buttonStyle,
+            isSignUpButtonLoading = isSignUpButtonLoading,
+            onClick = onCreateAccount,
+            modifier = modifier
+        )
     }
 
     /**
