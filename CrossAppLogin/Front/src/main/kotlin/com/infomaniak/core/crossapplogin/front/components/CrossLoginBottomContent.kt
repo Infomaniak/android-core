@@ -423,8 +423,8 @@ private fun ButtonExpanded(
 private fun AccountCreationButton(
     style: ButtonStyle,
     isSignUpButtonLoading: () -> Boolean,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     ButtonExpanded(
         stringResource(R.string.buttonCreateAccount),
