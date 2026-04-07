@@ -468,7 +468,7 @@ object NoCrossAppLoginAccountsContent {
             onClick = onLogin,
         )
         AccountCreationButton(
-            primaryButtonType = customization.buttonStyle,
+            style = customization.buttonStyle,
             isSignUpButtonLoading = isSignUpButtonLoading,
             onClick = onCreateAccount,
             modifier = modifier
