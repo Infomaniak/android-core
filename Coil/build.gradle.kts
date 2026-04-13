@@ -50,6 +50,11 @@ dependencies {
     api(project(":Auth"))
     implementation(project(":Avatar"))
     implementation(project(":Network"))
+    implementation(project(":Sentry"))
+
+    implementation(core.androidx.core.ktx)
+    implementation(core.compose.material3)
+    implementation(core.coil.svg)
 
     api(core.coil)
     api(core.coil.network.okhttp)

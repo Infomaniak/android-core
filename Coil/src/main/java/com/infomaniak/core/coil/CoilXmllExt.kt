@@ -28,14 +28,29 @@ import android.graphics.drawable.GradientDrawable
 import android.widget.ImageView
 import androidx.annotation.ArrayRes
 import androidx.annotation.ColorInt
+import androidx.compose.ui.graphics.toArgb
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import coil3.ImageLoader
+import coil3.asDrawable
+import coil3.imageLoader
 import coil3.load
+import coil3.request.CachePolicy
+import coil3.request.ErrorResult
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
+import coil3.request.allowHardware
 import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
+import coil3.svg.SvgDecoder
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
+import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.coil.ImageLoaderProvider.simpleImageLoader
+import com.infomaniak.core.sentry.SentryLog
+
+const val TAG = "CoilXmllExt"
 
 fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
     return getBackgroundColorGradientDrawable(getBackgroundColorResBasedOnId(id, array))
@@ -104,4 +119,48 @@ fun Context.generateInitialsAvatarDrawable(
         canvas.drawText(initials, xPos.toFloat(), yPos, this)
     }
     return BitmapDrawable(this.resources, bitmap)
+}
+
+suspend fun AvatarType.toBitmap( appContext : Context): Bitmap? = when (this) {
+    is AvatarType.WithInitials.Url -> {
+        loadAsBitmap(url = this.url, appContext = appContext) ?: appContext.generateInitialsAvatarDrawable(
+            initials = this.initials,
+            background = getBackgroundColorGradientDrawable(this.colors.containerColor.toArgb()),
+            initialsColor = this.colors.contentColor.toArgb(),
+        ).toBitmap()
+    }
+    is AvatarType.WithInitials.Initials -> {
+        appContext.generateInitialsAvatarDrawable(
+            initials = this.initials,
+            background = getBackgroundColorGradientDrawable(this.colors.containerColor.toArgb()),
+            initialsColor = this.colors.contentColor.toArgb(),
+        ).toBitmap()
+    }
+    is AvatarType.DrawableResource -> {
+        ContextCompat.getDrawable(appContext, this.resource)?.toBitmap()
+    }
+    else -> null
+}
+
+private suspend fun loadAsBitmap(url: String?, size: Int = 256, appContext: Context): Bitmap? {
+    if (url.isNullOrBlank()) return null
+
+    val imageLoader = appContext.imageLoader
+
+    val request = ImageRequest.Builder(appContext)
+        .data(url)
+        .size(size)
+        .networkCachePolicy(policy = CachePolicy.ENABLED)
+        .allowHardware(false)
+        .decoderFactory(SvgDecoder.Factory())
+        .build()
+
+
+    return when (val result = imageLoader.execute(request)) {
+        is SuccessResult -> result.image.asDrawable(appContext.resources).toBitmap()
+        is ErrorResult -> {
+            SentryLog.e(TAG, "Failed to load SVG avatar", result.throwable)
+            null
+        }
+    }
 }
