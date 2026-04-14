@@ -18,11 +18,7 @@
 package com.infomaniak.core.network
 
 import com.infomaniak.core.network.utils.ErrorCodeTranslated
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
+import splitties.mainhandler.mainHandler
 import splitties.toast.UnreliableToastApi
 import splitties.toast.toast
 
@@ -51,18 +47,19 @@ object NetworkConfiguration {
         ApiEnvironment.current = apiEnvironment
         this.apiErrorCodes = apiErrorCodes
 
-        @OptIn(DelicateCoroutinesApi::class) // No need for structured concurrency here
-        if (BuildConfig.DEBUG || apiEnvironment != ApiEnvironment.Prod) GlobalScope.launch(Dispatchers.Main) {
-            yield() // Needed to ensure the underlying context of applicationContext (used in toast) is initialized
-
+        if (BuildConfig.DEBUG || apiEnvironment != ApiEnvironment.Prod) {
             // Show which API environment is being used on process creation.
             val apiHostMessage = when (apiEnvironment) {
                 ApiEnvironment.Prod -> "api host: Prod"
                 ApiEnvironment.PreProd -> "api host: Preprod"
                 is ApiEnvironment.Custom -> "api host: ${apiEnvironment.host}"
             }
-            @OptIn(UnreliableToastApi::class)
-            toast(apiHostMessage)
+
+            // Needed to ensure the underlying context of applicationContext (used in toast) is initialized
+            mainHandler.post {
+                @OptIn(UnreliableToastApi::class)
+                toast(apiHostMessage)
+            }
         }
     }
 }

@@ -48,10 +48,11 @@ dependencies {
     implementation(project(":Sentry"))
 
     implementation(core.androidx.core.ktx)
-    implementation(core.kotlinx.serialization.json)
     implementation(core.gson)
+    implementation(core.kotlinx.serialization.json)
     implementation(core.okhttp)
+    implementation(core.splitties.mainhandler)
+    implementation(core.splitties.systemservices)
     implementation(core.splitties.toast)
     implementation(core.stetho.okhttp3)
-    implementation(core.splitties.systemservices)
 }
