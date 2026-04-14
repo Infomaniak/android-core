@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ import com.infomaniak.core.crossapplogin.back.internal.ChannelMessageHandler
 import com.infomaniak.core.crossapplogin.back.internal.DisposableMessage
 import com.infomaniak.core.crossapplogin.back.internal.certificates.AppCertificateChecker
 import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdManager
+import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdResync
 import com.infomaniak.core.crossapplogin.back.internal.localAccountsFlow
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.Dispatchers
@@ -71,6 +72,8 @@ abstract class BaseCrossAppLoginService(protected open val selectedUserIdFlow: F
     private val signedInAccountRequests = Channel<Messenger>(capacity = Channel.UNLIMITED)
     private val syncSharedDeviceIdRequests = Channel<ByteArray>(capacity = Channel.UNLIMITED)
 
+    private val crossAppLogin by lazy { CrossAppLogin.forContext(this, lifecycleScope) }
+
     init {
         lifecycleScope.launch {
             lifecycle.currentStateFlow.first { it.isAtLeast(Lifecycle.State.STARTED) }
@@ -93,7 +96,8 @@ abstract class BaseCrossAppLoginService(protected open val selectedUserIdFlow: F
                 if (certificateChecker.isUidAllowed(msg.sendingUid).not()) return@use
 
                 val trustedClientMessenger = msg.replyTo
-                when (msg.what) {
+                when (IpcMessageWhat.entries.getOrNull(msg.what)) {
+                    null -> Unit
                     IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS -> {
                         check(signedInAccountRequests.trySend(trustedClientMessenger).isSuccess)
                     }
@@ -112,6 +116,18 @@ abstract class BaseCrossAppLoginService(protected open val selectedUserIdFlow: F
                             return@use
                         }
                         syncSharedDeviceIdRequests.trySend(sharedId)
+                    }
+                    IpcMessageWhat.RESYNC_SHARED_DEVICE_ID_REQUEST -> {
+                        val request = runCatching {
+                            ProtoBuf.decodeFromByteArray<SharedDeviceIdResync.ResyncRequest>(msg.unwrapByteArrayOrNull()!!)
+                        }.getOrElse { t ->
+                            SentryLog.wtf(TAG, "RESYNC_SHARED_DEVICE_ID_REQUEST message didn't contain expected data", t)
+                            return@use
+                        }
+                        handleSharedDeviceIdResyncRequest(trustedClientMessenger, request)
+                    }
+                    IpcMessageWhat.RESYNC_SHARED_DEVICE_ID_REPORT -> {
+                        TODO()
                     }
                 }
             }
@@ -136,7 +152,7 @@ abstract class BaseCrossAppLoginService(protected open val selectedUserIdFlow: F
         clientMessenger: Messenger,
         requestData: CrossAppDeviceIdRequest,
     ) {
-        val sharedDeviceIdManager = CrossAppLogin.forContext(this, lifecycleScope).sharedDeviceIdManager
+        val sharedDeviceIdManager = crossAppLogin.sharedDeviceIdManager
 
         sharedDeviceIdManager.findCrossAppDeviceId(requestData)?.let { sharedId ->
             sendSharedDeviceId(clientMessenger, sharedId)
@@ -161,6 +177,19 @@ abstract class BaseCrossAppLoginService(protected open val selectedUserIdFlow: F
         trustedClientMessenger.trySending { newMessage -> newMessage.putBundleWrappedDataInObj(accountsData) }
     }
 
+    private suspend fun handleSharedDeviceIdResyncRequest(
+        trustedClientMessenger: Messenger,
+        request: SharedDeviceIdResync.ResyncRequest
+    ) {
+        val counterRequest = crossAppLogin.sharedDeviceIdResync.onExternalResyncIncoming(request)
+        val response: SharedDeviceIdResync.ResyncResponse = if (counterRequest != null) {
+            SharedDeviceIdResync.ResyncResponse.AlreadySyncing(counterRequest)
+        } else {
+            TODO()
+        }
+        TODO("Reply with response")
+    }
+
     private inline fun Messenger.trySending(configureMessage: (Message) -> Unit): Boolean {
         val reply = Message.obtain().also { msg ->
             msg.isAsynchronous = true
@@ -175,10 +204,25 @@ abstract class BaseCrossAppLoginService(protected open val selectedUserIdFlow: F
         }
     }
 
-    internal object IpcMessageWhat {
-        const val GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS = 0
-        const val GET_SHARED_DEVICE_ID = 1
-        const val SYNC_SHARED_DEVICE_ID = 2
+    /**
+     * ## Important message to editors
+     *
+     * For all existing entries, unless the given ones never made it to a public release (which includes betas!):
+     * - **NEVER** change their order.
+     * - **NEVER** remove one that was present before.
+     * - **NEVER** reuse one that was used before. Those shall be unique and stable, essentially forever.
+     * - **Safe changes:**
+     *    1. Renaming any existing entry (without changing its purpose)
+     *    2. Adding new entries AT THE END.
+     *    3. Deprecating any entry (without changing its order).
+     *    4. Renaming this enum class.
+     */
+    internal enum class IpcMessageWhat {
+        GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS,
+        GET_SHARED_DEVICE_ID,
+        SYNC_SHARED_DEVICE_ID,
+        RESYNC_SHARED_DEVICE_ID_REQUEST,
+        RESYNC_SHARED_DEVICE_ID_REPORT,
     }
 
     companion object {

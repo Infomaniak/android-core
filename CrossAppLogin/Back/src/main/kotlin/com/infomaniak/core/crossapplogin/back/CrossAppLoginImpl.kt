@@ -217,7 +217,7 @@ internal class CrossAppLoginImpl(
 
                 try {
                     val request = Message.obtain().also {
-                        it.what = BaseCrossAppLoginService.IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS
+                        it.what = BaseCrossAppLoginService.IpcMessageWhat.GET_SNAPSHOT_OF_SIGNED_IN_ACCOUNTS.ordinal
                         it.replyTo = replyTo
                     }
                     messenger.send(request)

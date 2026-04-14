@@ -96,6 +96,15 @@ internal class SharedDeviceIdManagerImpl(
         }
     }
 
+    override suspend fun resyncCrossAppDeviceId(): Boolean {
+        val packages = targetPackageNames()
+        val appsToSendSyncReportTo = packages.filter { packageName ->
+            TODO("Send our cross-app-device-id over RESYNC_SHARED_DEVICE_ID_REQUEST")
+            TODO("Get result from RESYNC_SHARED_DEVICE_ID_RESPONSE")
+        }
+        TODO()
+    }
+
     private suspend fun getCrossAppDeviceId(): Uuid {
         storage.readDeviceId()?.let { return it }
         sharedDeviceIdMutex.withLock {
@@ -260,7 +269,7 @@ internal class SharedDeviceIdManagerImpl(
         val replyTo = Messenger(replyHandler)
         return try {
             val request = Message.obtain().also {
-                it.what = BaseCrossAppLoginService.IpcMessageWhat.GET_SHARED_DEVICE_ID
+                it.what = BaseCrossAppLoginService.IpcMessageWhat.GET_SHARED_DEVICE_ID.ordinal
                 it.replyTo = replyTo
                 val request = CrossAppDeviceIdRequest(packageNamesAlreadyBeingChecked = packageNamesToSkip)
                 it.putBundleWrappedDataInObj(ProtoBuf.encodeToByteArray(request))
@@ -276,7 +285,7 @@ internal class SharedDeviceIdManagerImpl(
         val messenger = Messenger(binder)
         try {
             val request = Message.obtain().also {
-                it.what = BaseCrossAppLoginService.IpcMessageWhat.SYNC_SHARED_DEVICE_ID
+                it.what = BaseCrossAppLoginService.IpcMessageWhat.SYNC_SHARED_DEVICE_ID.ordinal
                 it.putBundleWrappedDataInObj(newId.toByteArray())
             }
             Dispatchers.IO { messenger.send(request) }

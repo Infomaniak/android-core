@@ -70,5 +70,6 @@ dependencies {
     implementation(core.activity.compose) // To access ComponentActivity
 
     testImplementation(core.junit)
+    testImplementation(core.kotest.assertions)
     androidTestImplementation(core.androidx.junit)
 }

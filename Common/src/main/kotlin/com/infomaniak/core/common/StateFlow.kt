@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,15 @@
  */
 package com.infomaniak.core.common
 
+import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 
+@OptIn(ExperimentalForInheritanceCoroutinesApi::class)
 fun <T, R> StateFlow<T>.mapSync(transform: (T) -> R): StateFlow<R> = object : StateFlow<R> {
 
     override val replayCache: List<R> get() = listOf(value)
@@ -50,3 +56,26 @@ fun <T, R> StateFlow<T>.mapSync(transform: (T) -> R): StateFlow<R> = object : St
 }
 
 private val nullSurrogate = Any()
+
+suspend fun <T> MutableStateFlow<T>.updateOnce(
+    valueToWaitFor: T,
+    newValue: T,
+) {
+    while (true) {
+        currentCoroutineContext().ensureActive()
+        if (valueToWaitFor == value && compareAndSet(valueToWaitFor, newValue)) return
+        first { it == value }
+    }
+}
+
+suspend fun <T> MutableStateFlow<T>.updateOnce(
+    canUpdate: (currentValue: T) -> Boolean,
+    newValue: T,
+) {
+    while (true) {
+        currentCoroutineContext().ensureActive()
+        val currentValue = value
+        if (canUpdate(currentValue) && compareAndSet(currentValue, newValue)) return
+        first(canUpdate)
+    }
+}

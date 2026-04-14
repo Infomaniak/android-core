@@ -20,6 +20,7 @@ package com.infomaniak.core.crossapplogin.back
 import android.content.Context
 import androidx.lifecycle.Lifecycle
 import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdManager
+import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdResync
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
@@ -66,4 +67,6 @@ sealed class CrossAppLogin {
 
     @ExperimentalUuidApi
     internal abstract val sharedDeviceIdManager: SharedDeviceIdManager
+
+    internal abstract val sharedDeviceIdResync: SharedDeviceIdResync
 }
