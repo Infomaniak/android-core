@@ -120,7 +120,7 @@ private fun Cursor.getNameFromDate(): String? = getDateAdded()?.toInstant()?.let
 
 fun Cursor.getFileDatesWithFallback(lastModifiedDateFallback: Date? = null): Pair<Date?, Date> {
     val createdAt = getFileCreatedDate()
-    val modifiedAt = getFileUpdatedDate() ?: lastModifiedDateFallback ?: createdAt ?: Date()
+    val modifiedAt = getFileUpdatedDate() ?: lastModifiedDateFallback.isValid() ?: createdAt.isValid() ?: Date()
     return createdAt to modifiedAt
 }
 
