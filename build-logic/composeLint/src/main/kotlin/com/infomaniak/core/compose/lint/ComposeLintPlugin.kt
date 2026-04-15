@@ -45,15 +45,8 @@ class ComposeLintPlugin : Plugin<Project> {
                     }
                 }
 
-                afterEvaluate {
-                    val androidExt = extensions.findByName("android") as? CommonExtension<*, *, *, *, *, *>
-                        ?: return@afterEvaluate
-
-                    if (androidExt.buildFeatures.compose == true) {
-                        dependencies {
-                            add("lintChecks", lintLibrary)
-                        }
-                    }
+                dependencies {
+                    add("lintChecks", lintLibrary)
                 }
             }
         }
