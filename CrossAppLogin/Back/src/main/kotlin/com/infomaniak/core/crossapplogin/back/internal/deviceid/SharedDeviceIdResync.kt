@@ -19,46 +19,45 @@
 
 package com.infomaniak.core.crossapplogin.back.internal.deviceid
 
+import android.os.Messenger
 import android.os.SystemClock
+import com.infomaniak.core.common.trySending
 import com.infomaniak.core.common.updateOnce
+import com.infomaniak.core.crossapplogin.back.putBundleWrappedDataInObj
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.protobuf.ProtoBuf
 import kotlinx.serialization.protobuf.ProtoNumber
 import splitties.coroutines.raceOf
 import splitties.experimental.ExperimentalSplittiesApi
+import splitties.init.appCtx
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 internal class SharedDeviceIdResync(
     private val targetPackageNames: suspend () -> Set<String>,
-    private val saveSharedDeviceId: suspend (Uuid) -> Unit,
 ) {
 
     private val localResyncingMutableFlow = MutableStateFlow<ResyncRequest?>(null)
     private val localResyncingFlow: StateFlow<ResyncRequest?> = localResyncingMutableFlow.asStateFlow()
     private val priorExternalResync = Channel<ResyncRequest>()
+    private val externalResyncMutex = Mutex()
 
-    suspend fun onExternalResyncIncoming(request: ResyncRequest): ResyncRequest? {
-        val localResyncing = localResyncingFlow.value
-        if (localResyncing != null) {
-            if (localResyncing.startedBefore(request)) return localResyncing
-            else priorExternalResync.send(request)
-        }
-        return null
-    }
-
-    suspend fun tryResyncCrossAppDeviceId(ourSharedDeviceId: Uuid): Boolean {
+    suspend fun tryResyncSharedDeviceId(ourSharedDeviceId: Uuid): Boolean {
         try {
             localResyncingMutableFlow.updateOnce(valueToWaitFor = null, newValue = ResyncRequest.now(ourSharedDeviceId))
             return raceOf(
-                { resyncCrossAppDeviceId(ourSharedDeviceId) },
+                { resyncSharedDeviceId(ourSharedDeviceId) },
                 {
-                    saveSharedDeviceId(priorExternalResync.receive().id)
+                    SharedDeviceIdStorage.setDeviceId(priorExternalResync.receive().id)
                     false
                 }
             )
@@ -67,7 +66,39 @@ internal class SharedDeviceIdResync(
         }
     }
 
-    private suspend fun resyncCrossAppDeviceId(ourSharedDeviceId: Uuid): Boolean {
+    suspend fun handleSharedDeviceIdResyncRequest(
+        trustedClientMessenger: Messenger,
+        externalRequest: ResyncRequest
+    ) {
+        externalResyncMutex.withLock {
+            val counterRequest = onExternalResyncIncoming(externalRequest)
+            val response: ResyncResponse = if (counterRequest != null) {
+                ResyncResponse.AlreadySyncing(counterRequest)
+            } else {
+                TODO()
+            }
+            val responseBytes = ProtoBuf.encodeToByteArray(response)
+            val succeeded = trustedClientMessenger.trySending { newMessage ->
+                newMessage.putBundleWrappedDataInObj(responseBytes)
+            }
+            if (succeeded) updateSyncStatus(
+                packageName = externalRequest.sourceAppPackageName,
+                id = externalRequest.id,
+                status = SyncStatus.SyncedExternally
+            )
+        }
+    }
+
+    private fun onExternalResyncIncoming(request: ResyncRequest): ResyncRequest? {
+        val localResyncing = localResyncingFlow.value
+        if (localResyncing != null) {
+            if (localResyncing.startedBefore(request)) return localResyncing
+            else priorExternalResync.trySend(request)
+        }
+        return null
+    }
+
+    private suspend fun resyncSharedDeviceId(ourSharedDeviceId: Uuid): Boolean {
         val packages = targetPackageNames()
         cleanSyncStatusesOfUninstalledApps(packages)
 
@@ -85,7 +116,7 @@ internal class SharedDeviceIdResync(
                     return@filter true
                 }
                 is ResyncResponse.AlreadySyncing -> {
-                    saveSharedDeviceId(response.id)
+                    SharedDeviceIdStorage.setDeviceId(response.priorRequest.id)
                     return false
                 }
                 null -> {
@@ -143,14 +174,16 @@ internal class SharedDeviceIdResync(
 
     @Serializable
     data class ResyncRequest(
-        @ProtoNumber(1) val id: Uuid,
-        @ProtoNumber(2) val elapsedRealtimeNanos: Long,
+        @ProtoNumber(1) val sourceAppPackageName: String,
+        @ProtoNumber(2) val id: Uuid,
+        @ProtoNumber(3) val elapsedRealtimeNanos: Long,
     ) {
 
         fun startedBefore(other: ResyncRequest): Boolean = elapsedRealtimeNanos < other.elapsedRealtimeNanos
 
         companion object {
             fun now(id: Uuid) = ResyncRequest(
+                sourceAppPackageName = appCtx.packageName,
                 id = id,
                 elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
             )
@@ -183,7 +216,7 @@ internal class SharedDeviceIdResync(
     @Serializable
     enum class SyncStatus {
         @ProtoNumber(1) Synced,
-        @ProtoNumber(2) SyncedExternally,
-        @ProtoNumber(3) SyncedAndReportSaved,
+        @ProtoNumber(2) SyncedAndReportSaved,
+        @ProtoNumber(3) SyncedExternally,
     }
 }

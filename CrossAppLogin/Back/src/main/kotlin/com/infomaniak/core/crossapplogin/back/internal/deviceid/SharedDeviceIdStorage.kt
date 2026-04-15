@@ -19,6 +19,7 @@ package com.infomaniak.core.crossapplogin.back.internal.deviceid
 
 import android.provider.Settings
 import android.provider.Settings.Secure.ANDROID_ID
+import androidx.annotation.VisibleForTesting
 import androidx.core.util.AtomicFile
 import com.infomaniak.core.common.extensions.write
 import kotlinx.coroutines.Dispatchers
@@ -57,16 +58,7 @@ internal object SharedDeviceIdStorage {
     @Throws(IOException::class)
     internal suspend fun readDeviceId(): Uuid? = Dispatchers.IO {
         localDataReadWriteMutex.withLock {
-            try {
-                dataFile.openRead().use { stream ->
-                    ProtoBuf.decodeFromByteArray<SharedDeviceId>(stream.readBytes()).takeUnless {
-                        it.androidId != getAndroidId()
-                        // If different, the value was restored from a backup of another device (or post-reset).
-                    }?.let { sharedId -> Uuid.fromByteArray(sharedId.uuid) }
-                }
-            } catch (_: FileNotFoundException) {
-                null
-            }
+            readDataUnGuarded()?.let { sharedId -> Uuid.fromByteArray(sharedId.uuid) }
         }
     }
 
@@ -87,6 +79,33 @@ internal object SharedDeviceIdStorage {
         }
     }
 
+    internal suspend fun update(block: (SharedDeviceId?) -> SharedDeviceId) {
+        Dispatchers.IO {
+            localDataReadWriteMutex.withLock {
+                val currentValue: SharedDeviceId? = readDataUnGuarded()
+                val newValue = block(currentValue)
+                require(currentValue == null || currentValue.androidId == newValue.androidId)
+                dataFile.write { outputStream ->
+                    val data = newValue.let { ProtoBuf.encodeToByteArray(it) }
+
+                    outputStream.write(data)
+                }
+                _writtenIdFlow.tryEmit(Uuid.fromByteArray(newValue.uuid))
+            }
+        }
+    }
+
+    private fun readDataUnGuarded(): SharedDeviceId? = try {
+         dataFile.openRead().use { stream ->
+            ProtoBuf.decodeFromByteArray<SharedDeviceId>(stream.readBytes()).takeUnless {
+                it.androidId != getAndroidId()
+                // If different, the value was restored from a backup of another device (or post-reset).
+            }
+        }
+    } catch (_: FileNotFoundException) {
+        null
+    }
+
     /**
      * ## Important message to editors
      *
@@ -101,14 +120,17 @@ internal object SharedDeviceIdStorage {
      *    3. Deprecating any field (without touching its `@ProtoNumber`).
      *    4. Rename this data class.
      */
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     @Serializable
-    private class SharedDeviceId(
+    internal class SharedDeviceId(
         @ProtoNumber(1) val androidId: String,
         @ProtoNumber(2) val uuid: ByteArray,
+        @ProtoNumber(3) val syncRequesterPackageName: String? = null,
+        @ProtoNumber(4) val packageNamesStatuses: Map<String, SharedDeviceIdResync.SyncStatus> = emptyMap(),
     )
 
-    private suspend fun getAndroidId() = Dispatchers.IO {
+    private fun getAndroidId(): String {
         @Suppress("HardwareIds")
-        Settings.Secure.getString(appCtx.contentResolver, ANDROID_ID)
+        return Settings.Secure.getString(appCtx.contentResolver, ANDROID_ID)
     }
 }

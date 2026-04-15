@@ -34,6 +34,7 @@ import com.infomaniak.core.crossapplogin.back.internal.ChannelMessageHandler
 import com.infomaniak.core.crossapplogin.back.internal.DisposableMessage
 import com.infomaniak.core.crossapplogin.back.internal.certificates.AppCertificateChecker
 import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdManager
+import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdResync
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -157,6 +158,10 @@ internal class CrossAppLoginImpl(
         coroutineScope = coroutineScope,
         ipcIssuesManager = ipcIssuesManager,
         certificateChecker = certificateChecker,
+        targetPackageNames = ::targetPackageNames
+    )
+
+    override val sharedDeviceIdResync: SharedDeviceIdResync = SharedDeviceIdResync(
         targetPackageNames = ::targetPackageNames
     )
 
