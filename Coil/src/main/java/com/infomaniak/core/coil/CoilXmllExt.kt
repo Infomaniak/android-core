@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.coil
 
+import android.R
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -36,6 +37,8 @@ import coil3.request.placeholder
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 import com.infomaniak.core.coil.ImageLoaderProvider.simpleImageLoader
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.createBitmap
 
 fun Context.getBackgroundColorBasedOnId(id: Int, @ArrayRes array: Int? = null): GradientDrawable {
     return getBackgroundColorGradientDrawable(getBackgroundColorResBasedOnId(id, array))
@@ -89,19 +92,50 @@ fun Context.generateInitialsAvatarDrawable(
     background: Drawable,
     @ColorInt initialsColor: Int = Color.WHITE,
 ): Drawable {
-    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val bitmap = generateInitialsAvatarBitmap(
+        size = size,
+        initials = initials,
+        background = background,
+        initialsColor = initialsColor,
+    )
+    return bitmap.toDrawable(resources)
+}
+
+fun generateInitialsAvatarBitmap(
+    size: Int = 350,
+    initials: String,
+    background: Drawable,
+    @ColorInt initialsColor: Int = Color.WHITE,
+): Bitmap {
+    val bitmap = createBitmap(size, size)
     val canvas = Canvas(bitmap)
-    background.setBounds(canvas.clipBounds.left, canvas.clipBounds.top, canvas.clipBounds.right, canvas.clipBounds.bottom)
-    background.draw(canvas)
-    Paint().apply {
+
+    background.setBackground(canvas)
+
+    val paint = createInitialsAvatar(
+        size = size,
+        initialsColor = initialsColor,
+    )
+
+    val xPos = canvas.width / 2f
+    val yPos = (canvas.height / 2f - (paint.descent() + paint.ascent()) / 2f)
+    canvas.drawText(initials, xPos, yPos, paint)
+
+    return bitmap
+}
+
+private fun createInitialsAvatar(
+    size: Int = 350,
+    @ColorInt initialsColor: Int = Color.WHITE,
+): Paint {
+    return Paint().apply {
         isAntiAlias = true
         textAlign = Paint.Align.CENTER
         color = initialsColor
         textSize = (size / 2).toFloat()
-
-        val xPos = canvas.width / 2
-        val yPos = (canvas.height / 2 - (descent() + ascent()) / 2)
-        canvas.drawText(initials, xPos.toFloat(), yPos, this)
     }
-    return BitmapDrawable(this.resources, bitmap)
+}
+private fun Drawable.setBackground(canvas: Canvas){
+    setBounds(canvas.clipBounds.left, canvas.clipBounds.top, canvas.clipBounds.right, canvas.clipBounds.bottom)
+    draw(canvas)
 }
