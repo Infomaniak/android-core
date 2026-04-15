@@ -120,7 +120,7 @@ private fun Cursor.getNameFromDate(): String? = getDateAdded()?.toInstant()?.let
 
 fun Cursor.getFileDatesWithFallback(lastModifiedDateFallback: Date? = null): Pair<Date?, Date> {
     val createdAt = getFileCreatedDate()
-    val modifiedAt = getFileUpdatedDate() ?: lastModifiedDateFallback ?: createdAt ?: Date()
+    val modifiedAt = getFileUpdatedDate() ?: lastModifiedDateFallback.takeIfValid() ?: createdAt.takeIfValid() ?: Date()
     return createdAt to modifiedAt
 }
 
@@ -145,14 +145,14 @@ private fun Cursor.getLastModified(): Date? = getDateFromMillisecond(DocumentsCo
 private fun Cursor.getDateModified(): Date? = getDateFromSecond(MediaStore.MediaColumns.DATE_MODIFIED)
 
 private fun Cursor.getDateFromSecond(columnName: String): Date? {
-    return getLongOrNull(columnName)?.run { Date(seconds.inWholeMilliseconds) }.isValid()
+    return getLongOrNull(columnName)?.run { Date(seconds.inWholeMilliseconds) }.takeIfValid()
 }
 
 private fun Cursor.getDateFromMillisecond(columnName: String): Date? {
-    return getLongOrNull(columnName)?.let(::Date).isValid()
+    return getLongOrNull(columnName)?.let(::Date).takeIfValid()
 }
 
-private fun Date?.isValid() = this?.takeIf { it.time > 0 }
+private fun Date?.takeIfValid(): Date? = this?.takeIf { it.time > 0 }
 
 private fun Cursor.getColumnIndexOrNull(columnName: String) = getColumnIndex(columnName).takeUnless { it == -1 }
 
