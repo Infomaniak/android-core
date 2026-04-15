@@ -1,4 +1,5 @@
 [versions]
+accompanistPermissions = "0.37.3"
 activityCompose = "1.10.1" # TODO: Update to 1.11.0 or later after we bump compileSdk to 36
 adaptive = "1.2.0"
 agp = "8.13.0" # Delete this to-do on agp 9+ after searching and checking the project for the following: TODO[AGP9
@@ -59,6 +60,7 @@ swipeRefreshLayout = "1.2.0"
 workManager = "2.11.0"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 android-login = { module = "com.github.infomaniak:android-login", version.ref = "androidLogin" }
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
@@ -160,6 +162,7 @@ infomaniak-core-ui-compose-theme = { module = "com.infomaniak.core:Ui.Compose.Th
 infomaniak-core-ui-view = { module = "com.infomaniak.core:Ui.View" }
 infomaniak-core-ui-view-edgetoedge = { module = "com.infomaniak.core:Ui.View.EdgeToEdge" }
 infomaniak-core-webview = { module = "com.infomaniak.core:WebView" }
+infomaniak-core-permissionmanager = { module = "com.infomaniak.core:PermissionManager" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
