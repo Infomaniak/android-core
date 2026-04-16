@@ -28,12 +28,12 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun rememberPermissionManagerState(permissionType: PermissionType): PermissionManagerState {
-    val permissionString = permissionType.permission
+    val permission = permissionType.permission
 
-    return if (permissionString == null) {
+    return if (permission == null) {
         remember { UnsupportedApiPermissionManagerState }
     } else {
-        val permissionState = rememberPermissionState(permissionString)
+        val permissionState = rememberPermissionState(permission)
         val shouldDisplayRationale = rememberSaveable { mutableStateOf(false) }
         remember { SupportedApiPermissionManagerState(permissionState, shouldDisplayRationale) }
     }
@@ -41,8 +41,11 @@ fun rememberPermissionManagerState(permissionType: PermissionType): PermissionMa
 
 @Stable
 sealed interface PermissionManagerState {
-    val shouldDisplayRationale: Boolean
+    val shouldShowRationale: Boolean
 
     fun askPermission()
     fun dismissAndAskPermission()
+
+    @Composable
+    fun waitUntilGranted(action: () -> Unit): () -> Unit
 }

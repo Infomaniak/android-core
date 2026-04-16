@@ -17,11 +17,16 @@
  */
 package com.infomaniak.core.permissionmanager
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 
 @Stable
 internal object UnsupportedApiPermissionManagerState : PermissionManagerState {
-    override val shouldDisplayRationale: Boolean get() = false
+    override val shouldShowRationale: Boolean get() = false
+
     override fun askPermission() = Unit
     override fun dismissAndAskPermission() = Unit
+
+    @Composable
+    override fun waitUntilGranted(action: () -> Unit): () -> Unit = action
 }

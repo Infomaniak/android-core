@@ -18,8 +18,9 @@
 package com.infomaniak.core.permissionmanager
 
 import android.Manifest
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 
 enum class PermissionType(val permission: String?) {
-    Notification(if (Build.VERSION.SDK_INT >= 33) Manifest.permission.POST_NOTIFICATIONS else null),
+    Notification(permission = if (SDK_INT >= 33) Manifest.permission.POST_NOTIFICATIONS else null),
+    WriteExternalStorage(permission = if (SDK_INT >= 29) null else Manifest.permission.WRITE_EXTERNAL_STORAGE),
 }

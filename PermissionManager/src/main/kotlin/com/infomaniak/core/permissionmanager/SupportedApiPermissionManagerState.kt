@@ -17,31 +17,62 @@
  */
 package com.infomaniak.core.permissionmanager
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.shouldShowRationale
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
 
 @Stable
 @OptIn(ExperimentalPermissionsApi::class)
 internal class SupportedApiPermissionManagerState(
     private val permissionState: PermissionState,
-    private val _shouldDisplayRationale: MutableState<Boolean>,
+    private val _shouldShowRationale: MutableState<Boolean>,
 ) : PermissionManagerState {
-    override val shouldDisplayRationale: Boolean by _shouldDisplayRationale
+    override val shouldShowRationale: Boolean by _shouldShowRationale
 
     override fun askPermission() {
+        if (permissionState.status.isGranted) return
+
         if (permissionState.status.shouldShowRationale) {
-            _shouldDisplayRationale.value = true
+            _shouldShowRationale.value = true
         } else {
             permissionState.launchPermissionRequest()
         }
     }
 
     override fun dismissAndAskPermission() {
-        _shouldDisplayRationale.value = false
+        _shouldShowRationale.value = false
         permissionState.launchPermissionRequest()
+    }
+
+    @Composable
+    override fun waitUntilGranted(action: () -> Unit): () -> Unit = with(permissionState) {
+        val isGrantedFlow = remember(permission) { snapshotFlow { status.isGranted } }
+        val actionFired: CompletableJob = remember(permission) { Job() }
+
+        LaunchedEffect(permission) {
+            actionFired.join()
+            isGrantedFlow.first { it }
+            action()
+        }
+
+        return fun() {
+            if (status.isGranted) {
+                action()
+            } else {
+                launchPermissionRequest()
+                actionFired.complete()
+            }
+        }
     }
 }
