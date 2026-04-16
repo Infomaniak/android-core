@@ -79,9 +79,11 @@ internal class SharedDeviceIdResync(
     ) {
         externalResyncMutex.withLock {
             val counterRequest = onExternalResyncIncoming(externalRequest)
+            //TODO: Check onExternalResyncIncoming does what its supposed to do. Should it be inlined?
             val response: ResyncResponse = if (counterRequest != null) {
                 ResyncResponse.AlreadySyncing(counterRequest)
             } else {
+                //TODO: We should probably postpone our own resync worker.
                 val updated = SharedDeviceIdStorage.updateDeviceId(externalRequest)
                 if (updated) ResyncResponse.Updated else ResyncResponse.AlreadySynced
             }
@@ -94,6 +96,12 @@ internal class SharedDeviceIdResync(
                 id = externalRequest.id,
                 status = SyncStatus.SyncedExternally
             )
+        }
+    }
+
+    suspend fun handleResyncReport(trustedClientMessenger: Messenger, report: ResyncReport) {
+        externalResyncMutex.withLock {
+            TODO("Should we also guard against potential concurrent local resyncs?")
         }
     }
 
@@ -124,7 +132,7 @@ internal class SharedDeviceIdResync(
                     return@filter true
                 }
                 is ResyncResponse.AlreadySyncing -> {
-                    SharedDeviceIdStorage.setDeviceId(response.priorRequest.id)
+                    SharedDeviceIdStorage.updateDeviceId(response.priorRequest)
                     return false
                 }
                 null -> {

@@ -123,7 +123,10 @@ abstract class BaseCrossAppLoginService(protected open val selectedUserIdFlow: F
                     }
                 }
                 IpcMessageWhat.RESYNC_SHARED_DEVICE_ID_REPORT -> {
-                    TODO()
+                    val report = msg.extractProtoEncodedData<SharedDeviceIdResync.ResyncReport>()
+                    launch {
+                        crossAppLogin.sharedDeviceIdResync.handleResyncReport(trustedClientMessenger, report)
+                    }
                 }
             }
         } catch (e: Exception) {
