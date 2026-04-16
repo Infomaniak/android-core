@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalContracts::class)
+
 package com.infomaniak.core.crossapplogin.back.internal.deviceid
 
 import android.provider.Settings
@@ -22,6 +24,7 @@ import android.provider.Settings.Secure.ANDROID_ID
 import androidx.annotation.VisibleForTesting
 import androidx.core.util.AtomicFile
 import com.infomaniak.core.common.extensions.write
+import com.infomaniak.core.crossapplogin.back.internal.deviceid.SharedDeviceIdResync.SyncStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -38,6 +41,9 @@ import kotlinx.serialization.protobuf.ProtoNumber
 import splitties.init.appCtx
 import java.io.FileNotFoundException
 import java.io.IOException
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -55,10 +61,74 @@ internal object SharedDeviceIdStorage {
         writtenIdFlow = it.asSharedFlow()
     }
 
+    suspend fun cleanSyncStatusesOfUninstalledApps(installedApps: Set<String>) {
+        update { currentData ->
+            currentData ?: return
+            if (currentData.packageNamesStatuses.any { (packageName, _) -> packageName !in installedApps }) {
+                currentData.copy(
+                    packageNamesStatuses = currentData.packageNamesStatuses.filter { (packageName, _) ->
+                        packageName in installedApps
+                    }
+                )
+            } else return
+        }
+    }
+
     @Throws(IOException::class)
     internal suspend fun readDeviceId(): Uuid? = Dispatchers.IO {
         localDataReadWriteMutex.withLock {
             readDataUnGuarded()?.let { sharedId -> Uuid.fromByteArray(sharedId.uuid) }
+        }
+    }
+
+    suspend fun getPackagesWithStatus(expectedSharedDeviceId: Uuid, expectedStatus: SyncStatus): Set<String> {
+        return readAll(expectedSharedDeviceId)?.packageNamesStatuses?.mapNotNullTo(mutableSetOf()) { (packageName, status) ->
+            packageName.takeIf { expectedStatus == status }
+        } ?: emptySet()
+    }
+
+    suspend fun getSyncStatusForApp(packageName: String, expectedSharedDeviceId: Uuid): SyncStatus? {
+        return readAll(expectedSharedDeviceId)?.packageNamesStatuses?.get(packageName)
+    }
+
+    suspend fun updateDeviceId(externalRequest: SharedDeviceIdResync.ResyncRequest): Boolean {
+        val didIdChange: Boolean
+        update { currentData ->
+            if (currentData == null) {
+                didIdChange = true
+                SharedDeviceId(
+                    androidId = getAndroidId(),
+                    uuid = externalRequest.id.toByteArray(),
+                    syncRequesterPackageName = externalRequest.sourceAppPackageName,
+                    packageNamesStatuses = mapOf(externalRequest.sourceAppPackageName to SyncStatus.SyncedExternally)
+                )
+            } else {
+                val newId = externalRequest.id.toByteArray()
+                didIdChange = !(currentData.uuid contentEquals newId)
+                if (didIdChange) currentData.copy(
+                    uuid = newId,
+                    lastSyncRequesterPackageName = externalRequest.sourceAppPackageName,
+                    packageNamesStatuses = mapOf(externalRequest.sourceAppPackageName to SyncStatus.SyncedExternally)
+                ) else currentData.copy(
+                    lastSyncRequesterPackageName = externalRequest.sourceAppPackageName,
+                    packageNamesStatuses = currentData.packageNamesStatuses.let {
+                        if (it[externalRequest.sourceAppPackageName] == SyncStatus.SyncedExternally) {
+                            it
+                        } else {
+                            it + (externalRequest.sourceAppPackageName to SyncStatus.SyncedExternally)
+                        }
+                    }
+                )
+            }
+        }
+        return didIdChange
+    }
+
+    suspend fun updateSyncStatus(packageName: String, id: Uuid, status: SyncStatus) {
+        update { currentData ->
+            checkNotNull(currentData)
+            check(id.toByteArray() contentEquals currentData.uuid)
+            currentData.copy(packageNamesStatuses = currentData.packageNamesStatuses + (packageName to status))
         }
     }
 
@@ -79,15 +149,21 @@ internal object SharedDeviceIdStorage {
         }
     }
 
-    internal suspend fun update(block: (SharedDeviceId?) -> SharedDeviceId) {
-        Dispatchers.IO {
-            localDataReadWriteMutex.withLock {
-                val currentValue: SharedDeviceId? = readDataUnGuarded()
-                val newValue = block(currentValue)
-                require(currentValue == null || currentValue.androidId == newValue.androidId)
-                dataFile.write { outputStream ->
-                    val data = newValue.let { ProtoBuf.encodeToByteArray(it) }
+    @Throws(IOException::class)
+    private suspend fun readAll(expectedSharedDeviceId: Uuid) = Dispatchers.IO {
+        localDataReadWriteMutex.withLock { readDataUnGuarded() }?.takeIf {
+            it.uuid contentEquals expectedSharedDeviceId.toByteArray()
+        }
+    }
 
+    private suspend inline fun update(block: (SharedDeviceId?) -> SharedDeviceId) {
+        contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+        localDataReadWriteMutex.withLock {
+            val currentValue: SharedDeviceId? = Dispatchers.IO { readDataUnGuarded() }
+            val newValue = block(currentValue)
+            Dispatchers.IO {
+                dataFile.write { outputStream ->
+                    val data = ProtoBuf.encodeToByteArray(newValue)
                     outputStream.write(data)
                 }
                 _writtenIdFlow.tryEmit(Uuid.fromByteArray(newValue.uuid))
@@ -126,8 +202,20 @@ internal object SharedDeviceIdStorage {
         @ProtoNumber(1) val androidId: String,
         @ProtoNumber(2) val uuid: ByteArray,
         @ProtoNumber(3) val syncRequesterPackageName: String? = null,
-        @ProtoNumber(4) val packageNamesStatuses: Map<String, SharedDeviceIdResync.SyncStatus> = emptyMap(),
-    )
+        @ProtoNumber(4) val packageNamesStatuses: Map<String, SyncStatus> = emptyMap(),
+    ) {
+        fun copy(
+            androidId: String = this.androidId,
+            uuid: ByteArray = this.uuid,
+            lastSyncRequesterPackageName: String? = this.syncRequesterPackageName,
+            packageNamesStatuses: Map<String, SyncStatus> = this.packageNamesStatuses
+        ): SharedDeviceId = SharedDeviceId(
+            androidId = androidId,
+            uuid = uuid,
+            syncRequesterPackageName = lastSyncRequesterPackageName,
+            packageNamesStatuses = packageNamesStatuses
+        )
+    }
 
     private fun getAndroidId(): String {
         @Suppress("HardwareIds")

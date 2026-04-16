@@ -21,6 +21,7 @@ package com.infomaniak.core.crossapplogin.back.internal.deviceid
 
 import android.os.Messenger
 import android.os.SystemClock
+import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.trySending
 import com.infomaniak.core.common.updateOnce
 import com.infomaniak.core.crossapplogin.back.putBundleWrappedDataInObj
@@ -54,13 +55,19 @@ internal class SharedDeviceIdResync(
     suspend fun tryResyncSharedDeviceId(ourSharedDeviceId: Uuid): Boolean {
         try {
             localResyncingMutableFlow.updateOnce(valueToWaitFor = null, newValue = ResyncRequest.now(ourSharedDeviceId))
-            return raceOf(
-                { resyncSharedDeviceId(ourSharedDeviceId) },
-                {
-                    SharedDeviceIdStorage.setDeviceId(priorExternalResync.receive().id)
+            val resultSuccessStatusOrNewIdFromExternalResync: Xor<Boolean, Uuid> = raceOf(
+                { Xor.First(resyncSharedDeviceId(ourSharedDeviceId)) },
+                { Xor.Second(priorExternalResync.receive().id) }
+            )
+            return when (resultSuccessStatusOrNewIdFromExternalResync) {
+                is Xor.First -> resultSuccessStatusOrNewIdFromExternalResync.value
+                is Xor.Second -> {
+                    // We don't do this inside the race to ensure we don't update the device id while resync is running
+                    // and not canceled yet.
+                    SharedDeviceIdStorage.setDeviceId(resultSuccessStatusOrNewIdFromExternalResync.value)
                     false
                 }
-            )
+            }
         } finally {
             localResyncingMutableFlow.value = null
         }
@@ -75,7 +82,8 @@ internal class SharedDeviceIdResync(
             val response: ResyncResponse = if (counterRequest != null) {
                 ResyncResponse.AlreadySyncing(counterRequest)
             } else {
-                TODO()
+                val updated = SharedDeviceIdStorage.updateDeviceId(externalRequest)
+                if (updated) ResyncResponse.Updated else ResyncResponse.AlreadySynced
             }
             val responseBytes = ProtoBuf.encodeToByteArray(response)
             val succeeded = trustedClientMessenger.trySending { newMessage ->
@@ -100,7 +108,7 @@ internal class SharedDeviceIdResync(
 
     private suspend fun resyncSharedDeviceId(ourSharedDeviceId: Uuid): Boolean {
         val packages = targetPackageNames()
-        cleanSyncStatusesOfUninstalledApps(packages)
+        SharedDeviceIdStorage.cleanSyncStatusesOfUninstalledApps(packages)
 
         var shouldRetry = false
 
@@ -152,24 +160,20 @@ internal class SharedDeviceIdResync(
     }
 
     private suspend fun getSyncStatusForApp(packageName: String, expectedSharedDeviceId: Uuid): SyncStatus? {
-        TODO("Get data from storage")
+        return SharedDeviceIdStorage.getSyncStatusForApp(packageName, expectedSharedDeviceId)
     }
 
     private suspend fun updateSyncStatus(packageName: String, id: Uuid, status: SyncStatus) {
-        TODO()
+        SharedDeviceIdStorage.updateSyncStatus(packageName, id, status)
     }
 
     private suspend fun getSyncedPackages(expectedSharedDeviceId: Uuid): Set<String> {
-        TODO("Get data from storage")
+        return SharedDeviceIdStorage.getPackagesWithStatus(expectedSharedDeviceId, SyncStatus.Synced)
     }
 
     private suspend fun sendResyncReport(packageName: String, report: ResyncReport): Boolean {
         TODO("Send our cross-app-device-id over RESYNC_SHARED_DEVICE_ID_REPORT")
         TODO("Get result from RESYNC_SHARED_DEVICE_ID_REPORT_SAVED")
-    }
-
-    private suspend fun cleanSyncStatusesOfUninstalledApps(installedApps: Set<String>) {
-        TODO("Cleanup all data for apps not in targetPackageNames")
     }
 
     @Serializable
