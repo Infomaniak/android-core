@@ -17,12 +17,9 @@
  */
 package com.infomaniak.core.permissionmanager
 
-import androidx.compose.runtime.Stable
+import android.Manifest
+import android.os.Build
 
-@Stable
-sealed interface CustomPermissionManager {
-    val shouldShow: Boolean
-
-    fun askPermission()
-    fun dismissAndAskPermission()
+enum class PermissionType(val permission: String?) {
+    Notification(if (Build.VERSION.SDK_INT >= 33) Manifest.permission.POST_NOTIFICATIONS else null),
 }

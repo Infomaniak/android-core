@@ -26,22 +26,22 @@ import com.google.accompanist.permissions.shouldShowRationale
 
 @Stable
 @OptIn(ExperimentalPermissionsApi::class)
-internal class SupportedApiManager(
+internal class SupportedApiPermissionManagerState(
     private val permissionState: PermissionState,
-    private val _shouldShow: MutableState<Boolean>,
-) : CustomPermissionManager {
-    override val shouldShow: Boolean by _shouldShow
+    private val _shouldDisplayRationale: MutableState<Boolean>,
+) : PermissionManagerState {
+    override val shouldDisplayRationale: Boolean by _shouldDisplayRationale
 
     override fun askPermission() {
         if (permissionState.status.shouldShowRationale) {
-            _shouldShow.value = true
+            _shouldDisplayRationale.value = true
         } else {
             permissionState.launchPermissionRequest()
         }
     }
 
     override fun dismissAndAskPermission() {
-        _shouldShow.value = false
+        _shouldDisplayRationale.value = false
         permissionState.launchPermissionRequest()
     }
 }

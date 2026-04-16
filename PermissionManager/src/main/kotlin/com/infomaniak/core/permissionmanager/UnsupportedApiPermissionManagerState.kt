@@ -20,8 +20,8 @@ package com.infomaniak.core.permissionmanager
 import androidx.compose.runtime.Stable
 
 @Stable
-internal object UnsupportedApiManager : CustomPermissionManager {
-    override val shouldShow: Boolean get() = false
+internal object UnsupportedApiPermissionManagerState : PermissionManagerState {
+    override val shouldDisplayRationale: Boolean get() = false
     override fun askPermission() = Unit
     override fun dismissAndAskPermission() = Unit
 }

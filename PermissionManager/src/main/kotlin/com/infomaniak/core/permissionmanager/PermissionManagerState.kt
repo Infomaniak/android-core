@@ -1,5 +1,5 @@
 /*
- * Infomaniak SwissTransfer - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
 package com.infomaniak.core.permissionmanager
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -26,14 +27,22 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun rememberPermissionManager(customPermission: CustomPermission): CustomPermissionManager {
-    val permissionString = customPermission.permissionString
+fun rememberPermissionManagerState(permissionType: PermissionType): PermissionManagerState {
+    val permissionString = permissionType.permission
 
     return if (permissionString == null) {
-        remember { UnsupportedApiManager }
+        remember { UnsupportedApiPermissionManagerState }
     } else {
         val permissionState = rememberPermissionState(permissionString)
-        val shouldShow = rememberSaveable { mutableStateOf(false) }
-        remember { SupportedApiManager(permissionState, shouldShow) }
+        val shouldDisplayRationale = rememberSaveable { mutableStateOf(false) }
+        remember { SupportedApiPermissionManagerState(permissionState, shouldDisplayRationale) }
     }
+}
+
+@Stable
+sealed interface PermissionManagerState {
+    val shouldDisplayRationale: Boolean
+
+    fun askPermission()
+    fun dismissAndAskPermission()
 }

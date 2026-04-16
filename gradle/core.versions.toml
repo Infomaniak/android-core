@@ -143,6 +143,7 @@ infomaniak-core-network-ktor = { module = "com.infomaniak.core:Network.Ktor" }
 infomaniak-core-notifications = { module = "com.infomaniak.core:Notifications" }
 infomaniak-core-notifications-registration = { module = "com.infomaniak.core:Notifications.Registration" }
 infomaniak-core-onboarding = { module = "com.infomaniak.core:Onboarding" }
+infomaniak-core-permissionmanager = { module = "com.infomaniak.core:PermissionManager" }
 infomaniak-core-privacymanagement = { module = "com.infomaniak.core:PrivacyManagement" }
 infomaniak-core-recyclerview = { module = "com.infomaniak.core:RecyclerView" }
 infomaniak-core-sentry = { module = "com.infomaniak.core:Sentry" }
@@ -162,7 +163,6 @@ infomaniak-core-ui-compose-theme = { module = "com.infomaniak.core:Ui.Compose.Th
 infomaniak-core-ui-view = { module = "com.infomaniak.core:Ui.View" }
 infomaniak-core-ui-view-edgetoedge = { module = "com.infomaniak.core:Ui.View.EdgeToEdge" }
 infomaniak-core-webview = { module = "com.infomaniak.core:WebView" }
-infomaniak-core-permissionmanager = { module = "com.infomaniak.core:PermissionManager" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
