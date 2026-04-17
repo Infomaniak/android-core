@@ -26,7 +26,7 @@ internal fun Context.getFlavor(): String = runCatching {
     flavorField[null] as String
 }.getOrDefault("standard")
 
-internal fun Context.arePlayServicesLinked(): Boolean {
+internal fun Context.arePlayServicesAvailable(): Boolean {
     val enable = 0
     return runCatching {
         val googleApiAvailabilityClass = Class.forName("com.google.android.gms.common.GoogleApiAvailability")
@@ -38,6 +38,8 @@ internal fun Context.arePlayServicesLinked(): Boolean {
 }
 
 internal fun Context.isDontKeepActivitiesEnabled(): Boolean {
-    val disable = 0
-    return Global.getInt(contentResolver, Global.ALWAYS_FINISH_ACTIVITIES, disable) != disable
+    return runCatching {
+        val disable = 0
+        Global.getInt(contentResolver, Global.ALWAYS_FINISH_ACTIVITIES, disable) != disable
+    }.getOrDefault(false)
 }

@@ -67,7 +67,7 @@ object SentryConfig {
 
         Sentry.configureScope { scope ->
             scope.setTag("FlavorType", getFlavor())
-            scope.setTag("PlayServicesLinked", arePlayServicesLinked().toString())
+            scope.setTag("PlayServicesLinked", arePlayServicesAvailable().toString())
         }
 
         sentryConfigScopeOnActivityCreated { scope ->
