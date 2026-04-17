@@ -21,7 +21,6 @@
         <item quantity="other">Jatka näillä tileillä</item>
     </plurals>
     <string name="buttonCreateAccount">Luo tili</string>
-    <string name="buttonLogin">Kirjaudu</string>
     <string name="buttonStart">Aloita</string>
     <string name="buttonUseOtherAccount">Käytä toista tiliä</string>
     <string name="crossAppLoginAccountsLoaderTitle">Noudetaan tilejäsi…</string>

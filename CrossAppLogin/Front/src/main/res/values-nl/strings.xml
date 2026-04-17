@@ -21,7 +21,6 @@
         <item quantity="other">Doorgaan met deze accounts</item>
     </plurals>
     <string name="buttonCreateAccount">Een account aanmaken</string>
-    <string name="buttonLogin">Inloggen</string>
     <string name="buttonStart">Starten</string>
     <string name="buttonUseOtherAccount">Een ander account gebruiken</string>
     <string name="crossAppLoginAccountsLoaderTitle">Uw accounts ophalen…</string>

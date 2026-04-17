@@ -464,7 +464,7 @@ object NoCrossAppLoginAccountsContent {
             style = customization.buttonStyle,
             isLoginButtonLoading = isLoginButtonLoading,
             modifier = modifier,
-            text = stringResource(R.string.buttonLogin),
+            text = stringResource(RCore.string.buttonLogin),
             onClick = onLogin,
         )
         AccountCreationButton(

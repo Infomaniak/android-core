@@ -21,7 +21,6 @@
         <item quantity="other">Συνέχεια με αυτούς τους λογαριασμούς</item>
     </plurals>
     <string name="buttonCreateAccount">Δημιουργία λογαριασμού</string>
-    <string name="buttonLogin">Σύνδεση</string>
     <string name="buttonStart">Έναρξη</string>
     <string name="buttonUseOtherAccount">Χρήση άλλου λογαριασμού</string>
     <string name="crossAppLoginAccountsLoaderTitle">Ανάκτηση λογαριασμών σας…</string>

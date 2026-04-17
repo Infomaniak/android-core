@@ -22,6 +22,7 @@
     <string name="buttonCancel">Cancelar</string>
     <string name="buttonClose">Cerrar</string>
     <string name="buttonLater">Más tarde</string>
+    <string name="buttonLogin">Inicio de sesión</string>
     <string name="buttonNext">Siguiente</string>
     <string name="buttonNo">No</string>
     <string name="buttonRetry">Reintentar</string>

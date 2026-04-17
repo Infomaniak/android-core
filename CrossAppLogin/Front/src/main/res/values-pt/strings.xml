@@ -21,7 +21,6 @@
         <item quantity="other">Continuar com estas contas</item>
     </plurals>
     <string name="buttonCreateAccount">Criar uma conta</string>
-    <string name="buttonLogin">Iniciar sessão</string>
     <string name="buttonStart">Começar</string>
     <string name="buttonUseOtherAccount">Usar outra conta</string>
     <string name="crossAppLoginAccountsLoaderTitle">A obter as suas contas…</string>

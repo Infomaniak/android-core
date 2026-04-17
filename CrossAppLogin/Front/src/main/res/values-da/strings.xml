@@ -21,7 +21,6 @@
         <item quantity="other">Fortsæt med disse konti</item>
     </plurals>
     <string name="buttonCreateAccount">Opret en konto</string>
-    <string name="buttonLogin">Log ind</string>
     <string name="buttonStart">Start</string>
     <string name="buttonUseOtherAccount">Brug en anden konto</string>
     <string name="crossAppLoginAccountsLoaderTitle">Henter dine konti…</string>
