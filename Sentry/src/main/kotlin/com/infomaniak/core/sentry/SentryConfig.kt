@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package com.infomaniak.core.sentry
 
 import android.app.Application
 import com.infomaniak.core.network.models.exceptions.NetworkException
+import io.sentry.Sentry
 import io.sentry.SentryEvent
 import io.sentry.SentryOptions
 import io.sentry.android.core.SentryAndroid
@@ -62,6 +63,11 @@ object SentryConfig {
                     enableAutoFragmentLifecycleTracing = true,
                 )
             )
+        }
+
+        Sentry.configureScope { scope ->
+            scope.setTag("FlavorType", getFlavor())
+            scope.setTag("PlayServicesLinked", arePlayServicesLinked().toString())
         }
     }
 
