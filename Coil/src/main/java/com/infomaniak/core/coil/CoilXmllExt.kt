@@ -109,8 +109,7 @@ fun generateInitialsAvatarBitmap(
     val canvas = Canvas(bitmap)
 
     canvas.setBackground(background)
-    createInitialsAvatar(
-        canvas = canvas,
+    canvas.drawInitials(
         size = size,
         initials = initials,
         initialsColor = initialsColor,
@@ -119,8 +118,7 @@ fun generateInitialsAvatarBitmap(
     return bitmap
 }
 
-private fun createInitialsAvatar(
-    canvas: Canvas,
+private fun Canvas.drawInitials(
     size: Int = 350,
     initials: String,
     @ColorInt initialsColor: Int = Color.WHITE,
@@ -130,9 +128,9 @@ private fun createInitialsAvatar(
         textAlign = Paint.Align.CENTER
         color = initialsColor
         textSize = (size / 2).toFloat()
-        val xPos = canvas.width / 2f
-        val yPos = (canvas.height / 2f - (descent() + ascent()) / 2f)
-        canvas.drawText(initials, xPos, yPos, this)
+        val xPos = width / 2f
+        val yPos = (height / 2f - (descent() + ascent()) / 2f)
+        drawText(initials, xPos, yPos, this)
     }
 }
 
