@@ -18,6 +18,7 @@
 package com.infomaniak.core.sentry
 
 import android.content.Context
+import android.provider.Settings.Global
 
 internal fun Context.getFlavor(): String = runCatching {
     val buildConfigClass = Class.forName("$packageName.BuildConfig")
@@ -34,4 +35,9 @@ internal fun Context.arePlayServicesLinked(): Boolean {
         val isAvailableMethod = googleApiAvailabilityClass.getDeclaredMethod("isGooglePlayServicesAvailable", Context::class.java)
         isAvailableMethod.invoke(instance, this) as Int
     }.getOrDefault(1) == enable
+}
+
+internal fun Context.isDontKeepActivitiesEnabled(): Boolean {
+    val disable = 0
+    return Global.getInt(contentResolver, Global.ALWAYS_FINISH_ACTIVITIES, disable) != disable
 }

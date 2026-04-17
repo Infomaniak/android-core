@@ -69,6 +69,10 @@ object SentryConfig {
             scope.setTag("FlavorType", getFlavor())
             scope.setTag("PlayServicesLinked", arePlayServicesLinked().toString())
         }
+
+        sentryConfigScopeOnActivityCreated { scope ->
+            scope.setContexts("IsDontKeepActivitiesEnabled", isDontKeepActivitiesEnabled())
+        }
     }
 
     fun shouldBeDiscarded(
