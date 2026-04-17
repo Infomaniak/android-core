@@ -29,11 +29,28 @@ fun Application.sentryConfigScopeOnActivityCreated(onActivityCreatedBlock: Scope
             Sentry.configureScope(onActivityCreatedBlock)
         }
 
-        override fun onActivityStarted(activity: Activity) {}
-        override fun onActivityResumed(activity: Activity) {}
-        override fun onActivityPaused(activity: Activity) {}
-        override fun onActivityStopped(activity: Activity) {}
-        override fun onActivitySaveInstanceState(activity: Activity, savedInstanceState: Bundle) {}
-        override fun onActivityDestroyed(activity: Activity) {}
+        override fun onActivityStarted(activity: Activity) {
+            //Empty content
+        }
+
+        override fun onActivityResumed(activity: Activity) {
+            //Empty content
+        }
+
+        override fun onActivityPaused(activity: Activity) {
+            //Empty content
+        }
+
+        override fun onActivityStopped(activity: Activity) {
+            //Empty content
+        }
+
+        override fun onActivitySaveInstanceState(activity: Activity, savedInstanceState: Bundle) {
+            //Empty content
+        }
+
+        override fun onActivityDestroyed(activity: Activity) {
+            //Empty content
+        }
     })
 }

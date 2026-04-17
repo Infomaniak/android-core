@@ -23,7 +23,7 @@ import android.provider.Settings.Global
 internal fun Context.getFlavor(): String = runCatching {
     val buildConfigClass = Class.forName("$packageName.BuildConfig")
     val flavorField = buildConfigClass.getField("FLAVOR")
-    flavorField.get(null) as String
+    flavorField[null] as String
 }.getOrDefault("standard")
 
 internal fun Context.arePlayServicesLinked(): Boolean {
