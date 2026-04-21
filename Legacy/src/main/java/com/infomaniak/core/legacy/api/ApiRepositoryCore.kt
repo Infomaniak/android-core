@@ -33,7 +33,7 @@ abstract class ApiRepositoryCore {
         if (withEmails) with += "emails"
         if (withPhones) with += "phones"
         if (withSecurity) with += "security"
-        if (with.isNotEmpty()) with = "?with=$with"
+        if (with.isNotEmpty()) with = "&with=$with"
 
         val url = "${ApiRoutesCore.getUserProfile()}$with"
         return ApiController.callApi(url, ApiController.ApiMethod.GET, okHttpClient = okHttpClient)
