@@ -28,7 +28,6 @@ import com.infomaniak.core.common.DownloadStatus.Failed.LocalIssue
 import com.infomaniak.core.common.R
 import com.infomaniak.core.common.downloadStatusFlow
 import com.infomaniak.core.common.extensions.appName
-import com.infomaniak.core.common.extensions.appVersionName
 import com.infomaniak.core.common.isFinished
 import com.infomaniak.core.common.startDownloadingFile
 import kotlinx.coroutines.CoroutineScope
@@ -89,7 +88,6 @@ object DownloadManagerUtils {
         userAgent: String,
         extraHeaders: Iterable<Pair<String, String>>
     ): Request = addRequestHeader("Accept-Encoding", "gzip")
-        .addRequestHeader("App-Version", "Android $appVersionName")
         .addRequestHeader("User-Agent", userAgent)
         .addRequestHeaders(extraHeaders)
 

@@ -37,7 +37,6 @@ object HttpUtils {
         return Headers.Builder().apply {
             add("Accept-Language", getAcceptedLanguageHeaderValue())
             add("Accept-Encoding", "gzip")
-            add("App-Version", "Android $appVersionName")
             add("User-Agent", getUserAgent)
             if (HttpClientConfig.cacheDir == null) add("Cache-Control", "no-cache")
             contentType?.let {

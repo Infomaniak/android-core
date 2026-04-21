@@ -90,6 +90,5 @@ class HttpUtilsTest {
         Assert.assertEquals("application/json; charset=UTF-8", headers["Content-type"])
         Assert.assertEquals("no-cache", headers["Cache-Control"])
         Assert.assertEquals("mocked preference string", headers["Device-Identifier"])
-        Assert.assertEquals("Android 0.0.5", headers["App-Version"])
     }
 }
