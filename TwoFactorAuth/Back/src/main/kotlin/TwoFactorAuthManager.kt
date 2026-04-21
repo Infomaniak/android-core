@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,10 +24,10 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.eventFlow
 import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.common.Xor
+import com.infomaniak.core.common.combineFor
 import com.infomaniak.core.common.dynamicLazyMap
 import com.infomaniak.core.common.dynamicLazyMapOfSharedFlow
 import com.infomaniak.core.common.emitFirstsUntilSecond
-import com.infomaniak.core.common.combineFor
 import com.infomaniak.core.common.rateLimit
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
@@ -40,10 +40,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -55,6 +55,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
@@ -109,7 +110,7 @@ class TwoFactorAuthManager(
     }
 
     private val perUserIdRefreshTrigger = coroutineScope.dynamicLazyMap(perUserIdCacheManager) { _: Int ->
-        MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+        Channel<Unit>(capacity = Channel.CONFLATED)
     }
 
     private val perUserIdLatestChallenge = coroutineScope.dynamicLazyMapOfSharedFlow(perUserIdCacheManager) { userId: Int ->
@@ -117,7 +118,8 @@ class TwoFactorAuthManager(
             perUserIdTwoFactoAuth.useElement(userId) { twoFactorAuthAsync ->
                 val twoFactorAuth = twoFactorAuthAsync.await()
                 perUserIdRefreshTrigger.useElement(userId) { refreshTrigger ->
-                    emitAll(refreshTrigger.mapLatest { twoFactorAuth to twoFactorAuth.tryGettingLatestChallenge() })
+                    val refreshEvents = refreshTrigger.receiveAsFlow()
+                    emitAll(refreshEvents.mapLatest { twoFactorAuth to twoFactorAuth.tryGettingLatestChallenge() })
                 }
             }
         }
@@ -138,7 +140,7 @@ class TwoFactorAuthManager(
             userIds.collectLatest { userIds ->
                 perUserIdRefreshTrigger.useElements(userIds) { triggers ->
                     rateLimitedForegroundEvents.collect { _ ->
-                        triggers.values.forEach { trigger -> trigger.tryEmit(Unit) }
+                        triggers.values.forEach { trigger -> trigger.trySend(Unit) }
                     }
                 }
             }
@@ -197,7 +199,7 @@ class TwoFactorAuthManager(
     }
 
     fun refreshChallengeNow(userId: Long) {
-        perUserIdRefreshTrigger.useElement(userId.toInt()) { it.tryEmit(Unit) }
+        perUserIdRefreshTrigger.useElement(userId.toInt()) { it.trySend(Unit) }
     }
 
     private fun onApprovalChallengePushed(userId: Long, expirationTimeInMillis: Long) {
