@@ -1,6 +1,6 @@
 /*
- * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Infomaniak Authenticator - Android
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,11 +40,11 @@ abstract class ApiRepositoryCore {
             withPhones: Boolean = false,
             withSecurity: Boolean = false,
         ): ApiResponse<User> {
-            var with = ""
-            if (withEmails) with += "emails"
-            if (withPhones) with += "phones"
-            if (withSecurity) with += "security"
-            if (with.isNotEmpty()) with = "?with=$with"
+            val withQueries = mutableListOf<String>()
+            if (withEmails) withQueries.add("emails")
+            if (withPhones) withQueries.add("phones")
+            if (withSecurity) withQueries.add("security")
+            val with = if (withQueries.isNotEmpty()) "&with=${withQueries.joinToString(",")}" else ""
 
             val url = "${ApiRoutesCore.getUserProfile()}$with"
             return ApiController.callApi(
