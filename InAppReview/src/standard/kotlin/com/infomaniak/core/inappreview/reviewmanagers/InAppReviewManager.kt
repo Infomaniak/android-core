@@ -23,7 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.infomaniak.core.inappreview.AppReviewSettingsRepository
-import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.ALREADY_GAVE_REVIEW_KEY
+import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.ALREADY_ASK_REVIEW_KEY
 import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.APP_REVIEW_THRESHOLD_KEY
 import com.infomaniak.core.inappreview.BaseInAppReviewManager
 import com.infomaniak.core.webview.ui.WebViewActivity
@@ -38,20 +38,18 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
     private val appReviewSettingsRepository = AppReviewSettingsRepository(activity)
 
     private val appReviewCountdown = appReviewSettingsRepository.flowFor(APP_REVIEW_THRESHOLD_KEY)
-    private val alreadyGaveReview = appReviewSettingsRepository.flowFor(ALREADY_GAVE_REVIEW_KEY)
-
+    private val alreadyAskReview = appReviewSettingsRepository.flowFor(ALREADY_ASK_REVIEW_KEY)
     private var onUserWantsToReview: (() -> Unit)? = null
     private var onUserWantsToGiveFeedback: (() -> Unit)? = null
 
     override val shouldDisplayReviewDialog =
-        combine(alreadyGaveReview, appReviewCountdown) { alreadyGaveReview, countdown ->
+        combine(alreadyAskReview, appReviewCountdown) { alreadyGaveReview, countdown ->
             !alreadyGaveReview && countdown <= 0
         }.distinctUntilChanged()
 
     override fun init(
         countdownBehavior: Behavior,
         appReviewThreshold: Int?,
-        maxAppReviewThreshold: Int?,
         onUserWantToReview: (() -> Unit)?,
         onUserWantToGiveFeedback: (() -> Unit)?
     ) {
@@ -60,7 +58,6 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
 
         if (countdownBehavior == Behavior.LifecycleBased) activity.lifecycle.addObserver(observer = this)
         appReviewThreshold?.let { appReviewSettingsRepository.appReviewThreshold = it }
-        maxAppReviewThreshold?.let { appReviewSettingsRepository.maxAppReviewThreshold = it }
     }
 
     override fun onResume(owner: LifecycleOwner) {
@@ -71,37 +68,33 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
     //region public interface
     override fun onUserWantsToReview() {
         onUserWantsToReview?.invoke()
-        resetAppReviewSettings()
-        setAppReviewedStatus()
         launchInAppReview()
     }
 
     override fun onUserWantsToGiveFeedback(feedbackUrl: String) {
         onUserWantsToGiveFeedback?.invoke()
-        resetAppReviewSettings()
+        setAppReviewedStatus()
         WebViewActivity.startActivity(activity, feedbackUrl)
     }
 
-    override fun onUserWantsToDismiss() {
-        resetAppReviewSettings()
-    }
+    override fun onUserWantsToDismiss() = Unit
 
     override fun decrementAppReviewCountdown() {
         activity.lifecycleScope.launch(Dispatchers.IO) {
             val appReviewCountdown = appReviewSettingsRepository.getValue(APP_REVIEW_THRESHOLD_KEY)
-            alreadyGaveReview.collectLatest { hasGivenReview ->
-                if (!hasGivenReview) set(APP_REVIEW_THRESHOLD_KEY, appReviewCountdown - 1)
+            alreadyAskReview.collectLatest { hasAskedReview ->
+                if (!hasAskedReview) set(APP_REVIEW_THRESHOLD_KEY, appReviewCountdown - 1)
             }
         }
     }
+
+    override fun onReviewDialogShown() {
+        setAppReviewedStatus()
+    }
     //endregion
 
-    private fun resetAppReviewSettings() = activity.lifecycleScope.launch(Dispatchers.IO) {
-        appReviewSettingsRepository.resetReviewSettings()
-    }
-
     private fun setAppReviewedStatus() = activity.lifecycleScope.launch(Dispatchers.IO) {
-        set(ALREADY_GAVE_REVIEW_KEY, true)
+        set(ALREADY_ASK_REVIEW_KEY, true)
     }
 
     private fun <T> set(key: Preferences.Key<T>, value: T) = activity.lifecycleScope.launch(Dispatchers.IO) {
