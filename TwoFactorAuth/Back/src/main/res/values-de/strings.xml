@@ -22,7 +22,7 @@
     <string name="buttonEditPassword">Passwort ändern</string>
     <string name="twoFactorAuthAlreadyProcessedErrorTitle">Diese Anfrage wurde bereits bearbeitet</string>
     <string name="twoFactorAuthCheckOriginDescription">Sie haben diese Validierung nicht veranlasst?\nÜberprüfen Sie Ihre aktiven Geräte, und trennen Sie die, die Sie nicht erkennen.</string>
-    <string name="twoFactorAuthConfirmationDescription">Durch die Bestätigung dieser Verbindung wird diesem Gerät der Zugriff auf Ihr Infomaniak-Konto gestattet.</string>
+    <string name="twoFactorAuthConfirmationDescription">Durch die Bestätigung dieser Verbindung wird diesem Gerät der Zugriff auf Ihr Infomaniak-Konto gestattet</string>
     <string name="twoFactorAuthConnectionRejectedDescription">Sie haben einen Anmeldeversuch abgelehnt. Um Ihr Konto zu sichern, ändern Sie Ihr Passwort.\n\nWenn Sie diesen Versuch veranlasst haben, versuchen Sie es erneut, sich anzumelden.</string>
     <string name="twoFactorAuthConnectionRejectedTitle">Verbindung Abgelehnt</string>
     <string name="twoFactorAuthDeviceLabel">Gerät</string>

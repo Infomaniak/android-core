@@ -26,7 +26,7 @@
     <string name="twoFactorAuthConnectionRejectedDescription">Vous avez refusé une tentative de connexion. Pour sécuriser votre compte, changez votre mot de passe.\n\nSi vous êtes à l’origine de cette tentative, réessayez de vous connecter.</string>
     <string name="twoFactorAuthConnectionRejectedTitle">Connexion Refusée</string>
     <string name="twoFactorAuthDeviceLabel">Appareil</string>
-    <string name="twoFactorAuthExpiredErrorDescription">Le délai de validation est terminé.\nRelancez la demande.</string>
+    <string name="twoFactorAuthExpiredErrorDescription">Le délai de validation est terminé.\nRelancez la demande</string>
     <string name="twoFactorAuthExpiredErrorTitle">Cette demande de connexion a expiré</string>
     <string name="twoFactorAuthGenericErrorDescription">Impossible de terminer l’opération.\nRelancez la demande.</string>
     <string name="twoFactorAuthJustNowLabel">À l’instant</string>
