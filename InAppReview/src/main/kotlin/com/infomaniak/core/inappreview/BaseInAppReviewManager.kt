@@ -27,7 +27,6 @@ abstract class BaseInAppReviewManager(private val activity: ComponentActivity) :
     open fun init(
         countdownBehavior: Behavior = Behavior.LifecycleBased,
         appReviewThreshold: Int? = null,
-        maxAppReviewThreshold: Int? = null,
         onUserWantToReview: (() -> Unit)? = null,
         onUserWantToGiveFeedback: (() -> Unit)? = null
     ) = Unit
@@ -39,6 +38,8 @@ abstract class BaseInAppReviewManager(private val activity: ComponentActivity) :
     open fun onUserWantsToDismiss() = Unit
 
     open fun decrementAppReviewCountdown() = Unit
+
+    open fun onReviewDialogShown() = Unit
 
     enum class Behavior {
         /** This behavior uses the activity's lifecycle observer to automatically update the countdown */
