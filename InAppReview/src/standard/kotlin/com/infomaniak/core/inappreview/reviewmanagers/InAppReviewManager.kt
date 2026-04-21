@@ -25,6 +25,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.infomaniak.core.inappreview.AppReviewSettingsRepository
 import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.ALREADY_GAVE_REVIEW_KEY
 import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.APP_REVIEW_THRESHOLD_KEY
+import com.infomaniak.core.inappreview.AppReviewSettingsRepository.Companion.DO_NOT_SHOW_AGAIN_KEY
 import com.infomaniak.core.inappreview.BaseInAppReviewManager
 import com.infomaniak.core.webview.ui.WebViewActivity
 import kotlinx.coroutines.Dispatchers
@@ -39,13 +40,14 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
 
     private val appReviewCountdown = appReviewSettingsRepository.flowFor(APP_REVIEW_THRESHOLD_KEY)
     private val alreadyGaveReview = appReviewSettingsRepository.flowFor(ALREADY_GAVE_REVIEW_KEY)
+    private val doNotShowAgain = appReviewSettingsRepository.flowFor(DO_NOT_SHOW_AGAIN_KEY)
 
     private var onUserWantsToReview: (() -> Unit)? = null
     private var onUserWantsToGiveFeedback: (() -> Unit)? = null
 
     override val shouldDisplayReviewDialog =
-        combine(alreadyGaveReview, appReviewCountdown) { alreadyGaveReview, countdown ->
-            !alreadyGaveReview && countdown <= 0
+        combine(alreadyGaveReview, appReviewCountdown, doNotShowAgain) { alreadyGaveReview, countdown, doNotShowAgain ->
+            !alreadyGaveReview && countdown <= 0 && !doNotShowAgain
         }.distinctUntilChanged()
 
     override fun init(
@@ -80,6 +82,7 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
         onUserWantsToGiveFeedback?.invoke()
         resetAppReviewSettings()
         WebViewActivity.startActivity(activity, feedbackUrl)
+        disableReviewDialog()
     }
 
     override fun onUserWantsToDismiss() {
@@ -100,6 +103,10 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
         appReviewSettingsRepository.resetReviewSettings()
     }
 
+    private fun disableReviewDialog() = activity.lifecycleScope.launch(Dispatchers.IO) {
+        set(DO_NOT_SHOW_AGAIN_KEY, true)
+    }
+    
     private fun setAppReviewedStatus() = activity.lifecycleScope.launch(Dispatchers.IO) {
         set(ALREADY_GAVE_REVIEW_KEY, true)
     }
