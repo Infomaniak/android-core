@@ -135,6 +135,6 @@ private fun Canvas.drawInitials(
 }
 
 private fun Canvas.setBackground(background: Drawable){
-    background.setBounds(clipBounds.left, clipBounds.top, clipBounds.right, clipBounds.bottom)
+    background.bounds = clipBounds
     background.draw(this)
 }
