@@ -15,31 +15,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.permissionmanager
+package com.infomaniak.core.permissionmanager.rationale
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.infomaniak.core.permissionmanager.PermissionType
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun rememberPermissionManagerState(permissionType: PermissionType): PermissionManagerState {
+fun rememberRationalePermissionManagerState(permissionType: PermissionType): RationalePermissionManagerState {
     val permission = permissionType.permission
 
     return if (permission == null) {
-        remember { UnsupportedApiPermissionManagerState }
+        remember { UnsupportedApiRationalePermissionManagerState }
     } else {
         val permissionState = rememberPermissionState(permission)
-        remember(permission) { SupportedApiPermissionManagerState(permissionState) }
+        val shouldShowRationale = rememberSaveable(permission) { mutableStateOf(false) }
+        remember(permission) { SupportedApiRationalePermissionManagerState(permissionState, shouldShowRationale) }
     }
 }
 
 @Stable
-sealed interface PermissionManagerState {
-    fun askPermissionIfNeeded()
+sealed interface RationalePermissionManagerState {
+    val shouldShowRationale: Boolean
 
-    @Composable
-    fun waitUntilPermissionGranted(action: () -> Unit): () -> Unit
+    fun requestPermissionOrShowRationaleIfNeeded()
+    fun dismissAndAskPermission()
 }

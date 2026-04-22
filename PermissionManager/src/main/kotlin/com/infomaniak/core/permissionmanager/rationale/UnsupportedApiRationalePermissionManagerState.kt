@@ -15,15 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.permissionmanager
+package com.infomaniak.core.permissionmanager.rationale
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 
 @Stable
-internal object UnsupportedApiPermissionManagerState : PermissionManagerState {
-    override fun askPermissionIfNeeded() = Unit
+internal object UnsupportedApiRationalePermissionManagerState : RationalePermissionManagerState {
+    override val shouldShowRationale: Boolean get() = false
 
-    @Composable
-    override fun waitUntilPermissionGranted(action: () -> Unit): () -> Unit = action
+    override fun requestPermissionOrShowRationaleIfNeeded() = Unit
+    override fun dismissAndAskPermission() = Unit
 }
