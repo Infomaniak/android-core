@@ -54,4 +54,8 @@ open class ApiResponse<T>(
     fun isSuccess() = result == ApiResponseStatus.SUCCESS
 
     fun isError() = result == ApiResponseStatus.ERROR
+
+    override fun toString(): String {
+        return "ApiResponse(result=$result, data=$data, uri=$uri, error=$error, responseAt=$responseAt )"
+    }
 }
