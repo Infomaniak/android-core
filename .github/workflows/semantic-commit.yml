@@ -1,4 +1,4 @@
-name: Check Commit Message
+name: 'PR and Commit Message Check'
 
 on:
   pull_request_target:
