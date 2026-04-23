@@ -34,7 +34,10 @@ import kotlinx.coroutines.flow.first
 internal class SupportedApiPermissionManagerState(
     private val permissionState: PermissionState,
 ) : PermissionManagerState {
-    override fun askPermissionIfNeeded() = permissionState.launchPermissionRequest()
+    override fun askPermissionIfNeeded() {
+        if (permissionState.status.isGranted) return
+        permissionState.launchPermissionRequest()
+    }
 
     @Composable
     override fun waitUntilPermissionGranted(action: () -> Unit): () -> Unit = with(permissionState) {
