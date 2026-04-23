@@ -37,22 +37,3 @@ inline fun <T> ApiResponse<T>.on(
     onSuccess: T.() -> Unit,
     onError: ApiError.() -> Unit
 ): ApiResponse<T> = onSuccess(onSuccess).onError(onError)
-
-inline fun <T, R> ApiResponse<T>.mapSuccess(block: T.() -> R): R? {
-    return takeIf { isSuccess() }
-        ?.runCatching { data?.run(block) ?: throw ApiResponseException(this) }
-        ?.onFailure(Sentry::captureException)
-        ?.getOrNull()
-}
-
-inline fun <T, R> ApiResponse<T>.mapError(block: ApiError.() -> R): R? {
-    return takeIf { isError() }
-        ?.runCatching { error?.run(block) ?: throw ApiErrorException(this) }
-        ?.onFailure(Sentry::captureException)
-        ?.getOrNull()
-}
-
-inline fun <T, R> ApiResponse<T>.map(
-    onSuccess: T.() -> R,
-    onError: ApiError.() -> R
-): R? = mapSuccess(onSuccess) ?: mapError(onError)
