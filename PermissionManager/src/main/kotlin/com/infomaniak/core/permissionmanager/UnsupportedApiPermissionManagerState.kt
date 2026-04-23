@@ -22,8 +22,8 @@ import androidx.compose.runtime.Stable
 
 @Stable
 internal object UnsupportedApiPermissionManagerState : PermissionManagerState {
-    override fun askPermissionIfNeeded() = Unit
+    override fun launchPermissionRequestIfNeeded() = Unit
 
     @Composable
-    override fun waitUntilPermissionGranted(action: () -> Unit): () -> Unit = action
+    override fun dropIfDenied(action: () -> Unit): () -> Unit = action
 }

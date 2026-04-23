@@ -38,8 +38,8 @@ fun rememberPermissionManagerState(permissionType: PermissionType): PermissionMa
 
 @Stable
 sealed interface PermissionManagerState {
-    fun askPermissionIfNeeded()
+    fun launchPermissionRequestIfNeeded()
 
     @Composable
-    fun waitUntilPermissionGranted(action: () -> Unit): () -> Unit
+    fun dropIfDenied(action: () -> Unit): () -> Unit
 }
