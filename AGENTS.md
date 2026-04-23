@@ -40,6 +40,7 @@ utilities across Infomaniak apps. Designed for JDK 17+, minSdk 27, compiled SDK 
 
 - **Network**: Ktor HTTP client with interceptors
     - Key: `Network/Ktor/src/main/`
+    - HTTP client factory: `Network/Ktor/src/main/kotlin/CreateHttpClient.kt`
     - Models: `Network/Models/src/main/`
 - **Ktor**: Low-level Ktor extensions
 
