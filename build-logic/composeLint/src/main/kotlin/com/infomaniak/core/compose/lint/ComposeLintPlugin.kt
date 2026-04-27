@@ -39,10 +39,6 @@ class ComposeLintPlugin : Plugin<Project> {
                     lint {
                         lintConfig = rootProject.file("Core/lint.xml")
 
-                        // Update the baseline for all the subprojects with `./gradlew updateLintBaseline`
-                        // For Core, update the baseline with `./gradlew -p Core updateLintBaseline`
-                        baseline = file("lint-baseline.xml")
-
                         // To updateLintBaseline correctly, temporarily uncomment this line to only include errors and not
                         // warnings in the generated baseline
                         // ignoreWarnings = true

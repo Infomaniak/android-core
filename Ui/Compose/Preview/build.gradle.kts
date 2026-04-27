@@ -49,6 +49,10 @@ android {
             jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
         }
     }
+
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 dependencies {
