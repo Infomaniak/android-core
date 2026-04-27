@@ -22,12 +22,13 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.widget.ImageView
 import androidx.annotation.ArrayRes
 import androidx.annotation.ColorInt
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.drawable.toDrawable
 import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
@@ -89,19 +90,51 @@ fun Context.generateInitialsAvatarDrawable(
     background: Drawable,
     @ColorInt initialsColor: Int = Color.WHITE,
 ): Drawable {
-    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val bitmap = generateInitialsAvatarBitmap(
+        size = size,
+        initials = initials,
+        background = background,
+        initialsColor = initialsColor,
+    )
+    return bitmap.toDrawable(resources)
+}
+
+fun generateInitialsAvatarBitmap(
+    size: Int = 350,
+    initials: String,
+    background: Drawable,
+    @ColorInt initialsColor: Int = Color.WHITE,
+): Bitmap {
+    val bitmap = createBitmap(size, size)
     val canvas = Canvas(bitmap)
-    background.setBounds(canvas.clipBounds.left, canvas.clipBounds.top, canvas.clipBounds.right, canvas.clipBounds.bottom)
-    background.draw(canvas)
+
+    canvas.setBackground(background)
+    canvas.drawInitials(
+        size = size,
+        initials = initials,
+        initialsColor = initialsColor,
+    )
+
+    return bitmap
+}
+
+private fun Canvas.drawInitials(
+    size: Int = 350,
+    initials: String,
+    @ColorInt initialsColor: Int = Color.WHITE,
+) {
     Paint().apply {
         isAntiAlias = true
         textAlign = Paint.Align.CENTER
         color = initialsColor
         textSize = (size / 2).toFloat()
-
-        val xPos = canvas.width / 2
-        val yPos = (canvas.height / 2 - (descent() + ascent()) / 2)
-        canvas.drawText(initials, xPos.toFloat(), yPos, this)
+        val xPos = width / 2f
+        val yPos = (height / 2f - (descent() + ascent()) / 2f)
+        drawText(initials, xPos, yPos, this)
     }
-    return BitmapDrawable(this.resources, bitmap)
+}
+
+private fun Canvas.setBackground(background: Drawable){
+    background.bounds = clipBounds
+    background.draw(this)
 }
