@@ -21,19 +21,19 @@ import com.infomaniak.core.network.models.ApiError
 import com.infomaniak.core.network.models.ApiResponse
 import io.sentry.Sentry
 
-inline fun <T> ApiResponse<T>.onSuccess(block: T.() -> Unit): ApiResponse<T> = apply {
+inline fun <T : Any> ApiResponse<T>.onSuccess(block: T.() -> Unit): ApiResponse<T> = apply {
     if (isSuccess()) {
         data?.run(block) ?: Sentry.captureException(ApiResponseException(this))
     }
 }
 
-inline fun <T> ApiResponse<T>.onError(block: ApiError.() -> Unit): ApiResponse<T> = apply {
+inline fun <T : Any> ApiResponse<T>.onError(block: ApiError.() -> Unit): ApiResponse<T> = apply {
     if (isError()) {
         error?.run(block) ?: Sentry.captureException(ApiErrorException(this))
     }
 }
 
-inline fun <T> ApiResponse<T>.on(
+inline fun <T : Any> ApiResponse<T>.on(
     onSuccess: T.() -> Unit,
     onError: ApiError.() -> Unit
 ): ApiResponse<T> = onSuccess(onSuccess).onError(onError)
