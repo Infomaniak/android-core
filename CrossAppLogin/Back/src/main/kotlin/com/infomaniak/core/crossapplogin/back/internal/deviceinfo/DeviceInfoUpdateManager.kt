@@ -45,7 +45,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 object DeviceInfoUpdateManager : AssociatedUserDataCleanable {
 
-    private val lastSyncedKeyDir = appCtx.filesDir.resolve("lastSyncedDeviceInfoKeys")
+    private val lastSyncedKeyDir by lazy { appCtx.filesDir.resolve("lastSyncedDeviceInfoKeys") }
 
     val currentAppVersionData = suspendBlockingLazy(Dispatchers.IO) {
         appCtx.packageManager.getPackageInfo(appCtx.packageName, 0).let {

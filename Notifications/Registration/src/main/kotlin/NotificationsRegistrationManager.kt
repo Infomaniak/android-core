@@ -56,7 +56,7 @@ object NotificationsRegistrationManager : AssociatedUserDataCleanable {
 
     private const val TAG = "NotificationsRegistrationManager"
 
-    private val lastSyncedKeyDir = appCtx.filesDir.resolve("lastSyncedNotificationRegistrationInfo")
+    private val lastSyncedKeyDir by lazy { appCtx.filesDir.resolve("lastSyncedNotificationRegistrationInfo") }
 
     private val fcmTokenUpdates = MutableSharedFlow<String>(replay = 1)
 
