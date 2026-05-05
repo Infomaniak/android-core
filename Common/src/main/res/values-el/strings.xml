@@ -43,4 +43,5 @@
     <string name="trackingMatomoTitle">Matomo</string>
     <string name="trackingSentryDescription">Το Sentry είναι ένα εργαλείο που φιλοξενείται και διαχειρίζεται αποκλειστικά από την Infomaniak για να παρακολουθεί τη σταθερότητα της εφαρμογής σε πραγματικό χρόνο και να αναφέρει αυτόματα τυχόν τεχνικά σφάλματα στους προγραμματιστές μας.\n\nΑυτά τα δεδομένα επιτρέπουν στην ομάδα μας να διορθώνει και να βελτιστοποιεί γρήγορα την εφαρμογή, με αποτέλεσμα μια καλύτερη εμπειρία χρήστη για εσάς.</string>
     <string name="trackingSentryTitle">Sentry</string>
+    <string name="youHaveBeenDisconnectedLabel">Έχετε αποσυνδεθεί</string>
 </resources>
