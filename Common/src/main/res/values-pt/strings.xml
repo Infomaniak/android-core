@@ -43,4 +43,5 @@
     <string name="trackingMatomoTitle">Matomo</string>
     <string name="trackingSentryDescription">O Sentry é uma ferramenta alojada e gerida exclusivamente pela Infomaniak para monitorizar a estabilidade da aplicação em tempo real e reportar automaticamente quaisquer erros técnicos aos nossos programadores.\n\nEstes dados permitem à nossa equipa corrigir e otimizar rapidamente a aplicação, resultando numa melhor experiência de utilização para si.</string>
     <string name="trackingSentryTitle">Sentry</string>
+    <string name="youHaveBeenDisconnectedLabel">Foi desligado</string>
 </resources>
