@@ -17,7 +17,7 @@
  */
 package com.infomaniak.core.appintegrity.exceptions
 
-import androidx.activity.ComponentActivity
+import android.app.Activity
 import com.infomaniak.core.appintegrity.AppIntegrityIssue
 import com.infomaniak.core.appintegrity.IntegrityDialogResponse
 import com.infomaniak.core.appintegrity.isRecoverable
@@ -32,6 +32,6 @@ class AppIntegrityException(
     errorCode: Int,
     val issue: AppIntegrityIssue,
     message: String = "AppIntegrity issue ($errorCode): $issue",
-    val showRemediationDialog: (suspend (ComponentActivity) -> IntegrityDialogResponse)? = null,
+    val showRemediationDialog: (suspend (Activity) -> IntegrityDialogResponse)? = null,
     cause: Throwable?,
 ) : Exception(message, cause)
