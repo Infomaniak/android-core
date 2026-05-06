@@ -47,7 +47,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.common.extensions.openUrl
+import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.privacymanagement.theme.LocalPrivacyManagementTheme
 import com.infomaniak.core.privacymanagement.tracker.Tracker
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -96,7 +96,9 @@ private fun SourceButton(sourceUrl: String) {
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 48.dp),
-        onClick = { context.openUrl(sourceUrl) },
+        onClick = {
+            context.openUrlInCustomTab(sourceUrl)
+        },
         contentPadding = PaddingValues(horizontal = Margin.Medium),
         shape = RectangleShape,
     ) {
