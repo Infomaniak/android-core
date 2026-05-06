@@ -39,6 +39,7 @@ dependencies {
     api(core.splitties.coroutines)
     api(core.androidx.lifecycle.service)
     api(core.splitties.intents)
+    implementation(core.androidx.browser)
     implementation(core.androidx.collection)
     implementation(core.splitties.bitflags)
     implementation(core.splitties.toast)
