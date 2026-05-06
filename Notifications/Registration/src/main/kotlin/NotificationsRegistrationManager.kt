@@ -110,7 +110,9 @@ object NotificationsRegistrationManager : AssociatedUserDataCleanable {
             emit(token)
         }.stateIn(this)
 
-        val userIdsFlow = UserDatabase().userDao().allUsers.map { users -> users.map { it.id } }.distinctUntilChanged()
+        val userIdsFlow = UserDatabase().userDao().allUsers.map { users ->
+            users.map { it.id to it.apiToken }
+        }.distinctUntilChanged().map { it.map { (id, _) -> id } }
 
         latestFcmToken.collectLatest { fcmToken ->
             userIdsFlow.collectLatest { userIds ->

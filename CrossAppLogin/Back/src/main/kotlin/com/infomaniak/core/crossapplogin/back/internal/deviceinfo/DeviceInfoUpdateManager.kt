@@ -100,7 +100,9 @@ object DeviceInfoUpdateManager : AssociatedUserDataCleanable {
         Dispatchers.Default {
             val crossAppLogin = CrossAppLogin.forContext(context = appCtx, coroutineScope = this)
             crossAppLogin.sharedDeviceIdFlow.collectLatest { currentCrossAppDeviceId ->
-                val userIdsFlow = UserDatabase().userDao().allUsers.map { users -> users.map { it.id } }.distinctUntilChanged()
+                val userIdsFlow = UserDatabase().userDao().allUsers.map { users ->
+                    users.map { it.id to it.apiToken }
+                }.distinctUntilChanged().map { it.map { (id, _) -> id } }
                 userIdsFlow.collect { userIds ->
                     val isEverythingUpToDate = userIds.allConcurrent { isUpToDate(currentCrossAppDeviceId, it.toLong()) }
                     if (isEverythingUpToDate) return@collect
