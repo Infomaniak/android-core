@@ -17,7 +17,7 @@
  */
 package com.infomaniak.core.appintegrity
 
-import androidx.activity.ComponentActivity
+import android.app.Activity
 import com.google.android.play.core.integrity.IntegrityDialogRequest
 import com.google.android.play.core.integrity.IntegrityManager
 import com.google.android.play.core.integrity.IntegrityServiceException
@@ -56,7 +56,7 @@ internal fun IntegrityServiceException.toAppIntegrityException(
 private fun showStandardRemediationDialog(
     exception: StandardIntegrityException,
     standardIntegrityManager: StandardIntegrityManager
-): suspend (ComponentActivity) -> IntegrityDialogResponse = { activity ->
+): suspend (Activity) -> IntegrityDialogResponse = { activity ->
     val dialogRequest = StandardIntegrityManager.StandardIntegrityDialogRequest.builder()
         .setActivity(activity)
         .setTypeCode(IntegrityDialogTypeCode.GET_INTEGRITY)
@@ -70,7 +70,7 @@ private fun showStandardRemediationDialog(
 private fun showRemediationDialog(
     exception: IntegrityServiceException,
     integrityManager: IntegrityManager
-): suspend (ComponentActivity) -> IntegrityDialogResponse = { activity ->
+): suspend (Activity) -> IntegrityDialogResponse = { activity ->
     val dialogRequest = IntegrityDialogRequest.builder()
         .setActivity(activity)
         .setTypeCode(IntegrityDialogTypeCode.GET_INTEGRITY)
