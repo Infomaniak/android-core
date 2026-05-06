@@ -18,12 +18,12 @@
 package com.infomaniak.core.crossapplogin.back
 
 import android.content.pm.PackageManager
+import com.infomaniak.core.appintegrity.AppIntegrityIssue
 import com.infomaniak.core.appintegrity.AppIntegrityManager
 import com.infomaniak.core.appintegrity.AppIntegrityManager.Companion.APP_INTEGRITY_MANAGER_TAG
 import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
-import com.infomaniak.core.appintegrity.exceptions.FDroidUnsupportedIntegrityException
-import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
+import com.infomaniak.core.appintegrity.isRecoverable
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.common.dynamicLazyMap
@@ -43,9 +43,6 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import splitties.init.appCtx
 import java.io.IOException
-
-private const val INTEGRITY_UNAVAILABLE_ERROR_REGEX =
-    "(CANNOT_BIND_TO_SERVICE|PLAY_STORE_NOT_FOUND|PLAY_SERVICES_NOT_FOUND|PLAY_SERVICES_VERSION_OUTDATED|PLAY_STORE_VERSION_OUTDATED|TOO_MANY_REQUESTS)"
 
 internal class DerivedTokenGeneratorImpl(
     coroutineScope: CoroutineScope,
@@ -94,11 +91,7 @@ internal class DerivedTokenGeneratorImpl(
         true
     }.cancellable().getOrElse { exception ->
         when (exception) {
-            is FDroidUnsupportedIntegrityException -> false
-            is AppIntegrityException -> {
-                // If we get one of these Integrity exceptions, it means we won't be able to connect to the Service when tying later
-                exception.cause?.message?.contains(Regex(INTEGRITY_UNAVAILABLE_ERROR_REGEX)) == false
-            }
+            is AppIntegrityException -> exception.issue.isRecoverable()
             else -> true
         }
     }
@@ -162,25 +155,20 @@ internal class DerivedTokenGeneratorImpl(
         Xor.First(fetchNewAttestationToken(targetUrl))
     }.cancellable().getOrElse {
         val issue: Issue = when (it) {
-            is IntegrityException -> Issue.AppIntegrityCheckFailed(it)
             is IOException, is NetworkException -> Issue.NetworkIssue(it)
+            is AppIntegrityException if (it.issue == AppIntegrityIssue.RetryLater.NetworkError) -> Issue.NetworkIssue(it)
+            is AppIntegrityException -> Issue.AppIntegrityCheckFailed(it)
             else -> Issue.OtherIssue(it)
         }
         Xor.Second(issue)
     }
 
-    // TODO: Improve error handling as some are recoverable (network or backends availability related), while some are not.
-    //  See Play Integrity error codes: https://developer.android.com/google/play/integrity/error-codes,
-    //  and remediation: https://developer.android.com/google/play/integrity/remediation
-    @Throws(AppIntegrityException::class, FDroidUnsupportedIntegrityException::class)
+    @Throws(AppIntegrityException::class)
     private suspend inline fun fetchNewAttestationToken(targetUrl: String): String {
         val challenge = appIntegrityManager.getChallenge()
 
-        val appIntegrityToken = appIntegrityManager.requestClassicIntegrityVerdictToken(challenge)
-        SentryLog.i(APP_INTEGRITY_MANAGER_TAG, "request for app integrity token successful")
-
-        val attestationToken = appIntegrityManager.getApiIntegrityVerdict(
-            integrityToken = appIntegrityToken,
+        val attestationToken = appIntegrityManager.requestAttestationToken(
+            challenge = challenge,
             packageName = hostAppPackageName,
             targetUrl = targetUrl,
         )

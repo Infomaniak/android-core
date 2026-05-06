@@ -17,9 +17,21 @@
  */
 package com.infomaniak.core.appintegrity.exceptions
 
-/** An error has occurred when verified by api play integrity or our remote api */
-sealed class IntegrityException(override val cause: Throwable? = null) : Exception()
+import androidx.activity.ComponentActivity
+import com.infomaniak.core.appintegrity.AppIntegrityIssue
+import com.infomaniak.core.appintegrity.IntegrityDialogResponse
+import com.infomaniak.core.appintegrity.isRecoverable
 
-class AppIntegrityException(cause: Throwable?) : IntegrityException(cause)
-
-class FDroidUnsupportedIntegrityException() : IntegrityException()
+/**
+ * Thrown when either the Play App Integrity API or our remote API fails at verifying the device or the app integrity.
+ *
+ * - Some issues are recoverable, use the [isRecoverable] extension on [issue] to know.
+ * - Some issues are remediable through a dialog. Use [showRemediationDialog] to do so.
+ */
+class AppIntegrityException(
+    errorCode: Int,
+    val issue: AppIntegrityIssue,
+    message: String = "AppIntegrity issue ($errorCode): $issue",
+    val showRemediationDialog: (suspend (ComponentActivity) -> IntegrityDialogResponse)? = null,
+    cause: Throwable?,
+) : Exception(message, cause)
