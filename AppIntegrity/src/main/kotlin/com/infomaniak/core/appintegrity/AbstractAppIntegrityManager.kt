@@ -48,8 +48,8 @@ abstract class AbstractAppIntegrityManager {
 
     abstract suspend fun getChallenge(): String
 
-    abstract suspend fun getApiIntegrityVerdict(
-        integrityToken: String,
+    abstract suspend fun requestAttestationToken(
+        challenge: String,
         packageName: String,
         targetUrl: String,
     ): String
