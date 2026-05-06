@@ -19,7 +19,7 @@ ktlint {
 }
 
 rootProject.extra.apply {
-    set("coreCompileSdk", 35)
+    set("coreCompileSdk", 36)
     set("coreMinSdk", 27)
     set("javaVersion", JavaVersion.VERSION_17)
 }
