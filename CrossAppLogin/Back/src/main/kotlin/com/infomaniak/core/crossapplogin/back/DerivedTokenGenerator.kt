@@ -17,7 +17,7 @@
  */
 package com.infomaniak.core.crossapplogin.back
 
-import com.infomaniak.core.appintegrity.exceptions.IntegrityException
+import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import com.infomaniak.core.common.Xor
 import com.infomaniak.lib.login.ApiToken
 import okhttp3.Response
@@ -31,6 +31,6 @@ internal sealed interface DerivedTokenGenerator {
         data class ErrorResponse(val response: Response) : Issue
         data class NetworkIssue(val e: Exception) : Issue
         data class OtherIssue(val e: Throwable) : Issue
-        data class AppIntegrityCheckFailed(val details: IntegrityException) : Issue
+        data class AppIntegrityCheckFailed(val details: AppIntegrityException) : Issue
     }
 }

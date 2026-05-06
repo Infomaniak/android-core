@@ -21,7 +21,9 @@ import android.content.Context
 import android.util.Base64
 import android.util.Log
 import com.google.android.play.core.integrity.IntegrityManagerFactory
+import com.google.android.play.core.integrity.IntegrityServiceException
 import com.google.android.play.core.integrity.IntegrityTokenRequest
+import com.google.android.play.core.integrity.IntegrityTokenResponse
 import com.google.android.play.core.integrity.StandardIntegrityManager.PrepareIntegrityTokenRequest
 import com.google.android.play.core.integrity.StandardIntegrityManager.StandardIntegrityTokenProvider
 import com.google.android.play.core.integrity.StandardIntegrityManager.StandardIntegrityTokenRequest
@@ -32,7 +34,7 @@ import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.sentry.SentryLog
 import io.sentry.Sentry
 import io.sentry.SentryLevel
-import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
 /**
@@ -92,26 +94,24 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
      * ###### Can throw Integrity exceptions.
      */
     override suspend fun requestClassicIntegrityVerdictToken(challenge: String): String {
+        return requestClassicIntegrityVerdictTokenResponse(challenge)?.token() ?: "fake integrity token"
+    }
+
+    private suspend fun requestClassicIntegrityVerdictTokenResponse(challenge: String): IntegrityTokenResponse? {
         val nonce = Base64.encodeToString(challenge.toByteArray(), Base64.DEFAULT)
-        val token: CompletableDeferred<String> = CompletableDeferred()
 
         // The backend token check is disabled by default in preprod.
         // See [AppIntegrityRepository.getJwtToken]'s `force_integrity_test` if you want to enable it.
-        if (BuildConfig.DEBUG) return "fake integrity token"
-
-        classicIntegrityTokenProvider.requestIntegrityToken(IntegrityTokenRequest.builder().setNonce(nonce).build())
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    token.complete(task.result.token())
-                } else {
-                    token.completeExceptionally(task.exception ?: error("Failure when requestIntegrityToken"))
-                }
-            }
+        if (BuildConfig.DEBUG) return null
 
         return runCatching {
-            token.await()
+            val tokenRequest = IntegrityTokenRequest.builder().setNonce(nonce).build()
+            classicIntegrityTokenProvider.requestIntegrityToken(tokenRequest).await()
         }.cancellable().getOrElse { exception ->
-            throw AppIntegrityException(exception)
+            throw when (exception) {
+                is IntegrityServiceException -> exception.toAppIntegrityException(classicIntegrityTokenProvider)
+                else -> exception
+            }
         }
     }
 
@@ -125,22 +125,39 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
         return apiResponse.data ?: error("Get challenge cannot contain null data")
     }
 
-    override suspend fun getApiIntegrityVerdict(
-        integrityToken: String,
+    override suspend fun requestAttestationToken(
+        challenge: String,
+        packageName: String,
+        targetUrl: String
+    ): String {
+        val tokenResponse = requestClassicIntegrityVerdictTokenResponse(challenge)
+            ?: error("Can't get attestation token in debug")
+        return getApiIntegrityVerdict(tokenResponse, packageName, targetUrl)
+    }
+
+    private suspend fun getApiIntegrityVerdict(
+        integrityToken: IntegrityTokenResponse,
         packageName: String,
         targetUrl: String,
     ): String {
         runCatching {
             val apiResponse = appIntegrityRepository.getJwtToken(
-                integrityToken = integrityToken,
+                integrityToken = integrityToken.token(),
                 packageName = packageName,
                 targetUrl = targetUrl,
                 challengeId = challengeId,
             )
             return apiResponse.data ?: error("Integrity ApiResponse cannot contain null data")
         }.cancellable().getOrElse { exception ->
+            //TODO[AppIntegrity]: Handle verdict issues fully by looking up backend response.
+            // See this doc: https://developer.android.com/google/play/integrity/remediation#request-integrity-dialog
             if (exception is UnexpectedApiErrorFormatException && exception.bodyResponse.contains("invalid_attestation")) {
-                throw AppIntegrityException(exception)
+                throw AppIntegrityException(
+                    errorCode = exception.statusCode,
+                    issue = AppIntegrityIssue.SuspiciousError("invalid_attestation"),
+                    message = "Invalid attestation",
+                    cause = exception
+                )
             } else {
                 throw exception
             }
