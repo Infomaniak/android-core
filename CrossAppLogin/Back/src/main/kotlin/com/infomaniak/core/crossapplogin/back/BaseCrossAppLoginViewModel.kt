@@ -153,7 +153,7 @@ internal class CrossAppLoginFacadeImpl(
     @OptIn(ExperimentalSerializationApi::class)
     override suspend fun activateUpdates(hostActivity: ComponentActivity, singleSelection: Boolean): Nothing = coroutineScope {
         // Do nothing if the user's device cannot be verified via Play's AppIntegrity, to avoid displaying the CrossAppLogin
-        if (!derivedTokenGenerator.checkIfAppIntegrityCouldSucceed()) {
+        if (derivedTokenGenerator.isAppIntegrityGuaranteedToFail()) {
             _availableAccounts.emit(CrossAppLogin.AccountsFromOtherApps.none())
             awaitCancellation()
         }

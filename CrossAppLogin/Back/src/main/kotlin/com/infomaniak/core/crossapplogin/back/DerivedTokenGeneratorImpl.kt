@@ -17,13 +17,11 @@
  */
 package com.infomaniak.core.crossapplogin.back
 
-import android.content.pm.PackageManager
 import com.infomaniak.core.appintegrity.AppIntegrityIssue
 import com.infomaniak.core.appintegrity.AppIntegrityManager
 import com.infomaniak.core.appintegrity.AppIntegrityManager.Companion.APP_INTEGRITY_MANAGER_TAG
 import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
-import com.infomaniak.core.appintegrity.isRecoverable
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.common.dynamicLazyMap
@@ -75,26 +73,7 @@ internal class DerivedTokenGeneratorImpl(
         }.last()
     }
 
-    override suspend fun checkIfAppIntegrityCouldSucceed(): Boolean = runCatching {
-
-        val isRunningGrapheneOS = try {
-            appCtx.packageManager.getPackageInfo("app.grapheneos.info", PackageManager.MATCH_DISABLED_COMPONENTS)
-            true
-        } catch (_: PackageManager.NameNotFoundException) {
-            false
-        }
-        if (isRunningGrapheneOS) return false
-
-        // Be sure the length is between 16 and 500 char so the computed nonce sent to AppIntegrity will have a correct size
-        val dummyChallenge = "Dummy challenge to know if AppIntegrity can be reached"
-        appIntegrityManager.requestClassicIntegrityVerdictToken(dummyChallenge)
-        true
-    }.cancellable().getOrElse { exception ->
-        when (exception) {
-            is AppIntegrityException -> exception.issue.isRecoverable()
-            else -> true
-        }
-    }
+    override suspend fun isAppIntegrityGuaranteedToFail(): Boolean = appIntegrityManager.isGuaranteedToFail()
 
     private suspend fun attemptDerivingToken(token: String): Xor<ApiToken, Issue> {
         val targetUrl = tokenRetrievalUrl
