@@ -36,18 +36,15 @@ abstract class AbstractAppIntegrityManager {
         onNullTokenProvider: (String) -> Unit,
     )
 
-    /**
-     * Classic verdict request for Integrity token
-     *
-     * This doesn't automatically protect from replay attack, thus the use of challenge/challengeId pair with our API to add this
-     * layer of protection.
-     *
-     * ###### Can throw Integrity exceptions.
-     */
-    abstract suspend fun requestClassicIntegrityVerdictToken(challenge: String): String
+    abstract suspend fun isGuaranteedToFail(): Boolean
 
     abstract suspend fun getChallenge(): String
 
+    /**
+     * Currently uses classic Play Integrity API.
+     *
+     * @throws com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
+     */
     abstract suspend fun requestAttestationToken(
         challenge: String,
         packageName: String,
