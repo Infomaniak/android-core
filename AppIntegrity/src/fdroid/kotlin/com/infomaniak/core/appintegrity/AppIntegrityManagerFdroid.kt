@@ -38,9 +38,7 @@ class AppIntegrityManager(
         onFailure()
     }
 
-    override suspend fun requestClassicIntegrityVerdictToken(challenge: String): String {
-        throw unsupportedException()
-    }
+    override suspend fun isGuaranteedToFail(): Boolean = true
 
     override suspend fun getChallenge() = throw unsupportedException()
 
