@@ -1,6 +1,6 @@
 /*
- * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Infomaniak Authenticator - Android
+ * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.appintegrity.exceptions
+package com.infomaniak.core.appintegrity
 
-/** An error has occurred when verified by api play integrity or our remote api */
-sealed class IntegrityException(override val cause: Throwable? = null) : Exception()
-
-class AppIntegrityException(cause: Throwable?) : IntegrityException(cause)
-
-class FDroidUnsupportedIntegrityException() : IntegrityException()
+enum class IntegrityDialogResponse {
+    Failed,
+    Unavailable,
+    Cancelled,
+    Successful,
+    ;
+}

@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":Sentry"))
 
     "standardImplementation"(core.integrity)
+    "standardImplementation"(core.kotlinx.coroutines.play.services)
     implementation(core.ktor.client.core)
     implementation(core.ktor.client.content.negociation)
     implementation(core.ktor.client.json)
