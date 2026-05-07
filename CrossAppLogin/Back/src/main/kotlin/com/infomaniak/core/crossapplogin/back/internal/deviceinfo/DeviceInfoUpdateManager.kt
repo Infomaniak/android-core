@@ -100,9 +100,15 @@ object DeviceInfoUpdateManager : AssociatedUserDataCleanable {
         Dispatchers.Default {
             val crossAppLogin = CrossAppLogin.forContext(context = appCtx, coroutineScope = this)
             crossAppLogin.sharedDeviceIdFlow.collectLatest { currentCrossAppDeviceId ->
+
+                // We need to check for updates when the set of users changes, or when any of their token changes.
+                // When the token is refreshed, the corresponding file is supposed to have been cleared,
+                // so that the up-to-date check triggers a new schedule.
+                //TODO[Core-associated-user-data]: Factorize this duplicate code, and possibly the common logic.
                 val userIdsFlow = UserDatabase().userDao().allUsers.map { users ->
                     users.map { it.id to it.apiToken }
                 }.distinctUntilChanged().map { it.map { (id, _) -> id } }
+
                 userIdsFlow.collect { userIds ->
                     val isEverythingUpToDate = userIds.allConcurrent { isUpToDate(currentCrossAppDeviceId, it.toLong()) }
                     if (isEverythingUpToDate) return@collect
