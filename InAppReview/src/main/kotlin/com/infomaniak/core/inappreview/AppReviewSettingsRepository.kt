@@ -57,6 +57,7 @@ class AppReviewSettingsRepository(private val context: Context) {
     private fun <T> getInitialValue(key: Preferences.Key<T>) = when (key) {
         APP_REVIEW_THRESHOLD_KEY -> appReviewThreshold
         ALREADY_GAVE_REVIEW_KEY -> DEFAULT_ALREADY_GAVE_REVIEW
+        DO_NOT_SHOW_AGAIN_KEY -> DEFAULT_DO_NOT_SHOW_AGAIN
         else -> throw IllegalArgumentException("Unknown Preferences.Key")
     }
 
@@ -82,11 +83,13 @@ class AppReviewSettingsRepository(private val context: Context) {
 
         val APP_REVIEW_THRESHOLD_KEY = intPreferencesKey("appReviewThresholdKey")
         val ALREADY_GAVE_REVIEW_KEY = booleanPreferencesKey("alreadyGaveReview")
+        val DO_NOT_SHOW_AGAIN_KEY = booleanPreferencesKey("doNotShowAgainKey")
 
         internal const val DATA_STORE_NAME = "AppReviewSettingsDataStore"
 
         private const val DEFAULT_ALREADY_GAVE_REVIEW = false
 
         private const val DEFAULT_APP_REVIEW_THRESHOLD = 50
+        private const val DEFAULT_DO_NOT_SHOW_AGAIN = false
     }
 }
