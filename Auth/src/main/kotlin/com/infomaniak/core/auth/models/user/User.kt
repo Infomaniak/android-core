@@ -51,8 +51,6 @@ data class User(
     val isStaff: Boolean = false,
     @Embedded(prefix = "preferences_")
     val preferences: Preferences,
-    val phones: ArrayList<Phone>? = null,
-    val emails: ArrayList<Email>? = null,
 
     /**
      * Local
