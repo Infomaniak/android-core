@@ -33,9 +33,13 @@ abstract class ApiRepositoryCore {
     companion object {
         suspend fun getUserProfile(
             okHttpClient: OkHttpClient,
+            withSecurity: Boolean = false,
         ): ApiResponse<User> {
+            val with = if (withSecurity) "&with=security" else ""
+
+            val url = "${ApiRoutesCore.getUserProfile()}$with"
             return ApiController.callApi(
-                url = ApiRoutesCore.getUserProfile(),
+                url = url,
                 method = ApiController.ApiMethod.GET,
                 useKotlinxSerialization = true,
                 okHttpClient = okHttpClient,
