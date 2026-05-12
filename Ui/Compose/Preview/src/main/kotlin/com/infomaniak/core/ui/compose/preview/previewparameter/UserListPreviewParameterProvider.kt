@@ -33,7 +33,7 @@ private val usersPreviewData = listOf(
 )
 
 fun dummyUserOf(id: Int, firstName: String, lastName: String): User {
-    val dummyOrganization = OrganizationPreference(1234, 0L)
+    val dummyOrganization = OrganizationPreference(1234)
     val dummyPreferences = Preferences(null, dummyOrganization)
     val dummyApiToken = ApiToken("", null, "", 0, id, null, null)
 

@@ -105,6 +105,7 @@ class UserV3Migration : AutoMigrationSpec
 @DeleteColumn(tableName = "User", columnName = "preferences_timezone_gmt")
 @DeleteColumn(tableName = "User", columnName = "preferences_timezone_id")
 @DeleteColumn(tableName = "User", columnName = "preferences_timezone_name")
+@DeleteColumn(tableName = "User", columnName = "preferences_organizationPreference_lastLoginAt")
 @DeleteColumn(tableName = "User", columnName = "phones")
 @DeleteColumn(tableName = "User", columnName = "emails")
 class UserV6Migration : AutoMigrationSpec

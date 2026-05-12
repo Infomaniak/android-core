@@ -27,7 +27,4 @@ data class OrganizationPreference(
     @SerializedName("current_account_id")
     @ColumnInfo(defaultValue = "0")
     var currentOrganizationId: Int,
-    @SerializedName("last_login_at")
-    @ColumnInfo(defaultValue = "0")
-    var lastLoginAt: Long,
 ) : Parcelable
