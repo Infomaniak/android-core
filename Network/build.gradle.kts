@@ -50,6 +50,7 @@ dependencies {
     implementation(core.androidx.core.ktx)
     implementation(core.gson)
     implementation(core.kotlinx.serialization.json)
+    implementation(core.ktor.client.core)
     implementation(core.okhttp)
     implementation(core.splitties.mainhandler)
     implementation(core.splitties.systemservices)
