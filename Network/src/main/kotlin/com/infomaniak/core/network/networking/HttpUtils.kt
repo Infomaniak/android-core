@@ -20,6 +20,7 @@ package com.infomaniak.core.network.networking
 import android.os.Build
 import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.network.utils.Utils.getPreferredLocaleList
+import io.ktor.http.ContentType
 import io.ktor.http.HeadersBuilder
 import io.ktor.util.appendIfNameAbsent
 import okhttp3.Headers
@@ -56,8 +57,8 @@ object HttpUtils {
             }
     }
 
-    fun HeadersBuilder.setHeaders(contentType: String? = "application/json; charset=UTF-8") {
-        headerMap(contentType).forEach {
+    fun HeadersBuilder.setHeaders(contentType: ContentType? = ContentType.Application.Json) {
+        headerMap(contentType?.toString()).forEach {
             appendIfNameAbsent(it.key, it.value)
         }
     }
