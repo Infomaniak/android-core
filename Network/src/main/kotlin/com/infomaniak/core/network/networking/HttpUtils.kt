@@ -23,6 +23,7 @@ import com.infomaniak.core.network.utils.Utils.getPreferredLocaleList
 import io.ktor.http.HeadersBuilder
 import io.ktor.util.appendIfNameAbsent
 import okhttp3.Headers
+import okhttp3.Headers.Companion.toHeaders
 import java.net.URLEncoder
 
 object HttpUtils {
@@ -35,14 +36,7 @@ object HttpUtils {
      * add another one for token handling.
      */
     @ManualAuthorizationRequired
-    fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers =
-        Headers.Builder().apply {
-            headerMap(contentType).forEach {
-                add(it.key, it.value)
-            }
-        }.run {
-            build()
-        }
+    fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers = headerMap(contentType).toHeaders()
 
     val getUserAgent: String by lazy {
         with(NetworkConfiguration) {
