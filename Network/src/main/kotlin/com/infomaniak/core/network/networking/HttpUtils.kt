@@ -57,7 +57,7 @@ object HttpUtils {
             }
     }
 
-    fun HeadersBuilder.setHeaders(contentType: ContentType? = ContentType.Application.Json) {
+    fun HeadersBuilder.applyDefaultHeaders(contentType: ContentType? = ContentType.Application.Json) {
         headerMap(contentType?.toString()).forEach {
             appendIfNameAbsent(it.key, it.value)
         }

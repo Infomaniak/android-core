@@ -19,7 +19,7 @@
 @file:OptIn(ExperimentalContracts::class)
 
 import com.infomaniak.core.network.api.ApiController
-import com.infomaniak.core.network.networking.HttpUtils.setHeaders
+import com.infomaniak.core.network.networking.HttpUtils.applyDefaultHeaders
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
@@ -53,7 +53,7 @@ fun createHttpClient(
         retryOnExceptionIf { _, cause -> cause !is SerializationException }
     }
     defaultRequest {
-        headers { setHeaders() }
+        headers { applyDefaultHeaders() }
     }
     HttpResponseValidator {
         validateResponse { response ->

@@ -20,7 +20,7 @@ package com.infomaniak.core.twofactorauth.back
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.models.ApiResponse
-import com.infomaniak.core.network.networking.HttpUtils.setHeaders
+import com.infomaniak.core.network.networking.HttpUtils.applyDefaultHeaders
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import io.ktor.client.HttpClient
@@ -77,7 +77,7 @@ internal class TwoFactorAuthImpl(
         }
         defaultRequest {
             url("$LOGIN_ENDPOINT_URL/api/2fa/push/")
-            headers { setHeaders() }
+            headers { applyDefaultHeaders() }
         }
     }
 
