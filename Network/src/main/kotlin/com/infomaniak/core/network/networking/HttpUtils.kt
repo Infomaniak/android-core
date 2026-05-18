@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,11 @@ package com.infomaniak.core.network.networking
 import android.os.Build
 import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.network.utils.Utils.getPreferredLocaleList
+import io.ktor.http.ContentType
+import io.ktor.http.HeadersBuilder
+import io.ktor.util.appendIfNameAbsent
 import okhttp3.Headers
+import okhttp3.Headers.Companion.toHeaders
 import java.net.URLEncoder
 
 object HttpUtils {
@@ -33,21 +37,7 @@ object HttpUtils {
      * add another one for token handling.
      */
     @ManualAuthorizationRequired
-    fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers = with(NetworkConfiguration) {
-        return Headers.Builder().apply {
-            add("Accept-Language", getAcceptedLanguageHeaderValue())
-            add("Accept-Encoding", "gzip")
-            add("User-Agent", getUserAgent)
-            if (HttpClientConfig.cacheDir == null) add("Cache-Control", "no-cache")
-            contentType?.let {
-                add("Accept-type", it)
-                add("Content-type", it)
-            }
-            customHeaders?.forEach { customHeader -> add(customHeader.key, URLEncoder.encode(customHeader.value, "UTF-8")) }
-        }.run {
-            build()
-        }
-    }
+    fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers = headerMap(contentType).toHeaders()
 
     val getUserAgent: String by lazy {
         with(NetworkConfiguration) {
@@ -65,5 +55,29 @@ object HttpUtils {
                 weight -= 0.1F
                 "$accumulator,$languageTag;q=$weight"
             }
+    }
+
+    fun HeadersBuilder.applyDefaultHeaders(contentType: ContentType? = ContentType.Application.Json) {
+        headerMap(contentType?.toString()).forEach {
+            appendIfNameAbsent(it.key, it.value)
+        }
+    }
+
+    private fun headerMap(contentType: String?): Map<String, String> = with(NetworkConfiguration) {
+        buildMap {
+            put("Accept-Language", getAcceptedLanguageHeaderValue())
+            put("Accept-Encoding", "gzip")
+            put("User-Agent", getUserAgent)
+            if (HttpClientConfig.cacheDir == null) put("Cache-Control", "no-cache")
+            contentType?.let {
+                put("Accept-type", contentType)
+                put("Content-type", contentType)
+            }
+            customHeaders?.forEach { customHeader ->
+                computeIfAbsent(customHeader.key) {
+                    URLEncoder.encode(customHeader.value, "UTF-8")
+                }
+            }
+        }
     }
 }
