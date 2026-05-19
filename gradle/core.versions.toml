@@ -139,6 +139,7 @@ infomaniak-core-ksuite = { module = "com.infomaniak.core:KSuite" }
 infomaniak-core-ksuite-myksuite = { module = "com.infomaniak.core:KSuite.MyKSuite" }
 infomaniak-core-ksuite-pro = { module = "com.infomaniak.core:KSuite.KSuitePro" }
 infomaniak-core-ktor = { module = "com.infomaniak.core:Ktor" }
+infomaniak-core-login = { module = "com.infomaniak.core:Login" }
 infomaniak-core-matomo = { module = "com.infomaniak.core:Matomo" }
 infomaniak-core-network = { module = "com.infomaniak.core:Network" }
 infomaniak-core-network-ktor = { module = "com.infomaniak.core:Network.Ktor" }
