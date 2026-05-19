@@ -36,8 +36,6 @@ import createHttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -96,7 +94,6 @@ abstract class AbstractNotificationsRegistrationWorker(
         val httpClient = createHttpClient(okHttpClient)
         return runCatching {
             val response = httpClient.post("$INFOMANIAK_API_V1/devices/register") {
-                contentType(ContentType.Application.Json)
                 setBody(registrationInfo)
             }
             if (response.status.isSuccess()) {

@@ -30,7 +30,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.request
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -53,7 +52,7 @@ fun createHttpClient(
         retryOnExceptionIf { _, cause -> cause !is SerializationException }
     }
     defaultRequest {
-        headers { applyDefaultHeaders() }
+        applyDefaultHeaders()
     }
     HttpResponseValidator {
         validateResponse { response ->

@@ -32,9 +32,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.await
-import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.auth.api.ApiRoutesCore
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.common.autoCancelScope
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin
@@ -44,8 +44,6 @@ import createHttpClient
 import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -138,7 +136,6 @@ abstract class AbstractDeviceInfoUpdateWorker(
 
         val url = ApiRoutesCore.sendDeviceInfo()
         val response = httpClient.post(url) {
-            contentType(ContentType.Application.Json)
             setBody(deviceInfo)
         }
         if (response.status.isSuccess()) {

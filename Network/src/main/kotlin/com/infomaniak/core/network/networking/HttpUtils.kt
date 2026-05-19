@@ -20,8 +20,15 @@ package com.infomaniak.core.network.networking
 import android.os.Build
 import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.network.utils.Utils.getPreferredLocaleList
+import io.ktor.client.request.accept
+import io.ktor.client.request.headers
+import io.ktor.client.utils.CacheControl
 import io.ktor.http.ContentType
 import io.ktor.http.HeadersBuilder
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMessageBuilder
+import io.ktor.http.contentType
+import io.ktor.http.header.AcceptEncoding
 import io.ktor.util.appendIfNameAbsent
 import okhttp3.Headers
 import okhttp3.Headers.Companion.toHeaders
@@ -57,21 +64,31 @@ object HttpUtils {
             }
     }
 
-    fun HeadersBuilder.applyDefaultHeaders(contentType: ContentType? = ContentType.Application.Json) {
-        headerMap(contentType?.toString()).forEach {
+    fun HttpMessageBuilder.applyDefaultHeaders(contentType: ContentType? = ContentType.Application.Json) {
+        contentType?.let {
+            contentType(contentType)
+            accept(contentType)
+        }
+        headers {
+            applyDefaultHeaders()
+        }
+    }
+
+    private fun HeadersBuilder.applyDefaultHeaders() {
+        headerMap(contentType = null).forEach {
             appendIfNameAbsent(it.key, it.value)
         }
     }
 
     private fun headerMap(contentType: String?): Map<String, String> = with(NetworkConfiguration) {
         buildMap {
-            put("Accept-Language", getAcceptedLanguageHeaderValue())
-            put("Accept-Encoding", "gzip")
-            put("User-Agent", getUserAgent)
-            if (HttpClientConfig.cacheDir == null) put("Cache-Control", "no-cache")
+            put(HttpHeaders.AcceptLanguage, getAcceptedLanguageHeaderValue())
+            put(HttpHeaders.AcceptEncoding, AcceptEncoding.Gzip.toString())
+            put(HttpHeaders.UserAgent, getUserAgent)
+            if (HttpClientConfig.cacheDir == null) put(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
             contentType?.let {
-                put("Accept-type", contentType)
-                put("Content-type", contentType)
+                put(HttpHeaders.Accept, contentType)
+                put(HttpHeaders.ContentType, contentType)
             }
             customHeaders?.forEach { customHeader ->
                 computeIfAbsent(customHeader.key) {
