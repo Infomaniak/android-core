@@ -20,14 +20,13 @@ package com.infomaniak.core.network.networking
 import android.os.Build
 import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.network.utils.Utils.getPreferredLocaleList
-import io.ktor.client.plugins.DefaultRequest.DefaultRequestBuilder
-import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.accept
 import io.ktor.client.request.headers
 import io.ktor.client.utils.CacheControl
 import io.ktor.http.ContentType
 import io.ktor.http.HeadersBuilder
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMessageBuilder
 import io.ktor.http.contentType
 import io.ktor.http.header.AcceptEncoding
 import io.ktor.util.appendIfNameAbsent
@@ -65,7 +64,7 @@ object HttpUtils {
             }
     }
 
-    fun DefaultRequestBuilder.applyDefaultHeaders(contentType: ContentType? = ContentType.Application.Json) {
+    fun HttpMessageBuilder.applyDefaultHeaders(contentType: ContentType? = ContentType.Application.Json) {
         contentType?.let {
             contentType(contentType)
             accept(contentType)
@@ -73,10 +72,6 @@ object HttpUtils {
         headers {
             applyDefaultHeaders()
         }
-    }
-
-    fun HttpRequestBuilder.applyDefaultHeaders() {
-        headers { applyDefaultHeaders() }
     }
 
     private fun HeadersBuilder.applyDefaultHeaders() {
