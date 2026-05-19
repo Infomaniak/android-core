@@ -65,13 +65,13 @@ object HttpUtils {
 
     private fun headerMap(contentType: String?): Map<String, String> = with(NetworkConfiguration) {
         buildMap {
-            put("Accept-Language", getAcceptedLanguageHeaderValue())
-            put("Accept-Encoding", "gzip")
-            put("User-Agent", getUserAgent)
-            if (HttpClientConfig.cacheDir == null) put("Cache-Control", "no-cache")
+            put(HttpHeaders.AcceptLanguage, getAcceptedLanguageHeaderValue())
+            put(HttpHeaders.AcceptEncoding, AcceptEncoding.Gzip.toString())
+            put(HttpHeaders.UserAgent, getUserAgent)
+            if (HttpClientConfig.cacheDir == null) put(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
             contentType?.let {
-                put("Accept-type", contentType)
-                put("Content-type", contentType)
+                put(HttpHeaders.Accept, contentType)
+                put(HttpHeaders.ContentType, contentType)
             }
             customHeaders?.forEach { customHeader ->
                 computeIfAbsent(customHeader.key) {
