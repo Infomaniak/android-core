@@ -48,6 +48,8 @@ include(
     ":KSuite",
     ":Ktor",
     ":KSuite:KSuitePro",
+    ":Legacy",
+    ":Legacy:Confetti",
     ":KSuite:MyKSuite",
     ":Matomo",
     ":Network",
