@@ -31,7 +31,6 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
-import io.ktor.client.request.headers
 import io.ktor.client.request.patch
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -76,8 +75,8 @@ internal class TwoFactorAuthImpl(
             retryOnExceptionIf { _, cause -> cause !is SerializationException }
         }
         defaultRequest {
+            applyDefaultHeaders()
             url("$LOGIN_ENDPOINT_URL/api/2fa/push/")
-            headers { applyDefaultHeaders() }
         }
     }
 
