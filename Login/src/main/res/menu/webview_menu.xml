@@ -5,6 +5,6 @@
     <item
         android:id="@+id/doneItem"
         android:icon="@drawable/ic_baseline_close"
-        android:title="ok"
+        android:title="@string/buttonClose"
         app:showAsAction="always" />
 </menu>
