@@ -134,7 +134,7 @@ open class LoginWebViewClient(
             WEBVIEW_ERROR_CODE_CONNECTION_REFUSED,
             WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED -> getString(RCore.string.connectionError)
 
-            ERROR_ACCESS_DENIED -> getString(R.string.access_denied)
+            ERROR_ACCESS_DENIED -> getString(R.string.accessDenied)
             else -> {
                 InfomaniakLogin.sentryCallback?.invoke("Unknow error during Login", mapOf("ErrorCode" to errorCode))
                 getString(RCore.string.anErrorHasOccurred)

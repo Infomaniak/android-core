@@ -283,7 +283,7 @@ class InfomaniakLogin(
             }
             if (!error.isNullOrBlank()) {
                 val errorTitle = if (error == "access_denied") {
-                    context.getString(R.string.access_denied)
+                    context.getString(R.string.accessDenied)
                 } else {
                     context.getString(RCore.string.anErrorHasOccurred)
                 }
