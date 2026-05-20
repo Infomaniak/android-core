@@ -46,12 +46,13 @@ import splitties.init.appCtx
         ),
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
+        AutoMigration(from = 5, to = 6),
         AutoMigration(
-            from = 5, to = 6,
-            spec = UserV6Migration::class,
+            from = 6, to = 7,
+            spec = UserV7Migration::class,
         ),
     ],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
 
