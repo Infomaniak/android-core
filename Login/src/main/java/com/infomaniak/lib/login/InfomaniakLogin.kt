@@ -42,6 +42,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import java.security.MessageDigest
 import java.security.SecureRandom
+import com.infomaniak.core.common.R as RCore
 
 /**
  * Class which consists to create and manage an oauth 2.0 connection through Infomaniak Process
@@ -284,7 +285,7 @@ class InfomaniakLogin(
                 val errorTitle = if (error == "access_denied") {
                     context.getString(R.string.access_denied)
                 } else {
-                    context.getString(R.string.an_error_has_occurred)
+                    context.getString(RCore.string.anErrorHasOccurred)
                 }
                 onError(errorTitle)
             }
