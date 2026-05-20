@@ -27,6 +27,7 @@
     <string name="buttonRetry">Reintentar</string>
     <string name="buttonSave">Guardar</string>
     <string name="buttonYes">Sí</string>
+    <string name="connectionError">Problema de conexión a Internet</string>
     <string name="crossAppLoginIntegrityError">Recuperación de cuentas no disponible</string>
     <string name="errorDownload">Error al descargar</string>
     <string name="errorDownloadInsufficientSpace">No se puede descargar: espacio insuficiente</string>

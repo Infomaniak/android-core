@@ -27,6 +27,7 @@
     <string name="buttonRetry">Opnieuw proberen</string>
     <string name="buttonSave">Opslaan</string>
     <string name="buttonYes">Ja</string>
+    <string name="connectionError">Internetverbindingsprobleem</string>
     <string name="crossAppLoginIntegrityError">Ophalen van accounts niet beschikbaar</string>
     <string name="errorDownload">Downloadfout</string>
     <string name="errorDownloadInsufficientSpace">Kan niet downloaden: Onvoldoende ruimte</string>

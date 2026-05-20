@@ -27,6 +27,7 @@
     <string name="buttonRetry">Επανάληψη</string>
     <string name="buttonSave">Αποθήκευση</string>
     <string name="buttonYes">Ναι</string>
+    <string name="connectionError">Πρόβλημα σύνδεσης στο διαδίκτυο</string>
     <string name="crossAppLoginIntegrityError">Η ανάκτηση λογαριασμών δεν είναι διαθέσιμη</string>
     <string name="errorDownload">Σφάλμα λήψης</string>
     <string name="errorDownloadInsufficientSpace">Δεν είναι δυνατή η λήψη: Μη επαρκής χώρος</string>

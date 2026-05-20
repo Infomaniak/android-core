@@ -27,6 +27,7 @@
     <string name="buttonRetry">Försök igen</string>
     <string name="buttonSave">Spara</string>
     <string name="buttonYes">Ja</string>
+    <string name="connectionError">Problem med internetanslutning</string>
     <string name="crossAppLoginIntegrityError">Kontohämtning otillgänglig</string>
     <string name="errorDownload">Nedladdningsfel</string>
     <string name="errorDownloadInsufficientSpace">Kan inte ladda ner: Otillräckligt utrymme</string>

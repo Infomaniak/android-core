@@ -27,6 +27,7 @@
     <string name="buttonRetry">Prøv igen</string>
     <string name="buttonSave">Gem</string>
     <string name="buttonYes">Ja</string>
+    <string name="connectionError">Internetforbindelsesproblem</string>
     <string name="crossAppLoginIntegrityError">Kontihentning utilgængelig</string>
     <string name="errorDownload">Downloadfejl</string>
     <string name="errorDownloadInsufficientSpace">Kan ikke downloade: Utilstrækkelig plads</string>

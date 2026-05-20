@@ -2,7 +2,6 @@
 <resources>
     <string name="access_denied">Zugang verweigert</string>
 
-    <string name="connection_error">Internet-Verbindungsproblem</string>
     <string name="create_account">Ein Konto erstellen</string>
     <string name="login">Anmeldung</string>
 </resources>
