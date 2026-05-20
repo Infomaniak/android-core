@@ -38,6 +38,7 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
 import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
 import com.infomaniak.lib.login.ext.handleEdgeToEdge
 import kotlinx.serialization.json.Json
+import com.infomaniak.core.common.R as RCore
 
 class WebViewCreateAccountActivity : AppCompatActivity() {
 
@@ -74,7 +75,7 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
 
         binding.handleEdgeToEdge()
 
-        binding.toolbar.title = getString(R.string.create_account)
+        binding.toolbar.title = getString(RCore.string.buttonCreateAccount)
         binding.webview.apply {
             settings.javaScriptEnabled = true
             webViewClient = RegisterWebViewClient()

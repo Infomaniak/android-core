@@ -21,6 +21,7 @@
     <string name="browserNotFound">Ingen browser fundet</string>
     <string name="buttonCancel">Annuller</string>
     <string name="buttonClose">Luk</string>
+    <string name="buttonCreateAccount">Opret en konto</string>
     <string name="buttonLater">Senere</string>
     <string name="buttonNext">Næste</string>
     <string name="buttonNo">Nej</string>

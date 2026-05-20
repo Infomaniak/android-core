@@ -20,7 +20,6 @@
         <item quantity="one">Fortsätt med detta konto</item>
         <item quantity="other">Fortsätt med dessa konton</item>
     </plurals>
-    <string name="buttonCreateAccount">Skapa ett konto</string>
     <string name="buttonLogin">Logga in</string>
     <string name="buttonStart">Starta</string>
     <string name="buttonUseOtherAccount">Använd ett annat konto</string>

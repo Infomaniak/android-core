@@ -18,6 +18,5 @@
 <resources>
     <string name="access_denied">Accès refusé</string>
 
-    <string name="create_account">Créer un compte</string>
     <string name="login">Se connecter</string>
 </resources>

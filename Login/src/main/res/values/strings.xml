@@ -2,6 +2,5 @@
 <resources>
     <string name="access_denied">Access denied</string>
 
-    <string name="create_account">Create an account</string>
     <string name="login">Login</string>
 </resources>

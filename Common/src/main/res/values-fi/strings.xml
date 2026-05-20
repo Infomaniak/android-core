@@ -21,6 +21,7 @@
     <string name="browserNotFound">Selainta ei löytynyt</string>
     <string name="buttonCancel">Peruuta</string>
     <string name="buttonClose">Sulje</string>
+    <string name="buttonCreateAccount">Luo tili</string>
     <string name="buttonLater">Myöhemmin</string>
     <string name="buttonNext">Seuraava</string>
     <string name="buttonNo">Ei</string>

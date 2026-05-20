@@ -21,6 +21,7 @@
     <string name="browserNotFound">Geen browser gevonden</string>
     <string name="buttonCancel">Annuleren</string>
     <string name="buttonClose">Sluiten</string>
+    <string name="buttonCreateAccount">Een account aanmaken</string>
     <string name="buttonLater">Later</string>
     <string name="buttonNext">Volgende</string>
     <string name="buttonNo">Nee</string>

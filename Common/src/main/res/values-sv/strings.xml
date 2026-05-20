@@ -21,6 +21,7 @@
     <string name="browserNotFound">Ingen webbläsare hittades</string>
     <string name="buttonCancel">Avbryt</string>
     <string name="buttonClose">Stäng</string>
+    <string name="buttonCreateAccount">Skapa ett konto</string>
     <string name="buttonLater">Senare</string>
     <string name="buttonNext">Nästa</string>
     <string name="buttonNo">Nej</string>

@@ -2,6 +2,5 @@
 <resources>
     <string name="access_denied">Acceso rechazado</string>
 
-    <string name="create_account">Crear una cuenta</string>
     <string name="login">Ingresa en</string>
 </resources>

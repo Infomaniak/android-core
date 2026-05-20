@@ -21,6 +21,7 @@
     <string name="browserNotFound">Nenhum navegador encontrado</string>
     <string name="buttonCancel">Cancelar</string>
     <string name="buttonClose">Fechar</string>
+    <string name="buttonCreateAccount">Criar uma conta</string>
     <string name="buttonLater">Mais tarde</string>
     <string name="buttonNext">Seguinte</string>
     <string name="buttonNo">Não</string>

@@ -21,6 +21,7 @@
     <string name="browserNotFound">Δεν βρέθηκε πρόγραμμα περιήγησης</string>
     <string name="buttonCancel">Ακύρωση</string>
     <string name="buttonClose">Κλείσιμο</string>
+    <string name="buttonCreateAccount">Δημιουργία λογαριασμού</string>
     <string name="buttonLater">Αργότερα</string>
     <string name="buttonNext">Επόμενο</string>
     <string name="buttonNo">Όχι</string>
