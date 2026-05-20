@@ -1,5 +1,5 @@
 /*
- * Infomaniak Login - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2025 Infomaniak Network SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
