@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="access_denied">Zugang verweigert</string>
-
-    <string name="login">Anmeldung</string>
 </resources>

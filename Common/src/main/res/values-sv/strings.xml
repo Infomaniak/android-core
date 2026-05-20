@@ -23,6 +23,7 @@
     <string name="buttonClose">Stäng</string>
     <string name="buttonCreateAccount">Skapa ett konto</string>
     <string name="buttonLater">Senare</string>
+    <string name="buttonLogin">Logga in</string>
     <string name="buttonNext">Nästa</string>
     <string name="buttonNo">Nej</string>
     <string name="buttonRetry">Försök igen</string>

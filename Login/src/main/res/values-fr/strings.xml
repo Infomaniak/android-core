@@ -17,6 +17,4 @@
   -->
 <resources>
     <string name="access_denied">Accès refusé</string>
-
-    <string name="login">Se connecter</string>
 </resources>

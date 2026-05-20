@@ -23,6 +23,7 @@
     <string name="buttonClose">Fermer</string>
     <string name="buttonCreateAccount">Créer un compte</string>
     <string name="buttonLater">Plus tard</string>
+    <string name="buttonLogin">Se connecter</string>
     <string name="buttonNext">Suivant</string>
     <string name="buttonNo">Non</string>
     <string name="buttonRetry">Réessayer</string>

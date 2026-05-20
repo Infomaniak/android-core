@@ -20,7 +20,6 @@
         <item quantity="one">Continue with this account</item>
         <item quantity="other">Continue with these accounts</item>
     </plurals>
-    <string name="buttonLogin">Login</string>
     <string name="buttonStart">Start</string>
     <string name="buttonUseOtherAccount">Use another account</string>
     <string name="crossAppLoginAccountsLoaderTitle">Fetching your accounts…</string>

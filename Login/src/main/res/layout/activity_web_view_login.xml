@@ -20,7 +20,7 @@
             android:theme="?attr/themeLoginToolbar"
             android:visibility="visible"
             app:navigationIcon="@null"
-            app:title="@string/login"
+            app:title="@string/buttonLogin"
             tools:menu="@menu/webview_menu" />
 
         <ProgressBar

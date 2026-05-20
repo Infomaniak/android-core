@@ -23,6 +23,7 @@
     <string name="buttonClose">Κλείσιμο</string>
     <string name="buttonCreateAccount">Δημιουργία λογαριασμού</string>
     <string name="buttonLater">Αργότερα</string>
+    <string name="buttonLogin">Σύνδεση</string>
     <string name="buttonNext">Επόμενο</string>
     <string name="buttonNo">Όχι</string>
     <string name="buttonRetry">Επανάληψη</string>
