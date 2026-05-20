@@ -48,7 +48,6 @@ android {
 dependencies {
     implementation(core.androidx.browser)
     implementation(core.appcompat)
-    implementation(core.gson)
     implementation(core.kotlinx.coroutines.android)
     implementation(core.kotlinx.serialization.json)
     implementation(core.material)
