@@ -33,6 +33,8 @@ data class CrossLoginColors(
     val descriptionColor: Color,
     val avatarStrokeColor: Color,
     val buttonStrokeColor: Color,
+    val buttonSurfaceColors: Color,
+    val buttonOnSurfaceColors: Color,
 )
 
 object CrossLoginDefaults {
@@ -49,11 +51,15 @@ object CrossLoginDefaults {
         descriptionColor: Color? = null,
         avatarStrokeColor: Color? = null,
         buttonStrokeColor: Color? = null,
+        buttonSurfaceColors: Color? = null,
+        buttonOnSurfaceColors: Color? = null,
     ): CrossLoginColors = CrossLoginColors(
         titleColor = titleColor ?: MaterialTheme.colorScheme.onSurface,
         descriptionColor = descriptionColor ?: MaterialTheme.colorScheme.onSurfaceVariant,
         avatarStrokeColor = avatarStrokeColor ?: MaterialTheme.colorScheme.surface,
         buttonStrokeColor = buttonStrokeColor ?: MaterialTheme.colorScheme.outlineVariant,
+        buttonSurfaceColors = buttonSurfaceColors ?: MaterialTheme.colorScheme.surface,
+        buttonOnSurfaceColors = buttonOnSurfaceColors ?: MaterialTheme.colorScheme.onSurface,
     )
 
     fun buttonType(buttonType: ButtonStyle? = null): ButtonStyle {

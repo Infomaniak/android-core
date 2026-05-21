@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024 Infomaniak Network SA
+ * Copyright (C) 2024-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,8 +47,8 @@ import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.onboarding.components.OnboardingComponents.DefaultBackground
+import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -59,12 +59,16 @@ fun OnboardingScaffold(
     bottomContent: @Composable (PaddingValues) -> Unit,
     indicatorStyle: IndicatorStyle = HorizontalPagerIndicatorDefaults.style(),
     snackbarHost: @Composable () -> Unit = {},
+    topBar: @Composable () -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
 
     GoBackOnePageOnBack(pagerState, scope)
 
-    Scaffold(snackbarHost = snackbarHost) { paddingValues ->
+    Scaffold(
+        snackbarHost = snackbarHost,
+        topBar = topBar,
+    ) { paddingValues ->
         Column {
             val startPadding = paddingValues.calculateStartPadding(LocalLayoutDirection.current)
             val endPadding = paddingValues.calculateEndPadding(LocalLayoutDirection.current)
