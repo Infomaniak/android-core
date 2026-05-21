@@ -109,7 +109,7 @@ internal class TwoFactorAuthImpl(
     }.cancellable().getOrElse { t ->
         when (t) {
             is IOException -> SentryLog.i(TAG, "I/O issue while trying to get the latest challenge", t)
-            else -> SentryLog.e(TAG, "Couldn't get the latest challenge because of an unknow issue", t)
+            else -> SentryLog.e(TAG, "Couldn't get the latest challenge because of an unknown issue", t)
         }
         null
     }
@@ -153,7 +153,7 @@ internal class TwoFactorAuthImpl(
                 Outcome.Issue.Network
             }
             else -> {
-                SentryLog.e(TAG, "Couldn't $actionVerb the challenge ($challengeUid) because of an unknow issue", t)
+                SentryLog.e(TAG, "Couldn't $actionVerb the challenge ($challengeUid) because of an unknown issue", t)
                 Outcome.Issue.Unknown
             }
         }
