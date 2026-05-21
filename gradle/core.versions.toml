@@ -63,7 +63,7 @@ workManager = "2.11.0"
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
-android-login = { module = "com.github.infomaniak:android-login", version.ref = "androidLogin" }
+android-login = { module = "com.github.infomaniak:android-login", version.ref = "androidLogin" } # Only used by the Legacy module
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
 androidx-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout", version.ref = "adaptive" }
 androidx-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation", version.ref = "adaptive" }
@@ -139,6 +139,7 @@ infomaniak-core-ksuite = { module = "com.infomaniak.core:KSuite" }
 infomaniak-core-ksuite-myksuite = { module = "com.infomaniak.core:KSuite.MyKSuite" }
 infomaniak-core-ksuite-pro = { module = "com.infomaniak.core:KSuite.KSuitePro" }
 infomaniak-core-ktor = { module = "com.infomaniak.core:Ktor" }
+infomaniak-core-login = { module = "com.infomaniak.core:Login" }
 infomaniak-core-matomo = { module = "com.infomaniak.core:Matomo" }
 infomaniak-core-network = { module = "com.infomaniak.core:Network" }
 infomaniak-core-network-ktor = { module = "com.infomaniak.core:Network.Ktor" }

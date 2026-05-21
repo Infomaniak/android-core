@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    api(project(":Login"))
     implementation(project(":Common"))
     implementation(project(":Network"))
     implementation(project(":Sentry"))
@@ -66,7 +67,6 @@ dependencies {
     implementation(core.splitties.appctx)
     implementation(core.okhttp)
     implementation(core.stetho.okhttp3)
-    api(core.android.login)
     api(core.gson)
 
     // Room

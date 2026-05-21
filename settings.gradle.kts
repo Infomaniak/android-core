@@ -49,6 +49,7 @@ include(
     ":Ktor",
     ":KSuite:KSuitePro",
     ":KSuite:MyKSuite",
+    ":Login",
     ":Matomo",
     ":Network",
     ":Network:Ktor",
