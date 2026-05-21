@@ -283,8 +283,7 @@ class InfomaniakLogin(
             val error = data.getQueryParameter("error")
             if (!code.isNullOrBlank()) {
                 onSuccess(code)
-            }
-            if (!error.isNullOrBlank()) {
+            } else if (!error.isNullOrBlank()) {
                 val errorTitle = if (error == "access_denied") {
                     context.getString(R.string.accessDenied)
                 } else {
