@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,18 @@ package com.infomaniak.core.network.networking
 import android.os.Build
 import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.network.utils.Utils.getPreferredLocaleList
+import io.ktor.client.request.accept
+import io.ktor.client.request.headers
+import io.ktor.client.utils.CacheControl
+import io.ktor.http.ContentType
+import io.ktor.http.HeadersBuilder
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMessageBuilder
+import io.ktor.http.contentType
+import io.ktor.http.header.AcceptEncoding
+import io.ktor.util.appendIfNameAbsent
 import okhttp3.Headers
+import okhttp3.Headers.Companion.toHeaders
 import java.net.URLEncoder
 
 object HttpUtils {
@@ -33,21 +44,7 @@ object HttpUtils {
      * add another one for token handling.
      */
     @ManualAuthorizationRequired
-    fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers = with(NetworkConfiguration) {
-        return Headers.Builder().apply {
-            add("Accept-Language", getAcceptedLanguageHeaderValue())
-            add("Accept-Encoding", "gzip")
-            add("User-Agent", getUserAgent)
-            if (HttpClientConfig.cacheDir == null) add("Cache-Control", "no-cache")
-            contentType?.let {
-                add("Accept-type", it)
-                add("Content-type", it)
-            }
-            customHeaders?.forEach { customHeader -> add(customHeader.key, URLEncoder.encode(customHeader.value, "UTF-8")) }
-        }.run {
-            build()
-        }
-    }
+    fun getHeaders(contentType: String? = "application/json; charset=UTF-8"): Headers = headerMap(contentType).toHeaders()
 
     val getUserAgent: String by lazy {
         with(NetworkConfiguration) {
@@ -65,5 +62,39 @@ object HttpUtils {
                 weight -= 0.1F
                 "$accumulator,$languageTag;q=$weight"
             }
+    }
+
+    fun HttpMessageBuilder.applyDefaultHeaders(contentType: ContentType? = ContentType.Application.Json) {
+        contentType?.let {
+            contentType(contentType)
+            accept(contentType)
+        }
+        headers {
+            applyDefaultHeaders()
+        }
+    }
+
+    private fun HeadersBuilder.applyDefaultHeaders() {
+        headerMap(contentType = null).forEach {
+            appendIfNameAbsent(it.key, it.value)
+        }
+    }
+
+    private fun headerMap(contentType: String?): Map<String, String> = with(NetworkConfiguration) {
+        buildMap {
+            put(HttpHeaders.AcceptLanguage, getAcceptedLanguageHeaderValue())
+            put(HttpHeaders.AcceptEncoding, AcceptEncoding.Gzip.toString())
+            put(HttpHeaders.UserAgent, getUserAgent)
+            if (HttpClientConfig.cacheDir == null) put(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
+            contentType?.let {
+                put(HttpHeaders.Accept, contentType)
+                put(HttpHeaders.ContentType, contentType)
+            }
+            customHeaders?.forEach { customHeader ->
+                computeIfAbsent(customHeader.key) {
+                    URLEncoder.encode(customHeader.value, "UTF-8")
+                }
+            }
+        }
     }
 }

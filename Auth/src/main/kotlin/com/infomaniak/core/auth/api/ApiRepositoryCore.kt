@@ -28,28 +28,19 @@ abstract class ApiRepositoryCore {
 
     suspend fun getUserProfile(
         okHttpClient: OkHttpClient,
-        withEmails: Boolean = false,
-        withPhones: Boolean = false,
-        withSecurity: Boolean = false,
-    ): ApiResponse<User> = ApiRepositoryCore.getUserProfile(okHttpClient, withEmails, withPhones, withSecurity)
+    ): ApiResponse<User> = ApiRepositoryCore.getUserProfile(okHttpClient)
 
     companion object {
         suspend fun getUserProfile(
             okHttpClient: OkHttpClient,
-            withEmails: Boolean = false,
-            withPhones: Boolean = false,
             withSecurity: Boolean = false,
         ): ApiResponse<User> {
-            val withQueries = mutableListOf<String>()
-            if (withEmails) withQueries.add("emails")
-            if (withPhones) withQueries.add("phones")
-            if (withSecurity) withQueries.add("security")
-            val with = if (withQueries.isNotEmpty()) "&with=${withQueries.joinToString(",")}" else ""
+            val with = if (withSecurity) "&with=security" else ""
 
             val url = "${ApiRoutesCore.getUserProfile()}$with"
             return ApiController.callApi(
-                url,
-                ApiController.ApiMethod.GET,
+                url = url,
+                method = ApiController.ApiMethod.GET,
                 useKotlinxSerialization = true,
                 okHttpClient = okHttpClient,
             )

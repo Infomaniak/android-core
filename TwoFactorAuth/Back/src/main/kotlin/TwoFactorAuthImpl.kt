@@ -20,8 +20,7 @@ package com.infomaniak.core.twofactorauth.back
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.models.ApiResponse
-import com.infomaniak.core.network.networking.HttpUtils
-import com.infomaniak.core.network.networking.ManualAuthorizationRequired
+import com.infomaniak.core.network.networking.HttpUtils.applyDefaultHeaders
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import io.ktor.client.HttpClient
@@ -32,12 +31,10 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
-import io.ktor.client.request.headers
 import io.ktor.client.request.patch
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
-import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
@@ -78,12 +75,8 @@ internal class TwoFactorAuthImpl(
             retryOnExceptionIf { _, cause -> cause !is SerializationException }
         }
         defaultRequest {
+            applyDefaultHeaders()
             url("$LOGIN_ENDPOINT_URL/api/2fa/push/")
-            userAgent(HttpUtils.getUserAgent)
-            headers {
-                @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
-                HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
-            }
         }
     }
 

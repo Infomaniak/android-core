@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,10 +33,4 @@ data class Preferences(
     @Embedded(prefix = "organizationPreference_")
     @SerializedName("account") @SerialName("account")
     var organizationPreference: OrganizationPreference,
-    @Embedded(prefix = "language_")
-    var language: Language,
-    @Embedded(prefix = "country_")
-    var country: Country,
-    @Embedded(prefix = "timezone_")
-    var timezone: TimeZone? = null,
 ) : Parcelable

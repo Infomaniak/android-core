@@ -196,7 +196,7 @@ private suspend fun authenticateUser(apiToken: ApiToken, userExistenceChecker: U
         chain.proceed(newRequest)
     }.build()
 
-    val userProfileResponse = ApiRepositoryCore.getUserProfile(okhttpClient)
+    val userProfileResponse = ApiRepositoryCore.getUserProfile(okhttpClient, withSecurity = true)
 
     if (userProfileResponse.result == ApiResponseStatus.ERROR) return UserResult.Failure(userProfileResponse)
     val userData = userProfileResponse.data ?: return UserResult.Failure.Unknown

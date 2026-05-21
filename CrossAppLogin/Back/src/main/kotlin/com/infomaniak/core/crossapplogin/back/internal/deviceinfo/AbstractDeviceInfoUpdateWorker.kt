@@ -32,9 +32,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.await
-import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.auth.api.ApiRoutesCore
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.common.autoCancelScope
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin

@@ -19,8 +19,6 @@ package com.infomaniak.core.ui.compose.preview.previewparameter
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.models.user.preferences.Country
-import com.infomaniak.core.auth.models.user.preferences.Language
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
 import com.infomaniak.core.auth.models.user.preferences.Preferences
 import com.infomaniak.lib.login.ApiToken
@@ -35,10 +33,8 @@ private val usersPreviewData = listOf(
 )
 
 fun dummyUserOf(id: Int, firstName: String, lastName: String): User {
-    val dummyOrganization = OrganizationPreference(1234, 0L)
-    val dummyLanguage = Language("", "", "")
-    val dummyCountry = Country("", false)
-    val dummyPreferences = Preferences(null, dummyOrganization, dummyLanguage, dummyCountry, null)
+    val dummyOrganization = OrganizationPreference(1234)
+    val dummyPreferences = Preferences(null, dummyOrganization)
     val dummyApiToken = ApiToken("", null, "", 0, id, null, null)
 
     return User(
@@ -51,8 +47,6 @@ fun dummyUserOf(id: Int, firstName: String, lastName: String): User {
         login = "",
         isStaff = false,
         preferences = dummyPreferences,
-        phones = null,
-        emails = null,
         apiToken = dummyApiToken,
         organizations = ArrayList(),
     )

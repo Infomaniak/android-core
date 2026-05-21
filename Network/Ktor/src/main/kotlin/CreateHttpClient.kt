@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,22 +19,17 @@
 @file:OptIn(ExperimentalContracts::class)
 
 import com.infomaniak.core.network.api.ApiController
-import com.infomaniak.core.network.networking.HttpUtils
-import com.infomaniak.core.network.networking.ManualAuthorizationRequired
+import com.infomaniak.core.network.networking.HttpUtils.applyDefaultHeaders
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.request.accept
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.request
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.http.contentType
-import io.ktor.http.headers
-import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -57,13 +52,7 @@ fun createHttpClient(
         retryOnExceptionIf { _, cause -> cause !is SerializationException }
     }
     defaultRequest {
-        userAgent(HttpUtils.getUserAgent)
-        headers {
-            @OptIn(ManualAuthorizationRequired::class) // Already handled by the http client.
-            HttpUtils.getHeaders().forEach { (header, value) -> append(header, value) }
-        }
-        contentType(ContentType.Application.Json)
-        accept(ContentType.Application.Json)
+        applyDefaultHeaders()
     }
     HttpResponseValidator {
         validateResponse { response ->

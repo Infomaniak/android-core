@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,3 +79,33 @@ class UserV2Migration : AutoMigrationSpec
     toColumnName = "preferences_security_double_auth_method"
 )
 class UserV3Migration : AutoMigrationSpec
+
+@DeleteColumn(tableName = "User", columnName = "preferences_country_id")
+@DeleteColumn(tableName = "User", columnName = "preferences_country_isEnabled")
+@DeleteColumn(tableName = "User", columnName = "preferences_country_name")
+@DeleteColumn(tableName = "User", columnName = "preferences_country_shortName")
+@DeleteColumn(tableName = "User", columnName = "preferences_language_id")
+@DeleteColumn(tableName = "User", columnName = "preferences_language_locale")
+@DeleteColumn(tableName = "User", columnName = "preferences_language_name")
+@DeleteColumn(tableName = "User", columnName = "preferences_language_shortLocale")
+@DeleteColumn(tableName = "User", columnName = "preferences_language_shortName")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_authDevices")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_doubleAuth")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_doubleAuthMethod")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_emailValidatedAt")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_hasRecoveryEmail")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_hasValidPhone")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_infomaniakApplication")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_lastLoginAt")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_otp")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_remainingRescueCode")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_sms")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_smsPhone")
+@DeleteColumn(tableName = "User", columnName = "preferences_security_yubikey")
+@DeleteColumn(tableName = "User", columnName = "preferences_timezone_gmt")
+@DeleteColumn(tableName = "User", columnName = "preferences_timezone_id")
+@DeleteColumn(tableName = "User", columnName = "preferences_timezone_name")
+@DeleteColumn(tableName = "User", columnName = "preferences_organizationPreference_lastLoginAt")
+@DeleteColumn(tableName = "User", columnName = "phones")
+@DeleteColumn(tableName = "User", columnName = "emails")
+class UserV7Migration : AutoMigrationSpec

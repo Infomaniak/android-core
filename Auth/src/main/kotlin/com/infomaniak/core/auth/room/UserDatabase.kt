@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,11 +30,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.OrganizationAccount
-import com.infomaniak.core.auth.models.user.Email
-import com.infomaniak.core.auth.models.user.Phone
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices
-import com.infomaniak.core.sentry.SentryLog
 import splitties.init.appCtx
 
 @Database(
@@ -51,10 +47,15 @@ import splitties.init.appCtx
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6),
+        AutoMigration(
+            from = 6, to = 7,
+            spec = UserV7Migration::class,
+        ),
     ],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
+
 @TypeConverters(UserConverter::class)
 abstract class UserDatabase internal constructor() : RoomDatabase() {
 
@@ -88,30 +89,7 @@ abstract class UserDatabase internal constructor() : RoomDatabase() {
 class UserConverter {
     private val gson: Gson by lazy { Gson() }
 
-    private val authDevicesType = object : TypeToken<ArrayList<AuthDevices>>() {}.type
-    private val emailsType = object : TypeToken<ArrayList<Email>>() {}.type
     private val organizationAccountsType = object : TypeToken<ArrayList<OrganizationAccount>>() {}.type
-    private val phonesType = object : TypeToken<ArrayList<Phone>>() {}.type
-
-    @TypeConverter
-    fun authDevicesToJson(authDevices: ArrayList<AuthDevices>?): String {
-        return gson.toJson(authDevices, authDevicesType)
-    }
-
-    @TypeConverter
-    fun toauthDevices(json: String?): ArrayList<AuthDevices>? {
-        return gson.fromJson(json, authDevicesType)
-    }
-
-    @TypeConverter
-    fun emailsToJson(emails: ArrayList<Email>?): String {
-        return gson.toJson(emails, emailsType)
-    }
-
-    @TypeConverter
-    fun toEmails(json: String?): ArrayList<Email>? {
-        return gson.fromJson(json, emailsType)
-    }
 
     @TypeConverter
     fun organizationsToJson(organizationAccounts: ArrayList<OrganizationAccount>): String {
@@ -121,24 +99,5 @@ class UserConverter {
     @TypeConverter
     fun toOrganizationAccount(json: String?): ArrayList<OrganizationAccount> {
         return gson.fromJson(json, organizationAccountsType)
-    }
-
-    @TypeConverter
-    fun phonesToJson(phones: ArrayList<Phone>?): String {
-        return gson.toJson(phones, phonesType)
-    }
-
-    @TypeConverter
-    fun toPhones(json: String?): ArrayList<Phone>? = runCatching {
-        return gson.fromJson(json, phonesType)
-    }.getOrElse { exception ->
-        SentryLog.e(TAG, "NPE during database property deserialization", exception) { scope ->
-            scope.setExtra("json", json)
-        }
-        null
-    }
-
-    companion object {
-        const val TAG = "UserDatabase"
     }
 }
