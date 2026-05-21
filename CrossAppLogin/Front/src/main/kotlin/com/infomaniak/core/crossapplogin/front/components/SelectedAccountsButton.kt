@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,13 +38,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.ui.compose.basics.Dimens
-import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginCustomization
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.icons.Chevron
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
+import com.infomaniak.core.ui.compose.basics.Dimens
+import com.infomaniak.core.ui.compose.margin.Margin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,6 +61,9 @@ internal fun SelectedAccountsButton(
             .height(Dimens.buttonHeight),
         border = BorderStroke(1.dp, customization.colors.buttonStrokeColor),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = customization.colors.buttonSurfaceColors
+        ),
         onClick = onClick,
         contentPadding = contentPadding,
     ) {
