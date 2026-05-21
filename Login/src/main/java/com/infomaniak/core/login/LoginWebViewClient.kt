@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.login
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -70,8 +71,14 @@ open class LoginWebViewClient(
 
     override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
         error?.certificate?.apply {
-            if (issuedBy?.cName == "localhost" && issuedTo?.cName == "localhost") return
+            if (issuedBy?.cName == "localhost" && issuedTo?.cName == "localhost") {
+                @SuppressLint("WebViewClientOnReceivedSslError")
+                handler?.proceed()
+                return
+            }
         }
+
+        handler?.cancel()
         errorResult(SSL_ERROR_CODE)
     }
 
