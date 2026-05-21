@@ -95,8 +95,11 @@ open class LoginWebViewClient(
 
     private fun isValidUrl(inputUrl: String?): Boolean {
         if (inputUrl == null || onAuthResponse(inputUrl.toUri()) || inputUrl.startsWith("intent://")) return false
-        val baseUrlHost = baseUrl.toHttpUrl().host
-        val inputUrlHost = inputUrl.toHttpUrl().host
+
+        val inputUri = inputUrl.toUri()
+        if (inputUri.scheme !in listOf("http", "https")) return false
+        val baseUrlHost = runCatching { baseUrl.toHttpUrl().host }.getOrNull() ?: return false
+        val inputUrlHost = runCatching { inputUrl.toHttpUrl().host }.getOrNull() ?: return false
 
         return inputUrlHost == baseUrlHost
                 || inputUrl.contains("oauth2redirect")
