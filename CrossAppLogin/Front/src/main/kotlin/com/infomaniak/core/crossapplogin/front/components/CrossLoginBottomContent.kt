@@ -267,7 +267,7 @@ private fun LoginPage(
     isLoginButtonLoading: () -> Boolean,
     onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
     onAccountsSelectionClicked: () -> Unit,
-    @SuppressLint("ModifierParameter") animatedButtonModifier: Modifier,
+    @SuppressLint("ModifierParameter") animatedButtonModifier: Modifier = Modifier,
     noCrossAppLoginAccountsContent: @Composable () -> Unit,
 ) {
 
@@ -427,7 +427,7 @@ private fun AccountCreationButton(
     modifier: Modifier = Modifier
 ) {
     ButtonExpanded(
-        stringResource(R.string.buttonCreateAccount),
+        stringResource(RCore.string.buttonCreateAccount),
         shape = style.shape,
         colors = ButtonDefaults.textButtonColors(),
         isLoading = isSignUpButtonLoading,
@@ -464,7 +464,7 @@ object NoCrossAppLoginAccountsContent {
             style = customization.buttonStyle,
             isLoginButtonLoading = isLoginButtonLoading,
             modifier = modifier,
-            text = stringResource(R.string.buttonLogin),
+            text = stringResource(RCore.string.buttonLogin),
             onClick = onLogin,
         )
         AccountCreationButton(

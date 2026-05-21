@@ -27,17 +27,16 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
 import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
 import com.infomaniak.lib.login.ext.handleEdgeToEdge
-import java.util.MissingFormatArgumentException
 
 class WebViewLoginActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityWebViewLoginBinding.inflate(layoutInflater) }
 
     private val appUID: String by lazy {
-        intent.getStringExtra(APPLICATION_ID_TAG) ?: throw MissingFormatArgumentException(APPLICATION_ID_TAG)
+        intent.getStringExtra(APPLICATION_ID_TAG) ?: throw IllegalArgumentException(APPLICATION_ID_TAG)
     }
     private val loginUrl: String by lazy {
-        intent.getStringExtra(LOGIN_URL_TAG) ?: throw MissingFormatArgumentException(LOGIN_URL_TAG)
+        intent.getStringExtra(LOGIN_URL_TAG) ?: throw IllegalArgumentException(LOGIN_URL_TAG)
     }
     private val removeCookies: Boolean by lazy {
         intent.getBooleanExtra(REMOVE_COOKIES_TAG, true)

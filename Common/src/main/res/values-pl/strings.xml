@@ -21,12 +21,15 @@
     <string name="browserNotFound">Nie znaleziono przeglądarki</string>
     <string name="buttonCancel">Anuluj</string>
     <string name="buttonClose">Zamknij</string>
+    <string name="buttonCreateAccount">Utwórz konto</string>
     <string name="buttonLater">Później</string>
+    <string name="buttonLogin">Zaloguj</string>
     <string name="buttonNext">Dalej</string>
     <string name="buttonNo">Nie</string>
     <string name="buttonRetry">Spróbuj ponownie</string>
     <string name="buttonSave">Zapisz</string>
     <string name="buttonYes">Tak</string>
+    <string name="connectionError">Problem z połączeniem internetowym</string>
     <string name="crossAppLoginIntegrityError">Pobieranie kont niedostępne</string>
     <string name="errorDownload">Błąd pobierania</string>
     <string name="errorDownloadInsufficientSpace">Nie można pobrać: Za mało miejsca</string>

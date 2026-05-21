@@ -46,6 +46,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":Common"))
+
     implementation(core.androidx.browser)
     implementation(core.appcompat)
     implementation(core.kotlinx.coroutines.android)

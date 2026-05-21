@@ -21,12 +21,15 @@
     <string name="browserNotFound">Geen browser gevonden</string>
     <string name="buttonCancel">Annuleren</string>
     <string name="buttonClose">Sluiten</string>
+    <string name="buttonCreateAccount">Een account aanmaken</string>
     <string name="buttonLater">Later</string>
+    <string name="buttonLogin">Inloggen</string>
     <string name="buttonNext">Volgende</string>
     <string name="buttonNo">Nee</string>
     <string name="buttonRetry">Opnieuw proberen</string>
     <string name="buttonSave">Opslaan</string>
     <string name="buttonYes">Ja</string>
+    <string name="connectionError">Internetverbindingsprobleem</string>
     <string name="crossAppLoginIntegrityError">Ophalen van accounts niet beschikbaar</string>
     <string name="errorDownload">Downloadfout</string>
     <string name="errorDownloadInsufficientSpace">Kan niet downloaden: Onvoldoende ruimte</string>

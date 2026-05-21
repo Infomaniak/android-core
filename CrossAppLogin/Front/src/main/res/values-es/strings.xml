@@ -20,8 +20,6 @@
         <item quantity="one">Continuar con esta cuenta</item>
         <item quantity="other">Continuar con estas cuentas</item>
     </plurals>
-    <string name="buttonCreateAccount">Crear una cuenta</string>
-    <string name="buttonLogin">Inicio de sesión</string>
     <string name="buttonStart">Empezar</string>
     <string name="buttonUseOtherAccount">Utilizar otra cuenta</string>
     <string name="crossAppLoginAccountsLoaderTitle">Buscando sus cuentas…</string>

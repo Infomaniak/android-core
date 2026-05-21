@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023 Infomaniak Network SA
+ * Copyright (C) 2023-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,20 +38,20 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
 import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
 import com.infomaniak.lib.login.ext.handleEdgeToEdge
 import kotlinx.serialization.json.Json
-import java.util.MissingFormatArgumentException
+import com.infomaniak.core.common.R as RCore
 
 class WebViewCreateAccountActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityWebViewLoginBinding.inflate(layoutInflater) }
 
     private val createAccountUrl: String by lazy {
-        intent.getStringExtra(CREATE_ACCOUNT_URL_TAG) ?: throw MissingFormatArgumentException(CREATE_ACCOUNT_URL_TAG)
+        intent.getStringExtra(CREATE_ACCOUNT_URL_TAG) ?: throw IllegalArgumentException(CREATE_ACCOUNT_URL_TAG)
     }
     private val successUrl: String by lazy {
-        intent.getStringExtra(SUCCESS_HOST_TAG) ?: throw MissingFormatArgumentException(SUCCESS_HOST_TAG)
+        intent.getStringExtra(SUCCESS_HOST_TAG) ?: throw IllegalArgumentException(SUCCESS_HOST_TAG)
     }
     private val cancelUrl: String by lazy {
-        intent.getStringExtra(CANCEL_HOST_TAG) ?: throw MissingFormatArgumentException(CANCEL_HOST_TAG)
+        intent.getStringExtra(CANCEL_HOST_TAG) ?: throw IllegalArgumentException(CANCEL_HOST_TAG)
     }
     private val removeCookies: Boolean by lazy {
         intent.getBooleanExtra(REMOVE_COOKIES_TAG, true)
@@ -75,7 +75,7 @@ class WebViewCreateAccountActivity : AppCompatActivity() {
 
         binding.handleEdgeToEdge()
 
-        binding.toolbar.title = getString(R.string.create_account)
+        binding.toolbar.title = getString(RCore.string.buttonCreateAccount)
         binding.webview.apply {
             settings.javaScriptEnabled = true
             webViewClient = RegisterWebViewClient()

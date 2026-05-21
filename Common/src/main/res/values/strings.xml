@@ -21,12 +21,15 @@
     <string name="browserNotFound">No browser found</string>
     <string name="buttonCancel">Cancel</string>
     <string name="buttonClose">Close</string>
+    <string name="buttonCreateAccount">Create an account</string>
     <string name="buttonLater">Later</string>
+    <string name="buttonLogin">Log in</string>
     <string name="buttonNext">Next</string>
     <string name="buttonNo">No</string>
     <string name="buttonRetry">Retry</string>
     <string name="buttonSave">Save</string>
     <string name="buttonYes">Yes</string>
+    <string name="connectionError">Internet connection problem</string>
     <string name="crossAppLoginIntegrityError">Accounts retrieval unavailable</string>
     <string name="errorDownload">Download error</string>
     <string name="errorDownloadInsufficientSpace">Cannot download: Insufficient space</string>

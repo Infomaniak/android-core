@@ -21,12 +21,15 @@
     <string name="browserNotFound">Ingen webbläsare hittades</string>
     <string name="buttonCancel">Avbryt</string>
     <string name="buttonClose">Stäng</string>
+    <string name="buttonCreateAccount">Skapa ett konto</string>
     <string name="buttonLater">Senare</string>
+    <string name="buttonLogin">Logga in</string>
     <string name="buttonNext">Nästa</string>
     <string name="buttonNo">Nej</string>
     <string name="buttonRetry">Försök igen</string>
     <string name="buttonSave">Spara</string>
     <string name="buttonYes">Ja</string>
+    <string name="connectionError">Problem med internetanslutning</string>
     <string name="crossAppLoginIntegrityError">Kontohämtning otillgänglig</string>
     <string name="errorDownload">Nedladdningsfel</string>
     <string name="errorDownloadInsufficientSpace">Kan inte ladda ner: Otillräckligt utrymme</string>

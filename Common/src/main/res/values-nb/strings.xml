@@ -21,12 +21,15 @@
     <string name="browserNotFound">Ingen nettleser funnet</string>
     <string name="buttonCancel">Avbryt</string>
     <string name="buttonClose">Lukk</string>
+    <string name="buttonCreateAccount">Opprett en konto</string>
     <string name="buttonLater">Senere</string>
+    <string name="buttonLogin">Logg inn</string>
     <string name="buttonNext">Neste</string>
     <string name="buttonNo">Nei</string>
     <string name="buttonRetry">Prøv igjen</string>
     <string name="buttonSave">Lagre</string>
     <string name="buttonYes">Ja</string>
+    <string name="connectionError">Internett-tilkoblingsproblem</string>
     <string name="crossAppLoginIntegrityError">Henting av kontoer utilgjengelig</string>
     <string name="errorDownload">Nedlastingsfeil</string>
     <string name="errorDownloadInsufficientSpace">Kan ikke laste ned: Utilstrekkelig plass</string>

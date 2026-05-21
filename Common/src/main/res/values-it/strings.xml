@@ -21,12 +21,15 @@
     <string name="browserNotFound">Nessun browser trovato</string>
     <string name="buttonCancel">Annulla</string>
     <string name="buttonClose">Chiudere</string>
+    <string name="buttonCreateAccount">Crea un account</string>
     <string name="buttonLater">Più tardi</string>
+    <string name="buttonLogin">Accesso</string>
     <string name="buttonNext">Avanti</string>
     <string name="buttonNo">No</string>
     <string name="buttonRetry">Riprova</string>
     <string name="buttonSave">Salva</string>
     <string name="buttonYes">Sì</string>
+    <string name="connectionError">Problema di connessione a Internet</string>
     <string name="crossAppLoginIntegrityError">Recupero dei conti non disponibile</string>
     <string name="errorDownload">Errore durante il download</string>
     <string name="errorDownloadInsufficientSpace">Impossibile scaricare: spazio insufficiente</string>

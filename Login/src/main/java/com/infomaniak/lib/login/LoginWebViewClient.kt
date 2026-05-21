@@ -43,6 +43,7 @@ import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CON
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
 import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import com.infomaniak.core.common.R as RCore
 
 private val INFOMANIAK_REGEX = Regex(".*\\.infomaniak\\.(com|ch)")
 
@@ -131,12 +132,12 @@ open class LoginWebViewClient(
         return when (errorCode) {
             WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED,
             WEBVIEW_ERROR_CODE_CONNECTION_REFUSED,
-            WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED -> getString(R.string.connection_error)
+            WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED -> getString(RCore.string.connectionError)
 
-            ERROR_ACCESS_DENIED -> getString(R.string.access_denied)
+            ERROR_ACCESS_DENIED -> getString(R.string.accessDenied)
             else -> {
                 InfomaniakLogin.sentryCallback?.invoke("Unknow error during Login", mapOf("ErrorCode" to errorCode))
-                getString(R.string.an_error_has_occurred)
+                getString(RCore.string.anErrorHasOccurred)
             }
         }
     }

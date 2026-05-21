@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.infomaniak.lib.login.WebViewLoginActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -19,9 +18,9 @@
             android:elevation="2dp"
             android:theme="?attr/themeLoginToolbar"
             android:visibility="visible"
-            app:menu="@menu/webview_menu"
             app:navigationIcon="@null"
-            app:title="@string/login" />
+            app:title="@string/buttonLogin"
+            tools:menu="@menu/webview_menu" />
 
         <ProgressBar
             android:id="@+id/progressBar"

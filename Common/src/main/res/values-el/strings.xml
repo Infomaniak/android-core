@@ -21,12 +21,15 @@
     <string name="browserNotFound">Δεν βρέθηκε πρόγραμμα περιήγησης</string>
     <string name="buttonCancel">Ακύρωση</string>
     <string name="buttonClose">Κλείσιμο</string>
+    <string name="buttonCreateAccount">Δημιουργία λογαριασμού</string>
     <string name="buttonLater">Αργότερα</string>
+    <string name="buttonLogin">Σύνδεση</string>
     <string name="buttonNext">Επόμενο</string>
     <string name="buttonNo">Όχι</string>
     <string name="buttonRetry">Επανάληψη</string>
     <string name="buttonSave">Αποθήκευση</string>
     <string name="buttonYes">Ναι</string>
+    <string name="connectionError">Πρόβλημα σύνδεσης στο διαδίκτυο</string>
     <string name="crossAppLoginIntegrityError">Η ανάκτηση λογαριασμών δεν είναι διαθέσιμη</string>
     <string name="errorDownload">Σφάλμα λήψης</string>
     <string name="errorDownloadInsufficientSpace">Δεν είναι δυνατή η λήψη: Μη επαρκής χώρος</string>
