@@ -58,16 +58,16 @@ fun OnboardingScaffold(
     onboardingPages: List<OnboardingPage>,
     bottomContent: @Composable (PaddingValues) -> Unit,
     indicatorStyle: IndicatorStyle = HorizontalPagerIndicatorDefaults.style(),
-    topBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
+    topBar: @Composable () -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
 
     GoBackOnePageOnBack(pagerState, scope)
 
     Scaffold(
+        snackbarHost = snackbarHost,
         topBar = topBar,
-        snackbarHost = snackbarHost
     ) { paddingValues ->
         Column {
             val startPadding = paddingValues.calculateStartPadding(LocalLayoutDirection.current)
