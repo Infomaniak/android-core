@@ -19,9 +19,9 @@
             android:elevation="2dp"
             android:theme="?attr/themeLoginToolbar"
             android:visibility="visible"
-            app:menu="@menu/webview_menu"
             app:navigationIcon="@null"
-            app:title="@string/login" />
+            app:title="@string/login"
+            tools:menu="@menu/webview_menu" />
 
         <ProgressBar
             android:id="@+id/progressBar"
