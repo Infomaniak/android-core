@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.infomaniak.core.common.extensions.findActivity
 
 @Composable
-fun LockScreenOrientation(isLocked: Boolean) {
+fun PermanentlyLockScreenOrientation(isLocked: Boolean) {
     if (!isLocked) return
 
     val context = LocalContext.current
@@ -35,4 +35,14 @@ fun LockScreenOrientation(isLocked: Boolean) {
         @SuppressLint("SourceLockedOrientationActivity")
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
+}
+
+@Composable
+fun LockScreenOrientation(isLocked: Boolean) {
+    val context = LocalContext.current
+    val activity = context.findActivity() ?: return
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    activity.requestedOrientation =
+        if (isLocked) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_SENSOR
 }
