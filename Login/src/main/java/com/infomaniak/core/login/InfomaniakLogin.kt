@@ -90,7 +90,10 @@ class InfomaniakLogin(
         var success = false
         if (URLUtil.isValidUrl(url)) {
             when {
-                isChromeCustomTabsSupported(context) -> bindCustomTabsService(url)
+                isChromeCustomTabsSupported(context) -> {
+                    bindCustomTabsService(url)
+                    success = true
+                }
                 else -> {
                     success = showOnDefaultBrowser((url))
                 }
