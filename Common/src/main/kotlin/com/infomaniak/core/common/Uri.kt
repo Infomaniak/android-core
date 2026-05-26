@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,9 @@ package com.infomaniak.core.common
 import android.net.Uri
 import splitties.init.appCtx
 import splitties.mainthread.checkNotMainThread
-import java.io.FileNotFoundException
 
 fun Uri.doesFileExist(): Boolean {
     checkNotMainThread()
-    return try {
-        appCtx.contentResolver.openInputStream(this).use {}
-        true
-    } catch (e: FileNotFoundException) {
-        false
-    }
+    return runCatching { appCtx.contentResolver.openInputStream(this).use {} }
+        .isSuccess
 }
