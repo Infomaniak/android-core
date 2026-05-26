@@ -34,6 +34,6 @@ data class ApiToken(
     @SerialName("user_id") val userId: Int,
     @SerialName("scope") val scope: String? = null,
     @Transient var expiresAt: Long? = null,
-    @ColumnInfo(defaultValue = "1")
+    @ColumnInfo(defaultValue = "0")
     @Transient var isTemporary: Boolean = false,
 ) : Parcelable
