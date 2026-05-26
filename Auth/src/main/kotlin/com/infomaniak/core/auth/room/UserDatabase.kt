@@ -51,8 +51,9 @@ import splitties.init.appCtx
             from = 6, to = 7,
             spec = UserV7Migration::class,
         ),
+        AutoMigration(from = 7, to = 8),
     ],
-    version = 7,
+    version = 8,
     exportSchema = true
 )
 

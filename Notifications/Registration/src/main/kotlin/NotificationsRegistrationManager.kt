@@ -115,7 +115,7 @@ object NotificationsRegistrationManager : AssociatedUserDataCleanable {
         // so that the up-to-date check triggers a new schedule.
         //TODO[Core-associated-user-data]: Factorize this duplicate code, and possibly the common logic.
         val userIdsFlow = UserDatabase().userDao().allUsers.map { users ->
-            users.map { it.id to it.apiToken }
+            users.filterNot { it.apiToken.isTemporary }.map { it.id to it.apiToken }
         }.distinctUntilChanged().map { it.map { (id, _) -> id } }
 
         latestFcmToken.collectLatest { fcmToken ->

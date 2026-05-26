@@ -54,4 +54,5 @@ dependencies {
     implementation(core.kotlinx.serialization.json)
     implementation(core.material)
     implementation(core.okhttp)
+    compileOnly(core.room.common)
 }
