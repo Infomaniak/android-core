@@ -108,7 +108,7 @@ abstract class AbstractDeviceInfoUpdateWorker(
         )
 
         val outcomes = currentUsersFlow
-            .map { users -> users.mapTo(mutableSetOf()) { it.id.toLong() } }
+            .map { users -> users.filterNot { it.apiToken.isTemporary }.mapTo(mutableSetOf()) { it.id.toLong() } }
             .distinctUntilChanged()
             .mapLatest { userIds ->
                 deviceInfoUpdatersForUserId.useElements(userIds) {

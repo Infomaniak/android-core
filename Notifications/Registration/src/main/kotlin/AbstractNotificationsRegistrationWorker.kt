@@ -69,10 +69,10 @@ abstract class AbstractNotificationsRegistrationWorker(
         val outcomes = coroutineScope {
             currentUsers.map { user ->
                 async {
-                    if (!user.apiToken.isTemporary) {
-                        registerNotificationsForUser(userId = user.id, fcmToken = fcmToken)
-                    } else {
+                    if (user.apiToken.isTemporary) {
                         Outcome.Done
+                    } else {
+                        registerNotificationsForUser(userId = user.id, fcmToken = fcmToken)
                     }
                 }
             }
