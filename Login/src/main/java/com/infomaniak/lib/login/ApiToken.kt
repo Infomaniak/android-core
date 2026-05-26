@@ -18,6 +18,7 @@
 package com.infomaniak.lib.login
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -32,5 +33,7 @@ data class ApiToken(
     @SerialName("expires_in") val expiresIn: Int = 7200,
     @SerialName("user_id") val userId: Int,
     @SerialName("scope") val scope: String? = null,
-    @Transient var expiresAt: Long? = null
+    @Transient var expiresAt: Long? = null,
+    @ColumnInfo(defaultValue = "1")
+    @Transient var shouldBeRegistered: Boolean = true,
 ) : Parcelable

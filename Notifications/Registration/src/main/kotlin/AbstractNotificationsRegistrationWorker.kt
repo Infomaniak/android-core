@@ -69,7 +69,11 @@ abstract class AbstractNotificationsRegistrationWorker(
         val outcomes = coroutineScope {
             currentUsers.map { user ->
                 async {
-                    registerNotificationsForUser(userId = user.id, fcmToken = fcmToken)
+                    if (user.apiToken.shouldBeRegistered) {
+                        registerNotificationsForUser(userId = user.id, fcmToken = fcmToken)
+                    } else {
+                        Outcome.Done
+                    }
                 }
             }
         }.awaitAll()
