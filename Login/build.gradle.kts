@@ -50,9 +50,9 @@ dependencies {
 
     implementation(core.androidx.browser)
     implementation(core.appcompat)
-    implementation(core.room.runtime)
     implementation(core.kotlinx.coroutines.android)
     implementation(core.kotlinx.serialization.json)
     implementation(core.material)
     implementation(core.okhttp)
+    compileOnly(core.room.common)
 }

@@ -35,5 +35,5 @@ data class ApiToken(
     @SerialName("scope") val scope: String? = null,
     @Transient var expiresAt: Long? = null,
     @ColumnInfo(defaultValue = "1")
-    @Transient var shouldBeRegistered: Boolean = true,
+    @Transient var isTemporary: Boolean = false,
 ) : Parcelable
