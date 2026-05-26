@@ -67,13 +67,9 @@ abstract class AbstractNotificationsRegistrationWorker(
         }
         val currentUsers = UserDatabase().userDao().allUsers.first()
         val outcomes = coroutineScope {
-            currentUsers.map { user ->
+            currentUsers.filterNot { it.apiToken.isTemporary }.map { user ->
                 async {
-                    if (user.apiToken.isTemporary) {
-                        Outcome.Done
-                    } else {
-                        registerNotificationsForUser(userId = user.id, fcmToken = fcmToken)
-                    }
+                    registerNotificationsForUser(userId = user.id, fcmToken = fcmToken)
                 }
             }
         }.awaitAll()
