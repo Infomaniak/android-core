@@ -74,6 +74,7 @@ include(
     ":Ui:Compose:MaterialThemeFromXml",
     ":Ui:Compose:Preview",
     ":Ui:Compose:Theme",
+    ":Ui:Compose:WindowInset",
     ":Ui:View",
     ":Ui:View:EdgeToEdge",
     ":WebView",
