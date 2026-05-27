@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -29,7 +30,7 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyBu
 @Composable
 fun AppLockScaffold(
     topBar: @Composable () -> Unit,
-    illustration: @Composable () -> Unit,
+    illustration: @Composable ColumnScope.() -> Unit,
     buttonStyle: ButtonStyle,
     onUnlock: () -> Unit,
     modifier: Modifier = Modifier,
