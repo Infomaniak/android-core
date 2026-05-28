@@ -33,9 +33,9 @@ import kotlinx.serialization.json.Json
 @Composable
 fun WebView(
     url: String,
-    headersString: String?,
     onUrlToQuitReached: () -> Unit,
     urlToQuit: String?,
+    headers: Map<String, String>,
     domStorageEnabled: Boolean = false,
 ) {
     AndroidView(
@@ -55,10 +55,27 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = domStorageEnabled
 
-                val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
-                loadUrl(url, headers)
+                loadUrl(url, headers ?: mapOf())
             }
         })
+}
+
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+fun WebView(
+    url: String,
+    headersString: String?,
+    onUrlToQuitReached: () -> Unit,
+    urlToQuit: String?,
+    domStorageEnabled: Boolean = false,
+) {
+    WebView(
+        url = url,
+        headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf(),
+        onUrlToQuitReached = onUrlToQuitReached,
+        urlToQuit = urlToQuit,
+        domStorageEnabled = domStorageEnabled,
+    )
 }
 
 private class CustomWebViewClient(
