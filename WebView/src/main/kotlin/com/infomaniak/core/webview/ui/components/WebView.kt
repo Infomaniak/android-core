@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import kotlinx.serialization.json.Json
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -55,26 +54,9 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = domStorageEnabled
 
-                loadUrl(url, headers ?: mapOf())
+                loadUrl(url, headers)
             }
-        })
-}
-
-@SuppressLint("SetJavaScriptEnabled")
-@Composable
-fun WebView(
-    url: String,
-    headersString: String?,
-    onUrlToQuitReached: () -> Unit,
-    urlToQuit: String?,
-    domStorageEnabled: Boolean = false,
-) {
-    WebView(
-        url = url,
-        headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf(),
-        onUrlToQuitReached = onUrlToQuitReached,
-        urlToQuit = urlToQuit,
-        domStorageEnabled = domStorageEnabled,
+        }
     )
 }
 
