@@ -153,7 +153,7 @@ class TwoFactorAuthManager(
      */
     private val firstUnactionedChallenge: StateFlow<Pair<TwoFactorAuth, RemoteChallenge>?> = allCurrentChallenges.flatMapLatest { challengesMap ->
         actionedChallengesFlow.map { actionedChallengesMap ->
-            val actionedChallenges = actionedChallengesMap.values
+            val actionedChallenges = actionedChallengesMap.values.toSet()
             challengesMap.firstNotNullOfOrNull { (auth, challenge) ->
                 challenge.takeIf { it !in actionedChallenges }?.let { auth to challenge }
             }
