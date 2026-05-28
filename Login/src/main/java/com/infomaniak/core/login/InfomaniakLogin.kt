@@ -110,7 +110,7 @@ class InfomaniakLogin(
         val intent = Intent(context, WebViewLoginActivity::class.java).apply {
             putExtra(LOGIN_URL_TAG, url)
             putExtra(REMOVE_COOKIES_TAG, removeCookies)
-            putExtra(WebViewLoginActivity.Companion.APPLICATION_ID_TAG, appUID)
+            putExtra(WebViewLoginActivity.APPLICATION_ID_TAG, appUID)
         }
         resultLauncher.launch(intent)
     }
