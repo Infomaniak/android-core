@@ -205,9 +205,7 @@ class TwoFactorAuthManager(
     }
 
     private fun forgetActionedChallengeFor(userId: Int) {
-        actionedChallengesFlow.update { actionedChallengesMap ->
-            actionedChallengesMap.filterNot { (actionChallengeUserId, _) -> actionChallengeUserId == userId }
-        }
+        actionedChallengesFlow.update { it - userId }
     }
 
     private fun onApprovalChallengePushed(userId: Long, expirationTimeInMillis: Long) {
