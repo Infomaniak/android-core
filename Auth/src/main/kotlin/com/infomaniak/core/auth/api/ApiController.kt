@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,12 @@ package com.infomaniak.core.auth.api
 import com.google.gson.JsonParser
 import com.infomaniak.core.auth.AuthConfiguration
 import com.infomaniak.core.auth.TokenInterceptorListener
-import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.api.ApiController.RefreshTokenException
 import com.infomaniak.core.network.api.ApiController.gson
 import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
-import com.infomaniak.lib.login.ApiToken
+import com.infomaniak.core.login.ApiToken
 import okhttp3.MultipartBody
 import okhttp3.Request
 

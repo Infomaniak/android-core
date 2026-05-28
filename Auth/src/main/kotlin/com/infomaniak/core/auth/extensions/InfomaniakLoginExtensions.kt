@@ -22,7 +22,7 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.sentry.SentryLog
-import com.infomaniak.lib.login.InfomaniakLogin
+import com.infomaniak.core.login.InfomaniakLogin
 
 suspend fun InfomaniakLogin.logoutToken(user: User) = runCatching {
     deleteToken(

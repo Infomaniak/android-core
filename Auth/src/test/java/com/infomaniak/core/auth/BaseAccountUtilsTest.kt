@@ -22,7 +22,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
 import com.infomaniak.core.auth.models.user.preferences.Preferences
-import com.infomaniak.lib.login.ApiToken
+import com.infomaniak.core.login.ApiToken
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import splitties.init.injectAsAppCtx

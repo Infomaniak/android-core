@@ -1,5 +1,5 @@
 /*
- * Infomaniak Authenticator - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 package com.infomaniak.core.crossapplogin.back
 
 import androidx.activity.ComponentActivity
-import com.infomaniak.lib.login.ApiToken
+import com.infomaniak.core.login.ApiToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

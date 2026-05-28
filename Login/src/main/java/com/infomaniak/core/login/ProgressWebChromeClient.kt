@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025-2026 Infomaniak Network SA
+ * Copyright (C) 2023-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,19 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.infomaniak.core.login
 
-package com.infomaniak.lib.login.ext
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.widget.ProgressBar
+import androidx.core.view.isGone
 
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
-import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
+class ProgressWebChromeClient(private val progressBar: ProgressBar) : WebChromeClient() {
 
-internal fun ActivityWebViewLoginBinding.handleEdgeToEdge() {
-    ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-        val systemBar = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        appBarLayout.updatePadding(top = systemBar.top)
-        view.updatePadding(left = systemBar.left, right = systemBar.right, bottom = systemBar.bottom)
-        WindowInsetsCompat.CONSUMED
+    override fun onProgressChanged(view: WebView?, newProgress: Int) = with(progressBar) {
+        progress = newProgress
+        if (newProgress == 100) isGone = true
     }
+
 }

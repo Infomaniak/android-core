@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.login
+package com.infomaniak.core.login
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -29,14 +29,14 @@ import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.CANCEL_HOST_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.CREATE_ACCOUNT_URL_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.HEADERS_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.IGNORE_FIRST_CANCEL_URL_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
-import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
-import com.infomaniak.lib.login.ext.handleEdgeToEdge
+import com.infomaniak.core.login.InfomaniakLogin.Companion.CANCEL_HOST_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.CREATE_ACCOUNT_URL_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.HEADERS_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.IGNORE_FIRST_CANCEL_URL_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
+import com.infomaniak.core.login.databinding.ActivityWebViewLoginBinding
+import com.infomaniak.core.login.ext.handleEdgeToEdge
 import kotlinx.serialization.json.Json
 import com.infomaniak.core.common.R as RCore
 

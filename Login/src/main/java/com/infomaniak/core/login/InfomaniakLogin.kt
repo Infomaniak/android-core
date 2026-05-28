@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.login
+package com.infomaniak.core.login
 
 import android.content.ComponentName
 import android.content.Context
@@ -30,7 +30,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsServiceConnection
-import com.infomaniak.lib.login.ext.await
+import com.infomaniak.core.login.ext.await
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
