@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ package com.infomaniak.core.auth
 
 import androidx.lifecycle.LiveData
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.lib.login.ApiToken
+import com.infomaniak.core.login.ApiToken
 
 /**
  * CredentialManager: Adds a currentUserId and currentUser management layer to [BaseCredentialManager]

@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2023 Infomaniak Network SA
+ * Copyright (C) 2023-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.login
+package com.infomaniak.core.login
 
 import android.app.Activity
 import android.content.Intent
@@ -33,15 +33,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.CODE_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.ERROR_ACCESS_DENIED
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.ERROR_CODE_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.ERROR_TRANSLATED_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.HTTP_ERROR_CODE
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.SSL_ERROR_CODE
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED
+import com.infomaniak.core.login.InfomaniakLogin.Companion.CODE_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.ERROR_ACCESS_DENIED
+import com.infomaniak.core.login.InfomaniakLogin.Companion.ERROR_CODE_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.ERROR_TRANSLATED_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.HTTP_ERROR_CODE
+import com.infomaniak.core.login.InfomaniakLogin.Companion.SSL_ERROR_CODE
+import com.infomaniak.core.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED
+import com.infomaniak.core.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
+import com.infomaniak.core.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED
+import com.infomaniak.lib.login.R
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import com.infomaniak.core.common.R as RCore
 

@@ -19,7 +19,7 @@ package com.infomaniak.core.crossapplogin.back
 
 import com.infomaniak.core.appintegrity.exceptions.IntegrityException
 import com.infomaniak.core.common.Xor
-import com.infomaniak.lib.login.ApiToken
+import com.infomaniak.core.login.ApiToken
 import okhttp3.Response
 
 internal sealed interface DerivedTokenGenerator {

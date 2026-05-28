@@ -32,8 +32,8 @@ import com.infomaniak.core.network.api.ApiController
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
-import com.infomaniak.lib.login.ApiToken
-import com.infomaniak.lib.login.InfomaniakLogin
+import com.infomaniak.core.login.ApiToken
+import com.infomaniak.core.login.InfomaniakLogin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async

@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
 import com.infomaniak.core.auth.models.user.preferences.Preferences
-import com.infomaniak.lib.login.ApiToken
+import com.infomaniak.core.login.ApiToken
 
 class UserListPreviewParameterProvider : PreviewParameterProvider<List<User>> {
     override val values: Sequence<List<User>> = sequenceOf(usersPreviewData)

@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2024-2025 Infomaniak Network SA
+ * Copyright (C) 2024-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  */
 package com.infomaniak.core.auth.utils
 
-import com.infomaniak.lib.login.ApiToken
+import com.infomaniak.core.login.ApiToken
 
 object ApiTokenExt {
     val ApiToken.isInfinite get() = refreshToken == null

@@ -26,7 +26,7 @@ import com.google.gson.annotations.SerializedName
 import com.infomaniak.core.auth.firstOrEmpty
 import com.infomaniak.core.auth.models.OrganizationAccount
 import com.infomaniak.core.auth.models.user.preferences.Preferences
-import com.infomaniak.lib.login.ApiToken
+import com.infomaniak.core.login.ApiToken
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

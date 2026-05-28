@@ -39,7 +39,7 @@ import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
-import com.infomaniak.lib.login.ApiToken
+import com.infomaniak.core.login.ApiToken
 import io.sentry.IScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

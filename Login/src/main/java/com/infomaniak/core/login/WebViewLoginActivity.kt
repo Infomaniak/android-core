@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.lib.login
+package com.infomaniak.core.login
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -23,10 +23,11 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
-import com.infomaniak.lib.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
+import com.infomaniak.core.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
 import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
-import com.infomaniak.lib.login.ext.handleEdgeToEdge
+import com.infomaniak.core.login.ext.handleEdgeToEdge
+import com.infomaniak.lib.login.R
 
 class WebViewLoginActivity : AppCompatActivity() {
 

@@ -41,10 +41,10 @@ import com.infomaniak.core.network.models.ApiResponse
 import com.infomaniak.core.network.models.ApiResponseStatus
 import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.network.utils.ApiErrorCode.Companion.translateError
-import com.infomaniak.lib.login.ApiToken
-import com.infomaniak.lib.login.InfomaniakLogin
-import com.infomaniak.lib.login.InfomaniakLogin.ErrorStatus
-import com.infomaniak.lib.login.InfomaniakLogin.TokenResult
+import com.infomaniak.core.login.ApiToken
+import com.infomaniak.core.login.InfomaniakLogin
+import com.infomaniak.core.login.InfomaniakLogin.ErrorStatus
+import com.infomaniak.core.login.InfomaniakLogin.TokenResult
 import kotlinx.coroutines.launch
 
 object LoginUtils {

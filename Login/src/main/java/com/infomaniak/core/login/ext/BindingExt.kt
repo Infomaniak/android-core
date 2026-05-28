@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.infomaniak.lib.login.ext
+package com.infomaniak.core.login.ext
 
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
