@@ -27,15 +27,14 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import kotlinx.serialization.json.Json
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebView(
     url: String,
-    headersString: String?,
     onUrlToQuitReached: () -> Unit,
     urlToQuit: String?,
+    headers: Map<String, String>,
     domStorageEnabled: Boolean = false,
 ) {
     AndroidView(
@@ -55,10 +54,10 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = domStorageEnabled
 
-                val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
                 loadUrl(url, headers)
             }
-        })
+        }
+    )
 }
 
 private class CustomWebViewClient(

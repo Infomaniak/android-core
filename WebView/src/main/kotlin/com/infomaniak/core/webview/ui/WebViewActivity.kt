@@ -34,7 +34,8 @@ class WebViewActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val headers = intent.getStringExtra(EXTRA_HEADERS)
+        val headersString = intent.getStringExtra(EXTRA_HEADERS)
+        val headers = headersString?.let { Json.decodeFromString<Map<String, String>>(it) } ?: mapOf()
         val urlToQuit = intent.getStringExtra(EXTRA_URL_TO_QUIT)
         val url = intent.getStringExtra(EXTRA_URL)
         val domStorageEnabled = intent.getBooleanExtra(EXTRA_DOM_STORAGE_ENABLED, false)
@@ -47,7 +48,7 @@ class WebViewActivity : ComponentActivity() {
         setContent {
             WebView(
                 url = url,
-                headersString = headers,
+                headers = headers,
                 onUrlToQuitReached = {
                     setResult(RESULT_OK)
                     finish()
