@@ -21,7 +21,7 @@ package com.infomaniak.core.login.ext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
+import com.infomaniak.core.login.databinding.ActivityWebViewLoginBinding
 
 internal fun ActivityWebViewLoginBinding.handleEdgeToEdge() {
     ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->

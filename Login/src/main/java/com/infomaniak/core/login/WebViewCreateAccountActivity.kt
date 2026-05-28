@@ -35,9 +35,8 @@ import com.infomaniak.core.login.InfomaniakLogin.Companion.HEADERS_TAG
 import com.infomaniak.core.login.InfomaniakLogin.Companion.IGNORE_FIRST_CANCEL_URL_TAG
 import com.infomaniak.core.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
 import com.infomaniak.core.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
-import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
+import com.infomaniak.core.login.databinding.ActivityWebViewLoginBinding
 import com.infomaniak.core.login.ext.handleEdgeToEdge
-import com.infomaniak.lib.login.R
 import kotlinx.serialization.json.Json
 import com.infomaniak.core.common.R as RCore
 

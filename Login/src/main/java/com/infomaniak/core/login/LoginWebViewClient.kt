@@ -42,7 +42,6 @@ import com.infomaniak.core.login.InfomaniakLogin.Companion.SSL_ERROR_CODE
 import com.infomaniak.core.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_CONNECTION_REFUSED
 import com.infomaniak.core.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_INTERNET_DISCONNECTED
 import com.infomaniak.core.login.InfomaniakLogin.Companion.WEBVIEW_ERROR_CODE_NAME_NOT_RESOLVED
-import com.infomaniak.lib.login.R
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import com.infomaniak.core.common.R as RCore
 

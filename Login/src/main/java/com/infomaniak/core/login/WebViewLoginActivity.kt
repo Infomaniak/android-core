@@ -25,9 +25,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.infomaniak.core.login.InfomaniakLogin.Companion.LOGIN_URL_TAG
 import com.infomaniak.core.login.InfomaniakLogin.Companion.REMOVE_COOKIES_TAG
-import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
+import com.infomaniak.core.login.databinding.ActivityWebViewLoginBinding
 import com.infomaniak.core.login.ext.handleEdgeToEdge
-import com.infomaniak.lib.login.R
 
 class WebViewLoginActivity : AppCompatActivity() {
 

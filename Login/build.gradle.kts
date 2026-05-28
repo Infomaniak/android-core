@@ -12,7 +12,7 @@ val coreMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
-    namespace = "com.infomaniak.lib.login"
+    namespace = "com.infomaniak.core.login"
     compileSdk = coreCompileSdk
 
     defaultConfig {
