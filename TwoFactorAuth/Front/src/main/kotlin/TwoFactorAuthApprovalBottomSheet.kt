@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,12 +42,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.infomaniak.core.ui.compose.basics.CallableState
-import com.infomaniak.core.ui.compose.basics.WithLatestNotNull
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
 import com.infomaniak.core.twofactorauth.front.components.SecurityTheme
+import com.infomaniak.core.ui.compose.basics.CallableState
+import com.infomaniak.core.ui.compose.basics.WithLatestNotNull
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
@@ -61,8 +61,9 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun TwoFactorAuthApprovalAutoManagedBottomSheet(
-    twoFactorAuthManager: TwoFactorAuthManager
-) = SecurityTheme {
+    twoFactorAuthManager: TwoFactorAuthManager,
+    isInDarkTheme: Boolean,
+) = SecurityTheme(isInDarkTheme = isInDarkTheme) {
     val challengeState = twoFactorAuthManager.challengeToResolve.collectAsState()
     TwoFactorAuthApprovalAutoManagedBottomSheet(challengeState)
 }
@@ -121,7 +122,7 @@ private fun TwoFactorAuthApprovalAutoManagedBottomSheetPreview() = SecurityTheme
             iteration++
             val approval = CallableState<Challenge.ApprovalAction>()
             val dismissal = Job()
-            val dismiss = fun () { dismissal.complete() }
+            val dismiss = fun() { dismissal.complete() }
             value = challengeForPreview(Challenge.State.ApproveOrReject(approval), dismiss = dismiss)
             raceOf(
                 { dismissal.join() },
@@ -147,7 +148,9 @@ private fun TwoFactorAuthApprovalAutoManagedBottomSheetPreview() = SecurityTheme
     }
     // We have a black background to hide the ugly-ish PreviewActivity that doesn't support edge-to-edge.
     //TODO[issue-blocked]: Remove when https://issuetracker.google.com/issues/441665274 is addressed.
-    Box(Modifier.background(Color.Black).fillMaxSize()) {
+    Box(Modifier
+        .background(Color.Black)
+        .fillMaxSize()) {
         TwoFactorAuthApprovalAutoManagedBottomSheet(state)
     }
 }
