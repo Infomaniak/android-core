@@ -34,9 +34,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun WebView(
     url: String,
-    onUrlToQuitReached: () -> Unit,
-    urlToQuit: String?,
-    headers: Map<String, String>,
+    onUrlToQuitReached: () -> Unit = {},
+    urlToQuit: String? = null,
+    headers: Map<String, String> = emptyMap(),
     userAgentString: String? = null,
     domStorageEnabled: Boolean = false,
     webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
