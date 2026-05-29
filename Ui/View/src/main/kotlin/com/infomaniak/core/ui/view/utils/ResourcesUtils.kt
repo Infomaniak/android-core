@@ -17,7 +17,7 @@
  */
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.infomaniak.core.ui.view
+package com.infomaniak.core.ui.view.utils
 
 import android.content.Context
 import android.view.View
