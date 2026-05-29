@@ -99,7 +99,7 @@ class TwoFactorAuthManager(
         it == Lifecycle.Event.ON_START
     }.rateLimit(30.seconds, elementsBeforeLimit = 2)
 
-    private val actionedChallengesFlow = MutableStateFlow<Set<RemoteChallenge>>(emptySet())
+    private val actionedChallengesFlow = MutableStateFlow<Map<Int, RemoteChallenge>>(emptyMap())
 
     private val perUserIdCacheManager = DynamicLazyMap.CacheManager<Int, Any?> { _, _ ->
         delay(5.seconds) // Should be more than enough to keep the state between re-uses.
@@ -152,7 +152,8 @@ class TwoFactorAuthManager(
      * or have been fully handled since the most recent refresh to [allCurrentChallenges].
      */
     private val firstUnactionedChallenge: StateFlow<Pair<TwoFactorAuth, RemoteChallenge>?> = allCurrentChallenges.flatMapLatest { challengesMap ->
-        actionedChallengesFlow.map { actionedChallenges ->
+        actionedChallengesFlow.map { actionedChallengesMap ->
+            val actionedChallenges = actionedChallengesMap.values.toSet()
             challengesMap.firstNotNullOfOrNull { (auth, challenge) ->
                 challenge.takeIf { it !in actionedChallenges }?.let { auth to challenge }
             }
@@ -198,12 +199,17 @@ class TwoFactorAuthManager(
         onApprovalChallengePushed(userId, expirationTimeInMillis)
     }
 
-    fun refreshChallengeNow(userId: Long) {
+    fun refreshChallengeNow(userId: Long, fromExplicitUserAction: Boolean = true) {
+        if (fromExplicitUserAction) forgetActionedChallengeFor(userId.toInt())
         perUserIdRefreshTrigger.useElement(userId.toInt()) { it.trySend(Unit) }
     }
 
+    private fun forgetActionedChallengeFor(userId: Int) {
+        actionedChallengesFlow.update { it - userId }
+    }
+
     private fun onApprovalChallengePushed(userId: Long, expirationTimeInMillis: Long) {
-        refreshChallengeNow(userId)
+        refreshChallengeNow(userId, fromExplicitUserAction = false)
         TwoFactorAuthNotifications.postIncomingChallengeNotification(
             userId = userId,
             expirationTimeInMillis = expirationTimeInMillis
@@ -216,7 +222,8 @@ class TwoFactorAuthManager(
                 firstUnactionedChallenge = firstUnactionedChallenge,
                 getAccountInfo = getAccountInfo
             )
-            actionedChallengesFlow.update { it + actionData.remoteChallenge }
+            val userId = actionData.twoFactorAuth.userId
+            actionedChallengesFlow.update { it + (userId to actionData.remoteChallenge) }
             executeChallengeAction(actionData)
         }
     }.stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
