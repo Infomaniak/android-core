@@ -34,9 +34,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun WebView(
     url: String,
-    onUrlToQuitReached: () -> Unit,
-    urlToQuit: String?,
-    headers: Map<String, String>,
+    onUrlToQuitReached: () -> Unit = {},
+    urlToQuit: String? = null,
+    headers: Map<String, String> = emptyMap(),
     userAgentString: String? = null,
     @SuppressLint("ModifierParameter") // We have this to match the previous behavior when there was no modifier parameter.
     modifier: Modifier = Modifier.safeDrawingPadding(),
