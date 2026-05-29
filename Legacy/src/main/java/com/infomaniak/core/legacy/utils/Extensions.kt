@@ -44,7 +44,6 @@ import androidx.activity.result.ActivityResult
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
-import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.annotation.StyleableRes
 import androidx.core.app.ActivityCompat
@@ -67,13 +66,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.load
-import com.github.razir.progressbutton.DrawableButton.Companion.GRAVITY_CENTER
-import com.github.razir.progressbutton.TextChangeAnimatorParams
-import com.github.razir.progressbutton.attachTextChangeAnimator
-import com.github.razir.progressbutton.bindProgressButton
-import com.github.razir.progressbutton.hideProgress
-import com.github.razir.progressbutton.showProgress
-import com.google.android.material.button.MaterialButton
 import com.google.gson.JsonSyntaxException
 import com.infomaniak.core.legacy.models.user.User
 import com.infomaniak.core.legacy.utils.CoilUtils.simpleImageLoader
@@ -108,51 +100,6 @@ fun Context.showToast(title: String, duration: Int = Toast.LENGTH_LONG) {
 @Deprecated("Use the method exposed through the Core:Ui module")
 fun Context.showToast(title: Int, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, title, duration).show()
-}
-
-@Deprecated("Use the method exposed through the Core:Ui:View module")
-fun MaterialButton.initProgress(lifecycle: LifecycleOwner? = null, color: Int? = null) {
-
-    lifecycle?.bindProgressButton(button = this)
-
-    val params = color?.let {
-        TextChangeAnimatorParams().apply {
-            useCurrentTextColor = false
-            textColor = color
-            fadeInMills = 0L
-            fadeOutMills = 0L
-        }
-    }
-
-    params?.let(::attachTextChangeAnimator) ?: attachTextChangeAnimator()
-}
-
-@Deprecated("Use the method exposed through the Core:Ui:View module")
-fun MaterialButton.showProgressCatching(color: Int? = null) {
-    isClickable = false
-    // showProgress stores references to views which crashes when the view is freed
-    runCatching {
-        showProgress {
-            progressColor = color ?: Color.WHITE
-            gravity = GRAVITY_CENTER
-        }
-    }
-}
-
-@Deprecated("Use the method exposed through the Core:Ui:View module")
-fun MaterialButton.hideProgressCatching(@StringRes text: Int) {
-    isClickable = true
-    // hideProgress stores references to views which crashes when the view is freed
-    runCatching { hideProgress(text) }
-}
-
-@Deprecated("Use the method exposed through the Core:Ui:View module")
-fun MaterialButton.hideProgressCatching(text: String) {
-    isClickable = true
-    // hideProgress stores references to views which crashes when the view is freed
-    runCatching { hideProgress(text) }.onFailure { throwable ->
-        SentryLog.w("hideProgress", "An error has occurred when hideProgress", throwable)
-    }
 }
 
 /**

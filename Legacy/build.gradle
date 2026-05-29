@@ -82,8 +82,6 @@ dependencies {
     api core.sentry.android
     api core.sentry.okhttp
 
-    implementation core.progress.button
-
     api core.matomo
 
     testImplementation core.junit
