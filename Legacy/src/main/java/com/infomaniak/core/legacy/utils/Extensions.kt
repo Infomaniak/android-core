@@ -199,43 +199,6 @@ fun Dialog.showKeyboard() {
     }
 }
 
-@Deprecated("Use the method exposed through the Core:Ui:View module")
-fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
-    (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-        setMargins(
-            left ?: leftMargin,
-            top ?: topMargin,
-            right ?: rightMargin,
-            bottom ?: bottomMargin,
-        )
-        requestLayout()
-    }
-}
-
-@Deprecated("Use the method exposed through the Core:Ui:View module")
-fun View.setMarginsRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
-    (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-        start?.let { marginStart = it }
-        top?.let { topMargin = it }
-        end?.let { marginEnd = it }
-        bottom?.let { bottomMargin = it }
-        requestLayout()
-    }
-}
-
-@Deprecated("Use the method exposed through the Core:Ui:View module")
-fun View.setPaddingRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
-    (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-        setPaddingRelative(
-            start ?: paddingStart,
-            top ?: paddingTop,
-            end ?: paddingEnd,
-            bottom ?: paddingBottom,
-        )
-        requestLayout()
-    }
-}
-
 fun String.capitalizeFirstChar(): String = replaceFirstChar { char -> char.titlecase() }
 
 fun String.guessMimeType(): String {
