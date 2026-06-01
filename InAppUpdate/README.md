@@ -191,8 +191,6 @@ The composable adapts its layout automatically:
 
 On the `fdroid` flavor, `InAppUpdateManager.checkUpdateIsAvailable()` fetches the latest release from the F-Droid / Infomaniak API and invokes `onFDroidResult` with `true` when `currentVersionCode < latestVersionCode`.
 
-Background installation is handled by `AppUpdateScheduler` (WorkManager). If you want to schedule silent installation when the app goes to background, call:
-
 ```kotlin
 // In your Application or MainActivity:
 AppUpdateScheduler(context).scheduleWorkIfNeeded()
@@ -216,14 +214,3 @@ Or reset all update settings to their defaults:
 ```kotlin
 inAppUpdateManager.resetUpdateSettings()
 ```
-
----
-
-## 7. How it works
-
-- On every `onStart`, the manager checks whether it should query for updates based on the launch counter and user preference stored in DataStore.
-- For **flexible** updates (standard): a Play `InstallStateUpdatedListener` tracks download/installation state. When the download is complete, `canInstallUpdate` emits `true`.
-- For **immediate** updates (standard): the Play dialog blocks the UI; back press is disabled.
-- For **F-Droid**: the latest version code is fetched from the API and compared to `BuildConfig.VERSION_CODE`. The result is forwarded via `onFDroidResult`.
-- `AppUpdateScheduler` (standard only) enqueues a `WorkManager` task when the app goes to background, so the installation completes silently without requiring the app to be in the foreground.
-
