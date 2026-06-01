@@ -4,8 +4,7 @@ The `InAppReview` module manages the in-app review flow with a configurable coun
 It supports two distribution flavors:
 
 - **`standard`** — Google Play Review API (`ReviewManagerFactory`)
-- **`fdroid`** — Falls back to a custom `ReviewAlertDialog` (no Play dependency)
-
+- **`fdroid`** — No-op manager (no Play dependency). If you still want to prompt users, you can show `ReviewAlertDialog` yourself.
 The review prompt is only shown after a configurable number of app launches ("countdown"), and never again once the user has already submitted a review.
 
 ## 1. Integration (Gradle)
@@ -112,7 +111,7 @@ fun ReviewDialog(
 
 ---
 
-## 5. Manual countdown behavior
+## 4. Manual countdown behavior
 
 If you prefer to control when the countdown decrements (e.g., only after a meaningful user action), use `Behavior.Manual` and call `decrementAppReviewCountdown()` yourself:
 
