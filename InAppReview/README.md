@@ -5,7 +5,8 @@ It supports two distribution flavors:
 
 - **`standard`** — Google Play Review API (`ReviewManagerFactory`)
 - **`fdroid`** — No-op manager (no Play dependency). If you still want to prompt users, you can show `ReviewAlertDialog` yourself.
-The review prompt is only shown after a configurable number of app launches ("countdown"), and never again once the user has already submitted a review.
+
+The review prompt is only shown after a configurable number of app launches ("countdown"), and is not shown again after the user has tapped "Review" (i.e., once the review flow has been triggered).
 
 ## 1. Integration (Gradle)
 
