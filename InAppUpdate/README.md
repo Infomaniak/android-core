@@ -219,7 +219,7 @@ inAppUpdateManager.resetUpdateSettings()
 
 ---
 
-## 8. How it works
+## 7. How it works
 
 - On every `onStart`, the manager checks whether it should query for updates based on the launch counter and user preference stored in DataStore.
 - For **flexible** updates (standard): a Play `InstallStateUpdatedListener` tracks download/installation state. When the download is complete, `canInstallUpdate` emits `true`.
