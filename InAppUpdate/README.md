@@ -3,9 +3,8 @@
 The `InAppUpdate` module provides a lifecycle-aware abstraction layer for in-app update flows.  
 It supports two distribution flavors:
 
-- **`standard`** — Google Play in-app update API (flexible & immediate update types)
-- **`fdroid`** — F-Droid update detection via the Infomaniak API, with optional background installation via WorkManager
-
+- **`standard`** — Google Play in-app update API (flexible & immediate update types), with optional WorkManager-based completion of downloaded flexible updates
+- **`fdroid`** — F-Droid update detection via the Infomaniak API
 ## 1. Integration (Gradle)
 
 Add the following dependency to your `build.gradle.kts`:
