@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.infomaniak.core.auth.models.user.User
 import kotlinx.coroutines.flow.Flow
 
@@ -70,6 +71,9 @@ interface UserDao {
 
     @Update
     suspend fun update(user: User)
+
+    @Upsert
+    suspend fun upsert(user: User)
 
     @Delete
     suspend fun delete(user: User)
