@@ -32,9 +32,8 @@ import androidx.core.net.toUri
 import com.infomaniak.core.login.InfomaniakLogin.Companion.CANCEL_HOST_TAG
 import com.infomaniak.core.login.InfomaniakLogin.Companion.CREATE_ACCOUNT_URL_TAG
 import com.infomaniak.core.login.InfomaniakLogin.Companion.SUCCESS_HOST_TAG
+import com.infomaniak.core.login.databinding.ActivityWebViewLoginBinding
 import com.infomaniak.core.login.ext.handleEdgeToEdge
-import com.infomaniak.lib.login.R
-import com.infomaniak.lib.login.databinding.ActivityWebViewLoginBinding
 import com.infomaniak.core.common.R as RCore
 
 class WebViewCreateAccountActivity : AppCompatActivity() {
