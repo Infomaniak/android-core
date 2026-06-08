@@ -31,7 +31,7 @@ import kotlin.coroutines.cancellation.CancellationException
 object SentryConfig {
     fun Application.configureSentry(
         isDebug: Boolean,
-        isSentryTrackingEnabled: Boolean,
+        isSentryTrackingEnabled: () -> Boolean,
         isFilteredException: (Throwable?) -> Boolean = { false }
     ) {
         SentryAndroid.init(this) { options: SentryAndroidOptions ->
@@ -45,7 +45,7 @@ object SentryConfig {
                  * - App specific exceptions defined when the method is called
                  */
                 when {
-                    shouldBeDiscarded(event, isDebug, isSentryTrackingEnabled, isFilteredException) -> null
+                    shouldBeDiscarded(event, isDebug, isSentryTrackingEnabled(), isFilteredException) -> null
                     else -> event
                 }
             }
