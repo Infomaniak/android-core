@@ -37,6 +37,7 @@ include(
     ":BugTracker",
     ":Coil",
     ":Common",
+    ":DataValue",
     ":CrossAppLogin:Back",
     ":CrossAppLogin:Front",
     ":DotLottie",

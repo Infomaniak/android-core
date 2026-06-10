@@ -131,6 +131,7 @@ infomaniak-core-coil = { module = "com.infomaniak.core:Coil" }
 infomaniak-core-common = { module = "com.infomaniak.core:Common" }
 infomaniak-core-crossapplogin = { module = "com.infomaniak.core:CrossAppLogin.Front" }
 infomaniak-core-crossapplogin-back = { module = "com.infomaniak.core:CrossAppLogin.Back" }
+infomaniak-core-datavalue = { module = "com.infomaniak.core:DataValue" }
 infomaniak-core-twofactorauth-back-withuserdb = { module = "com.infomaniak.core:TwoFactorAuth.Back.WithUserDb" }
 infomaniak-core-crossapplogin-front = { module = "com.infomaniak.core:CrossAppLogin.Front" }
 infomaniak-core-dotlottie = { module = "com.infomaniak.core:DotLottie" }
