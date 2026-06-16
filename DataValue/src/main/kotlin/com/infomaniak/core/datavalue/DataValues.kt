@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Easy to use wrapper to interact with the DataStore.
  *
- * Extend this class to have access the `dataValue()` methods to define and access values stored in the DataStore.
+ * Extend this class to have access to the `dataValue()` methods to define and access values stored in the DataStore.
  *
  * It supports storing primitive types, serializable types, and their respective nullable versions.
  */
