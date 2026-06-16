@@ -37,7 +37,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Easy to use wrapper to interact with the DataStore.
@@ -141,15 +140,12 @@ abstract class DataValues(appContext: Context, name: String) {
     companion object {
         private val json by lazy { Json }
 
-        private val dataStores = ConcurrentHashMap<String, DataStore<Preferences>>()
-
-        private fun Context.dataValueStore(name: String): DataStore<Preferences> = dataStores.getOrPut(name) {
+        private fun Context.dataValueStore(name: String): DataStore<Preferences> =
             PreferenceDataStoreFactory.create(
                 // In case of a CorruptionException, clear everything rather than crashing.
                 corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
                 scope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
                 produceFile = { preferencesDataStoreFile(name) },
             )
-        }
     }
 }
