@@ -39,5 +39,5 @@ interface DataValue<T> {
     suspend fun setValue(value: T)
 
     /** Atomically reads the current value, applies [transform], then persists the result. */
-    suspend fun update(transform: (T) -> T)
+    suspend fun update(transform: suspend (T) -> T)
 }

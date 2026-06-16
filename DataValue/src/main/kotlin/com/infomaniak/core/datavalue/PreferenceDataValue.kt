@@ -39,7 +39,7 @@ internal class PreferenceDataValue<T, R : Any>(
         dataStore.edit { it.write(value) }
     }
 
-    override suspend fun update(transform: (T) -> T) {
+    override suspend fun update(transform: suspend (T) -> T) {
         dataStore.edit { it.write(transform(it.read())) }
     }
 
