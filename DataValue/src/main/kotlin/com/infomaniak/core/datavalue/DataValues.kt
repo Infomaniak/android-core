@@ -139,7 +139,7 @@ abstract class DataValues(appContext: Context, name: String) {
     ): DataValue<T> = PreferenceDataValue(dataStore, key, defaultValue, encode, decode)
 
     companion object {
-        private val json = Json
+        private val json by lazy { Json }
 
         private val dataStores = ConcurrentHashMap<String, DataStore<Preferences>>()
 
