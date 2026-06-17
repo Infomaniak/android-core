@@ -19,6 +19,7 @@ package com.infomaniak.core.auth
 
 import com.infomaniak.core.auth.utils.ApiTokenExt.isInfinite
 import com.infomaniak.core.login.ApiToken
+import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -27,6 +28,7 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import okio.IOException
 import com.infomaniak.core.auth.api.ApiController as AuthApiController
 
 class TokenAuthenticator(
@@ -35,8 +37,8 @@ class TokenAuthenticator(
 
     private val userId = tokenInterceptorListener.getCurrentUserId()
 
-    override fun authenticate(route: Route?, response: Response): Request? {
-        return runBlocking(Dispatchers.IO) {
+    override fun authenticate(route: Route?, response: Response): Request? = runCatching {
+        runBlocking(Dispatchers.IO) {
             mutex.withLock {
                 val request = response.request
                 val authorization = request.header("Authorization")
@@ -58,7 +60,10 @@ class TokenAuthenticator(
                 }
             }
         }
-    }
+    }.onFailure { t ->
+        if (t is IOException) throw t
+        SentryLog.w("TokenAuthenticator", "Failed to authenticate or refresh token", t)
+    }.getOrNull()
 
     companion object {
         val mutex = Mutex()
