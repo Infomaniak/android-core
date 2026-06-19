@@ -93,7 +93,8 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.coroutines.launch
 import com.infomaniak.core.common.R as RCore
 
-private const val ANIMATED_BUTTON_KEY = "ANIMATED_BUTTON_KEY"
+private const val ANIMATED_PRIMARY_BUTTON_KEY = "ANIMATED_PRIMARY_BUTTON_KEY"
+private const val ANIMATED_SECONDARY_BUTTON_KEY = "ANIMATED_SECONDARY_BUTTON_KEY"
 private val FAB_SIZE = 64.dp
 
 /**
@@ -126,7 +127,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
     onContinueWithSelectedAccounts: (List<ExternalAccount>) -> Unit,
     onUseAnotherAccountClicked: () -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
-    noCrossAppLoginAccountsContent: @Composable (Modifier, CrossLoginCustomization) -> Unit,
+    noCrossAppLoginAccountsContent: @Composable (Modifier, Modifier, CrossLoginCustomization) -> Unit,
     modifier: Modifier = Modifier,
     isSingleSelection: Boolean = false,
     isLoginButtonLoading: () -> Boolean = { false },
@@ -161,8 +162,12 @@ fun OnboardingComponents.CrossLoginBottomContent(
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    val animatedButtonModifier = Modifier.sharedElement(
-                        sharedContentState = rememberSharedContentState(key = ANIMATED_BUTTON_KEY),
+                    val animatedPrimaryButtonModifier = Modifier.sharedElement(
+                        sharedContentState = rememberSharedContentState(key = ANIMATED_PRIMARY_BUTTON_KEY),
+                        animatedVisibilityScope = this@AnimatedContent,
+                    )
+                    val animatedSecondaryButtonModifier = Modifier.sharedElement(
+                        sharedContentState = rememberSharedContentState(key = ANIMATED_SECONDARY_BUTTON_KEY),
                         animatedVisibilityScope = this@AnimatedContent,
                     )
 
@@ -176,10 +181,11 @@ fun OnboardingComponents.CrossLoginBottomContent(
                             isLoginButtonLoading = isLoginButtonLoading,
                             onContinueWithSelectedAccounts = onContinueWithSelectedAccounts,
                             onAccountsSelectionClicked = { showAccountsBottomSheet = true },
-                            animatedButtonModifier = animatedButtonModifier,
+                            animatedButtonModifier = animatedPrimaryButtonModifier,
                             noCrossAppLoginAccountsContent = {
                                 noCrossAppLoginAccountsContent(
-                                    animatedButtonModifier,
+                                    animatedPrimaryButtonModifier,
+                                    animatedSecondaryButtonModifier,
                                     customization
                                 )
                             }
@@ -188,7 +194,7 @@ fun OnboardingComponents.CrossLoginBottomContent(
                         ButtonNext(
                             onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
                             shape = nextButtonShape,
-                            modifier = animatedButtonModifier,
+                            modifier = animatedPrimaryButtonModifier,
                         )
                     }
                 }
@@ -459,21 +465,22 @@ object NoCrossAppLoginAccountsContent {
         onCreateAccount: () -> Unit,
         isLoginButtonLoading: () -> Boolean = { false },
         isSignUpButtonLoading: () -> Boolean = { false },
-    ): @Composable (Modifier, CrossLoginCustomization) -> Unit = { modifier, customization ->
-        ConnectionButton(
-            style = customization.buttonStyle,
-            isLoginButtonLoading = isLoginButtonLoading,
-            modifier = modifier,
-            text = stringResource(RCore.string.buttonLogin),
-            onClick = onLogin,
-        )
-        AccountCreationButton(
-            style = customization.buttonStyle,
-            isSignUpButtonLoading = isSignUpButtonLoading,
-            onClick = onCreateAccount,
-            modifier = modifier
-        )
-    }
+    ): @Composable (Modifier, Modifier, CrossLoginCustomization) -> Unit =
+        { primaryButtonModifier, secondaryButtonModifier, customization ->
+            ConnectionButton(
+                style = customization.buttonStyle,
+                isLoginButtonLoading = isLoginButtonLoading,
+                modifier = primaryButtonModifier,
+                text = stringResource(RCore.string.buttonLogin),
+                onClick = onLogin,
+            )
+            AccountCreationButton(
+                style = customization.buttonStyle,
+                isSignUpButtonLoading = isSignUpButtonLoading,
+                onClick = onCreateAccount,
+                modifier = secondaryButtonModifier
+            )
+        }
 
     /**
      * When no account is required.
@@ -482,7 +489,7 @@ object NoCrossAppLoginAccountsContent {
      */
     fun accountOptional(
         onStartClicked: () -> Unit,
-    ): @Composable (Modifier, CrossLoginCustomization) -> Unit = { modifier, customization ->
+    ): @Composable (Modifier, Modifier, CrossLoginCustomization) -> Unit = { modifier, _, customization ->
         ButtonExpanded(
             text = stringResource(R.string.buttonStart),
             shape = customization.buttonStyle.shape,
