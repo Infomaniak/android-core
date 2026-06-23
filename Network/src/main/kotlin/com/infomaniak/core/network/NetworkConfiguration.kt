@@ -30,7 +30,7 @@ object NetworkConfiguration {
     lateinit var appId: String
     var appVersionCode: Int = -1
     lateinit var appVersionName: String
-    var customHeaders: MutableMap<String, String>? = null
+    val customHeaders: CustomHeaders = CustomHeaders()
     var apiErrorCodes: List<ErrorCodeTranslated>? = null
         private set
 

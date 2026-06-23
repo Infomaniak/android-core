@@ -90,9 +90,9 @@ object HttpUtils {
                 put(HttpHeaders.Accept, contentType)
                 put(HttpHeaders.ContentType, contentType)
             }
-            customHeaders?.forEach { customHeader ->
-                computeIfAbsent(customHeader.key) {
-                    URLEncoder.encode(customHeader.value, "UTF-8")
+            customHeaders.get().forEach { (key, value) ->
+                computeIfAbsent(key) {
+                    URLEncoder.encode(value, "UTF-8")
                 }
             }
         }
