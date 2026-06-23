@@ -23,7 +23,11 @@ import com.infomaniak.core.network.utils.Utils.getPreferredLocaleList
 import io.ktor.client.request.accept
 import io.ktor.client.request.headers
 import io.ktor.client.utils.CacheControl
-import io.ktor.http.*
+import io.ktor.http.ContentType
+import io.ktor.http.HeadersBuilder
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMessageBuilder
+import io.ktor.http.contentType
 import io.ktor.http.header.AcceptEncoding
 import io.ktor.util.appendIfNameAbsent
 import okhttp3.Headers
