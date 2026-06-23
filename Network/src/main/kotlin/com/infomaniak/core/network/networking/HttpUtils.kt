@@ -23,11 +23,7 @@ import com.infomaniak.core.network.utils.Utils.getPreferredLocaleList
 import io.ktor.client.request.accept
 import io.ktor.client.request.headers
 import io.ktor.client.utils.CacheControl
-import io.ktor.http.ContentType
-import io.ktor.http.HeadersBuilder
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMessageBuilder
-import io.ktor.http.contentType
+import io.ktor.http.*
 import io.ktor.http.header.AcceptEncoding
 import io.ktor.util.appendIfNameAbsent
 import okhttp3.Headers
@@ -90,9 +86,9 @@ object HttpUtils {
                 put(HttpHeaders.Accept, contentType)
                 put(HttpHeaders.ContentType, contentType)
             }
-            customHeaders?.forEach { customHeader ->
-                computeIfAbsent(customHeader.key) {
-                    URLEncoder.encode(customHeader.value, "UTF-8")
+            customHeaders.get().forEach { (key, value) ->
+                computeIfAbsent(key) {
+                    URLEncoder.encode(value, "UTF-8")
                 }
             }
         }
