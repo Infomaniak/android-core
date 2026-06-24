@@ -25,12 +25,12 @@ package com.infomaniak.core.datavalue
  *
  * ```kotlin
  * object UnownedTypeSerializer : DataValueSerializer<UnownedType> {
- *     override fun serialize(value: UnownedType): String = when (value) {
+ *     override suspend fun serialize(value: UnownedType): String = when (value) {
  *         UnownedType.A -> "A"
  *         UnownedType.B -> "B"
  *     }
  *
- *     override fun deserialize(value: String): UnownedType = when (value) {
+ *     override suspend fun deserialize(value: String): UnownedType = when (value) {
  *         "A" -> UnownedType.A
  *         "B" -> UnownedType.B
  *     }
