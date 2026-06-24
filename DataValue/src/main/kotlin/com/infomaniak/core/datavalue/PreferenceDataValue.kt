@@ -29,8 +29,8 @@ internal class PreferenceDataValue<T, R : Any>(
     private val dataStore: DataStore<Preferences>,
     private val key: Preferences.Key<R>,
     private val defaultValue: T,
-    private val encode: (T) -> R?,
-    private val decode: (R) -> T,
+    private val encode: suspend (T) -> R?,
+    private val decode: suspend (R) -> T,
 ) : DataValue<T> {
 
     override val flow: Flow<T> = dataStore.data.map { it.read() }.distinctUntilChanged()
@@ -43,9 +43,11 @@ internal class PreferenceDataValue<T, R : Any>(
         dataStore.edit { it.write(transform(it.read())) }
     }
 
-    private fun Preferences.read(): T = this[key]?.let(decode) ?: defaultValue
+    private suspend fun Preferences.read(): T {
+        return this[key]?.let { decode(it) } ?: defaultValue
+    }
 
-    private fun MutablePreferences.write(value: T) {
+    private suspend fun MutablePreferences.write(value: T) {
         val encoded = encode(value)
         if (encoded == null) remove(key) else set(key, encoded)
     }
