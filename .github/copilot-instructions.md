@@ -27,8 +27,7 @@ Legacy/                 # Backward-compatible monolithic module
 build-logic/
 ├── composite/          # CoreCompositePlugin (settings plugin for host apps)
 └── convention/         # Shared Gradle convention plugins
-gradle/libs.versions.toml
-gradle/core.versions.toml  # Exposed to host apps
+gradle/core.versions.toml  # Version catalog — exposed to host apps as the `core` catalog
 lint.xml                   # Shared lint config — applies to all modules
 ```
 
