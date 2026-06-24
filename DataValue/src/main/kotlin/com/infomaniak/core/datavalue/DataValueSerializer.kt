@@ -43,8 +43,8 @@ package com.infomaniak.core.datavalue
 interface DataValueSerializer<T> {
 
     /** Encodes [value] into the [String] that will be stored. */
-    fun serialize(value: T): String
+    suspend fun serialize(value: T): String
 
     /** Decodes a previously [serialize]d [String] back into a [T]. */
-    fun deserialize(value: String): T
+    suspend fun deserialize(value: String): T
 }

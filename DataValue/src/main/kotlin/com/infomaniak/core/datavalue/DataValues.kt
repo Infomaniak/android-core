@@ -133,8 +133,8 @@ abstract class DataValues(appContext: Context, name: String) {
     private fun <T, R : Any> build(
         key: Preferences.Key<R>,
         defaultValue: T,
-        encode: (T) -> R?,
-        decode: (R) -> T,
+        encode: suspend (T) -> R?,
+        decode: suspend (R) -> T,
     ): DataValue<T> = PreferenceDataValue(dataStore, key, defaultValue, encode, decode)
 
     companion object {
