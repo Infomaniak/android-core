@@ -3,7 +3,7 @@
 > **Read `AGENTS.md` first** for module map and conventions. This file covers build, CI, and validation.
 
 ## Overview
-Infomaniak Android Core — a modular shared library consumed by all Infomaniak Android apps via **Gradle Composite Builds**. Contains ~25 independent modules (Auth, Network, Ui, Ktor, Notifications, etc.) plus a `Legacy` module for backward compatibility.
+Infomaniak Android Core — a modular shared library consumed by all Infomaniak Android apps via **Gradle Composite Builds**. Contains ~50 Gradle modules (Auth, Network, Ui, Ktor, Notifications, etc.) plus a `Legacy` module for backward compatibility.
 
 ## Build & Test (CI: `.github/workflows/android.yml`)
 ```bash
@@ -26,7 +26,7 @@ The plugin substitutes `com.infomaniak.core:*` GAV coords with local project pat
 Legacy/                 # Backward-compatible monolithic module
 build-logic/
 ├── composite/          # CoreCompositePlugin (settings plugin for host apps)
-└── convention/         # Shared Gradle convention plugins
+└── composeLint/        # Shared Compose lint checks
 gradle/core.versions.toml  # Version catalog — exposed to host apps as the `core` catalog
 lint.xml                   # Shared lint config — applies to all modules
 ```
