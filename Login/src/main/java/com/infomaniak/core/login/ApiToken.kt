@@ -36,4 +36,14 @@ data class ApiToken(
     @Transient var expiresAt: Long? = null,
     @ColumnInfo(defaultValue = "0")
     @Transient var isTemporary: Boolean = false,
-) : Parcelable
+) : Parcelable {
+
+    override fun toString() = "ApiToken(accessToken=██, " +
+            "refreshToken=██, " +
+            "tokenType='$tokenType', " +
+            "expiresIn=$expiresIn, " +
+            "userId=$userId, " +
+            "scope=$scope, " +
+            "expiresAt=$expiresAt, " +
+            "isTemporary=$isTemporary)"
+}

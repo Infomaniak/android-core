@@ -97,7 +97,9 @@ class AccessTokenUsageInterceptor(
     private fun formatAccessTokenForSentry(accessToken: String): String = accessToken.take(2) + "..." + accessToken.takeLast(2)
 
     @Serializable
-    data class ApiCallRecord(val accessToken: String, val date: Long, val responseCode: Int)
+    data class ApiCallRecord(val accessToken: String, val date: Long, val responseCode: Int) {
+        override fun toString() = "ApiCallRecord(accessToken=██, date=$date, responseCode=$responseCode)"
+    }
 
     companion object {
         private const val SECONDS_IN_A_DAY = 86_400L
