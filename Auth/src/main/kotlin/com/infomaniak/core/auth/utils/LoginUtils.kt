@@ -52,7 +52,7 @@ object LoginUtils {
     fun rememberLoginFlowController(
         infomaniakLogin: InfomaniakLogin,
         userExistenceChecker: UserExistenceChecker,
-        onLoginResult: (UserLoginResult?) -> Unit,
+        onLoginResult: suspend (UserLoginResult?) -> Unit,
     ): LoginFlowController {
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
@@ -71,10 +71,12 @@ object LoginUtils {
         }
 
         val accountCreationLauncher = rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-            when (val result = getAccountCreationResult(result, infomaniakLogin, loginLauncher)) {
-                AccountCreationResult.Success -> Unit
-                AccountCreationResult.Canceled -> onLoginResult(null)
-                is AccountCreationResult.Failure -> onLoginResult(UserLoginResult.Failure(result.errorMessage))
+            scope.launch {
+                when (val result = getAccountCreationResult(result, infomaniakLogin, loginLauncher)) {
+                    AccountCreationResult.Success -> Unit
+                    AccountCreationResult.Canceled -> onLoginResult(null)
+                    is AccountCreationResult.Failure -> onLoginResult(UserLoginResult.Failure(result.errorMessage))
+                }
             }
         }
 
