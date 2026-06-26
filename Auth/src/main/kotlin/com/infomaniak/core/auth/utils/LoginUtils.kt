@@ -35,16 +35,16 @@ import com.infomaniak.core.auth.models.AuthCodeResult
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.models.UserResult
 import com.infomaniak.core.common.cancellable
+import com.infomaniak.core.login.ApiToken
+import com.infomaniak.core.login.InfomaniakLogin
+import com.infomaniak.core.login.InfomaniakLogin.ErrorStatus
+import com.infomaniak.core.login.InfomaniakLogin.TokenResult
 import com.infomaniak.core.network.api.ApiController.toApiError
 import com.infomaniak.core.network.api.InternalTranslatedErrorCode
 import com.infomaniak.core.network.models.ApiResponse
 import com.infomaniak.core.network.models.ApiResponseStatus
 import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.network.utils.ApiErrorCode.Companion.translateError
-import com.infomaniak.core.login.ApiToken
-import com.infomaniak.core.login.InfomaniakLogin
-import com.infomaniak.core.login.InfomaniakLogin.ErrorStatus
-import com.infomaniak.core.login.InfomaniakLogin.TokenResult
 import kotlinx.coroutines.launch
 
 object LoginUtils {
@@ -53,6 +53,7 @@ object LoginUtils {
         infomaniakLogin: InfomaniakLogin,
         userExistenceChecker: UserExistenceChecker,
         onLoginResult: suspend (UserLoginResult?) -> Unit,
+        withSecurity: Boolean = false,
     ): LoginFlowController {
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
@@ -64,6 +65,7 @@ object LoginUtils {
                     context = context,
                     infomaniakLogin = infomaniakLogin,
                     userExistenceChecker = userExistenceChecker,
+                    withSecurity = withSecurity,
                 )
 
                 onLoginResult(userLoginResult)
@@ -93,6 +95,7 @@ object LoginUtils {
         context: Context,
         infomaniakLogin: InfomaniakLogin,
         userExistenceChecker: UserExistenceChecker,
+        withSecurity: Boolean = false,
     ): UserLoginResult? {
         val authCodeResult = result.toAuthCodeResult(context)
         when (authCodeResult) {
@@ -107,7 +110,7 @@ object LoginUtils {
             is TokenResult.Success -> Unit
         }
 
-        val userResult = getUsersByToken(listOf(tokenResult.apiToken), userExistenceChecker).single()
+        val userResult = getUsersByToken(listOf(tokenResult.apiToken), userExistenceChecker, withSecurity).single()
         return when (userResult) {
             is UserResult.Failure -> {
                 UserLoginResult.Failure(context.getString(userResult.apiResponse.translateError()))
@@ -125,7 +128,8 @@ object LoginUtils {
         apiTokens: List<ApiToken>,
         context: Context,
         userExistenceChecker: UserExistenceChecker,
-    ): List<UserLoginResult> = getUsersByToken(apiTokens, userExistenceChecker).map { result ->
+        withSecurity: Boolean = false,
+    ): List<UserLoginResult> = getUsersByToken(apiTokens, userExistenceChecker, withSecurity).map { result ->
         when (result) {
             is UserResult.Success -> UserLoginResult.Success(result.user)
             is UserResult.Failure -> UserLoginResult.Failure(context.getString(result.apiResponse.translateError()))
@@ -159,9 +163,10 @@ object LoginUtils {
 private suspend fun getUsersByToken(
     apiTokens: List<ApiToken>,
     userExistenceChecker: UserExistenceChecker,
+    withSecurity: Boolean,
 ): List<UserResult> = apiTokens.map { apiToken ->
     runCatching {
-        authenticateUser(apiToken, userExistenceChecker)
+        authenticateUser(apiToken, userExistenceChecker, withSecurity)
     }.cancellable().getOrDefault(UserResult.Failure.Unknown)
 }
 
@@ -188,7 +193,11 @@ private fun Context.formatAuthErrorMessage(errorStatus: ErrorStatus): String {
     )
 }
 
-private suspend fun authenticateUser(apiToken: ApiToken, userExistenceChecker: UserExistenceChecker): UserResult {
+private suspend fun authenticateUser(
+    apiToken: ApiToken,
+    userExistenceChecker: UserExistenceChecker,
+    withSecurity: Boolean,
+): UserResult {
     if (userExistenceChecker.isUserAlreadyPresent(apiToken.userId)) return UserResult.Failure(
         getErrorResponse(InternalTranslatedErrorCode.UserAlreadyPresent)
     )
@@ -198,7 +207,7 @@ private suspend fun authenticateUser(apiToken: ApiToken, userExistenceChecker: U
         chain.proceed(newRequest)
     }.build()
 
-    val userProfileResponse = ApiRepositoryCore.getUserProfile(okhttpClient, withSecurity = true)
+    val userProfileResponse = ApiRepositoryCore.getUserProfile(okhttpClient, withSecurity)
 
     if (userProfileResponse.result == ApiResponseStatus.ERROR) return UserResult.Failure(userProfileResponse)
     val userData = userProfileResponse.data ?: return UserResult.Failure.Unknown

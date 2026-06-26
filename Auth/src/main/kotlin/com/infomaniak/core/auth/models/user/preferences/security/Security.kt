@@ -31,5 +31,5 @@ data class Security(
     var score: Int,
     @SerializedName("date_last_changed_password") @SerialName("date_last_changed_password")
     @ColumnInfo(defaultValue = "0")
-    var dateLastChangedPassword: Long,
+    var dateLastChangedPassword: Long? = null,
 ) : Parcelable
