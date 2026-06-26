@@ -126,7 +126,8 @@ object LoginUtils {
         apiTokens: List<ApiToken>,
         context: Context,
         userExistenceChecker: UserExistenceChecker,
-    ): List<UserLoginResult> = getUsersByToken(apiTokens, userExistenceChecker, withSecurity = false).map { result ->
+        withSecurity: Boolean = false,
+    ): List<UserLoginResult> = getUsersByToken(apiTokens, userExistenceChecker, withSecurity).map { result ->
         when (result) {
             is UserResult.Success -> UserLoginResult.Success(result.user)
             is UserResult.Failure -> UserLoginResult.Failure(context.getString(result.apiResponse.translateError()))
