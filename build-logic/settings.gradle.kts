@@ -15,4 +15,5 @@ rootProject.name = "build-logic"
 include(
     ":composite",
     ":composeLint",
+    ":application",
 )
