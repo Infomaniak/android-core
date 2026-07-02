@@ -170,14 +170,13 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
             )
             return apiResponse.data ?: error("Integrity ApiResponse cannot contain null data")
         }.cancellable().getOrElse { exception ->
-            //TODO[AppIntegrity]: Handle verdict issues fully by looking up backend response.
-            // See this doc: https://developer.android.com/google/play/integrity/remediation#request-integrity-dialog
             if (exception is UnexpectedApiErrorFormatException && exception.bodyResponse.contains("invalid_attestation")) {
                 throw AppIntegrityException(
                     errorCode = exception.statusCode,
                     issue = AppIntegrityIssue.SuspiciousError("invalid_attestation"),
                     message = "Invalid attestation",
-                    cause = exception
+                    cause = exception,
+                    showRemediationDialog = integrityToken?.showRemediationDialog(classicIntegrityTokenProvider)
                 )
             } else {
                 throw exception

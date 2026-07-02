@@ -21,6 +21,7 @@ import android.app.Activity
 import com.google.android.play.core.integrity.IntegrityDialogRequest
 import com.google.android.play.core.integrity.IntegrityManager
 import com.google.android.play.core.integrity.IntegrityServiceException
+import com.google.android.play.core.integrity.IntegrityTokenResponse
 import com.google.android.play.core.integrity.StandardIntegrityException
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.android.play.core.integrity.StandardIntegrityManager.StandardIntegrityDialogRequest.StandardIntegrityResponse
@@ -51,6 +52,21 @@ internal fun IntegrityServiceException.toAppIntegrityException(
         showRemediationDialog = if (isRemediable) showRemediationDialog(this, standardIntegrityManager) else null,
         cause = this,
     )
+}
+
+internal fun IntegrityTokenResponse.showRemediationDialog(
+    integrityManager: IntegrityManager,
+    typeCode: Int = IntegrityDialogTypeCode.GET_INTEGRITY
+): suspend (Activity) -> IntegrityDialogResponse = { activity ->
+    // See this doc: https://developer.android.com/google/play/integrity/remediation#request-integrity-dialog
+    val dialogRequest = IntegrityDialogRequest.builder()
+        .setActivity(activity)
+        .setTypeCode(typeCode)
+        .setIntegrityResponse(IntegrityDialogRequest.IntegrityResponse.TokenResponse(this))
+        .build()
+
+    val dialogResponseCode = integrityManager.showDialog(dialogRequest).await()
+    remediationDialogResponseCodeToIntegrityDialogResponse(dialogResponseCode)
 }
 
 private fun showStandardRemediationDialog(
