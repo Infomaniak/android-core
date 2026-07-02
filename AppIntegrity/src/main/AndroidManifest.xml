@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Infomaniak Mail - Android
+  ~ Infomaniak Core - Android
   ~ Copyright (C) 2022-2024 Infomaniak Network SA
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <queries>
-        <intent>
-            <action android:name="com.infomaniak.crossapp.login"/>
-        </intent>
+        <package android:name="app.grapheneos.info"/>
     </queries>
 
 </manifest>
