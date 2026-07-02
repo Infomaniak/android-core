@@ -98,14 +98,17 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
 
         // Be sure the length is between 16 and 500 char so the computed nonce sent to AppIntegrity will have a correct size
         val dummyChallenge = "Dummy challenge to know if AppIntegrity can be reached"
-        return try {
+        return runCatching {
             requestClassicIntegrityVerdictToken(dummyChallenge)
             false
-        } catch (e: AppIntegrityException) {
-            !e.issue.isRecoverable()
-        } catch (t: Throwable) {
-            SentryLog.e(APP_INTEGRITY_MANAGER_TAG, "Unexpected exception in isGuaranteedToFail", t)
-            true
+        }.cancellable().getOrElse { throwable ->
+            when (throwable) {
+                is AppIntegrityException -> !throwable.issue.isRecoverable()
+                else -> {
+                    SentryLog.e(APP_INTEGRITY_MANAGER_TAG, "Unexpected exception in isGuaranteedToFail", throwable)
+                    true
+                }
+            }
         }
     }
 
