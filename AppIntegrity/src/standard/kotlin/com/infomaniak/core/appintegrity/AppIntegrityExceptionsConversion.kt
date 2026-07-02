@@ -29,6 +29,11 @@ import com.google.android.play.core.integrity.model.IntegrityDialogResponseCode
 import com.google.android.play.core.integrity.model.IntegrityDialogTypeCode
 import com.google.android.play.core.integrity.model.IntegrityErrorCode
 import com.google.android.play.core.integrity.model.StandardIntegrityErrorCode
+import com.infomaniak.core.appintegrity.AppIntegrityIssue.DevError
+import com.infomaniak.core.appintegrity.AppIntegrityIssue.DeviceIssue
+import com.infomaniak.core.appintegrity.AppIntegrityIssue.Internal
+import com.infomaniak.core.appintegrity.AppIntegrityIssue.RetryLater
+import com.infomaniak.core.appintegrity.AppIntegrityIssue.SuspiciousError
 import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import kotlinx.coroutines.tasks.await
 
@@ -119,26 +124,26 @@ private fun remediationDialogResponseCodeToIntegrityDialogResponse(code: Int): I
 private fun appIntegrityIssueFor(
     @StandardIntegrityErrorCode @IntegrityErrorCode integrityErrorCode: Int
 ): AppIntegrityIssue = when (integrityErrorCode) {
-    IntegrityErrorCode.NETWORK_ERROR -> AppIntegrityIssue.RetryLater.NetworkError
-    IntegrityErrorCode.GOOGLE_SERVER_UNAVAILABLE -> AppIntegrityIssue.RetryLater.GoogleServerUnavailable
-    IntegrityErrorCode.CLIENT_TRANSIENT_ERROR -> AppIntegrityIssue.Internal.ClientTransientError
-    StandardIntegrityErrorCode.CLIENT_TRANSIENT_ERROR -> AppIntegrityIssue.Internal.ClientTransientError
-    IntegrityErrorCode.TOO_MANY_REQUESTS -> AppIntegrityIssue.RetryLater.TooManyRequests
-    IntegrityErrorCode.INTERNAL_ERROR -> AppIntegrityIssue.Internal.InternalError
-    IntegrityErrorCode.CANNOT_BIND_TO_SERVICE -> AppIntegrityIssue.Internal.CantBindToService
-    IntegrityErrorCode.PLAY_STORE_VERSION_OUTDATED -> AppIntegrityIssue.DeviceIssue.PlayStoreVersionOutdated
-    IntegrityErrorCode.PLAY_SERVICES_VERSION_OUTDATED -> AppIntegrityIssue.DeviceIssue.PlayServicesVersionOutdated
-    IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND -> AppIntegrityIssue.DeviceIssue.PlayStoreAccountNotFound
-    IntegrityErrorCode.PLAY_STORE_NOT_FOUND -> AppIntegrityIssue.DeviceIssue.PlayStoreNotFound
-    IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND -> AppIntegrityIssue.DeviceIssue.PlayServicesNotFound
-    IntegrityErrorCode.API_NOT_AVAILABLE -> AppIntegrityIssue.DeviceIssue.ApiNotAvailable
-    IntegrityErrorCode.CLOUD_PROJECT_NUMBER_IS_INVALID -> AppIntegrityIssue.DevError("CLOUD_PROJECT_NUMBER_IS_INVALID")
-    IntegrityErrorCode.APP_NOT_INSTALLED -> AppIntegrityIssue.SuspiciousError("APP_NOT_INSTALLED")
-    IntegrityErrorCode.APP_UID_MISMATCH -> AppIntegrityIssue.SuspiciousError("APP_UID_MISMATCH")
-    IntegrityErrorCode.NONCE_TOO_SHORT -> AppIntegrityIssue.DevError("NONCE_TOO_SHORT")
-    IntegrityErrorCode.NONCE_TOO_LONG -> AppIntegrityIssue.DevError("NONCE_TOO_LONG")
-    IntegrityErrorCode.NONCE_IS_NOT_BASE64 -> AppIntegrityIssue.DevError("NONCE_IS_NOT_BASE64")
-    IntegrityErrorCode.NO_ERROR -> AppIntegrityIssue.SuspiciousError("NO_ERROR (What a Terrible Failure)")
-    StandardIntegrityErrorCode.INTEGRITY_TOKEN_PROVIDER_INVALID -> AppIntegrityIssue.Internal.IntegrityTokenProviderInvalid
-    else -> AppIntegrityIssue.SuspiciousError("Unexpected error code: $integrityErrorCode")
+    IntegrityErrorCode.NETWORK_ERROR -> RetryLater.NetworkError
+    IntegrityErrorCode.GOOGLE_SERVER_UNAVAILABLE -> RetryLater.GoogleServerUnavailable
+    IntegrityErrorCode.CLIENT_TRANSIENT_ERROR -> Internal.ClientTransientError
+    StandardIntegrityErrorCode.CLIENT_TRANSIENT_ERROR -> Internal.ClientTransientError
+    IntegrityErrorCode.TOO_MANY_REQUESTS -> RetryLater.TooManyRequests
+    IntegrityErrorCode.INTERNAL_ERROR -> Internal.InternalError
+    IntegrityErrorCode.CANNOT_BIND_TO_SERVICE -> Internal.CantBindToService
+    IntegrityErrorCode.PLAY_STORE_VERSION_OUTDATED -> DeviceIssue.PlayStoreVersionOutdated
+    IntegrityErrorCode.PLAY_SERVICES_VERSION_OUTDATED -> DeviceIssue.PlayServicesVersionOutdated
+    IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND -> DeviceIssue.PlayStoreAccountNotFound
+    IntegrityErrorCode.PLAY_STORE_NOT_FOUND -> DeviceIssue.PlayStoreNotFound
+    IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND -> DeviceIssue.PlayServicesNotFound
+    IntegrityErrorCode.API_NOT_AVAILABLE -> DeviceIssue.ApiNotAvailable
+    IntegrityErrorCode.CLOUD_PROJECT_NUMBER_IS_INVALID -> DevError("CLOUD_PROJECT_NUMBER_IS_INVALID")
+    IntegrityErrorCode.APP_NOT_INSTALLED -> SuspiciousError("APP_NOT_INSTALLED")
+    IntegrityErrorCode.APP_UID_MISMATCH -> SuspiciousError("APP_UID_MISMATCH")
+    IntegrityErrorCode.NONCE_TOO_SHORT -> DevError("NONCE_TOO_SHORT")
+    IntegrityErrorCode.NONCE_TOO_LONG -> DevError("NONCE_TOO_LONG")
+    IntegrityErrorCode.NONCE_IS_NOT_BASE64 -> DevError("NONCE_IS_NOT_BASE64")
+    IntegrityErrorCode.NO_ERROR -> SuspiciousError("NO_ERROR (What a Terrible Failure)")
+    StandardIntegrityErrorCode.INTEGRITY_TOKEN_PROVIDER_INVALID -> Internal.IntegrityTokenProviderInvalid
+    else -> SuspiciousError("Unexpected error code: $integrityErrorCode")
 }
