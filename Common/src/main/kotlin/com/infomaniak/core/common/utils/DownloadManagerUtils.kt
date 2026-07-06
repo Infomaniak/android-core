@@ -103,7 +103,7 @@ object DownloadManagerUtils {
         userAgent: String,
         userBearerToken: String?,
         onError: (Int) -> Unit,
-        onSentryLog: (String) -> Unit,
+        onSentryLog: (String) -> Unit = {},
     ) {
         CoroutineScope(Dispatchers.Default).launch {
             val request = requestFor(
@@ -123,29 +123,31 @@ object DownloadManagerUtils {
     private fun String.asAuthorizationHeader(): Pair<String, String> = "Authorization" to "Bearer $this"
 
     private suspend fun Flow<DownloadStatus?>.observeEnd(onError: (Int) -> Unit, onSentryLog: (String) -> Unit) {
-        filter { it.isFinished() }.first().checkFailure(onError, onSentryLog)
+        first { it.isFinished() }.checkFailure(onError, onSentryLog)
     }
 
-    private suspend fun DownloadStatus?.checkFailure(onError: (Int) -> Unit, onSentryLog: (String) -> Unit) = withContext(Dispatchers.Main) {
-        (this@checkFailure as? Failed)?.run {
-            when (reason) {
-                LocalIssue.InsufficientSpace -> onError(R.string.errorDownloadInsufficientSpace)
-                else -> onError(R.string.errorDownload)
-            }
+    private suspend fun DownloadStatus?.checkFailure(onError: (Int) -> Unit, onSentryLog: (String) -> Unit) {
+        withContext(Dispatchers.Main) {
+            (this@checkFailure as? Failed)?.run {
+                when (reason) {
+                    LocalIssue.InsufficientSpace -> onError(R.string.errorDownloadInsufficientSpace)
+                    else -> onError(R.string.errorDownload)
+                }
 
-            val sentryReason = when (reason) {
-                LocalIssue.FileAlreadyExists -> "File already exists"
-                LocalIssue.FileError -> "File error"
-                LocalIssue.InsufficientSpace -> "Insufficient space"
-                LocalIssue.StorageDeviceNotFound -> "Storage device not found"
-                Failed.RemoteIssue.HttpDataError -> "Http data error"
-                is Failed.RemoteIssue.HttpError -> "Http Error"
-                Failed.RemoteIssue.TooManyRedirects -> "Too many redirects"
-                Failed.RemoteIssue.UnhandledHttpCode -> "Unhandled HTTP Code"
-                else -> "Unknown error"
-            }
+                val sentryReason = when (reason) {
+                    LocalIssue.FileAlreadyExists -> "File already exists"
+                    LocalIssue.FileError -> "File error"
+                    LocalIssue.InsufficientSpace -> "Insufficient space"
+                    LocalIssue.StorageDeviceNotFound -> "Storage device not found"
+                    Failed.RemoteIssue.HttpDataError -> "Http data error"
+                    is Failed.RemoteIssue.HttpError -> "HTTP error ${reason.statusCode}"
+                    Failed.RemoteIssue.TooManyRedirects -> "Too many redirects"
+                    Failed.RemoteIssue.UnhandledHttpCode -> "Unhandled HTTP Code"
+                    else -> "Unknown error"
+                }
 
-            onSentryLog(sentryReason)
+                onSentryLog(sentryReason)
+            }
         }
     }
 }
