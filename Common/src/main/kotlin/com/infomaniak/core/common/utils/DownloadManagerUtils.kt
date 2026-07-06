@@ -102,7 +102,8 @@ object DownloadManagerUtils {
         name: String,
         userAgent: String,
         userBearerToken: String?,
-        onError: (Int) -> Unit
+        onError: (Int) -> Unit,
+        onSentryLog: (String) -> Unit = {},
     ) {
         CoroutineScope(Dispatchers.Default).launch {
             val request = requestFor(
@@ -113,7 +114,7 @@ object DownloadManagerUtils {
             )
             with(downloadManager) {
                 startDownloadingFile(request)
-                    ?.let { id -> downloadStatusFlow(id).observeEnd(onError) }
+                    ?.let { id -> downloadStatusFlow(id).observeEnd(onError, onSentryLog) }
                     ?: onError(R.string.errorDownload)
             }
         }
@@ -121,15 +122,31 @@ object DownloadManagerUtils {
 
     private fun String.asAuthorizationHeader(): Pair<String, String> = "Authorization" to "Bearer $this"
 
-    private suspend fun Flow<DownloadStatus?>.observeEnd(onError: (Int) -> Unit) {
-        filter { it.isFinished() }.first().checkFailure(onError)
+    private suspend fun Flow<DownloadStatus?>.observeEnd(onError: (Int) -> Unit, onSentryLog: (String) -> Unit) {
+        first { it.isFinished() }.checkFailure(onError, onSentryLog)
     }
 
-    private suspend fun DownloadStatus?.checkFailure(onError: (Int) -> Unit) = withContext(Dispatchers.Main) {
-        (this@checkFailure as? Failed)?.run {
-            when (reason) {
-                LocalIssue.InsufficientSpace -> onError(R.string.errorDownloadInsufficientSpace)
-                else -> onError(R.string.errorDownload)
+    private suspend fun DownloadStatus?.checkFailure(onError: (Int) -> Unit, onSentryLog: (String) -> Unit) {
+        withContext(Dispatchers.Main) {
+            (this@checkFailure as? Failed)?.run {
+                when (reason) {
+                    LocalIssue.InsufficientSpace -> onError(R.string.errorDownloadInsufficientSpace)
+                    else -> onError(R.string.errorDownload)
+                }
+
+                val sentryReason = when (reason) {
+                    LocalIssue.FileAlreadyExists -> "File already exists"
+                    LocalIssue.FileError -> "File error"
+                    LocalIssue.InsufficientSpace -> "Insufficient space"
+                    LocalIssue.StorageDeviceNotFound -> "Storage device not found"
+                    Failed.RemoteIssue.HttpDataError -> "Http data error"
+                    is Failed.RemoteIssue.HttpError -> "HTTP error ${reason.statusCode}"
+                    Failed.RemoteIssue.TooManyRedirects -> "Too many redirects"
+                    Failed.RemoteIssue.UnhandledHttpCode -> "Unhandled HTTP Code"
+                    else -> "Unknown error"
+                }
+
+                onSentryLog(sentryReason)
             }
         }
     }
