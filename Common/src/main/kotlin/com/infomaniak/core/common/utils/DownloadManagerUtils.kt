@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import splitties.init.appCtx
 import splitties.systemservices.downloadManager
 
 object DownloadManagerUtils {
