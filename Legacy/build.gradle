@@ -66,21 +66,12 @@ dependencies {
 
     implementation core.splitties.appctx
 
-    api core.room.ktx
-    api core.room.runtime
-    ksp core.room.compiler
-
     api core.material
-    api core.gson
-
-    api core.coil.two
 
     api core.android.login
-    api core.stetho.okhttp3
-    api core.okhttp
+    implementation core.okhttp
 
     api core.sentry.android
-    api core.sentry.okhttp
 
     api core.matomo
 

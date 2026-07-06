@@ -26,23 +26,18 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.content.res.TypedArray
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager.LayoutParams
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
 import androidx.annotation.StyleRes
 import androidx.annotation.StyleableRes
@@ -64,18 +59,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import coil.ImageLoader
-import coil.load
-import com.google.gson.JsonSyntaxException
-import com.infomaniak.core.legacy.models.user.User
-import com.infomaniak.core.legacy.utils.CoilUtils.simpleImageLoader
 import com.infomaniak.core.legacy.utils.Utils.ACCENTS_PATTERN
 import com.infomaniak.core.legacy.utils.Utils.CAMEL_CASE_REGEX
 import com.infomaniak.core.legacy.utils.Utils.SNAKE_CASE_REGEX
-import com.infomaniak.core.legacy.utils.UtilsUi.generateInitialsAvatarDrawable
-import com.infomaniak.core.legacy.utils.UtilsUi.getBackgroundColorBasedOnId
 import kotlinx.serialization.SerializationException
-import org.apache.commons.cli.MissingArgumentException
 import java.io.Serializable
 import java.text.Normalizer
 import kotlin.properties.ReadWriteProperty
@@ -120,7 +107,7 @@ fun RecyclerView.setPagination(
                 val totalItemCount = itemCount
                 val pastVisibleItems = findFirstVisibleItemPosition?.invoke()
                     ?: (this as? LinearLayoutManager)?.findFirstVisibleItemPosition()?.plus(triggerOffset)
-                    ?: throw MissingArgumentException("Missing findFirstVisibleItemPosition callback")
+                    ?: error("Missing findFirstVisibleItemPosition callback")
                 val isLastElement = (visibleItemCount + pastVisibleItems) >= totalItemCount
 
                 if (isLastElement) {
@@ -175,7 +162,7 @@ fun Exception.isNetworkException(): Boolean {
 }
 
 fun Exception.isSerializationException(): Boolean {
-    return this is JsonSyntaxException || this is SerializationException || this is IllegalArgumentException
+    return this is SerializationException || this is IllegalArgumentException
 }
 
 fun String.firstOrEmpty(): String = if (isNotEmpty()) first().toString() else ""
@@ -209,43 +196,6 @@ fun SharedPreferences.transaction(block: SharedPreferences.Editor.() -> Unit) {
     with(edit()) {
         block(this)
         apply()
-    }
-}
-
-@Deprecated("Use the method exposed through the Core:Coil module")
-fun ImageView.loadAvatar(
-    user: User,
-    imageLoader: ImageLoader = context.simpleImageLoader,
-) = loadAvatar(user.id, user.avatar, user.getInitials(), imageLoader)
-
-fun ImageView.loadAvatar(
-    id: Int,
-    avatarUrl: String?,
-    initials: String,
-    imageLoader: ImageLoader = context.simpleImageLoader,
-    @ColorInt initialsColor: Int = Color.WHITE,
-) {
-    val backgroundColor = context.getBackgroundColorBasedOnId(id)
-    loadAvatar(backgroundColor, avatarUrl, initials, imageLoader, initialsColor)
-}
-
-@Deprecated("Use the method exposed through the Core:Coil module")
-fun ImageView.loadAvatar(
-    backgroundColor: GradientDrawable,
-    avatarUrl: String?,
-    initials: String,
-    imageLoader: ImageLoader = context.simpleImageLoader,
-    @ColorInt initialsColor: Int = Color.WHITE,
-) {
-    val fallback = context.generateInitialsAvatarDrawable(
-        initials = initials,
-        background = backgroundColor,
-        initialsColor = initialsColor,
-    )
-    load(avatarUrl, imageLoader) {
-        error(fallback)
-        fallback(fallback)
-        placeholder(fallback)
     }
 }
 
