@@ -15,22 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.crossapplogin.back
+package com.infomaniak.core.auth
 
 import com.infomaniak.core.appintegrity.AppIntegrityIssue
 import com.infomaniak.core.appintegrity.AppIntegrityManager
 import com.infomaniak.core.appintegrity.AppIntegrityManager.Companion.APP_INTEGRITY_MANAGER_TAG
 import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
+import com.infomaniak.core.auth.DerivedTokenGenerator.Issue
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
-import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
+import com.infomaniak.core.login.ApiToken
+import com.infomaniak.core.login.InfomaniakLogin
 import com.infomaniak.core.network.api.ApiController
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
-import com.infomaniak.core.login.ApiToken
-import com.infomaniak.core.login.InfomaniakLogin
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -39,7 +39,7 @@ import splitties.init.appCtx
 import java.io.IOException
 import kotlin.uuid.ExperimentalUuidApi
 
-internal class DerivedTokenGeneratorImpl(
+class DerivedTokenGeneratorImpl(
     private val tokenRetrievalUrl: String,
     private val hostAppPackageName: String,
     private val clientId: String,

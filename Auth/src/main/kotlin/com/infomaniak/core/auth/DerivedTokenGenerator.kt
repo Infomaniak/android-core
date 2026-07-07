@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.crossapplogin.back
+package com.infomaniak.core.auth
 
 import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.login.ApiToken
 import okhttp3.Response
 
-internal sealed interface DerivedTokenGenerator {
+sealed interface DerivedTokenGenerator {
 
     suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue>
     suspend fun isAppIntegrityGuaranteedToFail(): Boolean
