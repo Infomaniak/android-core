@@ -52,8 +52,8 @@ object LoginUtils {
     fun rememberLoginFlowController(
         infomaniakLogin: InfomaniakLogin,
         userExistenceChecker: UserExistenceChecker,
-        onLoginResult: suspend (UserLoginResult?) -> Unit,
         withSecurity: Boolean = false,
+        onLoginResult: suspend (UserLoginResult?) -> Unit,
     ): LoginFlowController {
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
