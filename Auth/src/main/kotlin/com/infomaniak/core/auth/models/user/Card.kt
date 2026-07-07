@@ -64,10 +64,8 @@ data class Card(
             }
         }
 
-        links.orEmpty().forEachIndexed { index, link ->
-            val itemIndex = index + 1
-            builder.appendLine("item$itemIndex.URL:${link.url.escapeVCardValue()}")
-            builder.appendLine("item$itemIndex.X-ABLabel:${link.labelForVCard().escapeVCardValue()}")
+        links.orEmpty().forEach { link ->
+            builder.appendLine("URL:${link.url.escapeVCardValue()}")
         }
 
         builder.append("END:VCARD")
@@ -111,13 +109,4 @@ private fun String.escapeVCardValue(): String {
             }
         }
     }
-}
-
-private fun CardLink.labelForVCard(): String = when (type) {
-    CardLinkType.LinkedIn -> "LinkedIn"
-    CardLinkType.X -> "X"
-    CardLinkType.Instagram -> "Instagram"
-    CardLinkType.Facebook -> "Facebook"
-    CardLinkType.Website -> "Website"
-    CardLinkType.Other -> "URL"
 }
