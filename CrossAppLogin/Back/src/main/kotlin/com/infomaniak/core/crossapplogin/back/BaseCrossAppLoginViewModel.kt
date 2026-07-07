@@ -20,6 +20,9 @@ package com.infomaniak.core.crossapplogin.back
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.core.auth.DerivedTokenGenerator
+import com.infomaniak.core.auth.DerivedTokenGenerator.Issue
+import com.infomaniak.core.auth.DerivedTokenGeneratorImpl
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.api.ApiRoutesCore.TOKEN_URL
 import com.infomaniak.core.common.Xor
@@ -31,15 +34,14 @@ import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsChecki
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus.*
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.LoginResult
-import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
+import com.infomaniak.core.login.ApiToken
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import com.infomaniak.core.network.networking.HttpClient.addCache
 import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
-import com.infomaniak.core.login.ApiToken
 import io.sentry.IScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
