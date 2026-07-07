@@ -38,6 +38,7 @@ class TokenInterceptor(
         var request = chain.request()
 
         runBlocking(Dispatchers.Default) {
+            RestoreFromBackupManager.instance.ensureRestorationIsHandled()
             tokenInterceptorListener.getApiToken()
         }?.let { apiToken ->
             val authorization = request.header("Authorization")
