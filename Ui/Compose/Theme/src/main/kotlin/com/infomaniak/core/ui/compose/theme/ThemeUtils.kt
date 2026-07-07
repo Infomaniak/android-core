@@ -29,16 +29,16 @@ import com.google.android.material.color.ColorContrast.isContrastAvailable
 val LocalIsThemeDarkMode = staticCompositionLocalOf { false }
 
 @Composable
-fun selectSchemeForContrast(
+fun <T> selectSchemeForContrast(
     isDark: Boolean,
-    darkScheme: ColorScheme,
-    lightScheme: ColorScheme,
-    mediumContrastDarkColorScheme: ColorScheme,
-    mediumContrastLightColorScheme: ColorScheme,
-    highContrastDarkColorScheme: ColorScheme,
-    highContrastLightColorScheme: ColorScheme,
-): ColorScheme {
-    fun defaultColorScheme(): ColorScheme = if (isDark) darkScheme else lightScheme
+    darkScheme: T,
+    lightScheme: T,
+    mediumContrastDarkColorScheme: T,
+    mediumContrastLightColorScheme: T,
+    highContrastDarkColorScheme: T,
+    highContrastLightColorScheme: T,
+): T {
+    fun defaultColorScheme(): T = if (isDark) darkScheme else lightScheme
 
     val isPreview = LocalInspectionMode.current
     return if (!isPreview && isContrastAvailable()) {
