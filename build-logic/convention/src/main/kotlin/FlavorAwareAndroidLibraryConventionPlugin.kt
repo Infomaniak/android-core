@@ -1,8 +1,3 @@
-import AndroidLibraryConventionPlugin.Companion.android
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.apply
-
 /*
  * Infomaniak Core - Android
  * Copyright (C) 2026 Infomaniak Network SA
@@ -20,6 +15,12 @@ import org.gradle.kotlin.dsl.apply
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+import AndroidLibraryConventionPlugin.Companion.android
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
+
 class FlavorAwareAndroidLibraryConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
