@@ -4,7 +4,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 
 /*
- * Infomaniak kDrive - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
