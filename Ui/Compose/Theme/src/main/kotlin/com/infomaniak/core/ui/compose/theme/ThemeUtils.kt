@@ -19,7 +19,6 @@ package com.infomaniak.core.ui.compose.theme
 
 import android.app.UiModeManager
 import android.content.Context
-import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
