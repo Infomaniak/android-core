@@ -43,6 +43,7 @@ dependencies {
     implementation(project(":Sentry"))
 
     implementation(platform(core.compose.bom))
+    implementation(core.compose.ui)
     implementation(core.compose.runtime)
     implementation(core.activity.compose)
 
