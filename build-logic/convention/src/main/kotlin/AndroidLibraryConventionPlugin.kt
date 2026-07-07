@@ -1,11 +1,3 @@
-import com.android.build.api.dsl.LibraryExtension
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.getByName
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-
 /*
  * Infomaniak Core - Android
  * Copyright (C) 2026 Infomaniak Network SA
@@ -22,6 +14,18 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import com.android.build.api.dsl.LibraryExtension
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.getByName
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+
+/**
+ * Also used by [FlavorAwareAndroidLibraryConventionPlugin].
  */
 class AndroidLibraryConventionPlugin : Plugin<Project> {
 
