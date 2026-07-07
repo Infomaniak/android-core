@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="ATTACHMENTS_AUTHORITY" translatable="false">com.infomaniak.mail.attachments</string>
+    <string name="contactCardAddUrl">+</string>
+    <string name="contactCardCompany">Company</string>
+    <string name="contactCardCreate">Create contact card</string>
+    <string name="contactCardDelete">Supprimer</string>
+    <string name="contactCardDeleteConfirmation">Do you really want to delete your contact card?</string>
+    <string name="contactCardEdit">Edit contact card</string>
+    <string name="contactCardEmail">Email</string>
+    <string name="contactCardFacebook">Facebook</string>
+    <string name="contactCardFirstName">First name</string>
+    <string name="contactCardInstagram">Instagram</string>
+    <string name="contactCardLinkedIn">LinkedIn</string>
+    <string name="contactCardLinksTitle">Links and social networks</string>
+    <string name="contactCardOnboardingDescription">Create your own contact card for %1$s and share it as a vCard or QR code.</string>
+    <string name="contactCardOnboardingTitle">Your contact card</string>
+    <string name="contactCardOtherUrl">Other link</string>
+    <string name="contactCardPhone">Phone</string>
+    <string name="contactCardQrCodeDescription">QR code for the contact card</string>
+    <string name="contactCardRemoveUrl">Supprimer</string>
+    <string name="contactCardSave">Save contact card</string>
+    <string name="contactCardLastName">Last Name</string>
+    <string name="contactCardShare">Share contact card</string>
+    <string name="contactCardShareChooserTitle">Share contact card</string>
+    <string name="contactCardTitle">Contact card</string>
+    <string name="contactCardValidationDescription">Please fill in the first name, last name, email and phone fields before saving.</string>
+    <string name="contactCardValidationTitle">Validation</string>
+    <string name="contactCardWebsite">Website</string>
+    <string name="contactCardX">X</string>
+</resources>
