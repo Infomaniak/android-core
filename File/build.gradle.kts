@@ -24,12 +24,6 @@ android {
     namespace = "com.infomaniak.core.file"
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-Xannotation-default-target=param-property")
-    }
-}
-
 dependencies {
     implementation(project(":Common"))
     implementation(project(":Sentry"))
