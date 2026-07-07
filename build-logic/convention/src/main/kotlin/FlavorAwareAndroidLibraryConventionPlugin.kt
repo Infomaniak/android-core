@@ -1,6 +1,11 @@
+import AndroidLibraryConventionPlugin.Companion.android
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
+
 /*
- * Infomaniak Core - Android
- * Copyright (C) 2025-2026 Infomaniak Network SA
+ * Infomaniak kDrive - Android
+ * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,26 +20,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+class FlavorAwareAndroidLibraryConventionPlugin : Plugin<Project> {
 
-plugins {
-    alias(core.plugins.infomaniak.android.library)
-    alias(core.plugins.compose.compiler)
-}
+    override fun apply(target: Project): Unit = with(target) {
+        apply<AndroidLibraryConventionPlugin>()
 
-android {
-    namespace = "com.infomaniak.core.ui.compose.basicbutton"
-
-    buildFeatures {
-        compose = true
+        android {
+            flavorDimensions += "distribution"
+            productFlavors {
+                create("standard") {
+                    isDefault = true
+                }
+                create("fdroid")
+            }
+        }
     }
-}
-
-dependencies {
-    implementation(project(":Ui:Compose:Margin"))
-
-    implementation(platform(core.compose.bom))
-    implementation(core.compose.material3)
-    implementation(core.compose.ui)
-    implementation(core.compose.ui.tooling.preview)
-    debugImplementation(core.compose.ui.tooling)
 }

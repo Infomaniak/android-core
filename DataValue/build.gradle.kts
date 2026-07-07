@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /*
  * Infomaniak Core - Android
  * Copyright (C) 2026 Infomaniak Network SA
@@ -17,34 +15,14 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 plugins {
-    alias(core.plugins.android.library)
-    alias(core.plugins.kotlin.android)
+    alias(core.plugins.infomaniak.android.library)
     alias(core.plugins.kotlin.serialization)
 }
 
-val coreCompileSdk: Int by rootProject.extra
-val coreMinSdk: Int by rootProject.extra
-val javaVersion: JavaVersion by rootProject.extra
-
 android {
     namespace = "com.infomaniak.core.datavalue"
-    compileSdk = coreCompileSdk
-
-    defaultConfig {
-        minSdk = coreMinSdk
-    }
-
-    compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
-        }
-    }
 }
 
 dependencies {

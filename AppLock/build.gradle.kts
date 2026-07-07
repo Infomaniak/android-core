@@ -15,37 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(core.plugins.android.library)
-    alias(core.plugins.kotlin.android)
+    alias(core.plugins.infomaniak.android.library.flavor.aware)
     alias(core.plugins.compose.compiler)
     alias(core.plugins.navigation.safeargs)
 }
 
-val coreCompileSdk: Int by rootProject.extra
-val coreMinSdk: Int by rootProject.extra
-val javaVersion: JavaVersion by rootProject.extra
-
 android {
     namespace = "com.infomaniak.core.applock"
-    compileSdk = coreCompileSdk
-
-    defaultConfig {
-        minSdk = coreMinSdk
-    }
-
-    compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
-        }
-    }
 
     buildFeatures {
         viewBinding = true

@@ -1,11 +1,27 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+/*
+ * Infomaniak Core - Android
+ * Copyright (C) 2025-2026 Infomaniak Network SA
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    alias(core.plugins.android.library)
-    alias(core.plugins.kotlin.android)
+    alias(core.plugins.android.library) apply false
+    alias(core.plugins.kotlin.android) apply false
     alias(core.plugins.ktlint)
-
     alias(core.plugins.compose.lint)
 }
 
@@ -15,51 +31,5 @@ ktlint {
     ignoreFailures.set(true)
     reporters {
         reporter(ReporterType.PLAIN)
-    }
-}
-
-rootProject.extra.apply {
-    set("coreCompileSdk", 36)
-    set("coreMinSdk", 27)
-    set("javaVersion", JavaVersion.VERSION_17)
-}
-
-val coreCompileSdk: Int by rootProject.extra
-val coreMinSdk: Int by rootProject.extra
-val javaVersion: JavaVersion by rootProject.extra
-
-android {
-    namespace = "com.infomaniak.core"
-    compileSdk = coreCompileSdk
-
-    defaultConfig {
-        minSdk = coreMinSdk
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-    compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
-        }
-    }
-}
-
-subprojects {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-        compilerOptions {
-            freeCompilerArgs.add("-Xannotation-default-target=param-property")
-        }
     }
 }

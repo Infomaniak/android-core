@@ -243,6 +243,8 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 compose-lint = { id = "com.infomaniak.core.compose.lint" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+infomaniak-android-library = { id = "com.infomaniak.android.library" }
+infomaniak-android-library-flavor-aware = { id = "com.infomaniak.android.library.flavor.aware" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
