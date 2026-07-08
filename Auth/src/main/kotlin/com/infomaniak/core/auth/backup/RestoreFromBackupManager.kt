@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.auth
+package com.infomaniak.core.auth.backup
 
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -46,6 +46,6 @@ sealed class RestoreFromBackupManager {
     }
 
     companion object {
-        val instance: RestoreFromBackupManager = TODO()
+        val instance: RestoreFromBackupManager = RestoreFromBackupManagerImpl()
     }
 }

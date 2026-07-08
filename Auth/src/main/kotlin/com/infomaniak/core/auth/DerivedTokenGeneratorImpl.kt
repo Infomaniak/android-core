@@ -40,7 +40,7 @@ import java.io.IOException
 
 class DerivedTokenGeneratorImpl(
     private val tokenRetrievalUrl: String,
-    private val hostAppPackageName: String,
+    private val hostAppPackageName: String = appCtx.packageName,
     private val clientId: String,
     private val userAgent: String,
     private val accessType: InfomaniakLogin.AccessType? = null,
