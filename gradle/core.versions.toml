@@ -178,8 +178,6 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 ktlint-cliRuleset = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint"}
 ktlint-ruleEngineCore = { module = "com.pinterest.ktlint:ktlint-rule-engine-core", version.ref = "ktlint"}
-ktlint-cliRuleset = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint"}
-ktlint-cliRuleset = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint"}
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinxSerialization" }
