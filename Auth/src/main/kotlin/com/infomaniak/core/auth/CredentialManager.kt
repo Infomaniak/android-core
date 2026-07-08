@@ -34,7 +34,7 @@ abstract class CredentialManager : BaseCredentialManager() {
     abstract val currentUserId: Int
     abstract var currentUser: User?
 
-    fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().getAll()
+    fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().allAsLiveData()
 
     suspend fun getAllUsersCount(): Int = userDatabase.userDao().userCount()
 
