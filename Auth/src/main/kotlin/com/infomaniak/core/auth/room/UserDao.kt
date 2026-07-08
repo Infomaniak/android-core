@@ -30,7 +30,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
     @Query("SELECT * FROM user")
-    fun getAll(): LiveData<List<User>>
+    fun allAsLiveData(): LiveData<List<User>>
+
+    @Query("SELECT * FROM user")
+    suspend fun allUsers(): List<User>
 
     @get:Query("SELECT * FROM user")
     val allUsers: Flow<List<User>>
