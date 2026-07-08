@@ -17,10 +17,9 @@
  */
 package com.infomaniak.core.crossapplogin.back.internal.deviceid
 
-import android.provider.Settings
-import android.provider.Settings.Secure.ANDROID_ID
 import androidx.core.util.AtomicFile
 import com.infomaniak.core.common.extensions.write
+import com.infomaniak.core.common.getAndroidId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -106,9 +105,4 @@ internal object SharedDeviceIdStorage {
         @ProtoNumber(1) val androidId: String,
         @ProtoNumber(2) val uuid: ByteArray,
     )
-
-    private suspend fun getAndroidId() = Dispatchers.IO {
-        @Suppress("HardwareIds")
-        Settings.Secure.getString(appCtx.contentResolver, ANDROID_ID)
-    }
 }
