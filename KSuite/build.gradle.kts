@@ -1,49 +1,29 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+/*
+ * Infomaniak Core - Android
+ * Copyright (C) 2025-2026 Infomaniak Network SA
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 plugins {
-    alias(core.plugins.android.library)
-    alias(core.plugins.kotlin.android)
+    alias(core.plugins.infomaniak.android.library.flavor.aware)
     alias(core.plugins.compose.compiler)
     alias(core.plugins.kotlin.parcelize)
 }
 
-val coreCompileSdk: Int by rootProject.extra
-val coreMinSdk: Int by rootProject.extra
-val javaVersion: JavaVersion by rootProject.extra
-
 android {
-
     namespace = "com.infomaniak.core.ksuite"
-    compileSdk = coreCompileSdk
-
-    defaultConfig {
-        minSdk = coreMinSdk
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-        }
-    }
-
-    flavorDimensions += "distribution"
-    productFlavors {
-        create("standard") {
-            isDefault = true
-        }
-        create("fdroid")
-    }
-
-    compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
-        }
-    }
 
     buildFeatures {
         compose = true
