@@ -20,9 +20,13 @@ package com.infomaniak.core.auth
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import androidx.annotation.CallSuper
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
+import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
+import com.infomaniak.core.common.getAndroidId
 
 /**
  * This class factorises the addition, removal and listing of users inside of a [UserDatabase].
@@ -42,7 +46,12 @@ open class UserAccountUtils(
     @CallSuper
     open suspend fun addUser(user: User) {
         userDataCleanableList.forEach { it.resetForUser(user.id.toLong()) }
-        userDao.insert(user)
+        userDatabase.useWriterConnection {
+            it.immediateTransaction {
+                userDao.insert(user)
+                userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, getAndroidId()))
+            }
+        }
     }
 
     @CallSuper
