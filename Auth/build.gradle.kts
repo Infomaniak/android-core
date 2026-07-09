@@ -49,7 +49,6 @@ dependencies {
     implementation(core.appcompat)
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)
-    implementation(core.kotlinx.serialization.protobuf)
     implementation(core.gson)
     implementation(core.splitties.appctx)
     implementation(core.okhttp)

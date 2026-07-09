@@ -24,6 +24,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
+import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.models.user.User
 import kotlinx.coroutines.flow.Flow
 
@@ -83,5 +84,11 @@ interface UserDao {
 
     @Query("DELETE FROM user WHERE id = :userId")
     suspend fun deleteUserById(userId: Int)
+
+    @Upsert
+    suspend fun upsertTokenDeviceBinding(binding: TokenDeviceBinding)
+
+    @Query("SELECT * FROM TokenDeviceBinding WHERE userId=:userId")
+    suspend fun getTokenDeviceBindingForUser(userId: Int): TokenDeviceBinding?
 
 }

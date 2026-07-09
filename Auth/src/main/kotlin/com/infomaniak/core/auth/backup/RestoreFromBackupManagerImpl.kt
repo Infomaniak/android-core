@@ -19,38 +19,43 @@
 
 package com.infomaniak.core.auth.backup
 
-import androidx.core.util.AtomicFile
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
 import com.infomaniak.core.auth.AuthConfiguration.clientId
 import com.infomaniak.core.auth.DerivedTokenGenerator
 import com.infomaniak.core.auth.DerivedTokenGeneratorImpl
 import com.infomaniak.core.auth.api.ApiRoutesCore.TOKEN_URL
+import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
-import com.infomaniak.core.common.extensions.write
+import com.infomaniak.core.auth.shouldReport
+import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.getAndroidId
+import com.infomaniak.core.login.ApiToken
 import com.infomaniak.core.network.networking.HttpUtils
+import com.infomaniak.core.sentry.SentryLog
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.invoke
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.encodeToByteArray
-import kotlinx.serialization.protobuf.ProtoBuf
 import splitties.experimental.ExperimentalSplittiesApi
-import splitties.init.appCtx
-import java.io.FileNotFoundException
 
 internal class RestoreFromBackupManagerImpl(
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
 ) : RestoreFromBackupManager() {
 
-    private val restorationStateFile = AtomicFile(appCtx.filesDir.resolve("accountsRestorationState"))
+    private val userDb = UserDatabase.instance
+    private val userDao = userDb.userDao()
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
         coroutineScope = coroutineScope,
@@ -60,67 +65,104 @@ internal class RestoreFromBackupManagerImpl(
     )
 
     override val state: SharedFlow<State> = flow {
-        try {
-            val lastSavedRestorationState = readLastSavedRestorationState()
-            performRestorationHandlingIfNeeded(lastSavedRestorationState)
-        } catch (_: FileNotFoundException) {
-            saveNoRestorationInProgress()
-        }
+        performRestorationHandlingIfNeeded()
         emit(State.Settled)
-    }.shareIn(coroutineScope, SharingStarted.Eagerly)
+    }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly)
 
     override suspend fun ensureRestorationIsHandled() {
         state.first { it is State.Settled }
     }
 
-    private suspend fun FlowCollector<State>.performRestorationHandlingIfNeeded(lastState: AccountsRestorationState) {
-        val users = UserDatabase.instance.userDao().allUsers()
+    private suspend fun FlowCollector<State>.performRestorationHandlingIfNeeded() {
+        val users = userDao.allUsers()
         val currentAndroidId = getAndroidId()
-        val deviceChanged = currentAndroidId != lastState.androidId
-        restoreAccounts(
-            currentAndroidId = currentAndroidId,
-            alreadyRestoredAccountIds = if (deviceChanged) emptySet() else lastState.restoredAccountIds,
-            allUsers = users
-        )
+        restoreAccounts(currentAndroidId = currentAndroidId, allUsers = users)
     }
 
-    private suspend fun FlowCollector<State>.restoreAccounts(
+    private tailrec suspend fun FlowCollector<State>.restoreAccounts(
         currentAndroidId: String,
-        alreadyRestoredAccountIds: Set<Long>,
         allUsers: List<User>,
     ) {
-        val allUsersIds = allUsers.mapTo(hashSetOf()) { it.id.toLong() }
-        if (alreadyRestoredAccountIds.containsAll(allUsersIds)) return
+        val usersToDeriveTokensFor: List<User> = coroutineScope {
+            allUsers.map { user ->
+                async {
+                    val currentBinding = userDao.getTokenDeviceBindingForUser(user.id)
+                    when {
+                        currentBinding == null -> {
+                            userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, currentAndroidId))
+                            null // Adding missing valid binding (post app update).
+                        }
+                        currentBinding.androidId == currentAndroidId -> null // Already valid.
+                        else -> user // Device changed. Need to derive token.
+                    }
+                }
+            }
+        }.awaitAll().filterNotNull()
+
+        if (usersToDeriveTokensFor.isEmpty()) return
+
         emit(State.RestoringFromBackup)
-        saveRestorationState(
-            AccountsRestorationState(
-                androidId = currentAndroidId,
-                restoredAccountIds = alreadyRestoredAccountIds
-            )
-        )
-        TODO("Loop trying to derive tokens for remaining accounts. Allow retrying or giving-up if needed on each iteration")
-    }
 
-    private suspend fun saveNoRestorationInProgress() {
-        val users = UserDatabase.instance.userDao().allUsers()
-        // To avoid running a token derivation, we mark it as done if we
-        // didn't have it before.
-        val data = AccountsRestorationState(
-            androidId = getAndroidId(),
-            restoredAccountIds = users.mapTo(hashSetOf()) { it.id.toLong() }
-        )
-        saveRestorationState(data)
-    }
+        val issuesWithUser = coroutineScope {
+            usersToDeriveTokensFor.map { user ->
+                async {
+                    when (val result = attemptRestoringAccount(user)) {
+                        is Xor.First -> userDb.useWriterConnection {
+                            it.immediateTransaction {
+                                userDao.update(user.copy(apiToken = result.value))
+                                userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, currentAndroidId))
+                            }
+                            null
+                        }
+                        is Xor.Second -> result.value to user
+                    }
+                }
+            }
+        }.awaitAll().filterNotNull()
 
-    private suspend fun readLastSavedRestorationState(): AccountsRestorationState = Dispatchers.IO {
-        restorationStateFile.openRead().use { stream ->
-            ProtoBuf.decodeFromByteArray<AccountsRestorationState>(stream.readBytes())
+        if (issuesWithUser.isEmpty()) return
+
+        val shouldRetryAsync = CompletableDeferred<Boolean>()
+        val failedState = State.RestoringFromBackupFailed(
+            cause = issuesWithUser.first().first,
+            retry = { shouldRetryAsync.complete(true) },
+            giveUp = { shouldRetryAsync.complete(false) },
+        )
+        emit(failedState)
+        val shouldRetry = shouldRetryAsync.await()
+        val giveUp = !shouldRetry
+        if (giveUp) {
+            userDb.useWriterConnection {
+                it.immediateTransaction {
+                    TODO("removeUser from the db, and ensure associated data gets removed too")
+                    //TODO: For kDrive, that would be removing:
+                    // - MyKSuite data (MyKSuiteDataUtils.deleteData(…))
+                    // - everything called in AccountUtils.removeUser
+                    // Maybe we need to give the ability to register a callback in the apps,
+                    // as well as having a system to put data back in place when the app
+                    // process starts with orphan user data (i.e/ user-tied data that is not in the User table)
+                }
+            }
+            return
         }
+        restoreAccounts(currentAndroidId = currentAndroidId, allUsers = allUsers)
     }
 
-    private suspend fun saveRestorationState(currentState: AccountsRestorationState) = Dispatchers.IO {
-        restorationStateFile.write { outputStream ->
-            outputStream.write(ProtoBuf.encodeToByteArray(currentState))
+    private suspend fun attemptRestoringAccount(user: User): Xor<ApiToken, DerivedTokenGenerator.Issue> {
+        return derivedTokenGenerator.attemptDerivingOneOfTheseTokens(setOf(user.apiToken.accessToken)).also { result ->
+            if (result !is Xor.Second) return@also
+            val issue = result.value
+            val errorMessage = "Failed to derive token"
+            val sentryUser = io.sentry.protocol.User().also { it.id = user.id.toString() }
+            if (result.value.shouldReport()) {
+                SentryLog.e(TAG, errorMessage, (issue as? DerivedTokenGenerator.Issue.OtherIssue)?.e) { scope ->
+                    scope.user = sentryUser
+                }
+            } else {
+                SentryLog.i(TAG, "$errorMessage for user ${user.id}, with reason: $issue")
+            }
         }
     }
 }
+
+private const val TAG = "RestoreFromBackupManagerImpl"
