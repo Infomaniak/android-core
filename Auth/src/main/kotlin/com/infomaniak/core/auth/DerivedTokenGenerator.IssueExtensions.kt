@@ -15,17 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.auth.backup
+package com.infomaniak.core.auth
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoNumber
+import com.infomaniak.core.auth.DerivedTokenGenerator.Issue
 
-@ExperimentalSerializationApi
-@Serializable
-internal data class AccountsRestorationState(
-    @ProtoNumber(1)
-    val androidId: String,
-    @ProtoNumber(2)
-    val restoredAccountIds: Set<Long>,
-)
+fun Issue.shouldReport(): Boolean = when (this) {
+    is Issue.AppIntegrityCheckFailed -> false
+    is Issue.ErrorResponse -> response.code !in 500..599
+    is Issue.NetworkIssue -> false
+    is Issue.OtherIssue -> true
+}
