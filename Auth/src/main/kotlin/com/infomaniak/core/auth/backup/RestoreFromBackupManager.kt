@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.auth.backup
 
+import com.infomaniak.core.auth.DerivedTokenGenerator
 import kotlinx.coroutines.flow.SharedFlow
 
 sealed class RestoreFromBackupManager {
@@ -35,14 +36,10 @@ sealed class RestoreFromBackupManager {
          * @property giveUp Gives up restoring all accounts that failed, and disconnects them.
          */
         data class RestoringFromBackupFailed(
-            val cause: Issue,
+            val cause: DerivedTokenGenerator.Issue,
             val retry: () -> Unit,
             val giveUp: () -> Unit,
-        ) : State {
-            sealed interface Issue { // Find a way to have these defined somewhere once and for all.
-                data object NetworkIssue : Issue
-            }
-        }
+        ) : State
     }
 
     companion object {
