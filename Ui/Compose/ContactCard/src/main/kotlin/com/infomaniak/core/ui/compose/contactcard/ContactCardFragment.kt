@@ -28,8 +28,10 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.infomaniak.core.auth.models.user.Card
+import kotlinx.coroutines.launch
 
 class ContactCardFragment : Fragment() {
 
@@ -62,6 +64,8 @@ class ContactCardFragment : Fragment() {
     }
 
     private fun shareCard(card: Card) {
-        requireContext().shareContactCard(card)
+        lifecycleScope.launch {
+            requireContext().shareContactCard(card)
+        }
     }
 }

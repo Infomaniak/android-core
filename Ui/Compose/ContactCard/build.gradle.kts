@@ -41,7 +41,8 @@ android {
 }
 
 dependencies {
-    api(project(":Auth"))
+    implementation(project(":Auth"))
+    implementation(project(":Network"))
     implementation(project(":Avatar"))
     implementation(project(":Ui:Compose:Margin"))
 
