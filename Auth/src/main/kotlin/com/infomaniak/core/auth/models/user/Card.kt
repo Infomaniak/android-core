@@ -38,7 +38,7 @@ data class Card(
     val links: List<CardLink>? = null,
 ): Parcelable {
 
-    fun makeVCardString(forQRCode: Boolean = false): String {
+    fun makeVCardString(forQRCode: Boolean = false, avatarBase64: String? = null): String {
         val builder = StringBuilder()
 
         builder.appendLine("BEGIN:VCARD")
@@ -59,8 +59,8 @@ data class Card(
         }
 
         if (!forQRCode) {
-            avatarUrl?.takeIf(String::isNotBlank)?.let {
-                builder.appendLine("PHOTO;VALUE=URI:${it.escapeVCardValue()}")
+            avatarBase64?.let {
+                builder.appendLine("PHOTO;ENCODING=b;TYPE=JPEG:$it")
             }
         }
 
