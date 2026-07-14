@@ -30,6 +30,9 @@ import java.io.File
 private const val CONTACT_CARD_DIRECTORY = "attachments_cache"
 private const val CONTACT_CARD_FILE_PREFIX = "contact_card_"
 private const val CONTACT_CARD_FILE_SUFFIX = ".vcf"
+private const val FILE_NAME_CONNECTOR = "_"
+
+private val ILLEGAL_FILE_NAME_CHARACTERS = Regex("[\\\\/:*?\"<>|]+")
 
 suspend fun Card.createShareFile(context: Context): File = withContext(Dispatchers.IO) {
     val avatarBase64 = avatarUrl?.let { url ->
@@ -43,10 +46,10 @@ suspend fun Card.createShareFile(context: Context): File = withContext(Dispatche
         }.getOrNull()
     }
 
-    val file = File(
-        context.cacheDir,
-        "$CONTACT_CARD_DIRECTORY/$CONTACT_CARD_FILE_PREFIX$email$CONTACT_CARD_FILE_SUFFIX",
-    )
+    val fileName = "$CONTACT_CARD_FILE_PREFIX$firstName$FILE_NAME_CONNECTOR$lastName$CONTACT_CARD_FILE_SUFFIX"
+    val safeFileName = fileName.replace(ILLEGAL_FILE_NAME_CHARACTERS, "")
+
+    val file = File(context.cacheDir, "$CONTACT_CARD_DIRECTORY/$safeFileName")
     file.parentFile?.mkdirs()
     file.writeText(makeVCardString(avatarBase64 = avatarBase64))
     file
@@ -54,7 +57,8 @@ suspend fun Card.createShareFile(context: Context): File = withContext(Dispatche
 
 suspend fun Context.shareContactCard(card: Card) {
     val file = card.createShareFile(this)
-    val uri = FileProvider.getUriForFile(this, getString(R.string.ATTACHMENTS_AUTHORITY), file)
+    val authority = "${applicationContext.packageName}.core.contactcard.provider"
+    val uri = FileProvider.getUriForFile(this, authority, file)
     val intent = Intent().apply {
         action = Intent.ACTION_SEND
         type = "text/vcard"
