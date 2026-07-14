@@ -27,7 +27,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.infomaniak.core.auth.models.user.Card
@@ -35,32 +34,35 @@ import kotlinx.coroutines.launch
 
 class ContactCardFragment : Fragment() {
 
-    private val viewModel: ContactCardViewModel by viewModels {
-        ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
-    }
+    private val contactCardViewModel: ContactCardViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 MaterialTheme {
-                    val uiState = viewModel.uiState.collectAsState(initial = ContactCardUiState.Loading).value
+                    val uiState = contactCardViewModel.uiState.collectAsState(initial = ContactCardUiState.Loading).value
                     ContactCardScreen(
                         state = uiState,
                         onBack = { findNavController().popBackStack() },
-                        onCreate = viewModel::startCreate,
-                        onEdit = viewModel::startEdit,
-                        onDelete = viewModel::deleteCard,
-                        onCancel = viewModel::cancelEditing,
-                        onSave = viewModel::saveDraft,
-                        onAddAdditionalUrl = viewModel::addAdditionalUrl,
-                        onRemoveAdditionalUrl = viewModel::removeAdditionalUrl,
-                        onUpdateDraft = viewModel::updateDraft,
+                        onCreate = contactCardViewModel::startCreate,
+                        onEdit = contactCardViewModel::startEdit,
+                        onDelete = contactCardViewModel::deleteCard,
+                        onCancel = contactCardViewModel::cancelEditing,
+                        onSave = contactCardViewModel::saveDraft,
+                        onAddAdditionalUrl = contactCardViewModel::addAdditionalUrl,
+                        onRemoveAdditionalUrl = contactCardViewModel::removeAdditionalUrl,
+                        onUpdateDraft = contactCardViewModel::updateDraft,
                         onShare = ::shareCard,
                     )
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        contactCardViewModel.loadUser()
     }
 
     private fun shareCard(card: Card) {
