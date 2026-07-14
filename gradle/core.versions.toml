@@ -56,7 +56,6 @@ room = "2.8.4"
 sentry = "8.27.1"
 sentryPlugin = "5.12.2"
 splitties = "3.0.0"
-stethoOkhttp3 = "1.6.0"
 swipeRefreshLayout = "1.2.0"
 workManager = "2.11.0"
 
@@ -221,7 +220,6 @@ splitties-mainthread = { module = "com.louiscad.splitties:splitties-mainthread",
 splitties-preferences = { module = "com.louiscad.splitties:splitties-preferences", version.ref = "splitties" }
 splitties-systemservices = { module = "com.louiscad.splitties:splitties-systemservices", version.ref = "splitties" }
 splitties-toast = { module = "com.louiscad.splitties:splitties-toast", version.ref = "splitties" }
-stetho-okhttp3 = { module = "com.facebook.stetho:stetho-okhttp3", version.ref = "stethoOkhttp3" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swipeRefreshLayout" }
 # Tests
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitAndroidx" }

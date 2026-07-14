@@ -46,12 +46,12 @@ dependencies {
     implementation(core.compose.runtime)
     implementation(core.activity.compose)
 
+    implementation(core.appcompat)
     implementation(core.androidx.core.ktx)
     implementation(core.kotlinx.serialization.json)
     implementation(core.gson)
     implementation(core.splitties.appctx)
     implementation(core.okhttp)
-    implementation(core.stetho.okhttp3)
     api(core.gson)
 
     // Room
