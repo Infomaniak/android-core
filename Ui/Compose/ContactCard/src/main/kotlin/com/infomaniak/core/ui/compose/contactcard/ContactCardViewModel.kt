@@ -18,8 +18,9 @@ package com.infomaniak.core.ui.compose.contactcard
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.infomaniak.core.auth.PersistedCurrentUserAccountUtils
+import com.infomaniak.core.auth.UserAccountUtils
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.CardLink
 import com.infomaniak.core.auth.models.user.CardLinkType
@@ -27,13 +28,16 @@ import com.infomaniak.core.auth.models.user.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class ContactCardViewModel(application: Application) : AndroidViewModel(application) {
+class ContactCardViewModel(
+    application: Application,
+    savedStateHandle: SavedStateHandle,
+) : AndroidViewModel(application) {
 
-    private val accountUtils = PersistedCurrentUserAccountUtils(application.applicationContext)
+    private val accountUtils = UserAccountUtils(application.applicationContext)
+    private val userId: Int = requireNotNull(savedStateHandle.get<Int>(USER_ID_KEY)) { "userId argument is required" }
 
     private val _uiState = MutableStateFlow<ContactCardUiState>(ContactCardUiState.Loading)
     val uiState: StateFlow<ContactCardUiState> = _uiState.asStateFlow()
@@ -41,13 +45,15 @@ class ContactCardViewModel(application: Application) : AndroidViewModel(applicat
     private var currentUser: User? = null
 
     init {
+        loadUser()
+    }
+
+    fun loadUser() {
         viewModelScope.launch {
-            accountUtils.currentUserIdFlow.collectLatest { userId ->
-                val user = userId?.let { accountUtils.getUserById(it) } ?: accountUtils.getFirstUser()
-                currentUser = user
-                if (_uiState.value !is ContactCardUiState.Editing) {
-                    _uiState.value = user?.toUiState() ?: ContactCardUiState.Loading
-                }
+            val user = accountUtils.getUserById(userId)
+            currentUser = user
+            if (_uiState.value !is ContactCardUiState.Editing) {
+                _uiState.value = user?.toUiState() ?: ContactCardUiState.Loading
             }
         }
     }
@@ -112,6 +118,10 @@ class ContactCardViewModel(application: Application) : AndroidViewModel(applicat
 
     private fun User.toUiState(): ContactCardUiState {
         return card?.let { ContactCardUiState.Preview(user = this, card = it) } ?: ContactCardUiState.Onboarding(this)
+    }
+
+    companion object {
+        const val USER_ID_KEY = "userId"
     }
 }
 
