@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+
+    <declare-styleable name="PrimaryPalette">
+        <attr name="primary0" format="color" />
+        <attr name="primary10" format="color" />
+        <attr name="primary20" format="color" />
+        <attr name="primary30" format="color" />
+        <attr name="primary40" format="color" />
+        <attr name="primary50" format="color" />
+        <attr name="primary60" format="color" />
+        <attr name="primary70" format="color" />
+        <attr name="primary80" format="color" />
+        <attr name="primary90" format="color" />
+        <attr name="primary95" format="color" />
+        <attr name="primary99" format="color" />
+        <attr name="primary100" format="color" />
+    </declare-styleable>
+
+</resources>
