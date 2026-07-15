@@ -95,5 +95,6 @@ include(
     ":Ui:Compose:Theme",
     ":Ui:View",
     ":Ui:View:EdgeToEdge",
+    ":Ui:View:PrimaryPalette",
     ":WebView",
 )

@@ -166,6 +166,7 @@ infomaniak-core-ui-compose-preview = { module = "com.infomaniak.core:Ui.Compose.
 infomaniak-core-ui-compose-theme = { module = "com.infomaniak.core:Ui.Compose.Theme" }
 infomaniak-core-ui-view = { module = "com.infomaniak.core:Ui.View" }
 infomaniak-core-ui-view-edgetoedge = { module = "com.infomaniak.core:Ui.View.EdgeToEdge" }
+infomaniak-core-ui-view-primarypalette = { module = "com.infomaniak.core:Ui.View.PrimaryPalette" }
 infomaniak-core-webview = { module = "com.infomaniak.core:WebView" }
 integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
