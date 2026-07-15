@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":Network"))
     implementation(project(":Avatar"))
     implementation(project(":Ui:Compose:Margin"))
+    implementation(project(":Ui:Compose:MaterialThemeFromXml"))
 
     implementation(platform(core.compose.bom))
     api(core.compose.runtime)

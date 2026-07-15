@@ -90,6 +90,7 @@ import com.infomaniak.core.auth.models.user.preferences.Preferences
 import com.infomaniak.core.avatar.components.Avatar
 import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.ui.compose.margin.Margin
+import com.infomaniak.core.ui.compose.materialthemefromxml.MaterialThemeFromXml
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 import kotlinx.coroutines.launch
 
@@ -923,7 +924,7 @@ private fun previewCard(): Card = Card(
 @Preview(name = "Loading")
 @Composable
 private fun ContactCardScreenLoadingPreview() {
-    MaterialTheme {
+                MaterialThemeFromXml {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Loading,
@@ -945,7 +946,7 @@ private fun ContactCardScreenLoadingPreview() {
 @Preview(name = "Onboarding")
 @Composable
 private fun ContactCardScreenOnboardingPreview() {
-    MaterialTheme {
+                MaterialThemeFromXml {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Onboarding(user = previewUser()),
@@ -967,7 +968,7 @@ private fun ContactCardScreenOnboardingPreview() {
 @Preview(name = "Preview")
 @Composable
 private fun ContactCardScreenPreviewPreview() {
-    MaterialTheme {
+                MaterialThemeFromXml {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Preview(
@@ -992,7 +993,7 @@ private fun ContactCardScreenPreviewPreview() {
 @Preview(name = "Editing")
 @Composable
 private fun ContactCardScreenEditingPreview() {
-    MaterialTheme {
+                MaterialThemeFromXml {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Editing(

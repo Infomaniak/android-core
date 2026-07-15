@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -30,6 +29,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.infomaniak.core.auth.models.user.Card
+import com.infomaniak.core.ui.compose.materialthemefromxml.MaterialThemeFromXml
 import kotlinx.coroutines.launch
 
 class ContactCardFragment : Fragment() {
@@ -40,7 +40,7 @@ class ContactCardFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                MaterialTheme {
+                MaterialThemeFromXml {
                     val uiState = contactCardViewModel.uiState.collectAsState(initial = ContactCardUiState.Loading).value
                     ContactCardScreen(
                         state = uiState,
