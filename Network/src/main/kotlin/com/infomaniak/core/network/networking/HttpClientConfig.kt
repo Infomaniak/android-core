@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.network.networking
 
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.infomaniak.core.network.BuildConfig
 import io.sentry.okhttp.SentryOkHttpInterceptor
 import okhttp3.Interceptor
@@ -37,7 +36,6 @@ object HttpClientConfig {
      * interceptors. Especially needed by the custom interceptors like AccessTokenUsageInterceptor
      * */
     fun addCommonInterceptors(builder: OkHttpClient.Builder) = with(builder) {
-        if (BuildConfig.DEBUG) addNetworkInterceptor(StethoInterceptor())
         addInterceptor(GZipInterceptor())
         addInterceptor(SentryOkHttpInterceptor(captureFailedRequests = true))
         addInterceptor(UrlTraceInterceptor())
