@@ -17,11 +17,16 @@
   -->
 <resources>
     <string name="contactCardAddUrl">+</string>
+    <string name="contactCardAddUrlAction">Add a URL</string>
+    <string name="contactCardCancel">Cancel</string>
+    <string name="contactCardCloseDescription">Close</string>
     <string name="contactCardCompany">Company</string>
     <string name="contactCardCreate">Create contact card</string>
+    <string name="contactCardGeneralInfoTitle">General information</string>
+    <string name="contactCardMoreActionsDescription">More actions</string>
     <string name="contactCardDelete">Supprimer</string>
     <string name="contactCardDeleteConfirmation">Do you really want to delete your contact card?</string>
-    <string name="contactCardEdit">Edit contact card</string>
+    <string name="contactCardEdit">Modifier</string>
     <string name="contactCardEmail">Email</string>
     <string name="contactCardFacebook">Facebook</string>
     <string name="contactCardFirstName">First name</string>
@@ -34,9 +39,11 @@
     <string name="contactCardPhone">Phone</string>
     <string name="contactCardQrCodeDescription">QR code for the contact card</string>
     <string name="contactCardRemoveUrl">Supprimer</string>
+    <string name="contactCardRemoveUrlDescription">Remove URL</string>
     <string name="contactCardSave">Save contact card</string>
+    <string name="contactCardSaveShort">Save</string>
     <string name="contactCardLastName">Last Name</string>
-    <string name="contactCardShare">Share contact card</string>
+    <string name="contactCardShare">Share</string>
     <string name="contactCardShareChooserTitle">Share contact card</string>
     <string name="contactCardTitle">Contact card</string>
     <string name="contactCardValidationDescription">Please fill in the first name, last name, email and phone fields before saving.</string>
