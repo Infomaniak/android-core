@@ -24,9 +24,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.ui.compose.contactcard.R
+import com.infomaniak.core.common.R as RCore
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +46,7 @@ internal fun EditorTopBar(
         navigationIcon = {
             TextButton(onClick = onCancel) {
                 Text(
-                    text = stringResource(R.string.contactCardCancel),
+                    text = stringResource(RCore.string.buttonCancel),
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -53,7 +54,7 @@ internal fun EditorTopBar(
         actions = {
             TextButton(onClick = onSave) {
                 Text(
-                    text = stringResource(R.string.contactCardSaveShort),
+                    text = stringResource(RCore.string.buttonSave),
                     color = MaterialTheme.colorScheme.primary,
                 )
             }

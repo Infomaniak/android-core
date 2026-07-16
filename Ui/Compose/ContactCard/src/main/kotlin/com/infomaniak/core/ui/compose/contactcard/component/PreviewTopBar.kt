@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.ui.compose.contactcard.R
+import com.infomaniak.core.common.R as RCore
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +52,7 @@ internal fun PreviewTopBar(
             IconButton(onClick = onClose) {
                 Icon(
                     imageVector = Icons.Filled.Close,
-                    contentDescription = stringResource(R.string.contactCardCloseDescription),
+                    contentDescription = stringResource(RCore.string.buttonCancel),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -60,7 +61,7 @@ internal fun PreviewTopBar(
             IconButton(onClick = onMore) {
                 Icon(
                     imageVector = Icons.Filled.MoreVert,
-                    contentDescription = stringResource(R.string.contactCardMoreActionsDescription),
+                    contentDescription = stringResource(R.string.buttonMore),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }

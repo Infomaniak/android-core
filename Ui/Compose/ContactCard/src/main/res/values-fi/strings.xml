@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="addUrl">Lisää URL-osoite</string>
+    <string name="alertDescription">Täytä kaikki pakolliset kentät (etunimi, sukunimi, sähköpostiosoite, puhelinnumero).</string>
+    <string name="alertTitle">Pakolliset kentät</string>
+    <string name="buttonMore">Lisää</string>
+    <string name="company">Yritys</string>
+    <string name="contactCardOnBoardingDescription">QR-koodisi skannataan yhdellä eleellä. Ystäväsi voivat lisätä sinut yhteystietoihinsa silmänräpäyksessä, riippumatta siitä, onko internetyhteyttä vai ei.</string>
+    <string name="contactCardOnBoardingTitle">Luo oma käyntikorttisi</string>
+    <string name="contactCardQrCodeDescription">Yhteystietokortin QR-koodi</string>
+    <string name="contactCardShareChooserTitle">Jaa yhteystietokortti</string>
+    <string name="contactCardTitle">Yhteystietokortti</string>
+    <string name="deleteAlertDescription">Haluatko varmasti poistaa tähän tiliin liitetyn yhteystietokortin?</string>
+    <string name="deleteAlertTitle">Poista yhteystietokortti</string>
+    <string name="deleteButton">Poista</string>
+    <string name="email">Sähköposti</string>
+    <string name="facebook">Facebook</string>
+    <string name="firstName">Etunimi</string>
+    <string name="generalInformation">Yleistä tietoa</string>
+    <string name="instagram">Instagram</string>
+    <string name="lastName">Sukunimi</string>
+    <string name="linkedIn">LinkedIn</string>
+    <string name="linksAndSocialNetwork">Linkit ja sosiaalinen media</string>
+    <string name="menuEdit">Muokkaa</string>
+    <string name="otherUrl">Muu URL-osoite</string>
+    <string name="phone">Puhelin</string>
+    <string name="sharedButton">Jaa</string>
+    <string name="webSite">Verkkosivusto</string>
+    <string name="x">X</string>
+</resources>

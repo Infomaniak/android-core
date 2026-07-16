@@ -65,7 +65,7 @@ internal fun PreviewContent(
             ),
         ) {
             Text(
-                text = stringResource(R.string.contactCardShare),
+                text = stringResource(R.string.sharedButton),
                 modifier = Modifier.padding(vertical = Margin.Mini),
             )
         }

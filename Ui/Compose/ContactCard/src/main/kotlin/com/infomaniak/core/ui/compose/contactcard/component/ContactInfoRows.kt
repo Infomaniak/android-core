@@ -39,10 +39,10 @@ import com.infomaniak.core.ui.compose.margin.Margin
 @Composable
 internal fun ContactInfoRows(card: Card, modifier: Modifier = Modifier) {
     val rows = buildList {
-        card.company?.takeIf { it.isNotBlank() }?.let { add(stringResource(R.string.contactCardCompany) to it) }
-        card.phone.takeIf { it.isNotBlank() }?.let { add(stringResource(R.string.contactCardPhone) to it) }
+        card.company?.takeIf { it.isNotBlank() }?.let { add(stringResource(R.string.company) to it) }
+        card.phone.takeIf { it.isNotBlank() }?.let { add(stringResource(R.string.phone) to it) }
         card.links.orEmpty().firstOrNull { it.type == CardLinkType.Website }?.let {
-            add(stringResource(R.string.contactCardWebsite) to it.url)
+            add(stringResource(R.string.webSite) to it.url)
         }
     }
     Column(modifier = modifier) {

@@ -16,7 +16,6 @@
  */
 package com.infomaniak.core.ui.compose.contactcard.component
 
-import android.R.attr.type
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,7 +27,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -81,8 +79,8 @@ internal fun EditorContent(
                     Text(text = stringResource(android.R.string.ok))
                 }
             },
-            title = { Text(text = stringResource(R.string.contactCardValidationTitle)) },
-            text = { Text(text = stringResource(R.string.contactCardValidationDescription)) },
+            title = { Text(text = stringResource(R.string.alertTitle)) },
+            text = { Text(text = stringResource(R.string.alertDescription)) },
         )
     }
 
@@ -92,72 +90,72 @@ internal fun EditorContent(
             .padding(vertical = Margin.Medium),
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(Margin.Medium),
     ) {
-        SectionCard(title = stringResource(R.string.contactCardGeneralInfoTitle)) {
+        SectionCard(title = stringResource(R.string.generalInformation)) {
             EditorField(
                 value = editor.firstName,
-                placeholder = stringResource(R.string.contactCardFirstName),
+                placeholder = "${stringResource(R.string.firstName)}*",
                 onValueChange = { onUpdateDraft(editor.copy(firstName = it)) },
             )
             FieldDivider()
             EditorField(
                 value = editor.lastName,
-                placeholder = stringResource(R.string.contactCardLastName),
+                placeholder = "${stringResource(R.string.lastName)}*",
                 onValueChange = { onUpdateDraft(editor.copy(lastName = it)) },
             )
             FieldDivider()
             EditorField(
                 value = editor.email,
-                placeholder = stringResource(R.string.contactCardEmail),
+                placeholder = "${stringResource(R.string.email)}*",
                 keyboardType = KeyboardType.Email,
                 onValueChange = { onUpdateDraft(editor.copy(email = it)) },
             )
             FieldDivider()
             EditorField(
                 value = editor.phone,
-                placeholder = stringResource(R.string.contactCardPhone),
+                placeholder = "${stringResource(R.string.phone)}*",
                 keyboardType = KeyboardType.Phone,
                 onValueChange = { onUpdateDraft(editor.copy(phone = it)) },
             )
             FieldDivider()
             EditorField(
                 value = editor.company,
-                placeholder = stringResource(R.string.contactCardCompany),
+                placeholder = stringResource(R.string.company),
                 onValueChange = { onUpdateDraft(editor.copy(company = it)) },
             )
         }
 
-        SectionCard(title = stringResource(R.string.contactCardLinksTitle)) {
+        SectionCard(title = stringResource(R.string.linksAndSocialNetwork)) {
             EditorField(
                 value = editor.linkedIn,
-                placeholder = stringResource(R.string.contactCardLinkedIn),
+                placeholder = stringResource(R.string.linkedIn),
                 keyboardType = KeyboardType.Uri,
                 onValueChange = { onUpdateDraft(editor.copy(linkedIn = it)) },
             )
             FieldDivider()
             EditorField(
                 value = editor.facebook,
-                placeholder = stringResource(R.string.contactCardFacebook),
+                placeholder = stringResource(R.string.facebook),
                 keyboardType = KeyboardType.Uri,
                 onValueChange = { onUpdateDraft(editor.copy(facebook = it)) },
             )
             FieldDivider()
             EditorField(
                 value = editor.instagram,
-                placeholder = stringResource(R.string.contactCardInstagram),
+                placeholder = stringResource(R.string.instagram),
                 keyboardType = KeyboardType.Uri,
                 onValueChange = { onUpdateDraft(editor.copy(instagram = it)) },
             )
             FieldDivider()
             EditorField(
                 value = editor.x,
-                placeholder = stringResource(R.string.contactCardX),
+                placeholder = stringResource(R.string.x),
                 keyboardType = KeyboardType.Uri,
                 onValueChange = { onUpdateDraft(editor.copy(x = it)) },
             )
             FieldDivider()
             EditorField(
                 value = editor.website,
-                placeholder = stringResource(R.string.contactCardWebsite),
+                placeholder = stringResource(R.string.webSite),
                 keyboardType = KeyboardType.Uri,
                 onValueChange = { onUpdateDraft(editor.copy(website = it)) },
             )
@@ -168,7 +166,7 @@ internal fun EditorContent(
                     EditorField(
                         modifier = Modifier.weight(1f),
                         value = additionalUrl.value,
-                        placeholder = stringResource(R.string.contactCardOtherUrl),
+                        placeholder = "${stringResource(R.string.otherUrl)}*",
                         keyboardType = KeyboardType.Uri,
                         onValueChange = { value ->
                             onUpdateDraft(
@@ -186,7 +184,7 @@ internal fun EditorContent(
                     ) {
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_bin),
-                            contentDescription = stringResource(R.string.contactCardRemoveUrlDescription),
+                            contentDescription = stringResource(R.string.deleteButton),
                             tint = MaterialTheme.colorScheme.primary,
                         )
                     }
@@ -212,7 +210,7 @@ internal fun EditorContent(
                     )
                     Spacer(Modifier.height(Margin.Mini))
                     Text(
-                        text = stringResource(R.string.contactCardAddUrlAction),
+                        text = stringResource(R.string.addUrl),
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(start = Margin.Small),
                     )

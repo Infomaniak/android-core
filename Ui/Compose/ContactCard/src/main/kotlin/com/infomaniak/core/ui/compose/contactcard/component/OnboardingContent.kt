@@ -60,12 +60,12 @@ internal fun OnboardingContent(
                 .height(220.dp),
         )
         Spacer(Modifier.height(Margin.Medium))
-        Text(text = stringResource(R.string.contactCardOnboardingTitle), style = MaterialTheme.typography.headlineMedium)
+        Text(text = stringResource(R.string.contactCardOnBoardingTitle), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(Margin.Small))
-        Text(text = stringResource(R.string.contactCardOnboardingDescription, userName))
+        Text(text = stringResource(R.string.contactCardOnBoardingDescription, userName))
         Spacer(Modifier.height(Margin.Large))
         Button(onClick = onCreate) {
-            Text(text = stringResource(R.string.contactCardCreate))
+            Text(text = stringResource(R.string.contactCardOnBoardingTitle))
         }
     }
 }

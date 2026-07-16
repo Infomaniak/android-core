@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":Auth"))
     implementation(project(":Network"))
     implementation(project(":Avatar"))
+    implementation(project(":Common"))
     implementation(project(":Ui:Compose:Margin"))
     implementation(project(":Ui:Compose:MaterialThemeFromXml"))
 

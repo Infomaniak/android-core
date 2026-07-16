@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="addUrl">Legg til nettadresse</string>
+    <string name="alertDescription">Vennligst fyll ut alle obligatoriske felter (fornavn, etternavn, e-postadresse, telefonnummer).</string>
+    <string name="alertTitle">Obligatoriske felt</string>
+    <string name="buttonMore">Mer</string>
+    <string name="company">Selskap</string>
+    <string name="contactCardOnBoardingDescription">Få QR-koden din skannet med en enkel bevegelse. Kontaktene dine kan legge deg til på et øyeblikk, både med og uten internettforbindelse.</string>
+    <string name="contactCardOnBoardingTitle">Lag ditt eget visittkort</string>
+    <string name="contactCardQrCodeDescription">QR-kode for kontaktkortet</string>
+    <string name="contactCardShareChooserTitle">Del kontaktkort</string>
+    <string name="contactCardTitle">Kontaktkort</string>
+    <string name="deleteAlertDescription">Er du sikker på at du vil slette kontaktkortet som er knyttet til denne kontoen?</string>
+    <string name="deleteAlertTitle">Slett kontaktkortet</string>
+    <string name="deleteButton">Slett</string>
+    <string name="email">E-post</string>
+    <string name="facebook">Facebook</string>
+    <string name="firstName">Fornavn</string>
+    <string name="generalInformation">Generell informasjon</string>
+    <string name="instagram">Instagram</string>
+    <string name="lastName">Etternavn</string>
+    <string name="linkedIn">LinkedIn</string>
+    <string name="linksAndSocialNetwork">Lenker og sosiale nettverk</string>
+    <string name="menuEdit">Rediger</string>
+    <string name="otherUrl">Annen URL</string>
+    <string name="phone">Telefon</string>
+    <string name="sharedButton">Del</string>
+    <string name="webSite">Nettsted</string>
+    <string name="x">X</string>
+</resources>

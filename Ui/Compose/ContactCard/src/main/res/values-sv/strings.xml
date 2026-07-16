@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="addUrl">Lägg till webbadress</string>
+    <string name="alertDescription">Fyll i alla obligatoriska fält (förnamn, efternamn, e-postadress, telefonnummer).</string>
+    <string name="alertTitle">Obligatoriska fält</string>
+    <string name="buttonMore">Mer</string>
+    <string name="company">Företag</string>
+    <string name="contactCardOnBoardingDescription">Låt din QR-kod skannas med en enda gest. Dina kontakter kan lägga till dig på ett ögonblick, oavsett om de har internetuppkoppling eller inte.</string>
+    <string name="contactCardOnBoardingTitle">Skapa ditt visitkort</string>
+    <string name="contactCardQrCodeDescription">QR-kod för kontaktkortet</string>
+    <string name="contactCardShareChooserTitle">Dela kontaktkort</string>
+    <string name="contactCardTitle">Kontaktkort</string>
+    <string name="deleteAlertDescription">Är du säker på att du vill ta bort kontaktkortet som är kopplat till det här kontot?</string>
+    <string name="deleteAlertTitle">Ta bort kontaktkortet</string>
+    <string name="deleteButton">Ta bort</string>
+    <string name="email">E-post</string>
+    <string name="facebook">Facebook</string>
+    <string name="firstName">Förnamn</string>
+    <string name="generalInformation">Allmän information</string>
+    <string name="instagram">Instagram</string>
+    <string name="lastName">Efternamn</string>
+    <string name="linkedIn">LinkedIn</string>
+    <string name="linksAndSocialNetwork">Länkar och sociala nätverk</string>
+    <string name="menuEdit">Redigera</string>
+    <string name="otherUrl">Annan URL</string>
+    <string name="phone">Telefon</string>
+    <string name="sharedButton">Dela</string>
+    <string name="webSite">Webbplats</string>
+    <string name="x">X</string>
+</resources>

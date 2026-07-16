@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="addUrl">Aggiungi URL</string>
+    <string name="alertDescription">Si prega di compilare tutti i campi obbligatori (nome, cognome, e-mail, numero di telefono).</string>
+    <string name="alertTitle">Campi obbligatori</string>
+    <string name="buttonMore">Altro</string>
+    <string name="company">Azienda</string>
+    <string name="contactCardOnBoardingDescription">Fai scansionare il tuo codice QR con un solo gesto. I tuoi contatti potranno aggiungerti in un batter d’occhio, con o senza connessione a Internet.</string>
+    <string name="contactCardOnBoardingTitle">Crea il tuo biglietto da visita</string>
+    <string name="contactCardQrCodeDescription">Codice QR per la scheda contatto</string>
+    <string name="contactCardShareChooserTitle">Condividi scheda contatto</string>
+    <string name="contactCardTitle">Scheda di contatto</string>
+    <string name="deleteAlertDescription">Sei sicuro di voler eliminare la scheda del contatto associata a questo account?</string>
+    <string name="deleteAlertTitle">Elimina la scheda del contatto</string>
+    <string name="deleteButton">Elimina</string>
+    <string name="email">E-mail</string>
+    <string name="facebook">Facebook</string>
+    <string name="firstName">Nome</string>
+    <string name="generalInformation">Informazioni generali</string>
+    <string name="instagram">Instagram</string>
+    <string name="lastName">Cognome</string>
+    <string name="linkedIn">LinkedIn</string>
+    <string name="linksAndSocialNetwork">Link e social network</string>
+    <string name="menuEdit">Modifica</string>
+    <string name="otherUrl">Altro URL</string>
+    <string name="phone">Telefono</string>
+    <string name="sharedButton">Condividi</string>
+    <string name="webSite">Sito web</string>
+    <string name="x">X</string>
+</resources>

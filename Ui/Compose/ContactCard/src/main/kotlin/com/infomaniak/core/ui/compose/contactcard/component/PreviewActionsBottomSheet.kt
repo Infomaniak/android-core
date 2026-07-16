@@ -75,7 +75,7 @@ internal fun PreviewActionsBottomSheet(
         Column(modifier = Modifier.padding(bottom = Margin.Medium)) {
             BottomSheetAction(
                 icon = ImageVector.vectorResource(R.drawable.ic_pencil),
-                label = stringResource(R.string.contactCardEdit),
+                label = stringResource(R.string.menuEdit),
                 onClick = { dismissThen(onEdit) },
             )
             HorizontalDivider(
@@ -84,7 +84,7 @@ internal fun PreviewActionsBottomSheet(
             )
             BottomSheetAction(
                 icon = ImageVector.vectorResource(R.drawable.ic_bin),
-                label = stringResource(R.string.contactCardDelete),
+                label = stringResource(R.string.deleteButton),
                 onClick = { showDeleteConfirmation = true },
             )
         }
@@ -106,8 +106,8 @@ internal fun PreviewActionsBottomSheet(
                     Text(text = stringResource(android.R.string.cancel))
                 }
             },
-            title = { Text(text = stringResource(R.string.contactCardDelete)) },
-            text = { Text(text = stringResource(R.string.contactCardDeleteConfirmation)) },
+            title = { Text(text = stringResource(R.string.deleteAlertTitle)) },
+            text = { Text(text = stringResource(R.string.deleteAlertDescription)) },
         )
     }
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO-->
+<resources>
+    <string name="addUrl">URL toevoegen</string>
+    <string name="alertDescription">Vul alstublieft alle verplichte velden in (voornaam, achternaam, e-mailadres, telefoonnummer).</string>
+    <string name="alertTitle">Verplichte velden</string>
+    <string name="buttonMore">Meer</string>
+    <string name="company">Bedrijf</string>
+    <string name="contactCardOnBoardingDescription">Laat je QR-code met één enkel gebaar scannen. Je contacten kunnen je in een oogwenk toevoegen, met of zonder internetverbinding.</string>
+    <string name="contactCardOnBoardingTitle">Maak uw visitekaartje</string>
+    <string name="contactCardQrCodeDescription">QR-code voor de contactkaart</string>
+    <string name="contactCardShareChooserTitle">Contactkaart delen</string>
+    <string name="contactCardTitle">Contactkaart</string>
+    <string name="deleteAlertDescription">Weet u zeker dat u de contactkaart die aan dit account is gekoppeld, wilt verwijderen?</string>
+    <string name="deleteAlertTitle">De contactkaart verwijderen</string>
+    <string name="deleteButton">Verwijderen</string>
+    <string name="email">E-mail</string>
+    <string name="facebook">Facebook</string>
+    <string name="firstName">Voornaam</string>
+    <string name="generalInformation">Algemene informatie</string>
+    <string name="instagram">Instagram</string>
+    <string name="lastName">Achternaam</string>
+    <string name="linkedIn">LinkedIn</string>
+    <string name="linksAndSocialNetwork">Links en sociale netwerken</string>
+    <string name="menuEdit">Bewerken</string>
+    <string name="otherUrl">Andere URL</string>
+    <string name="phone">Telefoon</string>
+    <string name="sharedButton">Delen</string>
+    <string name="webSite">Website</string>
+    <string name="x">X</string>
+</resources>
