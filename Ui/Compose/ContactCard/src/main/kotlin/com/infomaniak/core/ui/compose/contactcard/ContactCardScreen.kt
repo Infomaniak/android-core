@@ -55,6 +55,7 @@ fun ContactCardScreen(
     onShare: (Card) -> Unit,
     viewModel: ContactCardViewModel = viewModel(),
     confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
+    topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var pendingDelete by remember { mutableStateOf(false) }
@@ -77,6 +78,7 @@ fun ContactCardScreen(
         onRemoveAdditionalUrl = viewModel::removeAdditionalUrl,
         onUpdateDraft = viewModel::updateDraft,
         onShare = onShare,
+        topBar = topBar,
     )
 
     if (pendingDelete) {
@@ -104,6 +106,7 @@ private fun ContactCardScreen(
     onRemoveAdditionalUrl: (String) -> Unit,
     onUpdateDraft: (ContactCardEditorState) -> Unit,
     onShare: (Card) -> Unit,
+    topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
 ) {
     val isEditing = state is ContactCardUiState.Editing
     val isPreview = state is ContactCardUiState.Preview
@@ -117,27 +120,18 @@ private fun ContactCardScreen(
             else -> MaterialTheme.colorScheme.background
         },
         topBar = {
-            when {
-                isEditing -> EditorTopBar(
+            val topBarState: ContactCardTopBarState = when {
+                isEditing -> ContactCardTopBarState.Editor(
                     onCancel = onCancel,
                     onSave = { requestSave = true },
                 )
-                isPreview -> PreviewTopBar(
+                isPreview -> ContactCardTopBarState.Preview(
                     onClose = onBack,
                     onMore = { showActionsBottomSheet = true },
                 )
-                else -> ContactCardTopBar(
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                        }
-                    },
-                )
+                else -> ContactCardTopBarState.Default(onBack = onBack)
             }
+            if (topBar != null) topBar(topBarState) else DefaultTopBar(topBarState)
         },
     ) { paddingValues ->
         Box(
@@ -188,6 +182,31 @@ private fun ContactCardScreen(
 }
 
 //region Previews
+
+@Composable
+private fun DefaultTopBar(state: ContactCardTopBarState) {
+    when (state) {
+        is ContactCardTopBarState.Editor -> EditorTopBar(
+            onCancel = state.onCancel,
+            onSave = state.onSave,
+        )
+        is ContactCardTopBarState.Preview -> PreviewTopBar(
+            onClose = state.onClose,
+            onMore = state.onMore,
+        )
+        is ContactCardTopBarState.Default -> ContactCardTopBar(
+            navigationIcon = {
+                IconButton(onClick = state.onBack) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            },
+        )
+    }
+}
 
 @Preview(name = "Loading")
 @Composable
