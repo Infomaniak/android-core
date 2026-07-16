@@ -16,33 +16,21 @@
  */
 package com.infomaniak.core.ui.compose.contactcard.component
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.common.R as RCore
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 internal fun EditorTopBar(
     onCancel: () -> Unit,
     onSave: () -> Unit,
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                text = stringResource(R.string.contactCardTitle),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        },
+    ContactCardTopBar(
         navigationIcon = {
             TextButton(onClick = onCancel) {
                 Text(
@@ -59,12 +47,6 @@ internal fun EditorTopBar(
                 )
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            navigationIconContentColor = MaterialTheme.colorScheme.primary,
-            actionIconContentColor = MaterialTheme.colorScheme.primary,
-        ),
     )
 }
 

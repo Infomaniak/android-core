@@ -27,20 +27,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.core.auth.models.user.Card
+import com.infomaniak.core.ui.compose.contactcard.component.ContactCardTopBar
 import com.infomaniak.core.ui.compose.contactcard.component.DefaultDeleteConfirmationDialog
 import com.infomaniak.core.ui.compose.contactcard.component.EditorContent
 import com.infomaniak.core.ui.compose.contactcard.component.EditorTopBar
@@ -129,18 +126,16 @@ private fun ContactCardScreen(
                     onClose = onBack,
                     onMore = { showActionsBottomSheet = true },
                 )
-                else -> TopAppBar(
-                    title = { Text(text = stringResource(R.string.contactCardTitle)) },
+                else -> ContactCardTopBar(
                     navigationIcon = {
                         IconButton(onClick = onBack) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.primary,
-                    ),
                 )
             }
         },
