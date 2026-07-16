@@ -81,6 +81,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.CardLink
 import com.infomaniak.core.auth.models.user.CardLinkType
@@ -90,15 +92,37 @@ import com.infomaniak.core.auth.models.user.preferences.Preferences
 import com.infomaniak.core.avatar.components.Avatar
 import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.ui.compose.margin.Margin
-import com.infomaniak.core.ui.compose.materialthemefromxml.MaterialThemeFromXml
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 import kotlinx.coroutines.launch
 
 private val CardCornerRadius = 12.dp
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun ContactCardScreen(
+    onBack: () -> Unit,
+    onShare: (Card) -> Unit,
+    viewModel: ContactCardViewModel = viewModel(),
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    ContactCardScreen(
+        state = state,
+        onBack = onBack,
+        onCreate = viewModel::startCreate,
+        onEdit = viewModel::startEdit,
+        onDelete = viewModel::deleteCard,
+        onCancel = viewModel::cancelEditing,
+        onSave = viewModel::saveDraft,
+        onAddAdditionalUrl = viewModel::addAdditionalUrl,
+        onRemoveAdditionalUrl = viewModel::removeAdditionalUrl,
+        onUpdateDraft = viewModel::updateDraft,
+        onShare = onShare,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ContactCardScreen(
     state: ContactCardUiState,
     onBack: () -> Unit,
     onCreate: () -> Unit,
@@ -884,7 +908,6 @@ private fun EditorField(
     )
 }
 
-
 //region Previews
 
 private fun previewUser(): User {
@@ -924,7 +947,7 @@ private fun previewCard(): Card = Card(
 @Preview(name = "Loading")
 @Composable
 private fun ContactCardScreenLoadingPreview() {
-                MaterialThemeFromXml {
+    MaterialTheme {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Loading,
@@ -946,7 +969,7 @@ private fun ContactCardScreenLoadingPreview() {
 @Preview(name = "Onboarding")
 @Composable
 private fun ContactCardScreenOnboardingPreview() {
-                MaterialThemeFromXml {
+    MaterialTheme {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Onboarding(user = previewUser()),
@@ -968,7 +991,7 @@ private fun ContactCardScreenOnboardingPreview() {
 @Preview(name = "Preview")
 @Composable
 private fun ContactCardScreenPreviewPreview() {
-                MaterialThemeFromXml {
+    MaterialTheme {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Preview(
@@ -993,7 +1016,7 @@ private fun ContactCardScreenPreviewPreview() {
 @Preview(name = "Editing")
 @Composable
 private fun ContactCardScreenEditingPreview() {
-                MaterialThemeFromXml {
+    MaterialTheme {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Editing(

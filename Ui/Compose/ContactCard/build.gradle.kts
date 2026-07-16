@@ -33,6 +33,8 @@ dependencies {
     implementation(core.compose.ui.tooling.preview)
 
     implementation(core.androidx.lifecycle.viewmodel.ktx)
+    implementation(core.androidx.lifecycle.viewmodel.compose)
+    implementation(core.androidx.lifecycle.runtime.compose)
     implementation(core.navigation.fragment.ktx)
     implementation(core.activity.compose)
     implementation(core.qrose)
