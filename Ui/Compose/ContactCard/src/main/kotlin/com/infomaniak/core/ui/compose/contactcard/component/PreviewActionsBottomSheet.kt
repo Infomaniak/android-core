@@ -16,29 +16,16 @@
  */
 package com.infomaniak.core.ui.compose.contactcard.component
 
-import android.R.attr.label
-import android.R.attr.onClick
-import android.R.attr.type
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -57,7 +44,6 @@ internal fun PreviewActionsBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     fun dismissThen(action: () -> Unit) {
         scope.launch {
@@ -85,30 +71,9 @@ internal fun PreviewActionsBottomSheet(
             BottomSheetAction(
                 icon = ImageVector.vectorResource(R.drawable.ic_bin),
                 label = stringResource(R.string.deleteButton),
-                onClick = { showDeleteConfirmation = true },
+                onClick = { dismissThen(onDelete) },
             )
         }
-    }
-
-    if (showDeleteConfirmation) {
-        AlertDialog(
-            onDismissRequest = { showDeleteConfirmation = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    showDeleteConfirmation = false
-                    dismissThen(onDelete)
-                }) {
-                    Text(text = stringResource(android.R.string.ok))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDeleteConfirmation = false }) {
-                    Text(text = stringResource(android.R.string.cancel))
-                }
-            },
-            title = { Text(text = stringResource(R.string.deleteAlertTitle)) },
-            text = { Text(text = stringResource(R.string.deleteAlertDescription)) },
-        )
     }
 }
 

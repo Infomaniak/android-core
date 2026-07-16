@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.core.auth.models.user.Card
+import com.infomaniak.core.ui.compose.contactcard.component.DefaultDeleteConfirmationDialog
 import com.infomaniak.core.ui.compose.contactcard.component.EditorContent
 import com.infomaniak.core.ui.compose.contactcard.component.EditorTopBar
 import com.infomaniak.core.ui.compose.contactcard.component.LoadingContent
@@ -56,15 +57,23 @@ fun ContactCardScreen(
     onBack: () -> Unit,
     onShare: (Card) -> Unit,
     viewModel: ContactCardViewModel = viewModel(),
+    confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    var pendingDelete by remember { mutableStateOf(false) }
+
+    val handleDelete: () -> Unit = if (confirmDelete != null) {
+        { confirmDelete { viewModel.deleteCard() } }
+    } else {
+        { pendingDelete = true }
+    }
 
     ContactCardScreen(
         state = state,
         onBack = onBack,
         onCreate = viewModel::startCreate,
         onEdit = viewModel::startEdit,
-        onDelete = viewModel::deleteCard,
+        onDelete = handleDelete,
         onCancel = viewModel::cancelEditing,
         onSave = viewModel::saveDraft,
         onAddAdditionalUrl = viewModel::addAdditionalUrl,
@@ -72,6 +81,16 @@ fun ContactCardScreen(
         onUpdateDraft = viewModel::updateDraft,
         onShare = onShare,
     )
+
+    if (pendingDelete) {
+        DefaultDeleteConfirmationDialog(
+            onDismiss = { pendingDelete = false },
+            onConfirm = {
+                pendingDelete = false
+                viewModel.deleteCard()
+            },
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
