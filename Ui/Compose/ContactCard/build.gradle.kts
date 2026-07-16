@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":Network"))
     implementation(project(":Avatar"))
     implementation(project(":Common"))
+    implementation(project(":Ui:View:PrimaryPalette"))
     implementation(project(":Ui:Compose:Margin"))
     implementation(project(":Ui:Compose:MaterialThemeFromXml"))
 
