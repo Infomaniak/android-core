@@ -4,9 +4,13 @@
     <string name="addUrl">Ajouter une URL</string>
     <string name="alertDescription">Veuillez remplir tous les champs obligatoires (prénom, nom, e-mail, numéro de téléphone).</string>
     <string name="alertTitle">Champs obligatoires</string>
+    <string name="buttonCreate">Créer</string>
     <string name="buttonMore">En savoir plus</string>
     <string name="company">Entreprise</string>
     <string name="contactCardOnBoardingDescription">Faites scanner votre code QR d’un simple geste. Vos contacts peuvent vous ajouter en un clin d’œil, avec ou sans connexion.</string>
+    <string name="contactCardOnBoardingFirstItem">Toutes vos informations dans un code QR</string>
+    <string name="contactCardOnBoardingSecondItem">Aucun compte requis côté destinataire</string>
+    <string name="contactCardOnBoardingThirdItem">Toujours accessible, même hors ligne</string>
     <string name="contactCardOnBoardingTitle">Créez votre carte de visite</string>
     <string name="contactCardQrCodeDescription">Code QR de la carte de contact</string>
     <string name="contactCardShareChooserTitle">Partager la carte de visite</string>

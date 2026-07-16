@@ -16,8 +16,11 @@
  */
 package com.infomaniak.core.ui.compose.contactcard
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -32,11 +35,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.core.auth.models.user.Card
+import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.contactcard.component.ContactCardTopBar
 import com.infomaniak.core.ui.compose.contactcard.component.DefaultDeleteConfirmationDialog
 import com.infomaniak.core.ui.compose.contactcard.component.EditorContent
@@ -110,15 +119,14 @@ private fun ContactCardScreen(
 ) {
     val isEditing = state is ContactCardUiState.Editing
     val isPreview = state is ContactCardUiState.Preview
+    val isOnboarding = state is ContactCardUiState.Onboarding
     var requestSave by remember { mutableStateOf(false) }
     var showActionsBottomSheet by remember { mutableStateOf(false) }
 
+    val topBarColor = if (isOnboarding) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background
+
     Scaffold(
-        containerColor = when {
-            isEditing -> MaterialTheme.colorScheme.surfaceContainer
-            isPreview -> MaterialTheme.colorScheme.primaryContainer
-            else -> MaterialTheme.colorScheme.background
-        },
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             val topBarState: ContactCardTopBarState = when {
                 isEditing -> ContactCardTopBarState.Editor(
@@ -131,37 +139,55 @@ private fun ContactCardScreen(
                 )
                 else -> ContactCardTopBarState.Default(onBack = onBack)
             }
+            androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
+                containerColor = topBarColor,
+                scrolledContainerColor = topBarColor,
+            )
             if (topBar != null) topBar(topBarState) else DefaultTopBar(topBarState)
         },
     ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-        ) {
-            when (state) {
-                ContactCardUiState.Loading -> LoadingContent()
-                is ContactCardUiState.Onboarding -> OnboardingContent(
-                    modifier = Modifier.fillMaxSize(),
-                    userName = "${state.user.firstname} ${state.user.lastname}",
-                    onCreate = onCreate,
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (isOnboarding) {
+                Image(
+                    painter = painterResource(R.drawable.ic_back_wave),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter),
+                    contentScale = ContentScale.FillWidth,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primaryContainer),
                 )
-                is ContactCardUiState.Preview -> PreviewContent(
-                    modifier = Modifier.fillMaxSize(),
-                    user = state.user,
-                    card = state.card,
-                    onShare = { onShare(state.card) },
-                )
-                is ContactCardUiState.Editing -> EditorContent(
-                    modifier = Modifier.fillMaxSize(),
-                    editor = state.editor,
-                    requestSave = requestSave,
-                    onSaveHandled = { requestSave = false },
-                    onSave = onSave,
-                    onAddAdditionalUrl = onAddAdditionalUrl,
-                    onRemoveAdditionalUrl = onRemoveAdditionalUrl,
-                    onUpdateDraft = onUpdateDraft,
-                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+            ) {
+                when (state) {
+                    ContactCardUiState.Loading -> LoadingContent()
+                    is ContactCardUiState.Onboarding -> OnboardingContent(
+                        modifier = Modifier.fillMaxSize(),
+                        userName = "${state.user.firstname} ${state.user.lastname}",
+                        onCreate = onCreate,
+                    )
+                    is ContactCardUiState.Preview -> PreviewContent(
+                        modifier = Modifier.fillMaxSize(),
+                        user = state.user,
+                        card = state.card,
+                        onShare = { onShare(state.card) },
+                    )
+                    is ContactCardUiState.Editing -> EditorContent(
+                        modifier = Modifier.fillMaxSize(),
+                        editor = state.editor,
+                        requestSave = requestSave,
+                        onSaveHandled = { requestSave = false },
+                        onSave = onSave,
+                        onAddAdditionalUrl = onAddAdditionalUrl,
+                        onRemoveAdditionalUrl = onRemoveAdditionalUrl,
+                        onUpdateDraft = onUpdateDraft,
+                    )
+                }
             }
         }
     }

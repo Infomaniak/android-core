@@ -19,9 +19,13 @@
     <string name="addUrl">Add URL</string>
     <string name="alertDescription">Please fill in all required fields (first name, last name, email, phone number).</string>
     <string name="alertTitle">Required fields</string>
+    <string name="buttonCreate">Create</string>
     <string name="buttonMore">More</string>
     <string name="company">Company</string>
     <string name="contactCardOnBoardingDescription">Have your QR code scanned with a single gesture. Your contacts can add you in the blink of an eye, with or without an internet connection.</string>
+    <string name="contactCardOnBoardingFirstItem">All your information in a QR code</string>
+    <string name="contactCardOnBoardingSecondItem">No account required on the recipient’s end</string>
+    <string name="contactCardOnBoardingThirdItem">Always accessible, even offline</string>
     <string name="contactCardOnBoardingTitle">Create Your Business Card</string>
     <string name="contactCardQrCodeDescription">QR code for the contact card</string>
     <string name="contactCardShareChooserTitle">Share contact card</string>

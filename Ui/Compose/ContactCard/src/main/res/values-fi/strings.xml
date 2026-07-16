@@ -4,9 +4,13 @@
     <string name="addUrl">Lisää URL-osoite</string>
     <string name="alertDescription">Täytä kaikki pakolliset kentät (etunimi, sukunimi, sähköpostiosoite, puhelinnumero).</string>
     <string name="alertTitle">Pakolliset kentät</string>
+    <string name="buttonCreate">Luo</string>
     <string name="buttonMore">Lisää</string>
     <string name="company">Yritys</string>
     <string name="contactCardOnBoardingDescription">QR-koodisi skannataan yhdellä eleellä. Ystäväsi voivat lisätä sinut yhteystietoihinsa silmänräpäyksessä, riippumatta siitä, onko internetyhteyttä vai ei.</string>
+    <string name="contactCardOnBoardingFirstItem">Kaikki tietosi QR-koodissa</string>
+    <string name="contactCardOnBoardingSecondItem">Vastaanottajalta ei vaadita käyttäjätiliä</string>
+    <string name="contactCardOnBoardingThirdItem">Aina käytettävissä, myös offline-tilassa</string>
     <string name="contactCardOnBoardingTitle">Luo oma käyntikorttisi</string>
     <string name="contactCardQrCodeDescription">Yhteystietokortin QR-koodi</string>
     <string name="contactCardShareChooserTitle">Jaa yhteystietokortti</string>

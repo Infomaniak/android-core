@@ -4,9 +4,13 @@
     <string name="addUrl">Tilføj URL</string>
     <string name="alertDescription">Udfyld venligst alle obligatoriske felter (fornavn, efternavn, e-mail, telefonnummer).</string>
     <string name="alertTitle">Obligatoriske felter</string>
+    <string name="buttonCreate">Opret</string>
     <string name="buttonMore">Mere</string>
     <string name="company">Virksomhed</string>
     <string name="contactCardOnBoardingDescription">Få din QR-kode scannet med en enkelt gestus. Dine kontakter kan tilføje dig på et øjeblik, uanset om der er internetforbindelse eller ej.</string>
+    <string name="contactCardOnBoardingFirstItem">Alle dine oplysninger i en QR-kode</string>
+    <string name="contactCardOnBoardingSecondItem">Modtageren behøver ikke at have en konto</string>
+    <string name="contactCardOnBoardingThirdItem">Altid tilgængelig, selv offline</string>
     <string name="contactCardOnBoardingTitle">Opret dit visitkort</string>
     <string name="contactCardQrCodeDescription">QR-kode til kontaktkortet</string>
     <string name="contactCardShareChooserTitle">Del kontaktkort</string>

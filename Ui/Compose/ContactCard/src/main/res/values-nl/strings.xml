@@ -4,9 +4,13 @@
     <string name="addUrl">URL toevoegen</string>
     <string name="alertDescription">Vul alstublieft alle verplichte velden in (voornaam, achternaam, e-mailadres, telefoonnummer).</string>
     <string name="alertTitle">Verplichte velden</string>
+    <string name="buttonCreate">Aanmaken</string>
     <string name="buttonMore">Meer</string>
     <string name="company">Bedrijf</string>
     <string name="contactCardOnBoardingDescription">Laat je QR-code met één enkel gebaar scannen. Je contacten kunnen je in een oogwenk toevoegen, met of zonder internetverbinding.</string>
+    <string name="contactCardOnBoardingFirstItem">Al je gegevens in één QR-code</string>
+    <string name="contactCardOnBoardingSecondItem">De ontvanger hoeft geen account aan te maken</string>
+    <string name="contactCardOnBoardingThirdItem">Altijd beschikbaar, zelfs offline</string>
     <string name="contactCardOnBoardingTitle">Maak uw visitekaartje</string>
     <string name="contactCardQrCodeDescription">QR-code voor de contactkaart</string>
     <string name="contactCardShareChooserTitle">Contactkaart delen</string>

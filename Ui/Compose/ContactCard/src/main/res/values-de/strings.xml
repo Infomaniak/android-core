@@ -4,9 +4,13 @@
     <string name="addUrl">URL hinzufügen</string>
     <string name="alertDescription">Bitte füllen Sie alle Pflichtfelder aus (Vorname, Nachname, E-Mail-Adresse, Telefonnummer).</string>
     <string name="alertTitle">Pflichtfelder</string>
+    <string name="buttonCreate">Erstellen</string>
     <string name="buttonMore">Mehr</string>
     <string name="company">Unternehmen</string>
     <string name="contactCardOnBoardingDescription">Lassen Sie Ihren QR-Code mit einer einzigen Geste scannen. Ihre Kontakte können Sie im Handumdrehen hinzufügen – mit oder ohne Internetverbindung.</string>
+    <string name="contactCardOnBoardingFirstItem">Alle Ihre Informationen in einem QR-Code</string>
+    <string name="contactCardOnBoardingSecondItem">Auf Seiten des Empfängers ist kein Konto erforderlich</string>
+    <string name="contactCardOnBoardingThirdItem">Jederzeit verfügbar, auch offline</string>
     <string name="contactCardOnBoardingTitle">Erstellen Sie Ihre Visitenkarte</string>
     <string name="contactCardQrCodeDescription">QR-Code für die Kontaktkarte</string>
     <string name="contactCardShareChooserTitle">Kontaktkarte teilen</string>

@@ -4,9 +4,13 @@
     <string name="addUrl">Lägg till webbadress</string>
     <string name="alertDescription">Fyll i alla obligatoriska fält (förnamn, efternamn, e-postadress, telefonnummer).</string>
     <string name="alertTitle">Obligatoriska fält</string>
+    <string name="buttonCreate">Skapa</string>
     <string name="buttonMore">Mer</string>
     <string name="company">Företag</string>
     <string name="contactCardOnBoardingDescription">Låt din QR-kod skannas med en enda gest. Dina kontakter kan lägga till dig på ett ögonblick, oavsett om de har internetuppkoppling eller inte.</string>
+    <string name="contactCardOnBoardingFirstItem">All din information i en QR-kod</string>
+    <string name="contactCardOnBoardingSecondItem">Mottagaren behöver inte ha något konto</string>
+    <string name="contactCardOnBoardingThirdItem">Alltid tillgängligt, även offline</string>
     <string name="contactCardOnBoardingTitle">Skapa ditt visitkort</string>
     <string name="contactCardQrCodeDescription">QR-kod för kontaktkortet</string>
     <string name="contactCardShareChooserTitle">Dela kontaktkort</string>
