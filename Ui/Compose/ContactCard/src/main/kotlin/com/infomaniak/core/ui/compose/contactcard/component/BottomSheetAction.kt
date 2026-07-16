@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -33,6 +34,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,14 +48,14 @@ internal fun BottomSheetAction(
 ) {
     TextButton(
         onClick = onClick,
-        shape = RoundedCornerShape(0.dp),
+        shape = RectangleShape,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Mini),
-        contentPadding = PaddingValues(
-            horizontal = Margin.Small,
-            vertical = Margin.Small,
-        ),
+        contentPadding = PaddingValues(Margin.Small),
+        colors = ButtonDefaults.textButtonColors(
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -68,7 +70,6 @@ internal fun BottomSheetAction(
             androidx.compose.foundation.layout.Spacer(Modifier.width(Margin.Medium))
             Text(
                 text = label,
-                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyLarge,
             )
         }

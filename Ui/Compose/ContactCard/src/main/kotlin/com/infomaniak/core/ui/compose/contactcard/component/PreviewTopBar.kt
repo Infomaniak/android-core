@@ -45,7 +45,7 @@ internal fun PreviewTopBar(
             Text(
                 text = stringResource(R.string.contactCardTitle),
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         },
         navigationIcon = {
@@ -68,7 +68,7 @@ internal fun PreviewTopBar(
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
         ),
     )
 }
