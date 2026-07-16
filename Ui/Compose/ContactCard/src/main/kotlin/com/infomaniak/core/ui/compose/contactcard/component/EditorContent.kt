@@ -16,6 +16,7 @@
  */
 package com.infomaniak.core.ui.compose.contactcard.component
 
+import android.R.attr.type
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +43,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -182,7 +185,7 @@ internal fun EditorContent(
                         modifier = Modifier.padding(end = Margin.Small),
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Delete,
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_bin),
                             contentDescription = stringResource(R.string.contactCardRemoveUrlDescription),
                             tint = MaterialTheme.colorScheme.primary,
                         )

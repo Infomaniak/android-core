@@ -159,12 +159,11 @@ private fun ContactCardScreen(
     }
 
     if (isPreview && showActionsBottomSheet) {
-        val previewState = state as ContactCardUiState.Preview
         PreviewActionsBottomSheet(
             onDismiss = { showActionsBottomSheet = false },
             onEdit = {
                 showActionsBottomSheet = false
-                onEdit(previewState.card)
+                onEdit(state.card)
             },
             onDelete = {
                 showActionsBottomSheet = false

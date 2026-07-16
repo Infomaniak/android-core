@@ -16,6 +16,9 @@
  */
 package com.infomaniak.core.ui.compose.contactcard.component
 
+import android.R.attr.label
+import android.R.attr.onClick
+import android.R.attr.type
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -37,7 +40,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -69,7 +74,7 @@ internal fun PreviewActionsBottomSheet(
     ) {
         Column(modifier = Modifier.padding(bottom = Margin.Medium)) {
             BottomSheetAction(
-                icon = Icons.Filled.Edit,
+                icon = ImageVector.vectorResource(R.drawable.ic_pencil),
                 label = stringResource(R.string.contactCardEdit),
                 onClick = { dismissThen(onEdit) },
             )
@@ -78,7 +83,7 @@ internal fun PreviewActionsBottomSheet(
                 color = MaterialTheme.colorScheme.outlineVariant,
             )
             BottomSheetAction(
-                icon = Icons.Filled.Delete,
+                icon = ImageVector.vectorResource(R.drawable.ic_bin),
                 label = stringResource(R.string.contactCardDelete),
                 onClick = { showDeleteConfirmation = true },
             )
