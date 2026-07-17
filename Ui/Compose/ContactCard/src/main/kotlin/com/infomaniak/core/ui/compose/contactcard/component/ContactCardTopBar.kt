@@ -32,7 +32,7 @@ import com.infomaniak.core.ui.compose.contactcard.R
 internal fun ContactCardTopBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    containerColor: androidx.compose.ui.graphics.Color = Color.Transparent,
+    containerColor: Color = Color.Transparent,
 ) {
     CenterAlignedTopAppBar(
         title = {

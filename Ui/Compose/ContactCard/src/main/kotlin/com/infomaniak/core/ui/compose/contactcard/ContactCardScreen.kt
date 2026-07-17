@@ -65,6 +65,7 @@ fun ContactCardScreen(
     viewModel: ContactCardViewModel = viewModel(),
     confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
+    colors: ContactCardColors = ContactCardDefaults.colors(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var pendingDelete by remember { mutableStateOf(false) }
@@ -88,6 +89,7 @@ fun ContactCardScreen(
         onUpdateDraft = viewModel::updateDraft,
         onShare = onShare,
         topBar = topBar,
+        colors = colors,
     )
 
     if (pendingDelete) {
@@ -116,6 +118,7 @@ private fun ContactCardScreen(
     onUpdateDraft: (ContactCardEditorState) -> Unit,
     onShare: (Card) -> Unit,
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
+    colors: ContactCardColors = ContactCardDefaults.colors(),
 ) {
     val isEditing = state is ContactCardUiState.Editing
     val isPreview = state is ContactCardUiState.Preview
@@ -123,10 +126,13 @@ private fun ContactCardScreen(
     var requestSave by remember { mutableStateOf(false) }
     var showActionsBottomSheet by remember { mutableStateOf(false) }
 
-    val topBarColor = if (isOnboarding) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background
+    val scaffoldContainerColor = when {
+        isPreview -> colors.background
+        else -> MaterialTheme.colorScheme.background
+    }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = scaffoldContainerColor,
         topBar = {
             val topBarState: ContactCardTopBarState = when {
                 isEditing -> ContactCardTopBarState.Editor(
@@ -139,10 +145,6 @@ private fun ContactCardScreen(
                 )
                 else -> ContactCardTopBarState.Default(onBack = onBack)
             }
-            androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
-                containerColor = topBarColor,
-                scrolledContainerColor = topBarColor,
-            )
             if (topBar != null) topBar(topBarState) else DefaultTopBar(topBarState)
         },
     ) { paddingValues ->
@@ -155,7 +157,7 @@ private fun ContactCardScreen(
                         .fillMaxWidth()
                         .align(Alignment.TopCenter),
                     contentScale = ContentScale.FillWidth,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primaryContainer),
+                    colorFilter = ColorFilter.tint(colors.waveBackground),
                 )
             }
 
