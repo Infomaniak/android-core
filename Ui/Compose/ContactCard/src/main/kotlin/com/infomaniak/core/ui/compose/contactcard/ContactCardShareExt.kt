@@ -16,6 +16,7 @@
  */
 package com.infomaniak.core.ui.compose.contactcard
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Base64
@@ -55,7 +56,7 @@ suspend fun Card.createShareFile(context: Context): File = withContext(Dispatche
     file
 }
 
-suspend fun Context.shareContactCard(card: Card) {
+suspend fun Activity.shareContactCard(card: Card) {
     val file = card.createShareFile(this)
     val authority = "${applicationContext.packageName}.core.contactcard.provider"
     val uri = FileProvider.getUriForFile(this, authority, file)

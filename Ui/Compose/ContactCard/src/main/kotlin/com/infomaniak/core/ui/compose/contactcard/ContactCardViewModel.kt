@@ -102,6 +102,7 @@ class ContactCardViewModel(
             val card = current.editor.toCard(current.user.avatar)
             val updatedUser = current.user.copy(card = card)
             accountUtils.updateUser(updatedUser)
+            currentUser = updatedUser
             _uiState.value = ContactCardUiState.Preview(user = updatedUser, card = card)
         }
     }
@@ -112,6 +113,7 @@ class ContactCardViewModel(
         viewModelScope.launch {
             val updatedUser = current.user.copy(card = null)
             accountUtils.updateUser(updatedUser)
+            currentUser = updatedUser
             _uiState.value = ContactCardUiState.Onboarding(updatedUser)
         }
     }
@@ -148,12 +150,12 @@ data class ContactCardEditorState(
 ) {
     fun toCard(fallbackAvatarUrl: String?): Card {
         val links = buildList {
-            if (website.isNotBlank()) add(CardLink(CardLinkType.Website, website))
-            if (linkedIn.isNotBlank()) add(CardLink(CardLinkType.LinkedIn, linkedIn))
-            if (facebook.isNotBlank()) add(CardLink(CardLinkType.Facebook, facebook))
-            if (instagram.isNotBlank()) add(CardLink(CardLinkType.Instagram, instagram))
-            if (x.isNotBlank()) add(CardLink(CardLinkType.X, x))
-            additionalUrls.mapNotNull { it.value.takeIf(String::isNotBlank) }.forEach {
+            website.trim().takeIf(String::isNotEmpty)?.let { add(CardLink(CardLinkType.Website, it)) }
+            linkedIn.trim().takeIf(String::isNotEmpty)?.let { add(CardLink(CardLinkType.LinkedIn, it)) }
+            facebook.trim().takeIf(String::isNotEmpty)?.let { add(CardLink(CardLinkType.Facebook, it)) }
+            instagram.trim().takeIf(String::isNotEmpty)?.let { add(CardLink(CardLinkType.Instagram, it)) }
+            x.trim().takeIf(String::isNotEmpty)?.let { add(CardLink(CardLinkType.X, it)) }
+            additionalUrls.mapNotNull { it.value.trim().takeIf(String::isNotEmpty) }.forEach {
                 add(CardLink(CardLinkType.Other, it))
             }
         }.takeIf { it.isNotEmpty() }

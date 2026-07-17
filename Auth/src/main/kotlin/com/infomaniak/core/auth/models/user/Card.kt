@@ -26,14 +26,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class Card(
-    @SerialName("first_name")
+    @SerializedName("first_name") @SerialName("first_name")
     val firstName: String,
-    @SerialName("last_name")
+    @SerializedName("last_name") @SerialName("last_name")
     val lastName: String,
     val email: String,
     val phone: String,
     val company: String? = null,
-    @SerialName("avatar_url")
+    @SerializedName("avatar_url") @SerialName("avatar_url")
     val avatarUrl: String? = null,
     val links: List<CardLink>? = null,
 ): Parcelable {
@@ -68,8 +68,8 @@ data class Card(
             builder.appendLine("URL:${link.url.escapeVCardValue()}")
         }
 
-        builder.append("END:VCARD")
-        return builder.toString()
+        builder.appendLine("END:VCARD")
+        return builder.toString().replace("\n", "\r\n")
     }
 }
 
