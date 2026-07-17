@@ -42,6 +42,7 @@ dependencies {
     implementation(core.androidx.core.ktx)
     implementation(core.androidx.lifecycle.runtime.ktx)
     implementation(core.androidx.lifecycle.process)
+    implementation(core.kotlinx.datetime)
 
     testImplementation(kotlin("test"))
     testImplementation(core.kotest.assertions)
