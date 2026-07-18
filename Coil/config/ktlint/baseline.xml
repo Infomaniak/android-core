@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/java/com/infomaniak/core/coil/AvatarTypeExt.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="39" column="1" source="standard:no-consecutive-blank-lines" />
+        <error line="72" column="90" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/coil/CoilXmllExt.kt">
+        <error line="41" column="98" source="standard:function-expression-body" />
+        <error line="45" column="83" source="standard:function-expression-body" />
+        <error line="137" column="55" source="standard:curly-spacing" />
+        <error line="137" column="55" source="standard:function-start-of-body-spacing" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/coil/ImageLoaderProvider.kt">
+        <error line="59" column="20" source="standard:function-expression-body" />
+        <error line="80" column="37" source="standard:wrapping" />
+        <error line="86" column="17" source="standard:wrapping" />
+    </file>
+</baseline>

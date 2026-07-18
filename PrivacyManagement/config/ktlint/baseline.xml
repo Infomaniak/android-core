@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/matomoLogo/MatomoLogo.kt">
+        <error line="37" column="13" source="standard:backing-property-naming" />
+        <error line="41" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/matomoLogo/MatomoLogoDark.kt">
+        <error line="217" column="13" source="standard:backing-property-naming" />
+        <error line="221" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/matomoLogo/MatomoLogoLight.kt">
+        <error line="203" column="13" source="standard:backing-property-naming" />
+        <error line="207" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/matomoLogoLabel/MatomoLogoLabel.kt">
+        <error line="38" column="13" source="standard:backing-property-naming" />
+        <error line="42" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/matomoLogoLabel/MatomoLogoLabelDark.kt">
+        <error line="419" column="13" source="standard:backing-property-naming" />
+        <error line="423" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/matomoLogoLabel/MatomoLogoLabelLight.kt">
+        <error line="405" column="13" source="standard:backing-property-naming" />
+        <error line="409" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/sentryLogo/SentryLogo.kt">
+        <error line="37" column="13" source="standard:backing-property-naming" />
+        <error line="41" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/sentryLogo/SentryLogoDark.kt">
+        <error line="123" column="13" source="standard:backing-property-naming" />
+        <error line="127" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/sentryLogo/SentryLogoLight.kt">
+        <error line="123" column="13" source="standard:backing-property-naming" />
+        <error line="127" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/sentryLogoLabel/SentryLogoLabel.kt">
+        <error line="38" column="13" source="standard:backing-property-naming" />
+        <error line="42" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/sentryLogoLabel/SentryLogoLabelDark.kt">
+        <error line="203" column="13" source="standard:backing-property-naming" />
+        <error line="207" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/images/illus/sentryLogoLabel/SentryLogoLabelLight.kt">
+        <error line="186" column="13" source="standard:backing-property-naming" />
+        <error line="190" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/screencontent/PrivacyManagementHomeContent.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="59" column="5" source="standard:function-naming" />
+        <error line="92" column="13" source="standard:function-naming" />
+        <error line="113" column="13" source="standard:function-naming" />
+        <error line="140" column="13" source="standard:function-naming" />
+        <error line="178" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/screencontent/PrivacyManagementTrackerContent.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="50" column="5" source="standard:function-naming" />
+        <error line="78" column="13" source="standard:function-naming" />
+        <error line="109" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/privacymanagement/tracker/Tracker.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+</baseline>
