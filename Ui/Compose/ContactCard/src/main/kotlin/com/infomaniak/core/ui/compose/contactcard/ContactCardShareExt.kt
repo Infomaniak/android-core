@@ -22,7 +22,9 @@ import android.content.Intent
 import android.util.Base64
 import androidx.core.content.FileProvider
 import com.infomaniak.core.auth.models.user.Card
+import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.utils.await
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
@@ -32,28 +34,41 @@ private const val CONTACT_CARD_DIRECTORY = "attachments_cache"
 private const val CONTACT_CARD_FILE_PREFIX = "contact_card_"
 private const val CONTACT_CARD_FILE_SUFFIX = ".vcf"
 private const val FILE_NAME_CONNECTOR = "_"
-
 private val ILLEGAL_FILE_NAME_CHARACTERS = Regex("[\\\\/:*?\"<>|]+")
 
 suspend fun Card.createShareFile(context: Context): File = withContext(Dispatchers.IO) {
-    val avatarBase64 = avatarUrl?.let { url ->
-        runCatching {
-            val request = Request.Builder().url(url).build()
-            HttpClient.okHttpClient.newCall(request).execute().use { response ->
-                response.takeIf { it.isSuccessful }
-                    ?.body?.bytes()
-                    ?.let { Base64.encodeToString(it, Base64.NO_WRAP) }
-            }
-        }.getOrNull()
-    }
+    val (avatarBase64, avatarMimeType) = getAvatarDataOrNull()
 
     val fileName = "$CONTACT_CARD_FILE_PREFIX$firstName$FILE_NAME_CONNECTOR$lastName$CONTACT_CARD_FILE_SUFFIX"
     val safeFileName = fileName.replace(ILLEGAL_FILE_NAME_CHARACTERS, "")
 
-    val file = File(context.cacheDir, "$CONTACT_CARD_DIRECTORY/$safeFileName")
-    file.parentFile?.mkdirs()
-    file.writeText(makeVCardString(avatarBase64 = avatarBase64))
-    file
+    val directory = File(context.cacheDir, CONTACT_CARD_DIRECTORY).apply { mkdirs() }
+
+    File(directory, safeFileName).apply {
+        val vCardContent = makeVCardString(avatarBase64 = avatarBase64, avatarMimeType = avatarMimeType)
+        writeText(vCardContent)
+    }
+}
+
+private suspend fun Card.getAvatarDataOrNull(): Pair<String?, String?> {
+    val url = avatarUrl ?: return null to null
+
+    return runCatching {
+        val request = Request.Builder().url(url).build()
+
+        HttpClient.okHttpClient.newCall(request).await().use { response ->
+            val body = response.body
+
+            if (!response.isSuccessful) return@runCatching null to null
+
+            val mimeType = body.contentType()?.subtype?.uppercase()
+            val base64 = Base64.encodeToString(body.bytes(), Base64.NO_WRAP)
+
+            base64 to mimeType
+        }
+    }
+        .cancellable()
+        .getOrDefault(null to null)
 }
 
 suspend fun Activity.shareContactCard(card: Card) {
