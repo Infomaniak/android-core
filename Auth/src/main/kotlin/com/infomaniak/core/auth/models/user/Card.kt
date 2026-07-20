@@ -36,40 +36,52 @@ data class Card(
     @SerializedName("avatar_url") @SerialName("avatar_url")
     val avatarUrl: String? = null,
     val links: List<CardLink>? = null,
-): Parcelable {
+) : Parcelable {
 
-    fun makeVCardString(forQRCode: Boolean = false, avatarBase64: String? = null): String {
-        val builder = StringBuilder()
+    fun makeVCardString(forQRCode: Boolean = false, avatarBase64: String? = null): String = buildString {
+        fun emit(line: String) = appendVCardLine(line)
 
-        builder.appendLine("BEGIN:VCARD")
-        builder.appendLine("VERSION:3.0")
-        builder.appendLine("N:${lastName.escapeVCardValue()};${firstName.escapeVCardValue()};;;")
-        builder.appendLine("FN:${listOf(firstName, lastName).filter(String::isNotBlank).joinToString(" ").escapeVCardValue()}")
+        emit("BEGIN:VCARD")
+        emit("VERSION:3.0")
+        emit("N:${lastName.escapeVCardValue()};${firstName.escapeVCardValue()};;;")
+        emit("FN:${listOf(firstName, lastName).filter(String::isNotBlank).joinToString(" ").escapeVCardValue()}")
 
         company?.takeIf(String::isNotBlank)?.let {
-            builder.appendLine("ORG:${it.escapeVCardValue()}")
+            emit("ORG:${it.escapeVCardValue()}")
         }
 
-        if (phone.isNotBlank()) {
-            builder.appendLine("TEL;TYPE=CELL:${phone.escapeVCardValue()}")
-        }
-
-        if (email.isNotBlank()) {
-            builder.appendLine("EMAIL;TYPE=INTERNET:${email.escapeVCardValue()}")
-        }
+        if (phone.isNotBlank()) emit("TEL;TYPE=CELL:${phone.escapeVCardValue()}")
+        if (email.isNotBlank()) emit("EMAIL;TYPE=INTERNET:${email.escapeVCardValue()}")
 
         if (!forQRCode) {
-            avatarBase64?.let {
-                builder.appendLine("PHOTO;ENCODING=b;TYPE=JPEG:$it")
-            }
+            avatarBase64?.let { emit("PHOTO;ENCODING=b;TYPE=JPEG:$it") }
         }
 
         links.orEmpty().forEach { link ->
-            builder.appendLine("URL:${link.url.escapeVCardValue()}")
+            emit("URL:${link.url.escapeVCardValue()}")
         }
 
-        builder.appendLine("END:VCARD")
-        return builder.toString().replace("\n", "\r\n")
+        emit("END:VCARD")
+    }
+
+    private fun StringBuilder.appendVCardLine(content: String) {
+        val maxOctets = 75
+        if (content.length <= maxOctets) {
+            append(content).append("\r\n")
+            return
+        }
+
+        var pos = 0
+        var firstSegment = true
+        while (pos < content.length) {
+            val limit = if (firstSegment) maxOctets else maxOctets - 1
+            val end = minOf(pos + limit, content.length)
+            if (!firstSegment) append(' ')
+            append(content, pos, end)
+            append("\r\n")
+            pos = end
+            firstSegment = false
+        }
     }
 }
 
