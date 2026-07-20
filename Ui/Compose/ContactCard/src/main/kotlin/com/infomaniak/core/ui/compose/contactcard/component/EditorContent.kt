@@ -35,6 +35,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,9 +67,11 @@ internal fun EditorContent(
     val isValid =
         editor.firstName.isNotBlank() && editor.lastName.isNotBlank() && editor.email.isNotBlank() && editor.phone.isNotBlank()
 
-    if (requestSave) {
-        onSaveHandled()
-        if (isValid) onSave() else showValidationError = true
+    LaunchedEffect(requestSave) {
+        if (requestSave) {
+            onSaveHandled()
+            if (isValid) onSave() else showValidationError = true
+        }
     }
 
     if (showValidationError) {
@@ -166,7 +169,7 @@ internal fun EditorContent(
                     EditorField(
                         modifier = Modifier.weight(1f),
                         value = additionalUrl.value,
-                        placeholder = "${stringResource(R.string.otherUrl)}*",
+                        placeholder = stringResource(R.string.otherUrl),
                         keyboardType = KeyboardType.Uri,
                         onValueChange = { value ->
                             onUpdateDraft(

@@ -15,6 +15,7 @@
     <string name="contactCardQrCodeDescription">QR-kode til kontaktkortet</string>
     <string name="contactCardShareChooserTitle">Del kontaktkort</string>
     <string name="contactCardTitle">Kontaktkort</string>
+    <string name="contentDescriptionBackButton">Tilbage</string>
     <string name="deleteAlertDescription">Er du sikker på, at du vil slette det kontaktkort, der er knyttet til denne konto?</string>
     <string name="deleteAlertTitle">Slet kontaktkortet</string>
     <string name="deleteButton">Slet</string>

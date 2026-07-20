@@ -90,21 +90,27 @@ data class Card(
 data class CardLink(
     val type: CardLinkType,
     val url: String,
-): Parcelable
+) : Parcelable
 
 @Serializable
 enum class CardLinkType {
-    @SerialName("linkedIn") @SerializedName("linkedIn")
+    @SerialName("linkedIn")
+    @SerializedName("linkedIn")
     LinkedIn,
-    @SerialName("x") @SerializedName("x")
+    @SerialName("x")
+    @SerializedName("x")
     X,
-    @SerialName("instagram") @SerializedName("instagram")
+    @SerialName("instagram")
+    @SerializedName("instagram")
     Instagram,
-    @SerialName("facebook") @SerializedName("facebook")
+    @SerialName("facebook")
+    @SerializedName("facebook")
     Facebook,
-    @SerialName("website") @SerializedName("website")
+    @SerialName("website")
+    @SerializedName("website")
     Website,
-    @SerialName("other") @SerializedName("other")
+    @SerialName("other")
+    @SerializedName("other")
     Other,
 }
 

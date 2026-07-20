@@ -16,7 +16,6 @@
  */
 package com.infomaniak.core.ui.compose.contactcard
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,14 +37,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.core.auth.models.user.Card
-import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.contactcard.component.ContactCardTopBar
 import com.infomaniak.core.ui.compose.contactcard.component.DefaultDeleteConfirmationDialog
 import com.infomaniak.core.ui.compose.contactcard.component.EditorContent
@@ -226,8 +226,8 @@ private fun DefaultTopBar(state: ContactCardTopBarState) {
             navigationIcon = {
                 IconButton(onClick = state.onBack) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = null,
+                        imageVector = ImageVector.vectorResource((R.drawable.ic_cross)),
+                        contentDescription = stringResource(R.string.contentDescriptionBackButton),
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 }

@@ -15,6 +15,7 @@
     <string name="contactCardQrCodeDescription">Codice QR per la scheda contatto</string>
     <string name="contactCardShareChooserTitle">Condividi scheda contatto</string>
     <string name="contactCardTitle">Scheda di contatto</string>
+    <string name="contentDescriptionBackButton">Indietro</string>
     <string name="deleteAlertDescription">Sei sicuro di voler eliminare la scheda del contatto associata a questo account?</string>
     <string name="deleteAlertTitle">Elimina la scheda del contatto</string>
     <string name="deleteButton">Elimina</string>

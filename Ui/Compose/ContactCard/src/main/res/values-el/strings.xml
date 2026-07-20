@@ -15,6 +15,7 @@
     <string name="contactCardQrCodeDescription">Κωδικός QR για την κάρτα επαφής</string>
     <string name="contactCardShareChooserTitle">Κοινοποίηση κάρτας επαφής</string>
     <string name="contactCardTitle">Κάρτα επαφών</string>
+    <string name="contentDescriptionBackButton">Πίσω</string>
     <string name="deleteAlertDescription">Είστε σίγουροι ότι θέλετε να διαγράψετε την κάρτα επαφής που σχετίζεται με αυτόν τον λογαριασμό;</string>
     <string name="deleteAlertTitle">Διαγραφή της κάρτας επαφής</string>
     <string name="deleteButton">Διαγραφή</string>

@@ -15,6 +15,7 @@
     <string name="contactCardQrCodeDescription">Código QR para o cartão de contacto</string>
     <string name="contactCardShareChooserTitle">Partilhar cartão de contacto</string>
     <string name="contactCardTitle">Cartão de contacto</string>
+    <string name="contentDescriptionBackButton">Voltar</string>
     <string name="deleteAlertDescription">Tem a certeza de que quer eliminar o cartão de contacto associado a esta conta?</string>
     <string name="deleteAlertTitle">Apagar o cartão de contacto</string>
     <string name="deleteButton">Apagar</string>

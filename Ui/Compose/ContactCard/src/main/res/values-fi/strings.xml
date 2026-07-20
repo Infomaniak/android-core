@@ -15,6 +15,7 @@
     <string name="contactCardQrCodeDescription">Yhteystietokortin QR-koodi</string>
     <string name="contactCardShareChooserTitle">Jaa yhteystietokortti</string>
     <string name="contactCardTitle">Yhteystietokortti</string>
+    <string name="contentDescriptionBackButton">Takaisin</string>
     <string name="deleteAlertDescription">Haluatko varmasti poistaa tähän tiliin liitetyn yhteystietokortin?</string>
     <string name="deleteAlertTitle">Poista yhteystietokortti</string>
     <string name="deleteButton">Poista</string>
