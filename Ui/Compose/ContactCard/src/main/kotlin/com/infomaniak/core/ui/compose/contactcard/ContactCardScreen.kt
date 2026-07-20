@@ -21,14 +21,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +56,7 @@ import com.infomaniak.core.ui.compose.contactcard.component.PreviewContent
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewTopBar
 import com.infomaniak.core.ui.compose.contactcard.component.previewCard
 import com.infomaniak.core.ui.compose.contactcard.component.previewUser
+import com.infomaniak.core.common.R as RCore
 
 @Composable
 fun ContactCardScreen(
@@ -123,6 +123,7 @@ private fun ContactCardScreen(
     val isEditing = state is ContactCardUiState.Editing
     val isPreview = state is ContactCardUiState.Preview
     val isOnboarding = state is ContactCardUiState.Onboarding
+    val isError = state is ContactCardUiState.Error
     var requestSave by remember { mutableStateOf(false) }
     var showActionsBottomSheet by remember { mutableStateOf(false) }
 
@@ -149,7 +150,7 @@ private fun ContactCardScreen(
         },
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
-            if (isOnboarding) {
+            if (isOnboarding || isError) {
                 Image(
                     painter = painterResource(R.drawable.ic_back_wave),
                     contentDescription = null,
@@ -168,6 +169,14 @@ private fun ContactCardScreen(
             ) {
                 when (state) {
                     ContactCardUiState.Loading -> LoadingContent()
+                    ContactCardUiState.Error -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(text = stringResource(RCore.string.anErrorHasOccurred))
+                        }
+                    }
                     is ContactCardUiState.Onboarding -> OnboardingContent(
                         modifier = Modifier.fillMaxSize(),
                         userName = "${state.user.firstname} ${state.user.lastname}",

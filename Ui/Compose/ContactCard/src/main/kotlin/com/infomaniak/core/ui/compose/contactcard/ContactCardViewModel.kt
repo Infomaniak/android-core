@@ -53,7 +53,7 @@ class ContactCardViewModel(
             val user = accountUtils.getUserById(userId)
             currentUser = user
             if (_uiState.value !is ContactCardUiState.Editing) {
-                _uiState.value = user?.toUiState() ?: ContactCardUiState.Loading
+                _uiState.value = user?.toUiState() ?: ContactCardUiState.Error
             }
         }
     }
@@ -77,7 +77,7 @@ class ContactCardViewModel(
     }
 
     fun cancelEditing() {
-        _uiState.value = currentUser?.toUiState() ?: ContactCardUiState.Loading
+        _uiState.value = currentUser?.toUiState() ?: ContactCardUiState.Error
     }
 
     fun updateDraft(editor: ContactCardEditorState) {
@@ -129,6 +129,7 @@ class ContactCardViewModel(
 
 sealed interface ContactCardUiState {
     data object Loading : ContactCardUiState
+    data object Error : ContactCardUiState
     data class Onboarding(val user: User) : ContactCardUiState
     data class Preview(val user: User, val card: Card) : ContactCardUiState
     data class Editing(val user: User, val editor: ContactCardEditorState, val existingCard: Card?) : ContactCardUiState
