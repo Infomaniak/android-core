@@ -19,12 +19,15 @@ package com.infomaniak.core.auth.backup
 
 import com.infomaniak.core.auth.DerivedTokenGenerator
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.first
 
 sealed class RestoreFromBackupManager {
 
     abstract val state: SharedFlow<State>
 
-    abstract suspend fun ensureRestorationIsHandled()
+    suspend fun ensureRestorationIsHandled() {
+        if (State.Settled !in state.replayCache) state.first { it is State.Settled }
+    }
 
     sealed interface State {
 
