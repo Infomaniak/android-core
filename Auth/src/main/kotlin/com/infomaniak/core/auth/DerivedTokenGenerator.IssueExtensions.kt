@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.auth
 
+import com.infomaniak.core.appintegrity.AppIntegrityIssue
 import com.infomaniak.core.auth.DerivedTokenGenerator.Issue
 
 fun Issue.shouldReport(): Boolean = when (this) {
@@ -24,4 +25,14 @@ fun Issue.shouldReport(): Boolean = when (this) {
     is Issue.ErrorResponse -> response.code !in 500..599
     is Issue.NetworkIssue -> false
     is Issue.OtherIssue -> true
+}
+
+internal fun Issue.shouldRetryAutomatically(): Boolean = when (this) {
+    is Issue.AppIntegrityCheckFailed -> when (details.issue) {
+        is AppIntegrityIssue.RetryLater, is AppIntegrityIssue.Internal -> true
+        is AppIntegrityIssue.DeviceIssue, is AppIntegrityIssue.DevError, is AppIntegrityIssue.SuspiciousError -> false
+    }
+    is Issue.ErrorResponse -> true
+    is Issue.NetworkIssue -> true
+    is Issue.OtherIssue -> false
 }
