@@ -18,8 +18,11 @@
 package com.infomaniak.core.auth.backup
 
 import com.infomaniak.core.auth.DerivedTokenGenerator
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 sealed class RestoreFromBackupManager {
 
@@ -28,6 +31,8 @@ sealed class RestoreFromBackupManager {
     suspend fun ensureRestorationIsHandled() {
         if (State.Settled !in state.replayCache) state.first { it is State.Settled }
     }
+
+    val shouldShowRestorationScreen: Flow<Boolean> = state.map { it != State.Settled }.distinctUntilChanged()
 
     sealed interface State {
 
