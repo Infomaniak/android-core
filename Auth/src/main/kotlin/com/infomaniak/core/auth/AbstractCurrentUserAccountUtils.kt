@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.flowOf
  */
 abstract class AbstractCurrentUserAccountUtils(
     appContext: Context,
-    userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
+    userDataCleanableList: () -> List<AssociatedUserDataCleanable> = { emptyList() },
     userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
 ) : UserAccountUtils(appContext, userDataCleanableList, userDatabase) {
 
