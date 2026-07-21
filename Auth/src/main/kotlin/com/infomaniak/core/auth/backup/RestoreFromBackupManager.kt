@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth.backup
 
 import com.infomaniak.core.auth.DerivedTokenGenerator
+import com.infomaniak.core.auth.shouldRetryAutomatically
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -29,7 +30,14 @@ sealed class RestoreFromBackupManager {
     abstract val state: SharedFlow<State>
 
     suspend fun ensureRestorationIsHandled() {
-        if (State.Settled !in state.replayCache) state.first { it is State.Settled }
+        when (val currentState = state.replayCache.firstOrNull()) {
+            State.Settled -> return
+            is State.RestoringFromBackupFailed if currentState.cause.shouldRetryAutomatically() -> {
+                currentState.retry() // Retry if appropriate for each new network call attempt.
+            }
+            else -> Unit
+        }
+        state.first { it is State.Settled }
     }
 
     val shouldShowRestorationScreen: Flow<Boolean> = state.map { it != State.Settled }.distinctUntilChanged()
