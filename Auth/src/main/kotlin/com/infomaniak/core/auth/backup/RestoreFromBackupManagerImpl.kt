@@ -44,7 +44,6 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -68,10 +67,6 @@ internal class RestoreFromBackupManagerImpl(
         performRestorationHandlingIfNeeded()
         emit(State.Settled)
     }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly)
-
-    override suspend fun ensureRestorationIsHandled() {
-        state.first { it is State.Settled }
-    }
 
     private suspend fun FlowCollector<State>.performRestorationHandlingIfNeeded() {
         val users = userDao.allUsers()
