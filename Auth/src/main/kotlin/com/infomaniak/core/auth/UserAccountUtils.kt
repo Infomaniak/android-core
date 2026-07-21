@@ -35,7 +35,7 @@ import com.infomaniak.core.common.getAndroidId
  */
 open class UserAccountUtils(
     appContext: Context,
-    private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
+    private val userDataCleanableList: () -> List<AssociatedUserDataCleanable> = { emptyList() },
     override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
 ) : BaseCredentialManager() {
     val users get() = userDao.allUsers
@@ -45,7 +45,7 @@ open class UserAccountUtils(
      */
     @CallSuper
     open suspend fun addUser(user: User) {
-        userDataCleanableList.forEach { it.resetForUser(user.id.toLong()) }
+        userDataCleanableList().forEach { it.resetForUser(user.id.toLong()) }
         userDatabase.useWriterConnection {
             it.immediateTransaction {
                 userDao.insert(user)
@@ -56,7 +56,7 @@ open class UserAccountUtils(
 
     @CallSuper
     open suspend fun removeUser(userId: Int) {
-        userDataCleanableList.forEach { it.resetForUser(userId.toLong()) }
+        userDataCleanableList().forEach { it.resetForUser(userId.toLong()) }
         userDao.deleteUserById(userId)
     }
 }
