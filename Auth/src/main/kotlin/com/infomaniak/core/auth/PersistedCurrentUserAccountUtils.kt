@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
  */
 open class PersistedCurrentUserAccountUtils(
     appContext: Context,
-    userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
+    userDataCleanableList: () -> List<AssociatedUserDataCleanable> = { emptyList() },
     userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
 ) : AbstractCurrentUserAccountUtils(appContext, userDataCleanableList, userDatabase) {
     override val currentUserIdFlow: Flow<Int?> = currentUserIdDao.getCurrentUserIdFlow()
