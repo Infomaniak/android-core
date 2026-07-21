@@ -22,6 +22,7 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.annotation.CallSuper
 import androidx.room.immediateTransaction
 import androidx.room.useWriterConnection
+import com.infomaniak.core.auth.backup.RestoreFromBackupManager
 import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
@@ -39,6 +40,10 @@ open class UserAccountUtils(
     override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
 ) : BaseCredentialManager() {
     val users get() = userDao.allUsers
+
+    init {
+        RestoreFromBackupManager.instance.registerRemoveUser(::removeUser)
+    }
 
     /**
      * @throws SQLiteConstraintException when adding a user with a primary key that already exists
