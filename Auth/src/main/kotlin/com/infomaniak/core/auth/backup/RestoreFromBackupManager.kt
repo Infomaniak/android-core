@@ -42,6 +42,8 @@ sealed class RestoreFromBackupManager {
 
     val shouldShowRestorationScreen: Flow<Boolean> = state.map { it != State.Settled }.distinctUntilChanged()
 
+    abstract fun registerRemoveUser(removeUser: suspend (id: Int) -> Unit)
+
     sealed interface State {
 
         data object Settled : State
