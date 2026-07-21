@@ -68,6 +68,13 @@ internal class RestoreFromBackupManagerImpl(
         emit(State.Settled)
     }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly)
 
+    private val removeUserDeferred = CompletableDeferred<suspend (id: Int) -> Unit>()
+
+    override fun registerRemoveUser(removeUser: suspend (id: Int) -> Unit) {
+        check(removeUserDeferred.isCompleted.not()) // Should not be called twice.
+        removeUserDeferred.complete(removeUser)
+    }
+
     private suspend fun FlowCollector<State>.performRestorationHandlingIfNeeded() {
         val users = userDao.allUsers()
         val currentAndroidId = getAndroidId()
@@ -127,17 +134,8 @@ internal class RestoreFromBackupManagerImpl(
         val shouldRetry = shouldRetryAsync.await()
         val giveUp = !shouldRetry
         if (giveUp) {
-            userDb.useWriterConnection {
-                it.immediateTransaction {
-                    TODO("removeUser from the db, and ensure associated data gets removed too")
-                    //TODO: For kDrive, that would be removing:
-                    // - MyKSuite data (MyKSuiteDataUtils.deleteData(…))
-                    // - everything called in AccountUtils.removeUser
-                    // Maybe we need to give the ability to register a callback in the apps,
-                    // as well as having a system to put data back in place when the app
-                    // process starts with orphan user data (i.e/ user-tied data that is not in the User table)
-                }
-            }
+            val removeUser = removeUserDeferred.await()
+            issuesWithUser.forEach { (_, user) -> removeUser(user.id) }
             return
         }
         restoreAccounts(currentAndroidId = currentAndroidId, allUsers = allUsers)
