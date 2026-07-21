@@ -56,17 +56,19 @@ internal class RestoreFromBackupManagerImpl(
     private val userDb = UserDatabase.instance
     private val userDao = userDb.userDao()
 
-    private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
-        coroutineScope = coroutineScope,
-        tokenRetrievalUrl = TOKEN_URL,
-        clientId = clientId,
-        userAgent = HttpUtils.getUserAgent,
-    )
+    private val derivedTokenGenerator: DerivedTokenGenerator by lazy {
+        DerivedTokenGeneratorImpl(
+            coroutineScope = coroutineScope,
+            tokenRetrievalUrl = TOKEN_URL,
+            clientId = clientId,
+            userAgent = HttpUtils.getUserAgent,
+        )
+    }
 
     override val state: SharedFlow<State> = flow {
         performRestorationHandlingIfNeeded()
         emit(State.Settled)
-    }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly)
+    }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     private val removeUserDeferred = CompletableDeferred<suspend (id: Int) -> Unit>()
 
