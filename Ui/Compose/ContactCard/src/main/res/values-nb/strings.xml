@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO-->
 <resources>
     <string name="addUrl">Legg til nettadresse</string>
     <string name="alertDescription">Vennligst fyll ut alle obligatoriske felter (fornavn, etternavn, e-postadresse, telefonnummer).</string>

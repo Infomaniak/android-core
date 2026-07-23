@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO-->
 <resources>
     <string name="addUrl">Dodaj adres URL</string>
     <string name="alertDescription">Proszę wypełnić wszystkie obowiązkowe pola (imię, nazwisko, adres e-mail, numer telefonu).</string>

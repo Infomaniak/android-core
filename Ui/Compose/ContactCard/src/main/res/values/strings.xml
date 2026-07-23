@@ -28,6 +28,7 @@
     <string name="contactCardOnBoardingThirdItem">Always accessible, even offline</string>
     <string name="contactCardOnBoardingTitle">Create Your Business Card</string>
     <string name="contactCardQrCodeDescription">QR code for the contact card</string>
+    <string name="contactCardQrCodeTooLarge">The contact card information exceeds QR code capacity</string>
     <string name="contactCardShareChooserTitle">Share contact card</string>
     <string name="contactCardTitle">Contact Card</string>
     <string name="contentDescriptionBackButton">Back</string>

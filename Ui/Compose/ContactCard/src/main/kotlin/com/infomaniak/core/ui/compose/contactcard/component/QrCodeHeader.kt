@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.User
@@ -46,7 +47,7 @@ import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.margin.Margin
 import io.github.alexzhirkevich.qrose.QrCodePainter
-
+import com.infomaniak.core.common.R as RCore
 @Composable
 internal fun QrCodeHeader(user: User, card: Card) {
     BoxWithConstraints(
@@ -56,18 +57,10 @@ internal fun QrCodeHeader(user: User, card: Card) {
         val qrSize = (maxWidth * 0.62f).coerceAtMost(240.dp)
         val gradientHeight = qrSize * 0.4f
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(qrSize),
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(gradientHeight)
-                    .background(MaterialTheme.colorScheme.primary),
-            )
-        }
+        HeaderBackground(
+            qrSize = qrSize,
+            gradientHeight = gradientHeight
+        )
 
         Surface(
             shape = RoundedCornerShape(CardCornerRadius),
@@ -81,42 +74,69 @@ internal fun QrCodeHeader(user: User, card: Card) {
                     .padding(Margin.Small),
                 contentAlignment = Alignment.Center,
             ) {
-                val vCardData = card.makeVCardString(forQRCode = true)
-                val qrPainter = remember(vCardData) {
-                    runCatching { QrCodePainter(data = vCardData) }.getOrNull()
-                }
-                if (qrPainter != null) {
-                    Image(
-                        painter = qrPainter,
-                        contentDescription = stringResource(R.string.contactCardQrCodeDescription),
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                } else {
-                    Text(
-                        text = stringResource(R.string.contactCardQrCodeTooLarge),
-                        color = MaterialTheme.colorScheme.error,
-                    )
-                }
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier
-                        .size(qrSize * 0.24f)
-                        .clip(CircleShape),
-                ) {
-                    Box(
-                        modifier = Modifier.padding(3.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Avatar(
-                            avatarType = AvatarType.fromUser(user),
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(CircleShape),
-                        )
-                    }
-                }
+                QrCodeImage(card = card)
+                QrCodeAvatar(user = user, qrSize = qrSize)
             }
+        }
+    }
+}
+
+@Composable
+private fun HeaderBackground(qrSize: Dp, gradientHeight: Dp) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(qrSize),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(gradientHeight)
+                .background(MaterialTheme.colorScheme.primary),
+        )
+    }
+}
+
+@Composable
+private fun QrCodeImage(card: Card) {
+    val vCardData = card.makeVCardString(forQRCode = true)
+    val qrPainter = remember(vCardData) {
+        runCatching { QrCodePainter(data = vCardData) }.getOrNull()
+    }
+
+    if (qrPainter != null) {
+        Image(
+            painter = qrPainter,
+            contentDescription = stringResource(R.string.contactCardQrCodeDescription),
+            modifier = Modifier.fillMaxSize(),
+        )
+    } else {
+        Text(
+            text = stringResource(RCore.string.anErrorHasOccurred),
+            color = MaterialTheme.colorScheme.error,
+        )
+    }
+}
+
+@Composable
+private fun QrCodeAvatar(user: User, qrSize: Dp) {
+    Surface(
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.surface,
+        modifier = Modifier
+            .size(qrSize * 0.24f)
+            .clip(CircleShape),
+    ) {
+        Box(
+            modifier = Modifier.padding(3.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Avatar(
+                avatarType = AvatarType.fromUser(user),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape),
+            )
         }
     }
 }

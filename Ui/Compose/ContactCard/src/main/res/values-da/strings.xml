@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO-->
 <resources>
     <string name="addUrl">Tilføj URL</string>
     <string name="alertDescription">Udfyld venligst alle obligatoriske felter (fornavn, efternavn, e-mail, telefonnummer).</string>

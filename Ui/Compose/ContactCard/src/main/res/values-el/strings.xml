@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO-->
 <resources>
     <string name="addUrl">Προσθήκη διεύθυνσης URL</string>
     <string name="alertDescription">Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία (όνομα, επώνυμο, διεύθυνση ηλεκτρονικού ταχυδρομείου, αριθμός τηλεφώνου).</string>

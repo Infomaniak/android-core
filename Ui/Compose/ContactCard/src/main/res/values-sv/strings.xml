@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO-->
 <resources>
     <string name="addUrl">Lägg till webbadress</string>
     <string name="alertDescription">Fyll i alla obligatoriska fält (förnamn, efternamn, e-postadress, telefonnummer).</string>

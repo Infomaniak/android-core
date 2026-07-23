@@ -15,6 +15,7 @@ android {
 
 dependencies {
     api(project(":Network"))
+    api(core.androidx.lifecycle.viewmodel.ktx)
     implementation(project(":Auth"))
     implementation(project(":Avatar"))
     implementation(project(":Common"))
@@ -30,7 +31,6 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation(core.compose.ui.tooling.preview)
 
-    implementation(core.androidx.lifecycle.viewmodel.ktx)
     implementation(core.androidx.lifecycle.viewmodel.compose)
     implementation(core.androidx.lifecycle.runtime.compose)
     implementation(core.qrose)

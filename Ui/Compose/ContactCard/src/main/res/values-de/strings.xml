@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO-->
 <resources>
     <string name="addUrl">URL hinzufügen</string>
     <string name="alertDescription">Bitte füllen Sie alle Pflichtfelder aus (Vorname, Nachname, E-Mail-Adresse, Telefonnummer).</string>

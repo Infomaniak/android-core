@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO-->
 <resources>
     <string name="addUrl">Lisää URL-osoite</string>
     <string name="alertDescription">Täytä kaikki pakolliset kentät (etunimi, sukunimi, sähköpostiosoite, puhelinnumero).</string>
