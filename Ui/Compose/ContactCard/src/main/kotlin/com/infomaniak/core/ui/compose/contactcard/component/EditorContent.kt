@@ -23,11 +23,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -61,6 +61,7 @@ internal fun EditorContent(
     onAddAdditionalUrl: () -> Unit,
     onRemoveAdditionalUrl: (String) -> Unit,
     onUpdateDraft: (ContactCardEditorState) -> Unit,
+    confirmValidationError: ((onConfirmed: () -> Unit) -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     var showValidationError by remember { mutableStateOf(false) }
@@ -70,20 +71,20 @@ internal fun EditorContent(
     LaunchedEffect(requestSave) {
         if (requestSave) {
             onSaveHandled()
-            if (isValid) onSave() else showValidationError = true
+            if (isValid) {
+                onSave()
+            } else if (confirmValidationError != null) {
+                confirmValidationError { }
+            } else {
+                showValidationError = true
+            }
         }
     }
 
     if (showValidationError) {
-        AlertDialog(
-            onDismissRequest = { showValidationError = false },
-            confirmButton = {
-                TextButton(onClick = { showValidationError = false }) {
-                    Text(text = stringResource(android.R.string.ok))
-                }
-            },
-            title = { Text(text = stringResource(R.string.alertTitle)) },
-            text = { Text(text = stringResource(R.string.alertDescription)) },
+        DefaultValidationErrorDialog(
+            onDismiss = { showValidationError = false },
+            onConfirm = { showValidationError = false },
         )
     }
 
@@ -211,7 +212,7 @@ internal fun EditorContent(
                         modifier = Modifier.size(20.dp),
                         tint = MaterialTheme.colorScheme.primary,
                     )
-                    Spacer(Modifier.height(Margin.Mini))
+                    Spacer(Modifier.width(Margin.Mini))
                     Text(
                         text = stringResource(R.string.addUrl),
                         color = MaterialTheme.colorScheme.primary,

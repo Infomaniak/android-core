@@ -64,43 +64,29 @@ fun ContactCardScreen(
     onShare: (Card) -> Unit,
     viewModel: ContactCardViewModel = viewModel(),
     confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
+    confirmValidationError: ((onConfirmed: () -> Unit) -> Unit)? = null,
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
     colors: ContactCardColors = ContactCardDefaults.colors(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    var pendingDelete by remember { mutableStateOf(false) }
-
-    val handleDelete: () -> Unit = if (confirmDelete != null) {
-        { confirmDelete { viewModel.deleteCard() } }
-    } else {
-        { pendingDelete = true }
-    }
 
     ContactCardScreen(
         state = state,
         onBack = onBack,
         onCreate = viewModel::startCreate,
         onEdit = viewModel::startEdit,
-        onDelete = handleDelete,
+        onDelete = viewModel::deleteCard,
         onCancel = viewModel::cancelEditing,
         onSave = viewModel::saveDraft,
         onAddAdditionalUrl = viewModel::addAdditionalUrl,
         onRemoveAdditionalUrl = viewModel::removeAdditionalUrl,
         onUpdateDraft = viewModel::updateDraft,
         onShare = onShare,
+        confirmDelete = confirmDelete,
+        confirmValidationError = confirmValidationError,
         topBar = topBar,
         colors = colors,
     )
-
-    if (pendingDelete) {
-        DefaultDeleteConfirmationDialog(
-            onDismiss = { pendingDelete = false },
-            onConfirm = {
-                pendingDelete = false
-                viewModel.deleteCard()
-            },
-        )
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,6 +103,8 @@ private fun ContactCardScreen(
     onRemoveAdditionalUrl: (String) -> Unit,
     onUpdateDraft: (ContactCardEditorState) -> Unit,
     onShare: (Card) -> Unit,
+    confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
+    confirmValidationError: ((onConfirmed: () -> Unit) -> Unit)? = null,
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
     colors: ContactCardColors = ContactCardDefaults.colors(),
 ) {
@@ -126,6 +114,13 @@ private fun ContactCardScreen(
     val isError = state is ContactCardUiState.Error
     var requestSave by remember { mutableStateOf(false) }
     var showActionsBottomSheet by remember { mutableStateOf(false) }
+    var pendingDelete by remember { mutableStateOf(false) }
+
+    val handleDelete: () -> Unit = if (confirmDelete != null) {
+        { confirmDelete { onDelete() } }
+    } else {
+        { pendingDelete = true }
+    }
 
     val scaffoldContainerColor = when {
         isPreview -> colors.background
@@ -197,6 +192,7 @@ private fun ContactCardScreen(
                         onAddAdditionalUrl = onAddAdditionalUrl,
                         onRemoveAdditionalUrl = onRemoveAdditionalUrl,
                         onUpdateDraft = onUpdateDraft,
+                        confirmValidationError = confirmValidationError,
                     )
                 }
             }
@@ -212,6 +208,16 @@ private fun ContactCardScreen(
             },
             onDelete = {
                 showActionsBottomSheet = false
+                handleDelete()
+            },
+        )
+    }
+
+    if (pendingDelete) {
+        DefaultDeleteConfirmationDialog(
+            onDismiss = { pendingDelete = false },
+            onConfirm = {
+                pendingDelete = false
                 onDelete()
             },
         )
