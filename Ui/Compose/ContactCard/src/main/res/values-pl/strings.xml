@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addUrl">Dodaj adres URL</string>
+    <string name="alertDescription">Proszę wypełnić wszystkie obowiązkowe pola (imię, nazwisko, adres e-mail, numer telefonu).</string>
+    <string name="alertTitle">Pola obowiązkowe</string>
+    <string name="buttonCreate">Utwórz</string>
+    <string name="buttonMore">Więcej</string>
+    <string name="company">Firma</string>
+    <string name="contactCardOnBoardingDescription">Wystarczy jeden gest, by zeskanować Twój kod QR. Twoi znajomi mogą dodać Cię do kontaktów w mgnieniu oka – zarówno przy połączeniu z internetem, jak i bez niego.</string>
+    <string name="contactCardOnBoardingFirstItem">Wszystkie Twoje dane w kodzie QR</string>
+    <string name="contactCardOnBoardingSecondItem">Odbiorca nie musi posiadać konta</string>
+    <string name="contactCardOnBoardingThirdItem">Zawsze dostępne, nawet w trybie offline</string>
+    <string name="contactCardOnBoardingTitle">Stwórz swoją wizytówkę</string>
+    <string name="contactCardQrCodeDescription">Kod QR karty kontaktu</string>
+    <string name="contactCardShareChooserTitle">Udostępnij kartę kontaktu</string>
+    <string name="contactCardTitle">Wizytówka</string>
+    <string name="contentDescriptionBackButton">Wstecz</string>
+    <string name="deleteAlertDescription">Czy na pewno chcesz usunąć wizytówkę powiązaną z tym kontem?</string>
+    <string name="deleteAlertTitle">Usuń wizytówkę</string>
+    <string name="deleteButton">Usuń</string>
+    <string name="email">E-mail</string>
+    <string name="facebook">Facebook</string>
+    <string name="firstName">Imię</string>
+    <string name="generalInformation">Informacje ogólne</string>
+    <string name="instagram">Instagram</string>
+    <string name="lastName">Nazwisko</string>
+    <string name="linkedIn">LinkedIn</string>
+    <string name="linksAndSocialNetwork">Linki i serwisy społecznościowe</string>
+    <string name="menuEdit">Edytuj</string>
+    <string name="otherUrl">Inny adres URL</string>
+    <string name="phone">Telefon</string>
+    <string name="shareButton">Udostępnij</string>
+    <string name="webSite">Strona internetowa</string>
+    <string name="x">X</string>
+</resources>

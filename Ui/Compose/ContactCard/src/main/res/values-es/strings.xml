@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addUrl">Añadir URL</string>
+    <string name="alertDescription">Rellena todos los campos obligatorios (nombre, apellidos, correo electrónico, número de teléfono).</string>
+    <string name="alertTitle">Campos obligatorios</string>
+    <string name="buttonCreate">Crear</string>
+    <string name="buttonMore">Más</string>
+    <string name="company">Empresa</string>
+    <string name="contactCardOnBoardingDescription">Deja que escaneen tu código QR con un solo gesto. Tus contactos podrán añadirte en un abrir y cerrar de ojos, tanto si hay conexión a Internet como si no.</string>
+    <string name="contactCardOnBoardingFirstItem">Toda tu información en un código QR</string>
+    <string name="contactCardOnBoardingSecondItem">No es necesario que el destinatario tenga una cuenta</string>
+    <string name="contactCardOnBoardingThirdItem">Siempre accesible, incluso sin conexión</string>
+    <string name="contactCardOnBoardingTitle">Crea tu tarjeta de visita</string>
+    <string name="contactCardQrCodeDescription">Código QR para la tarjeta de contacto</string>
+    <string name="contactCardShareChooserTitle">Compartir tarjeta de contacto</string>
+    <string name="contactCardTitle">Tarjeta de contacto</string>
+    <string name="contentDescriptionBackButton">Atrás</string>
+    <string name="deleteAlertDescription">¿Estás seguro de que quieres eliminar la ficha de contacto asociada a esta cuenta?</string>
+    <string name="deleteAlertTitle">Eliminar la ficha de contacto</string>
+    <string name="deleteButton">Eliminar</string>
+    <string name="email">Correo electrónico</string>
+    <string name="facebook">Facebook</string>
+    <string name="firstName">Nombre</string>
+    <string name="generalInformation">Información general</string>
+    <string name="instagram">Instagram</string>
+    <string name="lastName">Apellido</string>
+    <string name="linkedIn">LinkedIn</string>
+    <string name="linksAndSocialNetwork">Enlaces y redes sociales</string>
+    <string name="menuEdit">Editar</string>
+    <string name="otherUrl">Otra URL</string>
+    <string name="phone">Teléfono</string>
+    <string name="shareButton">Compartir</string>
+    <string name="webSite">Página web</string>
+    <string name="x">X</string>
+</resources>

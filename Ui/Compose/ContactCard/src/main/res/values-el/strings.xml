@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addUrl">Προσθήκη διεύθυνσης URL</string>
+    <string name="alertDescription">Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία (όνομα, επώνυμο, διεύθυνση ηλεκτρονικού ταχυδρομείου, αριθμός τηλεφώνου).</string>
+    <string name="alertTitle">Υποχρεωτικά πεδία</string>
+    <string name="buttonCreate">Δημιουργία</string>
+    <string name="buttonMore">Περισσότερα</string>
+    <string name="company">Εταιρεία</string>
+    <string name="contactCardOnBoardingDescription">Ο κωδικός QR σας μπορεί να σαρωθεί με μια απλή κίνηση. Οι επαφές σας μπορούν να σας προσθέσουν σε χρόνο μηδέν, είτε υπάρχει σύνδεση στο διαδίκτυο είτε όχι.</string>
+    <string name="contactCardOnBoardingFirstItem">Όλες οι πληροφορίες σας σε έναν κωδικό QR</string>
+    <string name="contactCardOnBoardingSecondItem">Δεν απαιτείται λογαριασμός από την πλευρά του παραλήπτη</string>
+    <string name="contactCardOnBoardingThirdItem">Πάντα προσβάσιμο, ακόμη και εκτός σύνδεσης</string>
+    <string name="contactCardOnBoardingTitle">Δημιουργήστε την επαγγελματική σας κάρτα</string>
+    <string name="contactCardQrCodeDescription">Κωδικός QR για την κάρτα επαφής</string>
+    <string name="contactCardShareChooserTitle">Κοινοποίηση κάρτας επαφής</string>
+    <string name="contactCardTitle">Κάρτα επαφών</string>
+    <string name="contentDescriptionBackButton">Πίσω</string>
+    <string name="deleteAlertDescription">Είστε σίγουροι ότι θέλετε να διαγράψετε την κάρτα επαφής που σχετίζεται με αυτόν τον λογαριασμό;</string>
+    <string name="deleteAlertTitle">Διαγραφή της κάρτας επαφής</string>
+    <string name="deleteButton">Διαγραφή</string>
+    <string name="email">Ηλεκτρονικό ταχυδρομείο</string>
+    <string name="facebook">Facebook</string>
+    <string name="firstName">Όνομα</string>
+    <string name="generalInformation">Γενικές πληροφορίες</string>
+    <string name="instagram">Instagram</string>
+    <string name="lastName">Επώνυμο</string>
+    <string name="linkedIn">LinkedIn</string>
+    <string name="linksAndSocialNetwork">Σύνδεσμοι και κοινωνικά δίκτυα</string>
+    <string name="menuEdit">Επεξεργασία</string>
+    <string name="otherUrl">Άλλη διεύθυνση URL</string>
+    <string name="phone">Τηλέφωνο</string>
+    <string name="shareButton">Κοινοποίηση</string>
+    <string name="webSite">Ιστοσελίδα</string>
+    <string name="x">X</string>
+</resources>
