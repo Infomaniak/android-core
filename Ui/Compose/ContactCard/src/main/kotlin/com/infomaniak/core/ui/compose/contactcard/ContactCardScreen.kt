@@ -250,3 +250,100 @@ private fun DefaultTopBar(state: ContactCardTopBarState) {
         )
     }
 }
+
+@Preview(name = "Loading")
+@Composable
+private fun ContactCardScreenLoadingPreview() {
+    MaterialTheme {
+        Surface {
+            ContactCardScreen(
+                state = ContactCardUiState.Loading,
+                onBack = {},
+                onCreate = {},
+                onEdit = {},
+                onDelete = {},
+                onCancel = {},
+                onSave = {},
+                onAddAdditionalUrl = {},
+                onRemoveAdditionalUrl = {},
+                onUpdateDraft = {},
+                onShare = {},
+            )
+        }
+    }
+}
+
+@Preview(name = "Onboarding")
+@Composable
+private fun ContactCardScreenOnboardingPreview() {
+    MaterialTheme {
+        Surface {
+            ContactCardScreen(
+                state = ContactCardUiState.Onboarding(user = previewUser()),
+                onBack = {},
+                onCreate = {},
+                onEdit = {},
+                onDelete = {},
+                onCancel = {},
+                onSave = {},
+                onAddAdditionalUrl = {},
+                onRemoveAdditionalUrl = {},
+                onUpdateDraft = {},
+                onShare = {},
+            )
+        }
+    }
+}
+
+@Preview(name = "Preview")
+@Composable
+private fun ContactCardScreenPreviewPreview() {
+    MaterialTheme {
+        Surface {
+            ContactCardScreen(
+                state = ContactCardUiState.Preview(
+                    user = previewUser().copy(card = previewCard()),
+                    card = previewCard(),
+                ),
+                onBack = {},
+                onCreate = {},
+                onEdit = {},
+                onDelete = {},
+                onCancel = {},
+                onSave = {},
+                onAddAdditionalUrl = {},
+                onRemoveAdditionalUrl = {},
+                onUpdateDraft = {},
+                onShare = {},
+            )
+        }
+    }
+}
+
+@Preview(name = "Editing")
+@Composable
+private fun ContactCardScreenEditingPreview() {
+    MaterialTheme {
+        Surface {
+            ContactCardScreen(
+                state = ContactCardUiState.Editing(
+                    user = previewUser(),
+                    editor = ContactCardEditorState.fromCard(previewCard(), fallbackAvatarUrl = "https://example.com/avatar.png"),
+                    existingCard = previewCard(),
+                ),
+                onBack = {},
+                onCreate = {},
+                onEdit = {},
+                onDelete = {},
+                onCancel = {},
+                onSave = {},
+                onAddAdditionalUrl = {},
+                onRemoveAdditionalUrl = {},
+                onUpdateDraft = {},
+                onShare = {},
+            )
+        }
+    }
+}
+
+//endregion
