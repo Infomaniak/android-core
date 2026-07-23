@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addUrl">Tilføj URL</string>
+    <string name="alertDescription">Udfyld venligst alle obligatoriske felter (fornavn, efternavn, e-mail, telefonnummer).</string>
+    <string name="alertTitle">Obligatoriske felter</string>
+    <string name="buttonCreate">Opret</string>
+    <string name="buttonMore">Mere</string>
+    <string name="company">Virksomhed</string>
+    <string name="contactCardOnBoardingDescription">Få din QR-kode scannet med en enkelt gestus. Dine kontakter kan tilføje dig på et øjeblik, uanset om der er internetforbindelse eller ej.</string>
+    <string name="contactCardOnBoardingFirstItem">Alle dine oplysninger i en QR-kode</string>
+    <string name="contactCardOnBoardingSecondItem">Modtageren behøver ikke at have en konto</string>
+    <string name="contactCardOnBoardingThirdItem">Altid tilgængelig, selv offline</string>
+    <string name="contactCardOnBoardingTitle">Opret dit visitkort</string>
+    <string name="contactCardQrCodeDescription">QR-kode til kontaktkortet</string>
+    <string name="contactCardShareChooserTitle">Del kontaktkort</string>
+    <string name="contactCardTitle">Kontaktkort</string>
+    <string name="contentDescriptionBackButton">Tilbage</string>
+    <string name="deleteAlertDescription">Er du sikker på, at du vil slette det kontaktkort, der er knyttet til denne konto?</string>
+    <string name="deleteAlertTitle">Slet kontaktkortet</string>
+    <string name="deleteButton">Slet</string>
+    <string name="email">E-mail</string>
+    <string name="facebook">Facebook</string>
+    <string name="firstName">Fornavn</string>
+    <string name="generalInformation">Generelle oplysninger</string>
+    <string name="instagram">Instagram</string>
+    <string name="lastName">Efternavn</string>
+    <string name="linkedIn">LinkedIn</string>
+    <string name="linksAndSocialNetwork">Links og sociale medier</string>
+    <string name="menuEdit">Rediger</string>
+    <string name="otherUrl">Anden URL</string>
+    <string name="phone">Telefon</string>
+    <string name="shareButton">Del</string>
+    <string name="webSite">Hjemmeside</string>
+    <string name="x">X</string>
+</resources>
