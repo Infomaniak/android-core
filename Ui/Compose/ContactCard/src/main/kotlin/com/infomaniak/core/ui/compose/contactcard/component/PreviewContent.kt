@@ -65,7 +65,7 @@ internal fun PreviewContent(
             ),
         ) {
             Text(
-                text = stringResource(R.string.sharedButton),
+                text = stringResource(R.string.shareButton),
                 modifier = Modifier.padding(vertical = Margin.Mini),
             )
         }

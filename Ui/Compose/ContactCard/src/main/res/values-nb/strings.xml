@@ -30,7 +30,7 @@
     <string name="menuEdit">Rediger</string>
     <string name="otherUrl">Annen URL</string>
     <string name="phone">Telefon</string>
-    <string name="sharedButton">Del</string>
+    <string name="shareButton">Del</string>
     <string name="webSite">Nettsted</string>
     <string name="x">X</string>
 </resources>

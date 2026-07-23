@@ -30,7 +30,7 @@
     <string name="menuEdit">Editar</string>
     <string name="otherUrl">Otra URL</string>
     <string name="phone">Teléfono</string>
-    <string name="sharedButton">Compartir</string>
+    <string name="shareButton">Compartir</string>
     <string name="webSite">Página web</string>
     <string name="x">X</string>
 </resources>

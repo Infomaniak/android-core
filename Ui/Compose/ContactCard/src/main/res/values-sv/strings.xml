@@ -30,7 +30,7 @@
     <string name="menuEdit">Redigera</string>
     <string name="otherUrl">Annan URL</string>
     <string name="phone">Telefon</string>
-    <string name="sharedButton">Dela</string>
+    <string name="shareButton">Dela</string>
     <string name="webSite">Webbplats</string>
     <string name="x">X</string>
 </resources>

@@ -30,7 +30,7 @@
     <string name="menuEdit">Muokkaa</string>
     <string name="otherUrl">Muu URL-osoite</string>
     <string name="phone">Puhelin</string>
-    <string name="sharedButton">Jaa</string>
+    <string name="shareButton">Jaa</string>
     <string name="webSite">Verkkosivusto</string>
     <string name="x">X</string>
 </resources>

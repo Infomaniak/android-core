@@ -30,7 +30,7 @@
     <string name="menuEdit">Επεξεργασία</string>
     <string name="otherUrl">Άλλη διεύθυνση URL</string>
     <string name="phone">Τηλέφωνο</string>
-    <string name="sharedButton">Κοινοποίηση</string>
+    <string name="shareButton">Κοινοποίηση</string>
     <string name="webSite">Ιστοσελίδα</string>
     <string name="x">X</string>
 </resources>

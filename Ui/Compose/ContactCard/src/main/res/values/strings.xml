@@ -45,7 +45,7 @@
     <string name="menuEdit">Edit</string>
     <string name="otherUrl">Other URL</string>
     <string name="phone">Phone</string>
-    <string name="sharedButton">Share</string>
+    <string name="shareButton">Share</string>
     <string name="webSite">Web site</string>
     <string name="x">X</string>
 </resources>
