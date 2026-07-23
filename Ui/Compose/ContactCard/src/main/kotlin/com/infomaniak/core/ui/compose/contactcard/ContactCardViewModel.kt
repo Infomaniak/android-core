@@ -16,11 +16,116 @@
  */
 package com.infomaniak.core.ui.compose.contactcard
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.infomaniak.core.auth.UserAccountUtils
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.CardLink
 import com.infomaniak.core.auth.models.user.CardLinkType
 import com.infomaniak.core.auth.models.user.User
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.util.UUID
+
+class ContactCardViewModel(
+    application: Application,
+    savedStateHandle: SavedStateHandle,
+) : AndroidViewModel(application) {
+
+    private val accountUtils = UserAccountUtils(application.applicationContext)
+    private val userId: Int = requireNotNull(savedStateHandle.get<Int>(USER_ID_KEY)) { "userId argument is required" }
+
+    private val _uiState = MutableStateFlow<ContactCardUiState>(ContactCardUiState.Loading)
+    val uiState: StateFlow<ContactCardUiState> = _uiState.asStateFlow()
+
+    private var currentUser: User? = null
+
+    init {
+        loadUser()
+    }
+
+    fun loadUser() {
+        viewModelScope.launch {
+            val user = accountUtils.getUserById(userId)
+            currentUser = user
+            if (_uiState.value !is ContactCardUiState.Editing) {
+                _uiState.value = user?.toUiState() ?: ContactCardUiState.Error
+            }
+        }
+    }
+
+    fun startCreate() {
+        val user = currentUser ?: return
+        _uiState.value = ContactCardUiState.Editing(
+            user = user,
+            editor = ContactCardEditorState.fromUser(user),
+            existingCard = null,
+        )
+    }
+
+    fun startEdit(card: Card) {
+        val user = currentUser ?: return
+        _uiState.value = ContactCardUiState.Editing(
+            user = user,
+            editor = ContactCardEditorState.fromCard(card, user.avatar),
+            existingCard = card,
+        )
+    }
+
+    fun cancelEditing() {
+        _uiState.value = currentUser?.toUiState() ?: ContactCardUiState.Error
+    }
+
+    fun updateDraft(editor: ContactCardEditorState) {
+        val current = _uiState.value as? ContactCardUiState.Editing ?: return
+        _uiState.value = current.copy(editor = editor)
+    }
+
+    fun addAdditionalUrl() {
+        val current = _uiState.value as? ContactCardUiState.Editing ?: return
+        updateDraft(current.editor.copy(additionalUrls = current.editor.additionalUrls + EditableUrl()))
+    }
+
+    fun removeAdditionalUrl(id: String) {
+        val current = _uiState.value as? ContactCardUiState.Editing ?: return
+        updateDraft(current.editor.copy(additionalUrls = current.editor.additionalUrls.filterNot { it.id == id }))
+    }
+
+    fun saveDraft() {
+        val current = _uiState.value as? ContactCardUiState.Editing ?: return
+
+        viewModelScope.launch {
+            val card = current.editor.toCard(current.user.avatar)
+            val updatedUser = current.user.copy(card = card)
+            accountUtils.updateUser(updatedUser)
+            currentUser = updatedUser
+            _uiState.value = ContactCardUiState.Preview(user = updatedUser, card = card)
+        }
+    }
+
+    fun deleteCard() {
+        val current = _uiState.value as? ContactCardUiState.Preview ?: return
+
+        viewModelScope.launch {
+            val updatedUser = current.user.copy(card = null)
+            accountUtils.updateUser(updatedUser)
+            currentUser = updatedUser
+            _uiState.value = ContactCardUiState.Onboarding(updatedUser)
+        }
+    }
+
+    private fun User.toUiState(): ContactCardUiState {
+        return card?.let { ContactCardUiState.Preview(user = this, card = it) } ?: ContactCardUiState.Onboarding(this)
+    }
+
+    companion object {
+        const val USER_ID_KEY = "userId"
+    }
+}
 
 sealed interface ContactCardUiState {
     data object Loading : ContactCardUiState
