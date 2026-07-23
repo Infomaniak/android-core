@@ -235,7 +235,7 @@ private fun DefaultTopBar(state: ContactCardTopBarState) {
             navigationIcon = {
                 IconButton(onClick = state.onBack) {
                     Icon(
-                        imageVector = ImageVector.vectorResource((R.drawable.ic_cross)),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
                         contentDescription = stringResource(R.string.contentDescriptionBackButton),
                         tint = MaterialTheme.colorScheme.primary,
                     )

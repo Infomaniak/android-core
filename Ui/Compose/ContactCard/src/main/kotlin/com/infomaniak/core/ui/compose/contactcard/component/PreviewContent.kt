@@ -48,11 +48,10 @@ internal fun PreviewContent(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = Margin.Medium, vertical = Margin.Medium),
+                .padding(Margin.Medium),
         ) {
             ContactVCardBloc(user = user, card = card)
         }
-
         Button(
             onClick = onShare,
             modifier = Modifier
