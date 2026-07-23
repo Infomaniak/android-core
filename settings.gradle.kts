@@ -89,6 +89,7 @@ include(
     ":Ui:Compose:BasicButton",
     ":Ui:Compose:Basics",
     ":Ui:Compose:BottomStickyButtonScaffolds",
+    ":Ui:Compose:ContactCard",
     ":Ui:Compose:Margin",
     ":Ui:Compose:MaterialThemeFromXml",
     ":Ui:Compose:Preview",
