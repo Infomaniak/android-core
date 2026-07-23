@@ -30,6 +30,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.Request
 import java.io.File
 
+private const val MAX_AVATAR_SIZE = 5 * 1024 * 1024 // 5 MB
 private const val CONTACT_CARD_DIRECTORY = "attachments_cache"
 private const val CONTACT_CARD_FILE_PREFIX = "contact_card_"
 private const val CONTACT_CARD_FILE_SUFFIX = ".vcf"
@@ -57,12 +58,19 @@ private suspend fun Card.getAvatarDataOrNull(): Pair<String?, String?> {
         val request = Request.Builder().url(url).build()
 
         HttpClient.okHttpClient.newCall(request).await().use { response ->
-            val body = response.body
+            val body = response.body ?: return@runCatching null to null
 
             if (!response.isSuccessful) return@runCatching null to null
 
+            val contentLength = body.contentLength()
+            if (contentLength > MAX_AVATAR_SIZE) return@runCatching null to null
+
             val mimeType = body.contentType()?.subtype?.uppercase()
-            val base64 = Base64.encodeToString(body.bytes(), Base64.NO_WRAP)
+            val bytes = body.bytes()
+            
+            if (bytes.size > MAX_AVATAR_SIZE) return@runCatching null to null
+            
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
 
             base64 to mimeType
         }
