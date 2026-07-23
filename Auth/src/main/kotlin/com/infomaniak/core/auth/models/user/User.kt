@@ -45,6 +45,8 @@ data class User(
     val lastname: String,
     val email: String,
     val avatar: String?,
+    @SerializedName("card") @SerialName("card")
+    val card: Card? = null,
     val login: String,
     @ColumnInfo(defaultValue = "false")
     @SerializedName("is_staff") @SerialName("is_staff")
