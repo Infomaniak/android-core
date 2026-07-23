@@ -31,12 +31,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.auth.models.user.Card
@@ -45,7 +45,7 @@ import com.infomaniak.core.avatar.components.Avatar
 import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.margin.Margin
-import io.github.alexzhirkevich.qrose.rememberQrCodePainter
+import io.github.alexzhirkevich.qrose.QrCodePainter
 
 @Composable
 internal fun QrCodeHeader(user: User, card: Card) {
@@ -81,12 +81,22 @@ internal fun QrCodeHeader(user: User, card: Card) {
                     .padding(Margin.Small),
                 contentAlignment = Alignment.Center,
             ) {
-                val qrPainter = rememberQrCodePainter(data = card.makeVCardString(forQRCode = true))
-                Image(
-                    painter = qrPainter,
-                    contentDescription = stringResource(R.string.contactCardQrCodeDescription),
-                    modifier = Modifier.fillMaxSize(),
-                )
+                val vCardData = card.makeVCardString(forQRCode = true)
+                val qrPainter = remember(vCardData) {
+                    runCatching { QrCodePainter(data = vCardData) }.getOrNull()
+                }
+                if (qrPainter != null) {
+                    Image(
+                        painter = qrPainter,
+                        contentDescription = stringResource(R.string.contactCardQrCodeDescription),
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.contactCardQrCodeTooLarge),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
                 Surface(
                     shape = CircleShape,
                     color = MaterialTheme.colorScheme.surface,
