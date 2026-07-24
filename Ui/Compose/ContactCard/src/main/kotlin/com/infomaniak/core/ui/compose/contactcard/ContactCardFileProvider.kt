@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025-2026 Infomaniak Network SA
+ * Copyright (C) 2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,29 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.infomaniak.core.ui.compose.contactcard
 
-plugins {
-    alias(core.plugins.infomaniak.android.library)
-}
+import androidx.core.content.FileProvider
 
-android {
-    namespace = "com.infomaniak.core.network"
-
-    buildFeatures {
-        buildConfig = true
-    }
-}
-
-dependencies {
-    api(core.okhttp)
-    api(project(":Network:Models"))
-    implementation(project(":Sentry"))
-
-    implementation(core.androidx.core.ktx)
-    implementation(core.gson)
-    implementation(core.kotlinx.serialization.json)
-    implementation(core.ktor.client.core)
-    implementation(core.splitties.mainhandler)
-    implementation(core.splitties.systemservices)
-    implementation(core.splitties.toast)
-}
+class ContactCardFileProvider : FileProvider()
