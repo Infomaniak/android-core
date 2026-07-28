@@ -35,10 +35,12 @@ fun WebView(
     onUrlToQuitReached: () -> Unit,
     urlToQuit: String?,
     headers: Map<String, String>,
+    @SuppressLint("ModifierParameter") // We have this to match the previous behavior when there was no modifier parameter.
+    modifier: Modifier = Modifier.safeDrawingPadding(),
     domStorageEnabled: Boolean = false,
 ) {
     AndroidView(
-        modifier = Modifier.safeDrawingPadding(),
+        modifier = modifier,
         factory = {
             WebView(it).apply {
                 layoutParams = ViewGroup.LayoutParams(
