@@ -62,8 +62,8 @@ fun Avatar(
         contentAlignment = Alignment.Center,
     ) {
         when (avatarType) {
-            is AvatarType.WithInitials.Initials -> InitialsAvatar(avatarType)
-            is AvatarType.WithInitials.Url -> UrlAvatar(avatarType)
+            is AvatarType.WithInitials.Initials -> InitialsAvatar(avatarType, shape)
+            is AvatarType.WithInitials.Url -> UrlAvatar(avatarType, shape)
             is AvatarType.DrawableResource -> DrawableResourceAvatar(avatarType)
         }
     }
