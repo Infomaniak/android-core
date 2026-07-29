@@ -21,6 +21,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import androidx.annotation.CallSuper
 import androidx.room.withTransaction
+import com.infomaniak.core.auth.backup.RestoreFromBackupManager
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
@@ -40,7 +41,8 @@ abstract class AbstractCurrentUserAccountUtils(
     appContext: Context,
     userDataCleanableList: () -> List<AssociatedUserDataCleanable> = { emptyList() },
     userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
-) : UserAccountUtils(appContext, userDataCleanableList, userDatabase) {
+    restoreFromBackupManager: RestoreFromBackupManager = RestoreFromBackupManager.instance,
+) : UserAccountUtils(appContext, userDataCleanableList, userDatabase, restoreFromBackupManager) {
 
     /**
      * If you need a live [User] instead of just its id, use [currentUserFlow]
