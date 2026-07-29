@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth
 
 import android.database.sqlite.SQLiteConstraintException
+import com.infomaniak.core.auth.backup.RestoreFromBackupManagerImpl
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import kotlinx.coroutines.flow.first
@@ -79,7 +80,11 @@ class AccountUtilsCommonTest : BaseAccountUtilsTest() {
 
     private inline fun withAccountUtils(block: UserAccountUtils.() -> Unit) {
         val userDatabase = UserDatabase.instantiateDataBase(context, true)
-        val persistedUserIdAccountUtils = object : UserAccountUtils(context, userDatabase = userDatabase) {}
+        val persistedUserIdAccountUtils = object : UserAccountUtils(
+            appContext = context,
+            userDatabase = userDatabase,
+            restoreFromBackupManager = RestoreFromBackupManagerImpl()
+        ) {}
         val result = runCatching {
             block(persistedUserIdAccountUtils)
         }

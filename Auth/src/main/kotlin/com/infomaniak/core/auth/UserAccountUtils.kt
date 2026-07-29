@@ -38,11 +38,12 @@ open class UserAccountUtils(
     appContext: Context,
     private val userDataCleanableList: () -> List<AssociatedUserDataCleanable> = { emptyList() },
     override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
+    restoreFromBackupManager: RestoreFromBackupManager = RestoreFromBackupManager.instance,
 ) : BaseCredentialManager() {
     val users get() = userDao.allUsers
 
     init {
-        RestoreFromBackupManager.instance.registerRemoveUser(::removeUser)
+        restoreFromBackupManager.registerRemoveUser(::removeUser)
     }
 
     /**
