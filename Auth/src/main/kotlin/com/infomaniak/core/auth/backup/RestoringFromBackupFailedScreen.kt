@@ -18,11 +18,14 @@
 package com.infomaniak.core.auth.backup
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -38,19 +41,53 @@ import com.infomaniak.core.auth.DerivedTokenGenerator
 fun RestoringFromBackupFailedScreen(
     state: RestoreFromBackupManager.State.RestoringFromBackupFailed,
     modifier: Modifier = Modifier,
+) = AspectRatioFlow(modifier) { isLandscape ->
+    if (isLandscape) Row(
+        modifier = Modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally)) {
+        Spacer(Modifier.weight(1f))
+        RestorationFailed(
+            state = state,
+            modifier = Modifier.fillMaxHeight().weight(1f)
+        )
+    } else {
+        RestorationFailed(
+            state = state,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+
+@Composable
+private fun RestorationFailed(
+    state: RestoreFromBackupManager.State.RestoringFromBackupFailed,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier.fillMaxSize(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Bottom)
     ) {
         Text("Failed to restore your account", textAlign = TextAlign.Center)
+        Spacer(Modifier.height(8.dp))
         Button(onClick = state.retry) { Text("Retry") }
         TextButton(onClick = state.giveUp) { Text("Give up") }
-        Spacer(Modifier.padding(72.dp).navigationBarsPadding())
+        Spacer(Modifier.height(72.dp).navigationBarsPadding())
     }
 }
 
+@Composable
+private fun AspectRatioFlow(
+    modifier: Modifier = Modifier,
+    content: @Composable (isLandscape: Boolean) -> Unit
+) {
+    BoxWithConstraints(modifier = modifier) {
+        val isLandscape = maxWidth > maxHeight
+        content(isLandscape)
+    }
+}
+
+@Preview(device = "spec:parent=pixel_5,orientation=landscape")
 @Preview
 @Composable
 private fun RestoringFromBackupScreenPreviewScreen() {
