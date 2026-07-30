@@ -132,7 +132,6 @@ internal class CrossAppLoginFacadeImpl(
     )
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
-        coroutineScope = scope,
         tokenRetrievalUrl = TOKEN_URL,
         hostAppPackageName = applicationId,
         clientId = clientId,
