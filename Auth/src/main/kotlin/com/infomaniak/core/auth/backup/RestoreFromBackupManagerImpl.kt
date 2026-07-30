@@ -51,13 +51,15 @@ import splitties.experimental.ExperimentalSplittiesApi
 
 internal class RestoreFromBackupManagerImpl(
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    userDatabase: UserDatabase = UserDatabase.instance,
+    tokenGenerator: DerivedTokenGenerator? = null,
 ) : RestoreFromBackupManager() {
 
-    private val userDb = UserDatabase.instance
-    private val userDao = userDb.userDao()
+    private val userDb = userDatabase
+    private val userDao = userDatabase.userDao()
 
     private val derivedTokenGenerator: DerivedTokenGenerator by lazy {
-        DerivedTokenGeneratorImpl(
+        tokenGenerator ?: DerivedTokenGeneratorImpl(
             tokenRetrievalUrl = TOKEN_URL,
             clientId = clientId,
             userAgent = HttpUtils.getUserAgent,
