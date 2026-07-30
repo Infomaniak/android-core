@@ -58,7 +58,6 @@ internal class RestoreFromBackupManagerImpl(
 
     private val derivedTokenGenerator: DerivedTokenGenerator by lazy {
         DerivedTokenGeneratorImpl(
-            coroutineScope = coroutineScope,
             tokenRetrievalUrl = TOKEN_URL,
             clientId = clientId,
             userAgent = HttpUtils.getUserAgent,
