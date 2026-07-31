@@ -32,10 +32,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.auth.DerivedTokenGenerator
+import com.infomaniak.core.auth.R
+import com.infomaniak.core.common.R as RCore
 
 @Composable
 fun RestoringFromBackupFailedScreen(
@@ -68,10 +71,10 @@ private fun RestorationFailed(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Bottom)
     ) {
-        Text("Failed to restore your account", textAlign = TextAlign.Center)
+        Text(stringResource(R.string.accountRestoreFailedError), textAlign = TextAlign.Center)
         Spacer(Modifier.height(8.dp))
-        Button(onClick = state.retry) { Text("Retry") }
-        TextButton(onClick = state.giveUp) { Text("Give up") }
+        Button(onClick = state.retry) { Text(stringResource(RCore.string.buttonRetry)) }
+        TextButton(onClick = state.giveUp) { Text(stringResource(R.string.buttonGiveUp)) }
         Spacer(Modifier.height(72.dp).navigationBarsPadding())
     }
 }
