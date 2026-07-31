@@ -26,7 +26,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -47,11 +49,14 @@ fun RestoringFromBackupFailedScreen(
 ) = AspectRatioFlow(modifier) { isLandscape ->
     if (isLandscape) Row(
         modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally)) {
+        horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally)
+    ) {
         Spacer(Modifier.weight(1f))
         RestorationFailed(
             state = state,
-            modifier = Modifier.fillMaxHeight().weight(1f)
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
         )
     } else {
         RestorationFailed(
@@ -67,15 +72,23 @@ private fun RestorationFailed(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.padding(bottom = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Bottom)
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Bottom),
     ) {
-        Text(stringResource(R.string.accountRestoreFailedError), textAlign = TextAlign.Center)
+        Text(
+            stringResource(R.string.accountRestoreFailedError),
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Spacer(Modifier.height(8.dp))
         Button(onClick = state.retry) { Text(stringResource(RCore.string.buttonRetry)) }
         TextButton(onClick = state.giveUp) { Text(stringResource(R.string.buttonGiveUp)) }
-        Spacer(Modifier.height(72.dp).navigationBarsPadding())
+        Spacer(
+            Modifier
+                .height(72.dp)
+                .navigationBarsPadding()
+        )
     }
 }
 
@@ -94,9 +107,10 @@ private fun AspectRatioFlow(
 @Preview
 @Composable
 private fun RestoringFromBackupScreenPreviewScreen() {
-    RestoringFromBackupFailedScreen(RestoreFromBackupManager.State.RestoringFromBackupFailed(
-        cause = DerivedTokenGenerator.Issue.OtherIssue(Exception()),
-        retry = {},
-        giveUp = {}
-    ))
+    RestoringFromBackupFailedScreen(
+        RestoreFromBackupManager.State.RestoringFromBackupFailed(
+            cause = DerivedTokenGenerator.Issue.OtherIssue(Exception()),
+            retry = {},
+            giveUp = {}
+        ))
 }
