@@ -30,6 +30,7 @@
     <string name="otherUrl">Altro URL</string>
     <string name="phone">Telefono</string>
     <string name="shareButton">Condividi</string>
+    <string name="socialNetworksIconContentDescription">Icona dei social network</string>
     <string name="webSite">Sito web</string>
     <string name="x">X</string>
 </resources>
