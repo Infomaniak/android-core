@@ -39,7 +39,7 @@ internal fun PreviewTopBar(
             IconButton(onClick = onClose) {
                 Icon(
                     imageVector = Icons.Filled.Close,
-                    contentDescription = stringResource(RCore.string.buttonCancel),
+                    contentDescription = stringResource(RCore.string.buttonClose),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }
