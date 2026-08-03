@@ -99,7 +99,7 @@ class ContactCardViewModel(
         val current = _uiState.value as? ContactCardUiState.Editing ?: return
 
         viewModelScope.launch {
-            val card = current.editor.toCard(current.user.avatar)
+            val card = current.editor.toCard()
             accountUtils.updateUserCard(userId, card)
             val updatedUser = current.user.copy(card = card)
             currentUser = updatedUser
@@ -149,7 +149,7 @@ data class ContactCardEditorState(
     val website: String,
     val additionalUrls: List<EditableUrl>,
 ) {
-    fun toCard(fallbackAvatarUrl: String?): Card {
+    fun toCard(): Card {
         val links = buildList {
             website.trim().takeIf(String::isNotEmpty)?.let { add(CardLink(CardLinkType.Website, it)) }
             linkedIn.trim().takeIf(String::isNotEmpty)?.let { add(CardLink(CardLinkType.LinkedIn, it)) }
@@ -167,7 +167,7 @@ data class ContactCardEditorState(
             email = email.trim(),
             phone = phone.trim(),
             company = company.trim().takeIf(String::isNotBlank),
-            avatarUrl = avatarUrl?.takeIf(String::isNotBlank) ?: fallbackAvatarUrl,
+            avatarUrl = avatarUrl?.takeIf(String::isNotBlank),
             links = links,
         )
     }
