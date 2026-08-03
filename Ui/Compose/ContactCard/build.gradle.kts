@@ -14,9 +14,9 @@ android {
 }
 
 dependencies {
-    api(project(":Network"))
+    implementation(project(":Network"))
     api(core.androidx.lifecycle.viewmodel.ktx)
-    implementation(project(":Auth"))
+    api(project(":Auth"))
     implementation(project(":Avatar"))
     implementation(project(":Common"))
     implementation(project(":Ui:View:PrimaryPalette"))
