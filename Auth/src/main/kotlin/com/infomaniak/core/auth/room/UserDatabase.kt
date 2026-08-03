@@ -31,6 +31,7 @@ import com.google.gson.reflect.TypeToken
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.OrganizationAccount
 import com.infomaniak.core.auth.models.user.Card
+import com.infomaniak.core.auth.models.user.Phone
 import com.infomaniak.core.auth.models.user.User
 import splitties.init.appCtx
 
@@ -94,6 +95,7 @@ class UserConverter {
 
     private val organizationAccountsType = object : TypeToken<ArrayList<OrganizationAccount>>() {}.type
     private val cardType = object : TypeToken<Card>() {}.type
+    private val phonesType = object : TypeToken<List<Phone>>() {}.type
 
     @TypeConverter
     fun organizationsToJson(organizationAccounts: ArrayList<OrganizationAccount>): String {
@@ -113,5 +115,15 @@ class UserConverter {
     @TypeConverter
     fun toCard(json: String?): Card? {
         return json?.let { gson.fromJson(it, cardType) }
+    }
+
+    @TypeConverter
+    fun phonesToJson(phones: List<Phone>?): String? {
+        return phones?.let { gson.toJson(it, phonesType) }
+    }
+
+    @TypeConverter
+    fun toPhones(json: String?): List<Phone>? {
+        return json?.let { gson.fromJson(it, phonesType) }
     }
 }
