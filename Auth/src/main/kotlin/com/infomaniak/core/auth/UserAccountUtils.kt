@@ -20,9 +20,14 @@ package com.infomaniak.core.auth
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import androidx.annotation.CallSuper
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
+import com.infomaniak.core.auth.backup.RestoreFromBackupManager
+import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
+import com.infomaniak.core.common.getAndroidId
 
 /**
  * This class factorises the addition, removal and listing of users inside of a [UserDatabase].
@@ -31,23 +36,33 @@ import com.infomaniak.core.common.AssociatedUserDataCleanable
  */
 open class UserAccountUtils(
     appContext: Context,
-    private val userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
+    private val userDataCleanableList: () -> List<AssociatedUserDataCleanable> = { emptyList() },
     override val userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
+    restoreFromBackupManager: RestoreFromBackupManager = RestoreFromBackupManager.instance,
 ) : BaseCredentialManager() {
     val users get() = userDao.allUsers
+
+    init {
+        restoreFromBackupManager.registerRemoveUser(::removeUser)
+    }
 
     /**
      * @throws SQLiteConstraintException when adding a user with a primary key that already exists
      */
     @CallSuper
     open suspend fun addUser(user: User) {
-        userDataCleanableList.forEach { it.resetForUser(user.id.toLong()) }
-        userDao.insert(user)
+        userDataCleanableList().forEach { it.resetForUser(user.id.toLong()) }
+        userDatabase.useWriterConnection {
+            it.immediateTransaction {
+                userDao.insert(user)
+                userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, getAndroidId()))
+            }
+        }
     }
 
     @CallSuper
     open suspend fun removeUser(userId: Int) {
-        userDataCleanableList.forEach { it.resetForUser(userId.toLong()) }
+        userDataCleanableList().forEach { it.resetForUser(userId.toLong()) }
         userDao.deleteUserById(userId)
     }
 }

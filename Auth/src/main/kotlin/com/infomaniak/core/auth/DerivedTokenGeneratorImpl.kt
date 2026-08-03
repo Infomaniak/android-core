@@ -15,26 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.core.crossapplogin.back
+package com.infomaniak.core.auth
 
 import com.infomaniak.core.appintegrity.AppIntegrityIssue
 import com.infomaniak.core.appintegrity.AppIntegrityManager
 import com.infomaniak.core.appintegrity.AppIntegrityManager.Companion.APP_INTEGRITY_MANAGER_TAG
 import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
+import com.infomaniak.core.auth.DerivedTokenGenerator.Issue
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
-import com.infomaniak.core.common.dynamicLazyMap
-import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
+import com.infomaniak.core.login.ApiToken
+import com.infomaniak.core.login.InfomaniakLogin
 import com.infomaniak.core.network.api.ApiController
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
-import com.infomaniak.core.login.ApiToken
-import com.infomaniak.core.login.InfomaniakLogin
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -42,25 +38,15 @@ import okhttp3.RequestBody
 import splitties.init.appCtx
 import java.io.IOException
 
-internal class DerivedTokenGeneratorImpl(
-    coroutineScope: CoroutineScope,
+class DerivedTokenGeneratorImpl(
     private val tokenRetrievalUrl: String,
-    private val hostAppPackageName: String,
+    private val hostAppPackageName: String = appCtx.packageName,
     private val clientId: String,
     private val userAgent: String,
     private val accessType: InfomaniakLogin.AccessType? = null,
 ) : DerivedTokenGenerator {
 
     private val appIntegrityManager = AppIntegrityManager(appCtx, userAgent)
-
-    private val attestationTokensForUrls = coroutineScope.dynamicLazyMap<String, Deferred<Xor<String, Issue>>>(
-        cacheManager = { _, asyncResult ->
-            // TODO: Cache tokens again (forever only if possible) once they can be reused,
-            //  by uncommenting, the line below, and possibly replacing awaitCancellation() if reuse is limited in time.
-            // if (asyncResult.await() is Xor.First) awaitCancellation()
-            // Skip cache if unsuccessful.
-        },
-    ) { targetUrl -> async { attemptFetchNewAttestationToken(targetUrl) } }
 
     override suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue> {
         require(tokensToTry.isNotEmpty())
@@ -77,7 +63,7 @@ internal class DerivedTokenGeneratorImpl(
 
     private suspend fun attemptDerivingToken(token: String): Xor<ApiToken, Issue> {
         val targetUrl = tokenRetrievalUrl
-        val attestationToken: String = when (val result = attestationTokensForUrls.useElement(targetUrl) { it.await() }) {
+        val attestationToken: String = when (val result = attemptFetchNewAttestationToken(targetUrl)) {
             is Xor.First -> result.value
             is Xor.Second -> return result
         }

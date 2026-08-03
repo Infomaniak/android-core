@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth
 
 import android.content.Context
+import com.infomaniak.core.auth.backup.RestoreFromBackupManager
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.AssociatedUserDataCleanable
@@ -28,9 +29,10 @@ import kotlinx.coroutines.flow.Flow
  */
 open class PersistedCurrentUserAccountUtils(
     appContext: Context,
-    userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList(),
+    userDataCleanableList: () -> List<AssociatedUserDataCleanable> = { emptyList() },
     userDatabase: UserDatabase = UserDatabase.instantiateDataBase(appContext),
-) : AbstractCurrentUserAccountUtils(appContext, userDataCleanableList, userDatabase) {
+    restoreFromBackupManager: RestoreFromBackupManager = RestoreFromBackupManager.instance,
+) : AbstractCurrentUserAccountUtils(appContext, userDataCleanableList, userDatabase, restoreFromBackupManager) {
     override val currentUserIdFlow: Flow<Int?> = currentUserIdDao.getCurrentUserIdFlow()
 
     override suspend fun setCurrentUserId(userId: Int?) {
