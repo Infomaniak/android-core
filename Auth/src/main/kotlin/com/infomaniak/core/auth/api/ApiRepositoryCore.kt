@@ -35,7 +35,7 @@ abstract class ApiRepositoryCore {
             okHttpClient: OkHttpClient,
             withSecurity: Boolean = false,
         ): ApiResponse<User> {
-            val with = if (withSecurity) "&with=security" else ""
+            val with = "&with=" + (if (withSecurity) "security," else "") + "phones"
 
             val url = "${ApiRoutesCore.getUserProfile()}$with"
             return ApiController.callApi(
