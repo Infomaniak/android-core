@@ -41,7 +41,7 @@ internal fun ContactInfoRows(card: Card, modifier: Modifier = Modifier) {
     val rows = buildList {
         card.company?.takeIf { it.isNotBlank() }?.let { add(stringResource(R.string.company) to it) }
         card.phone.takeIf { it.isNotBlank() }?.let { add(stringResource(R.string.phone) to it) }
-        card.links.orEmpty().firstOrNull { it.type == CardLinkType.Website }?.let {
+        card.links.orEmpty().firstOrNull { it.type == CardLinkType.Website && it.url.isNotBlank() }?.let {
             add(stringResource(R.string.webSite) to it.url)
         }
     }
