@@ -47,17 +47,19 @@ fun RestoringFromBackupFailedScreen(
     state: RestoreFromBackupManager.State.RestoringFromBackupFailed,
     modifier: Modifier = Modifier,
 ) = AspectRatioFlow(modifier) { isLandscape ->
-    if (isLandscape) Row(
-        modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally)
-    ) {
-        Spacer(Modifier.weight(1f))
-        RestorationFailed(
-            state = state,
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-        )
+    if (isLandscape) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally)
+        ) {
+            Spacer(Modifier.weight(1f))
+            RestorationFailed(
+                state = state,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+            )
+        }
     } else {
         RestorationFailed(
             state = state,
