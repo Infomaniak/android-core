@@ -29,7 +29,7 @@ fun Issue.shouldReport(): Boolean = when (this) {
 
 internal fun Issue.shouldRetryAutomatically(): Boolean = when (this) {
     is Issue.AppIntegrityCheckFailed -> shouldRetryAutomatically()
-    is Issue.ErrorResponse -> true
+    is Issue.ErrorResponse -> this.response.code != 401
     is Issue.NetworkIssue -> true
     is Issue.OtherIssue -> false
 }
