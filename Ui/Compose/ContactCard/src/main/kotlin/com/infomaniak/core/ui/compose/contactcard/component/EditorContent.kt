@@ -65,8 +65,10 @@ internal fun EditorContent(
     confirmValidationError: ((onConfirmed: () -> Unit) -> Unit)? = null,
 ) {
     var showValidationError by remember { mutableStateOf(false) }
-    val isValid =
-        editor.firstName.isNotBlank() && editor.lastName.isNotBlank() && editor.email.isNotBlank() && editor.phone.isNotBlank()
+    val isValid = editor.firstName.isNotBlank()
+            && editor.lastName.isNotBlank()
+            && editor.email.isNotBlank()
+            && editor.phone.isNotBlank()
 
     LaunchedEffect(requestSave) {
         if (requestSave) {
