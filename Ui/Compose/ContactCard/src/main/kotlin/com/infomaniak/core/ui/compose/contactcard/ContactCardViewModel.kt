@@ -196,7 +196,7 @@ data class ContactCardEditorState(
                 firstName = user.firstname,
                 lastName = user.lastname,
                 email = user.email,
-                phone = "",
+                phone = user.phones?.firstOrNull()?.phone.orEmpty(),
                 company = "",
                 avatarUrl = user.avatar,
                 linkedIn = "",

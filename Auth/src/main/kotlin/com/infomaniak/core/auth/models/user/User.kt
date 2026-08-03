@@ -45,6 +45,8 @@ data class User(
     val lastname: String,
     val email: String,
     val avatar: String?,
+    @SerializedName("phones") @SerialName("phones")
+    val phones: List<Phone>? = null,
     @SerializedName("card") @SerialName("card")
     val card: Card? = null,
     val login: String,
