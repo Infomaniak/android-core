@@ -30,6 +30,7 @@
     <string name="otherUrl">Άλλη διεύθυνση URL</string>
     <string name="phone">Τηλέφωνο</string>
     <string name="shareButton">Κοινοποίηση</string>
+    <string name="socialNetworksIconContentDescription">Εικονίδιο κοινωνικών δικτύων</string>
     <string name="webSite">Ιστοσελίδα</string>
     <string name="x">X</string>
 </resources>
