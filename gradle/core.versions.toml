@@ -45,6 +45,7 @@ matomo = "4.3.4"
 mockk = "1.14.6"
 navigation = "2.9.6"
 nav3Core = "1.1.1"
+qrose = "1.1.2"
 okhttp = "5.3.2"
 okio = "3.16.2"
 playReview = "2.0.2"
@@ -80,6 +81,8 @@ androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", 
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerView" }
@@ -106,6 +109,7 @@ compose-ui-android = { module = "androidx.compose.ui:ui-android" }
 compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+qrose = { module = "io.github.alexzhirkevich:qrose", version.ref = "qrose" }
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintLayout" }
 coordinatorlayout = { module = "androidx.coordinatorlayout:coordinatorlayout", version.ref = "coordinatorLayout" }
 firebase-messaging-ktx = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaseMessaging" }
@@ -157,6 +161,7 @@ infomaniak-core-twofactorauth-back = { module = "com.infomaniak.core:TwoFactorAu
 infomaniak-core-twofactorauth-front = { module = "com.infomaniak.core:TwoFactorAuth.Front" }
 infomaniak-core-ui = { module = "com.infomaniak.core:Ui" }
 infomaniak-core-ui-compose-accountbottomsheet = { module = "com.infomaniak.core:Ui.Compose.AccountBottomSheet" }
+infomaniak-core-ui-compose-contactcard = { module = "com.infomaniak.core:Ui.Compose.ContactCard" }
 infomaniak-core-ui-compose-basicbutton = { module = "com.infomaniak.core:Ui.Compose.BasicButton" }
 infomaniak-core-ui-compose-basics = { module = "com.infomaniak.core:Ui.Compose.Basics" }
 infomaniak-core-ui-compose-bottomstickybuttonscaffolds = { module = "com.infomaniak.core:Ui.Compose.BottomStickyButtonScaffolds" }

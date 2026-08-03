@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Core - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M20.47,2H3.53C3.339,1.997 3.15,2.032 2.973,2.103C2.796,2.173 2.635,2.278 2.498,2.411C2.362,2.543 2.253,2.702 2.178,2.877C2.102,3.052 2.062,3.24 2.06,3.43V20.57C2.062,20.761 2.102,20.949 2.178,21.124C2.253,21.299 2.362,21.457 2.498,21.59C2.635,21.722 2.796,21.827 2.973,21.897C3.15,21.968 3.339,22.003 3.53,22H20.47C20.66,22.003 20.849,21.968 21.026,21.897C21.203,21.827 21.364,21.722 21.501,21.59C21.637,21.457 21.746,21.299 21.822,21.124C21.897,20.949 21.937,20.761 21.94,20.57V3.43C21.937,3.24 21.897,3.052 21.822,2.877C21.746,2.702 21.637,2.543 21.501,2.411C21.364,2.278 21.203,2.173 21.026,2.103C20.849,2.032 20.66,1.997 20.47,2ZM8.09,18.74H5.09V9.74H8.09V18.74ZM6.59,8.48C6.176,8.48 5.779,8.316 5.486,8.023C5.194,7.731 5.03,7.334 5.03,6.92C5.03,6.506 5.194,6.11 5.486,5.817C5.779,5.524 6.176,5.36 6.59,5.36C6.809,5.335 7.032,5.357 7.242,5.424C7.453,5.491 7.647,5.602 7.812,5.749C7.977,5.896 8.109,6.077 8.199,6.279C8.29,6.48 8.336,6.699 8.336,6.92C8.336,7.141 8.29,7.36 8.199,7.562C8.109,7.763 7.977,7.944 7.812,8.091C7.647,8.238 7.453,8.349 7.242,8.416C7.032,8.483 6.809,8.505 6.59,8.48ZM18.91,18.74H15.91V13.91C15.91,12.7 15.48,11.91 14.39,11.91C14.052,11.913 13.724,12.018 13.448,12.213C13.173,12.408 12.964,12.683 12.85,13C12.771,13.235 12.737,13.483 12.75,13.73V18.73H9.75V9.73H12.75V11C13.022,10.527 13.418,10.138 13.896,9.873C14.373,9.609 14.914,9.48 15.46,9.5C17.46,9.5 18.91,10.79 18.91,13.56V18.74Z"
+      android:fillColor="#BC0055"/>
+</vector>
