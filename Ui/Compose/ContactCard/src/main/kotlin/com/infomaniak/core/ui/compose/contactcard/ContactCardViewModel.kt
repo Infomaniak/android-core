@@ -100,8 +100,8 @@ class ContactCardViewModel(
 
         viewModelScope.launch {
             val card = current.editor.toCard(current.user.avatar)
+            accountUtils.updateUserCard(userId, card)
             val updatedUser = current.user.copy(card = card)
-            accountUtils.updateUser(updatedUser)
             currentUser = updatedUser
             _uiState.value = ContactCardUiState.Preview(user = updatedUser, card = card)
         }
@@ -111,8 +111,8 @@ class ContactCardViewModel(
         val current = _uiState.value as? ContactCardUiState.Preview ?: return
 
         viewModelScope.launch {
+            accountUtils.updateUserCard(userId, null)
             val updatedUser = current.user.copy(card = null)
-            accountUtils.updateUser(updatedUser)
             currentUser = updatedUser
             _uiState.value = ContactCardUiState.Onboarding(updatedUser)
         }
