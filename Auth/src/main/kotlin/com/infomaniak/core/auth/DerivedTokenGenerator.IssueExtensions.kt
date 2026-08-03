@@ -28,11 +28,13 @@ fun Issue.shouldReport(): Boolean = when (this) {
 }
 
 internal fun Issue.shouldRetryAutomatically(): Boolean = when (this) {
-    is Issue.AppIntegrityCheckFailed -> when (details.issue) {
-        is AppIntegrityIssue.RetryLater, is AppIntegrityIssue.Internal -> true
-        is AppIntegrityIssue.DeviceIssue, is AppIntegrityIssue.DevError, is AppIntegrityIssue.SuspiciousError -> false
-    }
+    is Issue.AppIntegrityCheckFailed -> shouldRetryAutomatically()
     is Issue.ErrorResponse -> true
     is Issue.NetworkIssue -> true
     is Issue.OtherIssue -> false
+}
+
+private fun Issue.AppIntegrityCheckFailed.shouldRetryAutomatically(): Boolean = when (details.issue) {
+    is AppIntegrityIssue.RetryLater, is AppIntegrityIssue.Internal -> true
+    is AppIntegrityIssue.DeviceIssue, is AppIntegrityIssue.DevError, is AppIntegrityIssue.SuspiciousError -> false
 }
