@@ -19,6 +19,7 @@ package com.infomaniak.core.auth
 
 import androidx.annotation.CallSuper
 import androidx.collection.ArrayMap
+import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.network.networking.HttpClientConfig
@@ -58,8 +59,8 @@ abstract class BaseCredentialManager : UserExistenceChecker {
     }
 
     @CallSuper
-    open suspend fun updateUser(user: User) {
-        userDatabase.userDao().update(user)
+    open suspend fun updateUserCard(userId: Int, card: Card?) {
+        userDatabase.userDao().updateUserCard(userId, card)
     }
     //endregion
 
