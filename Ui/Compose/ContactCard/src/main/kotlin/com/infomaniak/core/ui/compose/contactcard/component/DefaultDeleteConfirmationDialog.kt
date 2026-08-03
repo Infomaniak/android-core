@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.ui.compose.contactcard.R
+import com.infomaniak.core.common.R as RCore
 
 @Composable
 internal fun DefaultDeleteConfirmationDialog(
@@ -35,12 +36,12 @@ internal fun DefaultDeleteConfirmationDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(text = stringResource(android.R.string.ok))
+                Text(text = stringResource(R.string.deleteButton))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = stringResource(android.R.string.cancel))
+                Text(text = stringResource(RCore.string.buttonCancel))
             }
         },
         title = { Text(text = stringResource(R.string.deleteAlertTitle)) },
