@@ -86,6 +86,8 @@ internal class RestoreFromBackupManagerImpl(
         currentAndroidId: String,
         allUsers: List<User>,
     ) {
+        if (allUsers.isEmpty()) return // Fast-path for the app not set up yet case.
+
         val usersToDeriveTokensFor: List<User> = coroutineScope {
             allUsers.map { user ->
                 async {
