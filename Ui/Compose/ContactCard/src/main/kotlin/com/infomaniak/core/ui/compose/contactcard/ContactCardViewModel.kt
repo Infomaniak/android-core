@@ -60,19 +60,23 @@ class ContactCardViewModel(
 
     fun startCreate() {
         val user = currentUser ?: return
+        val editor = ContactCardEditorState.fromUser(user)
         _uiState.value = ContactCardUiState.Editing(
             user = user,
-            editor = ContactCardEditorState.fromUser(user),
+            editor = editor,
             existingCard = null,
+            isValid = editor.validate(),
         )
     }
 
     fun startEdit(card: Card) {
         val user = currentUser ?: return
+        val editor = ContactCardEditorState.fromCard(card, user.avatar)
         _uiState.value = ContactCardUiState.Editing(
             user = user,
-            editor = ContactCardEditorState.fromCard(card, user.avatar),
+            editor = editor,
             existingCard = card,
+            isValid = editor.validate(),
         )
     }
 
@@ -82,7 +86,7 @@ class ContactCardViewModel(
 
     fun updateDraft(editor: ContactCardEditorState) {
         val current = _uiState.value as? ContactCardUiState.Editing ?: return
-        _uiState.value = current.copy(editor = editor)
+        _uiState.value = current.copy(editor = editor, isValid = editor.validate())
     }
 
     fun addAdditionalUrl() {
@@ -97,6 +101,8 @@ class ContactCardViewModel(
 
     fun saveDraft() {
         val current = _uiState.value as? ContactCardUiState.Editing ?: return
+
+        if (!current.editor.validate()) return
 
         viewModelScope.launch {
             val card = current.editor.toCard()
@@ -132,7 +138,12 @@ sealed interface ContactCardUiState {
     data object Error : ContactCardUiState
     data class Onboarding(val user: User) : ContactCardUiState
     data class Preview(val user: User, val card: Card) : ContactCardUiState
-    data class Editing(val user: User, val editor: ContactCardEditorState, val existingCard: Card?) : ContactCardUiState
+    data class Editing(
+        val user: User,
+        val editor: ContactCardEditorState,
+        val existingCard: Card?,
+        val isValid: Boolean = false,
+    ) : ContactCardUiState
 }
 
 data class ContactCardEditorState(
@@ -149,6 +160,13 @@ data class ContactCardEditorState(
     val website: String,
     val additionalUrls: List<EditableUrl>,
 ) {
+    fun validate(): Boolean {
+        return firstName.trim().isNotEmpty() &&
+                lastName.trim().isNotEmpty() &&
+                email.trim().isNotEmpty() &&
+                phone.trim().isNotEmpty()
+    }
+
     fun toCard(): Card {
         val links = buildList {
             website.trim().takeIf(String::isNotEmpty)?.let { add(CardLink(CardLinkType.Website, it)) }
