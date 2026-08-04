@@ -124,12 +124,11 @@ internal class CrossAppLoginFacadeImpl(
 
     override val accountsCheckingState: StateFlow<AccountsCheckingState> = accountsCheckingStateFlow().stateIn(
         scope = scope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000L),
         initialValue = AccountsCheckingState(status = Checking)
     )
 
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
-        coroutineScope = scope,
         tokenRetrievalUrl = TOKEN_URL,
         hostAppPackageName = applicationId,
         clientId = clientId,
