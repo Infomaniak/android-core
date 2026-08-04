@@ -24,7 +24,6 @@ import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
 import com.infomaniak.core.appintegrity.exceptions.NetworkException
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
-import com.infomaniak.core.common.dynamicLazyMap
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.network.api.ApiController
 import com.infomaniak.core.network.utils.await
@@ -32,9 +31,6 @@ import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.login.ApiToken
 import com.infomaniak.core.login.InfomaniakLogin
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -43,7 +39,6 @@ import splitties.init.appCtx
 import java.io.IOException
 
 internal class DerivedTokenGeneratorImpl(
-    coroutineScope: CoroutineScope,
     private val tokenRetrievalUrl: String,
     private val hostAppPackageName: String,
     private val clientId: String,
@@ -52,15 +47,6 @@ internal class DerivedTokenGeneratorImpl(
 ) : DerivedTokenGenerator {
 
     private val appIntegrityManager = AppIntegrityManager(appCtx, userAgent)
-
-    private val attestationTokensForUrls = coroutineScope.dynamicLazyMap<String, Deferred<Xor<String, Issue>>>(
-        cacheManager = { _, asyncResult ->
-            // TODO: Cache tokens again (forever only if possible) once they can be reused,
-            //  by uncommenting, the line below, and possibly replacing awaitCancellation() if reuse is limited in time.
-            // if (asyncResult.await() is Xor.First) awaitCancellation()
-            // Skip cache if unsuccessful.
-        },
-    ) { targetUrl -> async { attemptFetchNewAttestationToken(targetUrl) } }
 
     override suspend fun attemptDerivingOneOfTheseTokens(tokensToTry: Set<String>): Xor<ApiToken, Issue> {
         require(tokensToTry.isNotEmpty())
@@ -77,7 +63,7 @@ internal class DerivedTokenGeneratorImpl(
 
     private suspend fun attemptDerivingToken(token: String): Xor<ApiToken, Issue> {
         val targetUrl = tokenRetrievalUrl
-        val attestationToken: String = when (val result = attestationTokensForUrls.useElement(targetUrl) { it.await() }) {
+        val attestationToken: String = when (val result = attemptFetchNewAttestationToken(targetUrl)) {
             is Xor.First -> result.value
             is Xor.Second -> return result
         }
