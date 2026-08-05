@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorProducer
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,11 +44,11 @@ import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
 
 @Composable
-internal fun InitialsAvatar(avatarType: AvatarType.WithInitials) {
+internal fun InitialsAvatar(avatarType: AvatarType.WithInitials, shape: Shape = CircleShape) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .clip(CircleShape)
+            .clip(shape)
             .background(avatarType.colors.containerColor),
         contentAlignment = Alignment.Center,
     ) {
