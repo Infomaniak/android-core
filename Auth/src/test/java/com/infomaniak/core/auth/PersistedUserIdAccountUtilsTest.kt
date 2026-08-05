@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.auth
 
+import com.infomaniak.core.auth.backup.RestoreFromBackupManagerImpl
 import com.infomaniak.core.auth.room.UserDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -218,7 +219,11 @@ class PersistedUserIdAccountUtilsTest : BaseAccountUtilsTest() {
 
     private inline fun withAccountUtils(block: PersistedCurrentUserAccountUtils.() -> Unit) {
         val userDatabase = UserDatabase.instantiateDataBase(context, true)
-        val persistedUserIdAccountUtils = object : PersistedCurrentUserAccountUtils(context, userDatabase = userDatabase) {}
+        val persistedUserIdAccountUtils = object : PersistedCurrentUserAccountUtils(
+            appContext = context,
+            userDatabase = userDatabase,
+            restoreFromBackupManager = RestoreFromBackupManagerImpl()
+        ) {}
         val result = runCatching {
             block(persistedUserIdAccountUtils)
         }
