@@ -6,7 +6,7 @@ It supports two distribution flavors:
 - **`standard`** — Google Play Review API (`ReviewManagerFactory`)
 - **`fdroid`** — No-op manager (no Play dependency). If you still want to prompt users, you can show `ReviewAlertDialog` yourself.
 
-The review prompt is only shown after a configurable number of app launches ("countdown"), and is not shown again after the user has tapped "Review" (i.e., once the review flow has been triggered).
+The review prompt is only shown after a configurable number of app launches ("countdown"), and is never shown again once it has been displayed to the user.
 
 ## 1. Integration (Gradle)
 
@@ -45,7 +45,6 @@ class MainActivity : ComponentActivity() {
             // Manual         → you call decrementAppReviewCountdown() yourself
             countdownBehavior = BaseInAppReviewManager.Behavior.LifecycleBased,
             appReviewThreshold = 50,        // Optional: initial countdown value (default 50)
-            maxAppReviewThreshold = 500,    // Optional: value reset to after user interacts (default threshold × 10)
             onUserWantToReview = { },       // Optional: called when user taps "Review"
             onUserWantToGiveFeedback = { }, // Optional: called when user taps "Give feedback"
         )
@@ -53,8 +52,8 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-> **Defaults:** `appReviewThreshold = 50`, `maxAppReviewThreshold = appReviewThreshold * 10`.  
-> After any user interaction (review, feedback, or dismiss), the countdown is reset to `maxAppReviewThreshold` so the prompt is not shown again too soon.
+> **Default:** `appReviewThreshold = 50`.
+> Once the prompt has been displayed, call `onReviewDialogShown()` so it is never shown again.
 
 ---
 
@@ -63,8 +62,10 @@ class MainActivity : ComponentActivity() {
 ### 3.1 Observe `shouldDisplayReviewDialog`
 
 `shouldDisplayReviewDialog` is a `Flow<Boolean>` that emits `true` when:
-- the user has **not** already submitted a review, **and**
+- the user has **not** already been asked for a review, **and**
 - the countdown has reached **0 or below**.
+
+Once the prompt is shown, call `onReviewDialogShown()` to mark it as asked; the flow will never emit `true` again.
 
 Collect it in your Compose UI and show a dialog or bottom sheet accordingly:
 
@@ -74,6 +75,7 @@ fun ReviewPromptObserver(reviewManager: InAppReviewManager) {
     val shouldDisplay by reviewManager.shouldDisplayReviewDialog.collectAsState(initial = false)
 
     if (shouldDisplay) {
+        reviewManager.onReviewDialogShown()
         ReviewDialog(
             onReview = { reviewManager.onUserWantsToReview() },
             onFeedback = { reviewManager.onUserWantsToGiveFeedback("https://yourapp.example.com/feedback") },
