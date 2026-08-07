@@ -73,11 +73,8 @@ class InAppReviewManager(private val activity: ComponentActivity) : BaseInAppRev
 
     override fun onUserWantsToGiveFeedback(feedbackUrl: String) {
         onUserWantsToGiveFeedback?.invoke()
-        setAppReviewedStatus()
         WebViewActivity.startActivity(activity, feedbackUrl)
     }
-
-    override fun onUserWantsToDismiss() = Unit
 
     override fun decrementAppReviewCountdown() {
         activity.lifecycleScope.launch(Dispatchers.IO) {

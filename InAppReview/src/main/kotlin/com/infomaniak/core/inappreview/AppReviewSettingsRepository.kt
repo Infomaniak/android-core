@@ -55,7 +55,7 @@ class AppReviewSettingsRepository(private val context: Context) {
 
     private fun <T> getInitialValue(key: Preferences.Key<T>) = when (key) {
         APP_REVIEW_THRESHOLD_KEY -> appReviewThreshold
-        ALREADY_ASK_REVIEW_KEY -> DEFAULT_ALREADY_GAVE_REVIEW
+        ALREADY_ASK_REVIEW_KEY -> DEFAULT_ALREADY_ASK_REVIEW
         else -> throw IllegalArgumentException("Unknown Preferences.Key")
     }
 
@@ -76,11 +76,11 @@ class AppReviewSettingsRepository(private val context: Context) {
         private const val TAG = "AppReviewSettingsRepository"
 
         val APP_REVIEW_THRESHOLD_KEY = intPreferencesKey("appReviewThresholdKey")
-        val ALREADY_ASK_REVIEW_KEY = booleanPreferencesKey("alreadyGaveReview")
+        val ALREADY_ASK_REVIEW_KEY = booleanPreferencesKey("alreadyAskReviewKey")
 
         internal const val DATA_STORE_NAME = "AppReviewSettingsDataStore"
 
-        private const val DEFAULT_ALREADY_GAVE_REVIEW = false
+        private const val DEFAULT_ALREADY_ASK_REVIEW = false
 
         private const val DEFAULT_APP_REVIEW_THRESHOLD = 50
     }
