@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/FileType.kt">
+        <error line="58" column="39" source="standard:function-expression-body" />
+        <error line="64" column="66" source="standard:function-expression-body" />
+        <error line="75" column="59" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Archive.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="130" column="13" source="standard:backing-property-naming" />
+        <error line="134" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Audio.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="125" column="13" source="standard:backing-property-naming" />
+        <error line="129" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Calendar.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="82" column="13" source="standard:backing-property-naming" />
+        <error line="86" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Code.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="94" column="13" source="standard:backing-property-naming" />
+        <error line="98" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Folder.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="51" column="55" source="standard:argument-list-wrapping" />
+        <error line="51" column="70" source="standard:argument-list-wrapping" />
+        <error line="52" column="39" source="standard:argument-list-wrapping" />
+        <error line="52" column="63" source="standard:argument-list-wrapping" />
+        <error line="98" column="13" source="standard:backing-property-naming" />
+        <error line="102" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Font.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="96" column="13" source="standard:backing-property-naming" />
+        <error line="100" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Image.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="92" column="13" source="standard:backing-property-naming" />
+        <error line="96" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Pdf.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="95" column="13" source="standard:backing-property-naming" />
+        <error line="99" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Points.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="93" column="13" source="standard:backing-property-naming" />
+        <error line="97" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Sheet.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="103" column="13" source="standard:backing-property-naming" />
+        <error line="107" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Text.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="84" column="13" source="standard:backing-property-naming" />
+        <error line="88" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Unknown.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="78" column="13" source="standard:backing-property-naming" />
+        <error line="82" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Vcard.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="92" column="13" source="standard:backing-property-naming" />
+        <error line="96" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/filetypes/icons/Video.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="87" column="13" source="standard:backing-property-naming" />
+        <error line="91" column="13" source="standard:function-naming" />
+    </file>
+</baseline>

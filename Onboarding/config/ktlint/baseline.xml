@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/onboarding/HorizontalPagerIndicator.kt">
+        <error line="44" column="5" source="standard:function-naming" />
+        <error line="152" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/onboarding/OnboardingScaffold.kt">
+        <error line="56" column="5" source="standard:function-naming" />
+        <error line="108" column="13" source="standard:function-naming" />
+        <error line="117" column="13" source="standard:function-naming" />
+        <error line="152" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/onboarding/components/HighlightedText.kt">
+        <error line="50" column="5" source="standard:function-naming" />
+        <error line="113" column="9" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/onboarding/components/OnboardingComponents.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="65" column="9" source="standard:function-naming" />
+        <error line="93" column="9" source="standard:function-naming" />
+        <error line="121" column="9" source="standard:function-naming" />
+        <error line="146" column="9" source="standard:function-naming" />
+        <error line="166" column="9" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/onboarding/models/OnboardingLottieSource.kt">
+        <error line="23" column="72" source="standard:no-multi-spaces" />
+        <error line="27" column="74" source="standard:no-multi-spaces" />
+        <error line="31" column="70" source="standard:no-multi-spaces" />
+    </file>
+</baseline>

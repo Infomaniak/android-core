@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/dotlottie/DotLottieView.kt">
+        <error line="38" column="5" source="standard:class-signature" />
+        <error line="39" column="5" source="standard:class-signature" />
+        <error line="40" column="5" source="standard:class-signature" />
+        <error line="40" column="26" source="standard:class-signature" />
+        <error line="41" column="5" source="standard:class-signature" />
+        <error line="66" column="13" source="standard:function-naming" />
+    </file>
+</baseline>
