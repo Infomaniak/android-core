@@ -20,7 +20,7 @@ import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 
 fun CommonExtension<*, *, *, *, *, *>.applyCommonConfiguration() {
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         minSdk = 27
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
