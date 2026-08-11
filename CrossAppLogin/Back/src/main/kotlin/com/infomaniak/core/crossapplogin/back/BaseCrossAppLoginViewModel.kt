@@ -26,6 +26,7 @@ import com.infomaniak.core.auth.DerivedTokenGeneratorImpl
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.api.ApiRoutesCore.TOKEN_URL
 import com.infomaniak.core.auth.shouldReport
+import com.infomaniak.core.auth.shouldRetryAutomatically
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.common.completableScope
@@ -192,7 +193,7 @@ internal class CrossAppLoginFacadeImpl(
                     tokens.add(result.value)
                 }
                 is Xor.Second -> {
-                    hadATerminalIssue = hadATerminalIssue || result.value !is Issue.NetworkIssue
+                    hadATerminalIssue = hadATerminalIssue || !result.value.shouldRetryAutomatically()
                     errorMessageIds.add(getTokenDerivationIssueErrorMessage(account, issue = result.value))
                 }
             }
