@@ -29,6 +29,7 @@ import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.auth.shouldReport
+import com.infomaniak.core.auth.shouldRetryAutomatically
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.getAndroidId
 import com.infomaniak.core.login.ApiToken
@@ -44,6 +45,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -51,10 +53,13 @@ import splitties.experimental.ExperimentalSplittiesApi
 
 internal class RestoreFromBackupManagerImpl(
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    private val mode: RestorationMode,
 ) : RestoreFromBackupManager() {
 
     private val userDb = UserDatabase.instance
     private val userDao = userDb.userDao()
+
+    private val removeUserDeferred = CompletableDeferred<suspend (id: Int) -> Unit>()
 
     private val derivedTokenGenerator: DerivedTokenGenerator by lazy {
         DerivedTokenGeneratorImpl(
@@ -65,21 +70,36 @@ internal class RestoreFromBackupManagerImpl(
     }
 
     override val state: SharedFlow<State> = flow {
-        performRestorationHandlingIfNeeded()
+        when (mode) {
+            RestorationMode.External -> {
+                emit(State.RestoringFromBackup)
+                waitForRestorationCompletion(null)
+            }
+            RestorationMode.TokenDerivation -> {
+                restoreAccounts(currentAndroidId = getAndroidId(), allUsers = userDao.allUsers())
+            }
+        }
         emit(State.Settled)
     }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
-    private val removeUserDeferred = CompletableDeferred<suspend (id: Int) -> Unit>()
+    override suspend fun waitForRestorationCompletion(targetUserId: Int?) {
+        when (val currentState = state.replayCache.firstOrNull()) {
+            State.Settled -> return
+            is State.RestoringFromBackupFailed if currentState.cause.shouldRetryAutomatically() -> {
+                currentState.retry() // Retry if appropriate for each new network call attempt.
+            }
+            else -> Unit
+        }
+        val currentAndroidId = getAndroidId()
+        when (targetUserId) {
+            null -> userDao.tokenDeviceBindings.first { list -> list.all { it.androidId == currentAndroidId } }
+            else -> userDao.tokenDeviceBinding(userId = targetUserId).first { it?.androidId == currentAndroidId }
+        }
+    }
 
     override fun registerRemoveUser(removeUser: suspend (id: Int) -> Unit) {
         check(removeUserDeferred.isCompleted.not()) // Should not be called twice.
         removeUserDeferred.complete(removeUser)
-    }
-
-    private suspend fun FlowCollector<State>.performRestorationHandlingIfNeeded() {
-        val users = userDao.allUsers()
-        val currentAndroidId = getAndroidId()
-        restoreAccounts(currentAndroidId = currentAndroidId, allUsers = users)
     }
 
     private tailrec suspend fun FlowCollector<State>.restoreAccounts(
