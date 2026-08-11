@@ -27,7 +27,7 @@ fun Issue.shouldReport(): Boolean = when (this) {
     is Issue.OtherIssue -> true
 }
 
-internal fun Issue.shouldRetryAutomatically(): Boolean = when (this) {
+fun Issue.shouldRetryAutomatically(): Boolean = when (this) {
     is Issue.AppIntegrityCheckFailed -> shouldRetryAutomatically()
     is Issue.ErrorResponse -> shouldRetryAutomatically()
     is Issue.NetworkIssue -> true
