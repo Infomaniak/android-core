@@ -17,6 +17,9 @@
  */
 package com.infomaniak.core.appintegrity
 
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
 abstract class AbstractAppIntegrityManager {
 
     /**
@@ -38,15 +41,17 @@ abstract class AbstractAppIntegrityManager {
 
     abstract suspend fun isGuaranteedToFail(): Boolean
 
-    abstract suspend fun getChallenge(): String
+    @ExperimentalUuidApi
+    abstract suspend fun getChallenge(): Challenge
 
     /**
      * Currently uses classic Play Integrity API.
      *
      * @throws com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
      */
+    @ExperimentalUuidApi
     abstract suspend fun requestAttestationToken(
-        challenge: String,
+        challenge: Challenge,
         packageName: String,
         targetUrl: String,
     ): String
@@ -55,4 +60,10 @@ abstract class AbstractAppIntegrityManager {
      *  Only used to test App Integrity in Apps before their real backend implementation
      */
     open suspend fun callDemoRoute(mobileToken: String) = Unit
+
+    @ExperimentalUuidApi
+    data class Challenge(
+        val id: Uuid,
+        val data: String,
+    )
 }

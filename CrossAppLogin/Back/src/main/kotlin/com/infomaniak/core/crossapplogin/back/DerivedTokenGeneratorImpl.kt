@@ -37,6 +37,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import splitties.init.appCtx
 import java.io.IOException
+import kotlin.uuid.ExperimentalUuidApi
 
 internal class DerivedTokenGeneratorImpl(
     private val tokenRetrievalUrl: String,
@@ -128,6 +129,7 @@ internal class DerivedTokenGeneratorImpl(
         Xor.Second(issue)
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     @Throws(AppIntegrityException::class)
     private suspend inline fun fetchNewAttestationToken(targetUrl: String): String {
         val challenge = appIntegrityManager.getChallenge()
