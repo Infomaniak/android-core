@@ -17,13 +17,13 @@
  */
 package com.infomaniak.core.auth.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -144,7 +144,7 @@ object LoginUtils {
         infomaniakLogin: InfomaniakLogin,
         loginResultLauncher: ActivityResultLauncher<Intent>,
     ): AccountCreationResult {
-        if (result.resultCode != AppCompatActivity.RESULT_OK) return AccountCreationResult.Canceled
+        if (result.resultCode != Activity.RESULT_OK) return AccountCreationResult.Canceled
 
         val translatedError = result.data?.getStringExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG)
         return when {
@@ -171,7 +171,7 @@ private suspend fun getUsersByToken(
 }
 
 private fun ActivityResult.toAuthCodeResult(context: Context): AuthCodeResult {
-    if (resultCode != AppCompatActivity.RESULT_OK) return AuthCodeResult.Canceled
+    if (resultCode != Activity.RESULT_OK) return AuthCodeResult.Canceled
 
     val authCode = data?.getStringExtra(InfomaniakLogin.CODE_TAG)
     val translatedError = data?.getStringExtra(InfomaniakLogin.ERROR_TRANSLATED_TAG)
