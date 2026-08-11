@@ -53,7 +53,7 @@ import splitties.experimental.ExperimentalSplittiesApi
 
 internal class RestoreFromBackupManagerImpl(
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-    private val mode: RestorationMode,
+    private val mode: RestorationMode = RestorationMode.TokenDerivation,
 ) : RestoreFromBackupManager() {
 
     private val userDb = UserDatabase.instance
