@@ -95,4 +95,9 @@ interface UserDao {
     @Query("SELECT * FROM TokenDeviceBinding WHERE userId=:userId")
     suspend fun getTokenDeviceBindingForUser(userId: Int): TokenDeviceBinding?
 
+    @get:Query("SELECT * FROM TokenDeviceBinding")
+    val tokenDeviceBindings: Flow<List<TokenDeviceBinding>>
+
+    @Query("SELECT * FROM TokenDeviceBinding WHERE userId=:userId")
+    fun tokenDeviceBinding(userId: Int): Flow<TokenDeviceBinding?>
 }

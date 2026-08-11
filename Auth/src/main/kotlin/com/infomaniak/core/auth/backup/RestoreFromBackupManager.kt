@@ -18,27 +18,17 @@
 package com.infomaniak.core.auth.backup
 
 import com.infomaniak.core.auth.DerivedTokenGenerator
-import com.infomaniak.core.auth.shouldRetryAutomatically
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import splitties.init.appCtx
 
 sealed class RestoreFromBackupManager {
 
     abstract val state: SharedFlow<State>
 
-    suspend fun ensureRestorationIsHandled() {
-        when (val currentState = state.replayCache.firstOrNull()) {
-            State.Settled -> return
-            is State.RestoringFromBackupFailed if currentState.cause.shouldRetryAutomatically() -> {
-                currentState.retry() // Retry if appropriate for each new network call attempt.
-            }
-            else -> Unit
-        }
-        state.first { it is State.Settled }
-    }
+    abstract suspend fun waitForRestorationCompletion(targetUserId: Int?)
 
     val shouldShowRestorationScreen: Flow<Boolean> by lazy { state.map { it != State.Settled }.distinctUntilChanged() }
 
@@ -60,7 +50,23 @@ sealed class RestoreFromBackupManager {
         ) : State
     }
 
+    enum class RestorationMode {
+        /** Handled by [RestoreFromBackupManager], with token derivation. */
+        TokenDerivation,
+        /** Handled externally (with passkeys). */
+        External,
+    }
+
     companion object {
-        val instance: RestoreFromBackupManager = RestoreFromBackupManagerImpl()
+        val instance: RestoreFromBackupManager = RestoreFromBackupManagerImpl(
+            mode = if ("com.infomaniak.auth".let { packageWithPasskey ->
+                val currentAppId = appCtx.packageName
+                currentAppId == packageWithPasskey || currentAppId.startsWith("$packageWithPasskey.")
+            }) {
+                RestorationMode.External
+            } else {
+                RestorationMode.TokenDerivation
+            }
+        )
     }
 }

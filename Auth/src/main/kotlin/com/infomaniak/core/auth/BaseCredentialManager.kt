@@ -22,8 +22,8 @@ import androidx.collection.ArrayMap
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
-import com.infomaniak.core.network.networking.HttpClientConfig
 import com.infomaniak.core.login.ApiToken
+import com.infomaniak.core.network.networking.HttpClientConfig
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import okhttp3.Cache
@@ -125,7 +125,7 @@ abstract class BaseCredentialManager : UserExistenceChecker {
 
     private suspend fun getDefaultTokenInterceptorListener(userId: Int): TokenInterceptorListener {
         var user = userDatabase.userDao().findById(userId)
-        return object : TokenInterceptorListener {
+        return object : TokenInterceptorListener(dedicatedUserId = userId) {
             override suspend fun onRefreshTokenSuccess(apiToken: ApiToken) {
                 setUserToken(user, apiToken)
             }
