@@ -20,6 +20,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -191,7 +192,9 @@ private fun ContactCardScreen(
                         onShare = { onShare(state.card) },
                     )
                     is ContactCardUiState.Editing -> EditorContent(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .imePadding(),
                         editor = state.editor,
                         requestSave = requestSave,
                         onSaveHandled = { requestSave = false },
