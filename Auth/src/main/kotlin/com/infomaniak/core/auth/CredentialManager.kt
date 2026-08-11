@@ -36,7 +36,7 @@ abstract class CredentialManager : BaseCredentialManager() {
 
     fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().getAll()
 
-    fun getAllUsersCount(): Int = userDatabase.userDao().count()
+    suspend fun getAllUsersCount(): Int = userDatabase.userDao().userCount()
 
     final override suspend fun setUserToken(user: User?, apiToken: ApiToken) {
         super.setUserToken(user, apiToken)
