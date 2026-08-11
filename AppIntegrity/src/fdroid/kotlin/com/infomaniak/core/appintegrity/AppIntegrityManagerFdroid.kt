@@ -15,10 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.infomaniak.core.appintegrity
 
 import android.content.Context
 import com.infomaniak.core.appintegrity.exceptions.AppIntegrityException
+import kotlin.uuid.ExperimentalUuidApi
 
 class AppIntegrityManager(
     @Suppress("unused") private val appContext: Context,
@@ -43,7 +46,7 @@ class AppIntegrityManager(
     override suspend fun getChallenge() = throw unsupportedException()
 
     override suspend fun requestAttestationToken(
-        challenge: String,
+        challenge: Challenge,
         packageName: String,
         targetUrl: String
     ) = throw unsupportedException()

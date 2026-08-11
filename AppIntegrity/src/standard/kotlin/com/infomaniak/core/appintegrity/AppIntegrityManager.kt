@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.infomaniak.core.appintegrity
 
 import android.content.Context
@@ -37,7 +39,8 @@ import io.sentry.Sentry
 import io.sentry.SentryLevel
 import kotlinx.coroutines.tasks.await
 import splitties.init.appCtx
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Manager used to verify that the device used is real and doesn't have integrity problems
@@ -51,8 +54,6 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
     private var appIntegrityTokenProvider: StandardIntegrityTokenProvider? = null
     private val classicIntegrityTokenProvider by lazy { IntegrityManagerFactory.create(appContext) }
     private val appIntegrityRepository by lazy { AppIntegrityRepository(userAgent) }
-
-    private var challengeId = ""
 
     /**
      * This function is needed in case of standard verdict request by [requestIntegrityVerdictToken].
@@ -140,27 +141,31 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
         }
     }
 
-    override suspend fun getChallenge(): String {
-        generateChallengeId()
-        val apiResponse = appIntegrityRepository.getChallenge(challengeId)
+    override suspend fun getChallenge(): Challenge {
+        val challengeId = Uuid.random()
+        val apiResponse = appIntegrityRepository.getChallenge(challengeId.toString())
         SentryLog.d(
             tag = APP_INTEGRITY_MANAGER_TAG,
-            msg = "challengeId hash : ${challengeId.hashCode()} / challenge hash: ${apiResponse.data.hashCode()}",
+            msg = "challengeId hash : ${challengeId.toString().hashCode()} / challenge hash: ${apiResponse.data.hashCode()}",
         )
-        return apiResponse.data ?: error("Get challenge cannot contain null data")
+        return Challenge(
+            id = challengeId,
+            data = apiResponse.data ?: error("Get challenge cannot contain null data")
+        )
     }
 
     override suspend fun requestAttestationToken(
-        challenge: String,
+        challenge: Challenge,
         packageName: String,
         targetUrl: String
     ): String {
-        val tokenResponse = requestClassicIntegrityVerdictToken(challenge)
-        return getApiIntegrityVerdict(tokenResponse, packageName, targetUrl)
+        val tokenResponse = requestClassicIntegrityVerdictToken(challenge.data)
+        return getApiIntegrityVerdict(tokenResponse, challenge.id, packageName, targetUrl)
     }
 
     private suspend fun getApiIntegrityVerdict(
         integrityToken: IntegrityTokenResponse?,
+        challengeId: Uuid,
         packageName: String,
         targetUrl: String,
     ): String {
@@ -169,7 +174,7 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
                 integrityToken = integrityToken?.token() ?: "fake integrity token",
                 packageName = packageName,
                 targetUrl = targetUrl,
-                challengeId = challengeId,
+                challengeId = challengeId.toString(),
             )
             return apiResponse.data ?: error("Integrity ApiResponse cannot contain null data")
         }.cancellable().getOrElse { exception ->
@@ -202,10 +207,6 @@ class AppIntegrityManager(private val appContext: Context, userAgent: String) : 
         }.cancellable().getOrElse {
             it.printStackTrace()
         }
-    }
-
-    private fun generateChallengeId() {
-        challengeId = UUID.randomUUID().toString()
     }
 
     private fun manageException(exception: Throwable, errorMessage: String, onFailure: () -> Unit) {
