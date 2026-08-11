@@ -31,7 +31,6 @@ import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -127,7 +126,6 @@ object NotificationsRegistrationManager : AssociatedUserDataCleanable {
                 }
             }
         }
-        awaitCancellation() // Should never be reached since latestFcmToken is a StateFlow.
     }
 
     private suspend fun awaitAnyNeedForUpdate(
