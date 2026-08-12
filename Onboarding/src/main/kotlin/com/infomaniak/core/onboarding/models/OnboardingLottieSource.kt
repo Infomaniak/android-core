@@ -34,6 +34,8 @@ sealed class OnboardingLottieSource {
 
     data class Data(val data: ByteArray) : OnboardingLottieSource() {
         override fun toDotLottieSource(): DotLottieSource = DotLottieSource.Data(data)
+        override fun equals(other: Any?) = other is Data && data.contentEquals(other.data)
+        override fun hashCode() = data.contentHashCode()
     }
 
     data class Json(val jsonString: String) : OnboardingLottieSource() {
