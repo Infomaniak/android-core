@@ -24,12 +24,11 @@ import com.infomaniak.core.login.InfomaniakLogin.AccessType
  */
 object AuthConfiguration {
 
-    lateinit var appId: String
-    var appVersionCode: Int = -1
-    lateinit var appVersionName: String
-    lateinit var clientId: String
-    var accessType: AccessType? = AccessType.OFFLINE
-        private set
+    lateinit var appId: String; private set
+    var appVersionCode: Int = -1; private set
+    lateinit var appVersionName: String; private set
+    lateinit var clientId: String; private set
+    var accessType: AccessType? = AccessType.OFFLINE; private set
 
     fun init(
         appId: String,
