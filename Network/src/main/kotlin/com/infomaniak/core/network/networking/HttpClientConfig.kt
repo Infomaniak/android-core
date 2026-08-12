@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.network.networking
 
-import com.infomaniak.core.network.BuildConfig
 import io.sentry.okhttp.SentryOkHttpInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

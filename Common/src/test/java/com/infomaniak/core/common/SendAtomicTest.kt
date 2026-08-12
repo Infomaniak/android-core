@@ -99,7 +99,7 @@ suspend fun <T> SendChannel<T>.sendAtomicBroken(element: T) {
 }
 
 /**
- * This is similar to [com.infomaniak.core.trySelectAtomically], but using `launch { awaitCancellation() }` instead of `Job(parent = …)`,
+ * This is similar to [trySelectAtomically], but using `launch { awaitCancellation() }` instead of `Job(parent = …)`,
  * which should work the same, but doesn't, for some yet to discover reason.
  */
 private suspend inline fun <R> trySelectAtomicallyBroken(

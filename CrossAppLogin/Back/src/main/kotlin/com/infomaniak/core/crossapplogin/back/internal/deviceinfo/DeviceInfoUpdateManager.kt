@@ -27,7 +27,6 @@ import com.infomaniak.core.common.allConcurrent
 import com.infomaniak.core.common.extensions.write
 import com.infomaniak.core.crossapplogin.back.CrossAppLogin
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -115,7 +114,6 @@ object DeviceInfoUpdateManager : AssociatedUserDataCleanable {
                     AbstractDeviceInfoUpdateWorker.schedule<T>()
                 }
             }
-            awaitCancellation()
         }
 
     private fun lastSyncKeyFileForUser(userId: Long): AtomicFile = AtomicFile(lastSyncedKeyDir.resolve("$userId"))

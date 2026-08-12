@@ -21,8 +21,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AbstractComposeView
-import com.infomaniak.core.ui.compose.materialthemefromxml.MaterialThemeFromXml
 import com.infomaniak.core.ksuite.ksuitepro.views.components.GetCardContent
+import com.infomaniak.core.ui.compose.materialthemefromxml.MaterialThemeFromXml
 
 class GetCardView @JvmOverloads constructor(
     context: Context,
@@ -32,6 +32,8 @@ class GetCardView @JvmOverloads constructor(
 
     private var onClick: (() -> Unit)? = null
 
+    // False positive from Slack's compose lint. Views should not be @Stable annotated, and AbstractComposeView doesn't need it.
+    @Suppress("ComposeUnstableReceiver")
     @Composable
     override fun Content() {
         MaterialThemeFromXml {

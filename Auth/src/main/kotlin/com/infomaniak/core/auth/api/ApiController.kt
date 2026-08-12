@@ -20,12 +20,12 @@ package com.infomaniak.core.auth.api
 import com.google.gson.JsonParser
 import com.infomaniak.core.auth.AuthConfiguration
 import com.infomaniak.core.auth.TokenInterceptorListener
+import com.infomaniak.core.login.ApiToken
 import com.infomaniak.core.network.api.ApiController.RefreshTokenException
 import com.infomaniak.core.network.api.ApiController.gson
 import com.infomaniak.core.network.networking.HttpClient
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
-import com.infomaniak.core.login.ApiToken
 import okhttp3.MultipartBody
 import okhttp3.Request
 
@@ -38,7 +38,7 @@ object ApiController {
         }
 
         val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
-            .setType(MultipartBody.Companion.FORM)
+            .setType(MultipartBody.FORM)
             .addFormDataPart("grant_type", "refresh_token")
             .addFormDataPart("client_id", AuthConfiguration.clientId)
             .addFormDataPart("refresh_token", refreshToken)

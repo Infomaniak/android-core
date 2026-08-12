@@ -33,13 +33,13 @@ import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsChecki
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.LoginResult
 import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
+import com.infomaniak.core.login.ApiToken
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import com.infomaniak.core.network.networking.HttpClient.addCache
 import com.infomaniak.core.network.networking.HttpClient.addCommonInterceptors
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
-import com.infomaniak.core.login.ApiToken
 import io.sentry.IScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -173,7 +173,6 @@ internal class CrossAppLoginFacadeImpl(
             if (singleSelection) launch { keepSingleSelection() }
             _availableAccounts.emitAll(crossAppLogin.accountsFromOtherApps(hostActivity.lifecycle))
         }
-        awaitCancellation() // Can't be reached because isCrossAppLoginEnabledFlow is a SharedFlow.
     }
 
     override suspend fun attemptLogin(selectedAccounts: List<ExternalAccount>): LoginResult {
@@ -314,7 +313,6 @@ internal class CrossAppLoginFacadeImpl(
                 )
             }
         }
-        awaitCancellation() // Unreachable because availableAccounts is a StateFlow, and collectLatest is not truncating.
     }
 
     // @StringRes doesn't work with a suspend function because they technically return java.lang.Object
