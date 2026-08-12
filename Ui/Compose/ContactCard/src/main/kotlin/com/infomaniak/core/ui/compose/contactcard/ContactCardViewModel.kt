@@ -104,6 +104,10 @@ class ContactCardViewModel(
 
         if (!current.editor.validate()) return
 
+        if (current.existingCard == null) {
+            ContactCardMatomo.trackEvent("create")
+        }
+
         viewModelScope.launch {
             val card = current.editor.toCard()
             accountUtils.updateUserCard(userId, card)
@@ -115,6 +119,8 @@ class ContactCardViewModel(
 
     fun deleteCard() {
         val current = _uiState.value as? ContactCardUiState.Preview ?: return
+
+        ContactCardMatomo.trackEvent("delete")
 
         viewModelScope.launch {
             accountUtils.updateUserCard(userId, null)
