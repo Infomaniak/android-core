@@ -35,7 +35,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -99,7 +98,7 @@ object NotificationsRegistrationManager : AssociatedUserDataCleanable {
         workerClass: Class<T>
     ): Nothing = Dispatchers.Default {
 
-        val latestFcmToken = fcmTokenUpdates.filterNotNull().onStart {
+        val latestFcmToken = fcmTokenUpdates.onStart {
             val token = runCatching {
                 Firebase.messaging.token.await()
             }.cancellable().getOrElse { t ->
