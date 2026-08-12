@@ -150,6 +150,7 @@ private fun ContactCardScreen(
                     onClose = onBack,
                     onMore = { showActionsBottomSheet = true },
                 )
+                isOnboarding -> ContactCardTopBarState.Onboarding(onBack = onBack)
                 else -> ContactCardTopBarState.Default(onBack = onBack)
             }
             if (topBar != null) topBar(topBarState) else DefaultTopBar(topBarState)
@@ -258,6 +259,18 @@ private fun DefaultTopBar(state: ContactCardTopBarState) {
             onMore = state.onMore,
         )
         is ContactCardTopBarState.Default -> ContactCardTopBar(
+            navigationIcon = {
+                IconButton(onClick = state.onBack) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
+                        contentDescription = stringResource(R.string.contentDescriptionBackButton),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            },
+        )
+        is ContactCardTopBarState.Onboarding -> ContactCardTopBar(
+            showTitle = false,
             navigationIcon = {
                 IconButton(onClick = state.onBack) {
                     Icon(
