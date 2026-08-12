@@ -23,17 +23,17 @@ object ContactCardMatomo {
 
     private var matomoInstance: Matomo? = null
 
-    fun setMatomoInstance(matomo: Matomo) {
+    fun init(matomo: Matomo) {
         matomoInstance = matomo
     }
 
     fun trackEvent(name: String) {
-        matomoInstance?.trackEvent(ContactCardCategory, name)
+        matomoInstance?.trackEvent(CONTACT_CARD_CATEGORY, name)
     }
 
     fun trackScreen(screenName: String) {
         matomoInstance?.trackScreen(path = screenName, title = screenName)
     }
 
-    const val ContactCardCategory = "contactCard"
+    const val CONTACT_CARD_CATEGORY = "contactCard"
 }

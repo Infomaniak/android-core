@@ -62,9 +62,9 @@ private suspend fun Card.getAvatarDataOrNull(): Pair<String?, String?> {
 
             val mimeType = body.contentType()?.subtype?.uppercase()
             val bytes = body.bytes()
-            
+
             if (bytes.size > MAX_AVATAR_SIZE) return@runCatching null to null
-            
+
             val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
 
             base64 to mimeType

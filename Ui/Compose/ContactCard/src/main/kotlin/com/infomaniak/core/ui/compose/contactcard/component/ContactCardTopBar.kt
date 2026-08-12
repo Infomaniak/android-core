@@ -44,11 +44,12 @@ internal fun ContactCardTopBar(
         },
         navigationIcon = navigationIcon,
         actions = actions,
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = containerColor,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            scrolledContainerColor = Color.Unspecified,
             navigationIconContentColor = MaterialTheme.colorScheme.primary,
-            actionIconContentColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            actionIconContentColor = MaterialTheme.colorScheme.primary
         ),
     )
 }
