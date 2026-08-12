@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.onboarding.models.OnboardingLottieSource
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.lottiefiles.dotlottie.core.compose.runtime.DotLottieController
 import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation
 
@@ -102,7 +102,7 @@ object OnboardingComponents {
      * Easy to reuse way of displaying a .lottie animation with embedded themes. When on the same screen, the animation will play
      * once and then stop forever and not loop. The animation will restart from zero when leaving the page and coming back to it.
      *
-     * @param dotLottieSource the lottie animation to display.
+     * @param source the lottie animation to display.
      * @param isCurrentPageVisible whether or not the current page is presented to the user. This makes it so the animation only
      * starts playing when the page is presented to the user and not while it's loaded but outside of the screen. This also makes
      * so the animation can start again when the user goes back to a previously seen page.
