@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -113,6 +114,15 @@ private fun ContactCardScreen(
     val isPreview = state is ContactCardUiState.Preview
     val isOnboarding = state is ContactCardUiState.Onboarding
     val isError = state is ContactCardUiState.Error
+    
+    LaunchedEffect(isOnboarding, isEditing, isPreview) {
+        when {
+            isOnboarding -> ContactCardMatomo.trackScreen("ContactCardOnboardingView")
+            isEditing -> ContactCardMatomo.trackScreen("ContactCardFromView")
+            isPreview -> ContactCardMatomo.trackScreen("ContactCardQRCodeView")
+        }
+    }
+    
     var requestSave by remember { mutableStateOf(false) }
     var showActionsBottomSheet by remember { mutableStateOf(false) }
     var pendingDelete by remember { mutableStateOf(false) }
