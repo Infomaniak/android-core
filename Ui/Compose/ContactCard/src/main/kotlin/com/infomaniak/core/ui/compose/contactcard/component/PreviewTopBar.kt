@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.ui.compose.contactcard.R
@@ -38,7 +39,7 @@ internal fun PreviewTopBar(
         navigationIcon = {
             IconButton(onClick = onClose) {
                 Icon(
-                    imageVector = Icons.Filled.Close,
+                    painter = painterResource(R.drawable.ic_cross),
                     contentDescription = stringResource(RCore.string.buttonClose),
                     tint = MaterialTheme.colorScheme.primary,
                 )
@@ -47,7 +48,7 @@ internal fun PreviewTopBar(
         actions = {
             IconButton(onClick = onMore) {
                 Icon(
-                    imageVector = Icons.Filled.MoreVert,
+                    painter = painterResource(R.drawable.ic_param_dots),
                     contentDescription = stringResource(R.string.buttonMore),
                     tint = MaterialTheme.colorScheme.primary,
                 )
