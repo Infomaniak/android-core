@@ -20,4 +20,5 @@ sealed interface ContactCardTopBarState {
     data class Editor(val onCancel: () -> Unit, val onSave: () -> Unit) : ContactCardTopBarState
     data class Preview(val onClose: () -> Unit, val onMore: () -> Unit) : ContactCardTopBarState
     data class Default(val onBack: () -> Unit) : ContactCardTopBarState
+    data class Onboarding(val onBack: () -> Unit) : ContactCardTopBarState
 }

@@ -33,14 +33,17 @@ internal fun ContactCardTopBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     containerColor: Color = Color.Transparent,
+    showTitle: Boolean = true,
 ) {
     CenterAlignedTopAppBar(
         title = {
-            Text(
-                text = stringResource(R.string.contactCardTitle),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+            if (showTitle) {
+                Text(
+                    text = stringResource(R.string.contactCardTitle),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
         },
         navigationIcon = navigationIcon,
         actions = actions,
