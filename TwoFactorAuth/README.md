@@ -1,4 +1,4 @@
-# 2 factor authentication
+# 2-factor authentication
 
 ## How to integrate into a new app (Part One, polling-only)
 
@@ -10,28 +10,38 @@ It does NOT include notifications support, which is an extra (Part Two).
 Depend on these 2FA related libraries:
 
 ```kotlin
-implementation(project(":Core:TwoFactorAuth:Front"))
-implementation(project(":Core:TwoFactorAuth:Back:WithUserDb"))
+implementation(core.infomaniak.core.twofactorauth.back.withuserdb)
+implementation(core.infomaniak.core.twofactorauth.front)
 ```
 
 ### 2. Define the TwoFactorAuthManager singleton
 
 #### A. With the user db dependency
 
-Example:
+Example with top-level declaration:
 
 ```kotlin
 /**
- * Singleton for incoming 2FA (two factor authentication) challenges.
+ * Singleton for incoming 2FA (two-factor authentication) challenges.
  *
  * Not a ViewModel because the state needs to be scoped for the entire app.
  */
 val twoFactorAuthManager = TwoFactorAuthManager { userId -> AccountUtils.getHttpClient(userId) }
 ```
 
+Example with annotation based dependency injection:
+
+```kotlin
+@Provides
+@Singleton
+fun provideTwoFactorAuthManager(accountUtils: AccountUtils): TwoFactorAuthManager {
+    return TwoFactorAuthManager { userId -> accountUtils.getHttpClient(userId) }
+}
+```
+
 #### B. With NO dependency on the user db
 
-If you can't or don't want to depend on the user database dependency, you need to provide several more parameters.
+If you can't or don't want to depend on the user database dependency, you need to provide several extra parameters.
 Here's an example.
 
 ```kotlin
@@ -64,10 +74,17 @@ Example:
 
 ```kotlin
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var twoFactorAuthManager: TwoFactorAuthManager // If using annotation based DI lib.
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            TwoFactorAuthApprovalAutoManagedBottomSheet(twoFactorAuthManager) // References the singleton declare just before.
+            TwoFactorAuthApprovalAutoManagedBottomSheet(
+                twoFactorAuthManager = twoFactorAuthManager, // References the member var, or the singleton.
+                isInDarkTheme = isSystemInDarkTheme()
+            )
             Whatever()
         }
     }
@@ -81,10 +98,19 @@ Example:
 
 ```kotlin
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var twoFactorAuthManager: TwoFactorAuthManager // If using annotation based DI lib.
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(whatever)
-        addComposableOverlay { TwoFactorAuthApprovalAutoManagedBottomSheet(twoFactorAuthManager) }
+        addComposableOverlay {
+            TwoFactorAuthApprovalAutoManagedBottomSheet(
+                twoFactorAuthManager = twoFactorAuthManager, // References the member var, or the singleton.
+                isInDarkTheme = isSystemInDarkTheme()
+            )
+        }
     }
 }
 ```
@@ -104,7 +130,7 @@ For example, if the host app is published to F-Droid + the Google Play Store and
 Add this dependency in the host app's Gradle build file:
 
 ```kotlin
-"standardImplementation"(project(":Core:Notifications:Registration"))
+"standardImplementation"(core.infomaniak.core.notifications.registration)
 ```
 
 Here, "standard" matches the product flavor that includes Firebase/Google Play Services dependencies.
@@ -120,10 +146,10 @@ https://github.com/Infomaniak/android-kDrive/pull/1872/changes
 https://github.com/Infomaniak/android-kMail/pull/2698/changes
 
 Here's the list of changes you need to add from the example PRs above:
-- Ensure `TwoFactorAuthNotifications.channel()` is created/submitted to Android's NotificationManager.
-- Ensure `NotificationsRegistrationManager` is added in `userDataCleanableList` at the beginning of the app process for the Play Services app variant.
-- Ensure the user addition and removal functions to call `resetForUser` in elements registered `userDataCleanableList` (already done if added Cross-app login first).
-- Ensure `NotificationsRegistrationManager.scheduleWorkerOnUpdate` is called in an app process wide coroutine, right from the app process start.
-- Ensure the `Application` subclass is declared properly in the manifest for the Play Services dependent product flavor
-- In the `FirebaseMessagingService` subclass (create it and declare it in the manifest if needed), make sure the `onNewToken` and `onMessageReceived` functions are implemented properly to forward the new tokens to `NotificationsRegistrationManager`, and matching notifications (the ones with `TwoFactorAuthNotifications.TYPE` in key `"type"`), forwarded to `twoFactorAuthManager.onApprovalChallengePushed(…)`.
-- Ensure any other push notification topics are properly integrated for `RegisterUserDeviceWorker` and `NotificationsRegistrationManager.scheduleWorkerOnUpdate`.
+1. Ensure `TwoFactorAuthNotifications.channel()` is created/submitted to Android's NotificationManager.
+2. Ensure `NotificationsRegistrationManager` is added in `userDataCleanableList` at the beginning of the app process for the Play Services app variant.
+3. Ensure the user addition and removal functions to call `resetForUser` in elements registered `userDataCleanableList` (already done if added Cross-app login first).
+4. Ensure `NotificationsRegistrationManager.scheduleWorkerOnUpdate` is called in an app process wide coroutine, right from the app process start.
+5. Ensure the `Application` subclass is declared properly in the manifest for the Play Services dependent product flavor
+6. In the `FirebaseMessagingService` subclass (create it and declare it in the manifest if needed), make sure the `onNewToken` and `onMessageReceived` functions are implemented properly to forward the new tokens to `NotificationsRegistrationManager`, and matching notifications (the ones with `TwoFactorAuthNotifications.TYPE` in key `"type"`), forwarded to `twoFactorAuthManager.onApprovalChallengePushed(…)`.
+7. Ensure any other push notification topics are properly integrated for `RegisterUserDeviceWorker` and `NotificationsRegistrationManager.scheduleWorkerOnUpdate`.
