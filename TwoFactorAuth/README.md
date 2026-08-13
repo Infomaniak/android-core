@@ -39,10 +39,30 @@ fun provideTwoFactorAuthManager(accountUtils: AccountUtils): TwoFactorAuthManage
 }
 ```
 
-#### B. With NO dependency on the user db
+#### B. With NO dependency on the user db (not fully supported)
 
-If you can't or don't want to depend on the user database dependency, you need to provide several extra parameters.
-Here's an example.
+If you can't or don't want to depend on the user database dependency, there is a way.
+
+**⚠️⚠️ NOTE: ⚠️⚠️**
+
+Currently, the notifications part doesn't work without the user db, because so far, all our apps are using the user db,
+including apps that initially were not projected to do so.
+
+Technically, it is possible to make a user-db free version of the `notifications.registration` module, but it'll be
+done only if needed by an app.
+
+##### How to
+
+1. Drop the `.withuserdb` in the dependency
+
+```kotlin
+-implementation(core.infomaniak.core.twofactorauth.back.withuserdb)
++implementation(core.infomaniak.core.twofactorauth.back)
+```
+
+2. Provide the required extra parameters.
+
+Example:
 
 ```kotlin
 val twoFactorAuthManager = TwoFactorAuthManager(
