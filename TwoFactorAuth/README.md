@@ -47,8 +47,8 @@ Here's an example.
 ```kotlin
 val twoFactorAuthManager = TwoFactorAuthManager(
     coroutineScope = coroutineScope,
-    userIds = someStorage.connectedUsers.map(mutableSetOf()) { users ->
-        users.map { it.id }
+    userIds = someStorage.connectedUsers.map { users ->
+        users.map(mutableSetOf()) { it.id }
     }.distinctUntilChanged(),
     getAccountInfo = {
         val info = getUserAccountInfoById(it)
