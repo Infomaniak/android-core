@@ -24,6 +24,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ fun WebView(
     webChromeClient: WebChromeClient? = null,
     getWebView: ((WebView) -> Unit)? = null,
 ) {
+    val modifier = if (withSafeArea) Modifier.safeDrawingPadding() else Modifier
     AndroidView(
         modifier = modifier,
         factory = {
