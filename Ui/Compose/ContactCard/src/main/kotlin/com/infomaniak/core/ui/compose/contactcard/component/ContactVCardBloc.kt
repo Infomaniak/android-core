@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.CardLinkType
 import com.infomaniak.core.auth.models.user.User
@@ -93,12 +94,14 @@ internal fun ContactVCardBloc(user: User, card: Card) {
 
 @Preview(name = "ContactVCardBloc")
 @Composable
-private fun ContactVCardBlocPreview() {
+private fun ContactVCardBlocPreview(
+    @PreviewParameter(ContactPreviewProvider::class) contactData: PreviewContactData,
+) {
     MaterialTheme {
         Surface {
             ContactVCardBloc(
-                user = previewUser(),
-                card = previewCard(),
+                user = contactData.user,
+                card = contactData.card,
             )
         }
     }
