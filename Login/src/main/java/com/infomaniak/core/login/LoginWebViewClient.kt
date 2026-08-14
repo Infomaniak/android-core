@@ -152,12 +152,12 @@ open class LoginWebViewClient(
     }
 
     private fun shouldAllowLocalhostSslError(error: SslError?): Boolean {
-        if (!activity.isAppDebuggable()) return false
+        if (!isAppDebuggable()) return false
         val certificate = error?.certificate ?: return false
         return certificate.issuedBy?.cName == "localhost" && certificate.issuedTo?.cName == "localhost"
     }
 
-    private fun Activity.isAppDebuggable(): Boolean {
-        return (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+    private fun isAppDebuggable(): Boolean {
+        return (activity.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
     }
 }
