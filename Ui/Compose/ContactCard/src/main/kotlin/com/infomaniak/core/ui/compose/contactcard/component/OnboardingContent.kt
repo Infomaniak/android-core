@@ -51,7 +51,6 @@ import com.infomaniak.core.ui.compose.margin.Margin
 
 @Composable
 internal fun OnboardingContent(
-    userName: String,
     onCreate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -142,7 +141,6 @@ private fun OnboardingContentPreview() {
     MaterialTheme {
         Surface {
             OnboardingContent(
-                userName = "Alice Doe",
                 onCreate = {},
             )
         }

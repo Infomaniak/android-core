@@ -24,8 +24,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -38,27 +36,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.ui.compose.contactcard.component.ContactCardTopBar
 import com.infomaniak.core.ui.compose.contactcard.component.ContactPreviewProvider
 import com.infomaniak.core.ui.compose.contactcard.component.DefaultDeleteConfirmationDialog
+import com.infomaniak.core.ui.compose.contactcard.component.DefaultTopBar
 import com.infomaniak.core.ui.compose.contactcard.component.EditorContent
-import com.infomaniak.core.ui.compose.contactcard.component.EditorTopBar
 import com.infomaniak.core.ui.compose.contactcard.component.OnboardingContent
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewActionsBottomSheet
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewContactData
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewContent
-import com.infomaniak.core.ui.compose.contactcard.component.PreviewTopBar
 
 @Composable
 fun ContactCardScreen(
@@ -66,7 +59,6 @@ fun ContactCardScreen(
     onShare: (Card) -> Unit,
     viewModel: ContactCardViewModel = viewModel(),
     confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
-    confirmValidationError: ((onConfirmed: () -> Unit) -> Unit)? = null,
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
     colors: ContactCardColors = ContactCardDefaults.colors(),
 ) {
@@ -85,7 +77,6 @@ fun ContactCardScreen(
         onUpdateDraft = viewModel::updateDraft,
         onShare = onShare,
         confirmDelete = confirmDelete,
-        confirmValidationError = confirmValidationError,
         topBar = topBar,
         colors = colors,
     )
@@ -106,14 +97,13 @@ private fun ContactCardScreen(
     onUpdateDraft: (ContactCardEditorState) -> Unit,
     onShare: (Card) -> Unit,
     confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
-    confirmValidationError: ((onConfirmed: () -> Unit) -> Unit)? = null,
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
     colors: ContactCardColors = ContactCardDefaults.colors(),
 ) {
     val isEditing = state is ContactCardUiState.Editing
     val isPreview = state is ContactCardUiState.Preview
     val isOnboarding = state is ContactCardUiState.Onboarding
-    
+
     LaunchedEffect(isOnboarding, isEditing, isPreview) {
         when {
             isOnboarding -> ContactCardMatomo.trackScreen("ContactCardOnboardingView")
@@ -121,7 +111,7 @@ private fun ContactCardScreen(
             isPreview -> ContactCardMatomo.trackScreen("ContactCardQRCodeView")
         }
     }
-    
+
     var requestSave by remember { mutableStateOf(false) }
     var showActionsBottomSheet by remember { mutableStateOf(false) }
     var pendingDelete by remember { mutableStateOf(false) }
@@ -183,7 +173,6 @@ private fun ContactCardScreen(
                     }
                     is ContactCardUiState.Onboarding -> OnboardingContent(
                         modifier = Modifier.fillMaxSize(),
-                        userName = "${state.user.firstname} ${state.user.lastname}",
                         onCreate = { onCreate(state.user) },
                     )
                     is ContactCardUiState.Preview -> PreviewContent(
@@ -203,7 +192,6 @@ private fun ContactCardScreen(
                         onAddAdditionalUrl = onAddAdditionalUrl,
                         onRemoveAdditionalUrl = onRemoveAdditionalUrl,
                         onUpdateDraft = onUpdateDraft,
-                        confirmValidationError = confirmValidationError,
                     )
                 }
             }
@@ -241,43 +229,6 @@ private fun ContactCardScreen(
 }
 
 //region Previews
-
-@Composable
-private fun DefaultTopBar(state: ContactCardTopBarState) {
-    when (state) {
-        is ContactCardTopBarState.Editor -> EditorTopBar(
-            onCancel = state.onCancel,
-            onSave = state.onSave,
-        )
-        is ContactCardTopBarState.Preview -> PreviewTopBar(
-            onClose = state.onClose,
-            onMore = state.onMore,
-        )
-        is ContactCardTopBarState.Default -> ContactCardTopBar(
-            navigationIcon = {
-                IconButton(onClick = state.onBack) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
-                        contentDescription = stringResource(R.string.contentDescriptionBackButton),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                }
-            },
-        )
-        is ContactCardTopBarState.Onboarding -> ContactCardTopBar(
-            showTitle = false,
-            navigationIcon = {
-                IconButton(onClick = state.onBack) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
-                        contentDescription = stringResource(R.string.contentDescriptionBackButton),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                }
-            },
-        )
-    }
-}
 
 @Preview(name = "Loading")
 @Composable
