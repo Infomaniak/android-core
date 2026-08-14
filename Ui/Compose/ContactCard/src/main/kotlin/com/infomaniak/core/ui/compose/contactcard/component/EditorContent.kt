@@ -50,6 +50,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.ui.compose.contactcard.ContactCardEditorState
+import com.infomaniak.core.ui.compose.contactcard.model.ContactCardCallbacks
+import com.infomaniak.core.ui.compose.contactcard.model.isValid
 import com.infomaniak.core.ui.compose.contactcard.EditableUrl
 import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -58,11 +60,8 @@ import com.infomaniak.core.ui.compose.margin.Margin
 internal fun EditorContent(
     editor: ContactCardEditorState,
     requestSave: Boolean,
+    callbacks: ContactCardCallbacks,
     onSaveHandled: () -> Unit,
-    onSave: () -> Unit,
-    onAddAdditionalUrl: () -> Unit,
-    onRemoveAdditionalUrl: (String) -> Unit,
-    onUpdateDraft: (ContactCardEditorState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showValidationError by remember { mutableStateOf(false) }
@@ -70,9 +69,7 @@ internal fun EditorContent(
     LaunchedEffect(requestSave) {
         if (requestSave) {
             onSaveHandled()
-            if (editor.isValid()) {
-                onSave()
-            } else {
+            if (!editor.isValid()) {
                 showValidationError = true
             }
         }
@@ -93,23 +90,18 @@ internal fun EditorContent(
     ) {
         GeneralInformationSection(
             editor = editor,
-            onUpdateDraft = onUpdateDraft,
+            onUpdateDraft = callbacks.onUpdateDraft,
         )
-
         LinksAndSocialNetworkSection(
             editor = editor,
-            onUpdateDraft = onUpdateDraft,
-            onAddAdditionalUrl = onAddAdditionalUrl,
-            onRemoveAdditionalUrl = onRemoveAdditionalUrl,
+            onUpdateDraft = callbacks.onUpdateDraft,
+            onAddAdditionalUrl = callbacks.onAddAdditionalUrl,
+            onRemoveAdditionalUrl = callbacks.onRemoveAdditionalUrl,
         )
     }
 }
 
-private fun ContactCardEditorState.isValid(): Boolean =
-    firstName.isNotBlank() &&
-            lastName.isNotBlank() &&
-            email.isNotBlank() &&
-            phone.isNotBlank()
+// Moved to ContactCardCallbacks.kt
 
 @Composable
 private fun GeneralInformationSection(
@@ -282,10 +274,18 @@ private fun EditorContentPreview(
                 editor = ContactCardEditorState.fromCard(contactData.card, fallbackAvatarUrl = "https://example.com/avatar.png"),
                 requestSave = false,
                 onSaveHandled = {},
-                onSave = {},
-                onAddAdditionalUrl = {},
-                onRemoveAdditionalUrl = {},
-                onUpdateDraft = {},
+                callbacks = ContactCardCallbacks(
+                    onBack = {},
+                    onCreate = { _ -> },
+                    onEdit = { _, _ -> },
+                    onDelete = { _ -> },
+                    onCancel = { _ -> },
+                    onSave = { _, _, _ -> },
+                    onAddAdditionalUrl = {},
+                    onRemoveAdditionalUrl = {},
+                    onUpdateDraft = {},
+                    onShare = {},
+                ),
             )
         }
     }

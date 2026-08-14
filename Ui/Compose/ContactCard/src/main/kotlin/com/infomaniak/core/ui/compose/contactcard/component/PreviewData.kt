@@ -24,12 +24,12 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
 import com.infomaniak.core.auth.models.user.preferences.Preferences
 
-public data class PreviewContactData(
+data class PreviewContactData(
     val user: User,
     val card: Card,
 )
 
-public class ContactPreviewProvider : PreviewParameterProvider<PreviewContactData> {
+class ContactPreviewProvider : PreviewParameterProvider<PreviewContactData> {
     override val values: Sequence<PreviewContactData> = sequenceOf(
         PreviewContactData(
             user = User(
