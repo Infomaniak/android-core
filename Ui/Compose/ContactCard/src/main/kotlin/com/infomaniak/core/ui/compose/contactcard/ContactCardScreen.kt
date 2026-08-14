@@ -45,19 +45,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.ui.compose.contactcard.component.ContactCardTopBar
+import com.infomaniak.core.ui.compose.contactcard.component.ContactPreviewProvider
 import com.infomaniak.core.ui.compose.contactcard.component.DefaultDeleteConfirmationDialog
 import com.infomaniak.core.ui.compose.contactcard.component.EditorContent
 import com.infomaniak.core.ui.compose.contactcard.component.EditorTopBar
 import com.infomaniak.core.ui.compose.contactcard.component.OnboardingContent
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewActionsBottomSheet
+import com.infomaniak.core.ui.compose.contactcard.component.PreviewContactData
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewContent
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewTopBar
-import com.infomaniak.core.ui.compose.contactcard.component.previewCard
-import com.infomaniak.core.ui.compose.contactcard.component.previewUser
 import com.infomaniak.core.common.R as RCore
 
 @Composable
@@ -308,11 +309,13 @@ private fun ContactCardScreenLoadingPreview() {
 
 @Preview(name = "Onboarding")
 @Composable
-private fun ContactCardScreenOnboardingPreview() {
+private fun ContactCardScreenOnboardingPreview(
+    @PreviewParameter(ContactPreviewProvider::class) contactData: PreviewContactData,
+) {
     MaterialTheme {
         Surface {
             ContactCardScreen(
-                state = ContactCardUiState.Onboarding(user = previewUser()),
+                state = ContactCardUiState.Onboarding(user = contactData.user),
                 onBack = {},
                 onCreate = {},
                 onEdit = {},
@@ -330,13 +333,15 @@ private fun ContactCardScreenOnboardingPreview() {
 
 @Preview(name = "Preview")
 @Composable
-private fun ContactCardScreenPreviewPreview() {
+private fun ContactCardScreenPreviewPreview(
+    @PreviewParameter(ContactPreviewProvider::class) contactData: PreviewContactData,
+) {
     MaterialTheme {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Preview(
-                    user = previewUser().copy(card = previewCard()),
-                    card = previewCard(),
+                    user = contactData.user.copy(card = contactData.card),
+                    card = contactData.card,
                 ),
                 onBack = {},
                 onCreate = {},
@@ -355,14 +360,16 @@ private fun ContactCardScreenPreviewPreview() {
 
 @Preview(name = "Editing")
 @Composable
-private fun ContactCardScreenEditingPreview() {
+private fun ContactCardScreenEditingPreview(
+    @PreviewParameter(ContactPreviewProvider::class) contactData: PreviewContactData,
+) {
     MaterialTheme {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Editing(
-                    user = previewUser(),
-                    editor = ContactCardEditorState.fromCard(previewCard(), fallbackAvatarUrl = "https://example.com/avatar.png"),
-                    existingCard = previewCard(),
+                    user = contactData.user,
+                    editor = ContactCardEditorState.fromCard(contactData.card, fallbackAvatarUrl = contactData.user.avatar),
+                    existingCard = contactData.card,
                 ),
                 onBack = {},
                 onCreate = {},
