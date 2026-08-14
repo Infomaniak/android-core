@@ -54,12 +54,11 @@ private suspend fun Card.getAvatarDataOrNull(): Pair<String?, String?> {
         val request = Request.Builder().url(url).build()
 
         HttpClient.okHttpClient.newCall(request).await().use { response ->
-            val body = response.body ?: return@runCatching null to null
-
+            val body = response.body
             if (!response.isSuccessful) return@runCatching null to null
 
             val contentLength = body.contentLength()
-            if (contentLength > MAX_AVATAR_SIZE) return@runCatching null to null
+            if (contentLength > MAX_AVATAR_SIZE || contentLength == (-1).toLong()) return@runCatching null to null
 
             val mimeType = body.contentType()?.subtype?.uppercase()
             val bytes = body.bytes()
