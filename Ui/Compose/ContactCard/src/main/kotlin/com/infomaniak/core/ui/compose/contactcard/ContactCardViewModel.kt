@@ -42,8 +42,6 @@ class ContactCardViewModel(
     private val _uiState = MutableStateFlow<ContactCardUiState>(ContactCardUiState.Loading)
     val uiState: StateFlow<ContactCardUiState> = _uiState.asStateFlow()
 
-    private var currentUser: User? = null
-
     init {
         loadUser()
     }
@@ -51,15 +49,13 @@ class ContactCardViewModel(
     private fun loadUser() {
         viewModelScope.launch {
             val user = accountUtils.getUserById(userId)
-            currentUser = user
             if (_uiState.value !is ContactCardUiState.Editing) {
-                _uiState.value = user?.toUiState() ?: ContactCardUiState.Error
+                _uiState.value = user?.toUiState() ?: ContactCardUiState.Closed
             }
         }
     }
 
-    fun startCreate() {
-        val user = currentUser ?: return
+    fun startCreate(user: User) {
         val editor = ContactCardEditorState.fromUser(user)
         _uiState.value = ContactCardUiState.Editing(
             user = user,
@@ -69,8 +65,7 @@ class ContactCardViewModel(
         )
     }
 
-    fun startEdit(card: Card) {
-        val user = currentUser ?: return
+    fun startEdit(user: User, card: Card) {
         val editor = ContactCardEditorState.fromCard(card, user.avatar)
         _uiState.value = ContactCardUiState.Editing(
             user = user,
@@ -80,8 +75,8 @@ class ContactCardViewModel(
         )
     }
 
-    fun cancelEditing() {
-        _uiState.value = currentUser?.toUiState() ?: ContactCardUiState.Error
+    fun cancelEditing(user: User) {
+        _uiState.value = user.toUiState()
     }
 
     fun updateDraft(editor: ContactCardEditorState) {
@@ -99,33 +94,27 @@ class ContactCardViewModel(
         updateDraft(current.editor.copy(additionalUrls = current.editor.additionalUrls.filterNot { it.id == id }))
     }
 
-    fun saveDraft() {
-        val current = _uiState.value as? ContactCardUiState.Editing ?: return
+    fun saveDraft(user: User, editor: ContactCardEditorState, existingCard: Card?) {
+        if (!editor.validate()) return
 
-        if (!current.editor.validate()) return
-
-        if (current.existingCard == null) {
+        if (existingCard == null) {
             ContactCardMatomo.trackEvent("create")
         }
 
         viewModelScope.launch {
-            val card = current.editor.toCard()
+            val card = editor.toCard()
             accountUtils.updateUserCard(userId, card)
-            val updatedUser = current.user.copy(card = card)
-            currentUser = updatedUser
+            val updatedUser = user.copy(card = card)
             _uiState.value = ContactCardUiState.Preview(user = updatedUser, card = card)
         }
     }
 
-    fun deleteCard() {
-        val current = _uiState.value as? ContactCardUiState.Preview ?: return
-
+    fun deleteCard(user: User) {
         ContactCardMatomo.trackEvent("delete")
 
         viewModelScope.launch {
             accountUtils.updateUserCard(userId, null)
-            val updatedUser = current.user.copy(card = null)
-            currentUser = updatedUser
+            val updatedUser = user.copy(card = null)
             _uiState.value = ContactCardUiState.Onboarding(updatedUser)
         }
     }
@@ -141,7 +130,7 @@ class ContactCardViewModel(
 
 sealed interface ContactCardUiState {
     data object Loading : ContactCardUiState
-    data object Error : ContactCardUiState
+    data object Closed : ContactCardUiState
     data class Onboarding(val user: User) : ContactCardUiState
     data class Preview(val user: User, val card: Card) : ContactCardUiState
     data class Editing(
