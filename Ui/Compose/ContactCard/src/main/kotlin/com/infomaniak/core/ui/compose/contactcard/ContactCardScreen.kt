@@ -52,6 +52,8 @@ import com.infomaniak.core.ui.compose.contactcard.component.OnboardingContent
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewActionsBottomSheet
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewContactData
 import com.infomaniak.core.ui.compose.contactcard.component.PreviewContent
+import com.infomaniak.core.ui.compose.contactcard.model.ContactCardCallbacks
+import com.infomaniak.core.ui.compose.contactcard.model.isValid
 
 @Composable
 fun ContactCardScreen(
@@ -66,17 +68,19 @@ fun ContactCardScreen(
 
     ContactCardScreen(
         state = state,
-        onBack = onBack,
-        onCreate = viewModel::startCreate,
-        onEdit = viewModel::startEdit,
-        onDelete = viewModel::deleteCard,
-        onCancel = viewModel::cancelEditing,
-        onSave = viewModel::saveDraft,
-        onAddAdditionalUrl = viewModel::addAdditionalUrl,
-        onRemoveAdditionalUrl = viewModel::removeAdditionalUrl,
-        onUpdateDraft = viewModel::updateDraft,
-        onShare = onShare,
-        confirmDelete = confirmDelete,
+        callbacks = ContactCardCallbacks(
+            onBack = onBack,
+            onCreate = viewModel::startCreate,
+            onEdit = viewModel::startEdit,
+            onDelete = viewModel::deleteCard,
+            onCancel = viewModel::cancelEditing,
+            onSave = viewModel::saveDraft,
+            onAddAdditionalUrl = viewModel::addAdditionalUrl,
+            onRemoveAdditionalUrl = viewModel::removeAdditionalUrl,
+            onUpdateDraft = viewModel::updateDraft,
+            onShare = onShare,
+            confirmDelete = confirmDelete,
+        ),
         topBar = topBar,
         colors = colors,
     )
@@ -86,17 +90,7 @@ fun ContactCardScreen(
 @Composable
 private fun ContactCardScreen(
     state: ContactCardUiState,
-    onBack: () -> Unit,
-    onCreate: (user: User) -> Unit,
-    onEdit: (user: User, card: Card) -> Unit,
-    onDelete: (user: User) -> Unit,
-    onCancel: (user: User) -> Unit,
-    onSave: (user: User, editor: ContactCardEditorState, existingCard: Card?) -> Unit,
-    onAddAdditionalUrl: () -> Unit,
-    onRemoveAdditionalUrl: (String) -> Unit,
-    onUpdateDraft: (ContactCardEditorState) -> Unit,
-    onShare: (Card) -> Unit,
-    confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
+    callbacks: ContactCardCallbacks,
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
     colors: ContactCardColors = ContactCardDefaults.colors(),
 ) {
@@ -110,13 +104,19 @@ private fun ContactCardScreen(
     val isOnboarding = state is ContactCardUiState.Onboarding
     val scaffoldContainerColor = if (isPreview) colors.background else MaterialTheme.colorScheme.background
 
+    LaunchedEffect(requestSave) {
+        if (requestSave && state is ContactCardUiState.Editing && state.editor.isValid()) {
+            callbacks.onSave(state.user, state.editor, state.existingCard)
+        }
+    }
+
     Scaffold(
         containerColor = scaffoldContainerColor,
         topBar = {
             val topBarState = rememberTopBarState(
                 state = state,
-                onBack = onBack,
-                onCancel = { onCancel(it) },
+                onBack = callbacks.onBack,
+                onCancel = { callbacks.onCancel(it) },
                 onRequestSave = { requestSave = true },
                 onShowActions = { showActionsBottomSheet = true },
             )
@@ -144,14 +144,8 @@ private fun ContactCardScreen(
                 ContactCardBodyContent(
                     state = state,
                     requestSave = requestSave,
-                    onBack = onBack,
-                    onCreate = onCreate,
+                    callbacks = callbacks,
                     onSaveHandled = { requestSave = false },
-                    onSave = onSave,
-                    onAddAdditionalUrl = onAddAdditionalUrl,
-                    onRemoveAdditionalUrl = onRemoveAdditionalUrl,
-                    onUpdateDraft = onUpdateDraft,
-                    onShare = onShare,
                 )
             }
         }
@@ -162,12 +156,12 @@ private fun ContactCardScreen(
             onDismiss = { showActionsBottomSheet = false },
             onEdit = {
                 showActionsBottomSheet = false
-                onEdit(state.user, (state as ContactCardUiState.Preview).card)
+                callbacks.onEdit(state.user, state.card)
             },
             onDelete = {
                 showActionsBottomSheet = false
-                if (confirmDelete != null) {
-                    confirmDelete { onDelete(state.user) }
+                if (callbacks.confirmDelete != null) {
+                    callbacks.confirmDelete { callbacks.onDelete(state.user) }
                 } else {
                     pendingDelete = true
                 }
@@ -181,7 +175,7 @@ private fun ContactCardScreen(
             onDismiss = { pendingDelete = false },
             onConfirm = {
                 pendingDelete = false
-                onDelete(previewState.user)
+                callbacks.onDelete(previewState.user)
             },
         )
     }
@@ -227,14 +221,8 @@ private fun rememberTopBarState(
 private fun ContactCardBodyContent(
     state: ContactCardUiState,
     requestSave: Boolean,
-    onBack: () -> Unit,
-    onCreate: (User) -> Unit,
+    callbacks: ContactCardCallbacks,
     onSaveHandled: () -> Unit,
-    onSave: (User, ContactCardEditorState, Card?) -> Unit,
-    onAddAdditionalUrl: () -> Unit,
-    onRemoveAdditionalUrl: (String) -> Unit,
-    onUpdateDraft: (ContactCardEditorState) -> Unit,
-    onShare: (Card) -> Unit,
 ) {
     when (state) {
         ContactCardUiState.Loading -> {
@@ -247,18 +235,18 @@ private fun ContactCardBodyContent(
         }
         ContactCardUiState.Closed -> {
             LaunchedEffect(Unit) {
-                onBack()
+                callbacks.onBack()
             }
         }
         is ContactCardUiState.Onboarding -> OnboardingContent(
             modifier = Modifier.fillMaxSize(),
-            onCreate = { onCreate(state.user) },
+            onCreate = { callbacks.onCreate(state.user) },
         )
         is ContactCardUiState.Preview -> PreviewContent(
             modifier = Modifier.fillMaxSize(),
             user = state.user,
             card = state.card,
-            onShare = { onShare(state.card) },
+            onShare = { callbacks.onShare(state.card) },
         )
         is ContactCardUiState.Editing -> EditorContent(
             modifier = Modifier
@@ -267,10 +255,7 @@ private fun ContactCardBodyContent(
             editor = state.editor,
             requestSave = requestSave,
             onSaveHandled = onSaveHandled,
-            onSave = { onSave(state.user, state.editor, state.existingCard) },
-            onAddAdditionalUrl = onAddAdditionalUrl,
-            onRemoveAdditionalUrl = onRemoveAdditionalUrl,
-            onUpdateDraft = onUpdateDraft,
+            callbacks = callbacks,
         )
     }
 }
@@ -284,16 +269,18 @@ private fun ContactCardScreenLoadingPreview() {
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Loading,
-                onBack = {},
-                onCreate = { _ -> },
-                onEdit = { _, _ -> },
-                onDelete = { _ -> },
-                onCancel = { _ -> },
-                onSave = { _, _, _ -> },
-                onAddAdditionalUrl = {},
-                onRemoveAdditionalUrl = {},
-                onUpdateDraft = {},
-                onShare = {},
+                callbacks = ContactCardCallbacks(
+                    onBack = {},
+                    onCreate = { _ -> },
+                    onEdit = { _, _ -> },
+                    onDelete = { _ -> },
+                    onCancel = { _ -> },
+                    onSave = { _, _, _ -> },
+                    onAddAdditionalUrl = {},
+                    onRemoveAdditionalUrl = {},
+                    onUpdateDraft = {},
+                    onShare = {},
+                ),
             )
         }
     }
@@ -308,16 +295,18 @@ private fun ContactCardScreenOnboardingPreview(
         Surface {
             ContactCardScreen(
                 state = ContactCardUiState.Onboarding(user = contactData.user),
-                onBack = {},
-                onCreate = { _ -> },
-                onEdit = { _, _ -> },
-                onDelete = { _ -> },
-                onCancel = { _ -> },
-                onSave = { _, _, _ -> },
-                onAddAdditionalUrl = {},
-                onRemoveAdditionalUrl = {},
-                onUpdateDraft = {},
-                onShare = {},
+                callbacks = ContactCardCallbacks(
+                    onBack = {},
+                    onCreate = { _ -> },
+                    onEdit = { _, _ -> },
+                    onDelete = { _ -> },
+                    onCancel = { _ -> },
+                    onSave = { _, _, _ -> },
+                    onAddAdditionalUrl = {},
+                    onRemoveAdditionalUrl = {},
+                    onUpdateDraft = {},
+                    onShare = {},
+                ),
             )
         }
     }
@@ -335,16 +324,18 @@ private fun ContactCardScreenPreviewPreview(
                     user = contactData.user.copy(card = contactData.card),
                     card = contactData.card,
                 ),
-                onBack = {},
-                onCreate = { _ -> },
-                onEdit = { _, _ -> },
-                onDelete = { _ -> },
-                onCancel = { _ -> },
-                onSave = { _, _, _ -> },
-                onAddAdditionalUrl = {},
-                onRemoveAdditionalUrl = {},
-                onUpdateDraft = {},
-                onShare = {},
+                callbacks = ContactCardCallbacks(
+                    onBack = {},
+                    onCreate = { _ -> },
+                    onEdit = { _, _ -> },
+                    onDelete = { _ -> },
+                    onCancel = { _ -> },
+                    onSave = { _, _, _ -> },
+                    onAddAdditionalUrl = {},
+                    onRemoveAdditionalUrl = {},
+                    onUpdateDraft = {},
+                    onShare = {},
+                ),
             )
         }
     }
@@ -363,16 +354,18 @@ private fun ContactCardScreenEditingPreview(
                     editor = ContactCardEditorState.fromCard(contactData.card, fallbackAvatarUrl = contactData.user.avatar),
                     existingCard = contactData.card,
                 ),
-                onBack = {},
-                onCreate = { _ -> },
-                onEdit = { _, _ -> },
-                onDelete = { _ -> },
-                onCancel = { _ -> },
-                onSave = { _, _, _ -> },
-                onAddAdditionalUrl = {},
-                onRemoveAdditionalUrl = {},
-                onUpdateDraft = {},
-                onShare = {},
+                callbacks = ContactCardCallbacks(
+                    onBack = {},
+                    onCreate = { _ -> },
+                    onEdit = { _, _ -> },
+                    onDelete = { _ -> },
+                    onCancel = { _ -> },
+                    onSave = { _, _, _ -> },
+                    onAddAdditionalUrl = {},
+                    onRemoveAdditionalUrl = {},
+                    onUpdateDraft = {},
+                    onShare = {},
+                ),
             )
         }
     }
