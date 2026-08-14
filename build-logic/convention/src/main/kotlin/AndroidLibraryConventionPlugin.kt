@@ -33,15 +33,22 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         apply(plugin = "com.android.library")
         apply(plugin = "org.jetbrains.kotlin.android")
 
+        val proguardRules = file("proguard-rules.pro")
+
         android {
             applyCommonConfiguration()
             defaultConfig {
-                consumerProguardFile("proguard-rules.pro")
+                if (proguardRules.exists()) {
+                    consumerProguardFile(proguardRules)
+                }
             }
             buildTypes {
                 release {
                     isMinifyEnabled = false
-                    proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+                    proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+                    if (proguardRules.exists()) {
+                        proguardFiles(proguardRules)
+                    }
                 }
             }
         }
