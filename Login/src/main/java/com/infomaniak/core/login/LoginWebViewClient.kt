@@ -20,6 +20,7 @@ package com.infomaniak.core.login
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
@@ -70,12 +71,10 @@ open class LoginWebViewClient(
     }
 
     override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-        error?.certificate?.apply {
-            if (issuedBy?.cName == "localhost" && issuedTo?.cName == "localhost") {
-                @SuppressLint("WebViewClientOnReceivedSslError")
-                handler?.proceed()
-                return
-            }
+        if (shouldAllowLocalhostSslError(error)) {
+            @SuppressLint("WebViewClientOnReceivedSslError")
+            handler?.proceed()
+            return
         }
 
         handler?.cancel()
@@ -150,5 +149,18 @@ open class LoginWebViewClient(
                 getString(RCore.string.anErrorHasOccurred)
             }
         }
+    }
+
+    private fun shouldAllowLocalhostSslError(error: SslError?): Boolean {
+        if (!isAppDebuggable()) return false
+        val sslError = error ?: return false
+        val certificate = error.certificate ?: return false
+        return sslError.url.toUri().host == "localhost" &&
+                certificate.issuedBy?.cName == "localhost" &&
+                certificate.issuedTo?.cName == "localhost"
+    }
+
+    private fun isAppDebuggable(): Boolean {
+        return (activity.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
     }
 }
