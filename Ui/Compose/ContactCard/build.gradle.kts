@@ -10,17 +10,16 @@ android {
     buildFeatures {
         compose = true
     }
-
 }
 
 dependencies {
-    implementation(project(":Network"))
     api(core.androidx.lifecycle.viewmodel.ktx)
     api(project(":Auth"))
     implementation(project(":Avatar"))
     implementation(project(":Common"))
     implementation(project(":Ui:View:PrimaryPalette"))
     implementation(project(":Ui:Compose:Margin"))
+    implementation(project(":Network"))
 
     implementation(platform(core.compose.bom))
     api(core.compose.runtime)
