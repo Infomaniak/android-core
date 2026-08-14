@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.ui.compose.contactcard.R
@@ -73,12 +74,14 @@ internal fun PreviewContent(
 
 @Preview(name = "PreviewContent")
 @Composable
-private fun PreviewContentPreview() {
+private fun PreviewContentPreview(
+    @PreviewParameter(ContactPreviewProvider::class) contactData: PreviewContactData,
+) {
     MaterialTheme {
         Surface {
             PreviewContent(
-                user = previewUser(),
-                card = previewCard(),
+                user = contactData.user,
+                card = contactData.card,
                 onShare = {},
             )
         }
