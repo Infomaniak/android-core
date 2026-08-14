@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.CardLinkType
@@ -78,10 +79,12 @@ internal fun ContactInfoRows(card: Card, modifier: Modifier = Modifier) {
 
 @Preview(name = "ContactInfoRows")
 @Composable
-private fun ContactInfoRowsPreview() {
+private fun ContactInfoRowsPreview(
+    @PreviewParameter(ContactPreviewProvider::class) contactData: PreviewContactData,
+) {
     MaterialTheme {
         Surface {
-            ContactInfoRows(card = previewCard())
+            ContactInfoRows(card = contactData.card)
         }
     }
 }

@@ -16,6 +16,7 @@
  */
 package com.infomaniak.core.ui.compose.contactcard.component
 
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.CardLink
 import com.infomaniak.core.auth.models.user.CardLinkType
@@ -23,36 +24,42 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
 import com.infomaniak.core.auth.models.user.preferences.Preferences
 
-internal fun previewUser(): User {
-    val orgPreference = OrganizationPreference(currentOrganizationId = 0)
-    val preferences = Preferences(
-        security = null,
-        organizationPreference = orgPreference,
-    )
-    return User(
-        id = 42,
-        displayName = "Alice Doe",
-        firstname = "Alice",
-        lastname = "Doe",
-        email = "alice.doe@example.com",
-        avatar = "https://example.com/avatar.png",
-        card = null,
-        login = "alice.doe",
-        isStaff = false,
-        preferences = preferences,
+public data class PreviewContactData(
+    val user: User,
+    val card: Card,
+)
+
+public class ContactPreviewProvider : PreviewParameterProvider<PreviewContactData> {
+    override val values: Sequence<PreviewContactData> = sequenceOf(
+        PreviewContactData(
+            user = User(
+                id = 42,
+                displayName = "Alice Doe",
+                firstname = "Alice",
+                lastname = "Doe",
+                email = "alice.doe@example.com",
+                avatar = "https://example.com/avatar.png",
+                card = null,
+                login = "alice.doe",
+                isStaff = false,
+                preferences = Preferences(
+                    security = null,
+                    organizationPreference = OrganizationPreference(currentOrganizationId = 0),
+                ),
+            ),
+            card = Card(
+                firstName = "Alice",
+                lastName = "Doe",
+                email = "alice.doe@example.com",
+                phone = "+41 79 123 45 67",
+                company = "Infomaniak",
+                avatarUrl = "https://example.com/avatar.png",
+                links = listOf(
+                    CardLink(CardLinkType.LinkedIn, "https://linkedin.com/in/alicedoe"),
+                    CardLink(CardLinkType.Website, "https://example.com"),
+                    CardLink(CardLinkType.Other, "https://blog.example.com"),
+                ),
+            ),
+        )
     )
 }
-
-internal fun previewCard(): Card = Card(
-    firstName = "Alice",
-    lastName = "Doe",
-    email = "alice.doe@example.com",
-    phone = "+41 79 123 45 67",
-    company = "Infomaniak",
-    avatarUrl = "https://example.com/avatar.png",
-    links = listOf(
-        CardLink(CardLinkType.LinkedIn, "https://linkedin.com/in/alicedoe"),
-        CardLink(CardLinkType.Website, "https://example.com"),
-        CardLink(CardLinkType.Other, "https://blog.example.com"),
-    ),
-)
