@@ -20,6 +20,7 @@ package com.infomaniak.core.login
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
@@ -150,5 +151,15 @@ open class LoginWebViewClient(
                 getString(RCore.string.anErrorHasOccurred)
             }
         }
+    }
+
+    private fun shouldAllowLocalhostSslError(error: SslError?): Boolean {
+        if (!activity.isAppDebuggable()) return false
+        val certificate = error?.certificate ?: return false
+        return certificate.issuedBy?.cName == "localhost" && certificate.issuedTo?.cName == "localhost"
+    }
+
+    private fun Activity.isAppDebuggable(): Boolean {
+        return (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
     }
 }
