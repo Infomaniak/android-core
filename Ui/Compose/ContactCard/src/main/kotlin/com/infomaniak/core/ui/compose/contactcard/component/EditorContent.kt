@@ -16,6 +16,7 @@
  */
 package com.infomaniak.core.ui.compose.contactcard.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -62,7 +63,6 @@ internal fun EditorContent(
     onRemoveAdditionalUrl: (String) -> Unit,
     onUpdateDraft: (ContactCardEditorState) -> Unit,
     modifier: Modifier = Modifier,
-    confirmValidationError: ((onConfirmed: () -> Unit) -> Unit)? = null,
 ) {
     var showValidationError by remember { mutableStateOf(false) }
     val isValid = editor.firstName.isNotBlank()
@@ -75,8 +75,6 @@ internal fun EditorContent(
             onSaveHandled()
             if (isValid) {
                 onSave()
-            } else if (confirmValidationError != null) {
-                confirmValidationError { }
             } else {
                 showValidationError = true
             }
@@ -94,7 +92,7 @@ internal fun EditorContent(
         modifier = modifier
             .verticalScroll(rememberScrollState())
             .padding(vertical = Margin.Medium),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(Margin.Medium),
+        verticalArrangement = Arrangement.spacedBy(Margin.Medium),
     ) {
         SectionCard(title = stringResource(R.string.generalInformation)) {
             EditorField(

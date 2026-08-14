@@ -20,6 +20,7 @@ package com.infomaniak.core.ui.compose.contactcard
 import com.infomaniak.core.matomo.Matomo
 
 object ContactCardMatomo {
+    private const val CONTACT_CARD_CATEGORY = "contactCard"
 
     private var matomoInstance: Matomo? = null
 
@@ -34,6 +35,4 @@ object ContactCardMatomo {
     fun trackScreen(screenName: String) {
         matomoInstance?.trackScreen(path = screenName, title = screenName)
     }
-
-    const val CONTACT_CARD_CATEGORY = "contactCard"
 }
