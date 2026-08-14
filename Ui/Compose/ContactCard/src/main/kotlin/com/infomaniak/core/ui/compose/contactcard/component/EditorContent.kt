@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.ui.compose.contactcard.ContactCardEditorState
+import com.infomaniak.core.ui.compose.contactcard.EditableUrl
 import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.margin.Margin
 
@@ -65,15 +66,11 @@ internal fun EditorContent(
     modifier: Modifier = Modifier,
 ) {
     var showValidationError by remember { mutableStateOf(false) }
-    val isValid = editor.firstName.isNotBlank()
-            && editor.lastName.isNotBlank()
-            && editor.email.isNotBlank()
-            && editor.phone.isNotBlank()
 
     LaunchedEffect(requestSave) {
         if (requestSave) {
             onSaveHandled()
-            if (isValid) {
+            if (editor.isValid()) {
                 onSave()
             } else {
                 showValidationError = true
@@ -94,132 +91,182 @@ internal fun EditorContent(
             .padding(vertical = Margin.Medium),
         verticalArrangement = Arrangement.spacedBy(Margin.Medium),
     ) {
-        SectionCard(title = stringResource(R.string.generalInformation)) {
-            EditorField(
-                value = editor.firstName,
-                placeholder = "${stringResource(R.string.firstName)}*",
-                onValueChange = { onUpdateDraft(editor.copy(firstName = it)) },
-            )
+        GeneralInformationSection(
+            editor = editor,
+            onUpdateDraft = onUpdateDraft,
+        )
+
+        LinksAndSocialNetworkSection(
+            editor = editor,
+            onUpdateDraft = onUpdateDraft,
+            onAddAdditionalUrl = onAddAdditionalUrl,
+            onRemoveAdditionalUrl = onRemoveAdditionalUrl,
+        )
+    }
+}
+
+private fun ContactCardEditorState.isValid(): Boolean =
+    firstName.isNotBlank() &&
+            lastName.isNotBlank() &&
+            email.isNotBlank() &&
+            phone.isNotBlank()
+
+@Composable
+private fun GeneralInformationSection(
+    editor: ContactCardEditorState,
+    onUpdateDraft: (ContactCardEditorState) -> Unit,
+) {
+    SectionCard(title = stringResource(R.string.generalInformation)) {
+        EditorField(
+            value = editor.firstName,
+            placeholder = "${stringResource(R.string.firstName)}*",
+            onValueChange = { onUpdateDraft(editor.copy(firstName = it)) },
+        )
+        FieldDivider()
+        EditorField(
+            value = editor.lastName,
+            placeholder = "${stringResource(R.string.lastName)}*",
+            onValueChange = { onUpdateDraft(editor.copy(lastName = it)) },
+        )
+        FieldDivider()
+        EditorField(
+            value = editor.email,
+            placeholder = "${stringResource(R.string.email)}*",
+            keyboardType = KeyboardType.Email,
+            onValueChange = { onUpdateDraft(editor.copy(email = it)) },
+        )
+        FieldDivider()
+        EditorField(
+            value = editor.phone,
+            placeholder = "${stringResource(R.string.phone)}*",
+            keyboardType = KeyboardType.Phone,
+            onValueChange = { onUpdateDraft(editor.copy(phone = it)) },
+        )
+        FieldDivider()
+        EditorField(
+            value = editor.company,
+            placeholder = stringResource(R.string.company),
+            onValueChange = { onUpdateDraft(editor.copy(company = it)) },
+        )
+    }
+}
+
+@Composable
+private fun LinksAndSocialNetworkSection(
+    editor: ContactCardEditorState,
+    onUpdateDraft: (ContactCardEditorState) -> Unit,
+    onAddAdditionalUrl: () -> Unit,
+    onRemoveAdditionalUrl: (String) -> Unit,
+) {
+    SectionCard(title = stringResource(R.string.linksAndSocialNetwork)) {
+        EditorField(
+            value = editor.linkedIn,
+            placeholder = stringResource(R.string.linkedIn),
+            keyboardType = KeyboardType.Uri,
+            onValueChange = { onUpdateDraft(editor.copy(linkedIn = it)) },
+        )
+        FieldDivider()
+        EditorField(
+            value = editor.facebook,
+            placeholder = stringResource(R.string.facebook),
+            keyboardType = KeyboardType.Uri,
+            onValueChange = { onUpdateDraft(editor.copy(facebook = it)) },
+        )
+        FieldDivider()
+        EditorField(
+            value = editor.instagram,
+            placeholder = stringResource(R.string.instagram),
+            keyboardType = KeyboardType.Uri,
+            onValueChange = { onUpdateDraft(editor.copy(instagram = it)) },
+        )
+        FieldDivider()
+        EditorField(
+            value = editor.x,
+            placeholder = stringResource(R.string.x),
+            keyboardType = KeyboardType.Uri,
+            onValueChange = { onUpdateDraft(editor.copy(x = it)) },
+        )
+        FieldDivider()
+        EditorField(
+            value = editor.website,
+            placeholder = stringResource(R.string.webSite),
+            keyboardType = KeyboardType.Uri,
+            onValueChange = { onUpdateDraft(editor.copy(website = it)) },
+        )
+
+        editor.additionalUrls.forEach { additionalUrl ->
             FieldDivider()
-            EditorField(
-                value = editor.lastName,
-                placeholder = "${stringResource(R.string.lastName)}*",
-                onValueChange = { onUpdateDraft(editor.copy(lastName = it)) },
-            )
-            FieldDivider()
-            EditorField(
-                value = editor.email,
-                placeholder = "${stringResource(R.string.email)}*",
-                keyboardType = KeyboardType.Email,
-                onValueChange = { onUpdateDraft(editor.copy(email = it)) },
-            )
-            FieldDivider()
-            EditorField(
-                value = editor.phone,
-                placeholder = "${stringResource(R.string.phone)}*",
-                keyboardType = KeyboardType.Phone,
-                onValueChange = { onUpdateDraft(editor.copy(phone = it)) },
-            )
-            FieldDivider()
-            EditorField(
-                value = editor.company,
-                placeholder = stringResource(R.string.company),
-                onValueChange = { onUpdateDraft(editor.copy(company = it)) },
+            AdditionalUrlItem(
+                additionalUrl = additionalUrl,
+                onValueChange = { updatedUrl ->
+                    onUpdateDraft(
+                        editor.copy(
+                            additionalUrls = editor.additionalUrls.map {
+                                if (it.id == updatedUrl.id) updatedUrl else it
+                            }
+                        )
+                    )
+                },
+                onRemove = { onRemoveAdditionalUrl(additionalUrl.id) },
             )
         }
 
-        SectionCard(title = stringResource(R.string.linksAndSocialNetwork)) {
-            EditorField(
-                value = editor.linkedIn,
-                placeholder = stringResource(R.string.linkedIn),
-                keyboardType = KeyboardType.Uri,
-                onValueChange = { onUpdateDraft(editor.copy(linkedIn = it)) },
-            )
-            FieldDivider()
-            EditorField(
-                value = editor.facebook,
-                placeholder = stringResource(R.string.facebook),
-                keyboardType = KeyboardType.Uri,
-                onValueChange = { onUpdateDraft(editor.copy(facebook = it)) },
-            )
-            FieldDivider()
-            EditorField(
-                value = editor.instagram,
-                placeholder = stringResource(R.string.instagram),
-                keyboardType = KeyboardType.Uri,
-                onValueChange = { onUpdateDraft(editor.copy(instagram = it)) },
-            )
-            FieldDivider()
-            EditorField(
-                value = editor.x,
-                placeholder = stringResource(R.string.x),
-                keyboardType = KeyboardType.Uri,
-                onValueChange = { onUpdateDraft(editor.copy(x = it)) },
-            )
-            FieldDivider()
-            EditorField(
-                value = editor.website,
-                placeholder = stringResource(R.string.webSite),
-                keyboardType = KeyboardType.Uri,
-                onValueChange = { onUpdateDraft(editor.copy(website = it)) },
-            )
+        FieldDivider()
+        AddUrlButton(onClick = onAddAdditionalUrl)
+    }
+}
 
-            editor.additionalUrls.forEach { additionalUrl ->
-                FieldDivider()
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    EditorField(
-                        modifier = Modifier.weight(1f),
-                        value = additionalUrl.value,
-                        placeholder = stringResource(R.string.otherUrl),
-                        keyboardType = KeyboardType.Uri,
-                        onValueChange = { value ->
-                            onUpdateDraft(
-                                editor.copy(
-                                    additionalUrls = editor.additionalUrls.map {
-                                        if (it.id == additionalUrl.id) it.copy(value = value) else it
-                                    }
-                                )
-                            )
-                        },
-                    )
-                    IconButton(
-                        onClick = { onRemoveAdditionalUrl(additionalUrl.id) },
-                        modifier = Modifier.padding(end = Margin.Small),
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_bin),
-                            contentDescription = stringResource(R.string.deleteButton),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                }
-            }
+@Composable
+private fun AdditionalUrlItem(
+    additionalUrl: EditableUrl,
+    onValueChange: (EditableUrl) -> Unit,
+    onRemove: () -> Unit,
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        EditorField(
+            modifier = Modifier.weight(1f),
+            value = additionalUrl.value,
+            placeholder = stringResource(R.string.otherUrl),
+            keyboardType = KeyboardType.Uri,
+            onValueChange = { onValueChange(additionalUrl.copy(value = it)) },
+        )
+        IconButton(
+            onClick = onRemove,
+            modifier = Modifier.padding(end = Margin.Small),
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_bin),
+                contentDescription = stringResource(R.string.deleteButton),
+                tint = MaterialTheme.colorScheme.primary,
+            )
+        }
+    }
+}
 
-            FieldDivider()
-            TextButton(
-                onClick = onAddAdditionalUrl,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Margin.Mini, vertical = Margin.Mini),
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(Modifier.width(Margin.Mini))
-                    Text(
-                        text = stringResource(R.string.addUrl),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(start = Margin.Small),
-                    )
-                }
-            }
+@Composable
+private fun AddUrlButton(onClick: () -> Unit) {
+    TextButton(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Margin.Mini, vertical = Margin.Mini),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(Modifier.width(Margin.Mini))
+            Text(
+                text = stringResource(R.string.addUrl),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = Margin.Small),
+            )
         }
     }
 }
