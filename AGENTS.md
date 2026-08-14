@@ -3,7 +3,7 @@
 ## Package Identity
 
 Modular Android library consumed via Gradle composite builds. Provides shared authentication, networking, UI components, and
-utilities across Infomaniak apps. Designed for JDK 17+, minSdk 27, compiled SDK 35.
+utilities across Infomaniak apps. Designed for JDK 17+, minSdk 27, compiled SDK 37.
 
 ## Setup & Development
 
