@@ -25,7 +25,7 @@ import com.infomaniak.core.login.InfomaniakLogin.AccessType
  */
 object AuthConfiguration {
 
-    lateinit var clientId: String
+    internal lateinit var clientId: String
     internal var accessType: AccessType? = AccessType.OFFLINE
         private set
 
