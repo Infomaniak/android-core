@@ -70,7 +70,12 @@ internal fun EditorContent(
         if (requestSave) {
             onSaveHandled()
             if (!editor.isValid()) {
-                showValidationError = true
+                if (callbacks.confirmValidationError != null) {
+                    showValidationError = false
+                    callbacks.confirmValidationError { }
+                } else {
+                    showValidationError = true
+                }
             }
         }
     }
