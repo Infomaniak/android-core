@@ -100,43 +100,27 @@ private fun ContactCardScreen(
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
     colors: ContactCardColors = ContactCardDefaults.colors(),
 ) {
-    val isEditing = state is ContactCardUiState.Editing
-    val isPreview = state is ContactCardUiState.Preview
-    val isOnboarding = state is ContactCardUiState.Onboarding
-
-    LaunchedEffect(isOnboarding, isEditing, isPreview) {
-        when {
-            isOnboarding -> ContactCardMatomo.trackScreen("ContactCardOnboardingView")
-            isEditing -> ContactCardMatomo.trackScreen("ContactCardFromView")
-            isPreview -> ContactCardMatomo.trackScreen("ContactCardQRCodeView")
-        }
-    }
+    TrackScreenEffect(state)
 
     var requestSave by remember { mutableStateOf(false) }
     var showActionsBottomSheet by remember { mutableStateOf(false) }
     var pendingDelete by remember { mutableStateOf(false) }
 
-    val scaffoldContainerColor = when {
-        isPreview -> colors.background
-        else -> MaterialTheme.colorScheme.background
-    }
+    val isPreview = state is ContactCardUiState.Preview
+    val isOnboarding = state is ContactCardUiState.Onboarding
+    val scaffoldContainerColor = if (isPreview) colors.background else MaterialTheme.colorScheme.background
 
     Scaffold(
         containerColor = scaffoldContainerColor,
         topBar = {
-            val topBarState: ContactCardTopBarState = when {
-                isEditing -> ContactCardTopBarState.Editor(
-                    onCancel = { onCancel(state.user) },
-                    onSave = { requestSave = true },
-                )
-                isPreview -> ContactCardTopBarState.Preview(
-                    onClose = onBack,
-                    onMore = { showActionsBottomSheet = true },
-                )
-                isOnboarding -> ContactCardTopBarState.Onboarding(onBack = onBack)
-                else -> ContactCardTopBarState.Default(onBack = onBack)
-            }
-            if (topBar != null) topBar(topBarState) else DefaultTopBar(topBarState)
+            val topBarState = rememberTopBarState(
+                state = state,
+                onBack = onBack,
+                onCancel = { onCancel(it) },
+                onRequestSave = { requestSave = true },
+                onShowActions = { showActionsBottomSheet = true },
+            )
+            topBar?.invoke(topBarState) ?: DefaultTopBar(topBarState)
         },
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
@@ -157,43 +141,18 @@ private fun ContactCardScreen(
                     .fillMaxSize()
                     .padding(paddingValues),
             ) {
-                when (state) {
-                    ContactCardUiState.Loading -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                    ContactCardUiState.Closed -> {
-                        LaunchedEffect(Unit) {
-                            onBack()
-                        }
-                    }
-                    is ContactCardUiState.Onboarding -> OnboardingContent(
-                        modifier = Modifier.fillMaxSize(),
-                        onCreate = { onCreate(state.user) },
-                    )
-                    is ContactCardUiState.Preview -> PreviewContent(
-                        modifier = Modifier.fillMaxSize(),
-                        user = state.user,
-                        card = state.card,
-                        onShare = { onShare(state.card) },
-                    )
-                    is ContactCardUiState.Editing -> EditorContent(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .imePadding(),
-                        editor = state.editor,
-                        requestSave = requestSave,
-                        onSaveHandled = { requestSave = false },
-                        onSave = { onSave(state.user, state.editor, state.existingCard) },
-                        onAddAdditionalUrl = onAddAdditionalUrl,
-                        onRemoveAdditionalUrl = onRemoveAdditionalUrl,
-                        onUpdateDraft = onUpdateDraft,
-                    )
-                }
+                ContactCardBodyContent(
+                    state = state,
+                    requestSave = requestSave,
+                    onBack = onBack,
+                    onCreate = onCreate,
+                    onSaveHandled = { requestSave = false },
+                    onSave = onSave,
+                    onAddAdditionalUrl = onAddAdditionalUrl,
+                    onRemoveAdditionalUrl = onRemoveAdditionalUrl,
+                    onUpdateDraft = onUpdateDraft,
+                    onShare = onShare,
+                )
             }
         }
     }
@@ -203,7 +162,7 @@ private fun ContactCardScreen(
             onDismiss = { showActionsBottomSheet = false },
             onEdit = {
                 showActionsBottomSheet = false
-                onEdit(state.user, state.card)
+                onEdit(state.user, (state as ContactCardUiState.Preview).card)
             },
             onDelete = {
                 showActionsBottomSheet = false
@@ -224,6 +183,94 @@ private fun ContactCardScreen(
                 pendingDelete = false
                 onDelete(previewState.user)
             },
+        )
+    }
+}
+
+@Composable
+private fun TrackScreenEffect(state: ContactCardUiState) {
+    val isOnboarding = state is ContactCardUiState.Onboarding
+    val isEditing = state is ContactCardUiState.Editing
+    val isPreview = state is ContactCardUiState.Preview
+
+    LaunchedEffect(isOnboarding, isEditing, isPreview) {
+        when {
+            isOnboarding -> ContactCardMatomo.trackScreen("ContactCardOnboardingView")
+            isEditing -> ContactCardMatomo.trackScreen("ContactCardFromView")
+            isPreview -> ContactCardMatomo.trackScreen("ContactCardQRCodeView")
+        }
+    }
+}
+
+private fun rememberTopBarState(
+    state: ContactCardUiState,
+    onBack: () -> Unit,
+    onCancel: (User) -> Unit,
+    onRequestSave: () -> Unit,
+    onShowActions: () -> Unit,
+): ContactCardTopBarState {
+    return when (state) {
+        is ContactCardUiState.Editing -> ContactCardTopBarState.Editor(
+            onCancel = { onCancel(state.user) },
+            onSave = onRequestSave,
+        )
+        is ContactCardUiState.Preview -> ContactCardTopBarState.Preview(
+            onClose = onBack,
+            onMore = onShowActions,
+        )
+        is ContactCardUiState.Onboarding -> ContactCardTopBarState.Onboarding(onBack = onBack)
+        else -> ContactCardTopBarState.Default(onBack = onBack)
+    }
+}
+
+@Composable
+private fun ContactCardBodyContent(
+    state: ContactCardUiState,
+    requestSave: Boolean,
+    onBack: () -> Unit,
+    onCreate: (User) -> Unit,
+    onSaveHandled: () -> Unit,
+    onSave: (User, ContactCardEditorState, Card?) -> Unit,
+    onAddAdditionalUrl: () -> Unit,
+    onRemoveAdditionalUrl: (String) -> Unit,
+    onUpdateDraft: (ContactCardEditorState) -> Unit,
+    onShare: (Card) -> Unit,
+) {
+    when (state) {
+        ContactCardUiState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        ContactCardUiState.Closed -> {
+            LaunchedEffect(Unit) {
+                onBack()
+            }
+        }
+        is ContactCardUiState.Onboarding -> OnboardingContent(
+            modifier = Modifier.fillMaxSize(),
+            onCreate = { onCreate(state.user) },
+        )
+        is ContactCardUiState.Preview -> PreviewContent(
+            modifier = Modifier.fillMaxSize(),
+            user = state.user,
+            card = state.card,
+            onShare = { onShare(state.card) },
+        )
+        is ContactCardUiState.Editing -> EditorContent(
+            modifier = Modifier
+                .fillMaxSize()
+                .imePadding(),
+            editor = state.editor,
+            requestSave = requestSave,
+            onSaveHandled = onSaveHandled,
+            onSave = { onSave(state.user, state.editor, state.existingCard) },
+            onAddAdditionalUrl = onAddAdditionalUrl,
+            onRemoveAdditionalUrl = onRemoveAdditionalUrl,
+            onUpdateDraft = onUpdateDraft,
         )
     }
 }
