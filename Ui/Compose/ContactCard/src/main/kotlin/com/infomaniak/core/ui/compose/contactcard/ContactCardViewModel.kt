@@ -48,7 +48,7 @@ class ContactCardViewModel(
         loadUser()
     }
 
-    fun loadUser() {
+    private fun loadUser() {
         viewModelScope.launch {
             val user = accountUtils.getUserById(userId)
             currentUser = user
@@ -129,7 +129,7 @@ class ContactCardViewModel(
     }
 
     companion object {
-        const val USER_ID_KEY = "userId"
+        private const val USER_ID_KEY = "userId"
     }
 }
 

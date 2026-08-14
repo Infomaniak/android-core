@@ -129,17 +129,13 @@ private fun QrCodeAvatar(user: User, qrSize: Dp) {
             .size(qrSize * 0.24f)
             .clip(CircleShape),
     ) {
-        Box(
-            modifier = Modifier.padding(3.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Avatar(
-                avatarType = AvatarType.fromUser(user),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(CircleShape),
-            )
-        }
+        Avatar(
+            avatarType = AvatarType.fromUser(user),
+            modifier = Modifier
+                .padding(3.dp)
+                .fillMaxSize()
+                .clip(CircleShape),
+        )
     }
 }
 
