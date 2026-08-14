@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.auth.models.user.Card
@@ -48,6 +49,7 @@ import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.margin.Margin
 import io.github.alexzhirkevich.qrose.QrCodePainter
 import com.infomaniak.core.common.R as RCore
+
 @Composable
 internal fun QrCodeHeader(user: User, card: Card) {
     BoxWithConstraints(
@@ -143,12 +145,14 @@ private fun QrCodeAvatar(user: User, qrSize: Dp) {
 
 @Preview(name = "QrCodeHeader")
 @Composable
-private fun QrCodeHeaderPreview() {
+private fun QrCodeHeaderPreview(
+    @PreviewParameter(ContactPreviewProvider::class) contactData: PreviewContactData,
+) {
     MaterialTheme {
         Surface {
             QrCodeHeader(
-                user = previewUser(),
-                card = previewCard(),
+                user = contactData.user,
+                card = contactData.card,
             )
         }
     }
