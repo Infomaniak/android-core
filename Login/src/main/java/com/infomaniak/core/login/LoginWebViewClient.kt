@@ -71,12 +71,10 @@ open class LoginWebViewClient(
     }
 
     override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-        error?.certificate?.apply {
-            if (issuedBy?.cName == "localhost" && issuedTo?.cName == "localhost") {
-                @SuppressLint("WebViewClientOnReceivedSslError")
-                handler?.proceed()
-                return
-            }
+        if (shouldAllowLocalhostSslError(error)) {
+            @SuppressLint("WebViewClientOnReceivedSslError")
+            handler?.proceed()
+            return
         }
 
         handler?.cancel()
