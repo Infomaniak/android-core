@@ -18,6 +18,7 @@ package com.infomaniak.core.ui.compose.contactcard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -35,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -102,18 +104,14 @@ private fun ContactCardScreen(
     var showActionsBottomSheet by remember { mutableStateOf(false) }
     var pendingDelete by remember { mutableStateOf(false) }
 
-    val isPreview = state is ContactCardUiState.Preview
-    val isOnboarding = state is ContactCardUiState.Onboarding
-    val scaffoldContainerColor = if (isPreview) colors.background else MaterialTheme.colorScheme.background
-
-    LaunchedEffect(requestSave) {
-        if (requestSave && state is ContactCardUiState.Editing && state.editor.isValid()) {
-            callbacks.onSave(state.user, state.editor, state.existingCard)
-        }
-    }
-
+    ContactCardSaveEffect(
+        requestSave = requestSave,
+        state = state,
+        onSave = callbacks.onSave,
+    )
+    
     Scaffold(
-        containerColor = scaffoldContainerColor,
+        containerColor = containerColor(state, colors),
         topBar = {
             val topBarState = rememberTopBarState(
                 state = state,
@@ -122,20 +120,12 @@ private fun ContactCardScreen(
                 onRequestSave = { requestSave = true },
                 onShowActions = { showActionsBottomSheet = true },
             )
-            topBar?.invoke(topBarState) ?: DefaultTopBar(topBarState)
+            TopBarContent(topBar = topBar, topBarState = topBarState)
         },
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
-            if (isOnboarding) {
-                Image(
-                    painter = painterResource(R.drawable.ic_back_wave),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.TopCenter),
-                    contentScale = ContentScale.FillWidth,
-                    colorFilter = ColorFilter.tint(colors.waveBackground),
-                )
+            if (state is ContactCardUiState.Onboarding) {
+                OnboardingWaveBackground(color = colors.waveBackground)
             }
 
             Box(
@@ -153,33 +143,102 @@ private fun ContactCardScreen(
         }
     }
 
-    if (isPreview && showActionsBottomSheet) {
+    ContactCardDialogs(
+        state = state,
+        showActionsBottomSheet = showActionsBottomSheet,
+        pendingDelete = pendingDelete,
+        callbacks = callbacks,
+        onDismissBottomSheet = { showActionsBottomSheet = false },
+        onShowDeleteDialog = { pendingDelete = true },
+        onDismissDeleteDialog = { pendingDelete = false },
+    )
+}
+
+// ============================================================================
+// Helpers extraits (chacun ayant une complexité très basse)
+// ============================================================================
+
+@Composable
+private fun TopBarContent(
+    topBar: (@Composable (ContactCardTopBarState) -> Unit)?,
+    topBarState: ContactCardTopBarState,
+) {
+    if (topBar != null) {
+        topBar(topBarState)
+    } else {
+        DefaultTopBar(topBarState)
+    }
+}
+
+@Composable
+private fun ContactCardSaveEffect(
+    requestSave: Boolean,
+    state: ContactCardUiState,
+    onSave: (User, ContactCardEditorState, Card?) -> Unit,
+) {
+    LaunchedEffect(requestSave) {
+        if (requestSave && state is ContactCardUiState.Editing && state.editor.isValid()) {
+            onSave(state.user, state.editor, state.existingCard)
+        }
+    }
+}
+
+@Composable
+private fun BoxScope.OnboardingWaveBackground(color: Color) {
+    Image(
+        painter = painterResource(R.drawable.ic_back_wave),
+        contentDescription = null,
+        modifier = Modifier
+            .fillMaxWidth()
+            .align(Alignment.TopCenter),
+        contentScale = ContentScale.FillWidth,
+        colorFilter = ColorFilter.tint(color),
+    )
+}
+
+@Composable
+private fun ContactCardDialogs(
+    state: ContactCardUiState,
+    showActionsBottomSheet: Boolean,
+    pendingDelete: Boolean,
+    callbacks: ContactCardCallbacks,
+    onDismissBottomSheet: () -> Unit,
+    onShowDeleteDialog: () -> Unit,
+    onDismissDeleteDialog: () -> Unit,
+) {
+    if (state !is ContactCardUiState.Preview) return
+
+    if (showActionsBottomSheet) {
         PreviewActionsBottomSheet(
-            onDismiss = { showActionsBottomSheet = false },
+            onDismiss = onDismissBottomSheet,
             onEdit = {
-                showActionsBottomSheet = false
+                onDismissBottomSheet()
                 callbacks.onEdit(state.user, state.card)
             },
             onDelete = {
-                showActionsBottomSheet = false
-                if (callbacks.confirmDelete != null) {
-                    callbacks.confirmDelete { callbacks.onDelete(state.user) }
-                } else {
-                    pendingDelete = true
-                }
+                onDismissBottomSheet()
+                callbacks.confirmDelete?.invoke { callbacks.onDelete(state.user) } ?: onShowDeleteDialog()
             },
         )
     }
 
     if (pendingDelete) {
-        val previewState = state as ContactCardUiState.Preview
         DefaultDeleteConfirmationDialog(
-            onDismiss = { pendingDelete = false },
+            onDismiss = onDismissDeleteDialog,
             onConfirm = {
-                pendingDelete = false
-                callbacks.onDelete(previewState.user)
+                onDismissDeleteDialog()
+                callbacks.onDelete(state.user)
             },
         )
+    }
+}
+
+@Composable
+private fun containerColor(state: ContactCardUiState, colors: ContactCardColors): Color {
+    return if (state is ContactCardUiState.Preview) {
+        colors.background
+    } else {
+        MaterialTheme.colorScheme.background
     }
 }
 
