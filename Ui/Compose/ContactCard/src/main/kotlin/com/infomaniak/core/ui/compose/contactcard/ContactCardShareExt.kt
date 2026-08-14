@@ -31,19 +31,15 @@ import okhttp3.Request
 import java.io.File
 
 private const val MAX_AVATAR_SIZE = 5 * 1024 * 1024 // 5 MB
-private const val CONTACT_CARD_DIRECTORY = "attachments_cache"
-private const val CONTACT_CARD_FILE_PREFIX = "contact_card_"
-private const val CONTACT_CARD_FILE_SUFFIX = ".vcf"
-private const val FILE_NAME_CONNECTOR = "_"
 private val ILLEGAL_FILE_NAME_CHARACTERS = Regex("[\\\\/:*?\"<>|]+")
 
 suspend fun Card.createShareFile(context: Context): File = withContext(Dispatchers.IO) {
     val (avatarBase64, avatarMimeType) = getAvatarDataOrNull()
 
-    val fileName = "$CONTACT_CARD_FILE_PREFIX$firstName$FILE_NAME_CONNECTOR$lastName$CONTACT_CARD_FILE_SUFFIX"
+    val fileName = "attachments_cache${firstName}_${lastName}.vcf"
     val safeFileName = fileName.replace(ILLEGAL_FILE_NAME_CHARACTERS, "")
 
-    val directory = File(context.cacheDir, CONTACT_CARD_DIRECTORY).apply { mkdirs() }
+    val directory = File(context.cacheDir, "attachments_cache").apply { mkdirs() }
 
     File(directory, safeFileName).apply {
         val vCardContent = makeVCardString(avatarBase64 = avatarBase64, avatarMimeType = avatarMimeType)
