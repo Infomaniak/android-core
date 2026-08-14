@@ -17,47 +17,66 @@
 package com.infomaniak.core.ui.compose.contactcard.component
 
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.common.R as RCore
+
+@Composable
+internal fun DefaultContactCardDialog(
+    titleRes: Int,
+    descriptionRes: Int,
+    confirmButtonRes: Int,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+    dismissButtonRes: Int? = null,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(text = stringResource(confirmButtonRes))
+            }
+        },
+        dismissButton = dismissButtonRes?.let {
+            {
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(it))
+                }
+            }
+        },
+        title = { Text(text = stringResource(titleRes)) },
+        text = { Text(text = stringResource(descriptionRes)) },
+    )
+}
+
+@Composable
+internal fun DefaultValidationErrorDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    DefaultContactCardDialog(
+        titleRes = R.string.alertTitle,
+        descriptionRes = R.string.alertDescription,
+        confirmButtonRes = android.R.string.ok,
+        onConfirm = onConfirm,
+        onDismiss = onDismiss,
+    )
+}
 
 @Composable
 internal fun DefaultDeleteConfirmationDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(text = stringResource(R.string.deleteButton))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(RCore.string.buttonCancel))
-            }
-        },
-        title = { Text(text = stringResource(R.string.deleteAlertTitle)) },
-        text = { Text(text = stringResource(R.string.deleteAlertDescription)) },
+    DefaultContactCardDialog(
+        titleRes = R.string.deleteAlertTitle,
+        descriptionRes = R.string.deleteAlertDescription,
+        confirmButtonRes = R.string.deleteButton,
+        onConfirm = onConfirm,
+        onDismiss = onDismiss,
+        dismissButtonRes = RCore.string.buttonCancel,
     )
-}
-
-@Preview(name = "DefaultDeleteConfirmationDialog")
-@Composable
-private fun DefaultDeleteConfirmationDialogPreview() {
-    MaterialTheme {
-        Surface {
-            DefaultDeleteConfirmationDialog(
-                onDismiss = {},
-                onConfirm = {},
-            )
-        }
-    }
 }
