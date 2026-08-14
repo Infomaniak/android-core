@@ -30,7 +30,6 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 import okio.IOException
-import com.infomaniak.core.auth.api.ApiController as AuthApiController
 
 class TokenAuthenticator(
     private val tokenInterceptorListener: TokenInterceptorListener
