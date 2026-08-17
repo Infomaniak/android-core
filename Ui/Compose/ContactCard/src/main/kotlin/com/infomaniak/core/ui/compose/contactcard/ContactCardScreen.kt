@@ -63,7 +63,7 @@ fun ContactCardScreen(
     onShare: (Card) -> Unit,
     viewModel: ContactCardViewModel = viewModel(),
     confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
-    confirmValidationError: ((onConfirmed: () -> Unit) -> Unit)? = null,
+    confirmValidationError: (() -> Unit)? = null,
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,
     colors: ContactCardColors = ContactCardDefaults.colors(),
 ) {

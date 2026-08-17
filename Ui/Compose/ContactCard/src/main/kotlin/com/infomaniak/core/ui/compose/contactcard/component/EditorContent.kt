@@ -72,7 +72,7 @@ internal fun EditorContent(
             if (!editor.isValid()) {
                 if (callbacks.confirmValidationError != null) {
                     showValidationError = false
-                    callbacks.confirmValidationError { }
+                    callbacks.confirmValidationError()
                 } else {
                     showValidationError = true
                 }
