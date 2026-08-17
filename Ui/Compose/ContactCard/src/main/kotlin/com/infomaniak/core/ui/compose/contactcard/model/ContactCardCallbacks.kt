@@ -32,7 +32,7 @@ data class ContactCardCallbacks(
     val onUpdateDraft: (ContactCardEditorState) -> Unit,
     val onShare: (Card) -> Unit,
     val confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
-    val confirmValidationError: ((onConfirmed: () -> Unit) -> Unit)? = null,
+    val confirmValidationError: (() -> Unit)? = null,
 )
 
 fun ContactCardEditorState.isValid(): Boolean =
