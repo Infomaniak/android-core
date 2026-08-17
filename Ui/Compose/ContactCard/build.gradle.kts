@@ -19,8 +19,8 @@ dependencies {
     implementation(project(":Common"))
     implementation(project(":Ui:View:PrimaryPalette"))
     implementation(project(":Ui:Compose:Margin"))
-    implementation(project(":Network"))
     implementation(project(":Matomo"))
+    implementation(project(":Network"))
 
     implementation(platform(core.compose.bom))
     api(core.compose.runtime)

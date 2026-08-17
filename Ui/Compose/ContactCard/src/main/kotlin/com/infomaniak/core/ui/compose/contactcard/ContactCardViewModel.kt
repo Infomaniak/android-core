@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.UUID
 
 class ContactCardViewModel(
@@ -116,6 +117,13 @@ class ContactCardViewModel(
             accountUtils.updateUserCard(userId, null)
             val updatedUser = user.copy(card = null)
             _uiState.value = ContactCardUiState.Onboarding(updatedUser)
+        }
+    }
+
+    fun shareCardData(card: Card, callback: (File) -> Unit) {
+        viewModelScope.launch {
+            val avatarData = card.getAvatarDataOrNull()
+            callback(card.createShareFile(getApplication(), avatarData))
         }
     }
 
