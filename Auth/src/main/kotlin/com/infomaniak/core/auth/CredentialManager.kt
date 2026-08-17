@@ -42,6 +42,4 @@ abstract class CredentialManager : BaseCredentialManager() {
         super.setUserToken(user, apiToken)
         user?.let { if (currentUserId == it.id) currentUser = it }
     }
-
-    suspend fun getUserById(id: Int): User? = userDatabase.userDao().findById(id)
 }

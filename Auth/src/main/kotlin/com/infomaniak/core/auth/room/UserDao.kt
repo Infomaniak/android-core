@@ -24,6 +24,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
+import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.User
 import kotlinx.coroutines.flow.Flow
 
@@ -71,6 +72,9 @@ interface UserDao {
 
     @Update
     suspend fun update(user: User)
+
+    @Query("UPDATE user SET card = :card WHERE id = :userId")
+    suspend fun updateUserCard(userId: Int, card: Card?)
 
     @Upsert
     suspend fun upsert(user: User)

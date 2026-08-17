@@ -19,6 +19,7 @@ package com.infomaniak.core.auth
 
 import androidx.annotation.CallSuper
 import androidx.collection.ArrayMap
+import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.network.networking.HttpClientConfig
@@ -39,6 +40,10 @@ abstract class BaseCredentialManager : UserExistenceChecker {
 
     override suspend fun isUserAlreadyPresent(userId: Int): Boolean = userDatabase.userDao().findById(userId) != null
 
+    suspend fun getUserById(id: Int): User? = userDao.findById(id)
+
+    suspend fun getFirstUser(): User? = userDao.getFirst()
+
     //region Helper
     protected val userDao get() = userDatabase.userDao()
     protected val currentUserIdDao get() = userDatabase.currentUserIdDao()
@@ -51,6 +56,11 @@ abstract class BaseCredentialManager : UserExistenceChecker {
             it.apiToken = apiToken
             userDatabase.userDao().update(it)
         }
+    }
+
+    @CallSuper
+    open suspend fun updateUserCard(userId: Int, card: Card?) {
+        userDatabase.userDao().updateUserCard(userId, card)
     }
     //endregion
 
