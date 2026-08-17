@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":AppIntegrity"))
     implementation(project(":Network"))
     implementation(project(":Sentry"))
+    implementation(project(":Ui:Compose:Margin"))
 
     implementation(platform(core.compose.bom))
     implementation(core.compose.ui)

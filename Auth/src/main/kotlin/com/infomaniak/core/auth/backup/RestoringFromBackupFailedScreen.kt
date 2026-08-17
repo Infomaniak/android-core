@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.auth.DerivedTokenGenerator
 import com.infomaniak.core.auth.R
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.common.R as RCore
 
 @Composable
@@ -50,7 +51,7 @@ fun RestoringFromBackupFailedScreen(
     if (isLandscape) {
         Row(
             modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally)
+            horizontalArrangement = Arrangement.spacedBy(Margin.Medium, alignment = Alignment.CenterHorizontally)
         ) {
             Spacer(Modifier.weight(1f))
             RestorationFailed(
@@ -74,16 +75,16 @@ private fun RestorationFailed(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(bottom = 48.dp),
+        modifier = modifier.padding(bottom = Margin.Giant),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Bottom),
+        verticalArrangement = Arrangement.spacedBy(Margin.Mini, alignment = Alignment.Bottom),
     ) {
         Text(
             stringResource(R.string.accountRestoreFailedError),
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onBackground
         )
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(Margin.Mini))
         Button(onClick = state.retry) { Text(stringResource(RCore.string.buttonRetry)) }
         TextButton(onClick = state.giveUp) { Text(stringResource(R.string.buttonGiveUp)) }
         Spacer(
