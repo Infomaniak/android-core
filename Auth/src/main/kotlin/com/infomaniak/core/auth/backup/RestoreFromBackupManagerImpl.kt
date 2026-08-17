@@ -102,6 +102,9 @@ internal class RestoreFromBackupManagerImpl(
         removeUserDeferred.complete(removeUser)
     }
 
+    /**
+     * @param allUsers All users from the database. We compute this outside to avoid having to re-query the db on recursive calls.
+     */
     private tailrec suspend fun FlowCollector<State>.restoreAccounts(
         currentAndroidId: String,
         allUsers: List<User>,
