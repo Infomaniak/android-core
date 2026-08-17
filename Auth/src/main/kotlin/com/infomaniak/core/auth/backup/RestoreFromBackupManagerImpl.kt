@@ -111,44 +111,10 @@ internal class RestoreFromBackupManagerImpl(
     ) {
         if (allUsers.isEmpty()) return // Fast-path for the app not set up yet case.
 
-        val usersToDeriveTokensFor: List<User> = coroutineScope {
-            allUsers.map { user ->
-                async {
-                    val currentBinding = userDao.getTokenDeviceBindingForUser(user.id)
-                    when {
-                        currentBinding == null -> {
-                            userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, currentAndroidId))
-                            null // Adding missing valid binding (post app update).
-                        }
-                        currentBinding.androidId == currentAndroidId -> null // Already valid.
-                        else -> user // Device changed. Need to derive token.
-                    }
-                }
-            }
-        }.awaitAll().filterNotNull()
-
-        if (usersToDeriveTokensFor.isEmpty()) return
-
+        val usersToDeriveTokensFor: List<User> = getUsersThatNeedTokenRotation(currentAndroidId, allUsers).ifEmpty { return }
         emit(State.RestoringFromBackup)
 
-        val issuesWithUser = coroutineScope {
-            usersToDeriveTokensFor.map { user ->
-                async {
-                    when (val result = attemptRestoringAccount(user)) {
-                        is Xor.First -> userDb.useWriterConnection {
-                            it.immediateTransaction {
-                                userDao.update(user.copy(apiToken = result.value))
-                                userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, currentAndroidId))
-                            }
-                            null
-                        }
-                        is Xor.Second -> result.value to user
-                    }
-                }
-            }
-        }.awaitAll().filterNotNull()
-
-        if (issuesWithUser.isEmpty()) return
+        val issuesWithUser = attemptRestoringAccounts(usersToDeriveTokensFor, currentAndroidId).ifEmpty { return }
 
         val shouldRetryAsync = CompletableDeferred<Boolean>()
         val failedState = State.RestoringFromBackupFailed(
@@ -167,6 +133,26 @@ internal class RestoreFromBackupManagerImpl(
         restoreAccounts(currentAndroidId = currentAndroidId, allUsers = allUsers)
     }
 
+    private suspend fun attemptRestoringAccounts(
+        usersToDeriveTokensFor: List<User>,
+        currentAndroidId: String
+    ): List<Pair<DerivedTokenGenerator.Issue, User>> = coroutineScope {
+        usersToDeriveTokensFor.map { user ->
+            async {
+                when (val result = attemptRestoringAccount(user)) {
+                    is Xor.First -> userDb.useWriterConnection {
+                        it.immediateTransaction {
+                            userDao.update(user.copy(apiToken = result.value))
+                            userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, currentAndroidId))
+                        }
+                        null
+                    }
+                    is Xor.Second -> result.value to user
+                }
+            }
+        }
+    }.awaitAll().filterNotNull()
+
     private suspend fun attemptRestoringAccount(user: User): Xor<ApiToken, DerivedTokenGenerator.Issue> {
         return derivedTokenGenerator.attemptDerivingOneOfTheseTokens(setOf(user.apiToken.accessToken)).also { result ->
             if (result !is Xor.Second) return@also
@@ -182,6 +168,28 @@ internal class RestoreFromBackupManagerImpl(
             }
         }
     }
+
+    /**
+     * @param allUsers All users from the database. We compute this outside to avoid having to re-query the db on recursive calls.
+     */
+    private suspend fun getUsersThatNeedTokenRotation(
+        currentAndroidId: String,
+        allUsers: List<User>
+    ): List<User> = coroutineScope {
+        allUsers.map { user ->
+            async {
+                val currentBinding = userDao.getTokenDeviceBindingForUser(user.id)
+                when {
+                    currentBinding == null -> {
+                        userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, currentAndroidId))
+                        null // Adding missing valid binding (post app update).
+                    }
+                    currentBinding.androidId == currentAndroidId -> null // Already valid.
+                    else -> user // Device changed. Need to derive token.
+                }
+            }
+        }
+    }.awaitAll().filterNotNull()
 }
 
 private const val TAG = "RestoreFromBackupManagerImpl"
