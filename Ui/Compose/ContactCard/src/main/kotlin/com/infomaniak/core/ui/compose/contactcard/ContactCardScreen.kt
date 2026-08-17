@@ -61,7 +61,7 @@ import com.infomaniak.core.ui.compose.contactcard.model.isValid
 fun ContactCardScreen(
     onBack: () -> Unit,
     onShare: (Card) -> Unit,
-    viewModel: ContactCardViewModel = viewModel(),
+    viewModel: ContactCardViewModel,
     confirmDelete: ((onConfirmed: () -> Unit) -> Unit)? = null,
     confirmValidationError: (() -> Unit)? = null,
     topBar: (@Composable (ContactCardTopBarState) -> Unit)? = null,

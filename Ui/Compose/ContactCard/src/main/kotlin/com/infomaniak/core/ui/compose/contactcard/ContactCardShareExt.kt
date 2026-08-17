@@ -33,21 +33,19 @@ import java.io.File
 private const val MAX_AVATAR_SIZE = 5 * 1024 * 1024 // 5 MB
 private val ILLEGAL_FILE_NAME_CHARACTERS = Regex("[\\\\/:*?\"<>|]+")
 
-suspend fun Card.createShareFile(context: Context): File = withContext(Dispatchers.IO) {
-    val (avatarBase64, avatarMimeType) = getAvatarDataOrNull()
-
+suspend fun Card.createShareFile(context: Context, avatarData: Pair<String?, String?>): File = withContext(Dispatchers.IO) {
     val fileName = "attachments_cache${firstName}_${lastName}.vcf"
     val safeFileName = fileName.replace(ILLEGAL_FILE_NAME_CHARACTERS, "")
 
     val directory = File(context.cacheDir, "attachments_cache").apply { mkdirs() }
 
     File(directory, safeFileName).apply {
-        val vCardContent = makeVCardString(avatarBase64 = avatarBase64, avatarMimeType = avatarMimeType)
+        val vCardContent = makeVCardString(avatarBase64 = avatarData.first, avatarMimeType = avatarData.second)
         writeText(vCardContent)
     }
 }
 
-private suspend fun Card.getAvatarDataOrNull(): Pair<String?, String?> {
+suspend fun Card.getAvatarDataOrNull(): Pair<String?, String?> {
     val url = avatarUrl ?: return null to null
 
     return runCatching {
@@ -72,18 +70,4 @@ private suspend fun Card.getAvatarDataOrNull(): Pair<String?, String?> {
     }
         .cancellable()
         .getOrDefault(null to null)
-}
-
-suspend fun Activity.shareContactCard(card: Card) {
-    val file = card.createShareFile(this)
-    val authority = "${applicationContext.packageName}.core.contactcard.provider"
-    val uri = FileProvider.getUriForFile(this, authority, file)
-    val intent = Intent().apply {
-        action = Intent.ACTION_SEND
-        type = "text/vcard"
-        putExtra(Intent.EXTRA_STREAM, uri)
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    }
-
-    startActivity(Intent.createChooser(intent, getString(R.string.contactCardShareChooserTitle)))
 }
