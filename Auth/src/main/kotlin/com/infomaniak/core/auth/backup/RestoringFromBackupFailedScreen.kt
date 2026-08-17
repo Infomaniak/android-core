@@ -47,7 +47,7 @@ import com.infomaniak.core.common.R as RCore
 fun RestoringFromBackupFailedScreen(
     state: RestoreFromBackupManager.State.RestoringFromBackupFailed,
     modifier: Modifier = Modifier,
-) = AspectRatioFlow(modifier) { isLandscape ->
+) = OrientationAwareContainer(modifier) { isLandscape ->
     if (isLandscape) {
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -96,7 +96,7 @@ private fun RestorationFailed(
 }
 
 @Composable
-private fun AspectRatioFlow(
+private fun OrientationAwareContainer(
     modifier: Modifier = Modifier,
     content: @Composable (isLandscape: Boolean) -> Unit
 ) {
