@@ -31,6 +31,10 @@ import splitties.init.injectAsAppCtx
 @RunWith(RobolectricTestRunner::class)
 abstract class BaseAccountUtilsTest {
 
+    companion object {
+        const val testAndroidId = "test_android_id"
+    }
+
     protected var context: Context = ApplicationProvider.getApplicationContext()
 
     init {
@@ -38,7 +42,7 @@ abstract class BaseAccountUtilsTest {
         Settings.Secure.putString(
             context.contentResolver,
             Settings.Secure.ANDROID_ID,
-            "test_android_id"
+            testAndroidId
         )
     }
 
