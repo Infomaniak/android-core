@@ -33,6 +33,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.io.IOException
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -53,22 +54,19 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- no users
 
     @Test
-    fun noUsers_settlesImmediately() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun noUsers_settlesImmediately() = test { db ->
         val manager = createManager(db)
         manager.registerRemoveUser { }
 
         val states = manager.collectStatesUntilSettled()
 
         states shouldBe listOf(State.Settled)
-        db.close()
     }
 
     // --------------------------------------------------- same device
 
     @Test
-    fun sameDevice_settlesImmediately() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun sameDevice_settlesImmediately() = test { db ->
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
         val manager = createManager(db)
         manager.registerRemoveUser { }
@@ -76,12 +74,10 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         val states = manager.collectStatesUntilSettled()
 
         states shouldBe listOf(State.Settled)
-        db.close()
     }
 
     @Test
-    fun multipleUsers_allSameDevice_settlesImmediately() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun multipleUsers_allSameDevice_settlesImmediately() = test { db ->
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
         db.insertUserWithBinding(userId = 2, androidId = currentAndroidId)
         db.insertUserWithBinding(userId = 3, androidId = currentAndroidId)
@@ -91,14 +87,12 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         val states = manager.collectStatesUntilSettled()
 
         states shouldBe listOf(State.Settled)
-        db.close()
     }
 
     // --------------------------------------------------- pre-v9: missing binding
 
     @Test
-    fun missingBinding_addsBindingAndSettles() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun missingBinding_addsBindingAndSettles() = test { db ->
         db.insertUserWithoutBinding(userId = 1)
         val manager = createManager(db)
         manager.registerRemoveUser { }
@@ -108,12 +102,10 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         // Missing binding means a same-device app upgrade (pre-v9); no token derivation needed.
         states shouldBe listOf(State.Settled)
         db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
-        db.close()
     }
 
     @Test
-    fun multipleUsers_allMissingBindings_addsBindingsAndSettles() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun multipleUsers_allMissingBindings_addsBindingsAndSettles() = test { db ->
         db.insertUserWithoutBinding(userId = 1)
         db.insertUserWithoutBinding(userId = 2)
         val manager = createManager(db)
@@ -124,14 +116,12 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         states shouldBe listOf(State.Settled)
         db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
         db.userDao().getTokenDeviceBindingForUser(2)?.androidId shouldBe currentAndroidId
-        db.close()
     }
 
     // --------------------------------------------------- transferred device – success
 
     @Test
-    fun transferredDevice_derivationSucceeds_updatesTokenAndSettles() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun transferredDevice_derivationSucceeds_updatesTokenAndSettles() = test { db ->
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val manager = createManager(db, FakeDerivedTokenGenerator(Xor.First(newToken("derived_token"))))
@@ -142,12 +132,10 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         states shouldBe listOf(State.RestoringFromBackup, State.Settled)
         db.userDao().findById(1)?.apiToken?.accessToken shouldBe "derived_token"
         db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
-        db.close()
     }
 
     @Test
-    fun multipleUsers_allTransferred_allSucceed_settles() = runTest(timeout = 2.seconds) {
-        val db = testUserDb()
+    fun multipleUsers_allTransferred_allSucceed_settles() = test(timeout = 2.seconds) { db ->
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
         db.insertUserWithBinding(userId = 2, androidId = otherDeviceAndroidId)
         val manager = createManager(db, FakeDerivedTokenGenerator(Xor.First(newToken("derived"))))
@@ -158,12 +146,10 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         states shouldBe listOf(State.RestoringFromBackup, State.Settled)
         db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
         db.userDao().getTokenDeviceBindingForUser(2)?.androidId shouldBe currentAndroidId
-        db.close()
     }
 
     @Test
-    fun multipleUsers_mixedDevices_onlyTransferredAreRestored() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun multipleUsers_mixedDevices_onlyTransferredAreRestored() = test { db ->
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)      // already valid
         db.insertUserWithBinding(userId = 2, androidId = otherDeviceAndroidId)  // needs restoration
         val manager = createManager(db, FakeDerivedTokenGenerator(Xor.First(newToken("derived"))))
@@ -174,14 +160,12 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         states shouldBe listOf(State.RestoringFromBackup, State.Settled)
         db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
         db.userDao().getTokenDeviceBindingForUser(2)?.androidId shouldBe currentAndroidId
-        db.close()
     }
 
     // --------------------------------------------------- restoration failure
 
     @Test
-    fun transferredDevice_derivationFails_emitsRestoringFromBackupFailedState() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun transferredDevice_derivationFails_emitsRestoringFromBackupFailedState() = test { db ->
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val manager = createManager(db, FakeDerivedTokenGenerator(networkFailure()))
@@ -194,14 +178,12 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         states.any { it is State.RestoringFromBackupFailed }.shouldBeTrue()
         val failed = states.filterIsInstance<State.RestoringFromBackupFailed>().first()
         failed.cause.shouldBeInstanceOf<DerivedTokenGenerator.Issue.NetworkIssue>()
-        db.close()
     }
 
     // --------------------------------------------------- retry
 
     @Test
-    fun transferredDevice_derivationFails_thenRetry_succeeds() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun transferredDevice_derivationFails_thenRetry_succeeds() = test { db ->
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val generator = FakeDerivedTokenGenerator(networkFailure())
@@ -221,14 +203,12 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         // Confirm the retry produced the new token and updated the binding.
         db.userDao().findById(1)?.apiToken?.accessToken shouldBe "derived_after_retry"
         db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
-        db.close()
     }
 
     // --------------------------------------------------- give-up
 
     @Test
-    fun transferredDevice_derivationFails_giveUp_removesFailedUserAndSettles() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun transferredDevice_derivationFails_giveUp_removesFailedUserAndSettles() = test { db ->
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val manager = createManager(db, FakeDerivedTokenGenerator(networkFailure()))
@@ -239,12 +219,10 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         manager.collectStatesUntilSettled { failedState -> failedState.giveUp() }
 
         removedUserIds shouldBe listOf(1)
-        db.close()
     }
 
     @Test
-    fun multipleUsers_partialFailure_giveUp_onlyRemovesFailedUser() = runTest(timeout = .1.seconds) {
-        val db = testUserDb()
+    fun multipleUsers_partialFailure_giveUp_onlyRemovesFailedUser() = test { db ->
         // User 1 is on the current device: no restoration required, must not be removed.
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
         // User 2 was transferred: restoration will fail.
@@ -259,12 +237,20 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
         // Only the user whose restoration failed must be removed.
         removedUserIds shouldBe listOf(2)
-        db.close()
     }
 
     // ------------------------------------------------------------------ helpers
 
-    private fun testUserDb() = UserDatabase.instantiateDataBase(context, inMemory = true)
+    private fun test(timeout: Duration = .1.seconds, block: suspend TestScope.(userDb: UserDatabase) -> Unit) {
+        runTest(timeout = timeout) {
+            val db = UserDatabase.instantiateDataBase(context, inMemory = true)
+            try {
+                block(db)
+            } finally {
+                db.close()
+            }
+        }
+    }
 
     private fun TestScope.createManager(
         userDatabase: UserDatabase,
