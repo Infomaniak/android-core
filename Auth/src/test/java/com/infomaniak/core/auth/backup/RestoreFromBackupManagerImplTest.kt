@@ -55,7 +55,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun noUsers_settlesImmediately() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         val manager = createManager(db)
         manager.registerRemoveUser { }
 
@@ -69,7 +69,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun sameDevice_settlesImmediately() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
         val manager = createManager(db)
         manager.registerRemoveUser { }
@@ -82,7 +82,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun multipleUsers_allSameDevice_settlesImmediately() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
         db.insertUserWithBinding(userId = 2, androidId = currentAndroidId)
         db.insertUserWithBinding(userId = 3, androidId = currentAndroidId)
@@ -99,7 +99,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun missingBinding_addsBindingAndSettles() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithoutBinding(userId = 1)
         val manager = createManager(db)
         manager.registerRemoveUser { }
@@ -114,7 +114,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun multipleUsers_allMissingBindings_addsBindingsAndSettles() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithoutBinding(userId = 1)
         db.insertUserWithoutBinding(userId = 2)
         val manager = createManager(db)
@@ -132,7 +132,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun transferredDevice_derivationSucceeds_updatesTokenAndSettles() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val manager = createManager(db, FakeDerivedTokenGenerator(Xor.First(newToken("derived_token"))))
@@ -148,7 +148,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun multipleUsers_allTransferred_allSucceed_settles() = runTest(timeout = 2.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
         db.insertUserWithBinding(userId = 2, androidId = otherDeviceAndroidId)
         val manager = createManager(db, FakeDerivedTokenGenerator(Xor.First(newToken("derived"))))
@@ -164,7 +164,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun multipleUsers_mixedDevices_onlyTransferredAreRestored() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)      // already valid
         db.insertUserWithBinding(userId = 2, androidId = otherDeviceAndroidId)  // needs restoration
         val manager = createManager(db, FakeDerivedTokenGenerator(Xor.First(newToken("derived"))))
@@ -182,7 +182,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun transferredDevice_derivationFails_emitsRestoringFromBackupFailedState() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val manager = createManager(db, FakeDerivedTokenGenerator(networkFailure()))
@@ -202,7 +202,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun transferredDevice_derivationFails_thenRetry_succeeds() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val generator = FakeDerivedTokenGenerator(networkFailure())
@@ -229,7 +229,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun transferredDevice_derivationFails_giveUp_removesFailedUserAndSettles() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val manager = createManager(db, FakeDerivedTokenGenerator(networkFailure()))
@@ -245,7 +245,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
     @Test
     fun multipleUsers_partialFailure_giveUp_onlyRemovesFailedUser() = runTest(timeout = .1.seconds) {
-        val db = UserDatabase.instantiateDataBase(context, true)
+        val db = testUserDb()
         // User 1 is on the current device: no restoration required, must not be removed.
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
         // User 2 was transferred: restoration will fail.
