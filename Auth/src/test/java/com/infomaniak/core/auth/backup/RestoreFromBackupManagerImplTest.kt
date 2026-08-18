@@ -51,51 +51,6 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     private val currentAndroidId = "test_android_id"
     private val otherDeviceAndroidId = "other_device_id"
 
-    // ------------------------------------------------------------------ helpers
-
-    private fun TestScope.createManager(
-        userDatabase: UserDatabase,
-        tokenGenerator: DerivedTokenGenerator = FakeDerivedTokenGenerator(),
-    ) = RestoreFromBackupManagerImpl(
-        coroutineScope = backgroundScope,
-        userDatabase = userDatabase,
-        tokenGenerator = tokenGenerator,
-    )
-
-    private fun newToken(accessToken: String = "new_token"): ApiToken =
-        ApiToken(accessToken = accessToken, tokenType = "Bearer", userId = 0, expiresIn = 3600)
-
-    private fun networkFailure(): Xor<ApiToken, DerivedTokenGenerator.Issue> =
-        Xor.Second(DerivedTokenGenerator.Issue.NetworkIssue(IOException("network error")))
-
-    /** Inserts a user plus a [TokenDeviceBinding] recording which device created the token. */
-    private suspend fun UserDatabase.insertUserWithBinding(userId: Int, androidId: String) {
-        userDao().insert(userOf(userId))
-        userDao().upsertTokenDeviceBinding(TokenDeviceBinding(userId, androidId))
-    }
-
-    /** Inserts a user with **no** [TokenDeviceBinding] – simulates a pre-v9 database row. */
-    private suspend fun UserDatabase.insertUserWithoutBinding(userId: Int) {
-        userDao().insert(userOf(userId))
-    }
-
-    /**
-     * Collects [State] values emitted by [RestoreFromBackupManager.state] until [State.Settled],
-     * returning the full sequence (inclusive). Any [State.RestoringFromBackupFailed] encountered
-     * is forwarded to [onFailed] before the next state is awaited.
-     */
-    private suspend fun RestoreFromBackupManager.collectStatesUntilSettled(
-        onFailed: (State.RestoringFromBackupFailed) -> Unit = {},
-    ): List<State> {
-        val states = mutableListOf<State>()
-        state.first { s ->
-            states += s
-            if (s is State.RestoringFromBackupFailed) onFailed(s)
-            s is State.Settled
-        }
-        return states
-    }
-
     // --------------------------------------------------- no users
 
     @Test
@@ -308,7 +263,52 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         db.close()
     }
 
-    // ------------------------------------------------------------------ fake
+    // ------------------------------------------------------------------ helpers
+
+    private fun testUserDb() = UserDatabase.instantiateDataBase(context, inMemory = true)
+
+    private fun TestScope.createManager(
+        userDatabase: UserDatabase,
+        tokenGenerator: DerivedTokenGenerator = FakeDerivedTokenGenerator(),
+    ) = RestoreFromBackupManagerImpl(
+        coroutineScope = backgroundScope,
+        userDatabase = userDatabase,
+        tokenGenerator = tokenGenerator,
+    )
+
+    private fun newToken(accessToken: String = "new_token"): ApiToken =
+        ApiToken(accessToken = accessToken, tokenType = "Bearer", userId = 0, expiresIn = 3600)
+
+    private fun networkFailure(): Xor<ApiToken, DerivedTokenGenerator.Issue> =
+        Xor.Second(DerivedTokenGenerator.Issue.NetworkIssue(IOException("network error")))
+
+    /** Inserts a user plus a [TokenDeviceBinding] recording which device created the token. */
+    private suspend fun UserDatabase.insertUserWithBinding(userId: Int, androidId: String) {
+        userDao().insert(userOf(userId))
+        userDao().upsertTokenDeviceBinding(TokenDeviceBinding(userId, androidId))
+    }
+
+    /** Inserts a user with **no** [TokenDeviceBinding] – simulates a pre-v9 database row. */
+    private suspend fun UserDatabase.insertUserWithoutBinding(userId: Int) {
+        userDao().insert(userOf(userId))
+    }
+
+    /**
+     * Collects [State] values emitted by [RestoreFromBackupManager.state] until [State.Settled],
+     * returning the full sequence (inclusive). Any [State.RestoringFromBackupFailed] encountered
+     * is forwarded to [onFailed] before the next state is awaited.
+     */
+    private suspend fun RestoreFromBackupManager.collectStatesUntilSettled(
+        onFailed: (State.RestoringFromBackupFailed) -> Unit = {},
+    ): List<State> {
+        val states = mutableListOf<State>()
+        state.first { s ->
+            states += s
+            if (s is State.RestoringFromBackupFailed) onFailed(s)
+            s is State.Settled
+        }
+        return states
+    }
 
     private class FakeDerivedTokenGenerator(
         var result: Xor<ApiToken, DerivedTokenGenerator.Issue> = Xor.First(
