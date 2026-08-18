@@ -47,8 +47,7 @@ import kotlin.time.Duration.Companion.seconds
  */
 class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
-    // Android ID set by BaseAccountUtilsTest as "test_android_id"
-    private val currentAndroidId = "test_android_id"
+    private val currentAndroidId: String = testAndroidId
     private val otherDeviceAndroidId = "other_device_id"
 
     // --------------------------------------------------- no users
@@ -294,7 +293,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     /**
-     * Collects [State] values emitted by [RestoreFromBackupManager.state] until [State.Settled],
+     * Collects [State] values emitted by [state] until [State.Settled],
      * returning the full sequence (inclusive). Any [State.RestoringFromBackupFailed] encountered
      * is forwarded to [onFailed] before the next state is awaited.
      */
