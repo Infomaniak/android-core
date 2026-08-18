@@ -25,11 +25,12 @@ import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.login.ApiToken
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
@@ -105,7 +106,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
         val states = manager.collectStatesUntilSettled()
 
-        assertEquals(listOf(State.Settled), states)
+        states shouldBe listOf(State.Settled)
         db.close()
     }
 
@@ -120,7 +121,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
         val states = manager.collectStatesUntilSettled()
 
-        assertEquals(listOf(State.Settled), states)
+        states shouldBe listOf(State.Settled)
         db.close()
     }
 
@@ -135,7 +136,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
         val states = manager.collectStatesUntilSettled()
 
-        assertEquals(listOf(State.Settled), states)
+        states shouldBe listOf(State.Settled)
         db.close()
     }
 
@@ -151,8 +152,8 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         val states = manager.collectStatesUntilSettled()
 
         // Missing binding means a same-device app upgrade (pre-v9); no token derivation needed.
-        assertEquals(listOf(State.Settled), states)
-        assertEquals(currentAndroidId, db.userDao().getTokenDeviceBindingForUser(1)?.androidId)
+        states shouldBe listOf(State.Settled)
+        db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
         db.close()
     }
 
@@ -166,9 +167,9 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
         val states = manager.collectStatesUntilSettled()
 
-        assertEquals(listOf(State.Settled), states)
-        assertEquals(currentAndroidId, db.userDao().getTokenDeviceBindingForUser(1)?.androidId)
-        assertEquals(currentAndroidId, db.userDao().getTokenDeviceBindingForUser(2)?.androidId)
+        states shouldBe listOf(State.Settled)
+        db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
+        db.userDao().getTokenDeviceBindingForUser(2)?.androidId shouldBe currentAndroidId
         db.close()
     }
 
@@ -184,9 +185,9 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
         val states = manager.collectStatesUntilSettled()
 
-        assertEquals(listOf(State.RestoringFromBackup, State.Settled), states)
-        assertEquals("derived_token", db.userDao().findById(1)?.apiToken?.accessToken)
-        assertEquals(currentAndroidId, db.userDao().getTokenDeviceBindingForUser(1)?.androidId)
+        states shouldBe listOf(State.RestoringFromBackup, State.Settled)
+        db.userDao().findById(1)?.apiToken?.accessToken shouldBe "derived_token"
+        db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
         db.close()
     }
 
@@ -200,9 +201,9 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
         val states = manager.collectStatesUntilSettled()
 
-        assertEquals(listOf(State.RestoringFromBackup, State.Settled), states)
-        assertEquals(currentAndroidId, db.userDao().getTokenDeviceBindingForUser(1)?.androidId)
-        assertEquals(currentAndroidId, db.userDao().getTokenDeviceBindingForUser(2)?.androidId)
+        states shouldBe listOf(State.RestoringFromBackup, State.Settled)
+        db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
+        db.userDao().getTokenDeviceBindingForUser(2)?.androidId shouldBe currentAndroidId
         db.close()
     }
 
@@ -216,9 +217,9 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
         val states = manager.collectStatesUntilSettled()
 
-        assertEquals(listOf(State.RestoringFromBackup, State.Settled), states)
-        assertEquals(currentAndroidId, db.userDao().getTokenDeviceBindingForUser(1)?.androidId)
-        assertEquals(currentAndroidId, db.userDao().getTokenDeviceBindingForUser(2)?.androidId)
+        states shouldBe listOf(State.RestoringFromBackup, State.Settled)
+        db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
+        db.userDao().getTokenDeviceBindingForUser(2)?.androidId shouldBe currentAndroidId
         db.close()
     }
 
@@ -236,9 +237,9 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
             failedState.giveUp() // unblock the flow so the test completes
         }
 
-        assertTrue(states.any { it is State.RestoringFromBackupFailed })
+        states.any { it is State.RestoringFromBackupFailed }.shouldBeTrue()
         val failed = states.filterIsInstance<State.RestoringFromBackupFailed>().first()
-        assertTrue(failed.cause is DerivedTokenGenerator.Issue.NetworkIssue)
+        failed.cause.shouldBeInstanceOf<DerivedTokenGenerator.Issue.NetworkIssue>()
         db.close()
     }
 
@@ -260,12 +261,12 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         }
 
         // Attempt 1 → failure → retry → success → Settled
-        assertTrue(states.any { it is State.RestoringFromBackup })
-        assertEquals(1, states.count { it is State.RestoringFromBackupFailed })
-        assertTrue(states.last() is State.Settled)
+        states.any { it is State.RestoringFromBackup }.shouldBeTrue()
+        states.count { it is State.RestoringFromBackupFailed } shouldBe 1
+        states.last().shouldBeInstanceOf<State.Settled>()
         // Confirm the retry produced the new token and updated the binding.
-        assertEquals("derived_after_retry", db.userDao().findById(1)?.apiToken?.accessToken)
-        assertEquals(currentAndroidId, db.userDao().getTokenDeviceBindingForUser(1)?.androidId)
+        db.userDao().findById(1)?.apiToken?.accessToken shouldBe "derived_after_retry"
+        db.userDao().getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
         db.close()
     }
 
@@ -283,7 +284,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
 
         manager.collectStatesUntilSettled { failedState -> failedState.giveUp() }
 
-        assertEquals(listOf(1), removedUserIds)
+        removedUserIds shouldBe listOf(1)
         db.close()
     }
 
@@ -303,7 +304,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         manager.collectStatesUntilSettled { failedState -> failedState.giveUp() }
 
         // Only the user whose restoration failed must be removed.
-        assertEquals(listOf(2), removedUserIds)
+        removedUserIds shouldBe listOf(2)
         db.close()
     }
 

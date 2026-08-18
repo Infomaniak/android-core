@@ -69,5 +69,6 @@ dependencies {
     testImplementation(core.junit)
     testImplementation(core.androidx.test.core)
     testImplementation(core.kotlinx.coroutines.test)
+    testImplementation(core.kotest.assertions)
     testImplementation(core.robolectric)
 }
