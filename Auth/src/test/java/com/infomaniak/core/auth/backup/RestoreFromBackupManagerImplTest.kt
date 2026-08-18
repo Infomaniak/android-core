@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("NonAsciiCharacters")
+
 package com.infomaniak.core.auth.backup
 
 import com.infomaniak.core.auth.BaseAccountUtilsTest
@@ -57,7 +59,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- no users
 
     @Test
-    fun noUsers_settlesImmediately() = test { _ ->
+    fun `no users → settles immediately`() = test { _ ->
         val states = manager.collectStatesUntilSettled()
 
         states shouldBe listOf(State.Settled)
@@ -66,7 +68,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- same device
 
     @Test
-    fun sameDevice_settlesImmediately() = test { userDao ->
+    fun `same device → settles immediately`() = test { userDao ->
         userDao.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
 
         val states = manager.collectStatesUntilSettled()
@@ -76,7 +78,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_allSameDevice_settlesImmediately() = test { userDao ->
+    fun `multiple users, all same device → settles immediately`() = test { userDao ->
         userDao.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
         userDao.insertUserWithBinding(userId = 2, androidId = currentAndroidId)
         userDao.insertUserWithBinding(userId = 3, androidId = currentAndroidId)
@@ -92,7 +94,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- pre-v9: missing binding
 
     @Test
-    fun missingBinding_addsBindingAndSettles() = test { userDao ->
+    fun `missing binding → adds binding and settles`() = test { userDao ->
         userDao.insertUserWithoutBinding(userId = 1)
 
         val states = manager.collectStatesUntilSettled()
@@ -104,7 +106,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_allMissingBindings_addsBindingsAndSettles() = test { userDao ->
+    fun `multiple users, all missing bindings → adds bindings and settles`() = test { userDao ->
         userDao.insertUserWithoutBinding(userId = 1)
         userDao.insertUserWithoutBinding(userId = 2)
 
@@ -120,7 +122,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- transferred device – success
 
     @Test
-    fun transferredDevice_derivationSucceeds_updatesTokenAndSettles() = test { userDao ->
+    fun `transferred device, derivation succeeds → updates token and settles`() = test { userDao ->
         userDao.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val states = manager.collectStatesUntilSettled()
@@ -131,7 +133,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_allTransferred_allSucceed_settles() = test(timeout = 2.seconds) { userDao ->
+    fun `multiple users, all transferred, all succeed → settles`() = test(timeout = 2.seconds) { userDao ->
         userDao.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
         userDao.insertUserWithBinding(userId = 2, androidId = otherDeviceAndroidId)
 
@@ -143,7 +145,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_mixedDevices_onlyTransferredAreRestored() = test { userDao ->
+    fun `multiple users, mixed devices → only transferred are restored`() = test { userDao ->
         userDao.insertUserWithBinding(userId = 1, androidId = currentAndroidId)      // already valid
         userDao.insertUserWithBinding(userId = 2, androidId = otherDeviceAndroidId)  // needs restoration
 
@@ -157,7 +159,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- restoration failure
 
     @Test
-    fun transferredDevice_derivationFails_emitsRestoringFromBackupFailedState() = test(
+    fun `transferred device, derivation fails → emits RestoringFromBackupFailed state`() = test(
         initialTokenDerivationResult = networkFailure()
     ) { userDao ->
         userDao.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
@@ -176,7 +178,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- retry
 
     @Test
-    fun transferredDevice_derivationFails_thenRetry_succeeds() = test(
+    fun `transferred device, derivation fails, then retry → succeeds`() = test(
         initialTokenDerivationResult = networkFailure()
     ) { userDao ->
         userDao.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
@@ -199,7 +201,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- give-up
 
     @Test
-    fun transferredDevice_derivationFails_giveUp_removesFailedUserAndSettles() = test(
+    fun `transferred device, derivation fails, give up → removes failed user and settles`() = test(
         initialTokenDerivationResult = networkFailure()
     ) { userDao ->
         userDao.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
@@ -213,7 +215,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_partialFailure_giveUp_onlyRemovesFailedUser() = test(
+    fun `multiple users, partial failure, give up → only removes failed user`() = test(
         initialTokenDerivationResult = networkFailure()
     ) { userDao ->
         // User 1 is on the current device: no restoration required, must not be removed.
