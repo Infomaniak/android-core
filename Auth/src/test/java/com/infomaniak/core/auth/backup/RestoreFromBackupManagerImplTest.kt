@@ -72,6 +72,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         val states = manager.collectStatesUntilSettled()
 
         states shouldBe listOf(State.Settled)
+        userDao.findById(1).shouldNotBeNull()
     }
 
     @Test
@@ -83,6 +84,9 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         val states = manager.collectStatesUntilSettled()
 
         states shouldBe listOf(State.Settled)
+        userDao.findById(1).shouldNotBeNull()
+        userDao.findById(2).shouldNotBeNull()
+        userDao.findById(3).shouldNotBeNull()
     }
 
     // --------------------------------------------------- pre-v9: missing binding
@@ -96,6 +100,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         // Missing binding means a same-device app upgrade (pre-v9); no token derivation needed.
         states shouldBe listOf(State.Settled)
         userDao.getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
+        userDao.findById(1).shouldNotBeNull()
     }
 
     @Test
@@ -108,6 +113,8 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         states shouldBe listOf(State.Settled)
         userDao.getTokenDeviceBindingForUser(1)?.androidId shouldBe currentAndroidId
         userDao.getTokenDeviceBindingForUser(2)?.androidId shouldBe currentAndroidId
+        userDao.findById(1).shouldNotBeNull()
+        userDao.findById(2).shouldNotBeNull()
     }
 
     // --------------------------------------------------- transferred device – success
@@ -156,12 +163,14 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         userDao.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
         val states = manager.collectStatesUntilSettled { failedState ->
+            userDao.findById(1).shouldNotBeNull()
             failedState.giveUp() // unblock the flow so the test completes
         }
 
         states.any { it is State.RestoringFromBackupFailed }.shouldBeTrue()
         val failed = states.filterIsInstance<State.RestoringFromBackupFailed>().first()
         failed.cause.shouldBeInstanceOf<DerivedTokenGenerator.Issue.NetworkIssue>()
+        userDao.findById(1).shouldBeNull()
     }
 
     // --------------------------------------------------- retry
@@ -212,10 +221,14 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
         // User 2 was transferred: restoration will fail.
         userDao.insertUserWithBinding(userId = 2, androidId = otherDeviceAndroidId)
 
-        manager.collectStatesUntilSettled { failedState -> failedState.giveUp() }
+        manager.collectStatesUntilSettled { failedState ->
+            userDao.findById(2).shouldNotBeNull()
+            failedState.giveUp()
+        }
 
         // Only the user whose restoration failed must be removed.
-        userDao.findById(2) shouldBe null
+        userDao.findById(1).shouldNotBeNull()
+        userDao.findById(2).shouldBeNull()
     }
 
     // ------------------------------------------------------------------ helpers
