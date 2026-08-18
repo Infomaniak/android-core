@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.infomaniak.core.auth.backup
 
 import com.infomaniak.core.auth.BaseAccountUtilsTest
@@ -31,6 +32,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Tests for [RestoreFromBackupManagerImpl], covering all paths in the restoration state machine:
@@ -96,7 +98,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- no users
 
     @Test
-    fun noUsers_settlesImmediately() = runTest {
+    fun noUsers_settlesImmediately() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         val manager = createManager(db)
         manager.registerRemoveUser { }
@@ -110,7 +112,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- same device
 
     @Test
-    fun sameDevice_settlesImmediately() = runTest {
+    fun sameDevice_settlesImmediately() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
         val manager = createManager(db)
@@ -123,7 +125,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_allSameDevice_settlesImmediately() = runTest {
+    fun multipleUsers_allSameDevice_settlesImmediately() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
         db.insertUserWithBinding(userId = 2, androidId = currentAndroidId)
@@ -140,7 +142,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- pre-v9: missing binding
 
     @Test
-    fun missingBinding_addsBindingAndSettles() = runTest {
+    fun missingBinding_addsBindingAndSettles() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithoutBinding(userId = 1)
         val manager = createManager(db)
@@ -155,7 +157,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_allMissingBindings_addsBindingsAndSettles() = runTest {
+    fun multipleUsers_allMissingBindings_addsBindingsAndSettles() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithoutBinding(userId = 1)
         db.insertUserWithoutBinding(userId = 2)
@@ -173,7 +175,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- transferred device – success
 
     @Test
-    fun transferredDevice_derivationSucceeds_updatesTokenAndSettles() = runTest {
+    fun transferredDevice_derivationSucceeds_updatesTokenAndSettles() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
@@ -189,7 +191,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_allTransferred_allSucceed_settles() = runTest {
+    fun multipleUsers_allTransferred_allSucceed_settles() = runTest(timeout = 2.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
         db.insertUserWithBinding(userId = 2, androidId = otherDeviceAndroidId)
@@ -205,7 +207,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_mixedDevices_onlyTransferredAreRestored() = runTest {
+    fun multipleUsers_mixedDevices_onlyTransferredAreRestored() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)      // already valid
         db.insertUserWithBinding(userId = 2, androidId = otherDeviceAndroidId)  // needs restoration
@@ -223,7 +225,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- restoration failure
 
     @Test
-    fun transferredDevice_derivationFails_emitsRestoringFromBackupFailedState() = runTest {
+    fun transferredDevice_derivationFails_emitsRestoringFromBackupFailedState() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
@@ -243,7 +245,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- retry
 
     @Test
-    fun transferredDevice_derivationFails_thenRetry_succeeds() = runTest {
+    fun transferredDevice_derivationFails_thenRetry_succeeds() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
@@ -270,7 +272,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     // --------------------------------------------------- give-up
 
     @Test
-    fun transferredDevice_derivationFails_giveUp_removesFailedUserAndSettles() = runTest {
+    fun transferredDevice_derivationFails_giveUp_removesFailedUserAndSettles() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         db.insertUserWithBinding(userId = 1, androidId = otherDeviceAndroidId)
 
@@ -286,7 +288,7 @@ class RestoreFromBackupManagerImplTest : BaseAccountUtilsTest() {
     }
 
     @Test
-    fun multipleUsers_partialFailure_giveUp_onlyRemovesFailedUser() = runTest {
+    fun multipleUsers_partialFailure_giveUp_onlyRemovesFailedUser() = runTest(timeout = .1.seconds) {
         val db = UserDatabase.instantiateDataBase(context, true)
         // User 1 is on the current device: no restoration required, must not be removed.
         db.insertUserWithBinding(userId = 1, androidId = currentAndroidId)
