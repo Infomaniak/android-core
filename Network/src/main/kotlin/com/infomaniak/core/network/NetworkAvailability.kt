@@ -35,10 +35,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import splitties.systemservices.connectivityManager
 
-class NetworkAvailability(private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
+class NetworkAvailability(ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
     @Deprecated(
         message = "No need to pass Context",
@@ -58,7 +57,7 @@ class NetworkAvailability(private val ioDispatcher: CoroutineDispatcher = Dispat
                 launch {
                     mutex.withLock {
                         networks.add(network)
-                        send(element = hasAvailableNetwork(networks))
+                        send(element = networks.isNotEmpty())
                     }
                 }
             }
@@ -67,7 +66,7 @@ class NetworkAvailability(private val ioDispatcher: CoroutineDispatcher = Dispat
                 launch {
                     mutex.withLock {
                         networks.remove(network)
-                        send(element = hasAvailableNetwork(networks))
+                        send(element = networks.isNotEmpty())
                     }
                 }
             }
@@ -107,25 +106,18 @@ class NetworkAvailability(private val ioDispatcher: CoroutineDispatcher = Dispat
     }
 
     private fun getInitialNetworkAvailability(connectivityManager: ConnectivityManager): Boolean {
-        return connectivityManager.activeNetwork?.let(::hasInternetConnectivity) == true
+        val capabilities = connectivityManager.activeNetwork?.let(connectivityManager::getNetworkCapabilities)
+        return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
     }
 
     private fun networkRequestBuilder(): NetworkRequest {
         return NetworkRequest.Builder().apply {
             addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
         }.build()
-    }
-
-    private fun hasInternetConnectivity(network: Network) = runCatching {
-        network.getByName(ROOT_SERVER_URL) != null
-    }.getOrDefault(false)
-
-    private suspend fun hasAvailableNetwork(networks: List<Network>) = withContext(ioDispatcher) {
-        networks.any(::hasInternetConnectivity)
     }
 
     companion object {
         private val TAG = NetworkAvailability::class.java.simpleName
-        private const val ROOT_SERVER_URL = "a.root-servers.net"
     }
 }
