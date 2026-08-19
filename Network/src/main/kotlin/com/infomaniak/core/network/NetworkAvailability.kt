@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.network
 
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
@@ -25,34 +24,28 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import com.infomaniak.core.sentry.SentryLog
 import io.sentry.Sentry
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import splitties.systemservices.connectivityManager
 
-class NetworkAvailability(ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
+object NetworkAvailability {
 
-    @Deprecated(
-        message = "No need to pass Context",
-        replaceWith = ReplaceWith("NetworkAvailability()"),
-        level = DeprecationLevel.WARNING
-    )
-    constructor(@Suppress("unused") context: Context) : this() // TODO[short-deprecation]: Remove this once apps are updated.
-
+    private val TAG = NetworkAvailability::class.java.simpleName
     private val mutex = Mutex()
 
-    val isNetworkAvailable: Flow<Boolean> = callbackFlow {
+    val isNetworkAvailable: SharedFlow<Boolean> = callbackFlow {
         val networks = mutableListOf<Network>()
 
         val callback = object : NetworkCallback() {
-
             override fun onAvailable(network: Network) {
                 launch {
                     mutex.withLock {
@@ -79,7 +72,12 @@ class NetworkAvailability(ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
         registerNetworkCallback(connectivityManager, callback, ::send)
 
         awaitClose { unregisterNetworkCallback(connectivityManager, callback) }
-    }.conflate().flowOn(ioDispatcher) // IPC with ConnectivityManager is technically blocking I/O.
+    }
+        .distinctUntilChanged()
+        .shareIn(
+            scope = CoroutineScope(Dispatchers.IO), // IPC with ConnectivityManager is technically blocking I/O.
+            started = SharingStarted.Lazily
+        )
 
     private suspend fun registerNetworkCallback(
         connectivityManager: ConnectivityManager,
@@ -115,9 +113,5 @@ class NetworkAvailability(ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
             addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
         }.build()
-    }
-
-    companion object {
-        private val TAG = NetworkAvailability::class.java.simpleName
     }
 }
