@@ -40,7 +40,7 @@ internal fun ContactCardTopBar(
             if (showTitle) {
                 Text(
                     text = stringResource(R.string.contactCardTitle),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
             }

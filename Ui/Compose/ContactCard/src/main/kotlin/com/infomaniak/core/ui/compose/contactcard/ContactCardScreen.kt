@@ -16,6 +16,10 @@
  */
 package com.infomaniak.core.ui.compose.contactcard
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -43,7 +47,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.ui.compose.contactcard.component.ContactPreviewProvider
@@ -109,7 +112,7 @@ private fun ContactCardScreen(
         state = state,
         onSave = callbacks.onSave,
     )
-    
+
     Scaffold(
         containerColor = containerColor(state, colors),
         topBar = {
@@ -285,39 +288,46 @@ private fun ContactCardBodyContent(
     callbacks: ContactCardCallbacks,
     onSaveHandled: () -> Unit,
 ) {
-    when (state) {
-        ContactCardUiState.Loading -> {
-            Box(
+    AnimatedContent(
+        targetState = state,
+        contentKey = { it::class },
+        transitionSpec = { fadeIn() togetherWith fadeOut() },
+        label = "ContactCardStateTransition",
+    ) { uiState ->
+        when (uiState) {
+            ContactCardUiState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            ContactCardUiState.Closed -> {
+                LaunchedEffect(Unit) {
+                    callbacks.onBack()
+                }
+            }
+            is ContactCardUiState.Onboarding -> OnboardingContent(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
+                onCreate = { callbacks.onCreate(uiState.user) },
+            )
+            is ContactCardUiState.Preview -> PreviewContent(
+                modifier = Modifier.fillMaxSize(),
+                user = uiState.user,
+                card = uiState.card,
+                onShare = { callbacks.onShare(uiState.card) },
+            )
+            is ContactCardUiState.Editing -> EditorContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .imePadding(),
+                editor = uiState.editor,
+                requestSave = requestSave,
+                onSaveHandled = onSaveHandled,
+                callbacks = callbacks,
+            )
         }
-        ContactCardUiState.Closed -> {
-            LaunchedEffect(Unit) {
-                callbacks.onBack()
-            }
-        }
-        is ContactCardUiState.Onboarding -> OnboardingContent(
-            modifier = Modifier.fillMaxSize(),
-            onCreate = { callbacks.onCreate(state.user) },
-        )
-        is ContactCardUiState.Preview -> PreviewContent(
-            modifier = Modifier.fillMaxSize(),
-            user = state.user,
-            card = state.card,
-            onShare = { callbacks.onShare(state.card) },
-        )
-        is ContactCardUiState.Editing -> EditorContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .imePadding(),
-            editor = state.editor,
-            requestSave = requestSave,
-            onSaveHandled = onSaveHandled,
-            callbacks = callbacks,
-        )
     }
 }
 

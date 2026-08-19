@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.margin.Margin
 
@@ -66,6 +67,7 @@ internal fun PreviewContent(
         ) {
             Text(
                 text = stringResource(R.string.shareButton),
+                style = Typography.buttonPrimary,
                 modifier = Modifier.padding(vertical = Margin.Mini),
             )
         }
