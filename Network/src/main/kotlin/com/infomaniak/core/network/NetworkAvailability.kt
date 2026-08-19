@@ -67,6 +67,8 @@ object NetworkAvailability {
 
         launch {
             send(getInitialNetworkAvailability(connectivityManager))
+            // Note that onAvailable is also called on registration for every already matching network,
+            // so the networks property will be empty only if there are no available networks.
         }
 
         registerNetworkCallback(connectivityManager, callback, ::send)
