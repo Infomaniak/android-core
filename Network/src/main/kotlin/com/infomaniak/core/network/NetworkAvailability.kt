@@ -78,7 +78,7 @@ object NetworkAvailability {
         .distinctUntilChanged()
         .shareIn(
             scope = CoroutineScope(Dispatchers.IO), // IPC with ConnectivityManager is technically blocking I/O.
-            started = SharingStarted.Lazily
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000L),
         )
 
     private suspend fun registerNetworkCallback(
