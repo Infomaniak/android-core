@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.margin.Margin
 
@@ -111,6 +112,7 @@ internal fun OnboardingContent(
         ) {
             Text(
                 text = stringResource(R.string.buttonCreate),
+                style = Typography.buttonPrimary,
                 modifier = Modifier.padding(vertical = Margin.Mini),
             )
         }

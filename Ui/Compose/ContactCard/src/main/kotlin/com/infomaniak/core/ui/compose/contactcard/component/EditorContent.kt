@@ -262,7 +262,8 @@ private fun AddUrlButton(onClick: () -> Unit) {
             Text(
                 text = stringResource(R.string.addUrl),
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(start = Margin.Small),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(start = Margin.Micro),
             )
         }
     }

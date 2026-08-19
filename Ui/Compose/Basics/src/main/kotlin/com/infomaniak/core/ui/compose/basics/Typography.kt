@@ -59,6 +59,14 @@ object Typography {
         lineHeight = 20.sp,
     )
 
+    val buttonPrimary = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.sp,
+    )
+
     val bodySmallRegular = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,

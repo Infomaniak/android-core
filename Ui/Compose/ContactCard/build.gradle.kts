@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":Avatar"))
     implementation(project(":Common"))
     implementation(project(":Ui:View:PrimaryPalette"))
+    implementation(project(":Ui:Compose:Basics"))
     implementation(project(":Ui:Compose:Margin"))
     implementation(project(":Matomo"))
     implementation(project(":Network"))
