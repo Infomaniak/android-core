@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
 }
 
 def legacyCompileSdk = rootProject.ext["legacyCompileSdk"]
@@ -19,8 +18,6 @@ android {
         sourceCompatibility javaVersion
         targetCompatibility javaVersion
     }
-
-    kotlinOptions { jvmTarget = javaVersion }
 
     dependencies {
         implementation project(':Core:Legacy')
