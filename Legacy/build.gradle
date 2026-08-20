@@ -7,7 +7,7 @@ plugins {
 }
 
 rootProject.ext {
-    legacyCompileSdk = 35
+    legacyCompileSdk = 37
     legacyMinSdk = 27
 }
 
