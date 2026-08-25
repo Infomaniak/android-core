@@ -17,62 +17,67 @@
  */
 package com.infomaniak.core.common.backup
 
+import android.app.backup.BackupAgent
 import android.app.backup.BackupDataInputStream
 import android.app.backup.BackupDataOutput
 import android.app.backup.FileBackupHelper
-import android.content.Context
 import android.os.ParcelFileDescriptor
 
 class TransportAwareFileBackupHandler(
-    context: Context,
-    filesToBackup: Map<String, CloudBackupPolicy>,
+    private val context: BackupAgent,
+    private val filesToBackup: Map<String, BackupPolicy>,
 ) : BackupAgentBase.BackupHandler() {
 
-    enum class CloudBackupPolicy {
-        Skip, OnlyIfDeviceEncrypted, Always;
+    enum class BackupPolicy {
+        EncryptedDeviceToDeviceOnly,
+        DeviceToDeviceOnly,
+        DeviceEncryptedCloudAllowed,
+        DeviceEncryptedOnly,
+        CloudAllowed;
     }
 
-    private val deviceToDeviceBackupHelper by lazy {
+    private val encryptedDeviceToDeviceBackupHelper by lazy {
         FileBackupHelper(context, *filesToBackup.keys.toTypedArray())
-    }
-
-    private val deviceEncryptedCloudBackupHelper by lazy {
-        val filesToBackup = filesToBackup.mapNotNull { (name, policy) ->
-            when (policy) {
-                CloudBackupPolicy.OnlyIfDeviceEncrypted, CloudBackupPolicy.Always -> name
-                CloudBackupPolicy.Skip -> null
-            }
-        }.toTypedArray()
-        FileBackupHelper(context, *filesToBackup)
-    }
-
-    private val fallbackBackupHelper by lazy {
-        val filesToBackup = filesToBackup.mapNotNull { (name, policy) ->
-            when (policy) {
-                CloudBackupPolicy.Always -> name
-                CloudBackupPolicy.OnlyIfDeviceEncrypted, CloudBackupPolicy.Skip -> null
-            }
-        }.toTypedArray()
-        FileBackupHelper(context, *filesToBackup)
     }
 
     override fun performBackup(
         oldState: ParcelFileDescriptor?,
         data: BackupDataOutput,
         newState: ParcelFileDescriptor
-    ) = when {
-        data.isDeviceToDeviceTransfer == true -> deviceToDeviceBackupHelper.performBackup(oldState, data, newState)
-        data.isClientSideEncryptionEnabled == true -> deviceEncryptedCloudBackupHelper.performBackup(oldState, data, newState)
-        else -> fallbackBackupHelper.performBackup(oldState, data, newState)
+    ) {
+        val helper = fileBackupHelper(data)
+        helper.performBackup(oldState, data, newState)
     }
 
     override fun restoreEntity(data: BackupDataInputStream) {
         // Forward it to the helper that can handle all the files.
-        deviceToDeviceBackupHelper.restoreEntity(data)
+        encryptedDeviceToDeviceBackupHelper.restoreEntity(data)
     }
 
     override fun writeNewStateDescription(newState: ParcelFileDescriptor) {
         // Forward it to the helper that can handle all the files.
-        deviceToDeviceBackupHelper.writeNewStateDescription(newState)
+        encryptedDeviceToDeviceBackupHelper.writeNewStateDescription(newState)
+    }
+
+    private fun allowedPolicies(data: BackupDataOutput): Set<BackupPolicy> = buildSet {
+        add(BackupPolicy.CloudAllowed)
+        val clientEncrypted = data.isClientSideEncryptionEnabled == true
+        if (data.isDeviceToDeviceTransfer == true) {
+            add(BackupPolicy.DeviceToDeviceOnly)
+            if (clientEncrypted) add(BackupPolicy.EncryptedDeviceToDeviceOnly)
+        }
+        if (clientEncrypted) {
+            add(BackupPolicy.DeviceEncryptedOnly)
+            add(BackupPolicy.DeviceEncryptedCloudAllowed)
+        }
+    }
+
+    private fun fileBackupHelper(data: BackupDataOutput): FileBackupHelper {
+        if (data.isDeviceToDeviceTransfer == true && data.isClientSideEncryptionEnabled == true) {
+            return encryptedDeviceToDeviceBackupHelper
+        }
+        val allowedPolicies = allowedPolicies(data)
+        val files = filesToBackup.mapNotNull { (name, policy) -> name.takeIf { policy in allowedPolicies } }
+        return FileBackupHelper(context, *files.toTypedArray())
     }
 }
