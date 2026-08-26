@@ -26,15 +26,20 @@ internal fun Context.getFlavor(): String = runCatching {
     flavorField[null] as String
 }.getOrDefault("standard")
 
+private const val SUCCESS = 0
+private const val SERVICE_MISSING = 1
+private const val SERVICE_VERSION_UPDATE_REQUIRED = 2
+private const val SERVICE_UPDATING = 18
+
 internal fun Context.arePlayServicesAvailable(): Boolean {
-    val enable = 0
-    return runCatching {
+    val currentValue = runCatching {
         val googleApiAvailabilityClass = Class.forName("com.google.android.gms.common.GoogleApiAvailability")
         val getInstanceMethod = googleApiAvailabilityClass.getDeclaredMethod("getInstance")
         val instance = getInstanceMethod.invoke(null)
         val isAvailableMethod = googleApiAvailabilityClass.getDeclaredMethod("isGooglePlayServicesAvailable", Context::class.java)
         isAvailableMethod.invoke(instance, this) as Int
-    }.getOrDefault(1) == enable
+    }.getOrDefault(SERVICE_MISSING)
+    return sequenceOf(SUCCESS, SERVICE_VERSION_UPDATE_REQUIRED, SERVICE_UPDATING).contains(currentValue)
 }
 
 internal fun Context.isDontKeepActivitiesEnabled(): Boolean {
