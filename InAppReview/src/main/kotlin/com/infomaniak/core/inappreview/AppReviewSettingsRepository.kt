@@ -18,6 +18,7 @@
 package com.infomaniak.core.inappreview
 
 import android.content.Context
+import androidx.datastore.core.DataMigration
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
@@ -31,17 +32,33 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
+private val migrateAlreadyAskReviewKey = object : DataMigration<Preferences> {
+    override suspend fun shouldMigrate(currentData: Preferences): Boolean =
+        currentData[AppReviewSettingsRepository.ALREADY_ASK_REVIEW_KEY] == null &&
+            currentData[AppReviewSettingsRepository.LEGACY_ALREADY_ASK_REVIEW_KEY] != null
+
+    override suspend fun migrate(currentData: Preferences): Preferences {
+        val legacyValue = currentData[AppReviewSettingsRepository.LEGACY_ALREADY_ASK_REVIEW_KEY] ?: return currentData
+        return currentData.toMutablePreferences().apply {
+            this[AppReviewSettingsRepository.ALREADY_ASK_REVIEW_KEY] = legacyValue
+            remove(AppReviewSettingsRepository.LEGACY_ALREADY_ASK_REVIEW_KEY)
+        }.toPreferences()
+    }
+
+    override suspend fun cleanUp() = Unit
+}
+
 private val Context.dataStore by preferencesDataStore(
     name = AppReviewSettingsRepository.DATA_STORE_NAME,
     // In case we have a CorruptionException, we want to clear all DataStore preferences
     corruptionHandler = ReplaceFileCorruptionHandler<Preferences> { emptyPreferences() },
+    produceMigrations = { listOf(migrateAlreadyAskReviewKey) },
 )
 
 @Suppress("UNCHECKED_CAST")
 class AppReviewSettingsRepository(private val context: Context) {
 
     internal var appReviewThreshold = DEFAULT_APP_REVIEW_THRESHOLD
-    internal var maxAppReviewThreshold = appReviewThreshold * 10
 
     fun <T> flowFor(key: Preferences.Key<T>) = context.dataStore.data
         .map { it[key] ?: (getInitialValue(key) as T) }
@@ -56,7 +73,7 @@ class AppReviewSettingsRepository(private val context: Context) {
 
     private fun <T> getInitialValue(key: Preferences.Key<T>) = when (key) {
         APP_REVIEW_THRESHOLD_KEY -> appReviewThreshold
-        ALREADY_GAVE_REVIEW_KEY -> DEFAULT_ALREADY_GAVE_REVIEW
+        ALREADY_ASK_REVIEW_KEY -> DEFAULT_ALREADY_ASK_REVIEW
         else -> throw IllegalArgumentException("Unknown Preferences.Key")
     }
 
@@ -72,20 +89,17 @@ class AppReviewSettingsRepository(private val context: Context) {
         context.dataStore.edit(MutablePreferences::clear)
     }
 
-    suspend fun resetReviewSettings() {
-        setValue(APP_REVIEW_THRESHOLD_KEY, maxAppReviewThreshold)
-    }
-
     companion object {
 
         private const val TAG = "AppReviewSettingsRepository"
 
         val APP_REVIEW_THRESHOLD_KEY = intPreferencesKey("appReviewThresholdKey")
-        val ALREADY_GAVE_REVIEW_KEY = booleanPreferencesKey("alreadyGaveReview")
+        val ALREADY_ASK_REVIEW_KEY = booleanPreferencesKey("alreadyAskReviewKey")
+        val LEGACY_ALREADY_ASK_REVIEW_KEY = booleanPreferencesKey("alreadyGaveReview")
 
         internal const val DATA_STORE_NAME = "AppReviewSettingsDataStore"
 
-        private const val DEFAULT_ALREADY_GAVE_REVIEW = false
+        private const val DEFAULT_ALREADY_ASK_REVIEW = false
 
         private const val DEFAULT_APP_REVIEW_THRESHOLD = 50
     }
