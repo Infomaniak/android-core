@@ -25,16 +25,8 @@ import android.os.ParcelFileDescriptor
 
 class TransportAwareFileBackupHandler(
     private val context: BackupAgent,
-    private val filesToBackup: Map<String, BackupPolicy>,
+    private val filesToBackup: Map<String, AppBackupPolicy>,
 ) : BackupAgentBase.BackupHandler() {
-
-    enum class BackupPolicy {
-        EncryptedDeviceToDeviceOnly,
-        DeviceToDeviceOnly,
-        DeviceEncryptedCloudAllowed,
-        DeviceEncryptedOnly,
-        CloudAllowed;
-    }
 
     private val encryptedDeviceToDeviceBackupHelper by lazy {
         FileBackupHelper(context, *filesToBackup.keys.toTypedArray())
@@ -59,16 +51,16 @@ class TransportAwareFileBackupHandler(
         encryptedDeviceToDeviceBackupHelper.writeNewStateDescription(newState)
     }
 
-    private fun allowedPolicies(data: BackupDataOutput): Set<BackupPolicy> = buildSet {
-        add(BackupPolicy.CloudAllowed)
+    private fun allowedPolicies(data: BackupDataOutput): Set<AppBackupPolicy> = buildSet {
+        add(AppBackupPolicy.CloudAllowed)
         val clientEncrypted = data.isClientSideEncryptionEnabled == true
         if (data.isDeviceToDeviceTransfer == true) {
-            add(BackupPolicy.DeviceToDeviceOnly)
-            if (clientEncrypted) add(BackupPolicy.EncryptedDeviceToDeviceOnly)
+            add(AppBackupPolicy.DeviceToDeviceOnly)
+            if (clientEncrypted) add(AppBackupPolicy.EncryptedDeviceToDeviceOnly)
         }
         if (clientEncrypted) {
-            add(BackupPolicy.DeviceEncryptedOnly)
-            add(BackupPolicy.DeviceEncryptedCloudAllowed)
+            add(AppBackupPolicy.DeviceEncryptedOnly)
+            add(AppBackupPolicy.DeviceEncryptedCloudAllowed)
         }
     }
 
