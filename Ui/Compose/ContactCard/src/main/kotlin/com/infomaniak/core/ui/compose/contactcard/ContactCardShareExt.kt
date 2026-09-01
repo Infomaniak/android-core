@@ -16,14 +16,11 @@
  */
 package com.infomaniak.core.ui.compose.contactcard
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.util.Base64
-import androidx.core.content.FileProvider
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.common.cancellable
-import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider.okHttpClient
 import com.infomaniak.core.network.utils.await
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -51,7 +48,7 @@ suspend fun Card.getAvatarDataOrNull(): Pair<String?, String?> {
     return runCatching {
         val request = Request.Builder().url(url).build()
 
-        HttpClient.okHttpClient.newCall(request).await().use { response ->
+        okHttpClient.newCall(request).await().use { response ->
             val body = response.body
             if (!response.isSuccessful) return@runCatching null to null
 
