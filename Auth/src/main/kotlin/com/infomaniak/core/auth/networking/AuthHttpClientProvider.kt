@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.auth.networking
 
-import androidx.annotation.CallSuper
 import com.infomaniak.core.auth.TokenAuthenticator
 import com.infomaniak.core.auth.TokenInterceptor
 import com.infomaniak.core.auth.TokenInterceptorListener
@@ -50,7 +49,6 @@ abstract class BaseHttpClientProvider {
             }.build()
     }
 
-    @CallSuper
     protected open fun addTokenInterceptor(builder: OkHttpClient.Builder, tokenInterceptorListener: TokenInterceptorListener?) {
         tokenInterceptorListener?.let { listener ->
             builder.addInterceptor(TokenInterceptor(listener))
