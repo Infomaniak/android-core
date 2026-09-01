@@ -24,30 +24,26 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 
-
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebView(
     url: String,
+    @SuppressLint("ModifierParameter") // We have this to match the previous behavior when there was no modifier parameter.
+    modifier: Modifier = Modifier.safeDrawingPadding(),
     onUrlToQuitReached: () -> Unit = {},
     urlToQuit: String? = null,
     headers: Map<String, String> = emptyMap(),
     userAgentString: String? = null,
-    @SuppressLint("ModifierParameter") // We have this to match the previous behavior when there was no modifier parameter.
-    modifier: Modifier = Modifier.safeDrawingPadding(),
     domStorageEnabled: Boolean = false,
     webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
-    withSafeArea: Boolean = true,
     webChromeClient: WebChromeClient? = null,
     getWebView: ((WebView) -> Unit)? = null,
 ) {
-    val modifier = if (withSafeArea) Modifier.safeDrawingPadding() else Modifier
     AndroidView(
         modifier = modifier,
         factory = {

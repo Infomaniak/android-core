@@ -30,7 +30,7 @@ inline fun <reified T : Serializable> Intent.serializableExtra(key: String): T? 
     else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
 }
 
-inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+inline fun <reified T : Parcelable> Intent.parcelableExtra(key: String): T? = when {
     SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
     else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
 }
