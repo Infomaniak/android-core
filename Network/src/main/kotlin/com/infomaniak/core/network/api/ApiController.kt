@@ -86,7 +86,7 @@ object ApiController {
 
     /**
      * Executes an API request to the given URL with the specified parameters.
-     * Use [DefaultHttpClientProvider.okHttpClient] or [AuthHttpClientProvider.okHttpClient] for the client.
+     * Use [DefaultHttpClientProvider.okHttpClient] or an authenticated OkHttpClient supplied by the Auth module.
      */
     suspend inline fun <reified T> callApi(
         url: String,
