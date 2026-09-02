@@ -18,5 +18,24 @@
 package com.infomaniak.core.common.extensions
 
 import android.content.Intent
+import android.os.Build
+import android.os.Build.VERSION.SDK_INT
+import android.os.Parcelable
+import java.io.Serializable
 
 fun Intent.clearStack() = apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
+
+inline fun <reified T : Serializable> Intent.serializableExtra(key: String): T? = when {
+    SDK_INT >= 33 -> getSerializableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
+}
+
+inline fun <reified T : Parcelable> Intent.parcelableExtra(key: String): T? = when {
+    SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
+}
+
+inline fun <reified T : Parcelable> Intent.parcelableArrayList(key: String): ArrayList<T>? = when {
+    SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableArrayListExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
+}

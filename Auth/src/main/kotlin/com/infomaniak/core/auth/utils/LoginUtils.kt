@@ -204,7 +204,7 @@ private suspend fun authenticateUser(
     )
 
     val okhttpClient = DefaultHttpClientProvider.okHttpClient.newBuilder().addInterceptor { chain ->
-        val newRequest = changeAccessToken(chain.request(), apiToken)
+        val newRequest = changeAccessToken(chain.request(), apiToken.accessToken)
         chain.proceed(newRequest)
     }.build()
 

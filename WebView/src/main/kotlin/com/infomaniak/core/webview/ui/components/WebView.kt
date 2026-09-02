@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package com.infomaniak.core.webview.ui.components
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -32,12 +33,16 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun WebView(
     url: String,
-    onUrlToQuitReached: () -> Unit,
-    urlToQuit: String?,
-    headers: Map<String, String>,
     @SuppressLint("ModifierParameter") // We have this to match the previous behavior when there was no modifier parameter.
     modifier: Modifier = Modifier.safeDrawingPadding(),
+    onUrlToQuitReached: () -> Unit = {},
+    urlToQuit: String? = null,
+    headers: Map<String, String> = emptyMap(),
+    userAgentString: String? = null,
     domStorageEnabled: Boolean = false,
+    webViewClient: WebViewClient = CustomWebViewClient(urlToQuit, onUrlToQuitReached),
+    webChromeClient: WebChromeClient? = null,
+    getWebView: ((WebView) -> Unit)? = null,
 ) {
     AndroidView(
         modifier = modifier,
@@ -48,15 +53,17 @@ fun WebView(
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
 
-                webViewClient = CustomWebViewClient(
-                    urlToQuit = urlToQuit,
-                    onUrlToQuitReached = onUrlToQuitReached,
-                )
+                this.webViewClient = webViewClient
+                this.webChromeClient = webChromeClient
 
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = domStorageEnabled
 
+                userAgentString?.let { settings.userAgentString = it }
+
                 loadUrl(url, headers)
+
+                getWebView?.invoke(this)
             }
         }
     )
@@ -64,12 +71,12 @@ fun WebView(
 
 private class CustomWebViewClient(
     private val urlToQuit: String?,
-    private val onUrlToQuitReached: () -> Unit,
+    private val onUrlToQuitReached: (() -> Unit)?,
 ) : WebViewClient() {
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest?): Boolean {
         return if (urlToQuit != null && request?.url?.toString()?.contains(urlToQuit) == true) {
-            onUrlToQuitReached()
+            onUrlToQuitReached?.invoke()
             true
         } else {
             super.shouldOverrideUrlLoading(view, request)
