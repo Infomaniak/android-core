@@ -29,7 +29,7 @@ import com.infomaniak.core.network.models.ApiResponseStatus
 import com.infomaniak.core.network.models.ResponseHeaders
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import com.infomaniak.core.network.models.exceptions.ServerErrorException
-import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.networking.ManualAuthorizationRequired
 import com.infomaniak.core.network.utils.CustomDateTypeAdapter
@@ -84,11 +84,15 @@ object ApiController {
         gson = gsonBuilder.create()
     }
 
+    /**
+     * Executes an API request to the given URL with the specified parameters.
+     * Use [DefaultHttpClientProvider.okHttpClient] or an authenticated OkHttpClient supplied by the Auth module.
+     */
     suspend inline fun <reified T> callApi(
         url: String,
         method: ApiMethod,
         body: Any? = null,
-        okHttpClient: OkHttpClient = HttpClient.okHttpClient,
+        okHttpClient: OkHttpClient,
         useKotlinxSerialization: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
     ): T {
@@ -104,7 +108,7 @@ object ApiController {
         url: String,
         method: ApiMethod,
         body: Any? = null,
-        okHttpClient: OkHttpClient = HttpClient.okHttpClient,
+        okHttpClient: OkHttpClient,
         useKotlinxSerialization: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
     ): T {

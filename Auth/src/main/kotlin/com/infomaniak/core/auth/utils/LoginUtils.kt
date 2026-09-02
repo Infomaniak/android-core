@@ -43,7 +43,7 @@ import com.infomaniak.core.network.api.ApiController.toApiError
 import com.infomaniak.core.network.api.InternalTranslatedErrorCode
 import com.infomaniak.core.network.models.ApiResponse
 import com.infomaniak.core.network.models.ApiResponseStatus
-import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import com.infomaniak.core.network.utils.ApiErrorCode.Companion.translateError
 import kotlinx.coroutines.launch
 
@@ -104,7 +104,8 @@ object LoginUtils {
             is AuthCodeResult.Success -> Unit
         }
 
-        val tokenResult = infomaniakLogin.getToken(okHttpClient = HttpClient.okHttpClient, code = authCodeResult.code)
+        val tokenResult =
+            infomaniakLogin.getToken(okHttpClient = DefaultHttpClientProvider.okHttpClient, code = authCodeResult.code)
         when (tokenResult) {
             is TokenResult.Error -> return UserLoginResult.Failure(context.formatAuthErrorMessage(tokenResult.errorStatus))
             is TokenResult.Success -> Unit
@@ -202,7 +203,7 @@ private suspend fun authenticateUser(
         getErrorResponse(InternalTranslatedErrorCode.UserAlreadyPresent)
     )
 
-    val okhttpClient = HttpClient.okHttpClient.newBuilder().addInterceptor { chain ->
+    val okhttpClient = DefaultHttpClientProvider.okHttpClient.newBuilder().addInterceptor { chain ->
         val newRequest = changeAccessToken(chain.request(), apiToken)
         chain.proceed(newRequest)
     }.build()

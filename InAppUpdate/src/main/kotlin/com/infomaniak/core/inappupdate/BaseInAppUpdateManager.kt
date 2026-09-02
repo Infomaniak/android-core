@@ -37,7 +37,7 @@ import com.infomaniak.core.inappupdate.ui.UpdateRequiredActivity.Companion.start
 import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.network.NetworkConfiguration.appId
 import com.infomaniak.core.network.NetworkConfiguration.appVersionName
-import com.infomaniak.core.network.networking.HttpClient
+import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -72,7 +72,7 @@ abstract class BaseInAppUpdateManager(private val activity: ComponentActivity) :
             store = store,
             projectionFields = projectionFields,
             channelFilter = AppVersion.VersionChannel.Production,
-            okHttpClient = HttpClient.okHttpClient
+            okHttpClient = DefaultHttpClientProvider.okHttpClient,
         )
 
         emit(apiResponse.data?.mustRequireUpdate(appVersionName, AppVersion.VersionChannel.Production) == true)
