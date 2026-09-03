@@ -23,8 +23,8 @@
     <string name="buttonClose">Sulje</string>
     <string name="buttonCreateAccount">Luo tili</string>
     <string name="buttonLater">Myöhemmin</string>
+    <string name="buttonLogOut">Kirjaudu ulos</string>
     <string name="buttonLogin">Kirjaudu</string>
-    <string name="buttonLoginOut">Kirjaudu ulos</string>
     <string name="buttonMaybe">Ehkä</string>
     <string name="buttonNext">Seuraava</string>
     <string name="buttonNo">Ei</string>

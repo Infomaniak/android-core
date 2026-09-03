@@ -23,8 +23,8 @@
     <string name="buttonClose">Schliessen</string>
     <string name="buttonCreateAccount">Ein Konto erstellen</string>
     <string name="buttonLater">Später</string>
+    <string name="buttonLogOut">Abmelden</string>
     <string name="buttonLogin">Anmeldung</string>
-    <string name="buttonLoginOut">Abmelden</string>
     <string name="buttonMaybe">Vielleicht</string>
     <string name="buttonNext">Weiter</string>
     <string name="buttonNo">Nein</string>

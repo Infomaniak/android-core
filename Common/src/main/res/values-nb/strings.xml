@@ -23,8 +23,8 @@
     <string name="buttonClose">Lukk</string>
     <string name="buttonCreateAccount">Opprett en konto</string>
     <string name="buttonLater">Senere</string>
+    <string name="buttonLogOut">Logg ut</string>
     <string name="buttonLogin">Logg inn</string>
-    <string name="buttonLoginOut">Logg ut</string>
     <string name="buttonMaybe">Kanskje</string>
     <string name="buttonNext">Neste</string>
     <string name="buttonNo">Nei</string>

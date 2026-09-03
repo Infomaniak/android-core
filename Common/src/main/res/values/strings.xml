@@ -23,8 +23,8 @@
     <string name="buttonClose">Close</string>
     <string name="buttonCreateAccount">Create an account</string>
     <string name="buttonLater">Later</string>
+    <string name="buttonLogOut">Log out</string>
     <string name="buttonLogin">Log in</string>
-    <string name="buttonLoginOut">Log out</string>
     <string name="buttonMaybe">Maybe</string>
     <string name="buttonNext">Next</string>
     <string name="buttonNo">No</string>
