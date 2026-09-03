@@ -22,8 +22,15 @@ import android.app.backup.FullBackupDataOutput
 import android.os.Build.VERSION.SDK_INT
 import splitties.bitflags.hasFlag
 
-val FullBackupDataOutput.isDeviceToDeviceTransfer: Boolean?
-    get() = if (SDK_INT >= 28) transportFlags.hasFlag(BackupAgent.FLAG_DEVICE_TO_DEVICE_TRANSFER) else null
+/**
+ * If true, we don't have the 25MB limit.
+ *
+ * Before API 28, we can't know if it's a device-to-device transfer, or a cloud backup.
+ * Since it's going through the same pipeline either way, and since the 25MB limit
+ * is applied in both cases, we consider that we're not in the device-to-device transfer case.
+ */
+val FullBackupDataOutput.isDeviceToDeviceTransfer: Boolean
+    get() = if (SDK_INT >= 28) transportFlags.hasFlag(BackupAgent.FLAG_DEVICE_TO_DEVICE_TRANSFER) else false
 
-val FullBackupDataOutput.isClientSideEncryptionEnabled: Boolean?
-    get() = if (SDK_INT >= 28) transportFlags.hasFlag(BackupAgent.FLAG_CLIENT_SIDE_ENCRYPTION_ENABLED) else null
+val FullBackupDataOutput.isClientSideEncryptionEnabled: Boolean
+    get() = if (SDK_INT >= 28) transportFlags.hasFlag(BackupAgent.FLAG_CLIENT_SIDE_ENCRYPTION_ENABLED) else false
