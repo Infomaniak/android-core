@@ -54,11 +54,10 @@ import splitties.experimental.ExperimentalSplittiesApi
 internal class RestoreFromBackupManagerImpl(
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     private val mode: RestorationMode = RestorationMode.TokenDerivation,
-    userDatabase: UserDatabase = UserDatabase.instance,
+    private val userDatabase: UserDatabase = UserDatabase.instance,
     tokenGenerator: DerivedTokenGenerator? = null,
 ) : RestoreFromBackupManager() {
 
-    private val userDb = userDatabase
     private val userDao = userDatabase.userDao()
 
     private val removeUserDeferred = CompletableDeferred<suspend (id: Int) -> Unit>()
@@ -142,7 +141,7 @@ internal class RestoreFromBackupManagerImpl(
         usersToDeriveTokensFor.map { user ->
             async {
                 when (val result = attemptRestoringAccount(user)) {
-                    is Xor.First -> userDb.useWriterConnection {
+                    is Xor.First -> userDatabase.useWriterConnection {
                         it.immediateTransaction {
                             userDao.update(user.copy(apiToken = result.value))
                             userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, currentAndroidId))
