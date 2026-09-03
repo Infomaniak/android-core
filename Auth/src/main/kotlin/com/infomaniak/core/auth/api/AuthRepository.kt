@@ -41,7 +41,7 @@ object AuthRepository {
         val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("grant_type", "refresh_token")
-            .addFormDataPart("client_id", AuthConfiguration.clientId)
+            .addFormDataPart("client_id", AuthConfiguration.clientId())
             .addFormDataPart("refresh_token", refreshToken)
 
         if (AuthConfiguration.accessType == null) formBuilder.addFormDataPart("duration", "infinite")

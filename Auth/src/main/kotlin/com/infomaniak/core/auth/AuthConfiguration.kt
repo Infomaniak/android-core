@@ -19,13 +19,14 @@ package com.infomaniak.core.auth
 
 import com.infomaniak.core.auth.networking.AuthHttpClientProvider
 import com.infomaniak.core.login.InfomaniakLogin.AccessType
+import kotlinx.coroutines.CompletableDeferred
 
 /**
  * AuthConfiguration : Allow to configure this module.
  */
 object AuthConfiguration {
 
-    internal lateinit var clientId: String
+    private val clientIdAsync = CompletableDeferred<String>()
     internal var accessType: AccessType? = AccessType.OFFLINE
         private set
 
@@ -34,8 +35,10 @@ object AuthConfiguration {
         accessType: AccessType? = this.accessType,
         tokenInterceptorListener: TokenInterceptorListener,
     ) {
-        this.clientId = clientId
+        this.clientIdAsync.complete(clientId)
         this.accessType = accessType
         AuthHttpClientProvider.setTokenInterceptorListener(tokenInterceptorListener)
     }
+
+    internal suspend fun clientId() = clientIdAsync.await()
 }

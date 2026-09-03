@@ -42,7 +42,7 @@ import kotlin.uuid.ExperimentalUuidApi
 class DerivedTokenGeneratorImpl(
     private val tokenRetrievalUrl: String,
     private val hostAppPackageName: String = appCtx.packageName,
-    private val clientId: String,
+    private val clientId: suspend () -> String,
     private val userAgent: String,
     private val accessType: InfomaniakLogin.AccessType? = null,
 ) : DerivedTokenGenerator {
@@ -75,7 +75,7 @@ class DerivedTokenGeneratorImpl(
             it.addFormDataPart("subject_token_type", "urn:ietf:params:oauth:token-type:access_token")
             it.addFormDataPart("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
             it.addFormDataPart("client_assertion", attestationToken)
-            it.addFormDataPart("client_id", clientId)
+            it.addFormDataPart("client_id", clientId())
             if (accessType == null) it.addFormDataPart("duration", "infinite")
         }.build()
 

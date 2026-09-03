@@ -80,7 +80,7 @@ abstract class BaseCrossAppLoginViewModel(
     // We can't extend 2 classes, and we can't use implementation by delegation, hence the following.
 
     //region Delegating implementation.
-    private val delegate = CrossAppLoginFacadeImpl(applicationId, clientId, viewModelScope)
+    private val delegate = CrossAppLoginFacadeImpl(applicationId, { clientId }, viewModelScope)
 
     @CrossAppLoginFacade.UncheckedTokens
     override val availableAccounts: StateFlow<List<ExternalAccount>> get() = delegate.availableAccounts
@@ -113,7 +113,7 @@ abstract class BaseCrossAppLoginViewModel(
 
 internal class CrossAppLoginFacadeImpl(
     applicationId: String,
-    clientId: String,
+    clientId: suspend () -> String,
     scope: CoroutineScope,
 ) : CrossAppLoginFacade {
 
@@ -135,7 +135,7 @@ internal class CrossAppLoginFacadeImpl(
     private val derivedTokenGenerator: DerivedTokenGenerator = DerivedTokenGeneratorImpl(
         tokenRetrievalUrl = TOKEN_URL,
         hostAppPackageName = applicationId,
-        clientId = clientId,
+        clientId = { clientId() },
         userAgent = HttpUtils.getUserAgent,
     )
 

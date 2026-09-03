@@ -65,7 +65,7 @@ internal class RestoreFromBackupManagerImpl(
     private val derivedTokenGenerator: DerivedTokenGenerator by lazy {
         tokenGenerator ?: DerivedTokenGeneratorImpl(
             tokenRetrievalUrl = TOKEN_URL,
-            clientId = clientId,
+            clientId = ::clientId,
             userAgent = HttpUtils.getUserAgent,
         )
     }
