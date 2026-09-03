@@ -30,7 +30,7 @@ sealed interface CrossAppLoginFacade {
             applicationId: String,
             clientId: String,
             scope: CoroutineScope,
-        ): CrossAppLoginFacade = CrossAppLoginFacadeImpl(applicationId = applicationId, clientId = clientId, scope = scope)
+        ): CrossAppLoginFacade = CrossAppLoginFacadeImpl(applicationId = applicationId, clientId = { clientId }, scope = scope)
 
         fun List<ExternalAccount>.filterSelectedAccounts(skippedIds: Set<Long>): List<ExternalAccount> {
             return if (isNotEmpty()) filter { it.id !in skippedIds } else this
