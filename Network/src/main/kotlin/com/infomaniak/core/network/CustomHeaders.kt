@@ -30,6 +30,10 @@ class CustomHeaders {
         customHeaders[key] = value
     }
 
+    fun remove(key: String) {
+        customHeaders.remove(key)
+    }
+
     fun clear() {
         customHeaders.clear()
     }
