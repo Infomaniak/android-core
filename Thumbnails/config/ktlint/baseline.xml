@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/thumbnails/ThumbnailsUtils.kt">
+        <error line="47" column="113" source="standard:function-expression-body" />
+        <error line="56" column="99" source="standard:function-expression-body" />
+        <error line="81" column="108" source="standard:function-expression-body" />
+    </file>
+</baseline>

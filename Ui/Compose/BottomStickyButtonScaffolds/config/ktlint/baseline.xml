@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/ui/compose/bottomstickybuttonscaffolds/BottomStickyButtonScaffold.kt">
+        <error line="47" column="5" source="standard:function-naming" />
+        <error line="86" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/ui/compose/bottomstickybuttonscaffolds/DoubleStackedButtonScaffold.kt">
+        <error line="46" column="17" source="standard:function-naming" />
+        <error line="75" column="13" source="standard:function-naming" />
+        <error line="97" column="13" source="standard:function-naming" />
+        <error line="114" column="13" source="standard:function-naming" />
+        <error line="129" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/ui/compose/bottomstickybuttonscaffolds/ScaffoldTheme.kt">
+        <error line="28" column="5" source="standard:class-signature" />
+        <error line="29" column="5" source="standard:class-signature" />
+        <error line="29" column="58" source="standard:class-signature" />
+        <error line="44" column="1" source="standard:no-consecutive-blank-lines" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/ui/compose/bottomstickybuttonscaffolds/SinglePaneScaffold.kt">
+        <error line="39" column="5" source="standard:function-naming" />
+        <error line="71" column="13" source="standard:function-naming" />
+    </file>
+</baseline>
