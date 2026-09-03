@@ -23,6 +23,7 @@
     <string name="buttonClose">Sluiten</string>
     <string name="buttonCreateAccount">Een account aanmaken</string>
     <string name="buttonLater">Later</string>
+    <string name="buttonLogOut">Uitloggen</string>
     <string name="buttonLogin">Inloggen</string>
     <string name="buttonMaybe">Misschien</string>
     <string name="buttonNext">Volgende</string>
@@ -30,6 +31,8 @@
     <string name="buttonRetry">Opnieuw proberen</string>
     <string name="buttonSave">Opslaan</string>
     <string name="buttonYes">Ja</string>
+    <string name="confirmLogoutDescription">Weet u zeker dat u wilt afmelden bij %s?</string>
+    <string name="confirmLogoutTitle">Afmelden</string>
     <string name="connectionError">Internetverbindingsprobleem</string>
     <string name="crossAppLoginIntegrityError">Ophalen van accounts niet beschikbaar</string>
     <string name="errorDownload">Downloadfout</string>

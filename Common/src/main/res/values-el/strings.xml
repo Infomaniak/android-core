@@ -23,6 +23,7 @@
     <string name="buttonClose">Κλείσιμο</string>
     <string name="buttonCreateAccount">Δημιουργία λογαριασμού</string>
     <string name="buttonLater">Αργότερα</string>
+    <string name="buttonLogOut">Αποσύνδεση</string>
     <string name="buttonLogin">Σύνδεση</string>
     <string name="buttonMaybe">Ίσως</string>
     <string name="buttonNext">Επόμενο</string>
@@ -30,6 +31,8 @@
     <string name="buttonRetry">Επανάληψη</string>
     <string name="buttonSave">Αποθήκευση</string>
     <string name="buttonYes">Ναι</string>
+    <string name="confirmLogoutDescription">Είστε βέβαιοι ότι θέλετε να αποσυνδεθείτε από %s;</string>
+    <string name="confirmLogoutTitle">Αποσύνδεση</string>
     <string name="connectionError">Πρόβλημα σύνδεσης στο διαδίκτυο</string>
     <string name="crossAppLoginIntegrityError">Η ανάκτηση λογαριασμών δεν είναι διαθέσιμη</string>
     <string name="errorDownload">Σφάλμα λήψης</string>

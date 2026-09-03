@@ -23,6 +23,7 @@
     <string name="buttonClose">Sulje</string>
     <string name="buttonCreateAccount">Luo tili</string>
     <string name="buttonLater">Myöhemmin</string>
+    <string name="buttonLogOut">Kirjaudu ulos</string>
     <string name="buttonLogin">Kirjaudu</string>
     <string name="buttonMaybe">Ehkä</string>
     <string name="buttonNext">Seuraava</string>
@@ -30,6 +31,8 @@
     <string name="buttonRetry">Yritä uudelleen</string>
     <string name="buttonSave">Tallenna</string>
     <string name="buttonYes">Kyllä</string>
+    <string name="confirmLogoutDescription">Haluatko varmasti kirjautua ulos tililtä %s?</string>
+    <string name="confirmLogoutTitle">Kirjaudu ulos</string>
     <string name="connectionError">Internet-yhteysongelma</string>
     <string name="crossAppLoginIntegrityError">Tilien nouto ei ole käytettävissä</string>
     <string name="errorDownload">Latausvirhe</string>

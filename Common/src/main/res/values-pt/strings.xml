@@ -23,6 +23,7 @@
     <string name="buttonClose">Fechar</string>
     <string name="buttonCreateAccount">Criar uma conta</string>
     <string name="buttonLater">Mais tarde</string>
+    <string name="buttonLogOut">Terminar sessão</string>
     <string name="buttonLogin">Iniciar sessão</string>
     <string name="buttonMaybe">Talvez</string>
     <string name="buttonNext">Seguinte</string>
@@ -30,6 +31,8 @@
     <string name="buttonRetry">Tentar novamente</string>
     <string name="buttonSave">Guardar</string>
     <string name="buttonYes">Sim</string>
+    <string name="confirmLogoutDescription">Tem a certeza de que deseja terminar a sessão de %s?</string>
+    <string name="confirmLogoutTitle">Terminar sessão</string>
     <string name="connectionError">Problema de ligação à Internet</string>
     <string name="crossAppLoginIntegrityError">Recuperação de contas indisponível</string>
     <string name="errorDownload">Erro de descarregamento</string>

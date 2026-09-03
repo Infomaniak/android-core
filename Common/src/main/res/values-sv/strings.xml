@@ -23,6 +23,7 @@
     <string name="buttonClose">Stäng</string>
     <string name="buttonCreateAccount">Skapa ett konto</string>
     <string name="buttonLater">Senare</string>
+    <string name="buttonLogOut">Logga ut</string>
     <string name="buttonLogin">Logga in</string>
     <string name="buttonMaybe">Kanske</string>
     <string name="buttonNext">Nästa</string>
@@ -30,6 +31,8 @@
     <string name="buttonRetry">Försök igen</string>
     <string name="buttonSave">Spara</string>
     <string name="buttonYes">Ja</string>
+    <string name="confirmLogoutDescription">Är du säker på att du vill logga ut från %s?</string>
+    <string name="confirmLogoutTitle">Logga ut</string>
     <string name="connectionError">Problem med internetanslutning</string>
     <string name="crossAppLoginIntegrityError">Kontohämtning otillgänglig</string>
     <string name="errorDownload">Nedladdningsfel</string>
