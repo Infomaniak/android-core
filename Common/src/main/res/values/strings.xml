@@ -24,12 +24,15 @@
     <string name="buttonCreateAccount">Create an account</string>
     <string name="buttonLater">Later</string>
     <string name="buttonLogin">Log in</string>
+    <string name="buttonLoginOut">Log out</string>
     <string name="buttonMaybe">Maybe</string>
     <string name="buttonNext">Next</string>
     <string name="buttonNo">No</string>
     <string name="buttonRetry">Retry</string>
     <string name="buttonSave">Save</string>
     <string name="buttonYes">Yes</string>
+    <string name="confirmLogoutDescription">Are you sure you want to log out from %s?</string>
+    <string name="confirmLogoutTitle">Log out</string>
     <string name="connectionError">Internet connection problem</string>
     <string name="crossAppLoginIntegrityError">Accounts retrieval unavailable</string>
     <string name="errorDownload">Download error</string>

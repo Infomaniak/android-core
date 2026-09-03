@@ -24,12 +24,15 @@
     <string name="buttonCreateAccount">Ein Konto erstellen</string>
     <string name="buttonLater">Später</string>
     <string name="buttonLogin">Anmeldung</string>
+    <string name="buttonLoginOut">Abmelden</string>
     <string name="buttonMaybe">Vielleicht</string>
     <string name="buttonNext">Weiter</string>
     <string name="buttonNo">Nein</string>
     <string name="buttonRetry">Wiederholen</string>
     <string name="buttonSave">Speichern</string>
     <string name="buttonYes">Ja</string>
+    <string name="confirmLogoutDescription">Sind Sie sicher, dass Sie sich von %s abmelden möchten?</string>
+    <string name="confirmLogoutTitle">Abmelden</string>
     <string name="connectionError">Problem mit der Internetverbindung</string>
     <string name="crossAppLoginIntegrityError">Kontenabruf nicht verfügbar</string>
     <string name="errorDownload">Fehler beim Download</string>
