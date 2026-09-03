@@ -30,13 +30,14 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.OrganizationAccount
+import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.Phone
 import com.infomaniak.core.auth.models.user.User
 import splitties.init.appCtx
 
 @Database(
-    entities = [User::class, CurrentUserId::class],
+    entities = [User::class, CurrentUserId::class, TokenDeviceBinding::class],
     autoMigrations = [
         AutoMigration(
             from = 1, to = 2,
@@ -55,11 +56,11 @@ import splitties.init.appCtx
         ),
         AutoMigration(from = 7, to = 8),
         AutoMigration(from = 8, to = 9),
+        AutoMigration(from = 9, to = 10),
     ],
-    version = 9,
+    version = 10,
     exportSchema = true
 )
-
 @TypeConverters(UserConverter::class)
 abstract class UserDatabase internal constructor() : RoomDatabase() {
 

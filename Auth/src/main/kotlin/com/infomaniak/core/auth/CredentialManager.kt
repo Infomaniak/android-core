@@ -19,7 +19,10 @@ package com.infomaniak.core.auth
 
 import androidx.lifecycle.LiveData
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.AssociatedUserDataCleanable
 import com.infomaniak.core.login.ApiToken
+import splitties.init.appCtx
 
 /**
  * CredentialManager: Adds a currentUserId and currentUser management layer to [BaseCredentialManager]
@@ -29,12 +32,18 @@ import com.infomaniak.core.login.ApiToken
  * blocking methods which is fixed in the alternative classes.
  */
 @Deprecated("It's recommended to use UserAccountUtils, AbstractCurrentUserAccountUtils or PersistedCurrentUserAccountUtils")
-abstract class CredentialManager : BaseCredentialManager() {
+abstract class CredentialManager(
+    userDataCleanableList: () -> List<AssociatedUserDataCleanable>
+) : UserAccountUtils(
+    appContext = appCtx,
+    userDataCleanableList = userDataCleanableList,
+    userDatabase = UserDatabase.instance,
+) {
 
     abstract val currentUserId: Int
     abstract var currentUser: User?
 
-    fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().getAll()
+    fun getAllUsers(): LiveData<List<User>> = userDatabase.userDao().allAsLiveData()
 
     suspend fun getAllUsersCount(): Int = userDatabase.userDao().userCount()
 

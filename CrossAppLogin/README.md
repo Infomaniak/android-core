@@ -83,6 +83,8 @@ open class MainApplication : Application() {
     }
 }
 
+//NOTE: The 2 functions below are already present in the `UserAccountUtils` class, which should be used in new apps.
+
 suspend fun addUser(user: User) { // Wherever the user adding code is.
     // ...
     val userId = user.id.toLong()
@@ -90,8 +92,7 @@ suspend fun addUser(user: User) { // Wherever the user adding code is.
     // Save the user in the storage
 }
 
-suspend fun removeUser(context: Context, user: User) { // Wherever the user removal code is.
-    val userId = user.id.toLong()
+suspend fun removeUser(userId: Long) { // Wherever the user removal code is.
     MainApplication.userDataCleanableList.forEach { it.resetForUser(userId) }
     // Delete the user from storage
     // ...

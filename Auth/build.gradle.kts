@@ -41,11 +41,16 @@ dependencies {
     implementation(project(":AppIntegrity"))
     implementation(project(":Network"))
     implementation(project(":Sentry"))
+    implementation(project(":Ui:Compose:Margin"))
 
     implementation(platform(core.compose.bom))
     implementation(core.compose.ui)
     implementation(core.compose.runtime)
+    implementation(core.compose.ui)
+    implementation(core.compose.material3)
     implementation(core.activity.compose)
+    implementation(core.compose.ui.tooling.preview)
+    debugImplementation(core.compose.ui.tooling)
 
     implementation(core.appcompat)
     implementation(core.androidx.core.ktx)
@@ -64,5 +69,6 @@ dependencies {
     testImplementation(core.junit)
     testImplementation(core.androidx.test.core)
     testImplementation(core.kotlinx.coroutines.test)
+    testImplementation(core.kotest.assertions)
     testImplementation(core.robolectric)
 }

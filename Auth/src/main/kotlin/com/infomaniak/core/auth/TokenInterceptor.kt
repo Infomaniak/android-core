@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth
 
 import com.infomaniak.core.auth.TokenAuthenticator.Companion.changeAccessToken
+import com.infomaniak.core.auth.backup.RestoreFromBackupManager
 import com.infomaniak.core.network.api.ApiController.json
 import com.infomaniak.core.network.api.ApiController.toApiError
 import com.infomaniak.core.network.api.InternalTranslatedErrorCode
@@ -38,6 +39,7 @@ class TokenInterceptor(
         var request = chain.request()
 
         runBlocking(Dispatchers.Default) {
+            RestoreFromBackupManager.instance.waitForRestorationCompletion(tokenInterceptorListener.dedicatedUserId)
             tokenInterceptorListener.getApiToken()
         }?.let { apiToken ->
             val authorization = request.header("Authorization")

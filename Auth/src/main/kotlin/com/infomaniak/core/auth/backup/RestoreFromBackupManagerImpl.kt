@@ -1,0 +1,196 @@
+/*
+ * Infomaniak Core - Android
+ * Copyright (C) 2026 Infomaniak Network SA
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+@file:OptIn(ExperimentalSplittiesApi::class, ExperimentalSerializationApi::class)
+
+package com.infomaniak.core.auth.backup
+
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
+import com.infomaniak.core.auth.AuthConfiguration.clientId
+import com.infomaniak.core.auth.DerivedTokenGenerator
+import com.infomaniak.core.auth.DerivedTokenGeneratorImpl
+import com.infomaniak.core.auth.api.ApiRoutesCore.TOKEN_URL
+import com.infomaniak.core.auth.models.TokenDeviceBinding
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.auth.shouldReport
+import com.infomaniak.core.auth.shouldRetryAutomatically
+import com.infomaniak.core.common.Xor
+import com.infomaniak.core.common.getAndroidId
+import com.infomaniak.core.login.ApiToken
+import com.infomaniak.core.network.networking.HttpUtils
+import com.infomaniak.core.sentry.SentryLog
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.serialization.ExperimentalSerializationApi
+import splitties.experimental.ExperimentalSplittiesApi
+
+internal class RestoreFromBackupManagerImpl(
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    private val mode: RestorationMode = RestorationMode.TokenDerivation,
+    private val userDatabase: UserDatabase = UserDatabase.instance,
+    tokenGenerator: DerivedTokenGenerator? = null,
+) : RestoreFromBackupManager() {
+
+    private val userDao = userDatabase.userDao()
+
+    private val removeUserDeferred = CompletableDeferred<suspend (id: Int) -> Unit>()
+
+    private val derivedTokenGenerator: DerivedTokenGenerator by lazy {
+        tokenGenerator ?: DerivedTokenGeneratorImpl(
+            tokenRetrievalUrl = TOKEN_URL,
+            clientId = clientId,
+            userAgent = HttpUtils.getUserAgent,
+        )
+    }
+
+    override val state: SharedFlow<State> = flow {
+        when (mode) {
+            RestorationMode.External -> {
+                emit(State.RestoringFromBackup)
+                waitForRestorationCompletion(null)
+            }
+            RestorationMode.TokenDerivation -> {
+                restoreAccounts(currentAndroidId = getAndroidId(), allUsers = userDao.allUsers())
+            }
+        }
+        emit(State.Settled)
+    }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+
+    override suspend fun waitForRestorationCompletion(targetUserId: Int?) {
+        when (val currentState = state.replayCache.firstOrNull()) {
+            State.Settled -> return
+            is State.RestoringFromBackupFailed if currentState.cause.shouldRetryAutomatically() -> {
+                currentState.retry() // Retry if appropriate for each new network call attempt.
+            }
+            else -> Unit
+        }
+        val currentAndroidId = getAndroidId()
+        when (targetUserId) {
+            null -> userDao.tokenDeviceBindings.first { list -> list.all { it.androidId == currentAndroidId } }
+            else -> userDao.tokenDeviceBinding(userId = targetUserId).first { it?.androidId == currentAndroidId }
+        }
+    }
+
+    override fun registerRemoveUser(removeUser: suspend (id: Int) -> Unit) {
+        check(removeUserDeferred.isCompleted.not()) // Should not be called twice.
+        removeUserDeferred.complete(removeUser)
+    }
+
+    /**
+     * @param allUsers All users from the database. We compute this outside to avoid having to re-query the db on recursive calls.
+     */
+    private tailrec suspend fun FlowCollector<State>.restoreAccounts(
+        currentAndroidId: String,
+        allUsers: List<User>,
+    ) {
+        if (allUsers.isEmpty()) return // Fast-path for the app not set up yet case.
+
+        val usersToDeriveTokensFor: List<User> = getUsersThatNeedTokenRotation(currentAndroidId, allUsers).ifEmpty { return }
+        emit(State.RestoringFromBackup)
+
+        val issuesWithUser = attemptRestoringAccounts(usersToDeriveTokensFor, currentAndroidId).ifEmpty { return }
+
+        val shouldRetryAsync = CompletableDeferred<Boolean>()
+        val failedState = State.RestoringFromBackupFailed(
+            cause = issuesWithUser.first().first,
+            retry = { shouldRetryAsync.complete(true) },
+            giveUp = { shouldRetryAsync.complete(false) },
+        )
+        emit(failedState)
+        val shouldRetry = shouldRetryAsync.await()
+        val giveUp = !shouldRetry
+        if (giveUp) {
+            val removeUser = removeUserDeferred.await()
+            issuesWithUser.forEach { (_, user) -> removeUser(user.id) }
+            return
+        }
+        restoreAccounts(currentAndroidId = currentAndroidId, allUsers = allUsers)
+    }
+
+    private suspend fun attemptRestoringAccounts(
+        usersToDeriveTokensFor: List<User>,
+        currentAndroidId: String
+    ): List<Pair<DerivedTokenGenerator.Issue, User>> = coroutineScope {
+        usersToDeriveTokensFor.map { user ->
+            async {
+                when (val result = attemptRestoringAccount(user)) {
+                    is Xor.First -> userDatabase.useWriterConnection {
+                        it.immediateTransaction {
+                            userDao.update(user.copy(apiToken = result.value))
+                            userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, currentAndroidId))
+                        }
+                        null
+                    }
+                    is Xor.Second -> result.value to user
+                }
+            }
+        }
+    }.awaitAll().filterNotNull()
+
+    private suspend fun attemptRestoringAccount(user: User): Xor<ApiToken, DerivedTokenGenerator.Issue> {
+        return derivedTokenGenerator.attemptDerivingOneOfTheseTokens(setOf(user.apiToken.accessToken)).also { result ->
+            if (result !is Xor.Second) return@also
+            val issue = result.value
+            val errorMessage = "Failed to derive token"
+            val sentryUser = io.sentry.protocol.User().also { it.id = user.id.toString() }
+            if (result.value.shouldReport()) {
+                SentryLog.e(TAG, errorMessage, (issue as? DerivedTokenGenerator.Issue.OtherIssue)?.e) { scope ->
+                    scope.user = sentryUser
+                }
+            } else {
+                SentryLog.i(TAG, "$errorMessage for user ${user.id}, with reason: $issue")
+            }
+        }
+    }
+
+    /**
+     * @param allUsers All users from the database. We compute this outside to avoid having to re-query the db on recursive calls.
+     */
+    private suspend fun getUsersThatNeedTokenRotation(
+        currentAndroidId: String,
+        allUsers: List<User>
+    ): List<User> = coroutineScope {
+        allUsers.map { user ->
+            async {
+                val currentBinding = userDao.getTokenDeviceBindingForUser(user.id)
+                when {
+                    currentBinding == null -> {
+                        userDao.upsertTokenDeviceBinding(TokenDeviceBinding(user.id, currentAndroidId))
+                        null // Adding missing valid binding (post app update).
+                    }
+                    currentBinding.androidId == currentAndroidId -> null // Already valid.
+                    else -> user // Device changed. Need to derive token.
+                }
+            }
+        }
+    }.awaitAll().filterNotNull()
+}
+
+private const val TAG = "RestoreFromBackupManagerImpl"

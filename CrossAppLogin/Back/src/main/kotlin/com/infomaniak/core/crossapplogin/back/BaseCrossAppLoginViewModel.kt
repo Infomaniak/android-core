@@ -20,8 +20,13 @@ package com.infomaniak.core.crossapplogin.back
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.core.auth.DerivedTokenGenerator
+import com.infomaniak.core.auth.DerivedTokenGenerator.Issue
+import com.infomaniak.core.auth.DerivedTokenGeneratorImpl
 import com.infomaniak.core.auth.api.ApiRepositoryCore
 import com.infomaniak.core.auth.api.ApiRoutesCore.TOKEN_URL
+import com.infomaniak.core.auth.shouldReport
+import com.infomaniak.core.auth.shouldRetryAutomatically
 import com.infomaniak.core.common.Xor
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.common.completableScope
@@ -31,7 +36,6 @@ import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsChecki
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus.*
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.LoginResult
-import com.infomaniak.core.crossapplogin.back.DerivedTokenGenerator.Issue
 import com.infomaniak.core.crossapplogin.back.internal.CustomTokenInterceptor
 import com.infomaniak.core.login.ApiToken
 import com.infomaniak.core.network.models.exceptions.NetworkException
@@ -189,7 +193,7 @@ internal class CrossAppLoginFacadeImpl(
                     tokens.add(result.value)
                 }
                 is Xor.Second -> {
-                    hadATerminalIssue = hadATerminalIssue || result.value !is Issue.NetworkIssue
+                    hadATerminalIssue = hadATerminalIssue || !result.value.shouldRetryAutomatically()
                     errorMessageIds.add(getTokenDerivationIssueErrorMessage(account, issue = result.value))
                 }
             }
@@ -317,24 +321,11 @@ internal class CrossAppLoginFacadeImpl(
 
     // @StringRes doesn't work with a suspend function because they technically return java.lang.Object
     private suspend fun getTokenDerivationIssueErrorMessage(account: ExternalAccount, issue: Issue): Int {
-        val shouldReport: Boolean
         val messageResId = when (issue) {
-            is Issue.AppIntegrityCheckFailed -> {
-                shouldReport = false
-                RCore.string.crossAppLoginIntegrityError
-            }
-            is Issue.ErrorResponse -> {
-                shouldReport = issue.response.code !in 500..599
-                RCore.string.anErrorHasOccurred
-            }
-            is Issue.NetworkIssue -> {
-                shouldReport = false
-                RCoreNetwork.string.connectionError
-            }
-            is Issue.OtherIssue -> {
-                shouldReport = true
-                RCore.string.anErrorHasOccurred
-            }
+            is Issue.AppIntegrityCheckFailed -> RCore.string.crossAppLoginIntegrityError
+            is Issue.ErrorResponse -> RCore.string.anErrorHasOccurred
+            is Issue.NetworkIssue -> RCoreNetwork.string.connectionError
+            is Issue.OtherIssue -> RCore.string.anErrorHasOccurred
         }
 
         val details = when (issue) {
@@ -342,7 +333,7 @@ internal class CrossAppLoginFacadeImpl(
             else -> ""
         }
         val errorMessage = "Failed to derive token"
-        when (shouldReport) {
+        when (issue.shouldReport()) {
             true -> SentryLog.e(TAG, errorMessage, (issue as? Issue.OtherIssue)?.e) { scope ->
                 scope.addErrorExtraAndTag(account, issue, details)
             }

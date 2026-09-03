@@ -27,11 +27,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 
-interface TokenInterceptorListener {
-    suspend fun onRefreshTokenSuccess(apiToken: ApiToken)
-    suspend fun onRefreshTokenError()
-    suspend fun getApiToken(): ApiToken?
-    fun getCurrentUserId(): Int?
+abstract class TokenInterceptorListener(val dedicatedUserId: Int?) {
+    abstract suspend fun onRefreshTokenSuccess(apiToken: ApiToken)
+    abstract suspend fun onRefreshTokenError()
+    abstract suspend fun getApiToken(): ApiToken?
+    abstract fun getCurrentUserId(): Int?
 
     /**
      * Maps a flow of user IDs to a shared flow of API tokens with caching.

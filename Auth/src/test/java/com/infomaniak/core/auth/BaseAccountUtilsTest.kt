@@ -18,6 +18,7 @@
 package com.infomaniak.core.auth
 
 import android.content.Context
+import android.provider.Settings
 import androidx.test.core.app.ApplicationProvider
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
@@ -34,6 +35,11 @@ abstract class BaseAccountUtilsTest {
 
     init {
         context.injectAsAppCtx()
+        Settings.Secure.putString(
+            context.contentResolver,
+            Settings.Secure.ANDROID_ID,
+            testAndroidId
+        )
     }
 
     protected fun userOf(id: Int): User {
@@ -54,5 +60,9 @@ abstract class BaseAccountUtilsTest {
             apiToken = dummyApiToken,
             organizations = ArrayList(),
         )
+    }
+
+    protected companion object {
+        const val testAndroidId = "test_android_id"
     }
 }
