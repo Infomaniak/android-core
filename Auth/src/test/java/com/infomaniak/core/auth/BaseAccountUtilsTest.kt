@@ -62,7 +62,7 @@ abstract class BaseAccountUtilsTest {
         )
     }
 
-    companion object {
+    protected companion object {
         const val testAndroidId = "test_android_id"
     }
 }
