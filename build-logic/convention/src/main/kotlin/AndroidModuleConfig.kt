@@ -19,13 +19,13 @@
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 
-fun CommonExtension<*, *, *, *, *, *>.applyCommonConfiguration() {
-    compileSdk = 36
-    defaultConfig {
+fun CommonExtension.applyCommonConfiguration() {
+    compileSdk = 37
+    defaultConfig.apply {
         minSdk = 27
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    compileOptions {
+    compileOptions.apply {
         val javaVersion = JavaVersion.VERSION_11
         targetCompatibility = javaVersion // Generated JVM bytecode
         sourceCompatibility = javaVersion // Java language features. We are not writing Java, so we just keep it matching.

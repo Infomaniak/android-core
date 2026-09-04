@@ -18,9 +18,14 @@
 
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
+buildscript {
+    dependencies {
+        classpath(core.kotlin.gradle.plugin)
+    }
+}
+
 plugins {
     alias(core.plugins.android.library) apply false
-    alias(core.plugins.kotlin.android) apply false
     alias(core.plugins.ktlint)
     alias(core.plugins.compose.lint)
 }

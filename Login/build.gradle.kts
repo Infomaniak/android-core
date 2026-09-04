@@ -19,7 +19,7 @@
 plugins {
     alias(core.plugins.infomaniak.android.library)
     alias(core.plugins.kotlin.serialization)
-    kotlin("plugin.parcelize")
+    alias(core.plugins.kotlin.parcelize)
 }
 
 android {

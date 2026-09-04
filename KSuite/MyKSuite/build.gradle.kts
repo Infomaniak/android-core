@@ -20,7 +20,7 @@ plugins {
     alias(core.plugins.infomaniak.android.library.flavor.aware)
     alias(core.plugins.compose.compiler)
     alias(core.plugins.ksp)
-    kotlin("plugin.parcelize")
+    alias(core.plugins.kotlin.parcelize)
     alias(core.plugins.kotlin.serialization)
     alias(core.plugins.navigation.safeargs)
 }

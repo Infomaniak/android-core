@@ -31,5 +31,5 @@ dependencies {
     api(core.sentry.okhttp)
     implementation(core.sentry.android.fragment)
 
-    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit"))
 }
