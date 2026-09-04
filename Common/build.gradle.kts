@@ -44,7 +44,7 @@ dependencies {
     implementation(core.androidx.lifecycle.process)
     implementation(core.kotlinx.datetime)
 
-    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit"))
     testImplementation(core.kotest.assertions)
     testImplementation(core.kotlinx.coroutines.test)
     testImplementation(core.androidx.junit)
