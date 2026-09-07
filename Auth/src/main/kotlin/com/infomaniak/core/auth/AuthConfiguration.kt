@@ -30,10 +30,13 @@ object AuthConfiguration {
     internal var accessType: AccessType? = AccessType.OFFLINE
         private set
 
+    /**
+     * @param tokenInterceptorListener Set it for apps that can have a selected user.
+     */
     fun init(
         clientId: String,
         accessType: AccessType? = this.accessType,
-        tokenInterceptorListener: TokenInterceptorListener,
+        tokenInterceptorListener: TokenInterceptorListener?,
     ) {
         this.clientIdAsync.complete(clientId)
         this.accessType = accessType
