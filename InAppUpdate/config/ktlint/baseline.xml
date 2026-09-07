@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/fdroid/kotlin/com/infomaniak/core/inappupdate/AppUpdateScheduler.kt">
+        <error line="24" column="5" source="standard:class-signature" />
+        <error line="25" column="5" source="standard:class-signature" />
+        <error line="25" column="68" source="standard:class-signature" />
+        <error line="26" column="5" source="standard:class-signature" />
+    </file>
+    <file name="src/fdroid/kotlin/com/infomaniak/core/inappupdate/FdroidApiTools.kt">
+        <error line="29" column="48" source="standard:string-template" />
+    </file>
+    <file name="src/fdroid/kotlin/com/infomaniak/core/inappupdate/FdroidRelease.kt">
+        <error line="24" column="5" source="standard:class-signature" />
+        <error line="25" column="5" source="standard:class-signature" />
+        <error line="26" column="5" source="standard:class-signature" />
+        <error line="26" column="40" source="standard:class-signature" />
+        <error line="30" column="9" source="standard:class-signature" />
+        <error line="31" column="9" source="standard:class-signature" />
+        <error line="31" column="30" source="standard:class-signature" />
+    </file>
+    <file name="src/fdroid/kotlin/com/infomaniak/core/inappupdate/updatemanagers/InAppUpdateManager.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="33" column="5" source="standard:class-signature" />
+        <error line="33" column="45" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/inappupdate/UpdateScheduler.kt">
+        <error line="24" column="5" source="standard:class-signature" />
+        <error line="25" column="5" source="standard:class-signature" />
+        <error line="25" column="80" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/inappupdate/ui/UpdateRequiredActivity.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="70" column="55" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/inappupdate/ui/composable/UpdateAvailableBottomSheetContent.kt">
+        <error line="40" column="5" source="standard:function-naming" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/inappupdate/ui/composable/UpdateRequiredScreen.kt">
+        <error line="48" column="5" source="standard:function-naming" />
+        <error line="104" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/standard/kotlin/com/infomaniak/core/inappupdate/AppUpdateScheduler.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="41" column="5" source="standard:class-signature" />
+        <error line="42" column="5" source="standard:class-signature" />
+        <error line="42" column="80" source="standard:class-signature" />
+        <error line="43" column="5" source="standard:class-signature" />
+    </file>
+    <file name="src/standard/kotlin/com/infomaniak/core/inappupdate/updatemanagers/InAppUpdateManager.kt">
+        <error line="45" column="1" source="standard:no-unused-imports" />
+        <error line="55" column="5" source="standard:class-signature" />
+        <error line="55" column="45" source="standard:class-signature" />
+        <error line="62" column="5" source="standard:spacing-between-declarations-with-comments" />
+        <error line="148" column="17" source="standard:chain-wrapping" />
+        <error line="148" column="20" source="standard:condition-wrapping" />
+    </file>
+</baseline>

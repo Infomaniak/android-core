@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/ConnectionAttemptInfo.kt">
+        <error line="31" column="9" source="standard:class-signature" />
+        <error line="32" column="9" source="standard:class-signature" />
+        <error line="33" column="9" source="standard:class-signature" />
+        <error line="34" column="9" source="standard:class-signature" />
+        <error line="35" column="9" source="standard:class-signature" />
+        <error line="35" column="22" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/RemoteChallenge.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="61" column="9" source="standard:class-signature" />
+        <error line="62" column="9" source="standard:class-signature" />
+        <error line="62" column="32" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/TwoFactorAuthImpl.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="49" column="5" source="standard:class-signature" />
+        <error line="50" column="5" source="standard:class-signature" />
+        <error line="50" column="30" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/TwoFactorAuthManager.kt">
+        <error line="22" column="1" source="standard:import-ordering" />
+        <error line="154" column="131" source="standard:function-literal" />
+        <error line="154" column="131" source="standard:max-line-length" />
+        <error line="154" column="145" source="standard:function-literal" />
+        <error line="278" column="26" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/kotlin/TwoFactorAuthTestImpl.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="27" column="5" source="standard:class-signature" />
+        <error line="27" column="30" source="standard:class-signature" />
+    </file>
+    <file name="src/main/kotlin/notifications/TwoFactorAuthNotifications.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="100" column="29" source="standard:comment-wrapping" />
+        <error line="101" column="33" source="standard:comment-wrapping" />
+        <error line="102" column="28" source="standard:comment-wrapping" />
+        <error line="103" column="27" source="standard:comment-wrapping" />
+    </file>
+</baseline>

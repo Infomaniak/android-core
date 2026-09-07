@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/ui/view/layout/EndIconTextInputLayout.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/ui/view/utils/ResourcesUtils.kt">
+        <error line="25" column="1" source="standard:no-consecutive-blank-lines" />
+    </file>
+</baseline>

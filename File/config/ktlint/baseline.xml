@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/file/FileInfo.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="54" column="1" source="standard:spacing-between-declarations-with-comments" />
+        <error line="85" column="42" source="standard:function-expression-body" />
+        <error line="94" column="57" source="standard:function-expression-body" />
+        <error line="101" column="56" source="standard:function-expression-body" />
+        <error line="107" column="35" source="standard:function-expression-body" />
+        <error line="135" column="52" source="standard:function-expression-body" />
+        <error line="147" column="65" source="standard:function-expression-body" />
+        <error line="151" column="70" source="standard:function-expression-body" />
+        <error line="206" column="1" source="standard:indent" />
+    </file>
+    <file name="src/main/kotlin/com/infomaniak/core/file/InputStreamCounter.kt">
+        <error line="20" column="1" source="standard:import-ordering" />
+        <error line="27" column="5" source="standard:class-signature" />
+        <error line="27" column="43" source="standard:value-parameter-comment" />
+        <error line="27" column="55" source="standard:class-signature" />
+    </file>
+</baseline>

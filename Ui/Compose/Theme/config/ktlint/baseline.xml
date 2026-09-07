@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/infomaniak/core/ui/compose/theme/ThemeUtils.kt">
+        <error line="53" column="12" source="standard:multiline-if-else" />
+    </file>
+</baseline>

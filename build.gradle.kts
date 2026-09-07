@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -31,5 +32,19 @@ ktlint {
     ignoreFailures.set(true)
     reporters {
         reporter(ReporterType.PLAIN)
+    }
+}
+
+subprojects {
+    pluginManager.withPlugin("org.jlleitschuh.gradle.ktlint") {
+        extensions.configure<KtlintExtension> {
+            version.set("1.7.1")
+            android.set(true)
+            ignoreFailures.set(true)
+            baseline.set(layout.projectDirectory.file("config/ktlint/baseline.xml"))
+            reporters {
+                reporter(ReporterType.PLAIN)
+            }
+        }
     }
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/java/com/infomaniak/core/avatar/BackgroundColorUtils.kt">
+        <error line="32" column="73" source="standard:function-expression-body" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/avatar/components/Avatar.kt">
+        <error line="46" column="5" source="standard:function-naming" />
+        <error line="74" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/avatar/components/DrawableResourceAvatar.kt">
+        <error line="36" column="14" source="standard:function-naming" />
+        <error line="46" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/avatar/components/InitialsAvatar.kt">
+        <error line="46" column="14" source="standard:function-naming" />
+        <error line="70" column="13" source="standard:function-naming" />
+        <error line="72" column="9" source="standard:function-naming" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/avatar/components/UrlAvatar.kt">
+        <error line="48" column="14" source="standard:function-naming" />
+        <error line="85" column="13" source="standard:function-naming" />
+    </file>
+    <file name="src/main/java/com/infomaniak/core/avatar/models/AvatarType.kt">
+        <error line="56" column="25" source="standard:function-expression-body" />
+    </file>
+</baseline>
