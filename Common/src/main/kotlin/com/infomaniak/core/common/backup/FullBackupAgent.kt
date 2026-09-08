@@ -44,7 +44,14 @@ import java.io.FileInputStream
  * Anyway, this API is the one to use, with XML rules, and with overrides of [onFullBackup] and [onRestoreFile] for specific
  * cases, like extracting some data from a DB that shouldn't be fully backed-up, as a temporary file that is staged for backup.
  */
-abstract class FullBackupAgent : BackupAgent() {
+abstract class FullBackupAgent(private val restorationPolicy: RestorationPolicy) : BackupAgent() {
+
+    enum class RestorationPolicy {
+        /** Only restore files included (or not excluded) by `fullBackupContent` or in `dataExtractionRules` (set in manifest). */
+        FilteredFilesOnly,
+        /** Always restore the files, regardless of the data extraction rules. */
+        AllBackedUpFiles,
+    }
 
     /**
      * Helper function to read the right amount of bytes from [data] directly into a ByteArray.
@@ -64,7 +71,6 @@ abstract class FullBackupAgent : BackupAgent() {
         super.onFullBackup(data)
     }
 
-    @Suppress("RedundantOverride") // Allows specifying the nullability.
     override fun onRestoreFile(
         data: ParcelFileDescriptor,
         size: Long,
@@ -72,8 +78,14 @@ abstract class FullBackupAgent : BackupAgent() {
         type: Int,
         mode: Long,
         mtime: Long
-    ) {
-        super.onRestoreFile(data, size, destination, type, mode, mtime)
+    ): Unit = when (restorationPolicy) {
+        RestorationPolicy.FilteredFilesOnly -> {
+            super.onRestoreFile(data, size, destination, type, mode, mtime)
+        }
+        RestorationPolicy.AllBackedUpFiles -> {
+            // Always restore the files, regardless of the data extraction rules.
+            FullBackup.restoreFile(data = data, size = size, type = type, mode = mode, mtime = mtime, outFile = destination)
+        }
     }
 
     // Never called for full backup.
