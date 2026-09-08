@@ -28,6 +28,7 @@ dependencies {
     implementation(project(":Network"))
     implementation(project(":Sentry"))
 
+    implementation(platform(core.compose.bom))
     implementation(core.compose.material3)
     implementation(core.androidx.core.ktx)
     implementation(core.androidx.core)

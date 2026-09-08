@@ -18,6 +18,7 @@
 package com.infomaniak.core.compose.lint
 
 import com.android.build.api.dsl.CommonExtension
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -35,15 +36,20 @@ class ComposeLintPlugin : Plugin<Project> {
 
         target.subprojects {
             plugins.withId("com.android.base") {
-                extensions.configure<CommonExtension<*, *, *, *, *, *>>("android") {
-                    lint {
-                        lintConfig = rootProject.file("Core/lint.xml")
+                extensions.configure(
+                    "android",
+                    object : Action<CommonExtension> {
+                        override fun execute(android: CommonExtension) {
+                            android.lint.apply {
+                                lintConfig = rootProject.file("Core/lint.xml")
 
-                        // To updateLintBaseline correctly, temporarily uncomment this line to only include errors and not
-                        // warnings in the generated baseline
-                        // ignoreWarnings = true
-                    }
-                }
+                                // To updateLintBaseline correctly, temporarily uncomment this line to only include errors and not
+                                // warnings in the generated baseline
+                                // ignoreWarnings = true
+                            }
+                        }
+                    },
+                )
 
                 dependencies {
                     add("lintChecks", lintLibrary)

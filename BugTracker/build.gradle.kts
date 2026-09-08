@@ -40,6 +40,7 @@ dependencies {
     implementation(core.androidx.core.ktx)
     implementation(core.androidx.lifecycle.viewmodel.ktx)
     implementation(core.androidx.recyclerview)
+    implementation(core.material)
 
     implementation(core.navigation.fragment.ktx)
     implementation(core.navigation.ui.ktx)
