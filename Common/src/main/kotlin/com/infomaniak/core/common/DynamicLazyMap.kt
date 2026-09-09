@@ -142,6 +142,20 @@ class DynamicLazyMap<K, E>(
         }
     }
 
+    fun <R> map(
+        cacheManager: CacheManager<K, R>? = null,
+        createElement: CoroutineScope.(K, E) -> R,
+    ): DynamicLazyMap<K, R> = coroutineScope.dynamicLazyMap(cacheManager) { key ->
+        createElement(key, getAndUseUntilCancelled(key))
+    }
+
+    context(scope: CoroutineScope)
+    private fun getAndUseUntilCancelled(key: K): E = getOrCreateElementWithRefCounting(key).also { element ->
+        scope.coroutineContext.job.invokeOnCompletion {
+            releaseRefForElement(key, element)
+        }
+    }
+
     /**
      * The number of elements that are not used, but still in the cache.
      *
