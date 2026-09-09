@@ -27,9 +27,10 @@ android {
 
 dependencies {
     api(core.kotlinx.coroutines.core)
+    api(core.ktor.client.core)
     api(core.okhttp)
 
-    implementation(project(":Common"))
+    api(project(":Common"))
     implementation(project(":Network"))
     implementation(project(":Notifications"))
     implementation(project(":Sentry"))
@@ -39,6 +40,4 @@ dependencies {
     implementation(core.kotlinx.serialization.json)
     implementation(core.ktor.client.json)
     implementation(core.ktor.client.content.negociation)
-    implementation(core.ktor.client.core)
-    implementation(core.ktor.client.okhttp)
 }

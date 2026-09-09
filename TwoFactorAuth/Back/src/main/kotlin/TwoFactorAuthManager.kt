@@ -34,8 +34,10 @@ import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager.Challenge.State.Done
 import com.infomaniak.core.twofactorauth.back.notifications.TwoFactorAuthNotifications
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -60,10 +62,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
 import splitties.coroutines.raceOf
 import splitties.coroutines.repeatWhileActive
 import splitties.experimental.ExperimentalSplittiesApi
+import kotlin.collections.toMap
+import kotlin.sequences.sortedBy
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -90,9 +93,9 @@ import kotlin.uuid.ExperimentalUuidApi
 class TwoFactorAuthManager(
     // The CoroutineScope (and its Job) is strongly referenced by shareIn and stateIn, so no need to keep a reference here.
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-    private val userIds: Flow<Set<Int>>,
+    private val userIds: Flow<Set<Long>>,
     private val getAccountInfo: suspend (userId: Int) -> ConnectionAttemptInfo.TargetAccount?,
-    private val getConnectedHttpClient: suspend (userId: Int) -> OkHttpClient
+    perUserHttpClient: DynamicLazyMap<Long, Deferred<HttpClient>>
 ) {
 
     private val rateLimitedForegroundEvents = ProcessLifecycleOwner.get().lifecycle.eventFlow.filter {
@@ -101,21 +104,21 @@ class TwoFactorAuthManager(
 
     private val actionedChallengesFlow = MutableStateFlow<Map<Int, RemoteChallenge>>(emptyMap())
 
-    private val perUserIdCacheManager = DynamicLazyMap.CacheManager<Int, Any?> { _, _ ->
+    private val perUserIdCacheManager = DynamicLazyMap.CacheManager<Long, Any?> { _, _ ->
         delay(5.seconds) // Should be more than enough to keep the state between re-uses.
     }
 
-    private val perUserIdTwoFactoAuth = coroutineScope.dynamicLazyMap(perUserIdCacheManager) { userId: Int ->
-        async<TwoFactorAuth> { TwoFactorAuthImpl(getConnectedHttpClient(userId), userId) }
+    private val perUserIdTwoFactorAuth = perUserHttpClient.map(perUserIdCacheManager) { userId, httpClientAsync ->
+        async<TwoFactorAuth> { TwoFactorAuthImpl(httpClientAsync.await(), userId.toInt()) }
     }
 
-    private val perUserIdRefreshTrigger = coroutineScope.dynamicLazyMap(perUserIdCacheManager) { _: Int ->
+    private val perUserIdRefreshTrigger = coroutineScope.dynamicLazyMap(perUserIdCacheManager) { _: Long ->
         Channel<Unit>(capacity = Channel.CONFLATED)
     }
 
-    private val perUserIdLatestChallenge = coroutineScope.dynamicLazyMapOfSharedFlow(perUserIdCacheManager) { userId: Int ->
+    private val perUserIdLatestChallenge = coroutineScope.dynamicLazyMapOfSharedFlow(perUserIdCacheManager) { userId: Long ->
         flow {
-            perUserIdTwoFactoAuth.useElement(userId) { twoFactorAuthAsync ->
+            perUserIdTwoFactorAuth.useElement(userId) { twoFactorAuthAsync ->
                 val twoFactorAuth = twoFactorAuthAsync.await()
                 perUserIdRefreshTrigger.useElement(userId) { refreshTrigger ->
                     val refreshEvents = refreshTrigger.receiveAsFlow()
@@ -201,7 +204,7 @@ class TwoFactorAuthManager(
 
     fun refreshChallengeNow(userId: Long, fromExplicitUserAction: Boolean = true) {
         if (fromExplicitUserAction) forgetActionedChallengeFor(userId.toInt())
-        perUserIdRefreshTrigger.useElement(userId.toInt()) { it.trySend(Unit) }
+        perUserIdRefreshTrigger.useElement(userId) { it.trySend(Unit) }
     }
 
     private fun forgetActionedChallengeFor(userId: Int) {
@@ -335,7 +338,7 @@ private suspend fun FlowCollector<Challenge?>.executeChallengeAction(actionData:
 }
 
 /**
- * Emit a new version of the [TwoFactorAuthManager.Challenge] with its state updated accordingly to the [Outcome],
+ * Emit a new version of the [Challenge] with its state updated accordingly to the [Outcome],
  * and let the user dismiss or ask retrying if applicable.
  *
  * @return `true` if handling is done (e.g. the user approved, denied, or dismissed the 2FA challenge),

@@ -25,7 +25,6 @@ import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuth.Outcome
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -39,19 +38,17 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
 import java.io.IOException
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @ExperimentalUuidApi
 internal class TwoFactorAuthImpl(
-    connectedHttpClient: OkHttpClient,
+    connectedHttpClient: HttpClient,
     override val userId: Int,
 ) : TwoFactorAuth {
 
-    private val httpClient = HttpClient(OkHttp) {
-        engine { preconfigured = connectedHttpClient }
+    private val httpClient = connectedHttpClient.config {
         install(ContentNegotiation) {
             val jsonConfig = Json {
                 /** From [io.ktor.serialization.kotlinx.json.DefaultJson] */
