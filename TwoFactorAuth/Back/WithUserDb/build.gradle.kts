@@ -29,4 +29,5 @@ dependencies {
     api(project(":TwoFactorAuth:Back"))
 
     implementation(project(":Auth"))
+    implementation(core.ktor.client.okhttp)
 }
