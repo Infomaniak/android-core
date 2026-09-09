@@ -78,13 +78,15 @@ abstract class FullBackupAgent(private val restorationPolicy: RestorationPolicy)
         type: Int,
         mode: Long,
         mtime: Long
-    ): Unit = when (restorationPolicy) {
-        RestorationPolicy.FilteredFilesOnly -> {
-            super.onRestoreFile(data, size, destination, type, mode, mtime)
-        }
-        RestorationPolicy.AllBackedUpFiles -> {
-            // Always restore the files, regardless of the data extraction rules.
-            FullBackup.restoreFile(data = data, size = size, type = type, mode = mode, mtime = mtime, outFile = destination)
+    ) {
+        when (restorationPolicy) {
+            RestorationPolicy.FilteredFilesOnly -> {
+                super.onRestoreFile(data, size, destination, type, mode, mtime)
+            }
+            RestorationPolicy.AllBackedUpFiles -> {
+                // Always restore the files, regardless of the data extraction rules.
+                FullBackup.restoreFile(data = data, size = size, type = type, mode = mode, mtime = mtime, outFile = destination)
+            }
         }
     }
 
