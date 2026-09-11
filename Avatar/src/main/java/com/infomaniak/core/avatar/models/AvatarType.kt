@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2025 Infomaniak Network SA
+ * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package com.infomaniak.core.avatar.models
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.platform.LocalContext
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
@@ -26,28 +27,36 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.avatar.LocalAvatarColors
 import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 
+@Immutable
 sealed interface AvatarType {
 
+    @Immutable
     sealed interface WithInitials : AvatarType {
         val initials: String
         val colors: AvatarColors
 
+        @Immutable
         data class Initials(override val initials: String, override val colors: AvatarColors) : WithInitials {
+            @Immutable
             companion object
         }
 
+        @Immutable
         data class Url(
             val url: String,
             val imageLoader: ImageLoader,
             override val initials: String,
             override val colors: AvatarColors,
         ) : WithInitials {
+            @Immutable
             companion object
         }
     }
 
+    @Immutable
     data class DrawableResource(@DrawableRes val resource: Int) : AvatarType
 
+    @Immutable
     companion object {
         fun getUrlOrInitials(
             avatarUrlData: AvatarUrlData?,
