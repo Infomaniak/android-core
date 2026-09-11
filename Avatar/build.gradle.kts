@@ -37,4 +37,6 @@ dependencies {
     implementation(core.compose.ui.tooling.preview)
 
     implementation(core.coil.compose)
+
+    testImplementation(kotlin("test-junit"))
 }
