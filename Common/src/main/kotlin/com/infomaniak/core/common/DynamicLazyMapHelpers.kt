@@ -114,7 +114,7 @@ fun <K, E> UseElementSuspend<K, E, Nothing>.toDynamicLazyMap(): DynamicLazyMap<K
     return scope.dynamicLazyMap(createElement = asDynamicLazyMapCreateElement())
 }
 
-fun <K, E> UseElementSuspend<K, E, Nothing>.asDynamicLazyMapCreateElement(): CoroutineScope.(K) -> E {
+private fun <K, E> UseElementSuspend<K, E, Nothing>.asDynamicLazyMapCreateElement(): CoroutineScope.(K) -> E {
     val useElement: UseElementSuspend<K, E, Nothing> = this
     return fun CoroutineScope.(key: K): E {
         var element: E? = null
