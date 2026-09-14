@@ -21,10 +21,12 @@ package com.infomaniak.core.twofactorauth.back
 
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.DynamicLazyMap
 import com.infomaniak.core.common.dynamicLazyMap
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -38,20 +40,22 @@ fun TwoFactorAuthManager(
     getConnectedHttpClient: suspend (userId: Int) -> OkHttpClient
 ): TwoFactorAuthManager = TwoFactorAuthManager(
     coroutineScope = coroutineScope,
-    connectedHttpClient = { getConnectedHttpClient(it.toInt()).toKtorClient() }
+    connectedHttpClients = coroutineScope.dynamicLazyMap { userId ->
+        async { getConnectedHttpClient(userId.toInt()).toKtorClient() }
+    }
 )
 
 @OverloadResolutionByLambdaReturnType
 fun TwoFactorAuthManager(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-    connectedHttpClient: suspend (userId: Long) -> HttpClient,
+    connectedHttpClients: DynamicLazyMap<Long, Deferred<HttpClient>>,
 ): TwoFactorAuthManager = TwoFactorAuthManager(
     coroutineScope = coroutineScope,
     userIds = UserDatabase().userDao().allUsers.map { users ->
         users.mapTo(hashSetOf()) { it.id.toLong() }
     }.distinctUntilChanged(),
     getAccountInfo = { UserDatabase().userDao().findById(it)?.toTargetAccount() },
-    perUserHttpClient = coroutineScope.dynamicLazyMap { userId -> async { connectedHttpClient(userId) } }
+    perUserHttpClient = connectedHttpClients
 )
 
 private fun User.toTargetAccount() = ConnectionAttemptInfo.TargetAccount(
