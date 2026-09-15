@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.map
 import okhttp3.OkHttpClient
 import kotlin.experimental.ExperimentalTypeInference
 
-@OverloadResolutionByLambdaReturnType
 fun TwoFactorAuthManager(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     getConnectedHttpClient: suspend (userId: Int) -> OkHttpClient
@@ -45,7 +44,6 @@ fun TwoFactorAuthManager(
     }
 )
 
-@OverloadResolutionByLambdaReturnType
 fun TwoFactorAuthManager(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     connectedHttpClients: DynamicLazyMap<Long, Deferred<HttpClient>>,
