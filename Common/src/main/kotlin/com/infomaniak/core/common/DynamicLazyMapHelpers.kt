@@ -117,14 +117,17 @@ fun <K, E> UseElementSuspend<K, E, Nothing>.toDynamicLazyMap(): DynamicLazyMap<K
 private fun <K, E> UseElementSuspend<K, E, Nothing>.asDynamicLazyMapCreateElement(): CoroutineScope.(K) -> E {
     val useElement: UseElementSuspend<K, E, Nothing> = this
     return fun CoroutineScope.(key: K): E {
-        var element: E? = null
+        var element: Any? = nullSurrogate
         launch(start = CoroutineStart.UNDISPATCHED) {
-            useElement(key) {
+            useElement(key) { it: E ->
                 element = it
                 awaitCancellation()
             }
         }
+        check(element != nullSurrogate) { "useElement should call its passed block immediately and synchronously" }
         @Suppress("UNCHECKED_CAST")
         return element as E
     }
 }
+
+private val nullSurrogate = Any()
