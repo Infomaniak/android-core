@@ -54,6 +54,7 @@ tasks {
 
 gradlePlugin {
     plugins {
+        register(core.plugins.infomaniak.android.debug.signing, "AndroidDebugSigningPlugin")
         register(core.plugins.infomaniak.android.library, "AndroidLibraryConventionPlugin")
         register(core.plugins.infomaniak.android.library.flavor.aware, "FlavorAwareAndroidLibraryConventionPlugin")
     }

@@ -69,6 +69,31 @@ dependencies {
 📘 The full mapping logic (module name → project path) is documented in the
 **KDoc of [com.infomaniak.core.composite.CoreCompositePlugin](build-logic/composite/src/main/kotlin/com/infomaniak/core/composite/CoreCompositePlugin.kt)**.
 
+## Shared debug signing
+
+Android applications can use Core's debug signing convention plugin to sign every debug variant with the same development
+certificate. The Android application plugin must be applied first:
+
+```kotlin
+plugins {
+    alias(core.plugins.android.application)
+    alias(core.plugins.infomaniak.android.debug.signing)
+}
+```
+
+The debug signing plugin only configures the existing `debug` signing configuration. It does not apply
+`com.android.application`, and it does not configure or alter release signing.
+
+The bundled `infomaniak-debug.keystore` is intentionally public and must only be used for debug builds. Its dedicated credentials
+are:
+
+* Store password: `infomaniak-debug`
+* Key alias: `infomaniak-debug`
+* Key password: `infomaniak-debug`
+
+During Gradle configuration, the plugin materializes the keystore under the consuming project's ignored `.gradle/infomaniak`
+directory.
+
 ## Legacy module support (build-time)
 
 The composite plugin also supports the **Legacy** module located inside Core.
