@@ -18,7 +18,9 @@
 package com.infomaniak.core.common
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,6 +28,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 
 /**
  * Helper to create a [DynamicLazyMap] of [SharedFlow]s with a [Flow] factory.
@@ -47,7 +50,7 @@ fun <K, E> DynamicLazyMap.Companion.sharedFlow(
 /**
  * Helper to directly get a [Flow] from a [DynamicLazyMap] containing [SharedFlow]s.
  *
- * @see DynamicLazyMap.Companion.sharedFlow
+ * @see sharedFlow
  */
 fun <K, E> DynamicLazyMap<K, SharedFlow<E>>.flowForKey(key: K): Flow<E> = flow {
     useElement(key) { sharedFlow: SharedFlow<E> ->
@@ -95,3 +98,36 @@ inline fun <K, reified E, R> DynamicLazyMap<K, SharedFlow<E>>.combineFor(
 ): Flow<R> = flow {
     useElements(keys) { emitAll(combine(it.values, transform)) }
 }
+
+typealias UseElementSuspend<K, E, R> = suspend (K, suspend (E) -> R) -> R
+
+fun <K, E, R> DynamicLazyMap<K, E>.asFunction(): UseElementSuspend<K, E, R> {
+    return { key: K, block: suspend (E) -> R ->
+        useElement(key) { element ->
+            block(element)
+        }
+    }
+}
+
+context(scope: CoroutineScope)
+fun <K, E> UseElementSuspend<K, E, Nothing>.toDynamicLazyMap(): DynamicLazyMap<K, E> {
+    return scope.dynamicLazyMap(createElement = asDynamicLazyMapCreateElement())
+}
+
+private fun <K, E> UseElementSuspend<K, E, Nothing>.asDynamicLazyMapCreateElement(): CoroutineScope.(K) -> E {
+    val useElement: UseElementSuspend<K, E, Nothing> = this
+    return fun CoroutineScope.(key: K): E {
+        var element: Any? = nullSurrogate
+        launch(start = CoroutineStart.UNDISPATCHED) {
+            useElement(key) { it: E ->
+                element = it
+                awaitCancellation()
+            }
+        }
+        check(element != nullSurrogate) { "useElement should call its passed block immediately and synchronously" }
+        @Suppress("UNCHECKED_CAST")
+        return element as E
+    }
+}
+
+private val nullSurrogate = Any()

@@ -15,26 +15,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalTypeInference::class)
+
 package com.infomaniak.core.twofactorauth.back
 
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.DynamicLazyMap
+import com.infomaniak.core.common.dynamicLazyMap
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import okhttp3.OkHttpClient
+import kotlin.experimental.ExperimentalTypeInference
 
 fun TwoFactorAuthManager(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     getConnectedHttpClient: suspend (userId: Int) -> OkHttpClient
 ): TwoFactorAuthManager = TwoFactorAuthManager(
     coroutineScope = coroutineScope,
+    connectedHttpClients = coroutineScope.dynamicLazyMap { userId ->
+        async { getConnectedHttpClient(userId.toInt()).toKtorClient() }
+    }
+)
+
+fun TwoFactorAuthManager(
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    connectedHttpClients: DynamicLazyMap<Long, Deferred<HttpClient>>,
+): TwoFactorAuthManager = TwoFactorAuthManager(
+    coroutineScope = coroutineScope,
     userIds = UserDatabase().userDao().allUsers.map { users ->
-        users.mapTo(hashSetOf()) { it.id }
+        users.mapTo(hashSetOf()) { it.id.toLong() }
     }.distinctUntilChanged(),
     getAccountInfo = { UserDatabase().userDao().findById(it)?.toTargetAccount() },
-    getConnectedHttpClient = getConnectedHttpClient
+    perUserHttpClient = connectedHttpClients
 )
 
 private fun User.toTargetAccount() = ConnectionAttemptInfo.TargetAccount(
@@ -44,3 +63,5 @@ private fun User.toTargetAccount() = ConnectionAttemptInfo.TargetAccount(
     email = email,
     id = id.toLong(),
 )
+
+private fun OkHttpClient.toKtorClient(): HttpClient = HttpClient(OkHttp) { engine { preconfigured = this@toKtorClient } }
