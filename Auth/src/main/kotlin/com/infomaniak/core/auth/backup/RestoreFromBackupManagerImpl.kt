@@ -31,6 +31,7 @@ import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.auth.shouldReport
 import com.infomaniak.core.auth.shouldRetryAutomatically
 import com.infomaniak.core.common.Xor
+import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.common.getAndroidId
 import com.infomaniak.core.login.ApiToken
 import com.infomaniak.core.network.networking.HttpUtils
@@ -77,7 +78,12 @@ internal class RestoreFromBackupManagerImpl(
                 waitForRestorationCompletion(null)
             }
             RestorationMode.TokenDerivation -> {
-                restoreAccounts(currentAndroidId = getAndroidId(), allUsers = userDao.allUsers())
+                val allUsers = userDao.allUsers().let {
+                    val tokensWereRestored = restoreTokens(targetUsers = it)
+                    // If tokens were restored, fetch users again to have them.
+                    if (tokensWereRestored) userDao.allUsers() else it
+                }
+                restoreAccounts(currentAndroidId = getAndroidId(), allUsers = allUsers)
             }
         }
         emit(State.Settled)
@@ -117,21 +123,49 @@ internal class RestoreFromBackupManagerImpl(
 
         val issuesWithUser = attemptRestoringAccounts(usersToDeriveTokensFor, currentAndroidId).ifEmpty { return }
 
+        waitForRetryOrGiveUp(issuesWithUser = issuesWithUser, onUserRemoved = { return })
+        restoreAccounts(currentAndroidId = currentAndroidId, allUsers = allUsers)
+    }
+
+    context(flow: FlowCollector<State.RestoringFromBackupFailed>)
+    private suspend inline fun waitForRetryOrGiveUp(
+        issuesWithUser: List<Pair<DerivedTokenGenerator.Issue, User>>,
+        onUserRemoved: () -> Nothing
+    ) {
         val shouldRetryAsync = CompletableDeferred<Boolean>()
         val failedState = State.RestoringFromBackupFailed(
             cause = issuesWithUser.first().first,
             retry = { shouldRetryAsync.complete(true) },
             giveUp = { shouldRetryAsync.complete(false) },
         )
-        emit(failedState)
+        flow.emit(failedState)
         val shouldRetry = shouldRetryAsync.await()
         val giveUp = !shouldRetry
         if (giveUp) {
             val removeUser = removeUserDeferred.await()
             issuesWithUser.forEach { (_, user) -> removeUser(user.id) }
-            return
+            onUserRemoved()
         }
-        restoreAccounts(currentAndroidId = currentAndroidId, allUsers = allUsers)
+    }
+
+    /** Returns true if some tokens were restored. */
+    private tailrec suspend fun FlowCollector<State>.restoreTokens(targetUsers: List<User>): Boolean {
+        targetUsers.filter { it.apiToken.accessToken.isEmpty() }.ifEmpty { return false }
+        emit(State.RestoringFromBackup)
+
+        val throwable = runCatching {
+            val couldRestoreTokens =  BlockStoreBackup.restoreTokens()
+            if (couldRestoreTokens) return true
+            throw NoSuchElementException("Couldn't restore tokens from the Block Store")
+        }.cancellable().getOrElse { it }
+
+        val issue = DerivedTokenGenerator.Issue.OtherIssue(throwable)
+        val affectedUsers = userDao.allUsers().filter { it.apiToken.accessToken.isEmpty() }
+        waitForRetryOrGiveUp(
+            issuesWithUser = affectedUsers.map { issue to it },
+            onUserRemoved = { return false }
+        )
+        return restoreTokens(targetUsers = affectedUsers)
     }
 
     private suspend fun attemptRestoringAccounts(
