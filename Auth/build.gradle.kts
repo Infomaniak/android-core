@@ -60,6 +60,9 @@ dependencies {
     implementation(core.okhttp)
     api(core.gson)
 
+    "standardImplementation"(core.play.services.block.store)
+    "standardImplementation"(core.kotlinx.coroutines.play.services)
+
     // Room
     implementation(core.room.ktx)
     api(core.room.runtime)
