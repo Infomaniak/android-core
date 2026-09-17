@@ -55,6 +55,11 @@ object BlockStoreBackup {
 
     private suspend fun writeTokensBackup(tokensDump: LongObjectMap<String>): Boolean {
         val failures = tokensDump.count { userId, accessToken ->
+            if (accessToken.isEmpty()) {
+                // Ensure we don't overwrite with an empty token.
+                // This can happen if a previous backup was aborted, leaving tokens in the Block Store, but out of the DB.
+                return false // Didn't fail.
+            }
             val storeRequest = StoreBytesData.Builder()
                 .setKey(userId.toString())
                 .setShouldBackupToCloud(true)
