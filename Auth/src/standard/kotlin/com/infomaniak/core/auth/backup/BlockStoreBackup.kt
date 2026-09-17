@@ -22,6 +22,7 @@ import androidx.collection.buildLongObjectMap
 import androidx.room.immediateTransaction
 import androidx.room.useWriterConnection
 import com.google.android.gms.auth.blockstore.Blockstore
+import com.google.android.gms.auth.blockstore.DeleteBytesRequest
 import com.google.android.gms.auth.blockstore.RetrieveBytesRequest
 import com.google.android.gms.auth.blockstore.StoreBytesData
 import com.infomaniak.core.auth.room.UserDatabase
@@ -42,6 +43,7 @@ object BlockStoreBackup {
         val backupContent = dumpTokens()
         val alreadyBackedUpContent = readTokensBackup()
         if (backupContent == alreadyBackedUpContent) return true
+        deleteObsoleteKeys(previousDump = alreadyBackedUpContent, tokensDump = backupContent)
         return writeTokensBackup(backupContent)
     }
 
@@ -67,6 +69,18 @@ object BlockStoreBackup {
             }
         }
         return failures == 0
+    }
+
+    private suspend fun deleteObsoleteKeys(
+        previousDump: LongObjectMap<String>?,
+        tokensDump: LongObjectMap<String>,
+    ) {
+       if (previousDump == null || previousDump.isEmpty()) return
+        val keysToDelete: List<String> = buildList {
+            previousDump.forEachKey { key -> if (key !in tokensDump) add(key.toString()) }
+        }
+        val deleteRequest = DeleteBytesRequest.Builder().setKeys(keysToDelete).build()
+        blockstoreClient.deleteBytes(deleteRequest).await()
     }
 
     private suspend fun dumpTokens(): LongObjectMap<String> = buildLongObjectMap {
