@@ -26,7 +26,7 @@ import kotlinx.coroutines.runBlocking
 
 context(_: FullBackupAgent)
 inline fun withBlockStoreCredentialsBackup(
-    crossinline backupCredentials: suspend () -> Boolean,
+    crossinline backupCredentials: suspend () -> Boolean = { BlockStoreBackup.backupTokens() },
     crossinline defaultBackupCalls: () -> Unit
 ): Unit = runBlocking {
     if (BlockStoreBackup.isSupported.not()) {
