@@ -21,6 +21,7 @@
     <string name="browserNotFound">Ingen browser fundet</string>
     <string name="buttonCancel">Annuller</string>
     <string name="buttonClose">Luk</string>
+    <string name="buttonCopy">Kopiér</string>
     <string name="buttonCreateAccount">Opret en konto</string>
     <string name="buttonLater">Senere</string>
     <string name="buttonLogOut">Log ud</string>
@@ -37,6 +38,7 @@
     <string name="crossAppLoginIntegrityError">Kontihentning utilgængelig</string>
     <string name="errorDownload">Downloadfejl</string>
     <string name="errorDownloadInsufficientSpace">Kan ikke downloade: Utilstrækkelig plads</string>
+    <string name="linkCopied">Link kopieret</string>
     <plurals name="myAccount">
         <item quantity="one">Min konto</item>
         <item quantity="other">Mine konti</item>

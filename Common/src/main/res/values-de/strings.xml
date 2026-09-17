@@ -21,6 +21,7 @@
     <string name="browserNotFound">Kein Browser gefunden</string>
     <string name="buttonCancel">Abbrechen</string>
     <string name="buttonClose">Schliessen</string>
+    <string name="buttonCopy">Kopieren</string>
     <string name="buttonCreateAccount">Ein Konto erstellen</string>
     <string name="buttonLater">Später</string>
     <string name="buttonLogOut">Abmelden</string>
@@ -37,6 +38,7 @@
     <string name="crossAppLoginIntegrityError">Kontenabruf nicht verfügbar</string>
     <string name="errorDownload">Fehler beim Download</string>
     <string name="errorDownloadInsufficientSpace">Download nicht möglich: Unzureichender Speicherplatz</string>
+    <string name="linkCopied">Link kopiert</string>
     <plurals name="myAccount">
         <item quantity="one">Mein Konto</item>
         <item quantity="other">Meine Konten</item>
