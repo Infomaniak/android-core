@@ -59,7 +59,7 @@ object BlockStoreBackup {
                 .setBytes(accessToken.toByteArray())
                 .build()
             runCatching {
-                blockstoreClient.storeBytes(storeRequest)
+                blockstoreClient.storeBytes(storeRequest).await()
                 false // Didn't fail.
             }.cancellable().getOrElse { throwable ->
                 SentryLog.wtf(TAG, "Failed to backup token", throwable)
