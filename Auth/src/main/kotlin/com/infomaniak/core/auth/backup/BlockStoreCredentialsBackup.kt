@@ -58,10 +58,8 @@ internal suspend fun UserDatabase.getUsersAndRemoveTokens(): List<User> = useWri
     transactor.immediateTransaction {
         transactor.execSQL("PRAGMA secure_delete = ON;")
         try {
-            userDao().allUsers().also { users ->
-                users.forEach { user ->
-                    userDao().update(user = user.copy(apiToken = user.apiToken.copy(accessToken = "", refreshToken = null)))
-                }
+            userDao().allUsers().also {
+                userDao().clearAllTokens()
             }
         } finally {
             transactor.execSQL("PRAGMA secure_delete = OFF;")
