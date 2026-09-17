@@ -45,7 +45,14 @@ abstract class BaseAccountUtilsTest {
     protected fun userOf(id: Int): User {
         val dummyOrganization = OrganizationPreference(1234)
         val dummyPreferences = Preferences(null, dummyOrganization)
-        val dummyApiToken = ApiToken("", null, "", 0, id, null, null)
+        val dummyApiToken = ApiToken(
+            accessToken = "whatever",
+            refreshToken = null,
+            tokenType = "",
+            userId = id,
+            scope = null,
+            expiresAt = null
+        )
 
         return User(
             id,
