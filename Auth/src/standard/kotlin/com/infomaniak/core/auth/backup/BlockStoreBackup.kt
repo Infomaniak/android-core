@@ -36,7 +36,7 @@ object BlockStoreBackup {
     private const val TAG = "BlockStoreBackup"
     private val db = UserDatabase.instance
 
-    val isSupported: Boolean = true
+    const val isSupported: Boolean = true
 
     suspend fun backupTokens(): Boolean {
         val backupContent = dumpTokens()
