@@ -77,6 +77,9 @@ interface UserDao {
     @Update
     suspend fun update(user: User)
 
+    @Query("UPDATE user SET accessToken = '', refreshToken = NULL")
+    suspend fun clearAllTokens()
+
     @Query("UPDATE user SET accessToken = :accessToken WHERE id = :userId")
     suspend fun updateUserToken(userId: Int, accessToken: String)
 
