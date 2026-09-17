@@ -19,6 +19,6 @@ package com.infomaniak.core.auth.backup
 
 object BlockStoreBackup {
     val isSupported: Boolean = false
-    suspend fun backupTokens(): Boolean = true
-    suspend fun restoreTokens(): Boolean = true
+    suspend fun backupTokens(): Boolean = false
+    suspend fun restoreTokens(): Boolean = false
 }
