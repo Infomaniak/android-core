@@ -22,4 +22,5 @@ include(
     ":convention",
     ":composite",
     ":composeLint",
+    ":application",
 )
