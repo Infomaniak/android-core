@@ -25,18 +25,22 @@ import com.infomaniak.core.common.backup.FullBackupAgent
 import kotlinx.coroutines.runBlocking
 
 context(_: FullBackupAgent)
-inline fun withBlockStoreTokensBackup(crossinline defaultBackupCalls: () -> Unit): Unit = runBlocking {
+inline fun withBlockStoreCredentialsBackup(
+    crossinline backupCredentials: suspend () -> Boolean,
+    crossinline defaultBackupCalls: () -> Unit
+): Unit = runBlocking {
     if (BlockStoreBackup.isSupported.not()) {
         defaultBackupCalls()
         return@runBlocking
     }
-    val succeeded = BlockStoreBackup.backupTokens()
+    val succeeded = backupCredentials()
     if (!succeeded) return@runBlocking // Abort backup
     val db = UserDatabase.instance
     // We don't want to keep tokens in the db for backup, so we remove them temporarily.
     // Note that the app can perfectly recover from this state if the backup process is aborted, here's why:
-    // Authenticated API calls with an empty token will result in a 401 http status code,
-    // which will lead to the token being refreshed using the passkey.
+    // - For token based apps, we detect empty tokens and restore them from the Block Store.
+    // - For passkeys based apps, authenticated API calls with an empty token will result in a 401 http status code,
+    //   which will lead to the token being refreshed using the passkey.
     val tokens = db.getUsersAndRemoveTokens()
     try {
         defaultBackupCalls()
