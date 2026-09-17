@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.auth.backup
 
+import androidx.room.execSQL
 import androidx.room.immediateTransaction
 import androidx.room.useWriterConnection
 import com.infomaniak.core.auth.models.user.User
@@ -49,14 +50,24 @@ inline fun withBlockStoreCredentialsBackup(
     }
 }
 
+/**
+ * Removes tokens from the database, and returns the users WITH the tokens (from before the removal operation).
+ */
 @PublishedApi
 internal suspend fun UserDatabase.getUsersAndRemoveTokens(): List<User> = useWriterConnection { transactor ->
     transactor.immediateTransaction {
-        userDao().allUsers().also { users ->
-            users.forEach { user ->
-                userDao().update(user = user.copy(apiToken = user.apiToken.copy(accessToken = "", refreshToken = null)))
+        transactor.execSQL("PRAGMA secure_delete = ON;")
+        try {
+            userDao().allUsers().also { users ->
+                users.forEach { user ->
+                    userDao().update(user = user.copy(apiToken = user.apiToken.copy(accessToken = "", refreshToken = null)))
+                }
             }
+        } finally {
+            transactor.execSQL("PRAGMA secure_delete = OFF;")
         }
+    }.also {
+        transactor.execSQL("PRAGMA wal_checkpoint(TRUNCATE);")
     }
 }
 
