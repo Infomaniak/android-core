@@ -21,6 +21,7 @@
     <string name="browserNotFound">Nie znaleziono przeglądarki</string>
     <string name="buttonCancel">Anuluj</string>
     <string name="buttonClose">Zamknij</string>
+    <string name="buttonCopy">Kopiuj</string>
     <string name="buttonCreateAccount">Utwórz konto</string>
     <string name="buttonLater">Później</string>
     <string name="buttonLogOut">Wyloguj</string>
@@ -37,6 +38,7 @@
     <string name="crossAppLoginIntegrityError">Pobieranie kont niedostępne</string>
     <string name="errorDownload">Błąd pobierania</string>
     <string name="errorDownloadInsufficientSpace">Nie można pobrać: Za mało miejsca</string>
+    <string name="linkCopied">Skopiowano link</string>
     <plurals name="myAccount">
         <item quantity="one">Moje konto</item>
         <item quantity="few">Moje konta</item>

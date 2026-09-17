@@ -21,6 +21,7 @@
     <string name="browserNotFound">Ingen webbläsare hittades</string>
     <string name="buttonCancel">Avbryt</string>
     <string name="buttonClose">Stäng</string>
+    <string name="buttonCopy">Kopiera</string>
     <string name="buttonCreateAccount">Skapa ett konto</string>
     <string name="buttonLater">Senare</string>
     <string name="buttonLogOut">Logga ut</string>
@@ -37,6 +38,7 @@
     <string name="crossAppLoginIntegrityError">Kontohämtning otillgänglig</string>
     <string name="errorDownload">Nedladdningsfel</string>
     <string name="errorDownloadInsufficientSpace">Kan inte ladda ner: Otillräckligt utrymme</string>
+    <string name="linkCopied">Länk kopierad</string>
     <plurals name="myAccount">
         <item quantity="one">Mitt konto</item>
         <item quantity="other">Mina konton</item>

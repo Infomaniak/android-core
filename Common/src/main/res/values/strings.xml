@@ -21,6 +21,7 @@
     <string name="browserNotFound">No browser found</string>
     <string name="buttonCancel">Cancel</string>
     <string name="buttonClose">Close</string>
+    <string name="buttonCopy">Copy</string>
     <string name="buttonCreateAccount">Create an account</string>
     <string name="buttonLater">Later</string>
     <string name="buttonLogOut">Log out</string>
@@ -37,6 +38,7 @@
     <string name="crossAppLoginIntegrityError">Accounts retrieval unavailable</string>
     <string name="errorDownload">Download error</string>
     <string name="errorDownloadInsufficientSpace">Cannot download: Insufficient space</string>
+    <string name="linkCopied">Link copied</string>
     <plurals name="myAccount">
         <item quantity="one">My account</item>
         <item quantity="other">My accounts</item>

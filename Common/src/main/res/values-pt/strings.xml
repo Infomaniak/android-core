@@ -21,6 +21,7 @@
     <string name="browserNotFound">Nenhum navegador encontrado</string>
     <string name="buttonCancel">Cancelar</string>
     <string name="buttonClose">Fechar</string>
+    <string name="buttonCopy">Copiar</string>
     <string name="buttonCreateAccount">Criar uma conta</string>
     <string name="buttonLater">Mais tarde</string>
     <string name="buttonLogOut">Terminar sessão</string>
@@ -37,6 +38,7 @@
     <string name="crossAppLoginIntegrityError">Recuperação de contas indisponível</string>
     <string name="errorDownload">Erro de descarregamento</string>
     <string name="errorDownloadInsufficientSpace">Não é possível descarregar: Espaço insuficiente</string>
+    <string name="linkCopied">Link copiado</string>
     <plurals name="myAccount">
         <item quantity="one">A minha conta</item>
         <item quantity="other">As minhas contas</item>
