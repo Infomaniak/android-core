@@ -20,11 +20,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.infomaniak.core.auth.UserAccountUtils
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.CardLink
 import com.infomaniak.core.auth.models.user.CardLinkType
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.auth.room.UserDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,7 +37,7 @@ class ContactCardViewModel(
     savedStateHandle: SavedStateHandle,
 ) : AndroidViewModel(application) {
 
-    private val accountUtils = UserAccountUtils(application.applicationContext)
+    private val userDao = UserDatabase.getDatabase().userDao()
     private val userId: Int = requireNotNull(savedStateHandle.get<Int>(USER_ID_KEY)) { "userId argument is required" }
 
     private val _uiState = MutableStateFlow<ContactCardUiState>(ContactCardUiState.Loading)
@@ -49,7 +49,7 @@ class ContactCardViewModel(
 
     private fun loadUser() {
         viewModelScope.launch {
-            val user = accountUtils.getUserById(userId)
+            val user = userDao.findById(userId)
             if (_uiState.value !is ContactCardUiState.Editing) {
                 _uiState.value = user?.toUiState() ?: ContactCardUiState.Closed
             }
@@ -104,7 +104,7 @@ class ContactCardViewModel(
 
         viewModelScope.launch {
             val card = editor.toCard()
-            accountUtils.updateUserCard(userId, card)
+            userDao.updateUserCard(userId, card)
             val updatedUser = user.copy(card = card)
             _uiState.value = ContactCardUiState.Preview(user = updatedUser, card = card)
         }
@@ -114,7 +114,7 @@ class ContactCardViewModel(
         ContactCardMatomo.trackEvent("delete")
 
         viewModelScope.launch {
-            accountUtils.updateUserCard(userId, null)
+            userDao.updateUserCard(userId, null)
             val updatedUser = user.copy(card = null)
             _uiState.value = ContactCardUiState.Onboarding(updatedUser)
         }
