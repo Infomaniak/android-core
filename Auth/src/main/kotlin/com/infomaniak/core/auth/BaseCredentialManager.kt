@@ -58,10 +58,6 @@ abstract class BaseCredentialManager : UserExistenceChecker {
         }
     }
 
-    @CallSuper
-    open suspend fun updateUserCard(userId: Int, card: Card?) {
-        userDatabase.userDao().updateUserCard(userId, card)
-    }
     //endregion
 
     //region HttpClient
