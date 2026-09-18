@@ -23,6 +23,7 @@ dependencies are excluded). This list may not be exhaustive.
 | [Google Play App Update](https://developer.android.com/guide/playcore/in-app-updates)                        | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)    |
 | [Google Play Integrity](https://developer.android.com/google/play/integrity)                                 | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)    |
 | [Google Play Review](https://developer.android.com/guide/playcore/in-app-review)                             | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)    |
+| [Google Play Services Block Store](https://developer.android.com/identity/block-store)                       | Proprietary                                                          |
 | [Jetpack Compose](https://developer.android.com/jetpack/compose)                                             | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)    |
 | [Kotlin Standard Library](https://kotlinlang.org/)                                                           | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)    |
 | [Kotlinx Coroutines](https://github.com/Kotlin/kotlinx.coroutines)                                           | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)    |
