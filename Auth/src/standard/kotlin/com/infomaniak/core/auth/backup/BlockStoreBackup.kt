@@ -33,8 +33,9 @@ import splitties.init.appCtx
 
 object BlockStoreBackup {
 
-    private val blockstoreClient = Blockstore.getClient(appCtx)
     private const val TAG = "BlockStoreBackup"
+
+    private val blockstoreClient = Blockstore.getClient(appCtx)
     private val db = UserDatabase.instance
 
     const val isSupported: Boolean = true
