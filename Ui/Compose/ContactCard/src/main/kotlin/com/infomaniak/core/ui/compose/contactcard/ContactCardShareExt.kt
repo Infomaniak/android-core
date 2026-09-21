@@ -31,15 +31,16 @@ private const val MAX_AVATAR_SIZE = 5 * 1024 * 1024 // 5 MB
 private val ILLEGAL_FILE_NAME_CHARACTERS = Regex("[\\\\/:*?\"<>|]+")
 
 suspend fun Card.createShareFile(context: Context, avatarData: Pair<String?, String?>): File = withContext(Dispatchers.IO) {
-    val fileName = "attachments_cache${firstName}_${lastName}.vcf"
-    val safeFileName = fileName.replace(ILLEGAL_FILE_NAME_CHARACTERS, "")
-
     val directory = File(context.cacheDir, "attachments_cache").apply { mkdirs() }
 
-    File(directory, safeFileName).apply {
+    File(directory, createVCardFileName(firstName, lastName)).apply {
         val vCardContent = makeVCardString(avatarBase64 = avatarData.first, avatarMimeType = avatarData.second)
         writeText(vCardContent)
     }
+}
+
+internal fun createVCardFileName(firstName: String, lastName: String): String {
+    return "${firstName}_${lastName}.vcf".replace(ILLEGAL_FILE_NAME_CHARACTERS, "")
 }
 
 suspend fun Card.getAvatarDataOrNull(): Pair<String?, String?> {
