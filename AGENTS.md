@@ -70,6 +70,7 @@ utilities across Infomaniak apps. Designed for JDK 17+, minSdk 27, compiled SDK 
 
 ## Patterns & Conventions
 
+- **Commits and pull requests**: Use Conventional Commits syntax for commit messages and pull request titles (e.g., `fix(contact-card): remove cache prefix from VCard filename`).
 - **Module naming**: Descriptive, PascalCase (e.g., `AppVersionChecker`, `TwoFactorAuth`)
 - **Composite build**: Consume via Maven coordinates `com.infomaniak.core:<artifact>`, where nested Gradle project paths map `:` to `.` in the artifact name (e.g., `:TwoFactorAuth:Front` → `com.infomaniak.core:TwoFactorAuth.Front`)
 - **Ktlint**: Android mode enabled (version set in `build.gradle.kts`)
