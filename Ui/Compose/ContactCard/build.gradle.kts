@@ -35,4 +35,6 @@ dependencies {
     implementation(core.androidx.lifecycle.viewmodel.compose)
     implementation(core.androidx.lifecycle.runtime.compose)
     implementation(core.qrose)
+
+    testImplementation(kotlin("test-junit"))
 }
