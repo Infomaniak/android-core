@@ -36,6 +36,7 @@
     <string name="confirmLogoutTitle">Afmelden</string>
     <string name="connectionError">Internetverbindingsprobleem</string>
     <string name="crossAppLoginIntegrityError">Ophalen van accounts niet beschikbaar</string>
+    <string name="edit">Bewerken</string>
     <string name="errorDownload">Downloadfout</string>
     <string name="errorDownloadInsufficientSpace">Kan niet downloaden: Onvoldoende ruimte</string>
     <string name="linkCopied">Link gekopieerd</string>

@@ -36,6 +36,7 @@
     <string name="confirmLogoutTitle">Log out</string>
     <string name="connectionError">Internet connection problem</string>
     <string name="crossAppLoginIntegrityError">Accounts retrieval unavailable</string>
+    <string name="edit">Edit</string>
     <string name="errorDownload">Download error</string>
     <string name="errorDownloadInsufficientSpace">Cannot download: Insufficient space</string>
     <string name="linkCopied">Link copied</string>

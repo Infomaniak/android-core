@@ -36,6 +36,7 @@
     <string name="confirmLogoutTitle">Wyloguj się</string>
     <string name="connectionError">Problem z połączeniem internetowym</string>
     <string name="crossAppLoginIntegrityError">Pobieranie kont niedostępne</string>
+    <string name="edit">Edytuj</string>
     <string name="errorDownload">Błąd pobierania</string>
     <string name="errorDownloadInsufficientSpace">Nie można pobrać: Za mało miejsca</string>
     <string name="linkCopied">Skopiowano link</string>

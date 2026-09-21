@@ -36,6 +36,7 @@
     <string name="confirmLogoutTitle">Logga ut</string>
     <string name="connectionError">Problem med internetanslutning</string>
     <string name="crossAppLoginIntegrityError">Kontohämtning otillgänglig</string>
+    <string name="edit">Redigera</string>
     <string name="errorDownload">Nedladdningsfel</string>
     <string name="errorDownloadInsufficientSpace">Kan inte ladda ner: Otillräckligt utrymme</string>
     <string name="linkCopied">Länk kopierad</string>
