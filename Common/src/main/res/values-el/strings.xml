@@ -36,6 +36,7 @@
     <string name="confirmLogoutTitle">Αποσύνδεση</string>
     <string name="connectionError">Πρόβλημα σύνδεσης στο διαδίκτυο</string>
     <string name="crossAppLoginIntegrityError">Η ανάκτηση λογαριασμών δεν είναι διαθέσιμη</string>
+    <string name="edit">Επεξεργασία</string>
     <string name="errorDownload">Σφάλμα λήψης</string>
     <string name="errorDownloadInsufficientSpace">Δεν είναι δυνατή η λήψη: Μη επαρκής χώρος</string>
     <string name="linkCopied">Ο σύνδεσμος αντιγράφηκε</string>

@@ -36,6 +36,7 @@
     <string name="confirmLogoutTitle">Logg ut</string>
     <string name="connectionError">Internett-tilkoblingsproblem</string>
     <string name="crossAppLoginIntegrityError">Henting av kontoer utilgjengelig</string>
+    <string name="edit">Rediger</string>
     <string name="errorDownload">Nedlastingsfeil</string>
     <string name="errorDownloadInsufficientSpace">Kan ikke laste ned: Utilstrekkelig plass</string>
     <string name="linkCopied">Lenke kopiert</string>

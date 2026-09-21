@@ -36,6 +36,7 @@
     <string name="confirmLogoutTitle">Disconnettersi</string>
     <string name="connectionError">Problema di connessione a Internet</string>
     <string name="crossAppLoginIntegrityError">Recupero dei conti non disponibile</string>
+    <string name="edit">Modifica</string>
     <string name="errorDownload">Errore durante il download</string>
     <string name="errorDownloadInsufficientSpace">Impossibile scaricare: spazio insufficiente</string>
     <string name="linkCopied">Link copiato</string>

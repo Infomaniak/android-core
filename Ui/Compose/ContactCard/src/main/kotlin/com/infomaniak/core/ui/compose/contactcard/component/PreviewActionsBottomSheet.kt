@@ -38,6 +38,7 @@ import androidx.compose.ui.window.DialogWindowProvider
 import com.infomaniak.core.ui.compose.contactcard.R
 import com.infomaniak.core.ui.compose.margin.Margin
 import kotlinx.coroutines.launch
+import com.infomaniak.core.common.R as RCommon
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +72,7 @@ internal fun PreviewActionsBottomSheet(
         Column(modifier = Modifier.padding(bottom = Margin.Medium)) {
             BottomSheetAction(
                 icon = ImageVector.vectorResource(R.drawable.ic_pencil),
-                label = stringResource(R.string.menuEdit),
+                label = stringResource(RCommon.string.edit),
                 onClick = { dismissThen(onEdit) },
             )
             HorizontalDivider(

@@ -36,6 +36,7 @@
     <string name="confirmLogoutTitle">Log ud</string>
     <string name="connectionError">Internetforbindelsesproblem</string>
     <string name="crossAppLoginIntegrityError">Kontihentning utilgængelig</string>
+    <string name="edit">Rediger</string>
     <string name="errorDownload">Downloadfejl</string>
     <string name="errorDownloadInsufficientSpace">Kan ikke downloade: Utilstrækkelig plads</string>
     <string name="linkCopied">Link kopieret</string>
