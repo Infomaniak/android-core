@@ -18,6 +18,8 @@
 package com.infomaniak.core.sentry
 
 import android.app.Application
+import android.app.backup.BackupAgent
+import android.content.Context
 import com.infomaniak.core.network.models.exceptions.NetworkException
 import io.sentry.Sentry
 import io.sentry.SentryEvent
@@ -29,11 +31,12 @@ import io.sentry.android.fragment.FragmentLifecycleState
 import kotlin.coroutines.cancellation.CancellationException
 
 object SentryConfig {
-    fun Application.configureSentry(
+    fun Context.configureSentry(
         isDebug: Boolean,
         isSentryTrackingEnabled: () -> Boolean,
         isFilteredException: (Throwable?) -> Boolean = { false }
     ) {
+        check(this is Application || this is BackupAgent)
         SentryAndroid.init(this) { options: SentryAndroidOptions ->
             // Register the callback as an option
             options.beforeSend = SentryOptions.BeforeSendCallback { event: SentryEvent, _: Any? ->
@@ -49,7 +52,7 @@ object SentryConfig {
                     else -> event
                 }
             }
-            options.addIntegration(
+            if (this is Application) options.addIntegration(
                 FragmentLifecycleIntegration(
                     application = this,
                     filterFragmentLifecycleBreadcrumbs = setOf(
@@ -70,7 +73,7 @@ object SentryConfig {
             scope.setTag("PlayServicesLinked", arePlayServicesAvailable().toString())
         }
 
-        sentryConfigScopeOnActivityCreated { scope ->
+        if (this is Application) sentryConfigScopeOnActivityCreated { scope ->
             scope.setContexts("IsDontKeepActivitiesEnabled", isDontKeepActivitiesEnabled())
         }
     }
