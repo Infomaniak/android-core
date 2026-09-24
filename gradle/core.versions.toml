@@ -50,6 +50,7 @@ qrose = "1.1.2"
 okhttp = "5.3.2"
 okio = "3.16.2"
 playReview = "2.0.2"
+playServicesBlockStore = "16.4.0"
 progressButton = "2.1.0"
 recyclerView = "1.4.0"
 #noinspection NewerVersionAvailable
@@ -210,6 +211,7 @@ play-app-update = { module = "com.google.android.play:app-update", version.ref =
 play-app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateVersion" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
+play-services-block-store = { module = "com.google.android.gms:play-services-auth-blockstore", version.ref = "playServicesBlockStore" }
 progress-button = { module = "com.github.razir.progressbutton:progressbutton", version.ref = "progressButton" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
