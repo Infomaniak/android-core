@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.auth.backup
 
+import android.content.Context
 import androidx.collection.LongObjectMap
 import androidx.collection.buildLongObjectMap
 import androidx.room.immediateTransaction
@@ -29,16 +30,16 @@ import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.tasks.await
-import splitties.init.appCtx
 
-object BlockStoreBackup {
+class BlockStoreBackup(context: Context) {
 
-    private const val TAG = "BlockStoreBackup"
+    companion object {
+        const val isSupported: Boolean = true
+        private const val TAG = "BlockStoreBackup"
+    }
 
-    private val blockstoreClient = Blockstore.getClient(appCtx)
+    private val blockstoreClient = Blockstore.getClient(context)
     private val db = UserDatabase.instance
-
-    const val isSupported: Boolean = true
 
     suspend fun backupTokens(): Boolean {
         val backupContent = dumpTokens()

@@ -25,9 +25,9 @@ import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.backup.FullBackupAgent
 import kotlinx.coroutines.runBlocking
 
-context(_: FullBackupAgent)
+context(backupAgent: FullBackupAgent)
 inline fun withBlockStoreCredentialsBackup(
-    crossinline backupCredentials: suspend () -> Boolean = { BlockStoreBackup.backupTokens() },
+    crossinline backupCredentials: suspend () -> Boolean = { BlockStoreBackup(backupAgent).backupTokens() },
     crossinline defaultBackupCalls: () -> Unit
 ): Unit = runBlocking {
     if (BlockStoreBackup.isSupported.not()) {
