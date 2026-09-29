@@ -22,7 +22,11 @@ import android.app.backup.BackupAgent
 import android.app.backup.BackupDataInput
 import android.app.backup.BackupDataOutput
 import android.app.backup.FullBackupDataOutput
+import android.content.Context
 import android.os.ParcelFileDescriptor
+import androidx.annotation.CallSuper
+import splitties.init.appCtx
+import splitties.init.injectAsAppCtx
 import java.io.DataInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -64,6 +68,12 @@ abstract class FullBackupAgent(private val restorationPolicy: RestorationPolicy)
             val readyBytesCount = DataInputStream(FileInputStream(fileDescriptor)).read(destination)
             check(readyBytesCount == destination.size)
         }
+    }
+
+    @CallSuper
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        runCatching { appCtx }.onFailure { base.applicationContext.injectAsAppCtx() }
     }
 
     @Suppress("RedundantOverride") // Allows specifying the nullability.
