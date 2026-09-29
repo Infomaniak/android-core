@@ -79,9 +79,10 @@ internal class RestoreFromBackupManagerImpl(
             }
             RestorationMode.TokenDerivation -> {
                 val allUsers = userDao.allUsers().let {
-                    val tokensWereRestored = restoreTokens(targetUsers = it)
-                    // If tokens were restored, fetch users again to have them.
-                    if (tokensWereRestored) userDao.allUsers() else it
+                    when (restoreTokens(targetUsers = it)) {
+                        UsersOperations.Updated -> userDao.allUsers()
+                        UsersOperations.Unchanged -> it
+                    }
                 }
                 restoreAccounts(currentAndroidId = getAndroidId(), allUsers = allUsers)
             }
@@ -148,14 +149,14 @@ internal class RestoreFromBackupManagerImpl(
         }
     }
 
-    /** Returns true if some tokens were restored. */
-    private tailrec suspend fun FlowCollector<State>.restoreTokens(targetUsers: List<User>): Boolean {
-        targetUsers.filter { it.apiToken.accessToken.isEmpty() }.ifEmpty { return false }
+    /** Returns [UsersOperations.Updated] if some tokens were restored, or if some users were deleted. */
+    private tailrec suspend fun FlowCollector<State>.restoreTokens(targetUsers: List<User>): UsersOperations {
+        targetUsers.filter { it.apiToken.accessToken.isEmpty() }.ifEmpty { return UsersOperations.Unchanged }
         emit(State.RestoringFromBackup)
 
         val throwable = runCatching {
             val couldRestoreTokens =  BlockStoreBackup.restoreTokens()
-            if (couldRestoreTokens) return true
+            if (couldRestoreTokens) return UsersOperations.Updated
             throw NoSuchElementException("Couldn't restore tokens from the Block Store")
         }.cancellable().getOrElse { it }
 
@@ -163,7 +164,7 @@ internal class RestoreFromBackupManagerImpl(
         val affectedUsers = userDao.allUsers().filter { it.apiToken.accessToken.isEmpty() }
         waitForRetryOrGiveUp(
             issuesWithUser = affectedUsers.map { issue to it },
-            onUserRemoved = { return false }
+            onUserRemoved = { return UsersOperations.Updated }
         )
         return restoreTokens(targetUsers = affectedUsers)
     }
@@ -226,5 +227,7 @@ internal class RestoreFromBackupManagerImpl(
         }
     }.awaitAll().filterNotNull()
 }
+
+private enum class UsersOperations { Updated, Unchanged }
 
 private const val TAG = "RestoreFromBackupManagerImpl"
