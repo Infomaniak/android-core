@@ -35,8 +35,12 @@ internal class BlockStoreTestingImpl(private val e2eeAvailable: Boolean) : Block
 
     override suspend fun storeBytes(key: String, shouldBackupToCloud: Boolean, bytes: ByteArray) {
         Dispatchers.IO {
-            val file = dir.resolve(if (shouldBackupToCloud) key + shouldBackupToCloudSuffix else key)
+            val cloudOkFile = dir.resolve(key + shouldBackupToCloudSuffix)
+            val deviceToDeviceOnlyFile = dir.resolve(key)
+            val file = if (shouldBackupToCloud) cloudOkFile else deviceToDeviceOnlyFile
             file.writeBytes(bytes)
+            val fileToDelete = if (shouldBackupToCloud) deviceToDeviceOnlyFile else cloudOkFile
+            fileToDelete.delete()
         }
     }
 
