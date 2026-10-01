@@ -53,7 +53,7 @@ internal class BlockStoreTestingImpl(private val e2eeAvailable: Boolean) : Block
     override suspend fun deleteBytes(keys: List<String>): Boolean = Dispatchers.IO {
         var deleted = false
         keys.forEach { key ->
-            deleted = dir.resolve(key).delete()
+            deleted = dir.resolve(key).delete() || deleted
             deleted = dir.resolve(key + shouldBackupToCloudSuffix).delete() || deleted
         }
         deleted
