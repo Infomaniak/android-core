@@ -18,14 +18,25 @@
 package com.infomaniak.core.auth.backup
 
 import android.app.backup.FullBackupDataOutput
+import android.content.pm.ApplicationInfo
 import com.infomaniak.core.common.backup.FullBackupAgent
+import splitties.bitflags.hasFlag
+import splitties.init.appCtx
 
-object BlockStoreBackup {
-    const val isSupported: Boolean = false
+sealed class BlockStore {
+
+    abstract suspend fun storeBytes(key: String, shouldBackupToCloud: Boolean, bytes: ByteArray)
+    abstract suspend fun retrieveBytes(keys: List<String>? = null): Map<String, ByteArray>
+    abstract suspend fun deleteBytes(keys: List<String>): Boolean
+    abstract suspend fun isE2eeAvailable(): Boolean
 
     context(agent: FullBackupAgent)
-    fun backupTestBlockStoreIfNeeded(data: FullBackupDataOutput) {}
+    abstract fun backupTestBlockStoreIfNeeded(data: FullBackupDataOutput)
 
-    suspend fun backupTokens(): Boolean = false
-    suspend fun restoreTokens(): Boolean = false
+    companion object {
+        val instance: BlockStore = when {
+            appCtx.applicationInfo.flags.hasFlag(ApplicationInfo.FLAG_DEBUGGABLE) -> BlockStoreTestingImpl(e2eeAvailable = true)
+            else -> BlockStorePlayServicesImpl()
+        }
+    }
 }

@@ -17,28 +17,29 @@
  */
 package com.infomaniak.core.auth.backup
 
+import android.app.backup.FullBackupDataOutput
 import androidx.collection.LongObjectMap
 import androidx.collection.buildLongObjectMap
 import androidx.room.immediateTransaction
 import androidx.room.useWriterConnection
-import com.google.android.gms.auth.blockstore.Blockstore
-import com.google.android.gms.auth.blockstore.DeleteBytesRequest
-import com.google.android.gms.auth.blockstore.RetrieveBytesRequest
-import com.google.android.gms.auth.blockstore.StoreBytesData
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.backup.FullBackupAgent
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.sentry.SentryLog
-import kotlinx.coroutines.tasks.await
-import splitties.init.appCtx
 
 object BlockStoreBackup {
 
     private const val TAG = "BlockStoreBackup"
 
-    private val blockstoreClient = Blockstore.getClient(appCtx)
+    private val blockStore = BlockStore.instance
     private val db = UserDatabase.instance
 
     const val isSupported: Boolean = true
+
+    context(agent: FullBackupAgent)
+    fun backupTestBlockStoreIfNeeded(data: FullBackupDataOutput) {
+        BlockStore.instance.backupTestBlockStoreIfNeeded(data)
+    }
 
     suspend fun backupTokens(): Boolean {
         val backupContent = dumpTokens()
@@ -61,13 +62,12 @@ object BlockStoreBackup {
                 // This can happen if a previous backup was aborted, leaving tokens in the Block Store, but out of the DB.
                 return@count false // Didn't fail.
             }
-            val storeRequest = StoreBytesData.Builder()
-                .setKey(userId.toString())
-                .setShouldBackupToCloud(true)
-                .setBytes(accessToken.toByteArray())
-                .build()
             runCatching {
-                blockstoreClient.storeBytes(storeRequest).await()
+                blockStore.storeBytes(
+                    key = userId.toString(),
+                    shouldBackupToCloud = true,
+                    bytes = accessToken.toByteArray()
+                )
                 false // Didn't fail.
             }.cancellable().getOrElse { throwable ->
                 SentryLog.wtf(TAG, "Failed to backup token", throwable)
@@ -85,8 +85,7 @@ object BlockStoreBackup {
         val keysToDelete: List<String> = buildList {
             previousDump.forEachKey { key -> if (key !in tokensDump) add(key.toString()) }
         }
-        val deleteRequest = DeleteBytesRequest.Builder().setKeys(keysToDelete).build()
-        blockstoreClient.deleteBytes(deleteRequest).await()
+        blockStore.deleteBytes(keysToDelete)
     }
 
     private suspend fun dumpTokens(): LongObjectMap<String> = buildLongObjectMap {
@@ -94,14 +93,11 @@ object BlockStoreBackup {
     }
 
     private suspend fun readTokensBackup(): LongObjectMap<String>? {
-        val retrieveRequest = RetrieveBytesRequest.Builder()
-            .setRetrieveAll(true)
-            .build()
-        val dataMap = blockstoreClient.retrieveBytes(retrieveRequest).await().blockstoreDataMap.ifEmpty { return null }
+        val dataMap = blockStore.retrieveBytes().ifEmpty { return null }
         return buildLongObjectMap {
-            dataMap.forEach { (key, data) ->
+            dataMap.forEach { (key, bytes) ->
                 val userId = key.toLongOrNull() ?: return@forEach
-                this[userId] = String(data.bytes)
+                this[userId] = String(bytes)
             }
         }
     }
@@ -115,6 +111,4 @@ object BlockStoreBackup {
             }
         }
     }
-
-    private suspend fun isE2eeAvailable(): Boolean = blockstoreClient.isEndToEndEncryptionAvailable.await()
 }

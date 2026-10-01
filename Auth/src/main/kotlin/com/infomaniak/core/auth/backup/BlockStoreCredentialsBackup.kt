@@ -17,6 +17,7 @@
  */
 package com.infomaniak.core.auth.backup
 
+import android.app.backup.FullBackupDataOutput
 import androidx.room.execSQL
 import androidx.room.immediateTransaction
 import androidx.room.useWriterConnection
@@ -27,6 +28,7 @@ import kotlinx.coroutines.runBlocking
 
 context(_: FullBackupAgent)
 inline fun withBlockStoreCredentialsBackup(
+    data: FullBackupDataOutput,
     crossinline backupCredentials: suspend () -> Boolean = { BlockStoreBackup.backupTokens() },
     crossinline defaultBackupCalls: () -> Unit
 ): Unit = runBlocking {
@@ -36,6 +38,7 @@ inline fun withBlockStoreCredentialsBackup(
     }
     val succeeded = backupCredentials()
     if (!succeeded) return@runBlocking // Abort backup
+    BlockStoreBackup.backupTestBlockStoreIfNeeded(data)
     val db = UserDatabase.instance
     // We don't want to keep tokens in the db for backup, so we remove them temporarily.
     // Note that the app can perfectly recover from this state if the backup process is aborted, here's why:
