@@ -17,8 +17,15 @@
  */
 package com.infomaniak.core.auth.backup
 
+import android.app.backup.FullBackupDataOutput
+import com.infomaniak.core.common.backup.FullBackupAgent
+
 object BlockStoreBackup {
     const val isSupported: Boolean = false
+
+    context(agent: FullBackupAgent)
+    fun backupTestBlockStoreIfNeeded(data: FullBackupDataOutput) {}
+
     suspend fun backupTokens(): Boolean = false
     suspend fun restoreTokens(): Boolean = false
 }

@@ -17,11 +17,13 @@
  */
 package com.infomaniak.core.auth.backup
 
+import android.app.backup.FullBackupDataOutput
 import androidx.collection.LongObjectMap
 import androidx.collection.buildLongObjectMap
 import androidx.room.immediateTransaction
 import androidx.room.useWriterConnection
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.backup.FullBackupAgent
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.sentry.SentryLog
 
@@ -33,6 +35,11 @@ object BlockStoreBackup {
     private val db = UserDatabase.instance
 
     const val isSupported: Boolean = true
+
+    context(agent: FullBackupAgent)
+    fun backupTestBlockStoreIfNeeded(data: FullBackupDataOutput) {
+        BlockStore.instance.backupTestBlockStoreIfNeeded(data)
+    }
 
     suspend fun backupTokens(): Boolean {
         val backupContent = dumpTokens()

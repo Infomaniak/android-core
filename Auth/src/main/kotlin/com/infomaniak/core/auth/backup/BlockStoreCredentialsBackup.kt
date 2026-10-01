@@ -38,7 +38,7 @@ inline fun withBlockStoreCredentialsBackup(
     }
     val succeeded = backupCredentials()
     if (!succeeded) return@runBlocking // Abort backup
-    BlockStore.instance.backupTestBlockStoreIfNeeded(data)
+    BlockStoreBackup.backupTestBlockStoreIfNeeded(data)
     val db = UserDatabase.instance
     // We don't want to keep tokens in the db for backup, so we remove them temporarily.
     // Note that the app can perfectly recover from this state if the backup process is aborted, here's why:
