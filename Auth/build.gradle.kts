@@ -57,6 +57,7 @@ dependencies {
     implementation(core.kotlinx.serialization.json)
     implementation(core.gson)
     implementation(core.splitties.appctx)
+    implementation(core.splitties.bitflags)
     implementation(core.okhttp)
     api(core.gson)
 
