@@ -17,7 +17,6 @@
     <string name="contentDescriptionBackButton">Tillbaka</string>
     <string name="deleteAlertDescription">Är du säker på att du vill ta bort kontaktkortet som är kopplat till det här kontot?</string>
     <string name="deleteAlertTitle">Ta bort kontaktkortet</string>
-    <string name="deleteButton">Ta bort</string>
     <string name="email">E-post</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">Förnamn</string>

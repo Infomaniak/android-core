@@ -17,7 +17,6 @@
     <string name="contentDescriptionBackButton">Tilbage</string>
     <string name="deleteAlertDescription">Er du sikker på, at du vil slette det kontaktkort, der er knyttet til denne konto?</string>
     <string name="deleteAlertTitle">Slet kontaktkortet</string>
-    <string name="deleteButton">Slet</string>
     <string name="email">E-mail</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">Fornavn</string>

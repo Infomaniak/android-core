@@ -81,7 +81,7 @@ internal fun PreviewActionsBottomSheet(
             )
             BottomSheetAction(
                 icon = ImageVector.vectorResource(R.drawable.ic_bin),
-                label = stringResource(R.string.deleteButton),
+                label = stringResource(RCommon.string.deleteButton),
                 onClick = { dismissThen(onDelete) },
             )
         }

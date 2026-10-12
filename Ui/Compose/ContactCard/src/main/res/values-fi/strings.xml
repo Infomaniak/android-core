@@ -17,7 +17,6 @@
     <string name="contentDescriptionBackButton">Takaisin</string>
     <string name="deleteAlertDescription">Haluatko varmasti poistaa tähän tiliin liitetyn yhteystietokortin?</string>
     <string name="deleteAlertTitle">Poista yhteystietokortti</string>
-    <string name="deleteButton">Poista</string>
     <string name="email">Sähköposti</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">Etunimi</string>
