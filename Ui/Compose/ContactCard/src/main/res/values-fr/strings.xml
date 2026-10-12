@@ -17,7 +17,6 @@
     <string name="contentDescriptionBackButton">Retour</string>
     <string name="deleteAlertDescription">Êtes-vous sûr de vouloir supprimer la fiche de visite associée à ce compte ?</string>
     <string name="deleteAlertTitle">Supprimer la carte de visite</string>
-    <string name="deleteButton">Supprimer</string>
     <string name="email">E-mail</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">Prénom</string>

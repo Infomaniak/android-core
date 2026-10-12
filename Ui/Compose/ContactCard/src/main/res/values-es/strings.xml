@@ -17,7 +17,6 @@
     <string name="contentDescriptionBackButton">Atrás</string>
     <string name="deleteAlertDescription">¿Estás seguro de que quieres eliminar la ficha de contacto asociada a esta cuenta?</string>
     <string name="deleteAlertTitle">Eliminar la ficha de contacto</string>
-    <string name="deleteButton">Eliminar</string>
     <string name="email">Correo electrónico</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">Nombre</string>

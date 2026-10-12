@@ -17,7 +17,6 @@
     <string name="contentDescriptionBackButton">Πίσω</string>
     <string name="deleteAlertDescription">Είστε σίγουροι ότι θέλετε να διαγράψετε την κάρτα επαφής που σχετίζεται με αυτόν τον λογαριασμό;</string>
     <string name="deleteAlertTitle">Διαγραφή της κάρτας επαφής</string>
-    <string name="deleteButton">Διαγραφή</string>
     <string name="email">Ηλεκτρονικό ταχυδρομείο</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">Όνομα</string>

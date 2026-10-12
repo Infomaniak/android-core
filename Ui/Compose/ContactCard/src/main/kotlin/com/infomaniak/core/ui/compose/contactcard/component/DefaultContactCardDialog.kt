@@ -74,7 +74,7 @@ internal fun DefaultDeleteConfirmationDialog(
     DefaultContactCardDialog(
         titleRes = R.string.deleteAlertTitle,
         descriptionRes = R.string.deleteAlertDescription,
-        confirmButtonRes = R.string.deleteButton,
+        confirmButtonRes = RCore.string.deleteButton,
         onConfirm = onConfirm,
         onDismiss = onDismiss,
         dismissButtonRes = RCore.string.buttonCancel,

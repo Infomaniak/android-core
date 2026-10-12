@@ -17,7 +17,6 @@
     <string name="contentDescriptionBackButton">Wstecz</string>
     <string name="deleteAlertDescription">Czy na pewno chcesz usunąć wizytówkę powiązaną z tym kontem?</string>
     <string name="deleteAlertTitle">Usuń wizytówkę</string>
-    <string name="deleteButton">Usuń</string>
     <string name="email">E-mail</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">Imię</string>

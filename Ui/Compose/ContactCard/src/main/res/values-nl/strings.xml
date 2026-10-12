@@ -17,7 +17,6 @@
     <string name="contentDescriptionBackButton">Terug</string>
     <string name="deleteAlertDescription">Weet u zeker dat u de contactkaart die aan dit account is gekoppeld, wilt verwijderen?</string>
     <string name="deleteAlertTitle">De contactkaart verwijderen</string>
-    <string name="deleteButton">Verwijderen</string>
     <string name="email">E-mail</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">Voornaam</string>

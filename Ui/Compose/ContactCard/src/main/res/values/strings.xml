@@ -33,7 +33,6 @@
     <string name="contentDescriptionBackButton">Back</string>
     <string name="deleteAlertDescription">Are you sure you want to delete the contact card associated with this account?</string>
     <string name="deleteAlertTitle">Delete the contact card</string>
-    <string name="deleteButton">Delete</string>
     <string name="email">Email</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">First Name</string>

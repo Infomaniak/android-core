@@ -17,7 +17,6 @@
     <string name="contentDescriptionBackButton">Indietro</string>
     <string name="deleteAlertDescription">Sei sicuro di voler eliminare la scheda del contatto associata a questo account?</string>
     <string name="deleteAlertTitle">Elimina la scheda del contatto</string>
-    <string name="deleteButton">Elimina</string>
     <string name="email">E-mail</string>
     <string name="facebook">Facebook</string>
     <string name="firstName">Nome</string>

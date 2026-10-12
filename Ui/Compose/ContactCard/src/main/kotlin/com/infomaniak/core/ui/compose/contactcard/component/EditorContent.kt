@@ -50,11 +50,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.infomaniak.core.ui.compose.contactcard.ContactCardEditorState
-import com.infomaniak.core.ui.compose.contactcard.model.ContactCardCallbacks
-import com.infomaniak.core.ui.compose.contactcard.model.isValid
 import com.infomaniak.core.ui.compose.contactcard.EditableUrl
 import com.infomaniak.core.ui.compose.contactcard.R
+import com.infomaniak.core.ui.compose.contactcard.model.ContactCardCallbacks
+import com.infomaniak.core.ui.compose.contactcard.model.isValid
 import com.infomaniak.core.ui.compose.margin.Margin
+import com.infomaniak.core.common.R as RCore
 
 @Composable
 internal fun EditorContent(
@@ -200,8 +201,8 @@ private fun LinksAndSocialNetworkSection(
                         editor.copy(
                             additionalUrls = editor.additionalUrls.map {
                                 if (it.id == updatedUrl.id) updatedUrl else it
-                            }
-                        )
+                            },
+                        ),
                     )
                 },
                 onRemove = { onRemoveAdditionalUrl(additionalUrl.id) },
@@ -233,7 +234,7 @@ private fun AdditionalUrlItem(
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_bin),
-                contentDescription = stringResource(R.string.deleteButton),
+                contentDescription = stringResource(RCore.string.deleteButton),
                 tint = MaterialTheme.colorScheme.primary,
             )
         }
