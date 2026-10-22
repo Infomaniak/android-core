@@ -28,16 +28,15 @@ class GZipInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain) = unzip(chain.proceed(chain.request()))
 
     private fun unzip(response: Response): Response = with(response) {
-        return if (body != null && headers["content-encoding"] == "gzip") {
-            with(body!!) {
-                val unzippedBody = GzipSource(source())
+        return when (headers["content-encoding"]) {
+             "gzip" -> {
+                val unzippedBody = GzipSource(body.source())
                 val strippedHeaders = headers.newBuilder().build()
                 newBuilder().headers(strippedHeaders)
-                    .body(RealResponseBody(contentType().toString(), contentLength(), unzippedBody.buffer()))
+                    .body(RealResponseBody(body.contentType().toString(), body.contentLength(), unzippedBody.buffer()))
                     .build()
             }
-        } else {
-            response
+            else -> response
         }
     }
 }
