@@ -26,7 +26,7 @@ import com.infomaniak.core.network.api.ApiController.gson
 import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
-import okhttp3.MultipartBody
+import okhttp3.FormBody
 import okhttp3.Request
 
 object AuthRepository {
@@ -38,13 +38,12 @@ object AuthRepository {
             throw RefreshTokenException()
         }
 
-        val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("grant_type", "refresh_token")
-            .addFormDataPart("client_id", AuthConfiguration.clientId())
-            .addFormDataPart("refresh_token", refreshToken)
+        val formBuilder: FormBody.Builder = FormBody.Builder()
+            .add("grant_type", "refresh_token")
+            .add("client_id", AuthConfiguration.clientId())
+            .add("refresh_token", refreshToken)
 
-        if (AuthConfiguration.accessType == null) formBuilder.addFormDataPart("duration", "infinite")
+        if (AuthConfiguration.accessType == null) formBuilder.add("duration", "infinite")
 
         val request = Request.Builder()
             .url(ApiRoutesCore.TOKEN_URL)

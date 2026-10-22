@@ -31,7 +31,7 @@ import com.infomaniak.core.network.api.ApiController
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import com.infomaniak.core.sentry.SentryLog
-import okhttp3.MultipartBody
+import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -68,15 +68,14 @@ class DerivedTokenGeneratorImpl(
             is Xor.First -> result.value
             is Xor.Second -> return result
         }
-        val form = MultipartBody.Builder().also {
-            it.setType(MultipartBody.FORM)
-            it.addFormDataPart("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
-            it.addFormDataPart("subject_token", token)
-            it.addFormDataPart("subject_token_type", "urn:ietf:params:oauth:token-type:access_token")
-            it.addFormDataPart("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
-            it.addFormDataPart("client_assertion", attestationToken)
-            it.addFormDataPart("client_id", clientId())
-            if (accessType == null) it.addFormDataPart("duration", "infinite")
+        val form = FormBody.Builder().also {
+            it.add("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
+            it.add("subject_token", token)
+            it.add("subject_token_type", "urn:ietf:params:oauth:token-type:access_token")
+            it.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
+            it.add("client_assertion", attestationToken)
+            it.add("client_id", clientId())
+            if (accessType == null) it.add("duration", "infinite")
         }.build()
 
         val okHttpClient = OkHttpClient()

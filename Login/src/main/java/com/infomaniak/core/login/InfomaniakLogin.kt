@@ -36,7 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import okhttp3.MultipartBody
+import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -289,26 +289,24 @@ class InfomaniakLogin(
     }
 
     suspend fun getToken(okHttpClient: OkHttpClient, code: String): TokenResult {
-        val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("grant_type", "authorization_code")
-            .addFormDataPart("client_id", clientID)
-            .addFormDataPart("code", code)
-            .addFormDataPart("code_verifier", getCodeVerifier())
-            .addFormDataPart("redirect_uri", getRedirectURI())
+        val formBuilder: FormBody.Builder = FormBody.Builder()
+            .add("grant_type", "authorization_code")
+            .add("client_id", clientID)
+            .add("code", code)
+            .add("code_verifier", getCodeVerifier())
+            .add("redirect_uri", getRedirectURI())
 
         return getToken(okHttpClient = okHttpClient, body = formBuilder.build())
     }
 
     suspend fun getToken(okHttpClient: OkHttpClient, username: String, password: String): TokenResult {
-        val formBuilder: MultipartBody.Builder = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("grant_type", "password")
-            .addFormDataPart("client_id", clientID)
-            .addFormDataPart("username", username)
-            .addFormDataPart("password", password)
+        val formBuilder: FormBody.Builder = FormBody.Builder()
+            .add("grant_type", "password")
+            .add("client_id", clientID)
+            .add("username", username)
+            .add("password", password)
 
-        accessType?.let { formBuilder.addFormDataPart("access_type", it.apiValue) }
+        accessType?.let { formBuilder.add("access_type", it.apiValue) }
 
         return getToken(okHttpClient = okHttpClient, body = formBuilder.build())
     }
