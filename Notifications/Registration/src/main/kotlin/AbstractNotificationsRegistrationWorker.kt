@@ -23,6 +23,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.await
@@ -40,6 +41,7 @@ import io.ktor.http.isSuccess
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 import okhttp3.OkHttpClient
@@ -75,6 +77,9 @@ abstract class AbstractNotificationsRegistrationWorker(
         }.awaitAll()
         return if (outcomes.any { it == Outcome.ShouldRetry }) {
             Result.retry()
+        } else if (outcomes.any { it == Outcome.Failed }) {
+            SentryLog.i(TAG, "Work failed")
+            Result.failure()
         } else {
             SentryLog.i(TAG, "Work finished")
             Result.success()
@@ -128,9 +133,10 @@ abstract class AbstractNotificationsRegistrationWorker(
             return workRequest.id
         }
 
-        suspend fun awaitWorkerCompletion(uuid: UUID) {
+        suspend fun awaitWorkerCompletion(uuid: UUID): Boolean {
             val workManager = WorkManager.getInstance(appCtx)
-            workManager.getWorkInfoByIdFlow(uuid).first { it?.state?.isFinished == true }
+            val workInfo = workManager.getWorkInfoByIdFlow(uuid).filterNotNull().first { it.state.isFinished }
+            return workInfo.state != WorkInfo.State.FAILED
         }
 
         @PublishedApi
@@ -140,6 +146,7 @@ abstract class AbstractNotificationsRegistrationWorker(
 
 private enum class Outcome {
     Done,
+    Failed,
     ShouldRetry,
 }
 
@@ -155,11 +162,11 @@ private fun handleUnsuccessfulResponse(response: HttpResponse): Outcome {
         }
         401 -> {
             SentryLog.w(TAG, errorMessage)
-            Outcome.Done
+            Outcome.Failed
         }
         else -> {
             SentryLog.wtf(TAG, errorMessage)
-            Outcome.Done
+            Outcome.Failed
         }
     }
 }
@@ -171,6 +178,6 @@ private fun handleNetworkOperationFailure(t: Throwable): Outcome {
         Outcome.ShouldRetry
     } else {
         SentryLog.wtf(TAG, errorMessage, t)
-        Outcome.Done
+        Outcome.Failed
     }
 }
