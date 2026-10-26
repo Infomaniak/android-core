@@ -30,6 +30,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.request
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -56,7 +57,7 @@ fun createHttpClient(
     }
     HttpResponseValidator {
         validateResponse { response ->
-            response.validateContentType { accepted, received ->
+            if (response.status.isSuccess()) response.validateContentType { accepted, received ->
                 val url = response.request.url
                 val method = response.request.method
                 throw IllegalArgumentException("Expected Content-Type $accepted but got $received from $method on $url")

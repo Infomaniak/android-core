@@ -118,11 +118,11 @@ object NotificationsRegistrationManager : AssociatedUserDataCleanable {
 
         latestFcmToken.collectLatest { fcmToken ->
             userIdsFlow.collectLatest { userIds ->
-                while (true) {
+                do {
                     awaitAnyNeedForUpdate(userIds, fcmToken, latestNotificationTopics)
                     val id = AbstractNotificationsRegistrationWorker.schedule(workerClass)
-                    AbstractNotificationsRegistrationWorker.awaitWorkerCompletion(id) // Don't loop immediately.
-                }
+                    val didNotFail = AbstractNotificationsRegistrationWorker.awaitWorkerCompletion(id) // Don't loop immediately.
+                } while (didNotFail)
             }
         }
     }
