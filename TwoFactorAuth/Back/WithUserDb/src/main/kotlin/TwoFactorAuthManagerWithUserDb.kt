@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalTypeInference::class)
 
 package com.infomaniak.core.twofactorauth.back
 
@@ -32,7 +31,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import okhttp3.OkHttpClient
-import kotlin.experimental.ExperimentalTypeInference
 
 fun TwoFactorAuthManager(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
