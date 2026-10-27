@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalAtomicApi::class)
 
 package com.infomaniak.core.auth.backup
 
@@ -26,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
 import splitties.init.appCtx
 import java.io.File
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 internal class BlockStoreTestingImpl(private val e2eeAvailable: Boolean) : BlockStore() {
 

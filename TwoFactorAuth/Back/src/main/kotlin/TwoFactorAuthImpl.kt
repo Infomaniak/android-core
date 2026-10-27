@@ -35,7 +35,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.io.IOException
@@ -62,7 +61,6 @@ internal class TwoFactorAuthImpl(
                 // Use-case specific config:
                 coerceInputValues = true // Use default values if not recognized (used for enums).
                 ignoreUnknownKeys = true // Don't break if keys are added.
-                @OptIn(ExperimentalSerializationApi::class)
                 decodeEnumsCaseInsensitive = true
             }
             json(jsonConfig)
