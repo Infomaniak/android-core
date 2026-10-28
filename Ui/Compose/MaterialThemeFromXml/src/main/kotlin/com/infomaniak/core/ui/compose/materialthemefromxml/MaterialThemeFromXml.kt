@@ -83,6 +83,5 @@ fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalCont
 }
 
 private fun Context.getMaterialColor(@AttrRes colorId: Int, fallback: Color = Color.Unspecified): Color {
-    val color = MaterialColors.getColor(this, colorId, 0)
-    return if (color != 0) Color(color) else fallback
+    return Color(MaterialColors.getColorOrNull(this, colorId) ?: return fallback)
 }
