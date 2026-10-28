@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Êtes-vous sûr de vouloir vous déconnecter du compte %s ?</string>
     <string name="confirmLogoutTitle">Me déconnecter</string>
     <string name="connectionError">Problème de connexion internet</string>
+    <string name="contentDescriptionClear">Effacer</string>
     <string name="crossAppLoginIntegrityError">Récupération des comptes indisponible</string>
     <string name="deleteButton">Supprimer</string>
     <string name="edit">Modifier</string>

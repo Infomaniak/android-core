@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Er du sikker på at du vil logge ut fra %s?</string>
     <string name="confirmLogoutTitle">Logg ut</string>
     <string name="connectionError">Internett-tilkoblingsproblem</string>
+    <string name="contentDescriptionClear">Tøm</string>
     <string name="crossAppLoginIntegrityError">Henting av kontoer utilgjengelig</string>
     <string name="deleteButton">Slett</string>
     <string name="edit">Rediger</string>

@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Sind Sie sicher, dass Sie sich von %s abmelden möchten?</string>
     <string name="confirmLogoutTitle">Abmelden</string>
     <string name="connectionError">Problem mit der Internetverbindung</string>
+    <string name="contentDescriptionClear">Löschen</string>
     <string name="crossAppLoginIntegrityError">Kontenabruf nicht verfügbar</string>
     <string name="deleteButton">Löschen</string>
     <string name="edit">Bearbeiten</string>

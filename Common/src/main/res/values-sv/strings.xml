@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Är du säker på att du vill logga ut från %s?</string>
     <string name="confirmLogoutTitle">Logga ut</string>
     <string name="connectionError">Problem med internetanslutning</string>
+    <string name="contentDescriptionClear">Rensa</string>
     <string name="crossAppLoginIntegrityError">Kontohämtning otillgänglig</string>
     <string name="deleteButton">Ta bort</string>
     <string name="edit">Redigera</string>

@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Weet u zeker dat u wilt afmelden bij %s?</string>
     <string name="confirmLogoutTitle">Afmelden</string>
     <string name="connectionError">Internetverbindingsprobleem</string>
+    <string name="contentDescriptionClear">Wissen</string>
     <string name="crossAppLoginIntegrityError">Ophalen van accounts niet beschikbaar</string>
     <string name="deleteButton">Verwijderen</string>
     <string name="edit">Bewerken</string>
