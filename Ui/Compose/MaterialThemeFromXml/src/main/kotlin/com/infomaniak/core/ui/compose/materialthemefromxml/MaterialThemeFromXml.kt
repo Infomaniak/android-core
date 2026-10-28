@@ -35,6 +35,7 @@ import com.google.android.material.R as RMaterial
 @Composable
 fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalContext.current) {
     val primary = getMaterialColor(RAndroid.attr.colorPrimary)
+    val onSurface = getMaterialColor(RMaterial.attr.colorOnSurface)
 
     MaterialTheme(
         colorScheme = ColorScheme(
@@ -51,10 +52,10 @@ fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalCont
             onTertiary = getMaterialColor(RMaterial.attr.colorOnTertiary),
             tertiaryContainer = getMaterialColor(RMaterial.attr.colorTertiaryContainer),
             onTertiaryContainer = getMaterialColor(RMaterial.attr.colorOnTertiaryContainer),
-            background = getMaterialColor(RAndroid.attr.background),
-            onBackground = getMaterialColor(RMaterial.attr.colorOnBackground),
+            background = getMaterialColor(android.R.attr.colorBackground),
+            onBackground = getMaterialColor(RMaterial.attr.colorOnBackground, fallback = onSurface),
             surface = getMaterialColor(RMaterial.attr.colorSurface),
-            onSurface = getMaterialColor(RMaterial.attr.colorOnSurface),
+            onSurface = onSurface,
             surfaceVariant = getMaterialColor(RMaterial.attr.colorSurfaceVariant),
             onSurfaceVariant = getMaterialColor(RMaterial.attr.colorOnSurfaceVariant),
             // `surfaceTint` doesn't exist in XML theming, in Jetpack Compose it automatically gets defaulted
@@ -81,4 +82,6 @@ fun MaterialThemeFromXml(content: @Composable () -> Unit): Unit = with(LocalCont
     )
 }
 
-private fun Context.getMaterialColor(@AttrRes colorId: Int) = Color(MaterialColors.getColor(this, colorId, 0))
+private fun Context.getMaterialColor(@AttrRes colorId: Int, fallback: Color = Color.Unspecified): Color {
+    return Color(MaterialColors.getColorOrNull(this, colorId) ?: return fallback)
+}
