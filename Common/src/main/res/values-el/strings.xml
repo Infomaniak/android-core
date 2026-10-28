@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Είστε βέβαιοι ότι θέλετε να αποσυνδεθείτε από %s;</string>
     <string name="confirmLogoutTitle">Αποσύνδεση</string>
     <string name="connectionError">Πρόβλημα σύνδεσης στο διαδίκτυο</string>
+    <string name="contentDescriptionClear">Διαγραφή</string>
     <string name="crossAppLoginIntegrityError">Η ανάκτηση λογαριασμών δεν είναι διαθέσιμη</string>
     <string name="deleteButton">Διαγραφή</string>
     <string name="edit">Επεξεργασία</string>

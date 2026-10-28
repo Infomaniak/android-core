@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Czy na pewno chcesz się wylogować z konta %s?</string>
     <string name="confirmLogoutTitle">Wyloguj się</string>
     <string name="connectionError">Problem z połączeniem internetowym</string>
+    <string name="contentDescriptionClear">Wyczyść</string>
     <string name="crossAppLoginIntegrityError">Pobieranie kont niedostępne</string>
     <string name="deleteButton">Usuń</string>
     <string name="edit">Edytuj</string>

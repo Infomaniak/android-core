@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Haluatko varmasti kirjautua ulos tililtä %s?</string>
     <string name="confirmLogoutTitle">Kirjaudu ulos</string>
     <string name="connectionError">Internet-yhteysongelma</string>
+    <string name="contentDescriptionClear">Tyhjennä</string>
     <string name="crossAppLoginIntegrityError">Tilien nouto ei ole käytettävissä</string>
     <string name="deleteButton">Poista</string>
     <string name="edit">Muokkaa</string>

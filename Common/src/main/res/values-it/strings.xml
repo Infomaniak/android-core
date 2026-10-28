@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Sei sicuro di volerti disconnettere da %s?</string>
     <string name="confirmLogoutTitle">Disconnettersi</string>
     <string name="connectionError">Problema di connessione a Internet</string>
+    <string name="contentDescriptionClear">Cancella</string>
     <string name="crossAppLoginIntegrityError">Recupero dei conti non disponibile</string>
     <string name="deleteButton">Elimina</string>
     <string name="edit">Modifica</string>

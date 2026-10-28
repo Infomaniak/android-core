@@ -35,6 +35,7 @@
     <string name="confirmLogoutDescription">Tem a certeza de que deseja terminar a sessão de %s?</string>
     <string name="confirmLogoutTitle">Terminar sessão</string>
     <string name="connectionError">Problema de ligação à Internet</string>
+    <string name="contentDescriptionClear">Limpar</string>
     <string name="crossAppLoginIntegrityError">Recuperação de contas indisponível</string>
     <string name="deleteButton">Apagar</string>
     <string name="edit">Editar</string>
