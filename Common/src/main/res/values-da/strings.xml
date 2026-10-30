@@ -39,6 +39,8 @@
     <string name="crossAppLoginIntegrityError">Kontihentning utilgængelig</string>
     <string name="deleteButton">Slet</string>
     <string name="edit">Rediger</string>
+    <string name="emailAlreadyUsed">E-mailadressen er allerede i brug</string>
+    <string name="emailInvalid">E-mailadressen er ugyldig</string>
     <string name="errorDownload">Downloadfejl</string>
     <string name="errorDownloadInsufficientSpace">Kan ikke downloade: Utilstrækkelig plads</string>
     <string name="linkCopied">Link kopieret</string>

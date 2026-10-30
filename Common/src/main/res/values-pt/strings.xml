@@ -39,6 +39,8 @@
     <string name="crossAppLoginIntegrityError">Recuperação de contas indisponível</string>
     <string name="deleteButton">Apagar</string>
     <string name="edit">Editar</string>
+    <string name="emailAlreadyUsed">O e-mail já está sendo usado</string>
+    <string name="emailInvalid">O e-mail é inválido</string>
     <string name="errorDownload">Erro de descarregamento</string>
     <string name="errorDownloadInsufficientSpace">Não é possível descarregar: Espaço insuficiente</string>
     <string name="linkCopied">Link copiado</string>

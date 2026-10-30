@@ -39,6 +39,8 @@
     <string name="crossAppLoginIntegrityError">Kontohämtning otillgänglig</string>
     <string name="deleteButton">Ta bort</string>
     <string name="edit">Redigera</string>
+    <string name="emailAlreadyUsed">E-postadressen används redan</string>
+    <string name="emailInvalid">E-postadressen är ogiltig</string>
     <string name="errorDownload">Nedladdningsfel</string>
     <string name="errorDownloadInsufficientSpace">Kan inte ladda ner: Otillräckligt utrymme</string>
     <string name="linkCopied">Länk kopierad</string>

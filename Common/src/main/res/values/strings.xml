@@ -39,6 +39,8 @@
     <string name="crossAppLoginIntegrityError">Accounts retrieval unavailable</string>
     <string name="deleteButton">Delete</string>
     <string name="edit">Edit</string>
+    <string name="emailAlreadyUsed">The email is already used</string>
+    <string name="emailInvalid">The email is invalid</string>
     <string name="errorDownload">Download error</string>
     <string name="errorDownloadInsufficientSpace">Cannot download: Insufficient space</string>
     <string name="linkCopied">Link copied</string>

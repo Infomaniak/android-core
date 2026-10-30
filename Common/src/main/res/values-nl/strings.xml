@@ -39,6 +39,8 @@
     <string name="crossAppLoginIntegrityError">Ophalen van accounts niet beschikbaar</string>
     <string name="deleteButton">Verwijderen</string>
     <string name="edit">Bewerken</string>
+    <string name="emailAlreadyUsed">Het e-mailadres wordt al gebruikt</string>
+    <string name="emailInvalid">Het e-mailadres is ongeldig</string>
     <string name="errorDownload">Downloadfout</string>
     <string name="errorDownloadInsufficientSpace">Kan niet downloaden: Onvoldoende ruimte</string>
     <string name="linkCopied">Link gekopieerd</string>

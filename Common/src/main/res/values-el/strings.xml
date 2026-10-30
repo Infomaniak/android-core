@@ -39,6 +39,8 @@
     <string name="crossAppLoginIntegrityError">Η ανάκτηση λογαριασμών δεν είναι διαθέσιμη</string>
     <string name="deleteButton">Διαγραφή</string>
     <string name="edit">Επεξεργασία</string>
+    <string name="emailAlreadyUsed">Το e-mail χρησιμοποιείται ήδη</string>
+    <string name="emailInvalid">Το e-mail δεν είναι έγκυρο</string>
     <string name="errorDownload">Σφάλμα λήψης</string>
     <string name="errorDownloadInsufficientSpace">Δεν είναι δυνατή η λήψη: Μη επαρκής χώρος</string>
     <string name="linkCopied">Ο σύνδεσμος αντιγράφηκε</string>

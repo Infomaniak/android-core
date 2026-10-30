@@ -39,6 +39,8 @@
     <string name="crossAppLoginIntegrityError">Henting av kontoer utilgjengelig</string>
     <string name="deleteButton">Slett</string>
     <string name="edit">Rediger</string>
+    <string name="emailAlreadyUsed">E-postadressen er allerede i bruk</string>
+    <string name="emailInvalid">E-postadressen er ugyldig</string>
     <string name="errorDownload">Nedlastingsfeil</string>
     <string name="errorDownloadInsufficientSpace">Kan ikke laste ned: Utilstrekkelig plass</string>
     <string name="linkCopied">Lenke kopiert</string>
