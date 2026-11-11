@@ -20,6 +20,8 @@ package com.infomaniak.core.ui.compose.basics
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,3 +69,12 @@ fun <T> Flow<T>.collectAsStateIn(scope: CoroutineScope, initialValue: T): State<
         }
     }
 }
+
+context(viewModel: ViewModel)
+fun <T> Flow<T>.collectAsState(initialValue: T): State<T> = collectAsStateIn(
+    scope = viewModel.viewModelScope,
+    initialValue = initialValue,
+)
+
+context(viewModel: ViewModel)
+fun <T> StateFlow<T>.collectAsState(): State<T> = collectAsStateIn(scope = viewModel.viewModelScope)
