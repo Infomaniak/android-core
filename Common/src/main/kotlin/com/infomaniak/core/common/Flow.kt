@@ -40,6 +40,9 @@ import kotlinx.coroutines.flow.transformWhile
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.nanoseconds
 
+// To remove if https://github.com/Kotlin/kotlinx.coroutines/issues/4796 is ever addressed.
+suspend inline fun <reified R> Flow<*>.firstIsInstance(): R = first { it is R } as R
+
 suspend fun <R> Flow<Boolean>.tryCompletingWhileTrue(
     block: suspend () -> R
 ): R = transformLatest {
