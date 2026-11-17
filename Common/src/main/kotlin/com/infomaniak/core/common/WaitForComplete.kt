@@ -21,9 +21,10 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.Job
 
-suspend inline fun <R> waitForComplete(block: (completable: CompletableJob) -> R): R {
+suspend inline fun <R> waitForComplete(block: (completable: () -> Unit) -> R): R {
     val completable: CompletableJob = Job()
-    return block(completable).also { completable.join() }
+    // We don't expose CompletableJob because completeExceptionally doesn't get join() to rethrow it.
+    return block(completable::complete).also { completable.join() }
 }
 
 suspend inline fun <R> waitForValue(block: (completable: CompletableDeferred<R>) -> Unit): R {
