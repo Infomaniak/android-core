@@ -20,6 +20,7 @@ package com.infomaniak.core.ui.compose.basics
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.plus
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalLayoutDirection
 
@@ -31,3 +32,14 @@ fun PaddingValues.onlyHorizontal(): PaddingValues {
         end = calculateEndPadding(layoutDirection),
     )
 }
+
+@Composable
+fun PaddingValues.onlyHorizontalAndTop(): PaddingValues = onlyHorizontal() + PaddingValues(top = calculateTopPadding())
+
+@Composable
+fun PaddingValues.onlyHorizontalAndBottom(): PaddingValues = onlyHorizontal() + PaddingValues(bottom = calculateBottomPadding())
+
+fun PaddingValues.onlyVertical(): PaddingValues = PaddingValues(
+    top = calculateTopPadding(),
+    bottom = calculateBottomPadding(),
+)
