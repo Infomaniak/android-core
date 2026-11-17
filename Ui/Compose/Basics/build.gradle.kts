@@ -38,4 +38,5 @@ dependencies {
     implementation(core.compose.ui.tooling)
     implementation(core.foundation.android)
     implementation(core.splitties.collections)
+    implementation(core.androidx.lifecycle.viewmodel.ktx)
 }

@@ -20,14 +20,13 @@ package com.infomaniak.core.file
 import android.net.Uri
 import splitties.init.appCtx
 import java.io.InputStream
-import kotlin.io.buffered
-import kotlin.io.use
 
-internal class InputStreamCounter(
+class InputStreamCounter(
     bufferSize: Int = DEFAULT_BUFFER_SIZE // 8kiB only
 ) {
 
-    private val sharedByteArrayForCountingBytes = ByteArray(bufferSize)
+    @PublishedApi
+    internal val sharedByteArrayForCountingBytes = ByteArray(bufferSize)
 
     inline fun fileSizeFor(
         uri: Uri,
