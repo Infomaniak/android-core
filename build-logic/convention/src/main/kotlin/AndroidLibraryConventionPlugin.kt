@@ -33,12 +33,13 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         apply(plugin = "com.android.library")
 
         val proguardRules = file("proguard-rules.pro")
+        val consumerRules = file("consumer-rules.pro")
 
         android {
             applyCommonConfiguration()
             defaultConfig {
-                if (proguardRules.exists()) {
-                    consumerProguardFile(proguardRules)
+                if (consumerRules.exists()) {
+                    consumerProguardFile(consumerRules)
                 }
             }
             buildTypes {
