@@ -43,6 +43,7 @@
     <string name="emailInvalid">Het e-mailadres is ongeldig</string>
     <string name="errorDownload">Downloadfout</string>
     <string name="errorDownloadInsufficientSpace">Kan niet downloaden: Onvoldoende ruimte</string>
+    <string name="invalidInput">Ongeldige invoer</string>
     <string name="linkCopied">Link gekopieerd</string>
     <plurals name="myAccount">
         <item quantity="one">Mijn account</item>

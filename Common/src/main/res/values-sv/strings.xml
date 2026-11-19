@@ -43,6 +43,7 @@
     <string name="emailInvalid">E-postadressen är ogiltig</string>
     <string name="errorDownload">Nedladdningsfel</string>
     <string name="errorDownloadInsufficientSpace">Kan inte ladda ner: Otillräckligt utrymme</string>
+    <string name="invalidInput">Ogiltig inmatning</string>
     <string name="linkCopied">Länk kopierad</string>
     <plurals name="myAccount">
         <item quantity="one">Mitt konto</item>
