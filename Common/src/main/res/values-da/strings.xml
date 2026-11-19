@@ -43,6 +43,7 @@
     <string name="emailInvalid">E-mailadressen er ugyldig</string>
     <string name="errorDownload">Downloadfejl</string>
     <string name="errorDownloadInsufficientSpace">Kan ikke downloade: Utilstrækkelig plads</string>
+    <string name="invalidInput">Ugyldigt input</string>
     <string name="linkCopied">Link kopieret</string>
     <plurals name="myAccount">
         <item quantity="one">Min konto</item>

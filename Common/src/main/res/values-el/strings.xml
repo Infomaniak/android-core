@@ -43,6 +43,7 @@
     <string name="emailInvalid">Το e-mail δεν είναι έγκυρο</string>
     <string name="errorDownload">Σφάλμα λήψης</string>
     <string name="errorDownloadInsufficientSpace">Δεν είναι δυνατή η λήψη: Μη επαρκής χώρος</string>
+    <string name="invalidInput">Μη έγκυρη εισαγωγή</string>
     <string name="linkCopied">Ο σύνδεσμος αντιγράφηκε</string>
     <plurals name="myAccount">
         <item quantity="one">Ο λογαριασμός μου</item>

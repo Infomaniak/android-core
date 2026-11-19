@@ -43,6 +43,7 @@
     <string name="emailInvalid">L’e-mail non è valida</string>
     <string name="errorDownload">Errore durante il download</string>
     <string name="errorDownloadInsufficientSpace">Impossibile scaricare: spazio insufficiente</string>
+    <string name="invalidInput">Input non valido</string>
     <string name="linkCopied">Link copiato</string>
     <plurals name="myAccount">
         <item quantity="one">Il mio account</item>
