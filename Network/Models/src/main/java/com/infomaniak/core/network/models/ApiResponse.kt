@@ -1,6 +1,6 @@
 /*
  * Infomaniak Core - Android
- * Copyright (C) 2022-2025 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,4 +52,10 @@ open class ApiResponse<T>(
     var headers: ResponseHeaders = ResponseHeaders()
 
     fun isSuccess() = result == ApiResponseStatus.SUCCESS
+
+    fun isError() = result == ApiResponseStatus.ERROR
+
+    override fun toString(): String {
+        return "ApiResponse(result=$result, data=$data, uri=$uri, error=$error, responseAt=$responseAt )"
+    }
 }
