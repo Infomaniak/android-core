@@ -19,7 +19,6 @@ package com.infomaniak.core.auth.models.user.preferences
 
 import android.os.Parcelable
 import androidx.room.Embedded
-import com.google.gson.annotations.SerializedName
 import com.infomaniak.core.auth.models.user.preferences.security.Security
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
@@ -31,6 +30,6 @@ data class Preferences(
     @Embedded(prefix = "security_")
     var security: Security? = null,
     @Embedded(prefix = "organizationPreference_")
-    @SerializedName("account") @SerialName("account")
+    @SerialName("account")
     var organizationPreference: OrganizationPreference,
 ) : Parcelable

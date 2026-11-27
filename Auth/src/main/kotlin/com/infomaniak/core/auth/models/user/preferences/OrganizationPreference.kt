@@ -19,7 +19,6 @@ package com.infomaniak.core.auth.models.user.preferences
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
-import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -27,7 +26,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class OrganizationPreference(
-    @SerializedName("current_account_id") @SerialName("current_account_id")
+    @SerialName("current_account_id")
     @ColumnInfo(defaultValue = "0")
     var currentOrganizationId: Int,
 ) : Parcelable

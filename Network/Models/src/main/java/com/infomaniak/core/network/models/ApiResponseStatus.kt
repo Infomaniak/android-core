@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.network.models
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,22 +24,17 @@ import kotlinx.serialization.Serializable
 enum class ApiResponseStatus {
 
     @SerialName("error")
-    @SerializedName("error")
     ERROR,
 
     @SerialName("success")
-    @SerializedName("success")
     SUCCESS,
 
     @SerialName("asynchronous")
-    @SerializedName("asynchronous")
     ASYNCHRONOUS,
 
     @SerialName("redirect")
-    @SerializedName("redirect")
     REDIRECT,
 
     @SerialName("unknown")
-    @SerializedName("unknown")
     UNKNOWN;
 }

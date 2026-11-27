@@ -28,7 +28,6 @@ android {
 
 dependencies {
     implementation(core.androidx.core.ktx)
-    implementation(core.gson)
     implementation(core.kotlinx.serialization.json)
     implementation(core.okhttp)
 }

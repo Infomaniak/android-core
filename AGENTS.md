@@ -75,6 +75,9 @@ utilities across Infomaniak apps. Designed for JDK 17+, minSdk 27, compiled SDK 
 - **Composite build**: Consume via Maven coordinates `com.infomaniak.core:<artifact>`, where nested Gradle project paths map `:` to `.` in the artifact name (e.g., `:TwoFactorAuth:Front` → `com.infomaniak.core:TwoFactorAuth.Front`)
 - **Ktlint**: Android mode enabled (version set in `build.gradle.kts`)
 - **No main**: Libraries have no Application class
+- **R8**: Leave minification configuration to consuming apps. Put module-specific rules needed by apps in the module's
+  `consumer-rules.pro`; the Android library convention automatically packages this file when present. Do not duplicate rules
+  already supplied by dependencies.
 
 ## Key Files
 

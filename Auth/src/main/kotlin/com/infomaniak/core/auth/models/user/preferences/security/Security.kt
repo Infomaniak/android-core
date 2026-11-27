@@ -19,7 +19,6 @@ package com.infomaniak.core.auth.models.user.preferences.security
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
-import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -29,7 +28,7 @@ import kotlinx.serialization.Serializable
 data class Security(
     @ColumnInfo(defaultValue = "0")
     var score: Int,
-    @SerializedName("date_last_changed_password") @SerialName("date_last_changed_password")
+    @SerialName("date_last_changed_password")
     @ColumnInfo(defaultValue = "0")
     var dateLastChangedPassword: Long? = null,
 ) : Parcelable

@@ -17,10 +17,6 @@
  */
 package com.infomaniak.core.network.api
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import com.infomaniak.core.network.isNetworkException
 import com.infomaniak.core.network.isSerializationException
 import com.infomaniak.core.network.models.ApiError
@@ -32,26 +28,24 @@ import com.infomaniak.core.network.models.exceptions.ServerErrorException
 import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.network.networking.ManualAuthorizationRequired
-import com.infomaniak.core.network.utils.CustomDateTypeAdapter
 import com.infomaniak.core.network.utils.ErrorCodeTranslated
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
 import io.sentry.Sentry
 import io.sentry.SentryLevel
 import kotlinx.coroutines.CancellationException
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.jsonObject
 import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.lang.reflect.Type
 import java.net.UnknownHostException
-import java.util.Date
 
 object ApiController {
 
@@ -70,20 +64,6 @@ object ApiController {
         coerceInputValues = true
     }
 
-    var gson: Gson = GsonBuilder()
-        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
-        .create()
-
-    fun init(typeAdapterList: ArrayList<Pair<Type, Any>>) {
-        val gsonBuilder = gson.newBuilder()
-
-        for (typeAdapter in typeAdapterList) {
-            gsonBuilder.registerTypeAdapter(typeAdapter.first, typeAdapter.second)
-        }
-
-        gson = gsonBuilder.create()
-    }
-
     /**
      * Executes an API request to the given URL with the specified parameters.
      * Use [DefaultHttpClientProvider.okHttpClient] or an authenticated OkHttpClient supplied by the Auth module.
@@ -91,7 +71,24 @@ object ApiController {
     suspend inline fun <reified T> callApi(
         url: String,
         method: ApiMethod,
-        body: Any? = null,
+        okHttpClient: OkHttpClient,
+        useKotlinxSerialization: Boolean = false,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
+    ): T {
+        return executeRequest(
+            url,
+            method,
+            generateRequestBody(JsonNull),
+            okHttpClient,
+            useKotlinxSerialization,
+            buildErrorResult,
+        )
+    }
+
+    suspend inline fun <reified T, reified B> callApi(
+        url: String,
+        method: ApiMethod,
+        body: B?,
         okHttpClient: OkHttpClient,
         useKotlinxSerialization: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
@@ -107,7 +104,24 @@ object ApiController {
     inline fun <reified T> callApiBlocking(
         url: String,
         method: ApiMethod,
-        body: Any? = null,
+        okHttpClient: OkHttpClient = DefaultHttpClientProvider.okHttpClient,
+        useKotlinxSerialization: Boolean = false,
+        noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
+    ): T {
+        return executeRequestBlocking(
+            url,
+            method,
+            generateRequestBody(JsonNull),
+            okHttpClient,
+            useKotlinxSerialization,
+            buildErrorResult,
+        )
+    }
+
+    inline fun <reified T, reified B> callApiBlocking(
+        url: String,
+        method: ApiMethod,
+        body: B?,
         okHttpClient: OkHttpClient = DefaultHttpClientProvider.okHttpClient,
         useKotlinxSerialization: Boolean = false,
         noinline buildErrorResult: ((apiError: ApiError?, translatedErrorRes: Int) -> T)? = null,
@@ -116,12 +130,13 @@ object ApiController {
         return executeRequestBlocking(url, method, requestBody, okHttpClient, useKotlinxSerialization, buildErrorResult)
     }
 
-    fun generateRequestBody(body: Any?): RequestBody {
+    inline fun <reified T> generateRequestBody(body: T?): RequestBody {
         val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val toJson = when (body) {
-            is JsonElement, is com.google.gson.JsonElement -> body.toString()
+            is JsonElement -> body.toString()
             is String -> body
-            else -> gson.toJson(body)
+            null -> "null"
+            else -> json.encodeToString(body)
         }
         return toJson.toRequestBody(jsonMediaType)
     }
@@ -275,11 +290,9 @@ object ApiController {
         }
         .build()
 
+    @Suppress("UNUSED_PARAMETER")
     inline fun <reified T> createApiResponse(useKotlinxSerialization: Boolean, bodyResponse: String, headers: Headers): T {
-        val apiResponse = when {
-            useKotlinxSerialization -> json.decodeFromString<T>(bodyResponse)
-            else -> gson.fromJson(bodyResponse, object : TypeToken<T>() {}.type)
-        }
+        val apiResponse = json.decodeFromString<T>(bodyResponse)
 
         if (apiResponse is ApiResponse<*> && apiResponse.result == ApiResponseStatus.ERROR) {
             @Suppress("DEPRECATION")
@@ -288,10 +301,6 @@ object ApiController {
         if (apiResponse is ApiResponse<*>) apiResponse.headers = ResponseHeaders(headers)
 
         return apiResponse
-    }
-
-    private fun String.bodyResponseToJson(): JsonObject {
-        return JsonObject(mapOf("bodyResponse" to JsonPrimitive(this)))
     }
 
     inline fun <reified T> createInternetErrorResponse(
@@ -328,16 +337,11 @@ object ApiController {
     fun ErrorCodeTranslated.toApiError(): ApiError = createDetailedApiError(this, null)
 
     fun createDetailedApiError(errorCode: ErrorCodeTranslated, payload: InternalErrorPayload? = null): ApiError {
-        val useKotlinxSerialization = payload?.useKotlinxSerialization
         return ApiError(
             code = errorCode.code,
-            contextJson = if (useKotlinxSerialization == true) payload.bodyResponse?.bodyResponseToJson() else null,
-            contextGson = when {
-                useKotlinxSerialization == true -> null
-                else -> errorCode.runCatching {
-                    payload?.let { JsonParser.parseString(it.bodyResponse).asJsonObject }
-                }.getOrDefault(null)
-            },
+            contextJson = errorCode.runCatching {
+                payload?.bodyResponse?.let { json.parseToJsonElement(it).jsonObject }
+            }.getOrNull(),
             exception = payload?.exception
         )
     }
