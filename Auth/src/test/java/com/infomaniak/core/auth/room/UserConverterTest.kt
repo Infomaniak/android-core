@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.auth.room
 
-import com.google.gson.Gson
 import com.infomaniak.core.auth.models.OrganizationAccount
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.CardLink
@@ -28,6 +27,10 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -35,20 +38,17 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class UserConverterTest {
     private val converter = UserConverter()
-    private val gson = Gson()
-
     @Test
-    fun organizations_preserveGsonFieldNamesAndAllEnumValues() {
+    fun organizations_preserveSerializedFieldNamesAndAllEnumValues() {
         val organizations = ArrayList(OrganizationAccount.Type.entries.map { type ->
             OrganizationAccount(1, "Organization", type, true, false, true, false, true, "company")
         })
 
-        converter.toOrganizationAccount(gson.toJson(organizations)) shouldBe organizations
-        converter.toOrganizationAccount(converter.organizationsToJson(organizations)) shouldBe organizations
-        gson.fromJson(
-            converter.organizationsToJson(organizations),
-            com.google.gson.JsonElement::class.java
-        ) shouldBe gson.toJsonTree(organizations)
+        val json = converter.organizationsToJson(organizations)
+        val firstOrganization = Json.parseToJsonElement(json).jsonArray.first().jsonObject
+        firstOrganization["no_access"] shouldBe JsonPrimitive(true)
+        firstOrganization["type"] shouldBe JsonPrimitive("owner")
+        converter.toOrganizationAccount(json) shouldBe organizations
         converter.toOrganizationAccount("[]") shouldBe arrayListOf<OrganizationAccount>()
     }
 
@@ -60,7 +60,7 @@ class UserConverterTest {
     }
 
     @Test
-    fun card_preservesGsonFieldNamesAndAllLinkTypes() {
+    fun card_preservesSerializedFieldNamesAndAllLinkTypes() {
         val card = Card(
             firstName = "First",
             lastName = "Last",
@@ -71,12 +71,11 @@ class UserConverterTest {
             links = CardLinkType.entries.map { CardLink(it, "https://example.com") }
         )
 
-        converter.toCard(gson.toJson(card)) shouldBe card
-        converter.toCard(converter.cardToJson(card)) shouldBe card
-        gson.fromJson(
-            converter.cardToJson(card),
-            com.google.gson.JsonElement::class.java
-        ) shouldBe gson.toJsonTree(card)
+        val json = converter.cardToJson(card).orEmpty()
+        val serializedCard = Json.parseToJsonElement(json).jsonObject
+        serializedCard["first_name"] shouldBe JsonPrimitive("First")
+        serializedCard["avatar_url"] shouldBe JsonPrimitive("https://example.com/avatar")
+        converter.toCard(json) shouldBe card
     }
 
     @Test
@@ -115,8 +114,7 @@ class UserConverterTest {
         phone.type shouldBe "mobile"
 
         val restored = converter.toPhones(converter.phonesToJson(phones)).shouldNotBeNull().single()
-        gson.toJsonTree(restored) shouldBe gson.toJsonTree(phone)
-        converter.toPhones(gson.toJson(phones)) shouldBe phones
+        restored shouldBe phone
     }
 
     @Test

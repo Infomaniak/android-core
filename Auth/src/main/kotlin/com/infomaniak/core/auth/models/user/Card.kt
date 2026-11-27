@@ -18,7 +18,6 @@
 package com.infomaniak.core.auth.models.user
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -26,14 +25,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class Card(
-    @SerializedName("first_name") @SerialName("first_name")
+    @SerialName("first_name")
     val firstName: String,
-    @SerializedName("last_name") @SerialName("last_name")
+    @SerialName("last_name")
     val lastName: String,
     val email: String,
     val phone: String,
     val company: String? = null,
-    @SerializedName("avatar_url") @SerialName("avatar_url")
+    @SerialName("avatar_url")
     val avatarUrl: String? = null,
     val links: List<CardLink>? = null,
 ) : Parcelable {
@@ -81,22 +80,16 @@ data class CardLink(
 @Serializable
 enum class CardLinkType {
     @SerialName("linkedIn")
-    @SerializedName("linkedIn")
     LinkedIn,
     @SerialName("x")
-    @SerializedName("x")
     X,
     @SerialName("instagram")
-    @SerializedName("instagram")
     Instagram,
     @SerialName("facebook")
-    @SerializedName("facebook")
     Facebook,
     @SerialName("website")
-    @SerializedName("website")
     Website,
     @SerialName("other")
-    @SerializedName("other")
     Other,
 }
 

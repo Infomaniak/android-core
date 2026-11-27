@@ -135,9 +135,6 @@ class UserConverter {
         if (json == null) return null
 
         val element = serializer.parseToJsonElement(json).takeUnless { it == JsonNull } ?: return null
-
-        // Older Gson-backed caches can contain null entries or a missing/null required phone value.
-        //TODO: Remove this after next release, since the issue was only in internal testing versions.
         val entries = element.jsonArray
         val validEntries = entries.filter { entry ->
             entry != JsonNull && entry.jsonObject["phone"].let { it != null && it != JsonNull }

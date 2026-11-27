@@ -44,7 +44,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
             buildTypes {
                 release {
-                    isMinifyEnabled = false
                     proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
                     if (proguardRules.exists()) {
                         proguardFiles(proguardRules)

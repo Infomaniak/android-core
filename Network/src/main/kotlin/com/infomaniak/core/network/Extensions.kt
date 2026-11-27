@@ -17,7 +17,6 @@
  */
 package com.infomaniak.core.network
 
-import com.google.gson.JsonSyntaxException
 import kotlinx.serialization.SerializationException
 
 fun Exception.isNetworkException(): Boolean {
@@ -30,5 +29,5 @@ fun Exception.isNetworkException(): Boolean {
 }
 
 fun Exception.isSerializationException(): Boolean {
-    return this is JsonSyntaxException || this is SerializationException || this is IllegalArgumentException
+    return this is SerializationException || this is IllegalArgumentException
 }

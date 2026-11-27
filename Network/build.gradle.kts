@@ -34,7 +34,6 @@ dependencies {
     implementation(project(":Sentry"))
 
     implementation(core.androidx.core.ktx)
-    implementation(core.gson)
     implementation(core.kotlinx.serialization.json)
     implementation(core.ktor.client.core)
     implementation(core.splitties.mainhandler)

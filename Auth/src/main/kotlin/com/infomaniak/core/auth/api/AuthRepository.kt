@@ -17,15 +17,18 @@
  */
 package com.infomaniak.core.auth.api
 
-import com.google.gson.JsonParser
 import com.infomaniak.core.auth.AuthConfiguration
 import com.infomaniak.core.auth.TokenInterceptorListener
 import com.infomaniak.core.login.ApiToken
 import com.infomaniak.core.network.api.ApiController.RefreshTokenException
-import com.infomaniak.core.network.api.ApiController.gson
+import com.infomaniak.core.network.api.ApiController.json
 import com.infomaniak.core.network.networking.DefaultHttpClientProvider
 import com.infomaniak.core.network.utils.await
 import com.infomaniak.core.network.utils.bodyAsStringOrNull
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.FormBody
 import okhttp3.Request
 
@@ -69,10 +72,8 @@ object AuthRepository {
 
     private suspend fun handleInvalidGrant(bodyResponse: String?, tokenInterceptorListener: TokenInterceptorListener) {
         val invalidGrant = runCatching {
-            JsonParser.parseString(bodyResponse)
-                .asJsonObject
-                .getAsJsonPrimitive("error")
-                .asString == "invalid_grant"
+            bodyResponse?.let { json.parseToJsonElement(it).jsonObject["error"]?.jsonPrimitive?.contentOrNull } ==
+                "invalid_grant"
         }.getOrDefault(false)
 
         if (invalidGrant) {
@@ -85,7 +86,7 @@ object AuthRepository {
         bodyResponse: String?,
         tokenInterceptorListener: TokenInterceptorListener,
     ): ApiToken {
-        val apiToken = gson.fromJson(bodyResponse, ApiToken::class.java)
+        val apiToken = json.decodeFromString<ApiToken>(requireNotNull(bodyResponse))
         apiToken.expiresAt = System.currentTimeMillis() + (apiToken.expiresIn * 1_000L)
         tokenInterceptorListener.onRefreshTokenSuccess(apiToken)
         return apiToken

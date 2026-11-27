@@ -18,7 +18,6 @@
 package com.infomaniak.core.auth.models
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -31,28 +30,28 @@ data class OrganizationAccount(
     val type: Type,
     val billing: Boolean,
     val mailing: Boolean,
-    @SerializedName("no_access") @SerialName("no_access")
+    @SerialName("no_access")
     val noAccess: Boolean,
-    @SerializedName("workspace_only") @SerialName("workspace_only")
+    @SerialName("workspace_only")
     val workspaceOnly: Boolean,
-    @SerializedName("billing_mailing") @SerialName("billing_mailing")
+    @SerialName("billing_mailing")
     val billingMailing: Boolean,
-    @SerializedName("legal_entity_type") @SerialName("legal_entity_type")
+    @SerialName("legal_entity_type")
     val legalEntityType: String
 ) : Parcelable {
 
     @Serializable
     enum class Type {
-        @SerializedName("owner") @SerialName("owner")
+        @SerialName("owner")
         OWNER,
 
-        @SerializedName("admin") @SerialName("admin")
+        @SerialName("admin")
         ADMIN,
 
-        @SerializedName("normal") @SerialName("normal")
+        @SerialName("normal")
         NORMAL,
 
-        @SerializedName("client") @SerialName("client")
+        @SerialName("client")
         CLIENT;
     }
 }

@@ -22,7 +22,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import com.infomaniak.core.auth.firstOrEmpty
 import com.infomaniak.core.auth.models.OrganizationAccount
 import com.infomaniak.core.auth.models.user.preferences.Preferences
@@ -37,11 +36,11 @@ import kotlinx.serialization.Transient
 @Entity
 data class User(
     @PrimaryKey val id: Int,
-    @SerializedName("display_name") @SerialName("display_name")
+    @SerialName("display_name")
     val displayName: String?,
-    @SerializedName("first_name") @SerialName("first_name")
+    @SerialName("first_name")
     val firstname: String,
-    @SerializedName("last_name") @SerialName("last_name")
+    @SerialName("last_name")
     val lastname: String,
     val email: String,
     val avatar: String?,
@@ -49,7 +48,7 @@ data class User(
     val card: Card? = null,
     val login: String,
     @ColumnInfo(defaultValue = "false")
-    @SerializedName("is_staff") @SerialName("is_staff")
+    @SerialName("is_staff")
     val isStaff: Boolean = false,
     @Embedded(prefix = "preferences_")
     val preferences: Preferences,

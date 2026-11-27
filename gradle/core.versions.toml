@@ -24,7 +24,6 @@ dotlottie = "0.14.0"
 espressoCore = "3.7.0"
 firebaseMessaging = "24.1.2"
 googleServices = "4.5.0"
-gson = "2.13.2"
 hiltAndroid = "2.60.1"
 hiltAndroidx = "1.4.0"
 integrity = "1.6.0"
@@ -117,7 +116,6 @@ coordinatorlayout = { module = "androidx.coordinatorlayout:coordinatorlayout", v
 firebase-messaging-ktx = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaseMessaging" }
 foundation-android = { module = "androidx.compose.foundation:foundation-android" }
 gradle-build-tools = { module = "com.android.tools.build:gradle", version.ref = "agp" }
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
 hilt-androidx-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltAndroidx" }
