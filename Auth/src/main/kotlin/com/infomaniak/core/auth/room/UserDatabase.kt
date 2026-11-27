@@ -26,14 +26,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.infomaniak.core.auth.models.CurrentUserId
 import com.infomaniak.core.auth.models.OrganizationAccount
 import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.models.user.Card
 import com.infomaniak.core.auth.models.user.Phone
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.sentry.SentryLog
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import splitties.init.appCtx
 
 @Database(
@@ -92,39 +97,56 @@ abstract class UserDatabase internal constructor() : RoomDatabase() {
 }
 
 class UserConverter {
-    private val gson: Gson by lazy { Gson() }
-
-    private val organizationAccountsType = object : TypeToken<ArrayList<OrganizationAccount>>() {}.type
-    private val cardType = object : TypeToken<Card>() {}.type
-    private val phonesType = object : TypeToken<List<Phone>>() {}.type
+    private val serializer = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+    }
 
     @TypeConverter
     fun organizationsToJson(organizationAccounts: ArrayList<OrganizationAccount>): String {
-        return gson.toJson(organizationAccounts, organizationAccountsType)
+        return serializer.encodeToString(organizationAccounts.toList())
     }
 
     @TypeConverter
     fun toOrganizationAccount(json: String?): ArrayList<OrganizationAccount> {
-        return gson.fromJson(json, organizationAccountsType)
+        val organizations = serializer.decodeFromString<List<OrganizationAccount>>(
+            requireNotNull(json) { "Organizations JSON must not be null" }
+        )
+        return ArrayList(organizations)
     }
 
     @TypeConverter
     fun cardToJson(card: Card?): String? {
-        return card?.let { gson.toJson(it, cardType) }
+        return card?.let { serializer.encodeToString(it) }
     }
 
     @TypeConverter
     fun toCard(json: String?): Card? {
-        return json?.let { gson.fromJson(it, cardType) }
+        return json?.let { serializer.decodeFromString<Card?>(it) }
     }
 
     @TypeConverter
     fun phonesToJson(phones: List<Phone>?): String? {
-        return phones?.let { gson.toJson(it, phonesType) }
+        return phones?.let { serializer.encodeToString(it) }
     }
 
     @TypeConverter
     fun toPhones(json: String?): List<Phone>? {
-        return json?.let { gson.fromJson(it, phonesType) }
+        if (json == null) return null
+
+        val element = serializer.parseToJsonElement(json).takeUnless { it == JsonNull } ?: return null
+
+        // Older Gson-backed caches can contain null entries or a missing/null required phone value.
+        //TODO: Remove this after next release, since the issue was only in internal testing versions.
+        val entries = element.jsonArray
+        val validEntries = entries.filter { entry ->
+            entry != JsonNull && entry.jsonObject["phone"].let { it != null && it != JsonNull }
+        }
+        val removedCount = entries.size - validEntries.size
+        if (removedCount > 0) {
+            SentryLog.e("UserConverter", "Discarded $removedCount invalid cached phone entries")
+        }
+
+        return serializer.decodeFromJsonElement<List<Phone>>(JsonArray(validEntries))
     }
 }
